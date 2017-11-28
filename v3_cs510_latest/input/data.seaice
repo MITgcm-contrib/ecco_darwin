@@ -1,0 +1,26 @@
+# SEAICE parameters
+ &SEAICE_PARM01
+      SEAICE_multDim     = 7
+#
+      SEAICE_dryIceAlb   = 0.92,
+      SEAICE_wetIceAlb   = 0.80,
+      SEAICE_drySnowAlb  = 0.96,
+      SEAICE_wetSnowAlb  = 0.83,
+      SEAICE_strength    = 1.7e+04,
+      SEAICE_waterDrag   = 5.55,
+      SEAICE_drag        = 0.0012,
+      HO                 = 0.9,
+#
+      SEAICE_no_slip     = .TRUE.,
+      SEAICEadvScheme    = 7,
+#
+      MIN_ATEMP          = -40.,
+      MIN_TICE           = -40.,
+      SEAICE_saltFrac    = 0.3,
+      SEAICE_gamma_t     = 259200.,
+      ICE2WATR           = 0.92D0,
+      DIFF1              = 0.,
+      LSR_ERROR          = 2e-4,
+      SEAICEuseDYNAMICS  = .TRUE.,
+#
+ &
