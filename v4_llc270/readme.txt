@@ -15,7 +15,7 @@ make -j 16
 
 ==============
 # Instructions for running forward-only llc270 optimized solution (2001-2015)
-cd MITgcm
+cd ..
 mkdir run
 cd run
 ln -sf ../build/mitgcmuv .
@@ -34,7 +34,7 @@ qsub job_llc270_fdH
 
 ==============
 # Instructions for running forward-only llc270 optimized solution (2009-2015)
-cd MITgcm
+cd ..
 mkdir run
 cd run
 ln -sf ../build/mitgcmuv .

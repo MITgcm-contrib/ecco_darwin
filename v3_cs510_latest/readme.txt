@@ -19,7 +19,7 @@ make -j 16
 ==============
 # Instructions for running Version 3 (cg1) to 2009-2013.
 
-cd MITgcm
+cd ..
 mkdir run
 cd run
 ln -sf ../build/mitgcmuv .
