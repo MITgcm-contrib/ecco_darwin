@@ -1,0 +1,17 @@
+#!/bin/csh
+#PBS -l select=1:model=has+32:ncpus=24:model=has
+##PBS -l walltime=28:00:00
+#PBS -l walltime=2:00:00
+#PBS -j oe
+#PBS -m abe
+
+module purge
+module load comp-intel mpi-sgi
+module list
+
+
+umask 027
+cd $PBS_O_WORKDIR
+limit stacksize unlimited
+#./modpickup
+mpiexec -np 767 ./mitgcmuv
