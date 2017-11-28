@@ -1,0 +1,19 @@
+#!/bin/csh
+#PBS -l select=23:ncpus=20:model=ivy
+##PBS -q devel
+##PBS -l walltime=2:00:00
+#PBS -q long
+#PBS -l walltime=120:00:00
+#PBS -j oe
+#PBS -N darwin_cg1
+#PBS -m abe
+##PBS -M menemenlis@me.com
+
+setenv FORT_BUFFERED 1
+
+module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+
+cd $PBS_O_WORKDIR
+limit stacksize unlimited
+./modpickup
+mpiexec -np 450 ./mitgcmuv
