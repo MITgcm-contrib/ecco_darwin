@@ -1,5 +1,6 @@
 # Build executable for Hong Zhang's forward-only llc270 optimized solution
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_code
+cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270
 cd MITgcm
 mkdir build
 cd build
