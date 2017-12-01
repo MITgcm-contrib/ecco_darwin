@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code/EXF_OPTIONS.h,v 1.2 2017/12/01 19:02:10 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/EXF_OPTIONS.h,v 1.1 2017/12/01 19:02:10 dimitri Exp $
 C $Name:  $
 
 CBOP
@@ -167,6 +167,8 @@ C      |     |     |     |     |     |  evap, precip and runoff.
 C      |     |     |     |     |     | Compute  hflux and sflux.
 C
 C   =======================================================================
+
+#define USE_EXFCO2
 
 C-  Bulk formulae related flags.
 #define ALLOW_ATM_TEMP
