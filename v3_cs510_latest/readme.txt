@@ -1,6 +1,5 @@
 # Build executable for ECCO-Darwin version 3
 # with latest MITgcm code
-
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_code
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/darwin/pkg/darwin
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v3_cs510_latest
@@ -16,9 +15,9 @@ module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mp
 make depend
 make -j 16
 
-==============
-# Instructions for running Version 3 (cg1) to 2009-2013.
 
+==============
+# Instructions for running Version 3 (cg1) for 2009-2013.
 cd ..
 mkdir run
 cd run
@@ -36,6 +35,5 @@ ln -sf /nobackup/hzhang1/cs510/ICBC_2009_iter26/pickup.0000000001.data_xx pickup
 ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup*.0000000001.??ta .
 ln -sf /nobackup/dmenemen/forcing/runoff/runoff-360x180x12.bin .
 ln -sf /nobackup/hzhang1/cs510/run_template/tile00* .
-
 # modify run_darwin_450 as needed
 qsub run_darwin_450
