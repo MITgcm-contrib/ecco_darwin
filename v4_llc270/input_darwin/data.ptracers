@@ -4,8 +4,7 @@
  PTRACERS_advScheme(1)=39*33,
  PTRACERS_diffKh(1)=39*0.E3,
  PTRACERS_diffKr(1)=39*1.E-5,
-#PTRACERS_useGMRedi(1)=39*.TRUE. ,
- PTRACERS_useKPP(1)=39*.TRUE. ,
+ PTRACERS_useGMRedi(1)=39*.TRUE. ,
 # tracer 1 - phosphate
  PTRACERS_names(1)='PO4',
  PTRACERS_units(1)='mmol P/m^3',
