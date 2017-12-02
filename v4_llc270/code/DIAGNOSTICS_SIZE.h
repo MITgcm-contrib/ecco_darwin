@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code/DIAGNOSTICS_SIZE.h,v 1.1 2017/11/28 22:08:59 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code/DIAGNOSTICS_SIZE.h,v 1.2 2017/12/02 00:44:10 dimitri Exp $
 C $Name:  $
 
 
@@ -20,11 +20,11 @@ C  and "diagSt_size" (statistics-diags) since values here are deliberately small
       INTEGER    numDiags
       INTEGER    nRegions, sizRegMsk, nStats
       INTEGER    diagSt_size
-      PARAMETER( ndiagMax = 700 )
-      PARAMETER( numlists = 70, numperlist = 30, numLevels=5*Nr )
-      PARAMETER( numDiags = 3000 )
-      PARAMETER( nRegions = 20 , sizRegMsk = 1 , nStats = 4 )
-      PARAMETER( diagSt_size = 50*Nr )
+      PARAMETER( ndiagMax = 1500 )
+      PARAMETER( numlists = 90, numperlist = 90, numLevels=Nr )
+      PARAMETER( numDiags = 25+80*Nr )
+      PARAMETER( nRegions = 0 , sizRegMsk = 1 , nStats = 4 )
+      PARAMETER( diagSt_size = 10*Nr )
 
 
 CEH3 ;;; Local Variables: ***
