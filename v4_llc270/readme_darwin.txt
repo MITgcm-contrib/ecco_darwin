@@ -40,11 +40,8 @@ ln -sf pco2a_blended_2012 pco2a_blended_2014
 ln -sf pco2a_blended_2012 pco2a_blended_2015
 ln -sf pco2a_blended_2012 pco2a_blended_2016
 ln -sf ~dmenemen/CMS/run_template_cg1/darwin* .
-ln -sf /nobackup/dcarrol2/temp/pickup_llc270_dic.gf_cg1.0000078912.data pickup_dic.0000078912.data
-ln -sf /nobackup/dcarrol2/temp/pickup_llc270_ptracers.gf_cg1.0000078912.data pickup_ptracers.0000078912.data
+ln -sf /nobackup/dcarrol2/temp/pickup_llc270_dic.gf_cg1.0000078912.data pickup_dic.0000210384.data
+ln -sf /nobackup/dcarrol2/temp/pickup_llc270_ptracers.gf_cg1.0000078912.data pickup_ptracers.0000210384.data
 ln -sf /nobackup/dcarrol2/temp/pickup*.meta .
-ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup*.0000000001.??ta .
-ln -sf /nobackup/dmenemen/forcing/runoff/runoff-360x180x12.bin .
-ln -sf /nobackup/hzhang1/cs510/run_template/tile00* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH

@@ -10,10 +10,10 @@
 #PBS -m abe
 
 module purge
-module load comp-intel mpi-sgi
+module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 module list
 
-umask 027
+umask 022
 cd $PBS_O_WORKDIR
 limit stacksize unlimited
 mpiexec -np 767 ./mitgcmuv
