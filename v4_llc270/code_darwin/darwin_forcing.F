@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.1 2017/12/21 21:07:22 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.2 2017/12/24 16:08:17 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -1171,8 +1171,8 @@ c in darwin_plankton this is stored for previous timestep. Reset here.
 #ifdef ALLOW_CARBON
           Ptr(i,j,k,bi,bj,iDIC ) = Ptr(i,j,k,bi,bj,iDIC ) +
      &                                  dtplankton*ddicl
-          Ptr(i,j,k,bi,bj,iDIC ) = max(Ptr(i,j,k,bi,bj,iDIC),600.)
-          Ptr(i,j,k,bi,bj,iDIC ) = min(Ptr(i,j,k,bi,bj,iDIC),3000.)
+cDc          Ptr(i,j,k,bi,bj,iDIC ) = max(Ptr(i,j,k,bi,bj,iDIC),600.)
+cDc          Ptr(i,j,k,bi,bj,iDIC ) = min(Ptr(i,j,k,bi,bj,iDIC),3000.)
           Ptr(i,j,k,bi,bj,iDOC ) = Ptr(i,j,k,bi,bj,iDOC ) +
      &                                  dtplankton*ddocl
           Ptr(i,j,k,bi,bj,iPOC ) = Ptr(i,j,k,bi,bj,iPOC ) +
@@ -1181,7 +1181,7 @@ c in darwin_plankton this is stored for previous timestep. Reset here.
      &                                  dtplankton*dpicl
           Ptr(i,j,k,bi,bj,iALK ) = Ptr(i,j,k,bi,bj,iALK ) +
      &                                  dtplankton*dalkl
-          Ptr(i,j,k,bi,bj,iALK ) = min(Ptr(i,j,k,bi,bj,iALK),3000.)
+cDc          Ptr(i,j,k,bi,bj,iALK ) = min(Ptr(i,j,k,bi,bj,iALK),3000.)
           Ptr(i,j,k,bi,bj,iO2  ) = Ptr(i,j,k,bi,bj,iO2  ) +
      &                                  dtplankton*do2l
           DO nz = 1,nzmax
