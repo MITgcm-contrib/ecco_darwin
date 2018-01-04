@@ -12,6 +12,23 @@ module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mp
 make depend
 make -j 16
 
+# Instructions for running forward-only llc270 optimized solution (1992-2015)
+cd ..
+mkdir run
+cd run
+ln -sf ../build/mitgcmuv .
+cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
+ln -sf /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
+ln -sf /nobackup/hzhang1/forcing/era_xx .
+ln -sf /nobackup/hzhang1/obs/input/pickup* .
+ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
+ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
+ln -sf /nobackup/hzhang1/obs/input/tile* .
+ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/* .
+# modify job_llc270_fdH as needed
+qsub job_llc270_fdH
 
 ==============
 # Instructions for running forward-only llc270 optimized solution (2001-2015)
@@ -51,3 +68,5 @@ ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/w*data .
 ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
+
+
