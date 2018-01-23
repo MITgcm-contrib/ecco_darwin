@@ -32,7 +32,7 @@
  vwindfile         = 'era_xx/EIG_v10m',
  swdownfile        = 'era_xx/EIG_dsw_plus_ECCO_v4r1_ctrl',
  lwdownfile        = 'era_xx/EIG_dlw_plus_ECCO_v4r1_ctrl',
- apco2file         = 'pco2a_blended',
+ apco2file         = 'apCO2',
 #
  atempstartdate1   = 19920101,
  atempstartdate2   = 000000,
@@ -65,7 +65,7 @@
  lwdownstartdate2  = 030000,
  lwdownperiod      = 21600.0,
 #
- apco2startdate1  = 19790101,
+ apco2startdate1  = 19920101,
  apco2startdate2  = 030000,
  apco2period      = 86400.0,
  /
@@ -147,12 +147,12 @@
  lwdown_nlon        = 512,
  lwdown_nlat        = 256,
 #
- apco2_lon0        = 0.0D0,
- apco2_lon_inc     = 5.0D0,
- apco2_lat0        = -89.0D0,
- apco2_lat_inc     = 3.0D0,
-                     43*4.0D0,
-                     3.0D0,
- apco2_nlon        = 72,
- apco2_nlat        = 46,
+ apco2_lon0         = 0.0D0,
+ apco2_lon_inc      = 360.0D0,
+ apco2_lat0        = -89.4628220D0,
+ apco2_lat_inc     = 0.6958694,0.6999817,0.7009048,0.7012634,0.7014313,
+                     245*0.7017418,
+                     0.7014313,0.7012634,0.7009048,0.6999817,0.6958694
+ apco2_nlon         = 2,
+ apco2_nlat         = 256,
  /
