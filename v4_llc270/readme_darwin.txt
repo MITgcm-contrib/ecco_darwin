@@ -43,6 +43,7 @@ ln -sf ~dmenemen/CMS/run_template_cg1/darwin* .
 ln -sf /nobackup/dcarrol2/temp/pickup_llc270_dic.gf_cg1.0000078912.data pickup_dic.0000210384.data
 ln -sf /nobackup/dcarrol2/temp/pickup_llc270_ptracers.gf_cg1.0000078912.data pickup_ptracers.0000210384.data
 ln -sf /nobackup/dcarrol2/temp/pickup*.meta .
+ln -sf /nobackup/dcarrol2/forcing/iron_dust/llc270_Mahowald_2009_soluble_iron_dust.bin
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
 
@@ -59,8 +60,8 @@ ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
 ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
 ln -sf /nobackup/hzhang1/obs/input/tile* .
 ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/* .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/* .
+cp -sf /nobackup/hzhang1/pub/llc270_FWD/input/* .
+cp -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/* .
 ln -sf ~dmenemen/CMS/run_template_cg1/darwin* .
@@ -71,7 +72,7 @@ ln -sf /nobackup/dcarrol2/temp/pickup_ptracers.0000210384.meta pickup_ptracers.0
 ln -sf /nobackup/dcarrol2/temp/pickup_llc270_dic.gf_cg1.0000078912.data pickup_dic.0000000001.data
 ln -sf /nobackup/dcarrol2/temp/pickup_dic.0000210384.meta pickup_dic.0000000001.meta
 ln -sf /nobackup/dcarrol2/forcing/apCO2/apCO2* .
-ln -sf /nobackup/dcarrol2/temp/llc270_iron_dust.bin .
+ln -sf /nobackup/dcarrol2/forcing/iron_dust/llc270_Mahowald_2009_soluble_iron_dust.bin
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
 

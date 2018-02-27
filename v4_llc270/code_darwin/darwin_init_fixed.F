@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.1 2017/12/01 19:02:11 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.2 2018/02/27 15:49:48 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -81,7 +81,7 @@ c for chl
       chlpmin=16. _d 0                      ! mg Chl/mmolP
       istar=90. _d 0                        ! w/m2
 c iron related
-CBX   alpfe=     0.04 _d 0                  !solubility of Fe dust
+CDC   alpfe=     0.04 _d 0                  !solubility of Fe dust
       alpfe=     1.00 _d 0                  !solubility of Fe dust
       scav=      0.4 _d 0/(360. _d 0*86400. _d 0) !iron chem scavenging rate (s-1)
       ligand_tot=1. _d -3                   !total ligand (uM)
