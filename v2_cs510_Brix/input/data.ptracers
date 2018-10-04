@@ -1,11 +1,11 @@
  &PTRACERS_PARM01
- PTRACERS_numInUse=39,
+ PTRACERS_numInUse=34,
  PTRACERS_Iter0= 1,
- PTRACERS_advScheme(1)=39*33,
- PTRACERS_diffKh(1)=39*0.E3,
- PTRACERS_diffKr(1)=39*1.E-5,
-#PTRACERS_useGMRedi(1)=39*.TRUE. ,
- PTRACERS_useKPP(1)=39*.TRUE. ,
+ PTRACERS_advScheme(1)=34*33,
+ PTRACERS_diffKh(1)=34*0.E3,
+ PTRACERS_diffKr(1)=34*1.E-5,
+#PTRACERS_useGMRedi(1)=34*.TRUE. ,
+ PTRACERS_useKPP(1)=34*.TRUE. ,
 # tracer 1 - phosphate
  PTRACERS_names(1)='PO4',
  PTRACERS_units(1)='mmol P/m^3',
@@ -136,74 +136,52 @@
  PTRACERS_units(26)='mmol P/m^3'
  PTRACERS_initialFile(26)='/nobackup/hbrix/ICBC/pickup_oliver/biomass_o5.20000101.data',
 # PTRACERS_initialFile(26)='pickup_ptracers.0000000001.data',
-# tracer 27 - CHL01
- PTRACERS_names(27)='Chl01',
- PTRACERS_units(27)='mg Chla/m^3'
+# tracer 27 - DIC
+ PTRACERS_names(27)='DIC',
+ PTRACERS_units(27)='mmol C/m^3'
+ PTRACERS_initialFile(27)='/nobackup/hbrix/ICBC/NOBM_DIC_200901_510x6x510x50.bin',
+# PTRACERS_initialFile(27)='/nobackup/hbrix/ICBC/GLODAP_DIC_510x6x510x50.bin',
+# PTRACERS_initialFile(27)='/nobackup/hbrix/ICBC/darwin_s2_DIC.0000263016',
 # PTRACERS_initialFile(27)='pickup_ptracers.0000000001.data',
-# tracer 28 - CHL02
- PTRACERS_names(28)='Chl02',
- PTRACERS_units(28)='mg Chla/m^3'
+ PTRACERS_EvPrRn(27)= 0.
+# tracer 28 - DOC
+ PTRACERS_names(28)='DOC',
+ PTRACERS_units(28)='mmol C/m^3'
+ PTRACERS_initialFile(28)='/nobackup/hbrix/ICBC/NOBM_DOC_200901_510x6x510x50.bin',
+# PTRACERS_initialFile(28)='/nobackup/hbrix/ICBC/pickup_oliver/DOP_x120.20000101.data',
 # PTRACERS_initialFile(28)='pickup_ptracers.0000000001.data',
-# tracer 29 - CHL03
- PTRACERS_names(29)='Chl03',
- PTRACERS_units(29)='mg Chla/m^3'
+# tracer 29 - POC
+ PTRACERS_names(29)='POC',
+ PTRACERS_units(29)='mmol C/m^3'
+ PTRACERS_initialFile(29)='/nobackup/hbrix/ICBC/pickup_oliver/POP_x120.20000101.data',
 # PTRACERS_initialFile(29)='pickup_ptracers.0000000001.data',
-# tracer 30 - CHL04
- PTRACERS_names(30)='Chl04',
- PTRACERS_units(30)='mg Chla/m^3'
+# tracer 30 - PIC
+ PTRACERS_names(30)='PIC',
+ PTRACERS_units(30)='mmol C/m^3'
+ PTRACERS_initialFile(30)=' ',
 # PTRACERS_initialFile(30)='pickup_ptracers.0000000001.data',
-# tracer 31 - CHL05
- PTRACERS_names(31)='Chl05',
- PTRACERS_units(31)='mg Chla/m^3'
+# tracer 31 - ALK
+ PTRACERS_names(31)='ALK',
+ PTRACERS_units(31)='mmol eq/m^3'
+ PTRACERS_initialFile(31)='/nobackup/hbrix/ICBC/BlendedIC_ALK_510x6x510x50.bin',
+# PTRACERS_initialFile(31)='/nobackup/hbrix/ICBC/GLODAP_ALK_510x6x510x50.bin',
+# PTRACERS_initialFile(31)='/nobackup/hbrix/ICBC/darwin_s2_ALK.0000263016',
 # PTRACERS_initialFile(31)='pickup_ptracers.0000000001.data',
-# tracer 32 - DIC
- PTRACERS_names(32)='DIC',
- PTRACERS_units(32)='mmol C/m^3'
-# PTRACERS_initialFile(32)='/nobackup/hbrix/ICBC/CDIAC_AnthCO2_2006_510x6x510x50.bin',
-# PTRACERS_initialFile(32)='/nobackup/hbrix/ICBC/CCSM_DIC_JAN04_510x6x510x50.bin',
-# PTRACERS_initialFile(32)='/nobackup/hbrix/ICBC/GLODAP_DIC_510x6x510x50.bin',
- PTRACERS_initialFile(32)='/nobackup/hbrix/ICBC/darwin_s4a_DIC.0000052632.bin',
+ PTRACERS_EvPrRn(31)= 0.
+# tracer 32 - O2
+ PTRACERS_names(32)='O2',
+ PTRACERS_units(32)='mmol O/m^3'
+ PTRACERS_initialFile(32)='/nobackup/hbrix/ICBC/BlendedIC_OXY_510x6x510x50.bin',
+# PTRACERS_initialFile(32)='/nobackup/hbrix/ICBC/darwin_s2_O2.0000263016',
 # PTRACERS_initialFile(32)='pickup_ptracers.0000000001.data',
- PTRACERS_EvPrRn(32)= 0.
-# tracer 33 - DOC
- PTRACERS_names(33)='DOC',
+# tracer 33 - ZOOC1
+ PTRACERS_names(33)='ZOOC1',
  PTRACERS_units(33)='mmol C/m^3'
- PTRACERS_initialFile(33)='/nobackup/hbrix/ICBC/pickup_oliver/DOP_x120.20000101.data',
+ PTRACERS_initialFile(33)='/nobackup/hbrix/ICBC/pickup_oliver/ZOO1P_x120.20000101.data',
 # PTRACERS_initialFile(33)='pickup_ptracers.0000000001.data',
-# tracer 34 - POC
- PTRACERS_names(34)='POC',
+# tracer 34 - ZOOC2
+ PTRACERS_names(34)='ZOOC2',
  PTRACERS_units(34)='mmol C/m^3'
- PTRACERS_initialFile(34)='/nobackup/hbrix/ICBC/pickup_oliver/POP_x120.20000101.data',
+ PTRACERS_initialFile(34)='/nobackup/hbrix/ICBC/pickup_oliver/ZOO2P_x120.20000101.data',
 # PTRACERS_initialFile(34)='pickup_ptracers.0000000001.data',
-# tracer 35 - PIC
- PTRACERS_names(35)='PIC',
- PTRACERS_units(35)='mmol C/m^3'
- PTRACERS_initialFile(35)=' ',
-# PTRACERS_initialFile(35)='pickup_ptracers.0000000001.data',
-# tracer 36 - ALK
- PTRACERS_names(36)='ALK',
- PTRACERS_units(36)='mmol eq/m^3'
-# PTRACERS_initialFile(36)='/nobackup/hbrix/ICBC/CDIAC_ALK_510x6x510x50.bin',
-# PTRACERS_initialFile(36)='/nobackup/hbrix/ICBC/CCSM_ALK_JAN04_510x6x510x50.bin',
-# PTRACERS_initialFile(36)='/nobackup/hbrix/ICBC/GLODAP_ALK_510x6x510x50.bin',
- PTRACERS_initialFile(36)='/nobackup/hbrix/ICBC/darwin_s4a_ALK.0000052632.bin',
-# PTRACERS_initialFile(36)='pickup_ptracers.0000000001.data',
- PTRACERS_EvPrRn(36)= 0.
-# tracer 37 - O2
- PTRACERS_names(37)='O2',
- PTRACERS_units(37)='mmol O/m^3'
-# PTRACERS_initialFile(37)='/nobackup/hbrix/ICBC/WOA05_OXY_JAN_510x6x510x50.bin',
-# PTRACERS_initialFile(37)='/nobackup/hbrix/ICBC/CCSM_OXY_JAN04_510x6x510x50.bin',
- PTRACERS_initialFile(37)='/nobackup/hbrix/ICBC/darwin_s4a_O2.0000052632.bin',
-# PTRACERS_initialFile(37)='pickup_ptracers.0000000001.data',
-# tracer 38 - ZOOC1
- PTRACERS_names(38)='ZOOC1',
- PTRACERS_units(38)='mmol C/m^3'
- PTRACERS_initialFile(38)='/nobackup/hbrix/ICBC/pickup_oliver/ZOO1P_x120.20000101.data',
-# PTRACERS_initialFile(38)='pickup_ptracers.0000000001.data',
-# tracer 39 - ZOOC2
- PTRACERS_names(39)='ZOOC2',
- PTRACERS_units(39)='mmol C/m^3'
- PTRACERS_initialFile(39)='/nobackup/hbrix/ICBC/pickup_oliver/ZOO2P_x120.20000101.data',
-# PTRACERS_initialFile(39)='pickup_ptracers.0000000001.data',
  &

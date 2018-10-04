@@ -1,5 +1,5 @@
  &DARWIN_FORCING
- darwin_IronFile='/nobackup/hbrix/ICBC/mahowald2009_solubile_current_smooth_oce_mth-CS.bin',
+ darwin_IronFile='/nobackup/hbrix/ICBC/Mahowald2006_0.035dustdepos_clim_cube66_cubic_nonneg.bin',
  darwin_forcingPeriod=2629800.,
  darwin_forcingCycle=31557600.,
  darwin_seed=56,

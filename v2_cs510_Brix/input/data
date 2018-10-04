@@ -60,8 +60,8 @@ useAreaViscLength=.FALSE.,
 
 # Time stepping parameters
  &PARM03
- niter0=78912,
- endtime=189388800.,
+ niter0=131544,
+ endtime=220924800.,
  abEps=0.1,
  deltaT=1200.,
  cAdjFreq=0.,

@@ -21,8 +21,6 @@
 #2 new for checkpoint61m:
       SEAICEuseMetricTerms = .TRUE.,
       SEAICE_no_slip     = .TRUE.,
-      SEAICEadvScheme    = 7,
-      DIFF1              = 0.,
  &
 #
  &SEAICE_PARM02
