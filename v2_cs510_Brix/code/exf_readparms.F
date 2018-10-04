@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/exf_readparms.F,v 1.1 2018/08/28 14:59:05 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/exf_readparms.F,v 1.2 2018/10/04 05:16:14 dimitri Exp $
 C $Name:  $
 
 #include "EXF_OPTIONS.h"
@@ -909,19 +909,17 @@ C--   Derive other parameters:
 
 #ifdef ALLOW_CLIMSST_RELAXATION
 cgf warning before we overwrite tauThetaClimRelax/thetaClimFile:
-      IF ( doThetaClimRelax ) THEN
-        WRITE(msgBuf,'(2A)') '** WARNING ** EXF_READPARMS:',
-     &   ' useEXF implies that tauThetaClimRelax'
+      if ( (tauThetaClimRelax.NE.0.).AND.
+     &     (climsstTauRelax.NE.0.) ) then
+        WRITE(msgBuf,'(2A)') '***WARNING***',
+     &   ' useEXF implies that tauThetaClimRelax and '
         CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
      &       SQUEEZE_RIGHT , myThid)
-        WRITE(msgBuf,'(2A)') '** WARNING ** ',
-     &   ' and thetaClimFile from "data" file are overwritten'
+        WRITE(msgBuf,'(2A)') '***WARNING***',
+     &   'thetaClimFile from "data" file are overwritten'
         CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
      &       SQUEEZE_RIGHT , myThid)
-      ENDIF
-cgf overwrite tauThetaClimRelax/thetaClimFile:
-      tauThetaClimRelax=climsstTauRelax
-      thetaClimFile=' '
+      endif
 cgf overwrite doThetaClimRelax based on data.exf:
       if ( climsstTauRelax.NE.0.) then
         if (climsstfile.EQ.' ') then
@@ -938,23 +936,24 @@ cgf overwrite doThetaClimRelax based on data.exf:
       else
            doThetaClimRelax=.FALSE.
       endif
+cgf overwrite tauThetaClimRelax/thetaClimFile:
+      tauThetaClimRelax=climsstTauRelax
+      thetaClimFile=' '
 #endif
 
 #ifdef ALLOW_CLIMSSS_RELAXATION
 cgf warning before we overwrite tauSaltClimRelax/saltClimFile:
-      IF ( doSaltClimRelax ) THEN
-        WRITE(msgBuf,'(2A)') '** WARNING ** EXF_READPARMS:',
-     &   ' useEXF implies that tauSaltClimRelax'
+      if ( (tauSaltClimRelax.NE.0.).AND.
+     &     (climsssTauRelax.NE.0.) ) then
+        WRITE(msgBuf,'(2A)') '***WARNING***',
+     &   ' useEXF implies that tauSaltClimRelax and '
         CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
      &       SQUEEZE_RIGHT , myThid)
-        WRITE(msgBuf,'(2A)') '** WARNING ** ',
-     &   ' and saltClimFile from "data" file are overwritten'
+        WRITE(msgBuf,'(2A)') '***WARNING***',
+     &   'saltClimFile from "data" file are overwritten'
         CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
      &       SQUEEZE_RIGHT , myThid)
-      ENDIF
-cgf overwrite tauSaltClimRelax/saltClimFile:
-      tauSaltClimRelax=climsssTauRelax
-      saltClimFile=' '
+      endif
 cgf overwrite doSaltClimRelax based on data.exf:
       if ( climsssTauRelax.NE.0.) then
         if (climsssfile.EQ.' ') then
@@ -971,7 +970,13 @@ cgf overwrite doSaltClimRelax based on data.exf:
       else
            doSaltClimRelax=.FALSE.
       endif
+cgf overwrite tauSaltClimRelax/saltClimFile:
+      tauSaltClimRelax=climsssTauRelax
+      saltClimFile=' '
 #endif
+
+
+      CALL EXF_CHECK( myThid )
 
 c     Complete the start date specifications for the forcing
 c     fields to get a complete calendar date array.

@@ -19,8 +19,7 @@ C  dic_int1:
 C  0=use default 278.d-6
 C  1=use constant value - dic_pCO2, read in from data.dic
 C  2=read in from file
-C  3=interact with atmospheric box (use dic_pCO2 as initial atmos. value)
-
+C  3=interact with atmospheric box
 C !USES: ===============================================================
       IMPLICIT NONE
 #include "SIZE.h"
@@ -40,42 +39,37 @@ C !USES: ===============================================================
 #endif
 
 C !INPUT PARAMETERS: ===================================================
-C  istate               :: 0=initial call, 1=subsequent calls
+C  myThid               :: thread number
+C  myIter               :: current timestep
 C  myTime               :: current time
-C  myIter               :: current iteration number
-C  myThid               :: my Thread Id number
-      INTEGER istate
+C  istate               :: 0=initial call, 1=subsequent calls
+      INTEGER myIter, myThid, istate
       _RL myTime
-      INTEGER myIter, myThid
 
       LOGICAL  DIFFERENT_MULTIPLE
       EXTERNAL DIFFERENT_MULTIPLE
 
 C !LOCAL VARIABLES: ====================================================
-C   total_atmos_moles :: atmosphere total gas content (should be parameter)
-      _RL total_atmos_moles
-      INTEGER bi, bj, i,j,k
-      INTEGER ntim, iUnit
-
-      _RL total_flux
-      _RL total_carbon
-
-C for carbon budget ouput
-      _RL total_ocean_carbon_old
-      _RL total_atmos_carbon_old
-      _RL atpco2
-      _RL total_carbon_old, carbon_diff
-      _RL year_diff_ocean, year_diff_atmos, year_total
-      _RL start_diff_ocean, start_diff_atmos, start_total
+       INTEGER bi, bj, I,J,k
+       INTEGER ntim, iUnit
+c
+       _RL total_flux
+       _RL total_ocean_carbon_old
+       _RL total_atmos_carbon_old
+       _RL total_atmos_moles
+       _RL atpco2
+       _RL total_carbon_old, total_carbon, carbon_diff
+       _RL tmp
+       _RL year_diff_ocean, year_diff_atmos, year_total
+       _RL start_diff_ocean, start_diff_atmos, start_total
 C variables for reading CO2 input files
-      _RL tmp
       _RL aWght, bWght
-
+c
        CHARACTER*(MAX_LEN_FNAM) fn
        LOGICAL permCheckPoint
 CEOP
 
-C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 c if coupled to atmsopheric model, use the
 c Co2 value passed from the coupler
@@ -114,59 +108,67 @@ c default - set only once
        ENDDO
       endif
 
-C user specified value (or default = 278 ppm)- set only once
-      IF (dic_int1.EQ.1 .AND. istate.EQ.0 ) THEN
-        DO bj=myByLo(myThid),myByHi(myThid)
-         DO bi=myBxLo(myThid),myBxHi(myThid)
-          DO j=1-OLy,sNy+OLy
-           DO i=1-OLx,sNx+OLx
+c user specified value - set only once
+      if (dic_int1.eq.1.and.istate.eq.0) then
+       DO bj=myByLo(myThid),myByHi(myThid)
+        DO bi=myBxLo(myThid),myBxHi(myThid)
+
+         DO j=1-OLy,sNy+OLy
+          DO i=1-OLx,sNx+OLx
              AtmospCO2(i,j,bi,bj)=dic_pCO2
-           ENDDO
           ENDDO
          ENDDO
+
         ENDDO
-      ENDIF
+       ENDDO
+      endif
 
-C read from a file (note:
-C                   dic_int2=number entries to read
-C                   dic_int3=start timestep,
-C                   dic_int4=timestep between file entries)
-      IF (dic_int1.EQ.2) THEN
-C linearly interpolate between file entries
-        ntim=int((myIter-dic_int3)/dic_int4)+1
-        aWght = FLOAT(myIter-dic_int3)
-        bWght = FLOAT(dic_int4)
-        aWght = 0.5 _d 0 + aWght/bWght - FLOAT(ntim-1)
-        IF (aWght.GT.1. _d 0) THEN
-          ntim=ntim+1
-          aWght=aWght-1. _d 0
-        ENDIF
-        bWght = 1. _d 0 - aWght
-        tmp=co2atmos(ntim)*bWght+co2atmos(ntim+1)*aWght
-c       print*,'weights',ntim, aWght, bWght, tmp
+c read from a file (note:
+c                   dic_int2=number entries to read
+c                   dic_int3=start timestep,
+c                   dic_int4=timestep between file entries)
+      if (dic_int1.eq.2) then
+c linearly interpolate between file entries
+          ntim=int((myIter-dic_int3)/dic_int4)+1
+          aWght = FLOAT(myIter-dic_int3)
+          bWght = FLOAT(dic_int4)
+          aWght = 0.5 _d 0 + aWght/bWght - FLOAT(ntim-1)
+          if (aWght.gt.1. _d 0) then
+            ntim=ntim+1
+            aWght=aWght-1. _d 0
+          endif
+          bWght = 1. _d 0 - aWght
+          tmp=co2atmos(ntim)*bWght+co2atmos(ntim+1)*aWght
+c         print*,'weights',ntim, aWght, bWght, tmp
 
-        DO bj=myByLo(myThid),myByHi(myThid)
-         DO bi=myBxLo(myThid),myBxHi(myThid)
-           DO j=1-OLy,sNy+OLy
+          DO bj=myByLo(myThid),myByHi(myThid)
+           DO bi=myBxLo(myThid),myBxHi(myThid)
+
+            DO j=1-OLy,sNy+OLy
              DO i=1-OLx,sNx+OLx
                AtmospCO2(i,j,bi,bj)=tmp
              ENDDO
+            ENDDO
+
+c          print*,'AtmospCO2(20,20)',AtmospCO2(20,20,bi,bj)
+
            ENDDO
-         ENDDO
-        ENDDO
+          ENDDO
 
-      ENDIF
 
-C interactive atmosphere
-      IF (dic_int1.EQ.3) THEN
+      endif
+
+
+c interactive atmosphere
+      if (dic_int1.eq.3) then
 
 c      _BEGIN_MASTER(myThid)
 
-C Mass dry atmosphere = (5.1352+/-0.0003)d18 kg (Trenberth & Smith,
-C Journal of Climate 2005)
-C and Mean molecular mass air = 28.97 g/mol (NASA earth fact sheet)
+cMass dry atmosphere = (5.1352+/-0.0003)d18 kg (Trenberth & Smith,
+cJournal of Climate 2005)
+cand Mean molecular mass air = 28.97 g/mol (NASA earth fact sheet)
        total_atmos_moles= 1.77 _d 20
-C for 278ppmv we need total_atmos_carbon=4.9206e+16
+c for 278ppmv we need total_atmos_carbon=4.9206e+16
 
        if (istate.gt.0) then
         total_ocean_carbon_old=total_ocean_carbon
@@ -181,13 +183,20 @@ C for 278ppmv we need total_atmos_carbon=4.9206e+16
 
        DO bj=myByLo(myThid),myByHi(myThid)
         DO bi=myBxLo(myThid),myBxHi(myThid)
+         DO i=1,sNx
           DO j=1,sNy
-           DO i=1,sNx
-            IF (istate.gt.0) then
-              total_flux=total_flux
-     &                        + FluxCO2(i,j,bi,bj)*rA(i,j,bi,bj)
-     &                         *maskC(i,j,1,bi,bj)*dTtracerLev(1)
-            ENDIF
+            if (istate.gt.0) then
+              total_flux=total_flux+FluxCO2(i,j,bi,bj)*rA(i,j,bi,bj)*
+     &                        maskC(i,j,1,bi,bj)*dTtracerLev(1)
+            endif
+            DO k=1,nR
+c QQQQQ NOT SET UP FOR DARWIN YET QQQQQQQQQQQQ
+c             total_ocean_carbon= total_ocean_carbon+
+c    &              ( Ptracer(i,j,k,bi,bj,iDIC)
+c    &               +R_cp*Ptracer(i,j,k,bi,bj,iPO4) 
+c    &              ) * rA(i,j,bi,bj)*
+c    &                drF(k)*hFacC(i,j,k,bi,bj)
+            ENDDO
           ENDDO
          ENDDO
         ENDDO
@@ -196,46 +205,47 @@ C for 278ppmv we need total_atmos_carbon=4.9206e+16
        _GLOBAL_SUM_RL(total_flux,myThid)
        _GLOBAL_SUM_RL(total_ocean_carbon,myThid)
 
-       IF (istate.EQ.0) THEN
-C use value read in dic_init_fixed
+       if (istate.eq.0) then
+c use value read in dic_init_fixed
           total_atmos_carbon=total_atmos_carbon_ini
-       ELSE
-C calculate new atmos pCO2
+       else
+c calculate new atmos pCO2
           total_atmos_carbon=total_atmos_carbon - total_flux
-C write out if time for a new pickup
+c write out if time for a new pickup
           permCheckPoint = .FALSE.
           permCheckPoint =
      &      DIFFERENT_MULTIPLE(pChkptFreq,myTime,deltaTClock)
-          IF (permCheckPoint) THEN
+          if (permCheckPoint) then
             DO i = 1,MAX_LEN_FNAM
                 fn(i:i) = ' '
             ENDDO
             WRITE(fn,'(A,I10.10)') 'dic_atmos.',myIter
 C     Going to really do some IO. Make everyone except master thread wait.
             _BARRIER
-C write values to new pickup
+c write values to new pickup
 
             CALL MDSFINDUNIT( iUnit, myThid )
             open(iUnit,file=fn,status='new')
             write(iUnit,*) total_atmos_carbon, atpco2
             close(iUnit)
 
-        ENDIF
-       ENDIF
+          endif
+       endif
 
        atpco2=total_atmos_carbon/total_atmos_moles
 
 c     print*,'QQpCO2', total_atmos_carbon, atpco2, total_ocean_carbon,
 c    &                 total_flux
 
-C--    Set AtmospCO2 for next iteration:
        DO bj=myByLo(myThid),myByHi(myThid)
         DO bi=myBxLo(myThid),myBxHi(myThid)
+
          DO j=1-OLy,sNy+OLy
           DO i=1-OLx,sNx+OLx
-            AtmospCO2(i,j,bi,bj) = atpco2
+             AtmospCO2(i,j,bi,bj)=atpco2
           ENDDO
          ENDDO
+
         ENDDO
        ENDDO
 
@@ -283,10 +293,9 @@ c
 
 c     _END_MASTER(myThid)
 
-      ENDIF
+      endif
 
-#endif  /*USE_EXFCO2*/
-
+# endif  /*USE_EXFCO2*/
 #endif
 
       RETURN

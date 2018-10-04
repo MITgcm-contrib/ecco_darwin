@@ -1,11 +1,9 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/EXF_OPTIONS.h,v 1.1 2018/08/28 14:59:05 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/EXF_OPTIONS.h,v 1.2 2018/10/04 05:16:14 dimitri Exp $
 C $Name:  $
 
 #ifndef EXF_OPTIONS_H
 #define EXF_OPTIONS_H
 #include "PACKAGES_CONFIG.h"
-#include "AD_CONFIG.h"
-
 #ifdef ALLOW_EXF
 #define ALLOW_CARBON
 #define USE_EXFCO2
@@ -27,41 +25,35 @@ C
 c   pkg/exf CPP options:
 c   --------------------
 c
-c   > ( EXF_VERBOSE ) < replaced with run-time, logical parameter "exf_verbose".
+c   >>> EXF_VERBOSE <<<
+c       Do a bit more printout for the log file than usual.
 c
 c   >>> ALLOW_ATM_WIND <<<
 c       If defined, 10-m wind fields can be read-in from files.
-c
+c                                        
 c   >>> ALLOW_ATM_TEMP <<<
 c       If defined, atmospheric temperature and specific
 c       humidity fields can be read-in from files.
-c
+c                                        
 c   >>> ALLOW_DOWNWARD_RADIATION <<<
 c       If defined, downward long-wave and short-wave radiation
 c       can be read-in form files or computed from lwflux and swflux.
 c
-c   >>> ALLOW_ZENITHANGLE <<<
-c       If defined, ocean albedo varies with the zenith angle, and
-c       incoming fluxes at the top of the atmosphere are computed
-c
 c   >>> ALLOW_BULKFORMULAE <<<
 c       Allows the use of bulk formulae in order to estimate
-c       turbulent and radiative fluxes at the ocean surface.
+c       turbulent and radiative fluxes at the ocean's surface.
 c
 c   >>> EXF_READ_EVAP <<<
 c       If defined, evaporation fields are read-in, rather than
 c       computed from atmospheric state.
-c
+c                                        
 c   >>> ALLOW_RUNOFF <<<
 c       If defined, river and glacier runoff can be read-in from files.
 c
 c   >>> ATMOSPHERIC_LOADING <<<
 c       If defined, atmospheric pressure can be read-in from files.
-c   WARNING: this flag is set (define/undef) in CPP_OPTIONS.h
+c   WARNING: this flag is set (define/undef) in CPP_OPTIONS.h 
 c            and cannot be changed here (in EXF_OPTIONS)
-c
-c   >>> ICE_AREAMASK <<<
-c       If defined, fractional ice-covered area MASK can be read-in from files.
 c
 c   >>> ALLOW_CLIMSST_RELAXATION <<<
 c       Allow the relaxation to a monthly climatology of sea surface
@@ -73,6 +65,10 @@ c       salinity, e.g. the Levitus climatology.
 c
 c   >>> USE_EXF_INTERPOLATION <<<
 c       Allows specification of arbitrary Cartesian input grids.
+c
+c   >>> ALLOW_CARBON <<<
+c       If defined, atmospheric partial pressure of CO2
+c       can be read-in from files. define flag is set in DARWIN.h
 c
 c   ====================================================================
 c
@@ -138,6 +134,9 @@ c         |     |     |     |     | hflux, swflux, and evap.
 c
 c   ====================================================================
 
+C   Do more printout for the protocol file than usual.
+#undef EXF_VERBOSE
+
 C   Bulk formulae related flags.
 #define  ALLOW_ATM_TEMP
 #define  ALLOW_ATM_WIND
@@ -149,11 +148,6 @@ C   Bulk formulae related flags.
 # undef ALLOW_BULK_LARGEYEAGER04
 #endif
 
-C   Zenith Angle/Albedo related flags.
-#ifdef ALLOW_DOWNWARD_RADIATION
-# undef ALLOW_ZENITHANGLE
-#endif
-
 C   Relaxation to monthly climatologies.
 #define ALLOW_CLIMSST_RELAXATION
 #define ALLOW_CLIMSSS_RELAXATION
@@ -161,11 +155,6 @@ C   Relaxation to monthly climatologies.
 C   Use spatial interpolation to interpolate
 C   forcing files from input grid to model grid.
 #define USE_EXF_INTERPOLATION
-C   runoff is a special case for which one might want to bypass
-C   interpolation from an input grid
-#ifdef USE_EXF_INTERPOLATION
-# undef USE_NO_INTERP_RUNOFF
-#endif
 
 #define EXF_INTERP_USE_DYNALLOC
 #if ( defined (EXF_INTERP_USE_DYNALLOC) & defined (USING_THREADS) )

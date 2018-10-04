@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/CPP_OPTIONS.h,v 1.1 2018/08/28 14:59:04 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/CPP_OPTIONS.h,v 1.2 2018/10/04 05:16:14 dimitri Exp $
 C $Name:  $
 
 #ifndef CPP_OPTIONS_H
@@ -22,14 +22,14 @@ C o Include/exclude call to S/R CALC_DIFFUSIVITY
 C o Allow latitudinally varying BryanLewis79 vertical diffusivity
 #undef ALLOW_BL79_LAT_VARY
 
+C o Allow full 3D specification of vertical diffusivity
+#define ALLOW_3D_DIFFKR
+
 C o Include/exclude Implicit vertical advection code
 #undef INCLUDE_IMPLVERTADV_CODE
 
 C o Include/exclude AdamsBashforth-3rd-Order code
 #undef ALLOW_ADAMSBASHFORTH_3
-
-C o Include/exclude code for single reduction cg-solver
-#undef ALLOW_SRCG
 
 C o Include/exclude nonHydrostatic code
 #undef ALLOW_NONHYDROSTATIC
@@ -37,13 +37,10 @@ C o Include/exclude nonHydrostatic code
 C o Include pressure loading code
 #define ATMOSPHERIC_LOADING
 
-C o exclude/allow external forcing-fields load
+C o exclude/allow external forcing-fields load 
 C   this allows to read & do simple linear time interpolation of oceanic
 C   forcing fields, if no specific pkg (e.g., EXF) is used to compute them.
 #undef EXCLUDE_FFIELDS_LOAD
-
-C o Include/exclude GM-like eddy stress in momentum code
-#undef ALLOW_EDDYPSI
 
 C o Use "Exact Convervation" of fluid in Free-Surface formulation
 C   so that d/dt(eta) is exactly equal to - Div.Transport
@@ -52,10 +49,6 @@ C   so that d/dt(eta) is exactly equal to - Div.Transport
 C o Allow the use of Non-Linear Free-Surface formulation
 C   this implies that surface thickness (hFactors) vary with time
 #define NONLIN_FRSURF
-
-C o Allow mass source or sink of Fluid in the interior
-C   (3-D generalisation of oceanic real-fresh water flux)
-#undef ALLOW_ADDFLUID
 
 C o ALLOW isotropic scaling of harmonic and bi-harmonic terms when
 C   using an locally isotropic spherical grid with (dlambda) x (dphi*cos(phi))
@@ -102,16 +95,6 @@ cph     defined (ALLOW_ECCO) || \
 cph     defined (ALLOW_EXF))
 cph# include "ECCO_CPPOPTIONS.h"
 cph#endif
-
-C o Allow full 3D specification of vertical diffusivity
-#ifdef ALLOW_DIFFKR_CONTROL
-C - Need to be defined if using DIFFKR_CONTROL
-C   (alternatively, could have put this in ECCO_CPPOPTIONS)
-#define ALLOW_3D_DIFFKR
-#else
-C - otherwise, can be turned on or off hereafter:
-#define ALLOW_3D_DIFFKR
-#endif /* ALLOW_DIFFKR_CONTROL */
 
 #endif /* CPP_OPTIONS_H */
 

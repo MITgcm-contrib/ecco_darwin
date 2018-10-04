@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/ptracers_advection.F,v 1.1 2018/08/28 14:59:05 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/ptracers_advection.F,v 1.2 2018/10/04 05:16:15 dimitri Exp $
 C $Name:  $
 
 #include "PTRACERS_OPTIONS.h"
@@ -65,7 +65,7 @@ C Loop over tracers
       DO iTracer=1,PTRACERS_numInUse
 cBX-a
 c check if tracers values for DIC and ALK are > 3000 and DIC < 600 and correct if needed
-          IF ( iTracer == 32 .OR. iTracer == 36) THEN
+          IF ( iTracer == 27 .OR. iTracer == 31) THEN
                    DO k=1,Nr
                       DO j = 1,sNy
                          DO i = 1,sNx+1
@@ -75,7 +75,7 @@ c check if tracers values for DIC and ALK are > 3000 and DIC < 600 and correct i
                       ENDDO
                    ENDDO
           ENDIF
-          IF ( iTracer == 32) THEN
+          IF ( iTracer == 27) THEN
                    DO k=1,Nr
                       DO j = 1,sNy
                          DO i = 1,sNx+1
@@ -133,6 +133,7 @@ CADJ &      = comlev1_bibj_ptracers, key=iptrkey, byte=isbyte
 #else /* PTRACERS_ALLOW_DYN_STATE */
        IF ( PTRACERS_MultiDimAdv(iTracer) ) THEN
 #endif /* PTRACERS_ALLOW_DYN_STATE */
+
             CALL GAD_ADVECTION(
      I                        PTRACERS_ImplVertAdv(iTracer),
      I                        PTRACERS_advScheme(iTracer),

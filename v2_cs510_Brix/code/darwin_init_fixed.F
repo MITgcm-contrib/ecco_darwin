@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/darwin_init_fixed.F,v 1.1 2018/08/28 14:59:05 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/darwin_init_fixed.F,v 1.2 2018/10/04 05:16:14 dimitri Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -82,8 +82,8 @@ c for chl
       chlpmin=16. _d 0                      ! mg Chl/mmolP
       istar=90. _d 0                        ! w/m2
 c iron related
-CBX   alpfe=     0.04 _d 0                  !solubility of Fe dust
-      alpfe=     1.00 _d 0                  !solubility of Fe dust
+      alpfe=     0.04 _d 0                  !solubility of Fe dust
+cBX      alpfe=     1.00 _d 0                  !solubility of Fe dust
       scav=      0.4 _d 0/(360. _d 0*86400. _d 0) !iron chem scavenging rate (s-1)
       ligand_tot=1. _d -3                   !total ligand (uM)
       ligand_stab=2. _d 5                   !ligand stability rate ratio
@@ -111,7 +111,7 @@ c depth for denitrification to start
 c critical oxygen for O2/NO3 remineralization
       O2crit = 6.0 _d 0    !(Lipschultz et al 1990, DSR 37, 1513-1541)
 c ratio of no3 to p in denitrification process
-      denit_np = 120.0 _d 0
+      denit_np = 120.0 _d 0 
 
 c
 c oxidation rates for ammonium and nitrite
@@ -203,6 +203,7 @@ c set temperature function
        tempnorm = 0.3 _d 0  ! 1. _d 0
        tempdecay = 4. _d 0
 c set phosphate half stauration constants .. small or big organism
+cswd   SmallPsat=0.015 _d 0
        SmallPsat=0.015 _d 0
        BigPsat=0.035 _d 0
        ProcPsat=0.01 _d 0
@@ -303,11 +304,11 @@ c z* = wx_sink/Kremin_X
 c for e-folding length scale, z* = 300 m
 c choose Kremin_X = 1/30 day-1, wx_sink = 10 m day-1
 cswd     Kpremin_P = 1.0 _d 0/(50.0 _d 0*pday)
-         Kpremin_P = 2.0 _d 0/(50.0 _d 0*pday)
+         Kpremin_P =2.0 _d 0 *  1.0 _d 0/(50.0 _d 0*pday)
          Kpremin_N = Kpremin_P
          Kpremin_Fe = Kpremin_P
 cswd     Kpremin_Si = 1.0 _d 0/(300.0 _d 0*pday)
-         Kpremin_Si = 2.0 _d 0/(300.0 _d 0*pday)
+         Kpremin_Si =2 _d 0 *  1.0 _d 0/(300.0 _d 0*pday)
 c sinking rate for particulate matter (m/s)
          wp_sink = 10.0 _d 0/pday
          wn_sink = wp_sink

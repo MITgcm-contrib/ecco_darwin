@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/DIAGNOSTICS_SIZE.h,v 1.1 2018/08/28 14:59:04 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/DIAGNOSTICS_SIZE.h,v 1.2 2018/10/04 05:16:14 dimitri Exp $
 C $Name:  $
 
 
@@ -8,21 +8,21 @@ C     ndiagMax   :: maximum total number of available diagnostics
 C     numlists   :: maximum number of diagnostics list (in data.diagnostics)
 C     numperlist :: maximum number of active diagnostics per list (data.diagnostics)
 C     numLevels  :: maximum number of levels to write    (data.diagnostics)
-C     numDiags   :: maximum size of the storage array for active 2D/3D diagnostics
+C     numdiags   :: maximum size of the storage array for active 2D/3D diagnostics
 C     nRegions   :: maximum number of regions (statistics-diagnostics)
 C     sizRegMsk  :: maximum size of the regional-mask (statistics-diagnostics)
 C     nStats     :: maximum number of statistics (e.g.: aver,min,max ...)
 C     diagSt_size:: maximum size of the storage array for statistics-diagnostics
-C Note : may need to increase "numDiags" when using several 2D/3D diagnostics,
+C Note : may need to increase "numdiags" when using several 2D/3D diagnostics,
 C  and "diagSt_size" (statistics-diags) since values here are deliberately small.
       INTEGER    ndiagMax
       INTEGER    numlists, numperlist, numLevels
-      INTEGER    numDiags
+      INTEGER    numdiags
       INTEGER    nRegions, sizRegMsk, nStats
       INTEGER    diagSt_size
       PARAMETER( ndiagMax = 1500 )
-      PARAMETER( numlists = 90, numperlist = 90, numLevels=Nr )
-      PARAMETER( numDiags = 25+80*Nr )
+      PARAMETER( numlists = 54, numperlist = 50, numLevels=Nr )
+      PARAMETER( numdiags = 25+80*Nr )
       PARAMETER( nRegions = 0 , sizRegMsk = 1 , nStats = 4 )
       PARAMETER( diagSt_size = 10*Nr )
 

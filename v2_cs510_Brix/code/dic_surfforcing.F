@@ -17,8 +17,8 @@ C !INTERFACE: ==========================================================
      I           myIter,myTime,myThid)
 
 C !DESCRIPTION:
-C  Calculate the carbon air-sea flux terms
-C  following external_forcing_dic.F (OCMIP run) from Mick
+C  Calculate the carbon air-sea flux terms              
+C  following external_forcing_dic.F (OCMIP run) from Mick            
 
 C !USES: ===============================================================
       IMPLICIT NONE
@@ -54,7 +54,7 @@ c GDC                   :: tendency due to air-sea exchange
 
 
 C !LOCAL VARIABLES: ====================================================
-       INTEGER i,j, kLev, it
+       INTEGER I,J, kLev, it
 C Number of iterations for pCO2 solvers...
 C Solubility relation coefficients
       _RL SchmidtNoDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -62,12 +62,12 @@ C Solubility relation coefficients
       _RL Kwexch(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL pisvel(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 C local variables for carbon chem
+      _RL surfdic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surfalk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surfphos(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surfsi(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL surftemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surfsalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL surfdic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL surftemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #ifdef ALLOW_OLD_VIRTUALFLUX
       _RL VirtualFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #endif
@@ -87,8 +87,6 @@ c           AtmospCO2(i,j,bi,bj)=278.0 _d -6
 c        ENDDO
 c       ENDDO
 c#endif
-
-
 C =================================================================
 C determine inorganic carbon chem coefficients
         DO j=jmin,jmax
@@ -110,8 +108,8 @@ c put bounds on tracers so pH solver doesn't blow up
      &           max(4. _d 0, min(50. _d 0, salt(i,j,kLev,bi,bj)))
              surftemp(i,j) =
      &            max(-4. _d 0, min(39. _d 0, theta(i,j,kLev,bi,bj)))
-          ENDDO
          ENDDO
+        ENDDO
 
          CALL CARBON_COEFFS(
      I                       surftemp,surfsalt,
@@ -135,11 +133,7 @@ C Pre-compute part of exchange coefficient: pisvel*(1-fice)
 C Schmidt number is accounted for later
 #ifdef USE_EXFWIND
 cBX              pisvel(i,j)=0.337 _d 0 *wspeed(i,j,bi,bj)**2/3.6 _d 5
-cBX linear piston velocity after Krakauer et al. (2006), Eq. 3
-cBX  using <k> = 20, n=0.5, and <u^n> = 2.6747 (as determined from 2010
-cBX  EXFwspee field from cube92 run)
-              pisvel(i,j)=20 _d 0 *(wspeed(i,j,bi,bj)**0.5
-     &              /2.6747 _d 0) /3.6 _d 5
+              pisvel(i,j)=0.34822 _d 0 *wspeed(i,j,bi,bj)**2/3.6 _d 5
 #else
               pisvel(i,j)=0.337 _d 0 *wind(i,j,bi,bj)**2/3.6 _d 5
 #endif
@@ -175,6 +169,7 @@ C$TAF LOOP = parallel
         ENDDO
        ENDDO
 
+
        DO j=jmin,jmax
         DO i=imin,imax
 
@@ -189,23 +184,24 @@ C calculate SCHMIDT NO. for CO2
 
 C Determine surface flux (FDIC)
 C first correct pCO2at for surface atmos pressure
-              pCO2sat(i,j) =
+              pCO2sat(i,j) = 
      &          AtmosP(i,j,bi,bj)*AtmospCO2(i,j,bi,bj)
 
 C then account for Schmidt number
               Kwexch(i,j) = Kwexch_Pre(i,j,bi,bj)
      &                    / sqrt(SchmidtNoDIC(i,j)/660.0 _d 0)
 
+
 #ifdef WATERVAP_BUG
 C Calculate flux in terms of DIC units using K0, solubility
 C Flux = Vp * ([CO2sat] - [CO2])
 C CO2sat = K0*pCO2atmos*P/P0
 C Converting pCO2 to [CO2] using ff, as in CALC_PCO2
-              FluxCO2(i,j,bi,bj) =
-     &         Kwexch(i,j)*(
-     &         ak0(i,j,bi,bj)*pCO2sat(i,j) -
-     &         ff(i,j,bi,bj)*pCO2(i,j,bi,bj)
-     &         )
+              FluxCO2(i,j,bi,bj) = 
+     &         Kwexch(i,j)*( 
+     &         ak0(i,j,bi,bj)*pCO2sat(i,j) - 
+     &         ff(i,j,bi,bj)*pCO2(i,j,bi,bj) 
+     &         ) 
 #else
 C Corrected by Val Bennington Nov 2010 per G.A. McKinley's finding
 C of error in application of water vapor correction
@@ -247,11 +243,11 @@ c
           ENDDO
          ENDDO
 
-C update tendency
+C update tendency      
          DO j=jmin,jmax
           DO i=imin,imax
            GDC(i,j)= recip_drF(kLev)*recip_hFacC(i,j,kLev,bi,bj)
-     &              *(FluxCO2(i,j,bi,bj)
+     &              *(FluxCO2(i,j,bi,bj) 
 #ifdef ALLOW_OLD_VIRTUALFLUX
      &              + VirtualFlux(i,j)
 #endif

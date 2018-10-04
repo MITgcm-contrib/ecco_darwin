@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/PTRACERS_SIZE.h,v 1.1 2018/08/28 14:59:05 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/PTRACERS_SIZE.h,v 1.2 2018/10/04 05:16:14 dimitri Exp $
 C $Name:  $
 
 #ifdef ALLOW_PTRACERS
@@ -16,7 +16,7 @@ C  and is set here (default 1)
 C
 C     Number of tracers
       INTEGER PTRACERS_num
-      PARAMETER(PTRACERS_num = 39 )
+      PARAMETER(PTRACERS_num = 34 )
 
 #ifdef ALLOW_AUTODIFF_TAMC
       INTEGER    iptrkey
