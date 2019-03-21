@@ -33,7 +33,7 @@ ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
 ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
 ln -sf /nobackup/hzhang1/obs/input/tile* .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/w*data .
-ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
+ln -sf /nobackup/hzhang1/obs/optim42/xx_* .
 ln -sf /nobackup/hbrix/ICBC/pco2a_blended_* .
 ln -sf pco2a_blended_2012 pco2a_blended_2013
 ln -sf pco2a_blended_2012 pco2a_blended_2014
@@ -48,7 +48,7 @@ ln -sf /nobackup/dcarrol2/forcing/iron_dust/llc270_Mahowald_2009_soluble_iron_du
 qsub job_llc270_fdH
 
 ==============
-# Instructions for running ECCO-Darwin Version 4 for 1992-2015 period
+# Instructions for running ECCO-Darwin Version 4 for 1992-2018 period
 cd ..
 mkdir run
 cd run
@@ -59,7 +59,7 @@ ln -sf /nobackup/hzhang1/obs/input/pickup* .
 ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
 ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
 ln -sf /nobackup/hzhang1/obs/input/tile* .
-ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
+ln -sf /nobackup/hzhang1/obs/optim42/xx_* .
 cp -sf /nobackup/hzhang1/pub/llc270_FWD/input/* .
 cp -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
@@ -73,7 +73,6 @@ ln -sf /nobackup/dcarrol2/temp/pickup_llc270_dic.gf_cg1.0000078912.data pickup_d
 ln -sf /nobackup/dcarrol2/temp/pickup_dic.0000210384.meta pickup_dic.0000000001.meta
 ln -sf /nobackup/dcarrol2/forcing/apCO2/apCO2* .
 ln -sf /nobackup/dcarrol2/forcing/iron_dust/llc270_Mahowald_2009_soluble_iron_dust.bin
+ln -sf /nobackup/dcarrol2/adjustment/xx* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
-
-
