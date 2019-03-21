@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_generate_phyto.F,v 1.1 2017/12/01 19:02:11 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_generate_phyto.F,v 1.2 2019/03/21 06:02:45 dimitri Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -483,7 +483,7 @@ c set Si:P
         end if
 cswd %%%%%%%%%%% OCMIP STYLE for other phyto (not diatom or prochl)
         if (np.eq.2.or.np.eq.3.or.np.eq.8) then
-          R_PICPOC(np) = 0.04 _d 0
+          R_PICPOC(np) = 0.041886 _d 0
 cBX GF optizm run ag4         R_PICPOC(np) = 0.133 _d 0
         endif
 c set N:P and iron requirement according to diazotroph status

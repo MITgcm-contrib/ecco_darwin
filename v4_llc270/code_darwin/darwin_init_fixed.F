@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.3 2018/03/26 23:47:31 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.4 2019/03/21 06:02:45 dimitri Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -82,8 +82,8 @@ c for chl
       istar=90. _d 0                        ! w/m2
 c iron related
 CDC   alpfe=     0.04 _d 0                  !solubility of Fe dust
-      alpfe=     0.80 _d 0                  !solubility of Fe dust
-      scav=      0.4 _d 0/(360. _d 0*86400. _d 0) !iron chem scavenging rate (s-1)
+      alpfe=     0.92674 _d 0                  !solubility of Fe dust
+      scav=      0.40 _d 0/(360. _d 0*86400. _d 0) !iron chem scavenging rate (s-1)
       ligand_tot=1. _d -3                   !total ligand (uM)
       ligand_stab=2. _d 5                   !ligand stability rate ratio
 cswd  freefemax = .4 _d -3                  ! max free fe
@@ -99,7 +99,7 @@ c                                            mmol POC/m3/s
 #endif
 #ifdef PART_SCAV
 cswd  scav_rat=0.005 _d 0 /(86400.0 _d 0)
-      scav_rat= 3. _d 0 * 0.005 _d 0 /(86400.0 _d 0)
+      scav_rat= 9.3372 _d 0 * 0.005 _d 0 /(86400.0 _d 0)
       scav_inter=0.079 _d 0
       scav_exp=0.58 _d 0
 #endif
@@ -123,8 +123,8 @@ c critical light level (muEin/m2/s) after which oxidation starts
 c
 #ifndef GEIDER
 c set growth days ...small or big organism?
-       Smallgrow = .7 _d 0
-       Biggrow   = .4 _d 0
+       Smallgrow = 0.69178 _d 0
+       Biggrow   = 0.44 _d 0
        Smallgrowrange = 0. _d 0
        Biggrowrange = 0. _d 0
        diaz_growfac = 2. _d 0
@@ -157,8 +157,8 @@ cswd   smallkinhib =     6.0 _d 0   ! 2.0 _d 0
 #ifdef  GEIDER
 c for Pcm -- should be growth rates, but using old variables
 c note these are in terms of days - converted to 1/s later
-       Smallgrow = .7 _d 0
-       Biggrow   = .4 _d 0
+       Smallgrow = 0.69178 _d 0
+       Biggrow   = 0.44 _d 0
        Smallgrowrange = 0. _d 0
        Biggrowrange = 0. _d 0
        diaz_growfac = 2. _d 0
@@ -241,9 +241,9 @@ c set grazing effeciency
        GrazeEffsmall=0.6 _d 0
        GrazeEffbig  =0.2 _d 0
 c set grazing of diatom factor
-       diatomgraz = 0.8 _d 0
+       diatomgraz = 0.9 _d 0
        coccograz = 0.7 _d 0
-       olargegraz = 0.9 _d 0
+       olargegraz = 0.7 _d 0
 #else
 c grazing hlaf saturation
 c      kgrazesat = 0.1 _d 0
@@ -267,7 +267,7 @@ c set palatibility
        palatlo = 0.2 _d 0
 c set palatibilty diatom factor
 cswd   diatomgraz = 0.7 _d 0
-       diatomgraz = 0.85 _d 0
+       diatomgraz = 0.84573 _d 0
 cswd   coccograz = 0.6 _d 0
        coccograz = 0.85 _d 0
 cswd   olargegraz = 1.0 _d 0

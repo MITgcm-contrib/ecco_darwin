@@ -132,12 +132,12 @@ C       average AtmosP is about 1 Atm.
 C Pre-compute part of exchange coefficient: pisvel*(1-fice)
 C Schmidt number is accounted for later
 #ifdef USE_EXFWIND
-cBX              pisvel(i,j)=0.337 _d 0 *wspeed(i,j,bi,bj)**2/3.6 _d 5
+                pisvel(i,j)=0.337 _d 0 *wspeed(i,j,bi,bj)**2/3.6 _d 5
 cBX linear piston velocity after Krakauer et al. (2006), Eq. 3
 cBX  using <k> = 20, n=0.5, and <u^n> = 2.6747 (as determined from 2010
 cBX  EXFwspee field from cube92 run)
-              pisvel(i,j)=20 _d 0 *(wspeed(i,j,bi,bj)**0.5
-     &              /2.6747 _d 0) /3.6 _d 5
+cDc              pisvel(i,j)=20 _d 0 *(wspeed(i,j,bi,bj)**0.5
+cDc     &              /2.6747 _d 0) /3.6 _d 5
 #else
               pisvel(i,j)=0.337 _d 0 *wind(i,j,bi,bj)**2/3.6 _d 5
 #endif

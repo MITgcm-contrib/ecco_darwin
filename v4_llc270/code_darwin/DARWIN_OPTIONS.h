@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.2 2018/03/26 23:47:31 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.3 2019/03/21 06:02:45 dimitri Exp $
 C $Name:  $
 
 #ifndef DARWIN_OPTIONS_H
@@ -100,7 +100,7 @@ c can use either denit_relax or allow_denit but not both
 #undef DENIT_RELAX
 #endif
 
-#define DAR_DIAG_CHL
+#ifdef DAR_DIAG_CHL
 #define ALLOW_PAR_DAY
 #endif
 
