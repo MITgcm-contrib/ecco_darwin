@@ -1,5 +1,6 @@
-# Build executable for Hong Zhang's forward-only llc270 optimized solution
-cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_code
+==============
+# Build executable for forward-only llc270 iteration 42 optimized solution
+cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270
 cd MITgcm
 mkdir build
@@ -12,61 +13,49 @@ module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mp
 make depend
 make -j 16
 
+
+==============
 # Instructions for running forward-only llc270 optimized solution (1992-2015)
 cd ..
 mkdir run
 cd run
+mkdir diags
 ln -sf ../build/mitgcmuv .
-cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
-ln -sf /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
+ln -sf /nobackupp2/dmenemen/llc_270/iter42/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/hzhang1/obs/input/pickup* .
-ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
-ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
-ln -sf /nobackup/hzhang1/obs/input/tile* .
-ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/* .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/* .
-# modify job_llc270_fdH as needed
-qsub job_llc270_fdH
-
-==============
-# Instructions for running forward-only llc270 optimized solution (2001-2015)
-cd ..
-mkdir run
-cd run
-ln -sf ../build/mitgcmuv .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
-ln -sf /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
-ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/hzhang1/obs/input/pickup* .
-ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
-ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
-ln -sf /nobackup/hzhang1/obs/input/tile* .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/w*data .
-ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
 
 
 ==============
-# Instructions for running forward-only llc270 optimized solution (2009-2015)
-cd ..
-mkdir run
-cd run
-ln -sf ../build/mitgcmuv .
-cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
-cp data_2009 data
-cp data.ctrl_2009 data.ctrl
-ln -sf /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
-ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/20090101/pickup* .
-ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
-ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
-ln -sf /nobackup/hzhang1/obs/input/tile* .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/w*data .
-ln -sf /nobackup/hzhang1/obs/optim33/xx_* .
-# modify job_llc270_fdH as needed
-qsub job_llc270_fdH
-
-
+# Creating input directory for llc270 iteration 42
+mkdir /nobackupp2/dmenemen/llc_270
+mkdir /nobackupp2/dmenemen/llc_270/iter42
+mkdir /nobackupp2/dmenemen/llc_270/iter42/input
+cd /nobackupp2/dmenemen/llc_270/iter42/input
+cp /nobackup/hzhang1/obs/input/tile* .
+cp /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
+cp /nobackup/hzhang1/obs/pri_err/smooth* .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup* .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wkapgmFld.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wkaprediFld.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wdiffkrFld.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wprecip.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wlwdown.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wswdown.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/waqh.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/watemp.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wuwind.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/wvwind.data .
+cp /nobackup/hzhang1/obs/optim42/xx_kapgm.0000000042.data .
+cp /nobackup/hzhang1/obs/optim42/xx_kapredi.0000000042.data .
+cp /nobackup/hzhang1/obs/optim42/xx_diffkr.0000000042.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_precip.0000000042.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_lwdown.0000000042.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_swdown.0000000042.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_aqh.0000000042.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_atemp.0000000042.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_uwind.0000000042.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_vwind.0000000042.data .
+cp /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .

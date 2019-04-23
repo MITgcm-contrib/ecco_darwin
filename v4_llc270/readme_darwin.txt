@@ -1,7 +1,8 @@
+==============
 # Build executable for ECCO-Darwin version 4
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
-cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270
+cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
 cd MITgcm/pkg
 ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
 cd ..
@@ -15,32 +16,30 @@ module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mp
 make depend
 make -j 16
 
+
 ==============
 # Instructions for running ECCO-Darwin Version 4 for 1992-2018 period
 cd ..
 mkdir run
 cd run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
+ln -sf /nobackupp2/dmenemen/llc_270/iter42/input/* .
+ln -sf /nobackupp2/dmenemen/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/hzhang1/obs/input/pickup* .
-ln -sf /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
-ln -sf /nobackup/hzhang1/obs/pri_err/smooth* .
-ln -sf /nobackup/hzhang1/obs/input/tile* .
-ln -sf /nobackup/hzhang1/obs/optim42/xx_* .
-cp -sf /nobackup/hzhang1/pub/llc270_FWD/input/* .
-cp -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/* .
-ln -sf ~dmenemen/CMS/run_template_cg1/darwin* .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup.0000000001.meta pickup.0000000001.meta
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup.0000000001.data pickup.0000000001.data
-ln -sf /nobackup/dcarrol2/temp/pickup_llc270_ptracers.gf_cg1.0000078912.data pickup_ptracers.0000000001.data
-ln -sf /nobackup/dcarrol2/temp/pickup_ptracers.0000210384.meta pickup_ptracers.0000000001.meta 
-ln -sf /nobackup/dcarrol2/temp/pickup_llc270_dic.gf_cg1.0000078912.data pickup_dic.0000000001.data
-ln -sf /nobackup/dcarrol2/temp/pickup_dic.0000210384.meta pickup_dic.0000000001.meta
-ln -sf /nobackup/dcarrol2/forcing/apCO2/apCO2* .
-ln -sf /nobackup/dcarrol2/forcing/iron_dust/llc270_Mahowald_2009_soluble_iron_dust.bin
-ln -sf /nobackup/dcarrol2/adjustment/xx* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
+
+
+==============
+# Creating input directory for ECCO-Darwin version 4
+mkdir /nobackupp2/dmenemen/llc_270/ecco_darwin_v4
+mkdir /nobackupp2/dmenemen/llc_270/ecco_darwin_v4/input
+cd /nobackupp2/dmenemen/llc_270/ecco_darwin_v4/input
+cp /nobackup/dcarrol2/temp/pickup_ptracers_optimized.0000000001.data pickup_ptracers.0000000001.data
+cp /nobackup/dcarrol2/temp/pickup_dic_optimized.0000000001.data pickup_dic.0000000001.data
+cp /nobackup/dcarrol2/temp/pickup_ptracers.0000210384.meta pickup_ptracers.0000000001.meta 
+cp /nobackup/dcarrol2/temp/pickup_dic.0000210384.meta pickup_dic.0000000001.meta
+cp /nobackup/dcarrol2/forcing/apCO2/* .
+cp /nobackup/dcarrol2/temp/llc270_Mahowald_2009_soluble_iron_dust.bin .
