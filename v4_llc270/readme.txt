@@ -37,7 +37,10 @@ cd /nobackupp2/dmenemen/llc_270/iter42/input
 cp /nobackup/hzhang1/obs/input/tile* .
 cp /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
 cp /nobackup/hzhang1/obs/pri_err/smooth* .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup* .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup*meta .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup.0000000001.data_it42 pickup.0000000001.data
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup_seaice.0000000001.data .
+cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup_ggl90.0000000001.data .
 cp /nobackup/hzhang1/pub/llc270_FWD/input/wkapgmFld.data .
 cp /nobackup/hzhang1/pub/llc270_FWD/input/wkaprediFld.data .
 cp /nobackup/hzhang1/pub/llc270_FWD/input/wdiffkrFld.data .
