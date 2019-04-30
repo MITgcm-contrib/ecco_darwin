@@ -21,7 +21,7 @@ mkdir run
 cd run
 mkdir diags
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp2/dmenemen/llc_270/iter42/input/* .
+ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
 # modify job_llc270_fdH as needed
@@ -30,10 +30,8 @@ qsub job_llc270_fdH
 
 ==============
 # Creating input directory for llc270 iteration 42
-mkdir /nobackupp2/dmenemen/llc_270
-mkdir /nobackupp2/dmenemen/llc_270/iter42
-mkdir /nobackupp2/dmenemen/llc_270/iter42/input
-cd /nobackupp2/dmenemen/llc_270/iter42/input
+mkdir /nobackupp2/dmenemen/public/llc_270/iter42/input
+cd /nobackupp2/dmenemen/public/llc_270/iter42/input
 cp /nobackup/hzhang1/obs/input/tile* .
 cp /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
 cp /nobackup/hzhang1/obs/pri_err/smooth* .

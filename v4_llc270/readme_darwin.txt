@@ -23,8 +23,8 @@ cd ..
 mkdir run
 cd run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp2/dmenemen/llc_270/iter42/input/* .
-ln -sf /nobackupp2/dmenemen/llc_270/ecco_darwin_v4/input/* .
+ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
+ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/* .
@@ -34,9 +34,8 @@ qsub job_llc270_fdH
 
 ==============
 # Creating input directory for ECCO-Darwin version 4
-mkdir /nobackupp2/dmenemen/llc_270/ecco_darwin_v4
-mkdir /nobackupp2/dmenemen/llc_270/ecco_darwin_v4/input
-cd /nobackupp2/dmenemen/llc_270/ecco_darwin_v4/input
+mkdir /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input
+cd /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input
 cp /nobackup/dcarrol2/temp/pickup_ptracers_optimized.0000000001.data pickup_ptracers.0000000001.data
 cp /nobackup/dcarrol2/temp/pickup_dic_optimized.0000000001.data pickup_dic.0000000001.data
 cp /nobackup/dcarrol2/temp/pickup_ptracers.0000210384.meta pickup_ptracers.0000000001.meta 

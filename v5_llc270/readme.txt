@@ -21,45 +21,9 @@ mkdir run
 cd run
 mkdir diags
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp2/dmenemen/llc_270/iter42/input/* .
+ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/dcarrol2/LOAC/write_bin/v1.4.0/jra55_do_runoff_llc270_* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
-
-
-==============
-# Creating input directory for llc270 iteration 42
-mkdir /nobackupp2/dmenemen/llc_270
-mkdir /nobackupp2/dmenemen/llc_270/iter42
-mkdir /nobackupp2/dmenemen/llc_270/iter42/input
-cd /nobackupp2/dmenemen/llc_270/iter42/input
-cp /nobackup/hzhang1/obs/input/tile* .
-cp /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
-cp /nobackup/hzhang1/obs/pri_err/smooth* .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup*meta .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup.0000000001.data_it42 pickup.0000000001.data
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup_seaice.0000000001.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup_ggl90.0000000001.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wkapgmFld.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wkaprediFld.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wdiffkrFld.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wprecip.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wlwdown.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wswdown.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/waqh.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/watemp.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wuwind.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/wvwind.data .
-cp /nobackup/hzhang1/obs/optim42/xx_kapgm.0000000042.data .
-cp /nobackup/hzhang1/obs/optim42/xx_kapredi.0000000042.data .
-cp /nobackup/hzhang1/obs/optim42/xx_diffkr.0000000042.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_precip.0000000042.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_lwdown.0000000042.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_swdown.0000000042.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_aqh.0000000042.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_atemp.0000000042.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_uwind.0000000042.data .
-cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2018/xx_vwind.0000000042.data .
-cp /nobackup/hzhang1/obs/input/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin .
