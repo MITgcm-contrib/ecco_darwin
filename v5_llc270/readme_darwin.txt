@@ -26,6 +26,7 @@ ln -sf ../build/mitgcmuv .
 ln -sf /nobackupp2/dmenemen/llc_270/iter42/input/* .
 ln -sf /nobackupp2/dmenemen/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
+ln -sf /nobackup/dcarrol2/LOAC/write_bin/v1.4.0/jra55_do_runoff_llc270_* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/* .
 cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/* .
 # modify job_llc270_fdH as needed
