@@ -8,8 +8,8 @@ cd build
 module purge
 module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 ../tools/genmake2 -of \
-    ../../MITgcm_contrib/ecco_darwin/v4_llc270/code/linux_amd64_ifort+mpi_ice_nas \
-    -mo ../../MITgcm_contrib/ecco_darwin/v4_llc270/code
+    ../../MITgcm_contrib/ecco_darwin/v5_llc270/code/linux_amd64_ifort+mpi_ice_nas \
+    -mo ../../MITgcm_contrib/ecco_darwin/v5_llc270/code
 make depend
 make -j 16
 
