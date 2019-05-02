@@ -82,7 +82,6 @@
 # Time stepping parameters
  &PARM03
  nIter0=1,
- pickupSuff='0000000001',
  endtime=852055200,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
