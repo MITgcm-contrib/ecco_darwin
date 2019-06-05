@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.3 2019/03/21 06:02:45 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.4 2019/06/05 02:36:33 dimitri Exp $
 C $Name:  $
 
 #ifndef DARWIN_OPTIONS_H
@@ -65,6 +65,10 @@ C (not recommended)
 C define this to turn of reading of phyto backscattering spectra
 C and revert to fixed backscat ratios darwin_bbphy(nabp) set in data.darwin
 #undef  DAR_NONSPECTRAL_BACKSCATTERING_RATIO
+
+C Define omegaC-dependent dissolution rate
+C following Naviaux (2019, Marine Chemistry)
+#undef NAVIAUX_DISSOLUTION
 
 #undef  RELAX_NUTS
 #undef  FLUX_NUTS

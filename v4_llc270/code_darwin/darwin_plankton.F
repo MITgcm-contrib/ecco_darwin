@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.1 2017/12/21 22:16:32 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.2 2019/06/05 02:36:33 dimitri Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -68,9 +68,9 @@ c ANNA pass extra variables if WAVEBANDS
 #ifdef ALLOW_CARBON
      I                       DIClocal, DOClocal, POClocal, PIClocal,
      I                       ALKlocal, O2local, ZooClocal,
-     I                       POCuplocal, PICuplocal,
+     I                       POCuplocal, PICuplocal, Ksp_TP_local,
      O                       dDICdt, dDOCdt, dPOCdt, dPICdt,
-     O                       dALKdt, dO2dt, dZOOCdt,
+     O                       dALKdt, dO2dt, dZOOCdt, CO3local,
 #endif
 #ifdef GEIDER
      I                       phychl, 
@@ -188,6 +188,7 @@ c zoo   = zooplankton
          _RL ZooClocal(nzmax)
          _RL POCuplocal
          _RL PICuplocal
+         _RL Ksp_TP_local
          _RL dDICdt
          _RL dDOCdt
          _RL dPOCdt
@@ -195,6 +196,9 @@ c zoo   = zooplankton
          _RL dALKdt
          _RL dO2dt
          _RL dZOOCdt(nzmax)
+         _RL CO3local
+         _RL omegaC
+         _RL calcium
 #endif
 #ifdef GEIDER
          _RL phychl(npmax)
@@ -1351,8 +1355,19 @@ c remineralization of sinking particulate
            DOCremin =  reminTempFunction * Kdoc * DOClocal
            preminC  = reminTempFunction * Kpremin_C*POClocal
 c dissolution
+# ifdef NAVIAUX_DISSOLUTION
+           calcium = 1.028 _d -2*Slocal/35. _d 0
+           omegaC = calcium * CO3local / Ksp_TP_local
+c naviaux et al. 2019, Marine Chemistry
+           if (omegaC .LT. 0.8272 _d 0) then
+	    disscPIC = PIClocal*5.22 _d -9 * (1-omegaC)**0.11 _d 0
+           else
+            disscPIC = PIClocal*1.65 _d -5 * (1-omegaC)**4.7 _d 0
+           endif
+#else /* NAVIAUX_DISSOLUTION */
            disscPIC = Kdissc*PIClocal
-#endif
+# endif /* NAVIAUX_DISSOLUTION */
+#endif /* ALLOW_CARBON */
 
 c chemistry
 c NH4 -> NO2 -> NO3 by bacterial action

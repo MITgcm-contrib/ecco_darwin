@@ -165,7 +165,7 @@ C$TAF LOOP = parallel
      I        ak0(i,j,bi,bj), fugf(i,j,bi,bj),
      I        ff(i,j,bi,bj),
      I        bt(i,j,bi,bj),st(i,j,bi,bj),ft(i,j,bi,bj),
-     U        pH(i,j,bi,bj),pCO2(i,j,bi,bj),
+     U        pH(i,j,bi,bj),pCO2(i,j,bi,bj),CO3(i,j,bi,bj),
      I        myThid )
           ELSE
             pCO2(i,j,bi,bj)=0. _d 0
