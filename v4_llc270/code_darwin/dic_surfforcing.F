@@ -168,7 +168,9 @@ C$TAF LOOP = parallel
      U        pH(i,j,bi,bj),pCO2(i,j,bi,bj),CO3(i,j,bi,bj),
      I        myThid )
           ELSE
-            pCO2(i,j,bi,bj)=0. _d 0
+              pH(i,j,bi,bj) = 0. _d 0
+ 	      pCO2(i,j,bi,bj) = 0. _d 0
+	      CO3(i,j,bi,bj) = 0. _d 0 
           ENDIF
         ENDDO
        ENDDO

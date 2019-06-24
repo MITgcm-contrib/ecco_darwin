@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.4 2019/06/05 02:36:33 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.5 2019/06/24 16:49:19 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -252,6 +252,35 @@ c air-sea fluxes
        _RL flxCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL flxALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL flxO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+c sediment-to-ocean fluxes
+       _RL DICSedFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL ALKSedFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL bblDiffusionCoeff
+       _RL bblThickness
+       _RL RFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL sqrts
+       _RL s15
+       _RL tk
+       _RL tmpa1
+       _RL tmpa2
+       _RL tmpa3
+       _RL LogKspc
+       _RL KspTLocal
+       _RL KspTP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL CO3Sw(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL CO3Sed(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL zdum
+       _RL xvvalue
+       _RL bdepth
+       _RL cdepth
+       _RL pressc 
+       _RL pCO2SolverTemp
+       _RL pCO2SolverSal
+       _RL pCO2SolverDic
+       _RL pCO2SolverPo4
+       _RL pCO2SolverSi
+       _RL pCO2SolverAlk
 #endif
 
        _RL tot_Nfix
@@ -349,7 +378,7 @@ c air-sea flux of O2
      &                       flxO2,
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
-c dilusion of alkalinity
+c dilution of alkalinity
          call dic_alk_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &                       flxALK,
      &                    bi,bj,imin,imax,jmin,jmax,
@@ -875,7 +904,83 @@ c    &          .or.NH4l.eq.0. _d 0) then
 c            print*,'QQ N zeros',i,j,k,NO3l,NO2l,NH4l
 c           endif
 
+c compute Ksp as a function of temperature and pressure
 
+            sqrts = sqrt(Slocal)
+            s15 = Slocal**1.5 _d 0
+            tk = 273.15 + Tlocal
+
+            tmpa1 = - 171.9065 - (0.077993*tk) + (2839.319/tk)
+     &       + (71.595*log10(tk))
+
+            tmpa2 = +(-0.77712 + (0.0028426*tk) + (178.34/tk) )*sqrts
+            tmpa3 = -(0.07711*Slocal) + (0.0041249*s15)
+
+            logKspc = tmpa1 + tmpa2 + tmpa3
+            KspTLocal = 10.0**logKspc
+
+            bdepth = 0.0d0
+            cdepth = 0.0d0
+            pressc = 1.0d0
+
+            do l = 1,k
+             cdepth = bdepth + 0.5d0*drF(l)
+             bdepth = bdepth + drF(l)
+             pressc = 1.0d0 + 0.1d0*cdepth
+            end do
+
+            zdum   = (pressc*10.0 _d 0 - 10.0 _d 0)/10.0 _d 0
+            xvalue = ((48.8 _d 0 - 0.53 _d 0*Tlocal)*zdum
+     &       + (-0.00588 _d 0 + 0.0001845 _d 0*Tlocal)*zdum*zdum)
+     &       / (188.93 _d 0*(Tlocal + 273.15 _d 0))
+
+            KspTP(i,j,bi,bj) = KspTLocal*10**(xvalue)
+
+c compute CO3 for DARWIN_PLANKTON and sediment fluxes
+             if (maskC(i,j,k,bi,bj).NE.0. _d 0) then
+
+              pCO2SolverTemp = max(-4. _d 0, min(39. _d 0, Tlocal))
+              pCO2SolverSal = max(4. _d 0, min(50. _d 0, Slocal))
+              
+c check bounds for PCO2 solver
+ 	      pCO2SolverDic = max(100. _d 0, min(4000. _d 0,dicl))
+              pCO2SolverAlk = max(100. _d 0, min(4000. _d 0,alkl))
+              pCO2SolverPo4 = max(1. _d -10, min(10. _d 0,po4l))
+              pCO2SolverSi = max(1. _d -8, min(500. _d 0,sil))
+            
+c convert to mol m^-3
+              pCO2SolverDic = pCO2SolverDic*1.0 _d -3
+	      pCO2SolverAlk = pCO2SolverAlk*1.0 _d -3
+              pCO2SolverPo4 = pCO2SolverPo4*1.0 _d -3
+              pCO2SolverSi = pCO2SolverSi*1.0 _d -3 
+             
+              CALL CARBON_COEFFS_PRESSURE_DEP(
+     I         pCO2SolverTemp,pCO2SolverSal
+     I         bi,bj,iMin,iMax,jMin,jMax,
+     I         k,myThid)
+     
+              CALL CALC_PCO2_APPROX(
+     I         pCO2SolverTemp,pCO2SolverSal,
+     I         pCO2SolverDic,pCO2SolverPo4,
+     I         pCO2SolverSi,pCO2SolverAlk,
+     I         ak1(i,j,bi,bj),ak2(i,j,bi,bj),
+     I         ak1p(i,j,bi,bj),ak2p(i,j,bi,bj),ak3p(i,j,bi,bj),
+     I         aks(i,j,bi,bj),akb(i,j,bi,bj),akw(i,j,bi,bj),
+     I         aksi(i,j,bi,bj),akf(i,j,bi,bj),
+     I         ak0(i,j,bi,bj),fugf(i,j,bi,bj),
+     I         ff(i,j,bi,bj),
+     I         bt(i,j,bi,bj),st(i,j,bi,bj),ft(i,j,bi,bj),
+     U         pH(i,j,bi,bj),pCO2(i,j,bi,bj),CO3(i,j,bi,bj),
+     I         myThid)
+	    
+              else
+
+               pH(i,j,bi,bj) = 0. _d 0
+               pCO2(i,j,bi,bj) = 0. _d 0
+               CO3(i,j,bi,bj) = 0. _d 0
+        
+	      endif
+		
 c ANNA pass extra variables if WAVEBANDS
              CALL DARWIN_PLANKTON(
      U                       Phy,
@@ -909,9 +1014,10 @@ c ANNA pass extra variables if WAVEBANDS
 #ifdef ALLOW_CARBON
      I                       dicl, docl, pocl, picl,
      I                       alkl, o2l, zoocl,
-     I                       pocupl, picupl, Ksp_TP_Calc(i,j,bi,bj),
+     I                       pocupl, picupl, KspTP(i,j,bi,bj), 
+     I			     CO3(i,j,bi,bj),
      O                       ddicl, ddocl, dpocl, dpicl,
-     O                       dalkl, do2l, dzoocl, CO3(i,j,bi,bj),
+     O                       dalkl, do2l, dzoocl,omegaC(i,j,k,bi,bj),
 #endif
 #ifdef GEIDERCO3
      O                       phychl,
@@ -959,9 +1065,6 @@ c convert to dPOCl
                endif
              endif
 #endif
-
-
-             popupl = POPl
              ponupl = PONl
              pofeupl = POFel
              psiupl = PSil
@@ -972,7 +1075,6 @@ c convert to dPOCl
 #endif
              enddo
 
-
 c
 #ifdef ALLOW_CARBON
              pocupl = POCl
@@ -982,9 +1084,53 @@ c include surface forcing
               ddicl  =  ddicl  + flxCO2(i,j)
               dalkl  =  dalkl  + flxALK(i,j)
               do2l   =  do2l   + flxO2(i,j)
-             endif
+#ifdef ADKINS_SURF_FLUX
+c include surface fluxes from forcing files              
+	      ddicl  =  ddicl  + (dicSurf_flx(i,j,bi,bj)*1.0 _d 3)
+	      dalkl  =  dalkl  + (alkSurf_flx(i,j,bi,bj)*1.0 _d 3)
 #endif
-c
+	      endif
+#ifdef ALLOW_SED_DISS_FLUX
+c compute sediment dissolution fluxes
+             if (bottom.eq.1.0 _d 0) then
+
+              calcium(i,j,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
+              
+	      CO3Sed(i,j,bi,bj) = (KspTP(i,j,bi,bj) /
+     &         calcium(i,j,bi,bj))
+
+              bblDiffusionCoeff = 4.01 _d -10
+              bblThickness = 1.0 _d -3
+
+	      CO3Sw(i,j,bi,bj) = CO3(i,j,bi,bj)
+
+c	      print*,'CO3Sw: ',CO3Sw(i,j,bi,bj)
+            
+c convert from mol kg^-1 to mol m^-3
+              CO3Sed(i,j,bi,bj) = CO3Sed(i,j,bi,bj) * rhoConst
+              CO3Sw(i,j,bi,bj) = CO3Sw(i,j,bi,bj) * rhoConst
+
+c compute flux in mol m^-3 s^-1
+              RFlux(i,j,bi,bj) = (bblDiffusionCoeff/bblThickness) *
+     &         (CO3Sed(i,j,bi,bj)-CO3Sw(i,j,bi,bj))
+
+              if(RFlux(i,j,bi,bj).LT.0) then
+	       RFlux(i,j,bi,bj) = 0;
+	      endif
+
+              DICSedFlux(i,j,bi,bj) = RFlux(i,j,bi,bj)
+              ALKSedFlux(i,j,bi,bj) = 2*RFlux(i,j,bi,bj)
+
+c convert sediment fluxes to mmol m^-3 s^-1 and add then to local values
+	      ddicl = ddicl+(RFlux(i,j,bi,bj)*1.0 _d 3 /
+     &         drF(k)*HFacC(i,j,k,bi,bj))
+	      dalkl = dalkl+(2*RFlux(i,j,bi,bj)*1.0 _d 3 /
+     &         drF(k)*HFacC(i,j,k,bi,bj))
+
+             endif 
+#endif /* ALLOW_SED_DISS_FLUX */
+#endif /* ALLOW_CARBON */
+
 #ifdef CONS_SUPP
 c only works for two layer model
             if (k.eq.2) then
@@ -1208,15 +1354,15 @@ C             print*,'QQ phy02 > phy04',i,j,k,Phy2(i,j,k),
 C    &             Phy4(i,j,k), dPhy(2), dPhy(4)
 C           endif
 
-          if (dPhy(np2).gt.dPhy(np4).and.dPhy(np4).gt.0. _d 0) then
-             print*,'QQQ dphy',np2,' > dphy',np4,i,j,k,Phy2(i,j,k),
-     &             Ptr(i,j,k,bi,bj,iPhy+np4-1), dPhy(2), dPhy(4)
+c          if (dPhy(np2).gt.dPhy(np4).and.dPhy(np4).gt.0. _d 0) then
+c             print*,'QQQ dphy',np2,' > dphy',np4,i,j,k,Phy2(i,j,k),
+c     &             Ptr(i,j,k,bi,bj,iPhy+np4-1), dPhy(2), dPhy(4)
           endif
-          if (Ptr(i,j,k,bi,bj,iphy+np2-1).gt.Ptr(i,j,k,bi,bj,iPhy+np4-1)
-     &        .and. Ptr(i,j,k,bi,bj,iPhy+np4-1).gt.0. _d 0) then
-            print*,'QQ phy',np2,' > ',np4,i,j,k,
-     &             Ptr(i,j,k,bi,bj,iPhy+np2-1),
-     &             Ptr(i,j,k,bi,bj,iPhy+np4-1), dPhy(2), dPhy(4)
+c          if (Ptr(i,j,k,bi,bj,iphy+np2-1).gt.Ptr(i,j,k,bi,bj,iPhy+np4-1)
+c     &        .and. Ptr(i,j,k,bi,bj,iPhy+np4-1).gt.0. _d 0) then
+c            print*,'QQ phy',np2,' > ',np4,i,j,k,
+c     &             Ptr(i,j,k,bi,bj,iPhy+np2-1),
+c     &             Ptr(i,j,k,bi,bj,iPhy+np4-1), dPhy(2), dPhy(4)
           endif
 
           endif
@@ -1531,6 +1677,22 @@ c ANNA end TAVE
      &                         0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL( pH(1-Olx,1-Oly,bi,bj), 'DICPHAV ',
      &                         0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(DICSedFlux(1-Olx,1-Oly,bi,bj), 'DICSFLX ',
+     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(ALKSedFlux(1-Olx,1-Oly,bi,bj), 'ALKSFLX ',
+     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(KspTP(1-Olx,1-Oly,bi,bj), 'KSPTP   ',
+     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(RFlux(1-Olx,1-Oly,bi,bj), 'RFLUX   ',
+     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(CO3Sw(1-Olx,1-Oly,bi,bj), 'CO3SW   ',
+     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(CO3Sed(1-Olx,1-Oly,bi,bj), 'CO3SED  ',
+     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(calcium(1-Olx,1-Oly,bi,bj), 'CALCIUM ',
+     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(omegaC(1-Olx,1-Oly,1,bi,bj), 'OMEGAC  ',
+     &                         0,Nr,2,bi,bj,myThid)
 #endif /* ALLOW_CARBON */
        ENDIF
 #endif /* ALLOW_DIAGNOSTICS */

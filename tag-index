@@ -1,3 +1,7 @@
+06/24/19
+- Added non-linear water column dissolution raw late from Naviaux et al. 2019 (Marine Chemistry)
+  and DIC and alkalinity flux from bottom sediments following Sulpis et al. 2018 (PNAS)
+
 05/03/19
 - To make initialization and pickups more robust:
   - remove pickupSuff from data

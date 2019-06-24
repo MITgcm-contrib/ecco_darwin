@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.2 2019/06/05 02:36:33 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.3 2019/06/24 16:49:19 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -68,9 +68,10 @@ c ANNA pass extra variables if WAVEBANDS
 #ifdef ALLOW_CARBON
      I                       DIClocal, DOClocal, POClocal, PIClocal,
      I                       ALKlocal, O2local, ZooClocal,
-     I                       POCuplocal, PICuplocal, Ksp_TP_local,
+     I                       POCuplocal, PICuplocal, KspTPLocal, 
+     I 			     CO3Local,
      O                       dDICdt, dDOCdt, dPOCdt, dPICdt,
-     O                       dALKdt, dO2dt, dZOOCdt, CO3local,
+     O                       dALKdt, dO2dt, dZOOCdt,omegaCLocal,
 #endif
 #ifdef GEIDER
      I                       phychl, 
@@ -188,16 +189,16 @@ c zoo   = zooplankton
          _RL ZooClocal(nzmax)
          _RL POCuplocal
          _RL PICuplocal
-         _RL Ksp_TP_local
-         _RL dDICdt
+         _RL KspTPLocal
+         _RL CO3Local
+	 _RL dDICdt
          _RL dDOCdt
          _RL dPOCdt
          _RL dPICdt
          _RL dALKdt
          _RL dO2dt
          _RL dZOOCdt(nzmax)
-         _RL CO3local
-         _RL omegaC
+         _RL omegaCLocal
          _RL calcium
 #endif
 #ifdef GEIDER
@@ -718,8 +719,8 @@ c    &                             NO3local,NO2local,NH4local
                endif
                Nlimit(np)=NO3limit(np)+NO2limit(np)+NH4limit(np)
                if (Nlimit(np).gt.1.01 _d 0) then
-                print*,'QQ Nlimit', Nlimit(np), NO3limit(np), 
-     &                              NO2limit(np), NH4limit(np)
+c               print*,'QQ Nlimit', Nlimit(np), NO3limit(np), 
+c     &                              NO2limit(np), NH4limit(np)
                endif
                if (Nlimit(np).le.0. _d 0) then
 c                if (np.eq.1) then
@@ -1354,15 +1355,19 @@ c remineralization of sinking particulate
 #ifdef ALLOW_CARBON
            DOCremin =  reminTempFunction * Kdoc * DOClocal
            preminC  = reminTempFunction * Kpremin_C*POClocal
+
 c dissolution
 # ifdef NAVIAUX_DISSOLUTION
            calcium = 1.028 _d -2*Slocal/35. _d 0
-           omegaC = calcium * CO3local / Ksp_TP_local
-c naviaux et al. 2019, Marine Chemistry
-           if (omegaC .LT. 0.8272 _d 0) then
-	    disscPIC = PIClocal*5.22 _d -9 * (1-omegaC)**0.11 _d 0
+           omegaCLocal = calcium * CO3Local / KspTPLocal
+
+c Naviaux et al. 2019, Marine Chemistry rate law
+           if (omegaCLocal .LT. 0.8272 _d 0) then
+	    disscPIC = PIClocal*5.22 _d -9 *
+     &       (1-omegaCLocal)**0.11 _d 0
            else
-            disscPIC = PIClocal*1.65 _d -5 * (1-omegaC)**4.7 _d 0
+            disscPIC = PIClocal*1.65 _d -5 *
+     &      (1-omegaCLocal)**4.7 _d 0
            endif
 #else /* NAVIAUX_DISSOLUTION */
            disscPIC = Kdissc*PIClocal

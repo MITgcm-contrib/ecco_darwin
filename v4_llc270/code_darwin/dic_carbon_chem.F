@@ -1186,9 +1186,6 @@ c alternative pressure dependence from Ingle (1975)
 
            Ksp_TP_Calc(i,j,bi,bj) = Ksp_T_Calc*10**(xvalue)
 
-
-
-
 C------------------------------------------------------------------------
          else
             ff(i,j,bi,bj)=0.d0

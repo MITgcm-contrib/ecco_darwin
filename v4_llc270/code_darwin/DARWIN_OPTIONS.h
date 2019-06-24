@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.4 2019/06/05 02:36:33 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.5 2019/06/24 16:49:19 dcarroll Exp $
 C $Name:  $
 
 #ifndef DARWIN_OPTIONS_H
@@ -67,8 +67,12 @@ C and revert to fixed backscat ratios darwin_bbphy(nabp) set in data.darwin
 #undef  DAR_NONSPECTRAL_BACKSCATTERING_RATIO
 
 C Define omegaC-dependent dissolution rate
-C following Naviaux (2019, Marine Chemistry)
+C following Naviaux et al. 2019 (Marine Chemistry)
 #undef NAVIAUX_DISSOLUTION
+
+C allow DIC and ALK flux from bottom sediments 
+C following Sulpis et al. 2018 (PNAS)
+#undef ALLOW_SED_DISS_FLUX
 
 #undef  RELAX_NUTS
 #undef  FLUX_NUTS
