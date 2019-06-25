@@ -31,8 +31,11 @@ ln -sf /nobackup/hzhang1/cs510/ICBC_2009_iter26/jra25_xx_* .
 ln -sf /nobackup/hbrix/ICBC/pco2a_blended_* .
 ln -sf pco2a_blended_2012 pco2a_blended_2013
 ln -sf pco2a_blended_2012 pco2a_blended_2014
-ln -sf /nobackup/hzhang1/cs510/ICBC_2009_iter26/pickup.0000000001.data_xx pickup.0000000001.data
-ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup*.0000000001.??ta .
+ln -sf /nobackup/hzhang1/cs510/ICBC_2009_iter26/pickup.0000000001.data_xx pickup.0000078912.data
+ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup.0000000001.meta pickup.0000078912.meta
+ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup_seaice.0000000001.data pickup_seaice.0000078912.data
+ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup_seaice.0000000001.meta pickup_seaice.0000078912.meta
+ln -sf /nobackup/hbrix/ICBC/pickup_greensf/pickup* .
 ln -sf /nobackup/dmenemen/forcing/runoff/runoff-360x180x12.bin .
 ln -sf /nobackup/hzhang1/cs510/run_template/tile00* .
 # modify run_darwin_450 as needed
