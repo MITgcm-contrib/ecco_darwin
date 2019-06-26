@@ -45,7 +45,8 @@
  precipstartdate2  = 030000,
  precipperiod      = 21600.0,
 #
- runofffile        = 'jra55_do_runoff_llc270',
+ runofffile        = 'LOACv1.4.0_HJ/jra55_do_runoff_llc270',
+ runoftempfile     = 'LOACriver_temp/wattmp',
  runoffstartdate1  = 19920101,
  runoffstartdate2  = 120000,
  runoffperiod      = 86400.0,
@@ -77,6 +78,7 @@
 # to compensate for sea level rise for nlfs/realFWF
 #precip_exfremo_intercept = 1.073E-9,
 #precip_exfremo_slope = -3.340E-18,
+ exf_inscal_precip = 1.00500,
  /
 #
  &EXF_NML_04
