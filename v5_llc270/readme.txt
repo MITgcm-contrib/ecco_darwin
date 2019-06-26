@@ -23,7 +23,8 @@ mkdir diags
 ln -sf ../build/mitgcmuv .
 ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/dcarrol2/LOAC/write_bin/v1.4.0/jra55_do_runoff_llc270_* .
+ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACv1.4.0_HJ .
+ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACriver_temp .
 cp ../../MITgcm_contrib/ecco_darwin/v5_llc270/input/* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
