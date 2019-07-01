@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.3 2019/06/24 16:49:19 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.4 2019/07/01 19:23:45 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -1356,22 +1356,28 @@ c remineralization of sinking particulate
            DOCremin =  reminTempFunction * Kdoc * DOClocal
            preminC  = reminTempFunction * Kpremin_C*POClocal
 
-c dissolution
-# ifdef NAVIAUX_DISSOLUTION
+c water coloumn dissolution
+#ifdef NAVIAUX_DISSOLUTION
            calcium = 1.028 _d -2*Slocal/35. _d 0
            omegaCLocal = calcium * CO3Local / KspTPLocal
 
-c Naviaux et al. 2019, Marine Chemistry rate law
-           if (omegaCLocal .LT. 0.8272 _d 0) then
-	    disscPIC = PIClocal*5.22 _d -9 *
+c Naviaux et al. 2019, Marine Chemistry dissolution rate law
+           if (omegaCLocal .LT. 1.0 _d 0) then
+            if (omegaCLocal .LT. 0.8272 _d 0) then
+ 	     disscPIC = PIClocal*5.22 _d -9 *
      &       (1-omegaCLocal)**0.11 _d 0
+            else
+             disscPIC = PIClocal*1.65 _d -5 *
+     &       (1-omegaCLocal)**4.7 _d 0
+            endif
            else
-            disscPIC = PIClocal*1.65 _d -5 *
-     &      (1-omegaCLocal)**4.7 _d 0
+            disscPIC = 0.0 _d 0
            endif
+
 #else /* NAVIAUX_DISSOLUTION */
            disscPIC = Kdissc*PIClocal
-# endif /* NAVIAUX_DISSOLUTION */
+#endif /* NAVIAUX_DISSOLUTION */
+
 #endif /* ALLOW_CARBON */
 
 c chemistry

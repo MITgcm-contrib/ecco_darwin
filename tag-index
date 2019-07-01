@@ -1,3 +1,8 @@
+07/01/19
+- Moved pressure-dependent Ksp calculation used for non-linear water column and sediment 
+  dissolution from dic_carbon_chem.F to darwin_forcing.F. Additionally, Water column dissolution
+  is now only included when omegaC < 1. 
+
 06/24/19
 - Added non-linear water column dissolution raw late from Naviaux et al. 2019 (Marine Chemistry)
   and DIC and alkalinity flux from bottom sediments following Sulpis et al. 2018 (PNAS)

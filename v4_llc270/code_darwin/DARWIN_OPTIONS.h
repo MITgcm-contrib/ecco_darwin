@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.5 2019/06/24 16:49:19 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.6 2019/07/01 19:23:45 dcarroll Exp $
 C $Name:  $
 
 #ifndef DARWIN_OPTIONS_H
@@ -70,7 +70,7 @@ C Define omegaC-dependent dissolution rate
 C following Naviaux et al. 2019 (Marine Chemistry)
 #undef NAVIAUX_DISSOLUTION
 
-C allow DIC and ALK flux from bottom sediments 
+C allow DIC and ALK flux from bottom sediments
 C following Sulpis et al. 2018 (PNAS)
 #undef ALLOW_SED_DISS_FLUX
 

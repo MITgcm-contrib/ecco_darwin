@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.5 2019/06/24 16:49:19 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.6 2019/07/01 19:23:45 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -259,22 +259,45 @@ c sediment-to-ocean fluxes
        _RL bblDiffusionCoeff
        _RL bblThickness
        _RL RFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-       _RL sqrts
-       _RL s15
-       _RL tk
-       _RL tmpa1
-       _RL tmpa2
-       _RL tmpa3
-       _RL LogKspc
-       _RL KspTLocal
        _RL KspTP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
        _RL CO3Sw(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
        _RL CO3Sed(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-       _RL zdum
-       _RL xvvalue
-       _RL bdepth
-       _RL cdepth
-       _RL pressc 
+       
+       _RL  t
+       _RL  s
+       _RL  ta
+       _RL  pt
+       _RL  sit
+       _RL  tk
+       _RL  tk100
+       _RL  tk1002
+       _RL  dlogtk
+       _RL  sqrtis
+       _RL  sqrts
+       _RL  s15
+       _RL  scl
+       _RL  x1
+       _RL  x2
+       _RL  s2
+       _RL  xacc
+       _RL  invtk
+       _RL  is
+       _RL  is2
+       _RL  bdepth
+       _RL  cdepth
+       _RL  pressc
+       _RL  Ksp_T_Calc
+       _RL  xvalue
+       _RL  zdum
+       _RL  tmpa1
+       _RL  tmpa2
+       _RL  tmpa3
+       _RL  logKspc
+       _RL  dv
+       _RL  dk
+       _RL  pfactor
+       _RL  bigR
+
        _RL pCO2SolverTemp
        _RL pCO2SolverSal
        _RL pCO2SolverDic
@@ -284,9 +307,7 @@ c sediment-to-ocean fluxes
 #endif
 
        _RL tot_Nfix
-
        _RL tmp
-
        _RL phytmp, chltmp
 
       INTEGER i,j,k,it, ktmp
@@ -294,9 +315,6 @@ c sediment-to-ocean fluxes
       INTEGER debug
       CHARACTER*8 diagname
 
-c
-c
-c
       DO j=1-OLy,sNy+OLy
       DO i=1-OLx,sNx+OLx
        do k=1,Nr
@@ -906,19 +924,6 @@ c           endif
 
 c compute Ksp as a function of temperature and pressure
 
-            sqrts = sqrt(Slocal)
-            s15 = Slocal**1.5 _d 0
-            tk = 273.15 + Tlocal
-
-            tmpa1 = - 171.9065 - (0.077993*tk) + (2839.319/tk)
-     &       + (71.595*log10(tk))
-
-            tmpa2 = +(-0.77712 + (0.0028426*tk) + (178.34/tk) )*sqrts
-            tmpa3 = -(0.07711*Slocal) + (0.0041249*s15)
-
-            logKspc = tmpa1 + tmpa2 + tmpa3
-            KspTLocal = 10.0**logKspc
-
             bdepth = 0.0d0
             cdepth = 0.0d0
             pressc = 1.0d0
@@ -929,57 +934,226 @@ c compute Ksp as a function of temperature and pressure
              pressc = 1.0d0 + 0.1d0*cdepth
             end do
 
-            zdum   = (pressc*10.0 _d 0 - 10.0 _d 0)/10.0 _d 0
-            xvalue = ((48.8 _d 0 - 0.53 _d 0*Tlocal)*zdum
-     &       + (-0.00588 _d 0 + 0.0001845 _d 0*Tlocal)*zdum*zdum)
-     &       / (188.93 _d 0*(Tlocal + 273.15 _d 0))
+            if (maskC(i,j,k,bi,bj).NE.0. _d 0) then 
+             t = Tlocal
+             s = max(4. _d 0, Slocal)
 
-            KspTP(i,j,bi,bj) = KspTLocal*10**(xvalue)
+             tk = 273.15 + t
+             tk100 = tk/100.0
+             tk1002=tk100*tk100
+             invtk=1.0/tk
+             dlogtk=log(tk)
+             is=19.924*s/(1000.-1.005*s)
+             is2=is*is
+             sqrtis=sqrt(is)
+             s2=s*s
+             sqrts=sqrt(s)
+             s15=s**1.5
+             scl=s/1.80655
+
+c f = k0(1-pH2O)*correction term for non-ideality
+c Weiss & Price (1980, Mar. Chem., 8, 347-359; Eq 13 with table 6 values)
+             ff(i,j,bi,bj) = exp(-162.8301 + 218.2968/tk100 +
+     &        90.9241*log(tk100)-1.47696*tk1002 +
+     &        s*(0.025695-0.025225*tk100 +
+     &        0.0049867*tk1002))
+
+c K0 from Weiss 1974
+             ak0(i,j,bi,bj) = exp(93.4517/tk100-60.2409 + 
+     &        23.3585*log(tk100) +
+     &        s*(0.023517-0.023656*tk100 + 
+     &        0.0047036*tk1002))
+
+c k1 = [H][HCO3]/[H2CO3]
+c k2 = [H][CO3]/[HCO3]
+c Millero p.664 (1995) using Mehrbach et al. data on seawater scale 
+             ak1(i,j,bi,bj)=10**(-1*(3670.7*invtk - 
+     &        62.008+9.7944*dlogtk -
+     &        0.0118*s+0.000116*s2))
+           
+             ak2(i,j,bi,bj)=10**(-1*(1394.7*invtk+4.777 - 
+     &        0.0184*s+0.000118*s2))
+
+c NOW PRESSURE DEPENDENCE:
+c Following Takahashi (1981) GEOSECS report - quoting Culberson and 
+c Pytkowicz (1968)
+c pressc = pressure in bars
+             ak1(i,j,bi,bj) = ak1(i,j,bi,bj) *
+     &        exp((24.2-0.085*t)*(pressc-1.0)/(83.143*tk))
+
+c FIRST GO FOR K2: According to GEOSECS (1982) report
+c            ak2(i,j,bi,bj) = ak2(i,j,bi,bj) *
+c    &        exp((26.4-0.040*t)*(pressc-1.0)/(83.143*tk))
+
+c SECOND GO FOR K2: corrected coeff according to CO2sys documentation
+c E. Lewis and D. Wallace (1998) ORNL/CDIAC-105
+             ak2(i,j,bi,bj) = ak2(i,j,bi,bj) *
+     &        exp((16.4-0.040*t)*(pressc-1.0)/(83.143*tk))
+
+c kb = [H][BO2]/[HBO2]
+c Millero p.669 (1995) using data from dickson (1990)
+             akb(i,j,bi,bj)=exp((-8966.90-2890.53*sqrts-77.942*s +
+     &        1.728*s15-0.0996*s2)*invtk +
+     &        (148.0248+137.1942*sqrts+1.62142*s) +
+     &        (-24.4344-25.085*sqrts-0.2474*s) *
+     &        dlogtk+0.053105*sqrts*tk)
+
+c Mick and Karsten - Dec 04
+c ADDING pressure dependence based on Millero (1995), p675
+c with additional info from CO2sys documentation (E. Lewis and 
+c D. Wallace, 1998 - see endnotes for commentary on Millero, 95)
+             bigR = 83.145 
+             dv = -29.48+0.1622*t+2.608d-3*t*t
+             dk = -2.84d-3
+             pfactor = - (dv/(bigR*tk))*pressc 
+     &        + (0.5*dk/(bigR*tk))*pressc*pressc
+
+             akb(i,j,bi,bj) = akb(i,j,bi,bj)*exp(pfactor)
+
+c k1p = [H][H2PO4]/[H3PO4]
+c DOE(1994) eq 7.2.20 with footnote using data from Millero (1974)
+             ak1p(i,j,bi,bj) = exp(-4576.752*invtk+115.525 - 
+     &        18.453*dlogtk +
+     &        (-106.736*invtk+0.69171)*sqrts +
+     &        (-0.65643*invtk-0.01844)*s)
+
+c k2p = [H][HPO4]/[H2PO4]
+c DOE(1994) eq 7.2.23 with footnote using data from Millero (1974))
+             ak2p(i,j,bi,bj) = exp(-8814.715*invtk+172.0883 - 
+     &        27.927*dlogtk +
+     &        (-160.340*invtk+1.3566)*sqrts +
+     &        (0.37335*invtk-0.05778)*s)
+
+c k3p = [H][PO4]/[HPO4]
+c DOE(1994) eq 7.2.26 with footnote using data from Millero (1974)
+             ak3p(i,j,bi,bj) = exp(-3070.75*invtk-18.141 + 
+     &        (17.27039*invtk+2.81197) *
+     &        sqrts+(-44.99486*invtk-0.09984)*s)
+
+c ksi = [H][SiO(OH)3]/[Si(OH)4]
+c Millero p.671 (1995) using data from Yao and Millero (1995)
+             aksi(i,j,bi,bj) = exp(-8904.2*invtk+117.385 - 
+     &        19.334*dlogtk +
+     &        (-458.79*invtk+3.5913)*sqrtis +
+     &        (188.74*invtk-1.5998)*is +
+     &        (-12.1652*invtk+0.07871)*is2 +
+     &        log(1.0-0.001005*s))
+
+c kw = [H][OH]
+c Millero p.670 (1995) using composite data
+             akw(i,j,bi,bj) = exp(-13847.26*invtk+148.9652 - 
+     &        23.6521*dlogtk + 
+     &        (118.67*invtk-5.977+1.0495*dlogtk) *
+     &        sqrts-0.01615*s)
+
+c ks = [H][SO4]/[HSO4]
+c dickson (1990, J. chem. Thermodynamics 22, 113)
+             aks(i,j,bi,bj)=exp(-4276.1*invtk+141.328 - 
+     &        23.093*dlogtk +
+     &        (-13856*invtk+324.57-47.986*dlogtk)*sqrtis +
+     &        (35474*invtk-771.54+114.723*dlogtk)*is -
+     &        2698*invtk*is**1.5+1776*invtk*is2 +
+     &        log(1.0-0.001005*s))
+
+c kf = [H][F]/[HF]
+c dickson and Riley (1979) -- change pH scale to total
+             akf(i,j,bi,bj)=exp(1590.2*invtk-12.641+1.525*sqrtis +
+     &        log(1.0-0.001005*s) +
+     &        log(1.0+(0.1400/96.062)*(scl)/aks(i,j,bi,bj)))
+
+c Calculate concentrations for borate, sulfate, and fluoride
+c Uppstrom (1974)
+             bt(i,j,bi,bj) = 0.000232*scl/10.811
+
+c Morris & Riley (1966)
+             st(i,j,bi,bj) = 0.14*scl/96.062
+
+c Riley (1965)
+             ft(i,j,bi,bj) = 0.000067*scl/18.9984
+
+c solubility product for calcite
+C Following Mucci (1983) - from Zeebe/Wolf-Gladrow equic.m
+             tmpa1 = -171.9065-(0.077993*tk)+(2839.319/tk) +
+     &        (71.595*log10(tk))
+         
+             tmpa2 = +(-0.77712+(0.0028426*tk)+(178.34/tk))*sqrts
+             tmpa3 = -(0.07711*s)+(0.0041249*s15)
+             logKspc = tmpa1+tmpa2+tmpa3
+             Ksp_T_Calc = 10.0**logKspc
+
+c alternative pressure dependence from Ingle (1975)
+             zdum = (pressc*10.0d0-10.0d0)/10.0d0
+             xvalue = ((48.8d0-0.53d0*t)*zdum +
+     &        (-0.00588d0+0.0001845d0*t)*zdum*zdum) /
+     &        (188.93d0*(t+273.15d0))
+
+             KspTP(i,j,bi,bj) = Ksp_T_Calc*10**(xvalue)
+
+            else
+             ff(i,j,bi,bj)=0.d0
+             ak0(i,j,bi,bj)= 0.d0
+             ak1(i,j,bi,bj)= 0.d0
+             ak2(i,j,bi,bj)= 0.d0
+             akb(i,j,bi,bj)= 0.d0
+             ak1p(i,j,bi,bj) = 0.d0
+             ak2p(i,j,bi,bj) = 0.d0
+             ak3p(i,j,bi,bj) = 0.d0
+             aksi(i,j,bi,bj) = 0.d0
+             akw(i,j,bi,bj) = 0.d0
+             aks(i,j,bi,bj)= 0.d0
+             akf(i,j,bi,bj)= 0.d0
+             bt(i,j,bi,bj) = 0.d0
+             st(i,j,bi,bj) = 0.d0
+             ft(i,j,bi,bj) = 0.d0
+             KspTP(i,j,bi,bj) = 0.d0
+            endif
+
+c            CALL CARBON_COEFFS_PRESSURE_DEP(
+c     I       theta,salt
+c     I       bi,bj,i,i,j,j,
+c     I       k,myThid
 
 c compute CO3 for DARWIN_PLANKTON and sediment fluxes
-             if (maskC(i,j,k,bi,bj).NE.0. _d 0) then
+            if (maskC(i,j,k,bi,bj).NE.0. _d 0) then
 
-              pCO2SolverTemp = max(-4. _d 0, min(39. _d 0, Tlocal))
-              pCO2SolverSal = max(4. _d 0, min(50. _d 0, Slocal))
+c             print*,'Ksp',Ksp_TP_Calc(i,j,bi,bj)
+
+             pCO2SolverTemp = max(-4. _d 0, min(39. _d 0, Tlocal))
+             pCO2SolverSal = max(4. _d 0, min(50. _d 0, Slocal))
               
 c check bounds for PCO2 solver
- 	      pCO2SolverDic = max(100. _d 0, min(4000. _d 0,dicl))
-              pCO2SolverAlk = max(100. _d 0, min(4000. _d 0,alkl))
-              pCO2SolverPo4 = max(1. _d -10, min(10. _d 0,po4l))
-              pCO2SolverSi = max(1. _d -8, min(500. _d 0,sil))
+ 	     pCO2SolverDic = max(100. _d 0, min(4000. _d 0,dicl))
+             pCO2SolverAlk = max(100. _d 0, min(4000. _d 0,alkl))
+             pCO2SolverPo4 = max(1. _d -10, min(10. _d 0,po4l))
+             pCO2SolverSi = max(1. _d -8, min(500. _d 0,sil))
             
 c convert to mol m^-3
-              pCO2SolverDic = pCO2SolverDic*1.0 _d -3
-	      pCO2SolverAlk = pCO2SolverAlk*1.0 _d -3
-              pCO2SolverPo4 = pCO2SolverPo4*1.0 _d -3
-              pCO2SolverSi = pCO2SolverSi*1.0 _d -3 
-             
-              CALL CARBON_COEFFS_PRESSURE_DEP(
-     I         pCO2SolverTemp,pCO2SolverSal
-     I         bi,bj,iMin,iMax,jMin,jMax,
-     I         k,myThid)
-     
-              CALL CALC_PCO2_APPROX(
-     I         pCO2SolverTemp,pCO2SolverSal,
-     I         pCO2SolverDic,pCO2SolverPo4,
-     I         pCO2SolverSi,pCO2SolverAlk,
-     I         ak1(i,j,bi,bj),ak2(i,j,bi,bj),
-     I         ak1p(i,j,bi,bj),ak2p(i,j,bi,bj),ak3p(i,j,bi,bj),
-     I         aks(i,j,bi,bj),akb(i,j,bi,bj),akw(i,j,bi,bj),
-     I         aksi(i,j,bi,bj),akf(i,j,bi,bj),
-     I         ak0(i,j,bi,bj),fugf(i,j,bi,bj),
-     I         ff(i,j,bi,bj),
-     I         bt(i,j,bi,bj),st(i,j,bi,bj),ft(i,j,bi,bj),
-     U         pH(i,j,bi,bj),pCO2(i,j,bi,bj),CO3(i,j,bi,bj),
-     I         myThid)
+             pCO2SolverDic = pCO2SolverDic*1.0 _d -3
+             pCO2SolverAlk = pCO2SolverAlk*1.0 _d -3
+             pCO2SolverPo4 = pCO2SolverPo4*1.0 _d -3
+             pCO2SolverSi = pCO2SolverSi*1.0 _d -3 
+ 
+             CALL CALC_PCO2_APPROX(
+     I        pCO2SolverTemp,pCO2SolverSal,
+     I        pCO2SolverDic,pCO2SolverPo4,
+     I        pCO2SolverSi,pCO2SolverAlk,
+     I        ak1(i,j,bi,bj),ak2(i,j,bi,bj),
+     I        ak1p(i,j,bi,bj),ak2p(i,j,bi,bj),ak3p(i,j,bi,bj),
+     I        aks(i,j,bi,bj),akb(i,j,bi,bj),akw(i,j,bi,bj),
+     I        aksi(i,j,bi,bj),akf(i,j,bi,bj),
+     I        ak0(i,j,bi,bj),fugf(i,j,bi,bj),
+     I        ff(i,j,bi,bj),
+     I        bt(i,j,bi,bj),st(i,j,bi,bj),ft(i,j,bi,bj),
+     U        pH(i,j,bi,bj),pCO2(i,j,bi,bj),CO3(i,j,bi,bj),
+     I        myThid)
 	    
-              else
+             else
 
-               pH(i,j,bi,bj) = 0. _d 0
-               pCO2(i,j,bi,bj) = 0. _d 0
-               CO3(i,j,bi,bj) = 0. _d 0
+              pH(i,j,bi,bj) = 0. _d 0
+              pCO2(i,j,bi,bj) = 0. _d 0
+              CO3(i,j,bi,bj) = 0. _d 0
         
-	      endif
+	     endif
 		
 c ANNA pass extra variables if WAVEBANDS
              CALL DARWIN_PLANKTON(
