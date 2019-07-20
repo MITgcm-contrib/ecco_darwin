@@ -8,11 +8,10 @@
 #ifdef ALLOW_CARBON
 
 CBOP
-C !ROUTINE: DIC_SURFFORCING
+C !ROUTINE: DIC_BUDGETDIC
 
 C !INTERFACE: ==========================================================
-      SUBROUTINE DIC_SURFFORCING( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
-     O           GDC, 
+      SUBROUTINE DIC_BUDGETDIC( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
      I           bi,bj,imin,imax,jmin,jmax,
      I           myIter,myTime,myThid)
 
@@ -47,11 +46,6 @@ c  PTR_DIC              :: DIC tracer field
       _RL  PTR_PO4(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL  PTR_SIL(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       INTEGER iMin,iMax,jMin,jMax, bi, bj
-
-C !OUTPUT PARAMETERS: ===================================================
-c GDC                   :: tendency due to air-sea exchange
-      _RL  GDC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-
 
 C !LOCAL VARIABLES: ====================================================
        INTEGER I,J, kLev, it
@@ -92,9 +86,16 @@ C determine inorganic carbon chem coefficients
         DO j=jmin,jmax
          DO i=imin,imax
 c put bounds on tracers so pH solver doesn't blow up
-             surfdic(i,j) = 
+             surfdic(i,j) = budgetDic1(i,j,bi,bj)
+             budgetDic1(i,j,bi,bj) =
      &           max(100. _d 0 , min(4000. _d 0, PTR_DIC(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
+             if(budgetTStep1.EQ.0) then
+C if first timestep
+C this is problematic for restarts; to do correctly we will have to
+C add to pickups or run simulation without interruptions
+                surfdic(i,j) = budgetDic1(i,j,bi,bj)
+             endif
              surfalk(i,j) = 
      &           max(100. _d 0 , min(4000. _d 0, PTR_ALK(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
@@ -253,23 +254,14 @@ c
 C update tendency      
          DO j=jmin,jmax
           DO i=imin,imax
-           GDC(i,j)= recip_drF(kLev)*recip_hFacC(i,j,kLev,bi,bj)
-     &              *(FluxCO2(i,j,bi,bj) 
-#ifdef ALLOW_OLD_VIRTUALFLUX
-     &              + VirtualFlux(i,j)
-#endif
-     &               )
-#ifdef CO2_FLUX_BUDGET
           if(budgetTStep1.EQ.0) then
 C if first timestep
-C this is problematic at restart clean-up later
-             dFluxCO2(i,j,bi,bj) = 0. d 0
+C this is problematic at restart; clean-up later
+             dFluxCO2Dic(i,j,bi,bj) = 0. d 0
           else
-C can include VirtualFlux later, if it is needed
-             dFluxCO2(i,j,bi,bj) = fluxCO2(i,j,bi,bj) -
-     &            fluxCO2_1(i,j,bi,bj)
-             fluxCO2_1(i,j,bi,bj) = fluxCO2(i,j,bi,bj)
-#endif /* CO2_FLUX_BUDGET */
+C at this point in code, fluxCO2_1 contains total flux for current time step
+             dFluxCO2Dic(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
+     &            fluxCO2(i,j,bi,bj)
           ENDDO
          ENDDO
 

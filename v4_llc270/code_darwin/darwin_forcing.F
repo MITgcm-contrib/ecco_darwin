@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.6 2019/07/01 19:23:45 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.7 2019/07/20 01:27:16 dimitri Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -391,6 +391,36 @@ c air-sea flux and dilution of CO2
      &                        flxCO2,
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
+#ifdef CO2_FLUX_BUDGET
+c air-sea CO2 flux increment due to temperature change: dFluxCO2Temp
+         call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &                    bi,bj,imin,imax,jmin,jmax,
+     &                    myIter,myTime,myThid)
+c air-sea CO2 flux increment due to salinity change: dFluxCO2Salt
+         call dic_budgetSalt(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &                    bi,bj,imin,imax,jmin,jmax,
+     &                    myIter,myTime,myThid)
+c air-sea CO2 flux increment due to alkalinity change: dFluxCO2Alk
+         call dic_budgetAlk(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &                    bi,bj,imin,imax,jmin,jmax,
+     &                    myIter,myTime,myThid)
+c air-sea CO2 flux increment due to DIC change: dFluxCO2Dic
+         call dic_budgetDic(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &                    bi,bj,imin,imax,jmin,jmax,
+     &                    myIter,myTime,myThid)
+#endif /* CO2_FLUX_BUDGET */
 c air-sea flux of O2
          call dic_o2_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iO2),
      &                       flxO2,
@@ -1867,6 +1897,22 @@ c ANNA end TAVE
      &                        0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(omegaC(1-Olx,1-Oly,1,bi,bj), 'OMEGAC  ',
      &                         0,Nr,2,bi,bj,myThid)
+#ifdef CO2_FLUX_BUDGET
+        CALL DIAGNOSTICS_FILL(dFluxCO2(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLX ',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(dFluxCO2Pv(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLXP',0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dFluxCO2Temp(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLXT',0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dFluxCO2Salt(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLXS',0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dFluxCO2Alk(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLXA',0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dFluxCO2Dic(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLXD',0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dFluxCO2Sf(1-Olx,1-Oly,bi,bj),
+     &   'DCO2SF  ',0,1,2,bi,bj,myThid)
+#endif /* CO2_FLUX_BUDGET */
 #endif /* ALLOW_CARBON */
        ENDIF
 #endif /* ALLOW_DIAGNOSTICS */

@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.4 2019/03/21 06:02:45 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.5 2019/07/20 01:27:16 dimitri Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -342,6 +342,10 @@ C make sure we have reserved enough space in Ptracers
        DO nz = 1,nzmax
         iZooC (nz)  = iZoC +                   (nz-1)
       ENDDO
+#endif
+
+#ifdef CO2_FLUX_BUDGET
+      budgetTStep1 = 0. _d 0
 #endif
 
 #ifdef DAR_DIAG_DIVER
