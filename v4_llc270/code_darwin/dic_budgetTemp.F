@@ -254,14 +254,15 @@ c
 C update tendency      
          DO j=jmin,jmax
           DO i=imin,imax
-          if(budgetTStep1.EQ.0) then
+           if(budgetTStep1.EQ.0) then
 C if first timestep
 C this is problematic at restart; clean-up later
-             dFluxCO2Temp(i,j,bi,bj) = 0. d 0
-          else
+            dFluxCO2Temp(i,j,bi,bj) = 0. d 0
+           else
 C at this point in code, fluxCO2_1 contains total flux for current time step
-             dFluxCO2Temp(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
-     &            fluxCO2(i,j,bi,bj)
+            dFluxCO2Temp(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
+     &           fluxCO2(i,j,bi,bj)
+           endif
           ENDDO
          ENDDO
 
