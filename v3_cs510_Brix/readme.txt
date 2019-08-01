@@ -38,7 +38,10 @@ ln -sf /nobackup/hzhang1/cs510/ICBC_2009_iter26/pickup.0000000001.data_xx pickup
 ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup.0000000001.meta pickup.0000078912.meta
 ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup_seaice.0000000001.data pickup_seaice.0000078912.data
 ln -sf /nobackup/hzhang1/cs510/ICBC_2009/pickup_seaice.0000000001.meta pickup_seaice.0000078912.meta
-ln -sf /nobackup/hbrix/ICBC/pickup_greensf/pickup* .
+ln -sf /nobackup/hbrix/ICBC/pickup_greensf/pickup_dic.gf_cg1.0000078912.data pickup_dic.0000078912.data
+ln -sf /nobackup/hbrix/ICBC/pickup_greensf/pickup_dic.gf_cg1.0000078912.meta pickup_dic.0000078912.meta
+ln -sf /nobackup/hbrix/ICBC/pickup_greensf/pickup_ptracers.gf_cg1.0000078912.data pickup_ptracers.0000078912.data
+ln -sf /nobackup/hbrix/ICBC/pickup_greensf/pickup_ptracers.gf_cg1.0000078912.meta pickup_ptracers.0000078912.meta
 ln -sf /nobackup/dmenemen/forcing/runoff/runoff-360x180x12.bin .
 ln -sf /nobackup/hzhang1/cs510/run_template/tile00* .
 
