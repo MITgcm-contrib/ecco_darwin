@@ -65,6 +65,8 @@ C local variables for carbon chem
 #ifdef ALLOW_OLD_VIRTUALFLUX
       _RL VirtualFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #endif
+C local variables for CO2_FLUX_BUDGET
+      _RL FluxCO2_loc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)      
 CEOP
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -205,7 +207,7 @@ C Calculate flux in terms of DIC units using K0, solubility
 C Flux = Vp * ([CO2sat] - [CO2])
 C CO2sat = K0*pCO2atmos*P/P0
 C Converting pCO2 to [CO2] using ff, as in CALC_PCO2
-              FluxCO2(i,j,bi,bj) = 
+              FluxCO2_loc(i,j) = 
      &         Kwexch(i,j)*( 
      &         ak0(i,j,bi,bj)*pCO2sat(i,j) - 
      &         ff(i,j,bi,bj)*pCO2(i,j,bi,bj) 
@@ -214,7 +216,7 @@ C Converting pCO2 to [CO2] using ff, as in CALC_PCO2
 C Corrected by Val Bennington Nov 2010 per G.A. McKinley's finding
 C of error in application of water vapor correction
 c Flux = kw*rho*(ff*pCO2atm-k0*FugFac*pCO2ocean)
-               FluxCO2(i,j,bi,bj) =
+               FluxCO2_loc(i,j) =
      &          Kwexch(i,j)*(
      &            ff(i,j,bi,bj)*pCO2sat(i,j) -
      &            pCO2(i,j,bi,bj)*fugf(i,j,bi,bj)
@@ -222,13 +224,12 @@ c Flux = kw*rho*(ff*pCO2atm-k0*FugFac*pCO2ocean)
      &
 #endif
           ELSE
-              FluxCO2(i,j,bi,bj) = 0. _d 0
+              FluxCO2_loc(i,j) = 0. _d 0
           ENDIF
 C convert flux (mol kg-1 m s-1) to (mol m-2 s-1)
-            FluxCO2(i,j,bi,bj) = FluxCO2(i,j,bi,bj)/permil
+            FluxCO2_loc(i,j) = FluxCO2_loc(i,j)/permil
 c convert flux (mol m-2 s-1) to (mmol m-2 s-1)
-            FluxCO2(i,j,bi,bj) = FluxCO2(i,j,bi,bj)*1. _d 3
-
+            FluxCO2_loc(i,j) = FluxCO2_loc(i,j)*1. _d 3
 
 #ifdef ALLOW_OLD_VIRTUALFLUX
             IF (maskC(i,j,kLev,bi,bj).NE.0. _d 0) THEN
@@ -261,7 +262,7 @@ C this is problematic at restart; clean-up later
            else
 C at this point in code, fluxCO2_1 contains total flux for current time step
             dFluxCO2Temp(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
-     &           fluxCO2(i,j,bi,bj)
+     &           FluxCO2_loc(i,j)
            endif
           ENDDO
          ENDDO
