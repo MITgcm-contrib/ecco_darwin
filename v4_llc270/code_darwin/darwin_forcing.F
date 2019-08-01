@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.7 2019/07/20 01:27:16 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.8 2019/08/01 18:29:59 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -420,6 +420,13 @@ c air-sea CO2 flux increment due to DIC change: dFluxCO2Dic
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
+
+         if (budgetTStep1 .EQ. 0) then
+         
+          budgetTStep1 = 1;
+
+         endif
+    
 #endif /* CO2_FLUX_BUDGET */
 c air-sea flux of O2
          call dic_o2_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iO2),

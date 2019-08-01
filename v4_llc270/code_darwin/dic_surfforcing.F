@@ -263,13 +263,17 @@ C update tendency
            if(budgetTStep1.EQ.0) then
 C if first timestep
 C this is problematic at restart clean-up later
-            dFluxCO2(i,j,bi,bj) = 0. d 0
+            dFluxCO2(i,j,bi,bj) = 0. _d 0
+            fluxCO2_1(i,j,bi,bj) = FluxCO2(i,j,bi,bj)            
            else
 C can include VirtualFlux later, if it is needed
-            dFluxCO2(i,j,bi,bj) = fluxCO2(i,j,bi,bj) -
+            dFluxCO2(i,j,bi,bj) = FluxCO2(i,j,bi,bj) -
      &           fluxCO2_1(i,j,bi,bj)
-            fluxCO2_1(i,j,bi,bj) = fluxCO2(i,j,bi,bj)
+
+            fluxCO2_1(i,j,bi,bj) = FluxCO2(i,j,bi,bj)
+            
            endif
+
 #endif /* CO2_FLUX_BUDGET */
           ENDDO
          ENDDO
