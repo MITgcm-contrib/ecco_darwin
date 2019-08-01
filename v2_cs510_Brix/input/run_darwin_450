@@ -5,9 +5,8 @@
 #PBS -q long
 #PBS -l walltime=120:00:00
 #PBS -j oe
-#PBS -N darwin_cg1
+#PBS -N darwin_V2
 #PBS -m abe
-##PBS -M menemenlis@me.com
 
 setenv FORT_BUFFERED 1
 
