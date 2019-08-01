@@ -1,3 +1,6 @@
+07/31/19
+- Added the correct V2 (hopefully) pickup files obtained from lou:~hbrix/ECCO2/darwin_ag4
+
 07/01/19
 - Moved pressure-dependent Ksp calculation used for non-linear water column and sediment 
   dissolution from dic_carbon_chem.F to darwin_forcing.F. Additionally, Water column dissolution
