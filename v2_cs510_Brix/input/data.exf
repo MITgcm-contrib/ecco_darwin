@@ -142,11 +142,11 @@
  climsst_nlat      = 720,
 #
  apco2_lon0        = 0.0D0,
- apco2_lon_inc     = 2.5D0,
- apco2_lat0        = -89.5D0,
- apco2_lat_inc     = 1.5D0,
-                     88*2.0D0,
-                     1.5D0,
- apco2_nlon        = 144,
- apco2_nlat        = 91,
- &
+ apco2_lon_inc     = 5.0D0,
+ apco2_lat0        = -89.0D0,
+ apco2_lat_inc     = 3.0D0,
+                     43*4.0D0,
+                     3.0D0,
+ apco2_nlon        = 72,
+ apco2_nlat        = 46, 
+&

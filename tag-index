@@ -1,3 +1,6 @@
+08/05/2019
+- DC: Corrected V2 apCO2 forcing grid dimensions in data.exf
+
 07/31/19
 - Added the correct V2 (hopefully) pickup files obtained from lou:~hbrix/ECCO2/darwin_ag4
 
