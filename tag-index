@@ -1,3 +1,7 @@
+08/06/2019
+- DC: Updated non-linear dissolution code, added dissolution rate diagnostic,
+  additional CO2 flux budget terms, and code for DIC/alkalinity surface forcing (for ship track simulations) 
+
 08/05/2019
 - DC: Corrected V2 apCO2 forcing grid dimensions in data.exf
 
