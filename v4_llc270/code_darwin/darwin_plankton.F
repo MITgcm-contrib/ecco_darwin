@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.4 2019/07/01 19:23:45 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.5 2019/08/06 18:28:13 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -72,6 +72,7 @@ c ANNA pass extra variables if WAVEBANDS
      I 			     CO3Local,
      O                       dDICdt, dDOCdt, dPOCdt, dPICdt,
      O                       dALKdt, dO2dt, dZOOCdt,omegaCLocal,
+     O                       disscPIC,
 #endif
 #ifdef GEIDER
      I                       phychl, 
@@ -1356,10 +1357,11 @@ c remineralization of sinking particulate
            DOCremin =  reminTempFunction * Kdoc * DOClocal
            preminC  = reminTempFunction * Kpremin_C*POClocal
 
-c water coloumn dissolution
-#ifdef NAVIAUX_DISSOLUTION
            calcium = 1.028 _d -2*Slocal/35. _d 0
            omegaCLocal = calcium * CO3Local / KspTPLocal
+
+c water column dissolution
+#ifdef NAVIAUX_DISSOLUTION
 
 c Naviaux et al. 2019, Marine Chemistry dissolution rate law
            if (omegaCLocal .LT. 1.0 _d 0) then

@@ -34,7 +34,7 @@ C          when coming from atmospheric model
      &                     ak0,ak1,ak2,akw,akb,aks,akf,
      &                     ak1p,ak2p,ak3p,aksi, fugf,
      &                     ff,ft,st,bt, Ksp_TP_Calc,CO3,
-     &                     omegaC
+     &                     omegaC,dissC
       _RL  ak0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  ak1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  ak2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -55,33 +55,13 @@ C Fugacity Factor added following Val Bennington
       _RL  Ksp_TP_Calc(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  CO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  omegaC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nR,nSx,nSy)
+      _RL  dissC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nR,nSx,nSy)
 
        COMMON /CO2_FLUX_BUDGET/
-     &  budgetPvPH,budgetPvPCO2,budgetPvCO3,
-     &  budgetTempPH,budgetTempPCO2,budgetTempCO3,
-     &  budgetSaltPH,budgetSaltPCO2,budgetSaltCO3,
-     &  budgetAlkPH,budgetAlkPCO2,budgetAlkCO3,
-     &  budgetDicPH,budgetDicPCO2,budgetDicCO3,
      &  fluxCO2_1,Kwexch1,budgetTemp1,budgetSalt1,budgetAlk1,
-     &  budgetDic1,budgetPhos1,budgetSi1,dFluxCO2,dFluxCO2Pv,
+     &  budgetDic1,budgetPhos1,budgetSi1,dFluxCO2,
      &  dFluxCO2Temp,dFluxCO2Salt,dFluxCO2Alk,dFluxCO2Dic,
-     &  dFluxCO2Sf,budgetTStep1
-
-      _RL budgetPvPH(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetPvPCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetPvCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetTempPH(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetTempPCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetTempCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetSaltPH(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetSaltPCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetSaltCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetAlkPH(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetAlkPCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetAlkCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetDicPH(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetDicPCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetDicCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+     &  dFluxCO2Pv,dFluxCO2ApCO2,dFluxCO2Sf,budgetTStep1
       
       _RL fluxCO2_1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
       _RL Kwexch1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -89,15 +69,18 @@ C Fugacity Factor added following Val Bennington
       _RL budgetSalt1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetAlk1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetDic1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL budgetPv1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL budgetApCO21(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
       _RL budgetPhos1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetSi1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
      
       _RL dFluxCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL dFluxCO2Pv(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Dic(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL dFluxCO2Pv(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL dFluxCO2ApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Sf(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetTStep1
 

@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.8 2019/08/01 18:29:59 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.9 2019/08/06 18:28:13 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -304,6 +304,8 @@ c sediment-to-ocean fluxes
        _RL pCO2SolverPo4
        _RL pCO2SolverSi
        _RL pCO2SolverAlk
+       _RL pHBudget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL pHBudget2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #endif
 
        _RL tot_Nfix
@@ -383,6 +385,17 @@ c ---------------------------
      &                       myIter, mythid)
 c --------------------------
 #ifdef ALLOW_CARBON
+
+#ifdef CO2_FLUX_BUDGET
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pHBudget1(i,j) = pH(i,j,bi,bj)
+          ENDDO
+         ENDDO
+
+#endif /* CO2_FLUX_BUDGET */
+
 c air-sea flux and dilution of CO2
          call dic_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
@@ -392,6 +405,19 @@ c air-sea flux and dilution of CO2
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
 #ifdef CO2_FLUX_BUDGET
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pHBudget2(i,j) = pH(i,j,bi,bj)
+	  ENDDO
+         ENDDO
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+          ENDDO
+         ENDDO
+
 c air-sea CO2 flux increment due to temperature change: dFluxCO2Temp
          call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
@@ -399,6 +425,13 @@ c air-sea CO2 flux increment due to temperature change: dFluxCO2Temp
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+          ENDDO
+         ENDDO
+
 c air-sea CO2 flux increment due to salinity change: dFluxCO2Salt
          call dic_budgetSalt(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
@@ -406,6 +439,13 @@ c air-sea CO2 flux increment due to salinity change: dFluxCO2Salt
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+          ENDDO
+         ENDDO
+
 c air-sea CO2 flux increment due to alkalinity change: dFluxCO2Alk
          call dic_budgetAlk(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
@@ -413,6 +453,13 @@ c air-sea CO2 flux increment due to alkalinity change: dFluxCO2Alk
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+          ENDDO
+         ENDDO
+
 c air-sea CO2 flux increment due to DIC change: dFluxCO2Dic
          call dic_budgetDic(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
@@ -420,6 +467,40 @@ c air-sea CO2 flux increment due to DIC change: dFluxCO2Dic
      &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
      &                    bi,bj,imin,imax,jmin,jmax,
      &                    myIter,myTime,myThid)
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+          ENDDO
+         ENDDO
+
+c air-sea CO2 flux increment due to piston velocity change: dFluxCO2PV
+         call dic_budgetPV(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &                    bi,bj,imin,imax,jmin,jmax,
+     &                    myIter,myTime,myThid)
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+          ENDDO
+         ENDDO
+
+c air-sea CO2 flux increment due to apCO2 change: dFluxCO2aPCO2
+         call dic_budgetApCO2(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &                    bi,bj,imin,imax,jmin,jmax,
+     &                    myIter,myTime,myThid)
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget2(i,j)
+          ENDDO
+         ENDDO
 
          if (budgetTStep1 .EQ. 0) then
          
@@ -1229,6 +1310,7 @@ c ANNA pass extra variables if WAVEBANDS
      I			     CO3(i,j,bi,bj),
      O                       ddicl, ddocl, dpocl, dpicl,
      O                       dalkl, do2l, dzoocl,omegaC(i,j,k,bi,bj),
+     O                       dissC(i,j,k,bi,bj),
 #endif
 #ifdef GEIDERCO3
      O                       phychl,
@@ -1904,11 +1986,11 @@ c ANNA end TAVE
      &                        0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(omegaC(1-Olx,1-Oly,1,bi,bj), 'OMEGAC  ',
      &                         0,Nr,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dissC(1-Olx,1-Oly,1,bi,bj), 'DISSC   ',
+     &                         0,Nr,2,bi,bj,myThid)
 #ifdef CO2_FLUX_BUDGET
         CALL DIAGNOSTICS_FILL(dFluxCO2(1-Olx,1-Oly,bi,bj),
      &   'DCO2FLX ',0,1,2,bi,bj,myThid )
-        CALL DIAGNOSTICS_FILL(dFluxCO2Pv(1-Olx,1-Oly,bi,bj),
-     &   'DCO2FLXP',0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(dFluxCO2Temp(1-Olx,1-Oly,bi,bj),
      &   'DCO2FLXT',0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(dFluxCO2Salt(1-Olx,1-Oly,bi,bj),
@@ -1916,7 +1998,11 @@ c ANNA end TAVE
         CALL DIAGNOSTICS_FILL(dFluxCO2Alk(1-Olx,1-Oly,bi,bj),
      &   'DCO2FLXA',0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(dFluxCO2Dic(1-Olx,1-Oly,bi,bj),
-     &   'DCO2FLXD',0,1,2,bi,bj,myThid)
+     &   'DCO2FLXD',0,1,2,bi,bj,myThid) 
+        CALL DIAGNOSTICS_FILL(dFluxCO2Pv(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLXP',0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dFluxCO2ApCO2(1-Olx,1-Oly,bi,bj),
+     &   'DCO2FLXC',0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(dFluxCO2Sf(1-Olx,1-Oly,bi,bj),
      &   'DCO2SF  ',0,1,2,bi,bj,myThid)
 #endif /* CO2_FLUX_BUDGET */
