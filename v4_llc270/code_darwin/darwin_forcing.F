@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.9 2019/08/06 18:28:13 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.10 2019/08/09 22:56:00 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -252,17 +252,21 @@ c air-sea fluxes
        _RL flxCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL flxALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL flxO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+       _RL calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL KspTP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+#ifdef ALLOW_SED_DISS_FLUX
 c sediment-to-ocean fluxes
        _RL DICSedFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
        _RL ALKSedFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-       _RL calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-       _RL bblDiffusionCoeff
-       _RL bblThickness
+       _RL BBLDiffusionCoeffLoc
+       _RL BBLThicknessLoc
        _RL RFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-       _RL KspTP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
        _RL CO3Sw(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
        _RL CO3Sed(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-       
+#endif /* ALLOW_SED_DISS_FLUX */
+
        _RL  t
        _RL  s
        _RL  ta
@@ -1383,17 +1387,23 @@ c include surface fluxes from forcing files
 	      dalkl  =  dalkl  + (alkSurf_flx(i,j,bi,bj)*1.0 _d 3)
 #endif
 	      endif
+
+              calcium(i,j,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
+
 #ifdef ALLOW_SED_DISS_FLUX
 c compute sediment dissolution fluxes
              if (bottom.eq.1.0 _d 0) then
-
-              calcium(i,j,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
               
 	      CO3Sed(i,j,bi,bj) = (KspTP(i,j,bi,bj) /
      &         calcium(i,j,bi,bj))
 
-              bblDiffusionCoeff = 4.01 _d -10
-              bblThickness = 1.0 _d -3
+              BBLDiffusionCoeffLoc = 4.01 _d -10
+
+              if (darwin_BBLFile .NE. ' ') then
+               BBLThicknessLoc = BBLThickness(i,j,bi,bj)
+              else 
+               BBLThicknessLoc = 1.0 _d -3	      
+              endif
 
 	      CO3Sw(i,j,bi,bj) = CO3(i,j,bi,bj)
 
@@ -1404,9 +1414,10 @@ c convert from mol kg^-1 to mol m^-3
               CO3Sw(i,j,bi,bj) = CO3Sw(i,j,bi,bj) * rhoConst
 
 c compute flux in mol m^-3 s^-1
-              RFlux(i,j,bi,bj) = (bblDiffusionCoeff/bblThickness) *
-     &         (CO3Sed(i,j,bi,bj)-CO3Sw(i,j,bi,bj))
+              RFlux(i,j,bi,bj) = (BBLDiffusionCoeffLoc / 
+     &         BBLThicknessLoc) * (CO3Sed(i,j,bi,bj)-CO3Sw(i,j,bi,bj))
 
+c prevent negative fluxes (for now)
               if(RFlux(i,j,bi,bj).LT.0) then
 	       RFlux(i,j,bi,bj) = 0;
 	      endif
@@ -1414,7 +1425,7 @@ c compute flux in mol m^-3 s^-1
               DICSedFlux(i,j,bi,bj) = RFlux(i,j,bi,bj)
               ALKSedFlux(i,j,bi,bj) = 2*RFlux(i,j,bi,bj)
 
-c convert sediment fluxes to mmol m^-3 s^-1 and add then to local values
+c convert sediment fluxes to mmol m^-3 s^-1 and then add to local values
 	      ddicl = ddicl+(RFlux(i,j,bi,bj)*1.0 _d 3 /
      &         drF(k)*HFacC(i,j,k,bi,bj))
 	      dalkl = dalkl+(2*RFlux(i,j,bi,bj)*1.0 _d 3 /
@@ -1970,17 +1981,20 @@ c ANNA end TAVE
      &                         0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL( pH(1-Olx,1-Oly,bi,bj), 'DICPHAV ',
      &                         0,1,2,bi,bj,myThid )
+
+#ifdef ALLOW_SED_DISS_FLUX
         CALL DIAGNOSTICS_FILL(DICSedFlux(1-Olx,1-Oly,bi,bj), 'DICSFLX ',
      &                        0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(ALKSedFlux(1-Olx,1-Oly,bi,bj), 'ALKSFLX ',
-     &                        0,1,2,bi,bj,myThid)
-        CALL DIAGNOSTICS_FILL(KspTP(1-Olx,1-Oly,bi,bj), 'KSPTP   ',
      &                        0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(RFlux(1-Olx,1-Oly,bi,bj), 'RFLUX   ',
      &                        0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(CO3Sw(1-Olx,1-Oly,bi,bj), 'CO3SW   ',
      &                        0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(CO3Sed(1-Olx,1-Oly,bi,bj), 'CO3SED  ',
+     &                        0,1,2,bi,bj,myThid)
+#endif /* ALLOW_SED_DISS_FLUX */
+        CALL DIAGNOSTICS_FILL(KspTP(1-Olx,1-Oly,bi,bj), 'KSPTP   ',
      &                        0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(calcium(1-Olx,1-Oly,bi,bj), 'CALCIUM ',
      &                        0,1,2,bi,bj,myThid)

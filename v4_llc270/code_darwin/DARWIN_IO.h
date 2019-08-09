@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_IO.h,v 1.1 2019/08/06 22:34:51 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_IO.h,v 1.2 2019/08/09 22:56:00 dcarroll Exp $
 C $Name:  $
 
 #include "DARWIN_OPTIONS.h"
@@ -26,7 +26,8 @@ C  darwin_seed          :: seed for the random number generator
 C  darwin_dicSurfFluxFile    :: file name of dic surface flux 
 C  darwin_alkSurfFluxFile    :: file name of alk surface flux
 C  darwin_calSurfFluxFile    :: file name of calcium surface flux
-
+C  darwin_BBLFile            :: file name of BBL file
+ 
       COMMON /DARWIN_FILENAMES/
      &        darwin_iceFile,
      &        darwin_ironFile,
@@ -45,7 +46,8 @@ C  darwin_calSurfFluxFile    :: file name of calcium surface flux
      &        darwin_seed,
      &        darwin_dicSurfFluxFile,
      &        darwin_alkSurfFluxFile,
-     &        darwin_calSurfFluxFile
+     &        darwin_calSurfFluxFile,
+     &        darwin_BBLFile
 
       CHARACTER*(MAX_LEN_FNAM) darwin_iceFile
       CHARACTER*(MAX_LEN_FNAM) darwin_ironFile
@@ -69,6 +71,7 @@ C  darwin_calSurfFluxFile    :: file name of calcium surface flux
       CHARACTER*(MAX_LEN_FNAM) darwin_dicSurfFluxFile
       CHARACTER*(MAX_LEN_FNAM) darwin_alkSurfFluxFile
       CHARACTER*(MAX_LEN_FNAM) darwin_calSurfFluxFile
+      CHARACTER*(MAX_LEN_FNAM) darwin_BBLFile
 
       _RL darwin_relaxscale
       _RL     darwin_forcingPeriod
@@ -113,9 +116,12 @@ c
        _RL   si_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nR,nSx, nSy)
 #endif
 #ifdef ADKINS_SURF_FLUX  
-       _RL   dicSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx, nSy)
-       _RL   alkSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx, nSy)
-       _RL   calSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx, nSy)
+       _RL   dicSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL   alkSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL   calSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+#endif
+#ifdef ALLOW_SED_DISS_FLUX
+       _RL   BBLThickness(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 #endif
 c
 c OUPUT DIAGNOSTICS

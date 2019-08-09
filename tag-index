@@ -1,3 +1,6 @@
+08/09/2019
+- DC: cleaned up darwin_forcing.F and added code for BBL thickness file (for sediment dissolution flux)
+
 08/06/2019
 - DC: Updated non-linear dissolution code, added dissolution rate diagnostic,
   additional CO2 flux budget terms, and code for DIC/alkalinity surface forcing (for ship track simulations) 

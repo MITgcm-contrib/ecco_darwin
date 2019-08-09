@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_fields_load.F,v 1.1 2019/08/06 22:34:51 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_fields_load.F,v 1.2 2019/08/09 22:56:00 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -72,6 +72,9 @@ C     msgBuf    - Informational/error meesage buffer
      &    , alkSurf_flx0, alkSurf_flx1
      &    , calSurf_flx0, calSurf_flx1
 #endif
+#ifdef ALLOW_SED_DISS_FLUX
+     &    , BBLThickness
+#endif
 #ifdef OASIM
      &    , oasim_ed0, oasim_ed1, oasim_es0, oasim_es1
 #endif
@@ -134,6 +137,29 @@ C     msgBuf    - Informational/error meesage buffer
       INTEGER nForcingPeriods,Imytm,Ifprd,Ifcyc,Iftm
 c
 c
+
+#ifdef ALLOW_SED_DISS_FLUX
+
+C     initialize BBL thickness 
+      DO bj = myByLo(myThid), myByHi(myThid)
+       DO bi = myBxLo(myThid), myBxHi(myThid)
+        DO j=1-OLy,sNy+OLy
+         DO i=1-OLx,sNx+OLx
+          BBLThickness(i,j,bi,bj) = 0. _d 0
+         ENDDO
+        ENDDO
+       ENDDO
+      ENDDO
+
+      if (darwin_BBLFile .NE. ' ') then
+       CALL READ_REC_XY_RS(darwin_BBLFile,BBLThickness,
+     &  1,0,myThid)
+      endif
+
+      _EXCH_XY_RS(BBLThickness, myThid)
+
+#endif /* ALLOW_SED_DISS_FLUX */
+
       IF ( darwin_ForcingPeriod .NE. 0. _d 0 ) THEN
 
 C First call requires that we initialize everything to zero for safety
