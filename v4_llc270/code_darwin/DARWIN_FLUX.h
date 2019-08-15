@@ -61,8 +61,9 @@ C Fugacity Factor added following Val Bennington
      &  fluxCO2_1,Kwexch1,budgetTemp1,budgetSalt1,budgetAlk1,
      &  budgetDic1,budgetPhos1,budgetSi1,dFluxCO2,
      &  dFluxCO2Temp,dFluxCO2Salt,dFluxCO2Alk,dFluxCO2Dic,
-     &  dFluxCO2Pv,dFluxCO2ApCO2,dFluxCO2Sf,budgetTStep1
-      
+     &  dFluxCO2Pv,dFluxCO2ApCO2,dFluxCO2Sf,budgetTStep1,
+     &  budgetPert
+ 
       _RL fluxCO2_1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
       _RL Kwexch1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetTemp1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -83,6 +84,7 @@ C Fugacity Factor added following Val Bennington
       _RL dFluxCO2ApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Sf(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetTStep1
+      _RL budgetPert
 
        COMMON /OXYGEN_CHEM/
      &              oA0,oA1,oA2,oA3,oA4,oA5,

@@ -12,6 +12,7 @@ C !ROUTINE: DIC_BUDGETTEMP
 
 C !INTERFACE: ==========================================================
       SUBROUTINE DIC_BUDGETTEMP( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
+     O           deltaTheta,
      I           bi,bj,imin,imax,jmin,jmax,
      I           myIter,myTime,myThid)
 
@@ -62,11 +63,13 @@ C local variables for carbon chem
       _RL surfsi(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surfsalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surftemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL budgetTemp1Pert(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #ifdef ALLOW_OLD_VIRTUALFLUX
       _RL VirtualFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #endif
 C local variables for CO2_FLUX_BUDGET
       _RL FluxCO2_loc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)      
+      _RL deltaTheta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 CEOP
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -111,11 +114,15 @@ C this is problematic for restarts; to do correctly we will have to
 C add to pickups or run simulation without interruptions
                  surftemp(i,j) = budgetTemp1(i,j,bi,bj)
              endif
+    
+             budgetTemp1Pert(i,j) = budgetTemp1(i,j,bi,bj) + 
+     &        budgetPert
+
          ENDDO
         ENDDO
 
          CALL CARBON_COEFFS(
-     I                       surftemp,surfsalt,
+     I                       budgetTemp1Pert,surfsalt,
      I                       bi,bj,iMin,iMax,jMin,jMax,myThid)
 C====================================================================
 
@@ -158,7 +165,7 @@ C$TAF LOOP = parallel
 
           IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
             CALL CALC_PCO2_APPROX(
-     I        surftemp(i,j),surfsalt(i,j),
+     I        budgetTemp1Pert(i,j),surfsalt(i,j),
      I        surfdic(i,j), surfphos(i,j),
      I        surfsi(i,j),surfalk(i,j),
      I        ak1(i,j,bi,bj),ak2(i,j,bi,bj),
@@ -177,7 +184,6 @@ C$TAF LOOP = parallel
           ENDIF
         ENDDO
        ENDDO
-
 
        DO j=jmin,jmax
         DO i=imin,imax
@@ -258,11 +264,14 @@ C update tendency
            if(budgetTStep1.EQ.0) then
 C if first timestep
 C this is problematic at restart; clean-up later
-            dFluxCO2Temp(i,j,bi,bj) = 0. d 0
+            dFluxCO2Temp(i,j,bi,bj) = 0. _d 0
+	    deltaTheta(i,j) = 0. _d 0
            else
 C at this point in code, fluxCO2_1 contains total flux for current time step
             dFluxCO2Temp(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
      &           FluxCO2_loc(i,j)
+            deltaTheta(i,j) = budgetTemp1(i,j,bi,bj) -
+     &       surftemp(i,j)
            endif
           ENDDO
          ENDDO

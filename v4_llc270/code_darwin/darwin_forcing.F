@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.10 2019/08/09 22:56:00 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.11 2019/08/15 23:38:50 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -310,6 +310,35 @@ c sediment-to-ocean fluxes
        _RL pCO2SolverAlk
        _RL pHBudget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL pHBudget2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+       _RL baselinePCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL pCO2Theta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL pCO2Salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL pCO2Alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL pCO2Dic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+       _RL deltaTheta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaSalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaAlk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+       _RL deltaDic_theta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic_salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic_alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic_apCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDicResidual(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+       _RL mixingDepth(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+       _RL dCO2Flux_theta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_dic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_apCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_bio(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_circ(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
 #endif
 
        _RL tot_Nfix
@@ -391,28 +420,28 @@ c --------------------------
 #ifdef ALLOW_CARBON
 
 #ifdef CO2_FLUX_BUDGET
-
          DO j=jmin,jmax
           DO i=imin,imax
            pHBudget1(i,j) = pH(i,j,bi,bj)
           ENDDO
          ENDDO
-
 #endif /* CO2_FLUX_BUDGET */
 
-c air-sea flux and dilution of CO2
+C baseline pCO2 and air-sea CO2 flux
          call dic_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &                        flxCO2,
-     &                    bi,bj,imin,imax,jmin,jmax,
-     &                    myIter,myTime,myThid)
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    flxCO2,
+     &    bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
+
 #ifdef CO2_FLUX_BUDGET
 
          DO j=jmin,jmax
           DO i=imin,imax
            pHBudget2(i,j) = pH(i,j,bi,bj)
+           baselinePCO2(i,j) = pCO2(i,j,bi,bj)
 	  ENDDO
          ENDDO
 
@@ -422,83 +451,73 @@ c air-sea flux and dilution of CO2
           ENDDO
          ENDDO
 
-c air-sea CO2 flux increment due to temperature change: dFluxCO2Temp
+C deltaPCO2 due to temperature change
          call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &                    bi,bj,imin,imax,jmin,jmax,
-     &                    myIter,myTime,myThid)
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaTheta,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
 
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Theta(i,j) = pCO2(i,j,bi,bj)
           ENDDO
          ENDDO
 
-c air-sea CO2 flux increment due to salinity change: dFluxCO2Salt
+C deltaPCO2 due to salinity change
          call dic_budgetSalt(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &                    bi,bj,imin,imax,jmin,jmax,
-     &                    myIter,myTime,myThid)
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaSalt,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
 
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Salt(i,j) = pCO2(i,j,bi,bj)
           ENDDO
          ENDDO
 
-c air-sea CO2 flux increment due to alkalinity change: dFluxCO2Alk
+C deltaPCO2 due to alkalinity change
          call dic_budgetAlk(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &                    bi,bj,imin,imax,jmin,jmax,
-     &                    myIter,myTime,myThid)
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaAlk,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
 
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Alk(i,j) = pCO2(i,j,bi,bj)
           ENDDO
          ENDDO
 
-c air-sea CO2 flux increment due to DIC change: dFluxCO2Dic
+C deltaPCO2 due to DIC change
          call dic_budgetDic(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &                    bi,bj,imin,imax,jmin,jmax,
-     &                    myIter,myTime,myThid)
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaDic,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
 
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Dic(i,j) = pCO2(i,j,bi,bj)
           ENDDO
          ENDDO
 
-c air-sea CO2 flux increment due to piston velocity change: dFluxCO2PV
-         call dic_budgetPV(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &                    bi,bj,imin,imax,jmin,jmax,
-     &                    myIter,myTime,myThid)
-
-         DO j=jmin,jmax
-          DO i=imin,imax
-           pH(i,j,bi,bj) = pHBudget1(i,j)
-          ENDDO
-         ENDDO
-
-c air-sea CO2 flux increment due to apCO2 change: dFluxCO2aPCO2
+C compute deltaApCO2
          call dic_budgetApCO2(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &                        Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &                    bi,bj,imin,imax,jmin,jmax,
-     &                    myIter,myTime,myThid)
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaApCO2,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
 
          DO j=jmin,jmax
           DO i=imin,imax
@@ -506,12 +525,86 @@ c air-sea CO2 flux increment due to apCO2 change: dFluxCO2aPCO2
           ENDDO
          ENDDO
 
+         DO j=jmin,jmax
+          DO i=imin,imax
+
+C compute delta Dic terms for each budget component (mol C m^-3)
+           deltaDic_theta(i,j) =  
+     &      (((pCO2Theta(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert) / 
+     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert)) *
+     &      deltaTheta(i,j)
+
+           deltaDic_salt(i,j) =  
+     &      (((pCO2Salt(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert) / 
+     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
+     &      budetPert)) *
+     &      deltaSalt(i,j)
+
+           deltaDic_alk(i,j) =  
+     &      (((pCO2Alk(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert) / 
+     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert)) *
+     &      deltaAlk(i,j) 
+
+           deltaDic_apCO2(i,j) = 
+     &      (budgetPert / (pCO2Dic(i,j) - baselinePCO2(i,j))) *
+     &      deltaApCO2(i,j)
+
+           deltaDicResidual(i,j) = deltaDic(i,j) - 
+     &      (deltaDic_theta(i,j) + deltaDic_salt(i,j) + 
+     &      deltaDic_alk(i,j) + deltaDic_apCO2(i,j))
+
+C           print*,'dDIC: ',deltaDic(i,j)
+C           print*,'dDIC_theta: ',deltaDic_theta(i,j)
+C           print*,'dDIC_salt: ',deltaDic_salt(i,j)
+C           print*,'dDIC_alk: ',deltaDic_alk(i,j)
+C           print*,'dDIC_apCO2: ',deltaDic_apCo2(i,j)
+C           print*,'dDIC residual: ',deltaDicResidual(i,j)
+
+          ENDDO
+         ENDDO
+
+C TODO: 1) compute GGL90 mixing depth here
+C TODO: 2) vertically-integrate relevant biological DIC tendency terms
+C       then subtract from residual flux to obtain circulation flux
+
+C compute CO2 flux budget terms (mol C m^-2 s^-1)
+         DO j=jmin,jmax
+          DO i=imin,imax
+
+           dCO2Flux_theta(i,j) = deltaDic_theta(i,j) * 
+     &      (mixingDepth(i,j) / deltaTclock) 
+
+           dCO2Flux_salt(i,j) = deltaDic_salt(i,j) *
+     &      (mixingDepth(i,j) / deltaTclock) 
+
+           dCO2Flux_alk(i,j) = deltaDic_alk(i,j) *
+     &      (mixingDepth(i,j) / deltaTclock)
+
+           dCO2Flux_apCO2(i,j) = deltaDic_apCO2(i,j) *
+     &      (mixingDepth(i,j) / deltaTclock) 
+
+C          dCO2Flux_bio(i,j) = deltaDic_bio(i,j) *
+C     &     mixingDepth(i,j)
+
+C          dCO2Flux_circ(i,j) = 
+C     &     (deltaDicResidual(i,j) *
+C     &     mixingDepth(i,j) / deltaTclock) - 
+C     &     dCO2Flux_bio(i,j)
+
+          ENDDO
+         ENDDO
+
          if (budgetTStep1 .EQ. 0) then
-         
+
           budgetTStep1 = 1;
 
          endif
-    
+
 #endif /* CO2_FLUX_BUDGET */
 c air-sea flux of O2
          call dic_o2_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iO2),

@@ -12,6 +12,7 @@ C !ROUTINE: DIC_BUDGETAPCO2
 
 C !INTERFACE: ==========================================================
       SUBROUTINE DIC_BUDGETAPCO2( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
+     O           deltaApCO2,
      I           bi,bj,imin,imax,jmin,jmax,
      I           myIter,myTime,myThid)
 
@@ -67,6 +68,7 @@ C local variables for carbon chem
 #endif
 C local variables for CO2_FLUX_BUDGET
       _RL FluxCO2_loc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)      
+      _RL deltaApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 CEOP
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -259,11 +261,14 @@ C update tendency
            if(budgetTStep1.EQ.0) then
 C if first timestep
 C this is problematic at restart; clean-up later
-            dFluxCO2ApCO2(i,j,bi,bj) = 0. d 0
+            dFluxCO2ApCO2(i,j,bi,bj) = 0. _d 0
+            deltaApCO2(i,j) = 0. _d 0
            else
 C at this point in code, fluxCO2_1 contains total flux for current time step
             dFluxCO2ApCO2(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
      &           FluxCO2_loc(i,j)
+            deltaApCO2(i,j) = budgetApCO21(i,j,bi,bj) -
+     &       pCO2sat(i,j)
            endif
           ENDDO
          ENDDO
