@@ -1,6 +1,12 @@
 # Build executable for ECCO-Darwin version 3
 # with circa-2011 MITgcm code, equivalent to
 # /nobackup/hbrix/MITgcm_110502/build_darwin_p6/mitgcmuv
+# Note: this version has different ICs from V2 and
+# uses a linear piston velocity formulation. The improved
+# V3 air-sea CO2 flux uptake, both globally and in the Southern Ocean,
+# results primarily from changing the piston velocity formulation
+# from quadratic to linear. By implementing various bug fixes and adjusted
+# ICs, we were able to return to the quadratic formulation in V4. 
 
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "2011-05-12 10:30:47" MITgcm_code
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "2011-05-12 10:30:47" MITgcm_contrib/darwin/pkg/darwin
