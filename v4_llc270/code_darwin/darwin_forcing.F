@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.11 2019/08/15 23:38:50 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.12 2019/08/21 20:30:31 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -327,7 +327,7 @@ c sediment-to-ocean fluxes
        _RL deltaDic_salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic_alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic_apCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-       _RL deltaDicResidual(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic_residual(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
        _RL mixingDepth(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
@@ -528,6 +528,8 @@ C compute deltaApCO2
          DO j=jmin,jmax
           DO i=imin,imax
 
+          IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
+
 C compute delta Dic terms for each budget component (mol C m^-3)
            deltaDic_theta(i,j) =  
      &      (((pCO2Theta(i,j) - baselinePCO2(i,j)) / 
@@ -540,7 +542,7 @@ C compute delta Dic terms for each budget component (mol C m^-3)
      &      (((pCO2Salt(i,j) - baselinePCO2(i,j)) / 
      &      budgetPert) / 
      &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
-     &      budetPert)) *
+     &      budgetPert)) *
      &      deltaSalt(i,j)
 
            deltaDic_alk(i,j) =  
@@ -554,47 +556,76 @@ C compute delta Dic terms for each budget component (mol C m^-3)
      &      (budgetPert / (pCO2Dic(i,j) - baselinePCO2(i,j))) *
      &      deltaApCO2(i,j)
 
-           deltaDicResidual(i,j) = deltaDic(i,j) - 
+           deltaDic_Residual(i,j) = deltaDic(i,j) - 
      &      (deltaDic_theta(i,j) + deltaDic_salt(i,j) + 
      &      deltaDic_alk(i,j) + deltaDic_apCO2(i,j))
+
+           else
+
+            deltaDic_theta(i,j) = 0. _d 0     
+            deltaDic_salt(i,j) = 0. _d 0
+            deltaDic_alk(i,j) = 0. _d 0
+	    deltaDic_apCO2(i,j) = 0. _d 0
+	    deltaDic_residual(i,j) = 0. _d 0
+
+           endif
+      
+C           print*,'deltaTheta: ',deltaTheta(i,j)
+C           print*,'deltaSalk: ',deltaSalt(i,j)
+C           print*,'deltaAlk: ',deltaAlk(i,j)
+C           print*,'deltaApCO2: ',deltaApCO2(i,j)
+
+C           print*,'baselinePCO2: ',baselinePCO2(i,j)
+C           print*,'pCO2Theta: ',pCO2Theta(i,j)
+C           print*,'pCO2Salt: ',pCO2Salt(i,j)
+C           print*,'pCO2Alk: ',pCO2Alk(i,j)
+C           print*,'pCO2Dic: ',pCO2Dic(i,j)
 
 C           print*,'dDIC: ',deltaDic(i,j)
 C           print*,'dDIC_theta: ',deltaDic_theta(i,j)
 C           print*,'dDIC_salt: ',deltaDic_salt(i,j)
 C           print*,'dDIC_alk: ',deltaDic_alk(i,j)
 C           print*,'dDIC_apCO2: ',deltaDic_apCo2(i,j)
-C           print*,'dDIC residual: ',deltaDicResidual(i,j)
+C           print*,'dDIC_residual: ',deltaDic_residual(i,j)
 
           ENDDO
          ENDDO
 
 C TODO: 1) compute GGL90 mixing depth here
+C first test with MLXDEPTH
+
+        DO j=jmin,jmax
+          DO i=imin,imax
+           mixingDepth(i,j) = hMixLayer(i,j,bi,bj)
+         ENDDO
+        ENDDO
+
 C TODO: 2) vertically-integrate relevant biological DIC tendency terms
 C       then subtract from residual flux to obtain circulation flux
 
-C compute CO2 flux budget terms (mol C m^-2 s^-1)
+C compute CO2 flux budget terms (mmol C m^-2 s^-1)
          DO j=jmin,jmax
           DO i=imin,imax
 
-           dCO2Flux_theta(i,j) = deltaDic_theta(i,j) * 
-     &      (mixingDepth(i,j) / deltaTclock) 
+           dCO2Flux_theta(i,j) = -(deltaDic_theta(i,j) * 
+     &      (mixingDepth(i,j) / deltaT)) 
 
-           dCO2Flux_salt(i,j) = deltaDic_salt(i,j) *
-     &      (mixingDepth(i,j) / deltaTclock) 
+           dCO2Flux_salt(i,j) = -(deltaDic_salt(i,j) *
+     &      (mixingDepth(i,j) / deltaT)) 
 
-           dCO2Flux_alk(i,j) = deltaDic_alk(i,j) *
-     &      (mixingDepth(i,j) / deltaTclock)
+           dCO2Flux_alk(i,j) = -(deltaDic_alk(i,j) *
+     &      (mixingDepth(i,j) / deltaT)) 
 
-           dCO2Flux_apCO2(i,j) = deltaDic_apCO2(i,j) *
-     &      (mixingDepth(i,j) / deltaTclock) 
+           dCO2Flux_apCO2(i,j) = -(deltaDic_apCO2(i,j) *
+     &      (mixingDepth(i,j) / deltaT))  
 
-C          dCO2Flux_bio(i,j) = deltaDic_bio(i,j) *
-C     &     mixingDepth(i,j)
+C          dCO2Flux_bio(i,j) = -(deltaDic_bio(i,j) *
+C     &     mixingDepth(i,j)) 
 
 C          dCO2Flux_circ(i,j) = 
-C     &     (deltaDicResidual(i,j) *
-C     &     mixingDepth(i,j) / deltaTclock) - 
-C     &     dCO2Flux_bio(i,j)
+C     &     -((deltaDicResidual(i,j) *
+C     &     mixingDepth(i,j) / deltaT) - 
+C     &     dCO2Flux_bio(i,j))
 
           ENDDO
          ENDDO
@@ -2096,22 +2127,24 @@ c ANNA end TAVE
         CALL DIAGNOSTICS_FILL(dissC(1-Olx,1-Oly,1,bi,bj), 'DISSC   ',
      &                         0,Nr,2,bi,bj,myThid)
 #ifdef CO2_FLUX_BUDGET
-        CALL DIAGNOSTICS_FILL(dFluxCO2(1-Olx,1-Oly,bi,bj),
+        CALL DIAGNOSTICS_FILL(dCO2Flux(1-Olx,1-Oly,bi,bj),
      &   'DCO2FLX ',0,1,2,bi,bj,myThid )
-        CALL DIAGNOSTICS_FILL(dFluxCO2Temp(1-Olx,1-Oly,bi,bj),
+        CALL DIAGNOSTICS_FILL(dCO2Flux_theta(1-Olx,1-Oly),
      &   'DCO2FLXT',0,1,2,bi,bj,myThid)
-        CALL DIAGNOSTICS_FILL(dFluxCO2Salt(1-Olx,1-Oly,bi,bj),
+        CALL DIAGNOSTICS_FILL(dCO2Flux_salt(1-Olx,1-Oly),
      &   'DCO2FLXS',0,1,2,bi,bj,myThid)
-        CALL DIAGNOSTICS_FILL(dFluxCO2Alk(1-Olx,1-Oly,bi,bj),
+        CALL DIAGNOSTICS_FILL(dCO2Flux_alk(1-Olx,1-Oly),
      &   'DCO2FLXA',0,1,2,bi,bj,myThid)
-        CALL DIAGNOSTICS_FILL(dFluxCO2Dic(1-Olx,1-Oly,bi,bj),
-     &   'DCO2FLXD',0,1,2,bi,bj,myThid) 
-        CALL DIAGNOSTICS_FILL(dFluxCO2Pv(1-Olx,1-Oly,bi,bj),
-     &   'DCO2FLXP',0,1,2,bi,bj,myThid)
-        CALL DIAGNOSTICS_FILL(dFluxCO2ApCO2(1-Olx,1-Oly,bi,bj),
+        CALL DIAGNOSTICS_FILL(dCO2Flux_apCO2(1-Olx,1-Oly),
      &   'DCO2FLXC',0,1,2,bi,bj,myThid)
-        CALL DIAGNOSTICS_FILL(dFluxCO2Sf(1-Olx,1-Oly,bi,bj),
-     &   'DCO2SF  ',0,1,2,bi,bj,myThid)
+
+C        CALL DIAGNOSTICS_FILL(dFluxCO2Dic(1-Olx,1-Oly),
+C     &   'DCO2FLXD',0,1,2,bi,bj,myThid) 
+C        CALL DIAGNOSTICS_FILL(dFluxCO2Pv(1-Olx,1-Oly,bi,bj),
+C     &   'DCO2FLXP',0,1,2,bi,bj,myThid)
+C        CALL DIAGNOSTICS_FILL(dFluxCO2Sf(1-Olx,1-Oly,bi,bj),
+C     &   'DCO2SF  ',0,1,2,bi,bj,myThid)
+
 #endif /* CO2_FLUX_BUDGET */
 #endif /* ALLOW_CARBON */
        ENDIF
