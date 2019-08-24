@@ -1,8 +1,7 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/ggl90_calc.F,v 1.1 2019/08/15 23:38:50 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/ggl90_calc.F,v 1.2 2019/08/24 13:10:27 dcarroll Exp $
 C $Name:  $
 
 #include "GGL90_OPTIONS.h"
-
 CBOP
 C !ROUTINE: GGL90_CALC
 
@@ -771,6 +770,16 @@ C     ===============================
         ENDDO
        ENDDO
       ENDDO
+
+      DO k=1,Nr
+       DO j=jMin,jMax
+        DO i=iMin,iMax
+         mixingLength(i,j,k,bi,bj) = GGL90mixingLength(i,j,k) /
+     &    drF(k)
+        ENDDO
+       ENDDO
+      ENDDO
+
 
 #ifdef ALLOW_DIAGNOSTICS
       IF ( useDiagnostics ) THEN

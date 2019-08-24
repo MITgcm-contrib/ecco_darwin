@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.2 2019/08/06 18:28:13 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.3 2019/08/24 13:10:27 dcarroll Exp $
 C $Name:  $
 
 #include "GCHEM_OPTIONS.h"
@@ -158,19 +158,19 @@ C     Define diagnostics Names :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      diagName  = 'DCO2FLXD'
-      diagTitle = 'delta CO2 flux due to DIC (mol/m2/s)'
-      diagUnits = 'mol/m2/s        '
-      diagCode  = 'SM P    M1      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+C      diagName  = 'DCO2FLXD'
+C      diagTitle = 'delta CO2 flux due to DIC (mol/m2/s)'
+C      diagUnits = 'mol/m2/s        '
+C      diagCode  = 'SM P    M1      '
+C      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+C     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      diagName  = 'DCO2FLXP'
-      diagTitle = 'delta CO2 flux due to piston velocity (mol/m2/s)'
-      diagUnits = 'mol/m2/s        '
-      diagCode  = 'SM P    M1      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+C      diagName  = 'DCO2FLXP'
+C      diagTitle = 'delta CO2 flux due to piston velocity (mol/m2/s)'
+C      diagUnits = 'mol/m2/s        '
+C      diagCode  = 'SM P    M1      '
+C      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+C     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
       diagName  = 'DCO2FLXC'
       diagTitle = 'delta CO2 flux due to apCO2 (mol/m2/s)'
@@ -179,9 +179,23 @@ C     Define diagnostics Names :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      diagName  = 'DCO2SF  '
-      diagTitle = 'CO2 flux budget scaling factor (dimensionless)'
-      diagUnits = 'dimensionless   '
+      diagName  = 'DCO2FLXB'
+      diagTitle = 'delta CO2 flux due to biology (mol/m2/s)'
+      diagUnits = 'mol/m2/s        '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DCO2FLXP'
+      diagTitle = 'delta CO2 flux due to circulation (mol/m2/s)'
+      diagUnits = 'mol/m2/s        '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'BCO2MIXD'
+      diagTitle = 'CO2 flux budget mixing depth (m)'
+      diagUnits = 'm               '
       diagCode  = 'SM P    M1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )

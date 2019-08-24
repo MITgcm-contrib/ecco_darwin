@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/GGL90.h,v 1.1 2019/08/15 23:38:50 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/GGL90.h,v 1.2 2019/08/24 13:10:27 dcarroll Exp $
 C $Name:  $
 
 #ifdef ALLOW_GGL90
@@ -81,12 +81,14 @@ CEOP
      &     GGL90mixingLengthMin,
      &     GGL90TKEmin, GGL90TKEsurfMin, GGL90TKEbottom,
      &     GGL90viscMax, GGL90diffMax,
-     &     GGL90dumpFreq, GGL90taveFreq, mxlMaxFlag
-
+     &     GGL90dumpFreq, GGL90taveFreq, mxlMaxFlag,
+     &     mixingLength
       _RL GGL90TKE    (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL GGL90viscArU(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL GGL90viscArV(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL GGL90diffKr (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+      _RL mixingLength(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+
       COMMON /GGL90_FIELDS/ GGL90TKE,
      &     GGL90viscArU, GGL90viscArV, GGL90diffKr
 
