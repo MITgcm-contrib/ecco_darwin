@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.13 2019/08/24 13:10:27 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.14 2019/08/25 23:23:14 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -1914,11 +1914,12 @@ c end if hFac>0
          enddo ! k
 c end layer loop
 c
-
        ENDDO ! i
        ENDDO ! j
 
 #ifdef CO2_FLUX_BUDGET
+C find k+1 from maximum GGL90 mixing length, 
+C use this as "mixing layer depth"
        DO k=1,Nr
         DO j=jmin,jmax
          DO i=imin,imax
@@ -1943,7 +1944,6 @@ C mmol C m^-3 s^-1
      &      budgetDOCRemin(i,j,k,bi,bj) +
      &      budgetPReminC(i,j,k,bi,bj) +     
      &      disscPIC(i,j,k,bi,bj))
-C     &     / (drF(k)*rA(i,j,bi,bj)*hFacC(i,j,k,bi,bj))
 	   endif
          ENDDO
         ENDDO
@@ -1954,23 +1954,29 @@ C compute CO2 flux budget terms (mmol C m^-2 s^-1)
         DO i=imin,imax
 
          dCO2Flux_theta(i,j) = -(deltaDic_theta(i,j) *
-     &   (mixingDepth(i,j) / deltaT))
+     &   (mixingDepth(i,j) / deltaT)) *
+     &    (1. _d 0 - FIce(i,j,bi,bj))
 
          dCO2Flux_salt(i,j) = -(deltaDic_salt(i,j) *
-     &    (mixingDepth(i,j) / deltaT))
+     &    (mixingDepth(i,j) / deltaT)) *
+     &    (1. _d 0 - FIce(i,j,bi,bj))
 
          dCO2Flux_alk(i,j) = -(deltaDic_alk(i,j) *
-     &    (mixingDepth(i,j) / deltaT))
+     &    (mixingDepth(i,j) / deltaT)) *
+     &    (1. _d 0 - FIce(i,j,bi,bj))
 
          dCO2Flux_apCO2(i,j) = -(deltaDic_apCO2(i,j) *
-     &    (mixingDepth(i,j) / deltaT))
+     &    (mixingDepth(i,j) / deltaT)) *
+     &    (1. _d 0 - FIce(i,j,bi,bj))
 
          dCO2Flux_bio(i,j) = -(deltaDic_bio(i,j) *
-     &    mixingDepth(i,j))
+     &    mixingDepth(i,j)) *
+     &    (1. _d 0 - FIce(i,j,bi,bj))
 
          dCO2Flux_circ(i,j) =
-     &    -((deltaDic_residual(i,j) *
-     &    mixingDepth(i,j) / deltaT) -
+     &    -(((deltaDic_residual(i,j) *
+     &    mixingDepth(i,j) / deltaT) *
+     &    (1. _d 0 - FIce(i,j,bi,bj))) -
      &    dCO2Flux_bio(i,j))
 
         ENDDO
