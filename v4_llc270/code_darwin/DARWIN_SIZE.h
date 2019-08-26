@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_SIZE.h,v 1.1 2017/12/01 19:02:10 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_SIZE.h,v 1.2 2019/08/26 05:33:09 dcarroll Exp $
 C $Name:  $
 
 c DARWIN_SIZE.h 
@@ -11,7 +11,6 @@ c npmax = no of "functional groups" of phytoplankton
 c nzmax = no of "functional groups" of zooplankton
 c
 c
-
          INTEGER npmax
          INTEGER nzmax
          PARAMETER(npmax=5,nzmax=2)
@@ -29,6 +28,7 @@ C iPOFe         :: index of POFe in Ptracer
 C iPOSi         :: index of POSi in Ptracer
 C iNH4          :: index of NH4  in Ptracer
 C iNO2          :: index of NO2  in Ptracer
+C iCa           :: index of Ca   in Ptracer
 C iZoo          :: index of first zooplankton
 C iPhy          :: index of first phytoplankton
 C iChl          :: index of first phytoplankton Chl (if using dynamic chl)
@@ -74,6 +74,7 @@ C remember to bring the fields in data.ptracers in the right order !
       INTEGER iALK
       INTEGER iO2
       INTEGER iZoC
+      INTEGER iCA
 #endif
 #ifdef DYNAMIC_CHL
       INTEGER iChl
@@ -110,7 +111,8 @@ C remember to bring the fields in data.ptracers in the right order !
       PARAMETER (iALK  =iPIC+1)
       PARAMETER (iO2   =iALK+1)
       PARAMETER (iZoC  =iO2+1)
-      PARAMETER (nDarwin=iZoC+nzmax-1)
+      PARAMETER (iCA = iZoC+nzmax)
+      PARAMETER (nDarwin=iCA-1)
 #else
       PARAMETER (nDarwin=iTOT-1)
 #endif

@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_readparams.F,v 1.1 2019/08/14 19:37:29 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_readparams.F,v 1.2 2019/08/26 05:33:09 dcarroll Exp $
 C $Name:  $
 
 #include "DARWIN_OPTIONS.h"
@@ -61,7 +61,7 @@ CEOP
      &           darwin_particleabsorbFile,
      &           darwin_dicSurfFluxFile,
      &           darwin_alkSurfFluxFile,
-     &           darwin_calSurfFluxFile,
+     &           darwin_caSurfFluxFile,
 #ifdef OASIM
      &           darwin_oasim_edFile, darwin_oasim_esFile,
 #endif
@@ -138,7 +138,7 @@ C Set defaults values for parameters in DARWIN_IO.h
       darwin_seed=0
       darwin_dicSurfFluxFile=' '
       darwin_alkSurfFluxFile=' '
-      darwin_calSurfFluxFile=' '
+      darwin_caSurfFluxFile=' '
 
 c default periodic forcing to same as for GCHEM
       darwin_forcingPeriod=gchem_ForcingPeriod

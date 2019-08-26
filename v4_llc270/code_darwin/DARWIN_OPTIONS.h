@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.9 2019/08/06 22:34:51 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.10 2019/08/26 05:33:09 dcarroll Exp $
 C $Name:  $
 
 #ifndef DARWIN_OPTIONS_H
@@ -78,7 +78,7 @@ C compute CO2 flux budget terms
 #undef CO2_FLUX_BUDGET
 
 C allow surface DIC, alkalinity, and calcium fluxes
-#undef ADKINS_SURF_FLUX
+#define ADKINS_SURF_FLUX
 
 #undef  RELAX_NUTS
 #undef  FLUX_NUTS

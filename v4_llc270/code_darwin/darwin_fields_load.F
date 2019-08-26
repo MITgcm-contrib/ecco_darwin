@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_fields_load.F,v 1.2 2019/08/09 22:56:00 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_fields_load.F,v 1.3 2019/08/26 05:33:09 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -70,7 +70,7 @@ C     msgBuf    - Informational/error meesage buffer
 #ifdef ADKINNS_SURF_FLUX
      &    , dicSurf_flx0, dicSurf_flx1 
      &    , alkSurf_flx0, alkSurf_flx1
-     &    , calSurf_flx0, calSurf_flx1
+     &    , caSurf_flx0, caSurf_flx1
 #endif
 #ifdef ALLOW_SED_DISS_FLUX
      &    , BBLThickness
@@ -119,8 +119,8 @@ C     msgBuf    - Informational/error meesage buffer
       _RS dicSurf_flx1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
       _RS alkSurf_flx0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RS alkSurf_flx1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RS calSurf_flx0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RS calSurf_flx1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RS caSurf_flx0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RS caSurf_flx1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 #endif
 #ifdef OASIM
       _RS oasim_ed0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,tlam,nSx,nSy)
@@ -240,8 +240,8 @@ cQQQ need to check timing
               dicSurf_flx1(i,j,bi,bj) = 0. _d 0
 	      alkSurf_flx0(i,j,bi,bj) = 0. _d 0
 	      alkSurf_flx1(i,j,bi,bj) = 0. _d 0
-              calSurf_flx0(i,j,bi,bj) = 0. _d 0
-	      calSurf_flx1(i,j,bi,bj) = 0. _d 0
+              caSurf_flx0(i,j,bi,bj) = 0. _d 0
+	      caSurf_flx1(i,j,bi,bj) = 0. _d 0
             ENDDO
            ENDDO
           ENDDO
@@ -414,10 +414,10 @@ C      data for the period ahead and the period behind myTime.
          CALL READ_REC_XY_RS( darwin_alkSurfFluxFile,alkSurf_flx1,
      &        intime1,myIter,myThid )
        ENDIF
-       IF ( darwin_calSurfFluxFile .NE. ' '  ) THEN
-         CALL READ_REC_XY_RS( darwin_calSurfFluxFile,calSurf_flx0,
+       IF ( darwin_caSurfFluxFile .NE. ' '  ) THEN
+         CALL READ_REC_XY_RS( darwin_caSurfFluxFile,caSurf_flx0,
      &        intime0,myIter,myThid )
-         CALL READ_REC_XY_RS( darwin_calSurfFluxFile,calSurf_flx1,
+         CALL READ_REC_XY_RS( darwin_caSurfFluxFile,caSurf_flx1,
      &        intime1,myIter,myThid )
        ENDIF
 #endif
@@ -521,8 +521,8 @@ C
        _EXCH_XY_RS(dicSurf_flx1, myThid )
        _EXCH_XY_RS(alkSurf_flx0, myThid )
        _EXCH_XY_RS(alkSurf_flx1, myThid )
-       _EXCH_XY_RS(calSurf_flx0, myThid )
-       _EXCH_XY_RS(calSurf_flx1, myThid )
+       _EXCH_XY_RS(caSurf_flx0, myThid )
+       _EXCH_XY_RS(caSurf_flx1, myThid )
 #endif
 #ifdef OASIM
        CALL EXCH_3D_RS   (oasim_ed0, tlam, myThid)
@@ -664,9 +664,9 @@ c artificial wvel for nutrient supply in 1-d and 2-d models
              alkSurf_flx(i,j,bi,bj) = bWght*alkSurf_flx0(i,j,bi,bj)
      &        +aWght*alkSurf_flx1(i,j,bi,bj)
             ENDIF
-            IF ( darwin_calSurfFluxFile .NE. ' '  ) THEN
-             calSurf_flx(i,j,bi,bj) = bWght*calSurf_flx0(i,j,bi,bj)
-     &        +aWght*calSurf_flx1(i,j,bi,bj)
+            IF ( darwin_caSurfFluxFile .NE. ' '  ) THEN
+             caSurf_flx(i,j,bi,bj) = bWght*caSurf_flx0(i,j,bi,bj)
+     &        +aWght*caSurf_flx1(i,j,bi,bj)
             ENDIF
 #endif
 

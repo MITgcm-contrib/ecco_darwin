@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/ptracers_integrate.F,v 1.2 2017/12/21 21:07:22 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/ptracers_integrate.F,v 1.3 2019/08/26 05:33:09 dcarroll Exp $
 C $Name:  $
 
 #include "PTRACERS_OPTIONS.h"
@@ -482,31 +482,6 @@ C--   Apply open boundary conditions for each passive tracer
      I         myThid )
         ENDIF
 #endif /* ALLOW_OBCS */
-
-cDM moving these bounds to darwin_forcing.F
-cDMcBX-a
-cDMc check if tracers values for DIC and ALK are > 3000 and DIC < 600 and correct if needed
-cDM        IF ( iTracer == 32 .OR. iTracer == 36) THEN
-cDM           DO k=1,Nr
-cDM              DO j=1-OLy,sNy+OLy
-cDM                 DO i=1-OLx,sNx+OLx
-cDM                    IF( pTracer(i,j,k,bi,bj,iTracer)>3000 )
-cDM     &                   pTracer(i,j,k,bi,bj,iTracer)=3000.
-cDM                 ENDDO
-cDM              ENDDO
-cDM           ENDDO
-cDM        ENDIF
-cDM        IF ( iTracer == 32) THEN
-cDM           DO k=1,Nr
-cDM              DO j=1-OLy,sNy+OLy
-cDM                 DO i=1-OLx,sNx+OLx
-cDM                    IF( pTracer(i,j,k,bi,bj,iTracer)<600 )
-cDM     &                   pTracer(i,j,k,bi,bj,iTracer)=600.
-cDM                 ENDDO
-cDM              ENDDO
-cDM           ENDDO
-cDM        ENDIF
-cDMcBX-e
 
 C--   end of tracer loop
        ENDIF

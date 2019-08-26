@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_IO.h,v 1.2 2019/08/09 22:56:00 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_IO.h,v 1.3 2019/08/26 05:33:09 dcarroll Exp $
 C $Name:  $
 
 #include "DARWIN_OPTIONS.h"
@@ -25,7 +25,7 @@ C  darwin_forcingCycle  :: perioDARWIN forcing parameter specific for DARWIN (se
 C  darwin_seed          :: seed for the random number generator
 C  darwin_dicSurfFluxFile    :: file name of dic surface flux 
 C  darwin_alkSurfFluxFile    :: file name of alk surface flux
-C  darwin_calSurfFluxFile    :: file name of calcium surface flux
+C  darwin_caSurfFluxFile    :: file name of calcium surface flux
 C  darwin_BBLFile            :: file name of BBL file
  
       COMMON /DARWIN_FILENAMES/
@@ -46,7 +46,7 @@ C  darwin_BBLFile            :: file name of BBL file
      &        darwin_seed,
      &        darwin_dicSurfFluxFile,
      &        darwin_alkSurfFluxFile,
-     &        darwin_calSurfFluxFile,
+     &        darwin_caSurfFluxFile,
      &        darwin_BBLFile
 
       CHARACTER*(MAX_LEN_FNAM) darwin_iceFile
@@ -70,7 +70,7 @@ C  darwin_BBLFile            :: file name of BBL file
       CHARACTER*(MAX_LEN_FNAM) darwin_acdomFile
       CHARACTER*(MAX_LEN_FNAM) darwin_dicSurfFluxFile
       CHARACTER*(MAX_LEN_FNAM) darwin_alkSurfFluxFile
-      CHARACTER*(MAX_LEN_FNAM) darwin_calSurfFluxFile
+      CHARACTER*(MAX_LEN_FNAM) darwin_caSurfFluxFile
       CHARACTER*(MAX_LEN_FNAM) darwin_BBLFile
 
       _RL darwin_relaxscale
@@ -94,7 +94,7 @@ c    sur_par        - surface PAR
      &      ,po4_flx, no3_flx, fet_flx, si_flx
 #endif
 #ifdef ADKINS_SURF_FLUX
-     &      ,dicSurf_flx, alkSurf_flx, calSurf_flx
+     &      ,dicSurf_flx, alkSurf_flx, caSurf_flx
 #endif
 c
        _RL   fice(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx, nSy)
@@ -118,7 +118,7 @@ c
 #ifdef ADKINS_SURF_FLUX  
        _RL   dicSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
        _RL   alkSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-       _RL   calSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL   caSurf_flx(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 #endif
 #ifdef ALLOW_SED_DISS_FLUX
        _RL   BBLThickness(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)

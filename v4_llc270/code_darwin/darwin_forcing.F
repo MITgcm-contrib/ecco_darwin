@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.14 2019/08/25 23:23:14 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.15 2019/08/26 05:33:09 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -256,7 +256,9 @@ c air-sea fluxes
 
        _RL calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
        _RL KspTP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-
+#ifdef ADKINS_SURF_FLUX
+       _RL dcal
+#endif
 #ifdef ALLOW_SED_DISS_FLUX
 c sediment-to-ocean fluxes
        _RL DICSedFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -917,6 +919,8 @@ c brute force...
              picl  = max(Ptr(i,j,k,bi,bj,iPIC  ),0. _d 0)
              alkl  = max(Ptr(i,j,k,bi,bj,iALK  ),0. _d 0)
              o2l   = max(Ptr(i,j,k,bi,bj,iO2   ),0. _d 0)
+             cal   = max(Ptr(i,j,k,bi,bj,iCa   ),0. _d 0)
+ 
              DO nz = 1,nzmax
                ZooCl(nz)  = max(Ptr(i,j,k,bi,bj,iZooC (nz)),0. _d 0)
              ENDDO
@@ -1070,6 +1074,9 @@ c set tendencies to 0
              do nz=1,nzmax
                dzoocl(nz)=0. _d 0
              enddo
+#endif
+#ifdef ADKINS_SURF_FLUX
+             dcal = 0. _d 0
 #endif
 c set other arguments to zero
              PP=0. _d 0
@@ -1438,17 +1445,23 @@ c
              picupl = PICl
 c include surface forcing
              if (k.eq.1) then
-              ddicl  =  ddicl  + flxCO2(i,j)
-              dalkl  =  dalkl  + flxALK(i,j)
-              do2l   =  do2l   + flxO2(i,j)
+              ddicl  =  ddicl + flxCO2(i,j)
+              dalkl  =  dalkl + flxALK(i,j)
+              do2l   =  do2l + flxO2(i,j)
 #ifdef ADKINS_SURF_FLUX
 c include surface fluxes from forcing files              
-	      ddicl  =  ddicl  + (dicSurf_flx(i,j,bi,bj)*1.0 _d 3)
-	      dalkl  =  dalkl  + (alkSurf_flx(i,j,bi,bj)*1.0 _d 3)
+	      ddicl = ddicl + (dicSurf_flx(i,j,bi,bj) * 1. _d 3)
+	      dalkl = dalkl + (alkSurf_flx(i,j,bi,bj) * 1. _d 3)
+              dcal = dcal + (caSurf_flx(i,j,bi,bj) * 1. _d 3)
+              dcal = dcal - budgetConsumpDIC_PIC(i,j,k,bi,bj) +
+     &         disscPIC(i,j,k,bi,bj)
+              
+C add in other Ca tendencies
 #endif
 	      endif
 
-              calcium(i,j,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
+              calcium(i,j,bi,bj) = 1.028 _d -2 *
+     &         (Slocal / 35. _d 0)
 
 #ifdef ALLOW_SED_DISS_FLUX
 c compute sediment dissolution fluxes
@@ -1611,6 +1624,7 @@ c ---- end steph's alternative
             dpicl = dpicl*maskInC(i,j,bi,bj)
             dalkl = dalkl*maskInC(i,j,bi,bj)
             do2l  = do2l *maskInC(i,j,bi,bj)
+            dcal  = dcal *maskInC(i,j,bi,bj)
             DO nz = 1,nzmax
              dzoocl(nz) = dzoocl(nz)*maskInC(i,j,bi,bj)
             ENDDO
@@ -1694,6 +1708,8 @@ c in darwin_plankton this is stored for previous timestep. Reset here.
           DO nz = 1,nzmax
            Ptr(i,j,k,bi,bj,iZooC (nz)) = Ptr(i,j,k,bi,bj,iZooC (nz)) +
      &                                        dtplankton*dzoocl (nz)
+          Ptr(i,j,k,bi,bj,iCA) = Ptr(i,j,k,bi,bj,iCA) +
+     &                                  dtplankton*dcal
           ENDDO
 #endif
 c

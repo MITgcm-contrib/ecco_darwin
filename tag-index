@@ -1,3 +1,16 @@
+08/25/2019
+-DC : added sea-ice mask for CO2 flux budget terms and
+ calcium tracer for ship track simulations
+
+08/24/2019
+- DC: continued development of CO2 flux budget code
+
+08/21/2019
+- DC: updated CO2 flux budget diagnostics and code
+
+08/15/2019
+- DC: check in of revised CO2 flux budget code (development in progress)
+
 08/15/2019
 - DC: updated V3 cs510 readme
 
