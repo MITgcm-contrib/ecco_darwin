@@ -91,7 +91,9 @@ C determine inorganic carbon chem coefficients
         DO j=jmin,jmax
          DO i=imin,imax
 c put bounds on tracers so pH solver doesn't blow up
+C value from previous timestep
              surfdic(i,j) = budgetDic1(i,j,bi,bj)
+C value from current timestep
              budgetDic1(i,j,bi,bj) =
      &           max(100. _d 0 , min(4000. _d 0, PTR_DIC(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
@@ -101,10 +103,9 @@ C this is problematic for restarts; to do correctly we will have to
 C add to pickups or run simulation without interruptions
                 surfdic(i,j) = budgetDic1(i,j,bi,bj)
              endif
-
-             budgetDic1Pert(i,j) = budgetDic1(i,j,bi,bj) + 
+C perturbation from current timestep
+             budgetDic1Pert(i,j) = surfdic(i,j) + 
      &        budgetPert
-
              surfalk(i,j) = 
      &           max(100. _d 0 , min(4000. _d 0, PTR_ALK(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
@@ -268,11 +269,13 @@ C this is problematic at restart; clean-up later
             dFluxCO2Dic(i,j,bi,bj) = 0. _d 0
             deltaDic(i,j) = 0. _d 0
            else
-C at this point in code, fluxCO2_1 contains total flux for current time step
+C at this point in code, fluxCO2_1 contains 
+C total flux for current time step
             dFluxCO2Dic(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
      &           FluxCO2_loc(i,j)
-            deltaDic(i,j) = budgetDic1(i,j,bi,bj) -
-     &       surfdic(i,j)
+C current value - value from previous timestep, convert to mmol m^-3  
+            deltaDic(i,j) = budgetDic1(i,j,bi,bj)*1e3 -
+     &       surfdic(i,j)*1e3
            endif
           ENDDO
          ENDDO

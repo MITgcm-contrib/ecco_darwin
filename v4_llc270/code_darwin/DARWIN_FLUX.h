@@ -59,9 +59,12 @@ C Fugacity Factor added following Val Bennington
 
        COMMON /CO2_FLUX_BUDGET/
      &  fluxCO2_1,Kwexch1,budgetTemp1,budgetSalt1,budgetAlk1,
-     &  budgetDic1,budgetPhos1,budgetSi1,dCO2Flux,
+     &  budgetDic1,budgetPV1,budgetApCO21,budgetBio1,
+     &  budgetPhos1,budgetSi1,
+     &  dCO2Flux,
      &  dFluxCO2Temp,dFluxCO2Salt,dFluxCO2Alk,dFluxCO2Dic,
-     &  dFluxCO2Pv,dFluxCO2ApCO2,dFluxCO2Sf,budgetTStep1,
+     &  dFluxCO2Pv,dFluxCO2ApCO2,dFluxCO2Sf,
+     &  budgetTStep1,
      &  budgetPert,
      &  budgetConsumpDIC,budgetConsumpDIC_PIC,
      &  budgetDOCRemin,budgetPReminC
@@ -72,8 +75,9 @@ C Fugacity Factor added following Val Bennington
       _RL budgetSalt1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetAlk1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetDic1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetPv1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL budgetPV1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetApCO21(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
+      _RL budgetBio1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetPhos1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL budgetSi1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
      

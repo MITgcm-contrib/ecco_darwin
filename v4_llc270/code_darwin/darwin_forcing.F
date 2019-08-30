@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.15 2019/08/26 05:33:09 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.16 2019/08/30 00:13:33 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -314,8 +314,10 @@ c sediment-to-ocean fluxes
    
 #ifdef CO2_FLUX_BUDGET
        _RL pHBudget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-       _RL pHBudget2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL pCO2Budget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL CO3Budget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
+       _RL baselinePH(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL baselinePCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL baselineCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        
@@ -345,6 +347,7 @@ c sediment-to-ocean fluxes
        _RL dCO2Flux_alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL dCO2Flux_dic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL dCO2Flux_apCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_residual(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL dCO2Flux_bio(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL dCO2Flux_circ(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #endif /* CO2_FLUX_BUDGET */
@@ -429,14 +432,17 @@ c --------------------------
 #ifdef ALLOW_CARBON
 
 #ifdef CO2_FLUX_BUDGET
+C store values from previous timestep
          DO j=jmin,jmax
           DO i=imin,imax
            pHBudget1(i,j) = pH(i,j,bi,bj)
+           pCO2Budget1(i,j) = pCO2(i,j,bi,bj)
+           CO3Budget1(i,j) = CO3(i,j,bi,bj)
           ENDDO
          ENDDO
 #endif /* CO2_FLUX_BUDGET */
 
-C baseline pCO2 and air-sea CO2 flux
+C compute baseline pCO2 and air-sea CO2 flux
          call dic_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
@@ -446,29 +452,31 @@ C baseline pCO2 and air-sea CO2 flux
      &    myIter,myTime,myThid)
 
 #ifdef CO2_FLUX_BUDGET
-
+C store values from current timestep as non-perturbed baseline
          DO j=jmin,jmax
           DO i=imin,imax
-           pHBudget2(i,j) = pH(i,j,bi,bj)
+           baselinePH(i,j) = pH(i,j,bi,bj)
            baselinePCO2(i,j) = pCO2(i,j,bi,bj)
 	   baselineCO3(i,j) = CO3(i,j,bi,bj)
           ENDDO
          ENDDO
 
+C set pH to value from previous timestep
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
           ENDDO
          ENDDO
 
-C deltaPCO2 due to temperature change
-         call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+C deltaPCO2 due to theta pertubation
+         call dic_budgetTheta(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
      &    deltaTheta,bi,bj,imin,imax,jmin,jmax,
      &    myIter,myTime,myThid)
 
+C set pH to value from previous timestep and store pCO2
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
@@ -476,7 +484,7 @@ C deltaPCO2 due to temperature change
           ENDDO
          ENDDO
 
-C deltaPCO2 due to salinity change
+C deltaPCO2 due to salinity perturbation
          call dic_budgetSalt(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
@@ -484,6 +492,7 @@ C deltaPCO2 due to salinity change
      &    deltaSalt,bi,bj,imin,imax,jmin,jmax,
      &    myIter,myTime,myThid)
 
+C set pH to value from previous timestep and store pCO2
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
@@ -491,7 +500,7 @@ C deltaPCO2 due to salinity change
           ENDDO
          ENDDO
 
-C deltaPCO2 due to alkalinity change
+C deltaPCO2 due to alkalinity perturbation
          call dic_budgetAlk(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
@@ -499,6 +508,7 @@ C deltaPCO2 due to alkalinity change
      &    deltaAlk,bi,bj,imin,imax,jmin,jmax,
      &    myIter,myTime,myThid)
 
+C set pH to value from previous timestep and store pCO2
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
@@ -506,7 +516,7 @@ C deltaPCO2 due to alkalinity change
           ENDDO
          ENDDO
 
-C deltaPCO2 due to DIC change
+C deltaPCO2 due to DIC perturbation
          call dic_budgetDic(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
@@ -514,6 +524,7 @@ C deltaPCO2 due to DIC change
      &    deltaDic,bi,bj,imin,imax,jmin,jmax,
      &    myIter,myTime,myThid)
 
+C set pH to value from previous timestep and store pCO2
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
@@ -532,7 +543,7 @@ C compute deltaApCO2
 C reset to baseline values
          DO j=jmin,jmax
           DO i=imin,imax
-           pH(i,j,bi,bj) = pHBudget2(i,j)
+           pH(i,j,bi,bj) = baselinePH(i,j)
            pCO2(i,j,bi,bj) = baselinePCO2(i,j)
            CO3(i,j,bi,bj) = baselineCO3(i,j)
           ENDDO
@@ -543,7 +554,7 @@ C reset to baseline values
 
           IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
 
-C compute delta Dic terms for each budget component (mol C m^-3)
+C compute delta DIC terms for each budget component (mmol C m^-3)
            deltaDic_theta(i,j) =  
      &      (((pCO2Theta(i,j) - baselinePCO2(i,j)) / 
      &      budgetPert) / 
@@ -1934,15 +1945,15 @@ c
        ENDDO ! j
 
 #ifdef CO2_FLUX_BUDGET
-C find k+1 from maximum GGL90 mixing length, 
+C find k index from maximum GGL90 mixing length, 
 C use this as "mixing layer depth"
        DO k=1,Nr
         DO j=jmin,jmax
          DO i=imin,imax
           if(mixingLength(i,j,k,bi,bj) .EQ. 
      &     MAXVAL(mixingLength(i,j,1:Nr,bi,bj))) then
-            mixingDepthKLev(i,j) = MIN(k+1,Nr)
-            mixingDepth(i,j) = ABS(rF(MIN(k+1,Nr)))
+            mixingDepthKLev(i,j) = MIN(k,Nr)
+            mixingDepth(i,j) = ABS(rF(MIN(k,Nr)))
           endif
          ENDDO
         ENDDO
@@ -1953,14 +1964,16 @@ C mmol C m^-3 s^-1
        DO k=1,Nr
         DO j=jmin,jmax
          DO i=imin,imax
-           if(k .LE. mixingDepthKLev(i,j)) then
-            deltaDic_bio(i,j) = deltaDic_bio(i,j) +
+
+          if(k .LE. mixingDepthKLev(i,j)) then
+           deltaDic_bio(i,j) = deltaDic_bio(i,j) +
      &      (-(budgetConsumpDIC(i,j,k,bi,bj)) +
      &      -(budgetConsumpDIC_PIC(i,j,k,bi,bj)) +
      &      budgetDOCRemin(i,j,k,bi,bj) +
      &      budgetPReminC(i,j,k,bi,bj) +     
      &      disscPIC(i,j,k,bi,bj))
-	   endif
+	  endif
+
          ENDDO
         ENDDO
        ENDDO
@@ -1969,31 +1982,33 @@ C compute CO2 flux budget terms (mmol C m^-2 s^-1)
        DO j=jmin,jmax
         DO i=imin,imax
 
-         dCO2Flux_theta(i,j) = -(deltaDic_theta(i,j) *
-     &   (mixingDepth(i,j) / deltaT)) *
-     &    (1. _d 0 - FIce(i,j,bi,bj))
+         dCO2Flux_theta(i,j) = deltaDic_theta(i,j) *
+     &    mixingDepth(i,j) / deltaT *
+     &    (1. _d 0 - FIce(i,j,bi,bj)) 
 
-         dCO2Flux_salt(i,j) = -(deltaDic_salt(i,j) *
-     &    (mixingDepth(i,j) / deltaT)) *
-     &    (1. _d 0 - FIce(i,j,bi,bj))
+         dCO2Flux_salt(i,j) = deltaDic_salt(i,j) *
+     &    mixingDepth(i,j) / deltaT *
+     &    (1. _d 0 - FIce(i,j,bi,bj)) 
 
-         dCO2Flux_alk(i,j) = -(deltaDic_alk(i,j) *
-     &    (mixingDepth(i,j) / deltaT)) *
-     &    (1. _d 0 - FIce(i,j,bi,bj))
+         dCO2Flux_alk(i,j) = deltaDic_alk(i,j) *
+     &    mixingDepth(i,j) / deltaT *
+     &    (1. _d 0 - FIce(i,j,bi,bj)) 
 
-         dCO2Flux_apCO2(i,j) = -(deltaDic_apCO2(i,j) *
-     &    (mixingDepth(i,j) / deltaT)) *
-     &    (1. _d 0 - FIce(i,j,bi,bj))
+         dCO2Flux_apCO2(i,j) = deltaDic_apCO2(i,j) *
+     &    mixingDepth(i,j) / deltaT *
+     &    (1. _d 0 - FIce(i,j,bi,bj)) 
 
-         dCO2Flux_bio(i,j) = -(deltaDic_bio(i,j) *
-     &    mixingDepth(i,j)) *
+         dCO2Flux_residual(i,j) = deltaDic_residual(i,j) *
+     &    mixingDepth(i,j) / deltaT *
+     &    (1. _d 0 - FIce(i,j,bi,bj)) 
+
+         dCO2Flux_bio(i,j) = deltaDic_bio(i,j) *
+     &    mixingDepth(i,j) *
      &    (1. _d 0 - FIce(i,j,bi,bj))
 
          dCO2Flux_circ(i,j) =
-     &    -(((deltaDic_residual(i,j) *
-     &    mixingDepth(i,j) / deltaT) *
-     &    (1. _d 0 - FIce(i,j,bi,bj))) -
-     &    dCO2Flux_bio(i,j))
+     &    dCO2Flux_residual(i,j) -
+     &    dCO2Flux_bio(i,j)
 
         ENDDO
        ENDDO
@@ -2158,6 +2173,8 @@ c ANNA end TAVE
      &   'DCO2FLXA',0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(dCO2Flux_apCO2(1-Olx,1-Oly),
      &   'DCO2FLXC',0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(dCO2Flux_residual(1-Olx,1-Oly),
+     &   'DCO2FLXR',0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(dCO2Flux_bio(1-Olx,1-Oly),
      &   'DCO2FLXB',0,1,2,bi,bj,myThid) 
         CALL DIAGNOSTICS_FILL(dCO2Flux_circ(1-Olx,1-Oly),

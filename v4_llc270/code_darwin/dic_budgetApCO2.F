@@ -187,23 +187,21 @@ C calculate SCHMIDT NO. for CO2
      &                *surftemp(i,j)
 c put positive bound on SCHMIT number (will go negative for temp>40)
               SchmidtNoDIC(i,j) = max(1. _d -2, SchmidtNoDIC(i,j))
-
+C apCO2 from previous timestep
               pCO2sat(i,j) = budgetApCO21(i,j,bi,bj)
+C apCO2 from current timestep
               budgetApCO21(i,j,bi,bj) =
      &          AtmosP(i,j,bi,bj)*AtmospCO2(i,j,bi,bj)
- 
               if(budgetTStep1.EQ.0) then
 C if first timestep
 C this is problematic for restarts; to do correctly we will have to
 C add to pickups or run simulation without interruptions
                 pCO2sat(i,j) = budgetApCO21(i,j,bi,bj)
               endif
-
 C Determine surface flux (FDIC)
 C then account for Schmidt number
                 Kwexch(i,j) = Kwexch_Pre(i,j,bi,bj)
      &                    / sqrt(SchmidtNoDIC(i,j)/660.0 _d 0)
-
 
 #ifdef WATERVAP_BUG
 C Calculate flux in terms of DIC units using K0, solubility
@@ -267,6 +265,7 @@ C this is problematic at restart; clean-up later
 C at this point in code, fluxCO2_1 contains total flux for current time step
             dFluxCO2ApCO2(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
      &           FluxCO2_loc(i,j)
+C current value - value from previous timestep
             deltaApCO2(i,j) = budgetApCO21(i,j,bi,bj) -
      &       pCO2sat(i,j)
            endif

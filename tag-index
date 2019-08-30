@@ -1,5 +1,8 @@
+08/29/2019
+- DC: more CO2 budget cleanup
+
 08/25/2019
--DC : added sea-ice mask for CO2 flux budget terms and
+- DC: added sea-ice mask for CO2 flux budget terms and
  calcium tracer for ship track simulations
 
 08/24/2019

@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.3 2019/08/24 13:10:27 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.4 2019/08/30 00:13:34 dcarroll Exp $
 C $Name:  $
 
 #include "GCHEM_OPTIONS.h"
@@ -179,6 +179,14 @@ C     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+      diagName  = 'DCO2FLXR'
+      diagTitle = 'residual delta CO2 flux due to 
+     & bio and physics (mol/m2/s)'
+      diagUnits = 'mol/m2/s        '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
       diagName  = 'DCO2FLXB'
       diagTitle = 'delta CO2 flux due to biology (mol/m2/s)'
       diagUnits = 'mol/m2/s        '
@@ -187,7 +195,7 @@ C     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
       diagName  = 'DCO2FLXP'
-      diagTitle = 'delta CO2 flux due to circulation (mol/m2/s)'
+      diagTitle = 'delta CO2 flux due to physics (mol/m2/s)'
       diagUnits = 'mol/m2/s        '
       diagCode  = 'SM P    M1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,

@@ -94,7 +94,9 @@ c put bounds on tracers so pH solver doesn't blow up
              surfdic(i,j) = 
      &           max(100. _d 0 , min(4000. _d 0, PTR_DIC(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
+C alkalinity from previous timestep
              surfalk(i,j) = budgetAlk1(i,j,bi,bj)
+C alkalinity from current timestep
              budgetAlk1(i,j,bi,bj) =
      &           max(100. _d 0 , min(4000. _d 0, PTR_ALK(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
@@ -104,10 +106,9 @@ C this is problematic for restarts; to do correctly we will have to
 C add to pickups or run simulation without interruptions
                  surfalk(i,j) = budgetAlk1(i,j,bi,bj)
              endif
-
+C perturbation from current timestep
              budgetAlk1Pert(i,j) = budgetAlk1(i,j,bi,bj) +
      &        budgetPert
-
              surfphos(i,j)  = 
      &           max(1. _d -10, min(10. _d 0, PTR_PO4(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
@@ -268,11 +269,13 @@ C this is problematic at restart; clean-up later
             dFluxCO2Alk(i,j,bi,bj) = 0. _d 0
             deltaAlk(i,j) = 0. _d 0
            else
-C at this point in code, fluxCO2_1 contains total flux for current time step
+C at this point in code, fluxCO2_1 contains 
+C total flux for current time step
             dFluxCO2Alk(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
      &           FluxCO2_loc(i,j)
-            deltaAlk(i,j) = budgetAlk1(i,j,bi,bj) -
-     &       surfalk(i,j)
+C current value - value from previous timestep, convert back to mmol m^-3
+            deltaAlk(i,j) = budgetAlk1(i,j,bi,bj)*1e3  -
+     &       surfalk(i,j)*1e3
            endif
           ENDDO
          ENDDO

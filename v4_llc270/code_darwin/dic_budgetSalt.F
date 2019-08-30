@@ -103,7 +103,9 @@ c put bounds on tracers so pH solver doesn't blow up
              surfsi(i,j)   = 
      &           max(1. _d -8, min(500. _d 0, PTR_SIL(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
+C salt from previous timestep
              surfsalt(i,j) = budgetSalt1(i,j,bi,bj)
+C salt from current timestep
              budgetSalt1(i,j,bi,bj) =
      &           max(4. _d 0, min(50. _d 0, salt(i,j,kLev,bi,bj)))
              if(budgetTStep1.EQ.0) then
@@ -112,10 +114,9 @@ C this is problematic for restarts; to do correctly we will have to
 C add to pickups or run simulation without interruptions
                  surfsalt(i,j) = budgetSalt1(i,j,bi,bj)
              endif
-
+C perturbation is from current value
              budgetSalt1Pert(i,j) = budgetSalt1(i,j,bi,bj) + 
      &        budgetPert
-
              surftemp(i,j) = 
      &           max(-4. _d 0, min(39. _d 0, theta(i,j,kLev,bi,bj)))
          ENDDO
@@ -268,9 +269,11 @@ C this is problematic at restart; clean-up later
             dFluxCO2Salt(i,j,bi,bj) = 0. _d 0
             deltaSalt(i,j) = 0. _d 0
            else
-C at this point in code, fluxCO2_1 contains total flux for current time step
+C at this point in code, fluxCO2_1 contains 
+C total flux for current time step
             dFluxCO2Salt(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
      &           FluxCO2_loc(i,j)
+C current value - value from previous timestep
             deltaSalt(i,j) = budgetSalt1(i,j,bi,bj) -
      &       surfsalt(i,j)
            endif

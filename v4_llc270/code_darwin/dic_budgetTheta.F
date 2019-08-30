@@ -8,10 +8,10 @@
 #ifdef ALLOW_CARBON
 
 CBOP
-C !ROUTINE: DIC_BUDGETTEMP
+C !ROUTINE: DIC_BUDGETTHETA
 
 C !INTERFACE: ==========================================================
-      SUBROUTINE DIC_BUDGETTEMP( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
+      SUBROUTINE DIC_BUDGETTHETA( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
      O           deltaTheta,
      I           bi,bj,imin,imax,jmin,jmax,
      I           myIter,myTime,myThid)
@@ -105,7 +105,9 @@ c put bounds on tracers so pH solver doesn't blow up
      &                          * maskC(i,j,kLev,bi,bj)
              surfsalt(i,j) = 
      &           max(4. _d 0, min(50. _d 0, salt(i,j,kLev,bi,bj)))
+C theta from previous timestep
              surftemp(i,j) = budgetTemp1(i,j,bi,bj)
+C theta from current timestep
              budgetTemp1(i,j,bi,bj) =
      &           max(-4. _d 0, min(39. _d 0, theta(i,j,kLev,bi,bj)))
              if(budgetTStep1.EQ.0) then
@@ -114,10 +116,8 @@ C this is problematic for restarts; to do correctly we will have to
 C add to pickups or run simulation without interruptions
                  surftemp(i,j) = budgetTemp1(i,j,bi,bj)
              endif
-    
              budgetTemp1Pert(i,j) = budgetTemp1(i,j,bi,bj) + 
      &        budgetPert
-
          ENDDO
         ENDDO
 
@@ -267,9 +267,11 @@ C this is problematic at restart; clean-up later
             dFluxCO2Temp(i,j,bi,bj) = 0. _d 0
 	    deltaTheta(i,j) = 0. _d 0
            else
-C at this point in code, fluxCO2_1 contains total flux for current time step
+C at this point in code, fluxCO2_1 contains 
+C total flux for current time step
             dFluxCO2Temp(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
      &           FluxCO2_loc(i,j)
+C current value - value from last timestep
             deltaTheta(i,j) = budgetTemp1(i,j,bi,bj) -
      &       surftemp(i,j)
            endif
