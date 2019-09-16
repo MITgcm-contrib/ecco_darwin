@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.16 2019/08/30 00:13:33 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.17 2019/09/16 15:25:49 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -1356,6 +1356,20 @@ c convert to mol m^-3
               CO3(i,j,bi,bj) = 0. _d 0
         
 	     endif
+
+#ifdef ADKINS_SURF_FLUX
+c include surface fluxes from forcing files
+             if (k.eq.1) then
+              dcal = dcal + (caSurf_flx(i,j,bi,bj) * 1. _d 3)
+              dcal = dcal - budgetConsumpDIC_PIC(i,j,k,bi,bj) +
+     &         disscPIC(i,j,k,bi,bj)
+             endif
+#endif /* ADKINS_SURF_FLUX */
+
+             Ptr(i,j,k,bi,bj,iCA) = Ptr(i,j,k,bi,bj,iCA) +
+     &        dtplankton*dcal
+
+             calcium(i,j,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
 	
 c ANNA pass extra variables if WAVEBANDS
              CALL DARWIN_PLANKTON(
@@ -1391,7 +1405,7 @@ c ANNA pass extra variables if WAVEBANDS
      I                       dicl, docl, pocl, picl,
      I                       alkl, o2l, zoocl,
      I                       pocupl, picupl, KspTP(i,j,bi,bj), 
-     I			     CO3(i,j,bi,bj),
+     I			     CO3(i,j,bi,bj),calcium(i,j,bi,bj),
      O                       ddicl, ddocl, dpocl, dpicl,
      O                       dalkl, do2l, dzoocl,omegaC(i,j,k,bi,bj),
      O                       disscPIC(i,j,k,bi,bj),
@@ -1463,17 +1477,8 @@ c include surface forcing
 c include surface fluxes from forcing files              
 	      ddicl = ddicl + (dicSurf_flx(i,j,bi,bj) * 1. _d 3)
 	      dalkl = dalkl + (alkSurf_flx(i,j,bi,bj) * 1. _d 3)
-              dcal = dcal + (caSurf_flx(i,j,bi,bj) * 1. _d 3)
-              dcal = dcal - budgetConsumpDIC_PIC(i,j,k,bi,bj) +
-     &         disscPIC(i,j,k,bi,bj)
-              
-C add in other Ca tendencies
-#endif
-	      endif
-
-              calcium(i,j,bi,bj) = 1.028 _d -2 *
-     &         (Slocal / 35. _d 0)
-
+#endif /* ADKINS_SURF_FLUX */
+	     endif
 #ifdef ALLOW_SED_DISS_FLUX
 c compute sediment dissolution fluxes
              if (bottom.eq.1.0 _d 0) then
@@ -1719,8 +1724,6 @@ c in darwin_plankton this is stored for previous timestep. Reset here.
           DO nz = 1,nzmax
            Ptr(i,j,k,bi,bj,iZooC (nz)) = Ptr(i,j,k,bi,bj,iZooC (nz)) +
      &                                        dtplankton*dzoocl (nz)
-          Ptr(i,j,k,bi,bj,iCA) = Ptr(i,j,k,bi,bj,iCA) +
-     &                                  dtplankton*dcal
           ENDDO
 #endif
 c

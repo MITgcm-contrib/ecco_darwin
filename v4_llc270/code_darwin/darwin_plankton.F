@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.6 2019/08/24 13:10:27 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.7 2019/09/16 15:25:49 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -69,7 +69,7 @@ c ANNA pass extra variables if WAVEBANDS
      I                       DIClocal, DOClocal, POClocal, PIClocal,
      I                       ALKlocal, O2local, ZooClocal,
      I                       POCuplocal, PICuplocal, KspTPLocal, 
-     I 			     CO3Local,
+     I 			     CO3Local,calciumLocal,
      O                       dDICdt, dDOCdt, dPOCdt, dPICdt,
      O                       dALKdt, dO2dt, dZOOCdt,omegaCLocal,
      O                       disscPIC,
@@ -196,15 +196,15 @@ c zoo   = zooplankton
          _RL PICuplocal
          _RL KspTPLocal
          _RL CO3Local
-	 _RL dDICdt
+	 _RL calciumLocal
+         _RL omegaCLocal
+         _RL dDICdt
          _RL dDOCdt
          _RL dPOCdt
          _RL dPICdt
          _RL dALKdt
          _RL dO2dt
          _RL dZOOCdt(nzmax)
-         _RL omegaCLocal
-         _RL calcium
 #endif
 #ifdef GEIDER
          _RL phychl(npmax)
@@ -1361,8 +1361,7 @@ c remineralization of sinking particulate
            DOCremin =  reminTempFunction * Kdoc * DOClocal
            preminC  = reminTempFunction * Kpremin_C*POClocal
 
-           calcium = 1.028 _d -2*Slocal/35. _d 0
-           omegaCLocal = calcium * CO3Local / KspTPLocal
+           omegaCLocal = calciumLocal * CO3Local / KspTPLocal
 
 c water column dissolution
 #ifdef NAVIAUX_DISSOLUTION
