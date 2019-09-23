@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.4 2019/08/30 00:13:34 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.5 2019/09/23 16:23:46 dcarroll Exp $
 C $Name:  $
 
 #include "GCHEM_OPTIONS.h"
@@ -119,6 +119,13 @@ C     Define diagnostics Names :
       diagName  = 'OMEGAC  '
       diagTitle = 'calcite saturation state (dimensionless)'
       diagUnits = 'dimensionless   '
+      diagCode  = 'SM P    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'CALCIUM '
+      diagTitle = 'calcium (mol/m3)'
+      diagUnits = 'mol/m3          '
       diagCode  = 'SM P    MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
