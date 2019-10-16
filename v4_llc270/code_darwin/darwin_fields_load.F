@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_fields_load.F,v 1.3 2019/08/26 05:33:09 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_fields_load.F,v 1.4 2019/10/16 18:04:40 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -265,11 +265,20 @@ cQQQ need to check timing
           ENDDO
          ENDDO
 #endif
-
-
+         DO bj = myByLo(myThid), myByHi(myThid)
+          DO bi = myBxLo(myThid), myBxHi(myThid)
+           DO j=1-Oly,sNy+Oly
+            DO i=1-Olx,sNx+Olx
+             DO k=1,nR
+              budgetConsumpDIC_PIC(i,j,k,bi,bj) = 0. _d 0
+              disscPIC(i,j,k,bi,bj) = 0. _d 0
+             ENDDO
+            ENDDO
+           ENDDO
+          ENDDO
+         ENDDO
 
        ENDIF
-
 
 C Now calculate whether it is time to update the forcing arrays
        rdt=1. _d 0 / deltaTclock

@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.17 2019/09/16 15:25:49 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.18 2019/10/16 18:04:40 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -254,7 +254,7 @@ c air-sea fluxes
        _RL flxALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL flxO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
-       _RL calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+       _RL calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
        _RL KspTP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 #ifdef ADKINS_SURF_FLUX
        _RL dcal
@@ -1086,9 +1086,7 @@ c set tendencies to 0
                dzoocl(nz)=0. _d 0
              enddo
 #endif
-#ifdef ADKINS_SURF_FLUX
              dcal = 0. _d 0
-#endif
 c set other arguments to zero
              PP=0. _d 0
              Nfix=0. _d 0
@@ -1360,16 +1358,17 @@ c convert to mol m^-3
 #ifdef ADKINS_SURF_FLUX
 c include surface fluxes from forcing files
              if (k.eq.1) then
-              dcal = dcal + (caSurf_flx(i,j,bi,bj) * 1. _d 3)
-              dcal = dcal - budgetConsumpDIC_PIC(i,j,k,bi,bj) +
-     &         disscPIC(i,j,k,bi,bj)
+              dcal = dcal + ((caSurf_flx(i,j,bi,bj) * 1. _d 3))
              endif
 #endif /* ADKINS_SURF_FLUX */
 
-             Ptr(i,j,k,bi,bj,iCA) = Ptr(i,j,k,bi,bj,iCA) +
-     &        dtplankton*dcal
+             dcal = dcal - budgetConsumpDIC_PIC(i,j,k,bi,bj) +
+     &        disscPIC(i,j,k,bi,bj)
 
-             calcium(i,j,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
+             Ptr(i,j,k,bi,bj,iCA) = MAX(Ptr(i,j,k,bi,bj,iCA) +
+     &        dtplankton*dcal,0. _d 0)
+
+             calcium(i,j,k,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
 	
 c ANNA pass extra variables if WAVEBANDS
              CALL DARWIN_PLANKTON(
@@ -1405,18 +1404,16 @@ c ANNA pass extra variables if WAVEBANDS
      I                       dicl, docl, pocl, picl,
      I                       alkl, o2l, zoocl,
      I                       pocupl, picupl, KspTP(i,j,bi,bj), 
-     I			     CO3(i,j,bi,bj),calcium(i,j,bi,bj),
+     I			     CO3(i,j,bi,bj), calcium(i,j,k,bi,bj),
      O                       ddicl, ddocl, dpocl, dpicl,
-     O                       dalkl, do2l, dzoocl,omegaC(i,j,k,bi,bj),
+     O                       dalkl, do2l, dzoocl, omegaC(i,j,k,bi,bj),
      O                       disscPIC(i,j,k,bi,bj),
 #endif
-#ifdef CO2_FLUX_BUDGET
      O                       budgetConsumpDIC(i,j,k,bi,bj),
      O			     budgetConsumpDIC_PIC(i,j,k,bi,bj),
-     O			     budgetDOCRemin(i,j,k,bi,bj),
      O			     budgetPReminC(i,j,k,bi,bj),
-#endif /* CO2_FLUX_BUDGET */
-#ifdef GEIDERCO3
+     O			     budgetDOCRemin(i,j,k,bi,bj),
+#ifdef GEIDER
      O                       phychl,
 #ifdef DYNAMIC_CHL
      I                       dphychl,
@@ -1484,7 +1481,7 @@ c compute sediment dissolution fluxes
              if (bottom.eq.1.0 _d 0) then
               
 	      CO3Sed(i,j,bi,bj) = (KspTP(i,j,bi,bj) /
-     &         calcium(i,j,bi,bj))
+     &         calcium(i,j,k,bi,bj))
 
               BBLDiffusionCoeffLoc = 4.01 _d -10
 
@@ -1496,8 +1493,6 @@ c compute sediment dissolution fluxes
 
 	      CO3Sw(i,j,bi,bj) = CO3(i,j,bi,bj)
 
-c	      print*,'CO3Sw: ',CO3Sw(i,j,bi,bj)
-            
 c convert from mol kg^-1 to mol m^-3
               CO3Sed(i,j,bi,bj) = CO3Sed(i,j,bi,bj) * rhoConst
               CO3Sw(i,j,bi,bj) = CO3Sw(i,j,bi,bj) * rhoConst
@@ -2147,8 +2142,8 @@ c ANNA end TAVE
      &                         0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(KspTP(1-Olx,1-Oly,bi,bj), 'KSPTP   ',
      &                        0,1,2,bi,bj,myThid)
-        CALL DIAGNOSTICS_FILL(calcium(1-Olx,1-Oly,bi,bj), 'CALCIUM ',
-     &                        0,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(calcium(1-Olx,1-Oly,1,bi,bj), 'CALCIUM ',
+     &                        0,Nr,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(omegaC(1-Olx,1-Oly,1,bi,bj), 'OMEGAC  ',
      &                         0,Nr,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(disscPIC(1-Olx,1-Oly,1,bi,bj), 'DISSC   ',

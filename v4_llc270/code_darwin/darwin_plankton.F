@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.7 2019/09/16 15:25:49 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.8 2019/10/16 18:04:40 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -69,15 +69,13 @@ c ANNA pass extra variables if WAVEBANDS
      I                       DIClocal, DOClocal, POClocal, PIClocal,
      I                       ALKlocal, O2local, ZooClocal,
      I                       POCuplocal, PICuplocal, KspTPLocal, 
-     I 			     CO3Local,calciumLocal,
+     I 			     CO3Local, calciumLocal,
      O                       dDICdt, dDOCdt, dPOCdt, dPICdt,
-     O                       dALKdt, dO2dt, dZOOCdt,omegaCLocal,
+     O                       dALKdt, dO2dt, dZOOCdt, omegaCLocal,
      O                       disscPIC,
 #endif
-#ifdef CO2_FLUX_BUDGET
      O                       consumpDIC, consumpDIC_PIC,
      O                       preminC, DOCremin, 
-#endif
 #ifdef GEIDER
      I                       phychl, 
 #ifdef DYNAMIC_CHL
@@ -584,8 +582,8 @@ c cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
      &            zooTempFunction, reminTempFunction,
      &            mortPTempFunction, mortZTempFunction, 
      &            mortZ2TempFunction, myThid)
-          if (debug.eq.1) print*,'phytoTempFunction',
-     &                          phytoTempFunction, Tlocal
+C          if (debug.eq.1) print*,'phytoTempFunction',
+C     &                          phytoTempFunction, Tlocal
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 c ******************** GROWTH OF PHYTO ****************************
@@ -607,7 +605,7 @@ c using Platt-like equations with inhibition
              ilimit(np)=0. _d 0
            endif
           enddo
-          if (debug.eq.1) print*,'ilimit',ilimit, PARlocal
+C          if (debug.eq.1) print*,'ilimit',ilimit, PARlocal
 #endif
 #endif
 c ANNA endif
@@ -789,18 +787,18 @@ c Now Check Against General Nutrient Limiting Tendency
              endif   ! diaz
              limit(np)=min(limit(np),1. _d 0)
            enddo    !np
-          if (debug.eq.1) print*,'nut limit',
-     &                          limit, PO4local, FeTlocal, Silocal
-          if (debug.eq.1) print*,'Nlimit',
-     &                 Nlimit
-          if (debug.eq.1) print*,'NH4limit',
-     &                  NH4limit, NH4local
-          if (debug.eq.1) print*,'NO2limit',
-     &                   NO2limit, NO2local
-          if (debug.eq.1) print*,'NO3limit',
-     &                  NO3limit, NO3local
-          if (debug.eq.1) print*,'ngrow',
-     &                  ngrow
+C          if (debug.eq.1) print*,'nut limit',
+C     &                          limit, PO4local, FeTlocal, Silocal
+C          if (debug.eq.1) print*,'Nlimit',
+C     &                 Nlimit
+C          if (debug.eq.1) print*,'NH4limit',
+C     &                  NH4limit, NH4local
+C          if (debug.eq.1) print*,'NO2limit',
+C     &                   NO2limit, NO2local
+C          if (debug.eq.1) print*,'NO3limit',
+C     &                  NO3limit, NO3local
+C          if (debug.eq.1) print*,'ngrow',
+C     &                  ngrow
 
 
 #ifdef GEIDER
@@ -863,8 +861,8 @@ c for inhibition
                  endif
                endif
 c end inhib
-               if (pcarbon(np).lt. 0. _d 0) 
-     &                 print*,'QQ ERROR pc=',np,pcarbon(np)
+C               if (pcarbon(np).lt. 0. _d 0) 
+C     &                 print*,'QQ ERROR pc=',np,pcarbon(np)
                if (pcm(np).gt.0. _d 0) then
                  ilimit(np)=pcarbon(np)/pcm(np)
                else
@@ -898,11 +896,11 @@ c            acclim(np)=max(acclim(np),chl2cmin(np))
            phychl(np)=phyto(np)*R_PC(np)*chl2c(np)
 #endif
           enddo
-          if (debug.eq.14) print*,'ilimit',ilimit, PARlocal
-          if (debug.eq.14) print*,'chl:c',chl2c
-          if (debug.eq.14) print*,'chl',phychl
+C          if (debug.eq.14) print*,'ilimit',ilimit, PARlocal
+C          if (debug.eq.14) print*,'chl:c',chl2c
+C          if (debug.eq.14) print*,'chl',phychl
 #ifdef DYNAMIC_CHL
-          if (debug.eq.14) print*,'acclim',acclim
+C          if (debug.eq.14) print*,'acclim',acclim
 #endif
 #endif /* GEIDER */
 
@@ -960,7 +958,7 @@ c GRAZING sum contributions of all zooplankton
      &               + graze(np,nz)*zooP(nz)*zooTempFunction(nz)
               enddo
            enddo
-           if (debug.eq.2) print*,'grazing_phyto',grazing_phyto
+C           if (debug.eq.2) print*,'grazing_phyto',grazing_phyto
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 #else
 c------------------------------------------------------------------------
@@ -979,7 +977,7 @@ c sum all palatability*phyto and find phyto specific grazing rate
      &             (tmpz+kgrazesat) )
            enddo
           enddo
-          if (debug.eq.2) print*,'allphyto',allphyto
+C          if (debug.eq.2) print*,'allphyto',allphyto
 c         if (debug.eq.2) print*,'grazephy',grazphy
 c sum over zoo for impact on phyto
           do np=1,npmax
@@ -989,7 +987,7 @@ c sum over zoo for impact on phyto
      &           grazphy(np,nz)*zooP(nz)
            enddo
           enddo
-          if (debug.eq.2) print*,'sumgrazephy',sumgrazphy
+C          if (debug.eq.2) print*,'sumgrazephy',sumgrazphy
 c sum over phy for impact on zoo, and all remainder to go to POM
           do nz=1,nzmax
            sumgrazzoo(nz)=0. _d 0
@@ -1039,14 +1037,14 @@ c sum over phy for impact on zoo, and all remainder to go to POM
 #endif
            enddo
           enddo
-          if (debug.eq.2) print*,'sumgrazzoo',sumgrazzoo
-          if (debug.eq.2) print*,'sumgrazloss',sumgrazloss
-          if (debug.eq.2) print*,'sumgrazzooN',sumgrazzooN
-          if (debug.eq.2) print*,'sumgrazlossN',sumgrazlossN
-          if (debug.eq.2) print*,'sumgrazzooFe',sumgrazzooFe
-          if (debug.eq.2) print*,'sumgrazlossFe',sumgrazlossFe
-          if (debug.eq.2) print*,'sumgrazzooSi',sumgrazzooSi
-          if (debug.eq.2) print*,'sumgrazlossSi',sumgrazlossSi
+C          if (debug.eq.2) print*,'sumgrazzoo',sumgrazzoo
+C          if (debug.eq.2) print*,'sumgrazloss',sumgrazloss
+C          if (debug.eq.2) print*,'sumgrazzooN',sumgrazzooN
+C          if (debug.eq.2) print*,'sumgrazlossN',sumgrazlossN
+C          if (debug.eq.2) print*,'sumgrazzooFe',sumgrazzooFe
+C          if (debug.eq.2) print*,'sumgrazlossFe',sumgrazlossFe
+C          if (debug.eq.2) print*,'sumgrazzooSi',sumgrazzooSi
+C          if (debug.eq.2) print*,'sumgrazlossSi',sumgrazlossSi
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 #endif
 
@@ -1086,13 +1084,13 @@ c accumulate particulate and dissolved detritus
      &                mortPTempFunction*phytomin(np)
 #endif
             enddo 
-            if (debug.eq.3) print*,'tot_phy_pop',totphy_pop
-            if (debug.eq.3) print*,'tot_phy_dop',totphy_dop
-            if (debug.eq.3) print*,'tot_phy_pon',totphy_pon
-            if (debug.eq.3) print*,'tot_phy_don',totphy_don
-            if (debug.eq.3) print*,'tot_phy_pofe',totphy_pofe
-            if (debug.eq.3) print*,'tot_phy_dofe',totphy_dofe
-            if (debug.eq.3) print*,'tot_phy_posi',totphy_posi
+C            if (debug.eq.3) print*,'tot_phy_pop',totphy_pop
+C            if (debug.eq.3) print*,'tot_phy_dop',totphy_dop
+C            if (debug.eq.3) print*,'tot_phy_pon',totphy_pon
+C            if (debug.eq.3) print*,'tot_phy_don',totphy_don
+C            if (debug.eq.3) print*,'tot_phy_pofe',totphy_pofe
+C            if (debug.eq.3) print*,'tot_phy_dofe',totphy_dofe
+C            if (debug.eq.3) print*,'tot_phy_posi',totphy_posi
 
 
 c cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1127,10 +1125,10 @@ c grazing: sum contribution from all phytoplankton
 #endif
               enddo
             enddo
-            if (debug.eq.4) print*,'grazingP', grazingP
-            if (debug.eq.4) print*,'grazingN', grazingN
-            if (debug.eq.4) print*,'grazingFe', grazingFe
-            if (debug.eq.4) print*,'grazingSi', grazingSi
+C            if (debug.eq.4) print*,'grazingP', grazingP
+C            if (debug.eq.4) print*,'grazingN', grazingN
+C            if (debug.eq.4) print*,'grazingFe', grazingFe
+C            if (debug.eq.4) print*,'grazingSi', grazingSi
 c *************  END ZOO GRAZING *********************************
 #endif
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1214,13 +1212,13 @@ c accumulate particulate and dissolved detritus
 #endif
             enddo
 #endif
-            if (debug.eq.5) print*,'totzoo_pop',totzoo_pop
-            if (debug.eq.5) print*,'totzoo_dop',totzoo_dop
-            if (debug.eq.5) print*,'totzoo_pon',totzoo_pon
-            if (debug.eq.5) print*,'totzoo_don',totzoo_don
-            if (debug.eq.5) print*,'totzoo_pofe',totzoo_pofe
-            if (debug.eq.5) print*,'totzoo_dofe',totzoo_dofe
-            if (debug.eq.5) print*,'totzoo_posi',totzoo_posi
+C            if (debug.eq.5) print*,'totzoo_pop',totzoo_pop
+C            if (debug.eq.5) print*,'totzoo_dop',totzoo_dop
+C            if (debug.eq.5) print*,'totzoo_pon',totzoo_pon
+C            if (debug.eq.5) print*,'totzoo_don',totzoo_don
+C            if (debug.eq.5) print*,'totzoo_pofe',totzoo_pofe
+C            if (debug.eq.5) print*,'totzoo_dofe',totzoo_dofe
+C            if (debug.eq.5) print*,'totzoo_posi',totzoo_posi
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 c ********************* NUTRIENT UPTAKE *******************************
@@ -1234,8 +1232,8 @@ c phospate uptake by each phytoplankton
 #endif
 #ifdef GEIDER
                grow(np)=ngrow(np)*pcarbon(np)
-               if (debug.eq.1) print*,'grow', grow(np), pcarbon(np)
-               if (debug.eq.14) print*,'grow', grow(np), pcarbon(np)
+C               if (debug.eq.1) print*,'grow', grow(np), pcarbon(np)
+C               if (debug.eq.14) print*,'grow', grow(np), pcarbon(np)
 #ifdef DYNAMIC_CHL
 c geider 97 for dChl/dt (source part) Eq. 3
                if (acclim(np).gt. 0. _d 0.and. 
@@ -1245,7 +1243,7 @@ c geider 97 for dChl/dt (source part) Eq. 3
                else
                 rhochl(np)= 0. _d 0
                endif
-               if (debug.eq.14) print*,'rhochl',rhochl(np)
+C               if (debug.eq.14) print*,'rhochl',rhochl(np)
 #endif
 #endif
                PspecificPO4(np) = grow(np)*phyto(np)
@@ -1286,16 +1284,16 @@ c New Way of doing Nitrogen Consumption .......................
      &                           PspecificPO4(np)*R_PC(np)*R_PICPOC(np)
 #endif
             enddo
-           if (debug.eq.7) print*,'local', parlocal,tlocal,po4local,
-     &                  no3local, no2local,nh4local,fetlocal,silocal
-           if (debug.eq.7) print*,'grow',grow
-           if (debug.eq.6) print*,'pspecificpo4', PspecificPO4
-           if (debug.eq.6) print*,'consumpPO4', consumpPO4
-           if (debug.eq.6) print*,'consumpFeT', consumpFeT
-           if (debug.eq.6) print*,'consumpSi ', consumpsi 
-           if (debug.eq.6) print*,'consumpNO3', consumpNO3
-           if (debug.eq.6) print*,'consumpNO2', consumpNO2
-           if (debug.eq.6) print*,'consumpNH4', consumpNH4
+C           if (debug.eq.7) print*,'local', parlocal,tlocal,po4local,
+C     &                  no3local, no2local,nh4local,fetlocal,silocal
+C           if (debug.eq.7) print*,'grow',grow
+C           if (debug.eq.6) print*,'pspecificpo4', PspecificPO4
+C           if (debug.eq.6) print*,'consumpPO4', consumpPO4
+C           if (debug.eq.6) print*,'consumpFeT', consumpFeT
+C           if (debug.eq.6) print*,'consumpSi ', consumpsi 
+C           if (debug.eq.6) print*,'consumpNO3', consumpNO3
+C           if (debug.eq.6) print*,'consumpNO2', consumpNO2
+C           if (debug.eq.6) print*,'consumpNH4', consumpNH4
 c ****************** END NUTRIENT UPTAKE ****************************
 
 c sinking phytoplankton and POM
@@ -1485,7 +1483,7 @@ c    &              phytoTempFunction(np)
 #endif
             enddo
 c end np loop
-            if (debug.eq.10) print*,'dphytodt',dphytodt
+C            if (debug.eq.10) print*,'dphytodt',dphytodt
 c
 #ifdef OLD_GRAZE
 c zooplankton growth by grazing
@@ -1507,7 +1505,7 @@ C zooplankton stoichiometry varies according to food source
               dzooSidt(nz) = sumgrazzooSi(nz)
             enddo
 #endif
-            if (debug.eq.10) print*,'dZooPdt',dZooPdt
+C            if (debug.eq.10) print*,'dZooPdt',dZooPdt
 
 c zooplankton mortality
             do nz=1,nzmax
@@ -1625,10 +1623,10 @@ c loss of O2 by remineralization
 
 #endif
 
-            if (debug.eq.10) print*,'dDOPdt', dDOPdt
-            if (debug.eq.10) print*,'dpopdt',dpopdt
-            if (debug.eq.10) print*,'dDONdt',dDONdt
-            if (debug.eq.10) print*,'dpondt',dpondt
+C            if (debug.eq.10) print*,'dDOPdt', dDOPdt
+C            if (debug.eq.10) print*,'dpopdt',dpopdt
+C            if (debug.eq.10) print*,'dDONdt',dDONdt
+C            if (debug.eq.10) print*,'dpondt',dpondt
 c
 c -------------------------------------------------------------------
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1706,21 +1704,21 @@ c QQQQQQQQQQQQTEST
          if (PARlocal.gt.1. _d 0) then
           if (dphytodt(nsistwo).gt.dphytodt(nsisfour).and.
      &                             dphytodt(nsisfour).gt.0. _d 0) then
-                print*,'QQQQ nsistwo>nsisfour',nsistwo,nsisfour, 
+C                print*,'QQQQ nsistwo>nsisfour',nsistwo,nsisfour, 
      &               dphytodt(nsistwo),  dphytodt(nsisfour),
      &               phyto(nsistwo), phyto(nsisfour),  
      &               phyto(nsisone)
           endif
           if (dphytodt(nsisthree).gt.dphytodt(nsisfour).and.
      &                             dphytodt(nsisfour).gt.0. _d 0) then
-                 print*,'QQQQ nsisthree>nsisfour',nsisthree,nsisfour,
+C                 print*,'QQQQ nsisthree>nsisfour',nsisthree,nsisfour,
      &                dphytodt(nsisthree), dphytodt(nsisfour),
      &               phyto(nsisthree), phyto(nsisfour),  
      &               phyto(nsisone)
           endif
           if (dphytodt(nsisfour).gt.dphytodt(nsisone).and.
      &                            dphytodt(nsisone).gt.0. _d 0) then
-                 print*,' BIG QQQQ nsisfour>nsisone',nsisone,nsisfour,
+C                 print*,' BIG QQQQ nsisfour>nsisone',nsisone,nsisfour,
      &                dphytodt(nsisfour), dphytodt(nsisone),
      &               phyto(nsisfour), phyto(nsisone)
           endif
