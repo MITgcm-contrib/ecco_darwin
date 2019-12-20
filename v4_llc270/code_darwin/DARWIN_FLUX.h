@@ -58,28 +58,21 @@ C Fugacity Factor added following Val Bennington
       _RL  disscPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nR,nSx,nSy)
 
        COMMON /CO2_FLUX_BUDGET/
-     &  fluxCO2_1,Kwexch1,budgetTemp1,budgetSalt1,budgetAlk1,
-     &  budgetDic1,budgetPV1,budgetApCO21,budgetBio1,
-     &  budgetPhos1,budgetSi1,
+     &  previousTemp,previousSalt,previousAlk,
+     &  previousDic,previousApCO2,
      &  dCO2Flux,
      &  dFluxCO2Temp,dFluxCO2Salt,dFluxCO2Alk,dFluxCO2Dic,
-     &  dFluxCO2Pv,dFluxCO2ApCO2,dFluxCO2Sf,
+     &  dFluxCO2ApCO2,
      &  budgetTStep1,
      &  budgetPert,
      &  budgetConsumpDIC,budgetConsumpDIC_PIC,
      &  budgetDOCRemin,budgetPReminC
 
-      _RL fluxCO2_1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
-      _RL Kwexch1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetTemp1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetSalt1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetAlk1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetDic1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetPV1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetApCO21(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
-      _RL budgetBio1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetPhos1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL budgetSi1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL previousTemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL previousSalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL previousAlk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL previousDic(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL previousApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
      
       _RL dCO2Flux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
  
@@ -87,9 +80,7 @@ C Fugacity Factor added following Val Bennington
       _RL dFluxCO2Salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Dic(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL dFluxCO2Pv(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2ApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL dFluxCO2Sf(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       
       _RL budgetTStep1
       _RL budgetPert

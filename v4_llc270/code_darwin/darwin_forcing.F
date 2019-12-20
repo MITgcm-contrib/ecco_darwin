@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.18 2019/10/16 18:04:40 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.19 2019/12/20 01:28:33 dimitri Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -303,7 +303,11 @@ c sediment-to-ocean fluxes
        _RL  dv
        _RL  dk
        _RL  pfactor
-       _RL  bigR
+       _RL  bigR          if(mixingLength(i,j,k,bi,bj) .EQ. 
+     &     MAXVAL(mixingLength(i,j,1:Nr,bi,bj))) then
+            mixingDepthKLev(i,j) = MIN(k,Nr)
+            mixingDepth(i,j) = ABS(rF(MIN(k,Nr)))
+
 
        _RL pCO2SolverTemp
        _RL pCO2SolverSal
@@ -554,7 +558,7 @@ C reset to baseline values
 
           IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
 
-C compute delta DIC terms for each budget component (mmol C m^-3)
+C compute delta DIC terms for each budget component (mol C m^-3)
            deltaDic_theta(i,j) =  
      &      (((pCO2Theta(i,j) - baselinePCO2(i,j)) / 
      &      budgetPert) / 
@@ -1516,7 +1520,30 @@ c convert sediment fluxes to mmol m^-3 s^-1 and then add to local values
      &         drF(k)*HFacC(i,j,k,bi,bj))
 
              endif 
-#endif /* ALLOW_SED_DISS_FLUX */
+#endif /* ALLOW_SED_DISS_F
+              dno3l=0. _d 0
+              dfetl=0. _d 0
+              dsil=0. _d 0
+            endif
+#endif
+#ifdef RELAX_NUTS
+#ifdef DENIT_RELAX
+           if (rF(k).lt.-depthdenit) then
+            if (darwin_relaxscale.gt.0. _d 0) then
+             IF ( darwin_NO3_RelaxFile .NE. ' '  ) THEN
+c Fanny's formulation
+              tmp=(Ptr(i,j,k,bi,bj,iNO3 )-no3_obs(i,j,k,bi,bj))
+              if (tmp.gt.0. _d 0) then
+                dno3l=dno3l-(tmp/
+     &                      darwin_relaxscale)
+                denit=tmp/
+     &                      darwin_relaxscale
+              else
+                denit=0. _d 0
+              endif
+c --- end fanny's formulation
+             ENDIF
+c steph's alternativeLUX */
 #endif /* ALLOW_CARBON */
 
 #ifdef CONS_SUPP
@@ -1950,8 +1977,8 @@ C use this as "mixing layer depth"
          DO i=imin,imax
           if(mixingLength(i,j,k,bi,bj) .EQ. 
      &     MAXVAL(mixingLength(i,j,1:Nr,bi,bj))) then
-            mixingDepthKLev(i,j) = MIN(k,Nr)
-            mixingDepth(i,j) = ABS(rF(MIN(k,Nr)))
+            mixingDepthKLev(i,j) = k
+            mixingDepth(i,j) = ABS(rF(k))
           endif
          ENDDO
         ENDDO
@@ -1959,27 +1986,33 @@ C use this as "mixing layer depth"
 
 C vertically-integrate relevant biological DIC tendency terms
 C mmol C m^-3 s^-1
+       DO j=jmin,jmax
+        DO i=imin,imax
+          deltaDic_bio(i,j) = 0.0 _d 0
+        ENDDO
+       ENDDO
        DO k=1,Nr
         DO j=jmin,jmax
          DO i=imin,imax
-
           if(k .LE. mixingDepthKLev(i,j)) then
            deltaDic_bio(i,j) = deltaDic_bio(i,j) +
      &      (-(budgetConsumpDIC(i,j,k,bi,bj)) +
-     &      -(budgetConsumpDIC_PIC(i,j,k,bi,bj)) +
+     &       -(budgetConsumpDIC_PIC(i,j,k,bi,bj)) +
      &      budgetDOCRemin(i,j,k,bi,bj) +
      &      budgetPReminC(i,j,k,bi,bj) +     
-     &      disscPIC(i,j,k,bi,bj))
+     &      disscPIC(i,j,k,bi,bj)) *
+     &      drF(k) / mixingDepth(i,j) / 1000.0 _d 0
 	  endif
-
          ENDDO
         ENDDO
        ENDDO
 
-C compute CO2 flux budget terms (mmol C m^-2 s^-1)
+C compute CO2 flux budget terms (mol C m^-2 s^-1)
        DO j=jmin,jmax
         DO i=imin,imax
 
+C Dustin & Dimitri will discuss how to incorporate sea ice in budget later
+C With exception of pCO2, there is a question whether the Fice scaling is needed here           
          dCO2Flux_theta(i,j) = deltaDic_theta(i,j) *
      &    mixingDepth(i,j) / deltaT *
      &    (1. _d 0 - FIce(i,j,bi,bj)) 

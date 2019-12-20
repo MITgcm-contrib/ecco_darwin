@@ -63,12 +63,11 @@ C local variables for carbon chem
       _RL surfsi(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surfsalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surftemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL budgetDic1Pert(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL budgetDicPert(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #ifdef ALLOW_OLD_VIRTUALFLUX
       _RL VirtualFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #endif
 C local variables for CO2_FLUX_BUDGET
-      _RL FluxCO2_loc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)      
       _RL deltaDic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 CEOP
 
@@ -91,21 +90,9 @@ C determine inorganic carbon chem coefficients
         DO j=jmin,jmax
          DO i=imin,imax
 c put bounds on tracers so pH solver doesn't blow up
-C value from previous timestep
-             surfdic(i,j) = budgetDic1(i,j,bi,bj)
-C value from current timestep
-             budgetDic1(i,j,bi,bj) =
+             surfdic(i,j) = 
      &           max(100. _d 0 , min(4000. _d 0, PTR_DIC(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
-             if(budgetTStep1.EQ.0) then
-C if first timestep
-C this is problematic for restarts; to do correctly we will have to
-C add to pickups or run simulation without interruptions
-                surfdic(i,j) = budgetDic1(i,j,bi,bj)
-             endif
-C perturbation from current timestep
-             budgetDic1Pert(i,j) = surfdic(i,j) + 
-     &        budgetPert
              surfalk(i,j) = 
      &           max(100. _d 0 , min(4000. _d 0, PTR_ALK(i,j)))*1e-3
      &                          * maskC(i,j,kLev,bi,bj)
@@ -117,8 +104,9 @@ C perturbation from current timestep
      &                          * maskC(i,j,kLev,bi,bj)
              surfsalt(i,j) = 
      &           max(4. _d 0, min(50. _d 0, salt(i,j,kLev,bi,bj)))
-             surftemp(i,j) =
-     &            max(-4. _d 0, min(39. _d 0, theta(i,j,kLev,bi,bj)))
+             surftemp(i,j) = 
+     &           max(-4. _d 0, min(39. _d 0, theta(i,j,kLev,bi,bj)))
+             budgetDicPert(i,j) = surfdic(i,j) + budgetPert
          ENDDO
         ENDDO
 
@@ -167,7 +155,7 @@ C$TAF LOOP = parallel
           IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
             CALL CALC_PCO2_APPROX(
      I        surftemp(i,j),surfsalt(i,j),
-     I        budgetDic1Pert(i,j), surfphos(i,j),
+     I        budgetDicPert(i,j), surfphos(i,j),
      I        surfsi(i,j),surfalk(i,j),
      I        ak1(i,j,bi,bj),ak2(i,j,bi,bj),
      I        ak1p(i,j,bi,bj),ak2p(i,j,bi,bj),ak3p(i,j,bi,bj),
@@ -186,96 +174,18 @@ C$TAF LOOP = parallel
         ENDDO
        ENDDO
 
-
-       DO j=jmin,jmax
-        DO i=imin,imax
-
-          IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
-C calculate SCHMIDT NO. for CO2
-              SchmidtNoDIC(i,j) = 
-     &            sca1 
-     &          + sca2 * surftemp(i,j)
-     &          + sca3 * surftemp(i,j)*surftemp(i,j)
-     &          + sca4 * surftemp(i,j)*surftemp(i,j)
-     &                *surftemp(i,j)
-c put positive bound on SCHMIT number (will go negative for temp>40)
-              SchmidtNoDIC(i,j) = max(1. _d -2, SchmidtNoDIC(i,j))
-
-C Determine surface flux (FDIC)
-C first correct pCO2at for surface atmos pressure
-              pCO2sat(i,j) = 
-     &          AtmosP(i,j,bi,bj)*AtmospCO2(i,j,bi,bj)
-
-C then account for Schmidt number
-                Kwexch(i,j) = Kwexch_Pre(i,j,bi,bj)
-     &                    / sqrt(SchmidtNoDIC(i,j)/660.0 _d 0)
-
-#ifdef WATERVAP_BUG
-C Calculate flux in terms of DIC units using K0, solubility
-C Flux = Vp * ([CO2sat] - [CO2])
-C CO2sat = K0*pCO2atmos*P/P0
-C Converting pCO2 to [CO2] using ff, as in CALC_PCO2
-              FluxCO2_loc(i,j) = 
-     &         Kwexch(i,j)*( 
-     &         ak0(i,j,bi,bj)*pCO2sat(i,j) - 
-     &         ff(i,j,bi,bj)*pCO2(i,j,bi,bj) 
-     &         ) 
-#else
-C Corrected by Val Bennington Nov 2010 per G.A. McKinley's finding
-C of error in application of water vapor correction
-c Flux = kw*rho*(ff*pCO2atm-k0*FugFac*pCO2ocean)
-               FluxCO2_loc(i,j) =
-     &          Kwexch(i,j)*(
-     &            ff(i,j,bi,bj)*pCO2sat(i,j) -
-     &            pCO2(i,j,bi,bj)*fugf(i,j,bi,bj)
-     &            *ak0(i,j,bi,bj) )
-     &
-#endif
-          ELSE
-              FluxCO2_loc(i,j) = 0. _d 0
-          ENDIF
-C convert flux (mol kg-1 m s-1) to (mol m-2 s-1)
-            FluxCO2_loc(i,j) = FluxCO2_loc(i,j)/permil
-c convert flux (mol m-2 s-1) to (mmol m-2 s-1)
-            FluxCO2_loc(i,j) = FluxCO2_loc(i,j)*1. _d 3
-
-#ifdef ALLOW_OLD_VIRTUALFLUX
-            IF (maskC(i,j,kLev,bi,bj).NE.0. _d 0) THEN
-c calculate virtual flux
-c EminusPforV = dS/dt*(1/Sglob)
-C NOTE: Be very careful with signs here!
-C Positive EminusPforV => loss of water to atmos and increase
-C in salinity. Thus, also increase in other surface tracers
-C (i.e. positive virtual flux into surface layer)
-C ...so here, VirtualFLux = dC/dt!
-              VirtualFlux(i,j)=gsm_DIC*surfaceForcingS(i,j,bi,bj)/gsm_s
-c OR
-c let virtual flux be zero
-c              VirtualFlux(i,j)=0.d0
-c
-            ELSE
-              VirtualFlux(i,j)=0. _d 0
-            ENDIF
-#endif /* ALLOW_OLD_VIRTUALFLUX */
-          ENDDO
-         ENDDO
-
 C update tendency      
          DO j=jmin,jmax
           DO i=imin,imax
            if(budgetTStep1.EQ.0) then
 C if first timestep
 C this is problematic at restart; clean-up later
-            dFluxCO2Dic(i,j,bi,bj) = 0. _d 0
             deltaDic(i,j) = 0. _d 0
+            previousDic(i,j,bi,bj) = surfdic(i,j)
            else
-C at this point in code, fluxCO2_1 contains 
-C total flux for current time step
-            dFluxCO2Dic(i,j,bi,bj) = fluxCO2_1(i,j,bi,bj) -
-     &           FluxCO2_loc(i,j)
-C current value - value from previous timestep, convert to mmol m^-3  
-            deltaDic(i,j) = budgetDic1(i,j,bi,bj)*1e3 -
-     &       surfdic(i,j)*1e3
+C current value - value from last timestep
+            deltaDic(i,j) = surfdic(i,j) - previousDic(i,j,bi,bj)
+            previousDic(i,j,bi,bj) = surfdic(i,j)
            endif
           ENDDO
          ENDDO
