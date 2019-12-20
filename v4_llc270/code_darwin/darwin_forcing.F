@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.19 2019/12/20 01:28:33 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.20 2019/12/20 02:57:16 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -303,11 +303,7 @@ c sediment-to-ocean fluxes
        _RL  dv
        _RL  dk
        _RL  pfactor
-       _RL  bigR          if(mixingLength(i,j,k,bi,bj) .EQ. 
-     &     MAXVAL(mixingLength(i,j,1:Nr,bi,bj))) then
-            mixingDepthKLev(i,j) = MIN(k,Nr)
-            mixingDepth(i,j) = ABS(rF(MIN(k,Nr)))
-
+       _RL  bigR         
 
        _RL pCO2SolverTemp
        _RL pCO2SolverSal
@@ -473,7 +469,7 @@ C set pH to value from previous timestep
          ENDDO
 
 C deltaPCO2 due to theta pertubation
-         call dic_budgetTheta(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+         call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),

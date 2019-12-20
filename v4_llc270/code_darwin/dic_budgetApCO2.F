@@ -191,7 +191,7 @@ C this is problematic at restart; clean-up later
            else
 C current value - value from last timestep
             deltaApCO2(i,j) = pCO2sat(i,j) - previousApCO2(i,j,bi,bj)
-            previousApCO2(i,j,bi,bj) = pCpCO2sat(i,j)
+            previousApCO2(i,j,bi,bj) = pCO2sat(i,j)
            endif
           ENDDO
          ENDDO
