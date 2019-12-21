@@ -59,7 +59,7 @@ C Fugacity Factor added following Val Bennington
 
        COMMON /CO2_FLUX_BUDGET/
      &  previousTemp,previousSalt,previousAlk,
-     &  previousDic,previousApCO2,
+     &  previousDic,previousApCO2,previousFluxCO2,
      &  dCO2Flux,
      &  dFluxCO2Temp,dFluxCO2Salt,dFluxCO2Alk,dFluxCO2Dic,
      &  dFluxCO2ApCO2,
@@ -73,9 +73,9 @@ C Fugacity Factor added following Val Bennington
       _RL previousAlk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL previousDic(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL previousApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy) 
-     
+      _RL previousFluxCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
       _RL dCO2Flux(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
- 
       _RL dFluxCO2Temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL dFluxCO2Alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)

@@ -264,13 +264,13 @@ C update tendency
 C if first timestep
 C this is problematic at restart clean-up later
             dCO2Flux(i,j,bi,bj) = 0. _d 0
+            previousFluxCO2(i,j,bi,bj) = FluxCO2(i,j,bi,bj)
            else
 C can include VirtualFlux later, if it is needed
             dCO2Flux(i,j,bi,bj) = FluxCO2(i,j,bi,bj) -
-     &           fluxCO2_1(i,j,bi,bj)
+     &           previousFluxCO2(i,j,bi,bj)
            endif
-           fluxCO2_1(i,j,bi,bj) = FluxCO2(i,j,bi,bj)
-
+           previousFluxCO2(i,j,bi,bj) = FluxCO2(i,j,bi,bj)
 #endif /* CO2_FLUX_BUDGET */
           ENDDO
          ENDDO
