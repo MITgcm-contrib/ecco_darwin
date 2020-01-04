@@ -11,8 +11,8 @@ CBOP
 C !ROUTINE: DIC_BUDGETTHETA
 
 C !INTERFACE: ==========================================================
-      SUBROUTINE DIC_BUDGETTHETA( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
-     O           deltaTheta,
+      SUBROUTINE DIC_BUDGETTEMP( PTR_DIC , PTR_ALK, PTR_PO4, PTR_SIL,
+     O           deltaTemp,
      I           bi,bj,imin,imax,jmin,jmax,
      I           myIter,myTime,myThid)
 
@@ -68,7 +68,7 @@ C local variables for carbon chem
       _RL VirtualFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 #endif
 C local variables for CO2_FLUX_BUDGET
-      _RL deltaTheta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL deltaTemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 CEOP
 
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -180,12 +180,12 @@ C update tendency
            if(budgetTStep1.EQ.0) then
 C if first timestep
 C this is problematic at restart; clean-up later
-	    deltaTheta(i,j) = 0. _d 0
-            previousTheta(i,j,bi,bj) = surftemp(i,j)
+	    deltaTemp(i,j) = 0. _d 0
+            previousTemp(i,j,bi,bj) = surftemp(i,j)
            else
 C current value - value from last timestep
-            deltaTheta(i,j) = surftemp(i,j) - previousTemp(i,j,bi,bj)
-            previousTheta(i,j,bi,bj) = surftemp(i,j)
+            deltaTemp(i,j) = surftemp(i,j) - previousTemp(i,j,bi,bj)
+            previousTemp(i,j,bi,bj) = surftemp(i,j)
            endif
           ENDDO
          ENDDO

@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.13 2019/12/21 19:13:40 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.14 2020/01/04 17:39:28 dcarroll Exp $
 C $Name:  $
 
 #ifndef DARWIN_OPTIONS_H
@@ -74,8 +74,8 @@ C allow DIC and ALK flux from bottom sediments
 C following Sulpis et al. 2018 (PNAS)
 #undef ALLOW_SED_DISS_FLUX
 
-C compute CO2 flux budget terms
-#define CO2_FLUX_BUDGET
+C compute air-sea CO2 flux budget
+#undef CO2_FLUX_BUDGET
 
 C allow surface DIC, alkalinity, and calcium fluxes
 #undef ADKINS_SURF_FLUX

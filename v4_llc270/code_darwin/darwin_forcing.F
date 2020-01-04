@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.20 2019/12/20 02:57:16 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.21 2020/01/04 17:39:28 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -321,18 +321,18 @@ c sediment-to-ocean fluxes
        _RL baselinePCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL baselineCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        
-       _RL pCO2Theta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL pCO2Temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL pCO2Salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL pCO2Alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL pCO2Dic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
-       _RL deltaTheta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaTemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaSalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaAlk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
-       _RL deltaDic_theta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic_temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic_salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic_alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic_apCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -342,7 +342,7 @@ c sediment-to-ocean fluxes
        _RL mixingDepthKLev(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL mixingDepth(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
-       _RL dCO2Flux_theta(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL dCO2Flux_temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL dCO2Flux_salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL dCO2Flux_alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL dCO2Flux_dic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -468,19 +468,19 @@ C set pH to value from previous timestep
           ENDDO
          ENDDO
 
-C deltaPCO2 due to theta pertubation
+C deltaPCO2 due to temperature pertubation
          call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
      &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &    deltaTheta,bi,bj,imin,imax,jmin,jmax,
+     &    deltaTemp,bi,bj,imin,imax,jmin,jmax,
      &    myIter,myTime,myThid)
 
 C set pH to value from previous timestep and store pCO2
          DO j=jmin,jmax
           DO i=imin,imax
            pH(i,j,bi,bj) = pHBudget1(i,j)
-           pCO2Theta(i,j) = pCO2(i,j,bi,bj)
+           pCO2Temp(i,j) = pCO2(i,j,bi,bj)
           ENDDO
          ENDDO
 
@@ -555,12 +555,12 @@ C reset to baseline values
           IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
 
 C compute delta DIC terms for each budget component (mol C m^-3)
-           deltaDic_theta(i,j) =  
-     &      (((pCO2Theta(i,j) - baselinePCO2(i,j)) / 
+           deltaDic_temp(i,j) =  
+     &      (((pCO2Temp(i,j) - baselinePCO2(i,j)) / 
      &      budgetPert) / 
      &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
      &      budgetPert)) *
-     &      deltaTheta(i,j)
+     &      deltaTemp(i,j)
 
            deltaDic_salt(i,j) =  
      &      (((pCO2Salt(i,j) - baselinePCO2(i,j)) / 
@@ -581,12 +581,12 @@ C compute delta DIC terms for each budget component (mol C m^-3)
      &      deltaApCO2(i,j)
 
            deltaDic_residual(i,j) = deltaDic(i,j) - 
-     &      (deltaDic_theta(i,j) + deltaDic_salt(i,j) + 
+     &      (deltaDic_temp(i,j) + deltaDic_salt(i,j) + 
      &      deltaDic_alk(i,j) + deltaDic_apCO2(i,j))
 
            else
 
-            deltaDic_theta(i,j) = 0. _d 0     
+            deltaDic_temp(i,j) = 0. _d 0     
             deltaDic_salt(i,j) = 0. _d 0
             deltaDic_alk(i,j) = 0. _d 0
 	    deltaDic_apCO2(i,j) = 0. _d 0
@@ -2009,7 +2009,7 @@ C compute CO2 flux budget terms (mol C m^-2 s^-1)
 
 C Dustin & Dimitri will discuss how to incorporate sea ice in budget later
 C With exception of pCO2, there is a question whether the Fice scaling is needed here           
-         dCO2Flux_theta(i,j) = deltaDic_theta(i,j) *
+         dCO2Flux_temp(i,j) = deltaDic_temp(i,j) *
      &    mixingDepth(i,j) / deltaT *
      &    (1. _d 0 - FIce(i,j,bi,bj)) 
 
@@ -2192,7 +2192,7 @@ c ANNA end TAVE
 #ifdef CO2_FLUX_BUDGET
         CALL DIAGNOSTICS_FILL(dCO2Flux(1-Olx,1-Oly,bi,bj),
      &   'DCO2FLX ',0,1,2,bi,bj,myThid )
-        CALL DIAGNOSTICS_FILL(dCO2Flux_theta(1-Olx,1-Oly),
+        CALL DIAGNOSTICS_FILL(dCO2Flux_temp(1-Olx,1-Oly),
      &   'DCO2FLXT',0,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(dCO2Flux_salt(1-Olx,1-Oly),
      &   'DCO2FLXS',0,1,2,bi,bj,myThid)
