@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.21 2020/01/04 17:39:28 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.22 2020/01/06 19:33:05 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -1355,12 +1355,13 @@ c convert to mol m^-3
         
 	     endif
 
+             calcium(i,j,k,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
+
 #ifdef ADKINS_SURF_FLUX
-c include surface fluxes from forcing files
+c include surface fluxes from forcing files, compute calcium tracer
              if (k.eq.1) then
               dcal = dcal + ((caSurf_flx(i,j,bi,bj) * 1. _d 3))
              endif
-#endif /* ADKINS_SURF_FLUX */
 
              dcal = dcal - budgetConsumpDIC_PIC(i,j,k,bi,bj) +
      &        disscPIC(i,j,k,bi,bj)
@@ -1369,7 +1370,8 @@ c include surface fluxes from forcing files
      &        dtplankton*dcal,0. _d 0)
 
              calcium(i,j,k,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
-	
+#endif /* ADKINS_SURF_FLUX */
+
 c ANNA pass extra variables if WAVEBANDS
              CALL DARWIN_PLANKTON(
      U                       Phy,
@@ -1966,19 +1968,33 @@ c
        ENDDO ! j
 
 #ifdef CO2_FLUX_BUDGET
-C find k index from maximum GGL90 mixing length, 
-C use this as "mixing layer depth"
+
+C find k index from mixed layer depth
        DO k=1,Nr
         DO j=jmin,jmax
          DO i=imin,imax
-          if(mixingLength(i,j,k,bi,bj) .EQ. 
-     &     MAXVAL(mixingLength(i,j,1:Nr,bi,bj))) then
+          if(hMixLayer(i,j,bi,bj) .GE.
+     &     ABS(rF(k))) then
             mixingDepthKLev(i,j) = k
             mixingDepth(i,j) = ABS(rF(k))
           endif
          ENDDO
         ENDDO
        ENDDO
+
+C find k index from maximum GGL90 mixing length, 
+C use this as "mixing layer depth"
+C       DO k=1,Nr
+C        DO j=jmin,jmax
+C         DO i=imin,imax
+C          if(mixingLength(i,j,k,bi,bj) .EQ. 
+C     &     MAXVAL(mixingLength(i,j,1:Nr,bi,bj))) then
+C            mixingDepthKLev(i,j) = k
+C            mixingDepth(i,j) = ABS(rF(k))
+C          endif
+C         ENDDO
+C        ENDDO
+C       ENDDO
 
 C vertically-integrate relevant biological DIC tendency terms
 C mmol C m^-3 s^-1
