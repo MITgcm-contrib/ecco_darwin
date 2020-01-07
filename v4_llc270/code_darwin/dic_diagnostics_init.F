@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.5 2019/09/23 16:23:46 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.6 2020/01/07 23:22:50 dcarroll Exp $
 C $Name:  $
 
 #include "GCHEM_OPTIONS.h"
@@ -137,6 +137,48 @@ C     Define diagnostics Names :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+      diagName  = 'DDIC    '
+      diagTitle = 'delta DIC (mol/m3)'
+      diagUnits = 'mol/m3          '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DDICTEMP'
+      diagTitle = 'delta DIC due to temperature (mol/m3)'
+      diagUnits = 'mol/m3          '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DDICSALT'
+      diagTitle = 'delta DIC due to salinity (mol/m3)'
+      diagUnits = 'mol/m3          '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DDICALK '
+      diagTitle = 'delta DIC due to alkalinity (mol/m3)'
+      diagUnits = 'mol/m3          '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DDICATM '
+      diagTitle = 'delta DIC due to apCO2 (mol/m3)'
+      diagUnits = 'mol/m3          '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DDICRES '
+      diagTitle = 'residual delta DIC(mol/m3)'
+      diagUnits = 'mol/m3          '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
       diagName  = 'DCO2FLX '
       diagTitle = 'delta flux of CO2 - air-sea exch (mol/m2/s)'
       diagUnits = 'mol/m2/s        '
@@ -164,13 +206,6 @@ C     Define diagnostics Names :
       diagCode  = 'SM P    M1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-C      diagName  = 'DCO2FLXD'
-C      diagTitle = 'delta CO2 flux due to DIC (mol/m2/s)'
-C      diagUnits = 'mol/m2/s        '
-C      diagCode  = 'SM P    M1      '
-C      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-C     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
 C      diagName  = 'DCO2FLXP'
 C      diagTitle = 'delta CO2 flux due to piston velocity (mol/m2/s)'

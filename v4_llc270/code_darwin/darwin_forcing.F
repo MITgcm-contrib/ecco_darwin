@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.22 2020/01/06 19:33:05 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.23 2020/01/07 23:22:49 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -311,16 +311,16 @@ c sediment-to-ocean fluxes
        _RL pCO2SolverPo4
        _RL pCO2SolverSi
        _RL pCO2SolverAlk
+
+       _RL baselinePH(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL baselinePCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL baselineCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
    
 #ifdef CO2_FLUX_BUDGET
        _RL pHBudget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL pCO2Budget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL CO3Budget1(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
-       _RL baselinePH(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-       _RL baselinePCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-       _RL baselineCO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-       
        _RL pCO2Temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL pCO2Salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL pCO2Alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -451,7 +451,6 @@ C compute baseline pCO2 and air-sea CO2 flux
      &    bi,bj,imin,imax,jmin,jmax,
      &    myIter,myTime,myThid)
 
-#ifdef CO2_FLUX_BUDGET
 C store values from current timestep as non-perturbed baseline
          DO j=jmin,jmax
           DO i=imin,imax
@@ -461,6 +460,7 @@ C store values from current timestep as non-perturbed baseline
           ENDDO
          ENDDO
 
+#ifdef CO2_FLUX_BUDGET
 C set pH to value from previous timestep
          DO j=jmin,jmax
           DO i=imin,imax
@@ -2062,6 +2062,15 @@ C With exception of pCO2, there is a question whether the Fice scaling is needed
 
 #endif /* CO2_FLUX_BUDGET */
 
+C reset to baseline values
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = baselinePH(i,j)
+           pCO2(i,j,bi,bj) = baselinePCO2(i,j)
+           CO3(i,j,bi,bj) = baselineCO3(i,j)
+          ENDDO
+         ENDDO
+
 #ifdef ALLOW_PAR_DAY
 C      1 <-> 2
        PARiaccum  = 3 - PARiprev
@@ -2206,6 +2215,19 @@ c ANNA end TAVE
      &                        0,1,2,bi,bj,myThid)
 #endif /* ALLOW_SED_DISS_FLUX */
 #ifdef CO2_FLUX_BUDGET
+        CALL DIAGNOSTICS_FILL(deltaDic(1-Olx,1-Oly),
+     &   'DDIC   ',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(deltaDic_temp(1-Olx,1-Oly),
+     &   'DDICTEMP',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(deltaDic_salt(1-Olx,1-Oly),
+     &   'DDICSALT',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(deltaDic_alk(1-Olx,1-Oly),
+     &   'DDICALK ',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(deltaDic_apCO2(1-Olx,1-Oly),
+     &   'DDICATM ',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(deltaDic_residual(1-Olx,1-Oly),
+     &   'DDICRES ',0,1,2,bi,bj,myThid )
+
         CALL DIAGNOSTICS_FILL(dCO2Flux(1-Olx,1-Oly,bi,bj),
      &   'DCO2FLX ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(dCO2Flux_temp(1-Olx,1-Oly),
@@ -2222,6 +2244,7 @@ c ANNA end TAVE
      &   'DCO2FLXB',0,1,2,bi,bj,myThid) 
         CALL DIAGNOSTICS_FILL(dCO2Flux_circ(1-Olx,1-Oly),
      &   'DCO2FLXP',0,1,2,bi,bj,myThid)
+
         CALL DIAGNOSTICS_FILL(mixingDepth(1-Olx,1-Oly),
      &   'BCO2MIXD',0,1,2,bi,bj,myThid)
 #endif /* CO2_FLUX_BUDGET */
