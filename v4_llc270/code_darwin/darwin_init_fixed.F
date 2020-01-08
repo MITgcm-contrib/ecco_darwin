@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.6 2019/08/15 23:38:50 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_init_fixed.F,v 1.7 2020/01/08 16:05:31 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -81,8 +81,8 @@ c for chl
       chlpmin=16. _d 0                      ! mg Chl/mmolP
       istar=90. _d 0                        ! w/m2
 c iron related
-CDC   alpfe=     0.04 _d 0                  !solubility of Fe dust
-      alpfe=     0.92674 _d 0                  !solubility of Fe dust
+C ECCO-Darwin JAMES paper value
+      alpfe=     0.9273 _d 0                  !solubility of Fe dust
       scav=      0.40 _d 0/(360. _d 0*86400. _d 0) !iron chem scavenging rate (s-1)
       ligand_tot=1. _d -3                   !total ligand (uM)
       ligand_stab=2. _d 5                   !ligand stability rate ratio
@@ -99,7 +99,8 @@ c                                            mmol POC/m3/s
 #endif
 #ifdef PART_SCAV
 cswd  scav_rat=0.005 _d 0 /(86400.0 _d 0)
-      scav_rat= 9.3372 _d 0 * 0.005 _d 0 /(86400.0 _d 0)
+C ECCO-Darwin JAMES paper value
+      scav_rat= 9.3208 _d 0 * 0.005 _d 0 /(86400.0 _d 0)
       scav_inter=0.079 _d 0
       scav_exp=0.58 _d 0
 #endif
@@ -123,8 +124,9 @@ c critical light level (muEin/m2/s) after which oxidation starts
 c
 #ifndef GEIDER
 c set growth days ...small or big organism?
-       Smallgrow = 0.69178 _d 0
-       Biggrow   = 0.44 _d 0
+C ECCO-Darwin JAMES paper value
+       Smallgrow = 0.6918 _d 0
+       Biggrow   = 0.4226 _d 0
        Smallgrowrange = 0. _d 0
        Biggrowrange = 0. _d 0
        diaz_growfac = 2. _d 0
@@ -157,8 +159,9 @@ cswd   smallkinhib =     6.0 _d 0   ! 2.0 _d 0
 #ifdef  GEIDER
 c for Pcm -- should be growth rates, but using old variables
 c note these are in terms of days - converted to 1/s later
-       Smallgrow = 0.69178 _d 0
-       Biggrow   = 0.44 _d 0
+C ECCO-Darwin JAMES paper value
+       Smallgrow = 0.6918 _d 0
+       Biggrow   = 0.4226 _d 0
        Smallgrowrange = 0. _d 0
        Biggrowrange = 0. _d 0
        diaz_growfac = 2. _d 0
@@ -267,7 +270,8 @@ c set palatibility
        palatlo = 0.2 _d 0
 c set palatibilty diatom factor
 cswd   diatomgraz = 0.7 _d 0
-       diatomgraz = 0.84573 _d 0
+C ECCO-Darwin JAMES paper value
+       diatomgraz = 0.8456 _d 0
 cswd   coccograz = 0.6 _d 0
        coccograz = 0.85 _d 0
 cswd   olargegraz = 1.0 _d 0
