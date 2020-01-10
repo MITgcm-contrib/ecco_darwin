@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.24 2020/01/10 22:24:02 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.25 2020/01/10 23:11:19 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -581,8 +581,8 @@ C compute delta DIC terms for each budget component (mol C m^-3)
      &      (budgetPert / (pCO2Dic(i,j) - baselinePCO2(i,j))) *
      &      deltaApCO2(i,j)
 
-           deltaDic_CO2Flux(i,j) = flxCO2(i,j) / 
-     &      drF(1) * HFacC(i,j,1,bi,bj)
+C dDIC due to air-sea CO2 flux
+           deltaDic_CO2Flux(i,j) = flxCO2(i,j) * deltaT
  
            deltaDic_residual(i,j) = deltaDic(i,j) - 
      &      (deltaDic_temp(i,j) + deltaDic_salt(i,j) + 
