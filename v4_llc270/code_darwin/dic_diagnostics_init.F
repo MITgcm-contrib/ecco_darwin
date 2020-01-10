@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.6 2020/01/07 23:22:50 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.7 2020/01/10 22:24:02 dcarroll Exp $
 C $Name:  $
 
 #include "GCHEM_OPTIONS.h"
@@ -167,6 +167,13 @@ C     Define diagnostics Names :
 
       diagName  = 'DDICATM '
       diagTitle = 'delta DIC due to apCO2 (mol/m3)'
+      diagUnits = 'mol/m3          '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DDICFLX '
+      diagTitle = 'delta DIC due to air-sea CO2 flux (mol/m3)'
       diagUnits = 'mol/m3          '
       diagCode  = 'SM P    M1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,

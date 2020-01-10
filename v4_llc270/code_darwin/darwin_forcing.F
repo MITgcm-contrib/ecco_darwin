@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.23 2020/01/07 23:22:49 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.24 2020/01/10 22:24:02 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -336,8 +336,9 @@ c sediment-to-ocean fluxes
        _RL deltaDic_salt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic_alk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic_apCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-       _RL deltaDic_bio(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic_CO2Flux(1-OLx:sNx+OLx,1-OLy:sNy+OLy)    
        _RL deltaDic_residual(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDic_bio(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
        _RL mixingDepthKLev(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL mixingDepth(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -580,6 +581,9 @@ C compute delta DIC terms for each budget component (mol C m^-3)
      &      (budgetPert / (pCO2Dic(i,j) - baselinePCO2(i,j))) *
      &      deltaApCO2(i,j)
 
+           deltaDic_CO2Flux(i,j) = flxCO2(i,j) / 
+     &      drF(1) * HFacC(i,j,1,bi,bj)
+ 
            deltaDic_residual(i,j) = deltaDic(i,j) - 
      &      (deltaDic_temp(i,j) + deltaDic_salt(i,j) + 
      &      deltaDic_alk(i,j) + deltaDic_apCO2(i,j))
@@ -590,6 +594,7 @@ C compute delta DIC terms for each budget component (mol C m^-3)
             deltaDic_salt(i,j) = 0. _d 0
             deltaDic_alk(i,j) = 0. _d 0
 	    deltaDic_apCO2(i,j) = 0. _d 0
+            deltaDic_CO2Flux(i,j) = 0. _d 0
 	    deltaDic_residual(i,j) = 0. _d 0
 
            endif
@@ -2216,7 +2221,7 @@ c ANNA end TAVE
 #endif /* ALLOW_SED_DISS_FLUX */
 #ifdef CO2_FLUX_BUDGET
         CALL DIAGNOSTICS_FILL(deltaDic(1-Olx,1-Oly),
-     &   'DDIC   ',0,1,2,bi,bj,myThid )
+     &   'DDIC    ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_temp(1-Olx,1-Oly),
      &   'DDICTEMP',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_salt(1-Olx,1-Oly),
@@ -2225,6 +2230,8 @@ c ANNA end TAVE
      &   'DDICALK ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_apCO2(1-Olx,1-Oly),
      &   'DDICATM ',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(deltaDic_CO2Flux(1-Olx,1-Oly),
+     &   'DDICFLX ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_residual(1-Olx,1-Oly),
      &   'DDICRES ',0,1,2,bi,bj,myThid )
 
