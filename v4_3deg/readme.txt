@@ -3,21 +3,25 @@
 
 # ========
 # Get code
- cvs co MITgcm_contrib/ecco_darwin/v4_3deg
- git clone git@github.com:MITgcm/MITgcm.git
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_3deg
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm/verification/tutorial_global_oce_biogeo
+ cd MITgcm/pkg
+ ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
+ cd ..
 
 # ================
 # Build executable
- cd MITgcm
  mkdir build
  cd build
  ../tools/genmake2 -mo ../../MITgcm_contrib/ecco_darwin/v4_3deg/code
  make depend
  make -j 8
+ cd ..
 
 # ======================
 # Run verification setup
- cd ..
  mkdir run
  cd run
  ln -sf ../build/mitgcmuv .
