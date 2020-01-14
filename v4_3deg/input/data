@@ -11,8 +11,6 @@
  diffKhT=0.E3,
  diffKhS=0.E3,
  viscAz=1.E-3,
-#diffKzT=3.E-5,
-#diffKzS=3.E-5,
  diffKrBL79surf= 3.E-5,
  diffKrBL79deep= 13.E-5,
  diffKrBL79Ho  = -2000.,
@@ -25,8 +23,9 @@
  implicitDiffusion=.TRUE.,
  implicitViscosity=.TRUE.,
  ivdc_kappa=100.,
- tempAdvScheme       = 2,
- saltAdvScheme       = 2,
+ useSingleCpuIO=.TRUE.,
+ tempAdvScheme=2,
+ saltAdvScheme=2,
  allowFreezing=.TRUE.,
 # turn on looped cells
  hFacMin=.1,
@@ -42,7 +41,7 @@
 
 # Time stepping parameters
  &PARM03
- nIter0=5184000,
+ nIter0=0,
  nTimeSteps = 4,
  deltaTmom  = 900.,
  tauCD =     321428.,
@@ -65,8 +64,8 @@
 # Gridding parameters
  &PARM04
  usingSphericalPolarGrid=.TRUE.,
- delZ=  50., 70.,  100., 140., 190.,
-       240., 290., 340., 390., 440.,
+ delZ=  50., 70.,  100., 140., 190., 
+       240., 290., 340., 390., 440., 
        490., 540., 590., 640., 690.,
  ygOrigin=-90.,
  delX=128*2.8125,
@@ -76,13 +75,15 @@
 # Input datasets
  &PARM05
  bathyFile=      'bathy.bin',
- hydrogThetaFile='lev_clim_temp.bin',
- hydrogSaltFile= 'lev_clim_salt.bin',
+ hydrogThetaFile='Theta.0005184000',
+ hydrogSaltFile= 'Salt.0005184000',
+ uVelInitFile=   'Uvel.0005184000',
+ vVelInitFile=   'Vvel.0005184000',
+ pSurfInitFile=  'Eta.0005184000',
  zonalWindFile=  'tren_taux.bin',
  meridWindFile=  'tren_tauy.bin',
  thetaClimFile=  'lev_monthly_temp.bin',
  saltClimFile=   'lev_monthly_salt.bin',
- surfQnetFile=   'shi_qnet.bin',
+ surfQFile=      'shi_qnet.bin',
  EmPmRFile=      'shi_empmr_year.bin',
- the_run_name=   'Tutorial Biogeo',
  &

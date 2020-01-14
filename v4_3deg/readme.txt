@@ -26,8 +26,8 @@
  cd run
  ln -sf ../build/mitgcmuv .
  cp ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/* .
+ ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/*.0005184000 .
  ln -sf ../verification/tutorial_global_oce_biogeo/input/*.bin .
- ln -sf ../verification/tutorial_global_oce_biogeo/input/pickup* .
  ./mitgcmuv > output.txt
 
 # ==============================
