@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.25 2020/01/10 23:11:19 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.26 2020/01/15 02:57:42 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -330,6 +330,7 @@ c sediment-to-ocean fluxes
        _RL deltaSalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaAlk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL deltaDicLoc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
        _RL deltaDic_temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -461,147 +462,6 @@ C store values from current timestep as non-perturbed baseline
           ENDDO
          ENDDO
 
-#ifdef CO2_FLUX_BUDGET
-C set pH to value from previous timestep
-         DO j=jmin,jmax
-          DO i=imin,imax
-           pH(i,j,bi,bj) = pHBudget1(i,j)
-          ENDDO
-         ENDDO
-
-C deltaPCO2 due to temperature pertubation
-         call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &    deltaTemp,bi,bj,imin,imax,jmin,jmax,
-     &    myIter,myTime,myThid)
-
-C set pH to value from previous timestep and store pCO2
-         DO j=jmin,jmax
-          DO i=imin,imax
-           pH(i,j,bi,bj) = pHBudget1(i,j)
-           pCO2Temp(i,j) = pCO2(i,j,bi,bj)
-          ENDDO
-         ENDDO
-
-C deltaPCO2 due to salinity perturbation
-         call dic_budgetSalt(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &    deltaSalt,bi,bj,imin,imax,jmin,jmax,
-     &    myIter,myTime,myThid)
-
-C set pH to value from previous timestep and store pCO2
-         DO j=jmin,jmax
-          DO i=imin,imax
-           pH(i,j,bi,bj) = pHBudget1(i,j)
-           pCO2Salt(i,j) = pCO2(i,j,bi,bj)
-          ENDDO
-         ENDDO
-
-C deltaPCO2 due to alkalinity perturbation
-         call dic_budgetAlk(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &    deltaAlk,bi,bj,imin,imax,jmin,jmax,
-     &    myIter,myTime,myThid)
-
-C set pH to value from previous timestep and store pCO2
-         DO j=jmin,jmax
-          DO i=imin,imax
-           pH(i,j,bi,bj) = pHBudget1(i,j)
-           pCO2Alk(i,j) = pCO2(i,j,bi,bj)
-          ENDDO
-         ENDDO
-
-C deltaPCO2 due to DIC perturbation
-         call dic_budgetDic(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &    deltaDic,bi,bj,imin,imax,jmin,jmax,
-     &    myIter,myTime,myThid)
-
-C set pH to value from previous timestep and store pCO2
-         DO j=jmin,jmax
-          DO i=imin,imax
-           pH(i,j,bi,bj) = pHBudget1(i,j)
-           pCO2Dic(i,j) = pCO2(i,j,bi,bj)
-          ENDDO
-         ENDDO
-
-C compute deltaApCO2
-         call dic_budgetApCO2(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
-     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
-     &    deltaApCO2,bi,bj,imin,imax,jmin,jmax,
-     &    myIter,myTime,myThid)
-
-C reset to baseline values
-         DO j=jmin,jmax
-          DO i=imin,imax
-           pH(i,j,bi,bj) = baselinePH(i,j)
-           pCO2(i,j,bi,bj) = baselinePCO2(i,j)
-           CO3(i,j,bi,bj) = baselineCO3(i,j)
-          ENDDO
-         ENDDO
-
-         DO j=jmin,jmax
-          DO i=imin,imax
-
-          IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
-
-C compute delta DIC terms for each budget component (mol C m^-3)
-           deltaDic_temp(i,j) =  
-     &      (((pCO2Temp(i,j) - baselinePCO2(i,j)) / 
-     &      budgetPert) / 
-     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
-     &      budgetPert)) *
-     &      deltaTemp(i,j)
-
-           deltaDic_salt(i,j) =  
-     &      (((pCO2Salt(i,j) - baselinePCO2(i,j)) / 
-     &      budgetPert) / 
-     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
-     &      budgetPert)) *
-     &      deltaSalt(i,j)
-
-           deltaDic_alk(i,j) =  
-     &      (((pCO2Alk(i,j) - baselinePCO2(i,j)) / 
-     &      budgetPert) / 
-     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
-     &      budgetPert)) *
-     &      deltaAlk(i,j) 
-
-           deltaDic_apCO2(i,j) = 
-     &      (budgetPert / (pCO2Dic(i,j) - baselinePCO2(i,j))) *
-     &      deltaApCO2(i,j)
-
-C dDIC due to air-sea CO2 flux
-           deltaDic_CO2Flux(i,j) = flxCO2(i,j) * deltaT
- 
-           deltaDic_residual(i,j) = deltaDic(i,j) - 
-     &      (deltaDic_temp(i,j) + deltaDic_salt(i,j) + 
-     &      deltaDic_alk(i,j) + deltaDic_apCO2(i,j))
-
-           else
-
-            deltaDic_temp(i,j) = 0. _d 0     
-            deltaDic_salt(i,j) = 0. _d 0
-            deltaDic_alk(i,j) = 0. _d 0
-	    deltaDic_apCO2(i,j) = 0. _d 0
-            deltaDic_CO2Flux(i,j) = 0. _d 0
-	    deltaDic_residual(i,j) = 0. _d 0
-
-           endif
-
-          ENDDO
-         ENDDO
-#endif /* CO2_FLUX_BUDGET */
 c air-sea flux of O2
          call dic_o2_surfforcing(Ptr(1-OLx,1-OLy,1,bi,bj,iO2),
      &                       flxO2,
@@ -1360,8 +1220,6 @@ c convert to mol m^-3
         
 	     endif
 
-             calcium(i,j,k,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
-
 #ifdef ADKINS_SURF_FLUX
 c include surface fluxes from forcing files, compute calcium tracer
              if (k.eq.1) then
@@ -1375,6 +1233,10 @@ c include surface fluxes from forcing files, compute calcium tracer
      &        dtplankton*dcal,0. _d 0)
 
              calcium(i,j,k,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
+#elseif
+C calcium in mmol m^-3
+             calcium(i,j,k,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
+     &        * 1. _d 3
 #endif /* ADKINS_SURF_FLUX */
 
 c ANNA pass extra variables if WAVEBANDS
@@ -1734,6 +1596,11 @@ c in darwin_plankton this is stored for previous timestep. Reset here.
 #endif
          ENDDO
 #ifdef ALLOW_CARBON
+
+          if (k.eq.1) then
+           deltaDicLoc(i,j) = (ddicl * dtplankton) / 1.0 _d 3
+          endif
+
           Ptr(i,j,k,bi,bj,iDIC ) = Ptr(i,j,k,bi,bj,iDIC ) +
      &                                  dtplankton*ddicl
           Ptr(i,j,k,bi,bj,iDOC ) = Ptr(i,j,k,bi,bj,iDOC ) +
@@ -1973,6 +1840,145 @@ c
        ENDDO ! j
 
 #ifdef CO2_FLUX_BUDGET
+C set pH to value from previous timestep
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+          ENDDO
+         ENDDO
+
+C deltaPCO2 due to temperature pertubation
+         call dic_budgetTemp(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaTemp,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
+
+C set pH to value from previous timestep and store pCO2
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Temp(i,j) = pCO2(i,j,bi,bj)
+          ENDDO
+         ENDDO
+
+C deltaPCO2 due to salinity perturbation
+         call dic_budgetSalt(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaSalt,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
+
+C set pH to value from previous timestep and store pCO2
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Salt(i,j) = pCO2(i,j,bi,bj)
+          ENDDO
+         ENDDO
+
+C deltaPCO2 due to alkalinity perturbation
+         call dic_budgetAlk(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaAlk,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
+
+C set pH to value from previous timestep and store pCO2
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Alk(i,j) = pCO2(i,j,bi,bj)
+          ENDDO
+         ENDDO
+
+C deltaPCO2 due to DIC perturbation
+         call dic_budgetDic(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaDic,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
+
+C set pH to value from previous timestep and store pCO2
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = pHBudget1(i,j)
+           pCO2Dic(i,j) = pCO2(i,j,bi,bj)
+          ENDDO
+         ENDDO
+
+C compute deltaApCO2
+         call dic_budgetApCO2(Ptr(1-OLx,1-OLy,1,bi,bj,iDIC),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iALK),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iPO4),
+     &    Ptr(1-OLx,1-OLy,1,bi,bj,iSi),
+     &    deltaApCO2,bi,bj,imin,imax,jmin,jmax,
+     &    myIter,myTime,myThid)
+
+C reset to baseline values
+         DO j=jmin,jmax
+          DO i=imin,imax
+           pH(i,j,bi,bj) = baselinePH(i,j)
+           pCO2(i,j,bi,bj) = baselinePCO2(i,j)
+           CO3(i,j,bi,bj) = baselineCO3(i,j)
+          ENDDO
+         ENDDO
+
+         DO j=jmin,jmax
+          DO i=imin,imax
+
+          IF ( maskC(i,j,kLev,bi,bj).NE.0. _d 0 ) THEN
+
+C compute delta DIC terms for each budget component (mol C m^-3)
+           deltaDic_temp(i,j) =  
+     &      (((pCO2Temp(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert) / 
+     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert)) *
+     &      deltaTemp(i,j)
+
+           deltaDic_salt(i,j) =  
+     &      (((pCO2Salt(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert) / 
+     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert)) *
+     &      deltaSalt(i,j)
+
+           deltaDic_alk(i,j) =  
+     &      (((pCO2Alk(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert) / 
+     &      ((pCO2Dic(i,j) - baselinePCO2(i,j)) / 
+     &      budgetPert)) *
+     &      deltaAlk(i,j) 
+
+           deltaDic_apCO2(i,j) = 
+     &      (budgetPert / (pCO2Dic(i,j) - baselinePCO2(i,j))) *
+     &      deltaApCO2(i,j)
+
+C dDIC due to air-sea CO2 flux
+           deltaDic_CO2Flux(i,j) = (flxCO2(i,j) * deltaT) / 1.0 _d 3
+ 
+           deltaDic_residual(i,j) = deltaDic(i,j) - 
+     &      (deltaDic_temp(i,j) + deltaDic_salt(i,j) + 
+     &      deltaDic_alk(i,j) + deltaDic_apCO2(i,j))
+
+           else
+
+            deltaDic_temp(i,j) = 0. _d 0     
+            deltaDic_salt(i,j) = 0. _d 0
+            deltaDic_alk(i,j) = 0. _d 0
+	    deltaDic_apCO2(i,j) = 0. _d 0
+            deltaDic_CO2Flux(i,j) = 0. _d 0
+	    deltaDic_residual(i,j) = 0. _d 0
+
+           endif
+
+          ENDDO
+         ENDDO
 
 C find k index from mixed layer depth
        DO k=1,Nr
@@ -2219,9 +2225,12 @@ c ANNA end TAVE
         CALL DIAGNOSTICS_FILL(CO3Sed(1-Olx,1-Oly,bi,bj), 'CO3SED  ',
      &                        0,1,2,bi,bj,myThid)
 #endif /* ALLOW_SED_DISS_FLUX */
+
 #ifdef CO2_FLUX_BUDGET
         CALL DIAGNOSTICS_FILL(deltaDic(1-Olx,1-Oly),
      &   'DDIC    ',0,1,2,bi,bj,myThid )
+        CALL DIAGNOSTICS_FILL(deltaDicLoc(1-Olx,1-Oly),
+     &   'DDICLOC ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_temp(1-Olx,1-Oly),
      &   'DDICTEMP',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_salt(1-Olx,1-Oly),
@@ -2234,7 +2243,6 @@ c ANNA end TAVE
      &   'DDICFLX ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_residual(1-Olx,1-Oly),
      &   'DDICRES ',0,1,2,bi,bj,myThid )
-
         CALL DIAGNOSTICS_FILL(dCO2Flux(1-Olx,1-Oly,bi,bj),
      &   'DCO2FLX ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(dCO2Flux_temp(1-Olx,1-Oly),
@@ -2251,10 +2259,10 @@ c ANNA end TAVE
      &   'DCO2FLXB',0,1,2,bi,bj,myThid) 
         CALL DIAGNOSTICS_FILL(dCO2Flux_circ(1-Olx,1-Oly),
      &   'DCO2FLXP',0,1,2,bi,bj,myThid)
-
         CALL DIAGNOSTICS_FILL(mixingDepth(1-Olx,1-Oly),
      &   'BCO2MIXD',0,1,2,bi,bj,myThid)
 #endif /* CO2_FLUX_BUDGET */
+
 #endif /* ALLOW_CARBON */
        ENDIF
 #endif /* ALLOW_DIAGNOSTICS */

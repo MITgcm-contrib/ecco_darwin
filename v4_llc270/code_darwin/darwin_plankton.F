@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.8 2019/10/16 18:04:40 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.9 2020/01/15 02:57:42 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -1359,7 +1359,9 @@ c remineralization of sinking particulate
            DOCremin =  reminTempFunction * Kdoc * DOClocal
            preminC  = reminTempFunction * Kpremin_C*POClocal
 
-           omegaCLocal = calciumLocal * CO3Local / KspTPLocal
+C units in mol m^-3
+           omegaCLocal = (calciumLocal * 1. _d -3)
+     &      * CO3Local / KspTPLocal
 
 c water column dissolution
 #ifdef NAVIAUX_DISSOLUTION

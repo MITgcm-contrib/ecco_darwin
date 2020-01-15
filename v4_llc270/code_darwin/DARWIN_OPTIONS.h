@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.14 2020/01/04 17:39:28 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/DARWIN_OPTIONS.h,v 1.15 2020/01/15 02:57:42 dcarroll Exp $
 C $Name:  $
 
 #ifndef DARWIN_OPTIONS_H
@@ -75,7 +75,7 @@ C following Sulpis et al. 2018 (PNAS)
 #undef ALLOW_SED_DISS_FLUX
 
 C compute air-sea CO2 flux budget
-#undef CO2_FLUX_BUDGET
+#define CO2_FLUX_BUDGET
 
 C allow surface DIC, alkalinity, and calcium fluxes
 #undef ADKINS_SURF_FLUX
