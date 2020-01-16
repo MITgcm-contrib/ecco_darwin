@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.8 2020/01/15 02:57:42 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.9 2020/01/16 01:53:46 dcarroll Exp $
 C $Name:  $
 
 #include "GCHEM_OPTIONS.h"
@@ -134,13 +134,6 @@ C     Define diagnostics Names :
       diagTitle = 'calcite dissolution rate (mol/m3/s)'
       diagUnits = 'mol/m3/s        '
       diagCode  = 'SM P    MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      diagName  = 'DDICLOC '
-      diagTitle = 'local delta DIC (mol/m3)'
-      diagUnits = 'mol/m3          '
-      diagCode  = 'SM P    M1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 

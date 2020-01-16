@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.26 2020/01/15 02:57:42 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.27 2020/01/16 01:53:46 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -330,7 +330,6 @@ c sediment-to-ocean fluxes
        _RL deltaSalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaAlk(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaDic(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-       _RL deltaDicLoc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
        _RL deltaApCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
        _RL deltaDic_temp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -1233,7 +1232,7 @@ c include surface fluxes from forcing files, compute calcium tracer
      &        dtplankton*dcal,0. _d 0)
 
              calcium(i,j,k,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
-#elseif
+#else
 C calcium in mmol m^-3
              calcium(i,j,k,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
      &        * 1. _d 3
@@ -1596,10 +1595,6 @@ c in darwin_plankton this is stored for previous timestep. Reset here.
 #endif
          ENDDO
 #ifdef ALLOW_CARBON
-
-          if (k.eq.1) then
-           deltaDicLoc(i,j) = (ddicl * dtplankton) / 1.0 _d 3
-          endif
 
           Ptr(i,j,k,bi,bj,iDIC ) = Ptr(i,j,k,bi,bj,iDIC ) +
      &                                  dtplankton*ddicl
@@ -2229,8 +2224,6 @@ c ANNA end TAVE
 #ifdef CO2_FLUX_BUDGET
         CALL DIAGNOSTICS_FILL(deltaDic(1-Olx,1-Oly),
      &   'DDIC    ',0,1,2,bi,bj,myThid )
-        CALL DIAGNOSTICS_FILL(deltaDicLoc(1-Olx,1-Oly),
-     &   'DDICLOC ',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_temp(1-Olx,1-Oly),
      &   'DDICTEMP',0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL(deltaDic_salt(1-Olx,1-Oly),
