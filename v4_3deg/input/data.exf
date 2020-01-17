@@ -1,0 +1,73 @@
+# *********************
+# External Forcing Data
+# *********************
+
+ &EXF_NML_01
+ exf_iprec         = 32,
+ /
+
+ &EXF_NML_02
+ hfluxfile         = 'shi_qnet.bin',
+ sfluxfile         = 'shi_empmr_year.bin',
+ ustressfile       = 'tren_taux.bin',
+ vstressfile       = 'tren_tauy.bin',
+ climsstfile       = 'lev_monthly_temp.bin',
+ climsssfile       = 'lev_monthly_salt.bin',
+#
+ hfluxperiod       = -12.,
+ sfluxperiod       = -12.,
+ ustressperiod     = -12.,
+ vstressperiod     = -12.,
+ climsstperiod     = -12.,
+ climsssperiod     = -12.,
+#
+ climsstTauRelax   = 5184000.,
+ climsssTauRelax   = 7776000.,
+ /
+
+ &EXF_NML_03
+ /
+
+ &EXF_NML_04
+ hflux_lon0    = 1.40625,
+ hflux_lon_inc = 2.8125,
+ hflux_lat0    = -88.59375,
+ hflux_lat_inc = 39*2.8125,
+ hflux_nlon    = 128,
+ hflux_nlat    = 64,
+#
+ sflux_lon0    = 1.40625,
+ sflux_lon_inc = 2.8125,
+ sflux_lat0    = -88.59375,
+ sflux_lat_inc = 39*2.8125,
+ sflux_nlon    = 128,
+ sflux_nlat    = 64,
+#
+ ustress_lon0    = 0.,
+ ustress_lon_inc = 2.8125,
+ ustress_lat0    = -88.59375,
+ ustress_lat_inc = 39*2.8125,
+ ustress_nlon    = 128,
+ ustress_nlat    = 64,
+#
+ vstress_lon0    = 1.40625,
+ vstress_lon_inc = 2.8125,
+ vstress_lat0    = -90.,
+ vstress_lat_inc = 39*2.8125,
+ vstress_nlon    = 128,
+ vstress_nlat    = 64,
+#
+ climsst_lon0    = 1.40625,
+ climsst_lon_inc = 2.8125,
+ climsst_lat0    = -88.59375,
+ climsst_lat_inc = 39*2.8125,
+ climsst_nlon    = 128,
+ climsst_nlat    = 64,
+#
+ climsss_lon0    = 1.40625,
+ climsss_lon_inc = 2.8125,
+ climsss_lat0    = -88.59375,
+ climsss_lat_inc = 39*2.8125,
+ climsss_nlon    = 128,
+ climsss_nlat    = 64,
+ /
