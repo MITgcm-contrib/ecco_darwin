@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_3deg/code/Attic/EXF_OPTIONS.h,v 1.1 2020/01/17 20:05:00 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_3deg/code/Attic/EXF_OPTIONS.h,v 1.2 2020/01/18 04:30:25 dimitri Exp $
 C $Name:  $
 
 CBOP
@@ -168,14 +168,16 @@ C      |     |     |     |     |     | Compute  hflux and sflux.
 C
 C   =======================================================================
 
+C#define USE_EXFCO2
+
 C-  Bulk formulae related flags.
-#undef ALLOW_ATM_TEMP
-#undef ALLOW_ATM_WIND
-#undef ALLOW_DOWNWARD_RADIATION
+#define ALLOW_ATM_TEMP
+#define ALLOW_ATM_WIND
+#define ALLOW_DOWNWARD_RADIATION
 #ifdef ALLOW_ATM_TEMP
 C Note: To use ALLOW_BULKFORMULAE or EXF_READ_EVAP, needs #define ALLOW_ATM_TEMP
 # define ALLOW_BULKFORMULAE
-# undef  ALLOW_BULK_LARGEYEAGER04
+# define ALLOW_BULK_LARGEYEAGER04
 # undef  EXF_READ_EVAP
 # ifndef ALLOW_BULKFORMULAE
 C  Note: To use ALLOW_READ_TURBFLUXES, ALLOW_ATM_TEMP needs to
@@ -197,7 +199,7 @@ C       and ATMOSPHERIC_LOADING need to be defined
 
 C-  Zenith Angle/Albedo related flags.
 #ifdef ALLOW_DOWNWARD_RADIATION
-# undef ALLOW_ZENITHANGLE
+# define ALLOW_ZENITHANGLE
 #endif
 
 C-  Use ocean_emissivity*lwdown in lwFlux. This flag should be defined
