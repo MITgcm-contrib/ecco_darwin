@@ -1,3 +1,6 @@
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_3deg/code/Attic/PTRACERS_SIZE.h,v 1.2 2020/01/23 01:27:38 dimitri Exp $
+C $Name:  $
+
 #ifdef ALLOW_PTRACERS
 
 CBOP
@@ -15,5 +18,15 @@ C     Number of tracers
       INTEGER PTRACERS_num
       PARAMETER(PTRACERS_num = 5 )
 
+#ifdef ALLOW_AUTODIFF_TAMC
+      INTEGER    iptrkey
+      INTEGER    maxpass
+      PARAMETER( maxpass     = PTRACERS_num + 2 )
+#endif
+
 CEOP
 #endif /* ALLOW_PTRACERS */
+
+CEH3 ;;; Local Variables: ***
+CEH3 ;;; mode:fortran ***
+CEH3 ;;; End: ***

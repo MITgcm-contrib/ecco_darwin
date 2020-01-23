@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_3deg/code/Attic/EXF_OPTIONS.h,v 1.2 2020/01/18 04:30:25 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_3deg/code/Attic/EXF_OPTIONS.h,v 1.3 2020/01/23 01:27:38 dimitri Exp $
 C $Name:  $
 
 CBOP
@@ -168,7 +168,7 @@ C      |     |     |     |     |     | Compute  hflux and sflux.
 C
 C   =======================================================================
 
-C#define USE_EXFCO2
+#define USE_EXFCO2
 
 C-  Bulk formulae related flags.
 #define ALLOW_ATM_TEMP

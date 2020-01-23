@@ -1,0 +1,14 @@
+ &DARWIN_FORCING
+ darwin_IronFile='llc270_Mahowald_2009_soluble_iron_dust.bin',
+ darwin_forcingPeriod=2629800.,
+ darwin_forcingCycle=31557600.,
+ darwin_seed=56,
+ /
+
+ &DIC_FORCING
+#DIC_windFile  = 'input/tren_speed_mth-2d.bin',
+#DIC_atmospFile= ' ',
+ dic_int1=2,
+ dic_pCO2=370.D-6,
+ /
+

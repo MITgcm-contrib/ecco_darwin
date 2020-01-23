@@ -1,3 +1,7 @@
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_3deg/code/Attic/DIAGNOSTICS_SIZE.h,v 1.2 2020/01/23 01:27:37 dimitri Exp $
+C $Name:  $
+
+
 C     Diagnostics Array Dimension
 C     ---------------------------
 C     ndiagMax   :: maximum total number of available diagnostics
@@ -16,11 +20,11 @@ C  and "diagSt_size" (statistics-diags) since values here are deliberately small
       INTEGER    numDiags
       INTEGER    nRegions, sizRegMsk, nStats
       INTEGER    diagSt_size
-      PARAMETER( ndiagMax = 500 )
-      PARAMETER( numlists = 10, numperlist = 50, numLevels=2*Nr )
-      PARAMETER( numDiags = 20*Nr )
-      PARAMETER( nRegions = 9 , sizRegMsk = 1 , nStats = 4 )
-      PARAMETER( diagSt_size = 50*Nr )
+      PARAMETER( ndiagMax = 1500 )
+      PARAMETER( numlists = 90, numperlist = 90, numLevels=Nr )
+      PARAMETER( numDiags = 25+120*Nr )
+      PARAMETER( nRegions = 0 , sizRegMsk = 1 , nStats = 4 )
+      PARAMETER( diagSt_size = 10*Nr )
 
 
 CEH3 ;;; Local Variables: ***
