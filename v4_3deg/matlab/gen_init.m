@@ -25,3 +25,11 @@ writebin('../input/Alk.0005184000',tmp(:,:,16:30));
 writebin('../input/PO4.0005184000',tmp(:,:,31:45));
 writebin('../input/DOP.0005184000',tmp(:,:,46:60));
 writebin('../input/O2.0005184000',tmp(:,:,61:75));
+
+% individual ptracers extracted from
+% /nobackup/dcarrol2/v4_3deg/pickup/v4_3deg_pickup_ptracers_optimized.0000000001.data
+% Type is real*4, dimensions are [128 64 15 40].
+for i=1:40
+    tmp=readbin('v4_3deg_pickup_ptracers_optimized.0000000001.data',[128 64 15],1,'real*4',i-1);
+    writebin(['../input/ptracers_optimized_' myint2str(i) '.0000000001'],tmp);
+end
