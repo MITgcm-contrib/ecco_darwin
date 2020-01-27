@@ -1,5 +1,5 @@
  &DARWIN_FORCING
- darwin_IronFile='llc270_Mahowald_2009_soluble_iron_dust.bin',
+ darwin_IronFile='3deg_Mahowald_2009_soluble_iron_dust.bin',
  darwin_forcingPeriod=2629800.,
  darwin_forcingCycle=31557600.,
  darwin_seed=56,

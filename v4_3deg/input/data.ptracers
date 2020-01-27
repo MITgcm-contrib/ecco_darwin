@@ -1,76 +1,165 @@
  &PTRACERS_PARM01
- PTRACERS_numInUse=5,
- PTRACERS_Iter0= 0,
-# tracer 1 - dic
- PTRACERS_names(1)='DIC',
- PTRACERS_long_names(1)='Dissolved Inorganic Carbon (DIC) [mol C/m^3]',
- PTRACERS_units(1)='mol/m^3',
- PTRACERS_advScheme(1)=77,
- PTRACERS_diffKh(1)=0.E3,
- PTRACERS_diffKr(1)=3.E-5,
- PTRACERS_useGMRedi(1)=.TRUE.,
- PTRACERS_initialFile(1)='DIC.0005184000',
-#- use F95 syntax (to be converted with -DNML_EXTENDED_F77 if needed)
- PTRACERS_ref(1:15,1) = 2.0282, 2.0609, 2.1206, 2.1581,
-                     2.1904, 2.2188, 2.2474, 2.2699,
-                     2.2792, 2.2814, 2.2815, 2.2806,
-                     2.2800, 2.2760, 2.2758,
- PTRACERS_EvPrRn(1)= 0.,
-# tracer 2 - alk
- PTRACERS_names(2)='Alk',
- PTRACERS_long_names(2)='Alkalinity (Alk) [mol eq/m^3]',
- PTRACERS_units(2)='mol/m^3',
- PTRACERS_advScheme(2)=77,
- PTRACERS_diffKh(2)=0.E3,
- PTRACERS_diffKr(2)=3.E-5,
- PTRACERS_useGMRedi(2)=.TRUE.,
- PTRACERS_initialFile(2)='Alk.0005184000',
-#- use F95 syntax (to be converted with -DNML_EXTENDED_F77 if needed)
- PTRACERS_ref(1:15,2) = 2.3086, 2.3149, 2.3164, 2.3112,
-                     2.3098, 2.3160, 2.3313, 2.3517,
-                     2.3667, 2.3761, 2.3832, 2.3862,
-                     2.3881, 2.3863, 2.3867,
- PTRACERS_EvPrRn(2)= 0.,
-# tracer 3 - po4
- PTRACERS_names(3)='PO4',
- PTRACERS_long_names(3)='Phosphate (PO4) [mol P/m^3]',
- PTRACERS_units(3)='mol/m^3',
- PTRACERS_advScheme(3)=77,
- PTRACERS_diffKh(3)=0.E3,
- PTRACERS_diffKr(3)=3.E-5,
- PTRACERS_useGMRedi(3)=.TRUE.,
- PTRACERS_initialFile(3)='PO4.0005184000',
-#- use F95 syntax (to be converted with -DNML_EXTENDED_F77 if needed)
- PTRACERS_ref(1:15,3) = 0.5438E-3, 0.7821E-3, 1.1335E-3, 1.4913E-3,
-                     1.8606E-3, 2.1986E-3, 2.3966E-3, 2.4187E-3,
-                     2.4046E-3, 2.3291E-3, 2.2922E-3, 2.2886E-3,
-                     2.2608E-3, 2.2356E-3, 2.2296E-3,
-#PTRACERS_EvPrRn(3)= 0.,
-# tracer 4 - dop
- PTRACERS_names(4)='DOP',
- PTRACERS_long_names(4)='Dissolved Organic Phosphorus (DOP) [mol P/m^3]',
- PTRACERS_units(4)='mol/m^3',
- PTRACERS_advScheme(4)=77,
- PTRACERS_diffKh(4)=0.E3,
- PTRACERS_diffKr(4)=3.E-5,
- PTRACERS_useGMRedi(4)=.TRUE.,
- PTRACERS_initialFile(4)='DOP.0005184000',
-#- use F95 syntax (to be converted with -DNML_EXTENDED_F77 if needed)
- PTRACERS_ref(1:15,4) = 15*0.,
-#PTRACERS_EvPrRn(4)= 0.,
-# tracer 5 - o2
- PTRACERS_names(5)='O2',
- PTRACERS_long_names(5)='Dissolved Oxygen (O2) [mol O/m^3]',
- PTRACERS_units(5)='mol/m^3',
- PTRACERS_advScheme(5)=77,
- PTRACERS_diffKh(5)=0.E3,
- PTRACERS_diffKr(5)=3.E-5,
- PTRACERS_useGMRedi(5)=.TRUE.,
- PTRACERS_initialFile(5)='O2.0005184000',
-#- use F95 syntax (to be converted with -DNML_EXTENDED_F77 if needed)
- PTRACERS_ref(1:15,5) = 0.2457, 0.2336, 0.1975, 0.1729,
-                     0.1591, 0.1503, 0.1424, 0.1445,
-                     0.1549, 0.1661, 0.1774, 0.1863,
-                     0.1925, 0.2021, 0.2051,
-#PTRACERS_EvPrRn(5)= 0.,
+ PTRACERS_numInUse=39,
+ PTRACERS_advScheme(1)=39*33,
+ PTRACERS_diffKh(1)=39*0.E3,
+ PTRACERS_diffKr(1)=39*1.E-5,
+ PTRACERS_useGMRedi(1)=39*.TRUE. ,
+# tracer 1 - phosphate
+ PTRACERS_names(1)='PO4',
+ PTRACERS_units(1)='mmol P/m^3',
+ PTRACERS_initialFile(1)='ptracers_optimized_01.0000000001',
+# tracer 2 - nitrate
+ PTRACERS_names(2)='NO3',
+ PTRACERS_units(2)='mmol N/m^3',
+ PTRACERS_initialFile(2)='ptracers_optimized_02.0000000001',
+# tracer 3 - dissolved iron
+ PTRACERS_names(3)='FeT',
+ PTRACERS_units(3)='mmol Fe/m^3',
+ PTRACERS_initialFile(3)='ptracers_optimized_03.0000000001',
+# tracer 4 - silicic acid
+ PTRACERS_names(4)='SiO2',
+ PTRACERS_units(4)='mmol Si/m^3',
+ PTRACERS_initialFile(4)='ptracers_optimized_04.0000000001',
+# tracer 5 - DOP 
+ PTRACERS_names(5)='DOP',
+ PTRACERS_units(5)='mmol P/m^3',
+ PTRACERS_initialFile(5)='ptracers_optimized_05.0000000001',
+# tracer 6 - DON
+ PTRACERS_names(6)='DON',
+ PTRACERS_units(6)='mmol N/m^3',
+ PTRACERS_initialFile(6)='ptracers_optimized_06.0000000001',
+# tracer 7 - DOFe
+ PTRACERS_names(7)='DOFe',
+ PTRACERS_units(7)='mmol Fe/m^3',
+ PTRACERS_initialFile(7)='ptracers_optimized_07.0000000001',
+# tracer 8 - ZOO1P
+ PTRACERS_names(8)='ZOO1P',
+ PTRACERS_units(8)='mmol P/m^3',
+ PTRACERS_initialFile(8)='ptracers_optimized_08.0000000001',
+# tracer 9 - ZOO1N
+ PTRACERS_names(9)='ZOO1N',
+ PTRACERS_units(9)='mmol N/m^3'
+ PTRACERS_initialFile(9)='ptracers_optimized_09.0000000001',
+# tracer 10 - ZOO1Fe
+ PTRACERS_names(10)='ZOO1Fe',
+ PTRACERS_units(10)='mmol Fe/m^3'
+ PTRACERS_initialFile(10)='ptracers_optimized_10.0000000001',
+# tracer 11 - ZOO1Si
+ PTRACERS_names(11)='ZOO1Si',
+ PTRACERS_units(11)='mmol Si/m^3'
+ PTRACERS_initialFile(11)='ptracers_optimized_11.0000000001',
+# tracer 12 - ZOO2P
+ PTRACERS_names(12)='ZOO2P',
+ PTRACERS_units(12)='mmol P/m^3',
+ PTRACERS_initialFile(12)='ptracers_optimized_12.0000000001',
+# tracer 13 - ZOO2N 
+ PTRACERS_names(13)='ZOO2N',
+ PTRACERS_units(13)='mmol N/m^3'
+ PTRACERS_initialFile(13)='ptracers_optimized_13.0000000001',
+# tracer 14 - ZOO2Fe
+ PTRACERS_names(14)='ZOO2Fe',
+ PTRACERS_units(14)='mmol Fe/m^3'
+ PTRACERS_initialFile(14)='ptracers_optimized_14.0000000001',
+# tracer 15 - ZOO2Si
+ PTRACERS_names(15)='ZOO2Si',
+ PTRACERS_units(15)='mmol Si/m^3'
+ PTRACERS_initialFile(15)='ptracers_optimized_15.0000000001',
+# tracer 16 - POP
+ PTRACERS_names(16)='POP',
+ PTRACERS_units(16)='mmol P/m^3',
+ PTRACERS_initialFile(16)='ptracers_optimized_16.0000000001',
+# tracer 17 - PON   
+ PTRACERS_names(17)='PON',
+ PTRACERS_units(17)='mmol N/m^3',
+ PTRACERS_initialFile(17)='ptracers_optimized_17.0000000001',
+# tracer 18 - POFe
+ PTRACERS_names(18)='POFe',
+ PTRACERS_units(18)='mmol Fe/m^3'
+ PTRACERS_initialFile(18)='ptracers_optimized_18.0000000001',
+# tracer 19 - POSi   
+ PTRACERS_names(19)='POSi',
+ PTRACERS_units(19)='mmol Si/m^3'
+ PTRACERS_initialFile(19)='ptracers_optimized_19.0000000001',
+# tracer 20 - NH4      
+ PTRACERS_names(20)='NH4',
+ PTRACERS_units(20)='mmol N/m^3'
+ PTRACERS_initialFile(20)='ptracers_optimized_20.0000000001',
+# tracer 21 - NO2
+ PTRACERS_names(21)='NO2',
+ PTRACERS_units(21)='mmol N/m^3'
+ PTRACERS_initialFile(21)='ptracers_optimized_21.0000000001',
+# tracer 22 - PHYT01
+ PTRACERS_names(22)='Phy01',
+ PTRACERS_units(22)='mmol P/m^3'
+ PTRACERS_initialFile(22)='ptracers_optimized_22.0000000001',
+# tracer 23 - PHYT02
+ PTRACERS_names(23)='Phy02',
+ PTRACERS_units(23)='mmol P/m^3'
+ PTRACERS_initialFile(23)='ptracers_optimized_23.0000000001',
+# tracer 24 - PHYT03
+ PTRACERS_names(24)='Phy03',
+ PTRACERS_units(24)='mmol P/m^3'
+ PTRACERS_initialFile(24)='ptracers_optimized_24.0000000001',
+# tracer 25 - PHYT04
+ PTRACERS_names(25)='Phy04',
+ PTRACERS_units(25)='mmol P/m^3'
+ PTRACERS_initialFile(25)='ptracers_optimized_25.0000000001',
+# tracer 26 - PHYT05
+ PTRACERS_names(26)='Phy05',
+ PTRACERS_units(26)='mmol P/m^3'
+ PTRACERS_initialFile(26)='ptracers_optimized_26.0000000001',
+# tracer 27 - CHL01
+ PTRACERS_names(27)='Chl01',
+ PTRACERS_units(27)='mg Chla/m^3'
+ PTRACERS_initialFile(27)='ptracers_optimized_27.0000000001',
+# tracer 28 - CHL02
+ PTRACERS_names(28)='Chl02',
+ PTRACERS_units(28)='mg Chla/m^3'
+ PTRACERS_initialFile(28)='ptracers_optimized_28.0000000001',
+# tracer 29 - CHL03
+ PTRACERS_names(29)='Chl03',
+ PTRACERS_units(29)='mg Chla/m^3'
+ PTRACERS_initialFile(29)='ptracers_optimized_29.0000000001',
+# tracer 30 - CHL04
+ PTRACERS_names(30)='Chl04',
+ PTRACERS_units(30)='mg Chla/m^3'
+ PTRACERS_initialFile(30)='ptracers_optimized_30.0000000001',
+# tracer 31 - CHL05
+ PTRACERS_names(31)='Chl05',
+ PTRACERS_units(31)='mg Chla/m^3'
+ PTRACERS_initialFile(31)='ptracers_optimized_31.0000000001',
+# tracer 32 - DIC
+ PTRACERS_names(32)='DIC',
+ PTRACERS_units(32)='mmol C/m^3'
+ PTRACERS_EvPrRn(32)= 0.
+ PTRACERS_initialFile(32)='ptracers_optimized_32.0000000001',
+# tracer 33 - DOC
+ PTRACERS_names(33)='DOC',
+ PTRACERS_units(33)='mmol C/m^3'
+ PTRACERS_initialFile(33)='ptracers_optimized_33.0000000001',
+# tracer 34 - POC
+ PTRACERS_names(34)='POC',
+ PTRACERS_units(34)='mmol C/m^3'
+ PTRACERS_initialFile(34)='ptracers_optimized_34.0000000001',
+# tracer 35 - PIC
+ PTRACERS_names(35)='PIC',
+ PTRACERS_units(35)='mmol C/m^3'
+ PTRACERS_initialFile(35)='ptracers_optimized_35.0000000001',
+# tracer 36 - ALK
+ PTRACERS_names(36)='ALK',
+ PTRACERS_units(36)='mmol eq/m^3'
+ PTRACERS_EvPrRn(36)= 0.
+ PTRACERS_initialFile(36)='ptracers_optimized_36.0000000001',
+# tracer 37 - O2
+ PTRACERS_names(37)='O2',
+ PTRACERS_units(37)='mmol O/m^3'
+ PTRACERS_initialFile(37)='ptracers_optimized_37.0000000001',
+# tracer 38 - ZOOC1
+ PTRACERS_names(38)='ZOOC1',
+ PTRACERS_units(38)='mmol C/m^3'
+ PTRACERS_initialFile(38)='ptracers_optimized_38.0000000001',
+# tracer 39 - ZOOC2
+ PTRACERS_names(39)='ZOOC2',
+ PTRACERS_units(39)='mmol C/m^3'
+ PTRACERS_initialFile(39)='ptracers_optimized_39.0000000001',
  &

@@ -1,4 +1,4 @@
  &GCHEM_PARM01
-  useDIC=.TRUE.,
+ useDARWIN=.TRUE.,
   nsubtime=1,
- &
+ /

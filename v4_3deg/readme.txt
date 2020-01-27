@@ -31,6 +31,8 @@
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/runof* .
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/*_2000 .
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/*.0005184000 .
+ ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/ptracers* .
+ ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/3deg* .
  ./mitgcmuv > output.txt
 
 # ==============================
