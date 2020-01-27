@@ -16,7 +16,8 @@
 # Build executable
  mkdir build
  cd build
- ../tools/genmake2 -mo '../../MITgcm_contrib/ecco_darwin/v4_3deg/code ../../MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270/code'
+ ../tools/genmake2 -ieee -mo \
+  '../../MITgcm_contrib/ecco_darwin/v4_3deg/code ../../MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270/code'
  make depend
  make -j 8
  cd ..
