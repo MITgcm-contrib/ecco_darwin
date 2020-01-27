@@ -332,8 +332,7 @@
    frequency(74) = -2635200.,
    timePhase(74) = 0.,
    fields(1,74) = 'THETA   ','SALT    ','TRAC32  ','TRAC36  ','TRAC01  ',
-
-&
+ &
 
 # Parameter for Diagnostics of per level statistics:
 #-----------------

@@ -34,7 +34,7 @@ fn1='v4_3deg_pickup_ptracers_optimized.0000000001.data';
 for k=1:15
     tmp=readbin(fn1,[128 64],1,'real*4',31*15+k-1);
     in=find(tmp==0);
-    for t=1:40
+    for t=1:39
         tmp=readbin(fn1,[128 64],1,'real*4',(t-1)*15+k-1);
         tmp(in)=nan;
         tmp=xpolate(tmp);

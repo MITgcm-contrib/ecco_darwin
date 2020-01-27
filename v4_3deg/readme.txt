@@ -5,6 +5,7 @@
 # Get code
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_3deg
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm/verification/tutorial_global_oce_biogeo
  cd MITgcm/pkg
@@ -15,7 +16,7 @@
 # Build executable
  mkdir build
  cd build
- ../tools/genmake2 -mo ../../MITgcm_contrib/ecco_darwin/v4_3deg/code
+ ../tools/genmake2 -mo '../../MITgcm_contrib/ecco_darwin/v4_3deg/code ../../MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270/code'
  make depend
  make -j 8
  cd ..
@@ -25,14 +26,11 @@
  mkdir run
  cd run
  ln -sf ../build/mitgcmuv .
+ cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/data* .
+ cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/data* .
  cp ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/*data* .
- ln -sf ../verification/tutorial_global_oce_biogeo/input/*bin .
- rm lev_* shi_* tren_t*
- ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/runof* .
- ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/*_2000 .
- ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/*.0005184000 .
- ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/ptracers* .
- ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/3deg* .
+ ln -sf ../verification/tutorial_global_oce_biogeo/input/bathy.bin .
+ ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
  ./mitgcmuv > output.txt
 
 # ==============================
