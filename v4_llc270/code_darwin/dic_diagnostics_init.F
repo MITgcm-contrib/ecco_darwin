@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.9 2020/01/16 01:53:46 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/dic_diagnostics_init.F,v 1.10 2020/01/29 19:33:29 dcarroll Exp $
 C $Name:  $
 
 #include "GCHEM_OPTIONS.h"
@@ -254,6 +254,41 @@ C     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
       diagTitle = 'CO2 flux budget mixing depth (m)'
       diagUnits = 'm               '
       diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'BCDIC   '
+      diagTitle = '(mmol/m3/sec)'
+      diagUnits = 'mmol/m3/sec     '
+      diagCode  = 'SM P    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'BCDICPIC'
+      diagTitle = '(mmol/m3/sec)'
+      diagUnits = 'mmol/m3/sec     '
+      diagCode  = 'SM P    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'BREMIND '
+      diagTitle = '(mmol/m3/sec)'
+      diagUnits = 'mmol/m3/sec     '
+      diagCode  = 'SM P    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'BREMINP '
+      diagTitle = '(mmol/m3/sec)'
+      diagUnits = 'mmol/m3/sec     '
+      diagCode  = 'SM P    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      diagName  = 'DISSCPIC'
+      diagTitle = '(mmol/m3/sec)'
+      diagUnits = 'mmol/m3/sec     '
+      diagCode  = 'SM P    MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I       diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 

@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.27 2020/01/16 01:53:46 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.28 2020/01/29 19:33:29 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -2255,7 +2255,24 @@ c ANNA end TAVE
         CALL DIAGNOSTICS_FILL(mixingDepth(1-Olx,1-Oly),
      &   'BCO2MIXD',0,1,2,bi,bj,myThid)
 #endif /* CO2_FLUX_BUDGET */
-
+        CALL DIAGNOSTICS_FILL(
+     &   budgetConsumpDIC(1-Olx,1-Oly,1,bi,bj),
+     &   'BCDIC   ',0,Nr,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(
+     &   budgetConsumpDIC_PIC(1-Olx,1-Oly,1,bi,bj),
+     &   'BCDICPIC',0,Nr,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(
+     &   budgetDOCRemin(1-Olx,1-Oly,1,bi,bj),
+     &   'BREMIND ',0,Nr,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(
+     &   budgetPReminC(1-Olx,1-Oly,1,bi,bj),
+     &   'BREMINP ',0,Nr,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(
+     &   budgetPReminC(1-Olx,1-Oly,1,bi,bj),
+     &   'BREMINP ',0,Nr,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(
+     &   disscPIC(1-Olx,1-Oly,1,bi,bj),
+     &   'DISSCPIC',0,Nr,2,bi,bj,myThid)
 #endif /* ALLOW_CARBON */
        ENDIF
 #endif /* ALLOW_DIAGNOSTICS */
