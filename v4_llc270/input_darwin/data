@@ -4,9 +4,9 @@
 #
 # Continuous equation parameters
  &PARM01
- tRef               = 3*23.,3*22.,21.,2*20.,19.,2*18.,17.,2*16.,15.,14.,13.,
-                      12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,12*1.,
- sRef               = 50*34.5,
+ tRef           = 3*23.,3*22.,21.,2*20.,19.,2*18.,17.,2*16.,15.,14.,13.,
+                  12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,12*1.,
+ sRef           = 50*34.5,
  no_slip_sides  = .TRUE.,
  no_slip_bottom = .TRUE.,
 #
@@ -14,15 +14,12 @@
 #
  viscAh=1.E0,
  viscAhGrid=1.E-2,
-# viscAh=2.0e4,
 #
  diffKhT=1.E1,
- diffKrT=1.E-5,
  diffKhS=1.E1,
+ diffKrT=1.E-5,
  diffKrS=1.E-5,
 #
-### diffKrBL79surf=0.1E-4,
-### diffKrBL79deep=1.0E-4,
  bottomDragQuadratic = 0.001,
 #when using ggl90
  ivdc_kappa=10.,
@@ -33,15 +30,8 @@
  viscA4GridMax=0.5,
  useAreaViscLength=.TRUE.,
  useRealFreshWaterFlux=.TRUE.,
-# balanceThetaClimRelax=.TRUE.,
  balanceSaltClimRelax=.TRUE.,
-# balanceEmPmR=.TRUE.,
-# balanceQnet=.TRUE.,
  allowFreezing=.FALSE.,
-### hFacInf=0.2,
-### hFacSup=2.0,
-# hFacMin=.2,
-# hFacMinDr=5.,
  hFacMinDr=50.,
  hFacMin=0.3,
  hFacInf=0.1,
@@ -101,10 +91,7 @@
 #
  pChkptFreq  =31536000.0,
  chkptFreq   =31536000.0,
-# taveFreq    =31536000.0,
-# dumpFreq    =31536000.0,
  monitorFreq = 43200.0,
-# monitorFreq = 6307200.0,
  dumpInitAndLast = .FALSE.,
  adjDumpFreq = 31536000.0,
  adjMonitorFreq = 43200.0,
@@ -126,11 +113,7 @@
 # Input datasets
  &PARM05
  adTapeDir='tapes',
-#bathyFile      ='bathy_eccollc_90x50.bin',
  bathyFile      ='bathy270_filled_noCaspian_r4',
  hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',
  hydrogSaltFile ='S_OWPv1_M_eccollc_90x50.bin',
-# viscA4Dfile    ='viscA4Dfld_eccollc_90x50.bin',
-# viscA4Zfile    ='viscA4Zfld_eccollc_90x50.bin',
-#
  /
