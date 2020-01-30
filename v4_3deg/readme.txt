@@ -49,4 +49,12 @@
  make depend
  make -j 8
  cd ../run
- mpirun -np 8 ./mitgcmuv
+ ln -sf ../build/mitgcmuv .
+ cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/data* .
+ cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/data* .
+ cp ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/*data* .
+ mv data_mpi data
+ ln -sf ../verification/tutorial_global_oce_biogeo/input/bathy.bin .
+ ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
+ mpirun -np 8 ./mitgcmuv &
+ tail -f STDOUT.0000 | grep advcfl_W
