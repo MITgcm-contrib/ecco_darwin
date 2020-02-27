@@ -38,7 +38,6 @@
 # Compare to verification output
  diff output.txt ../../MITgcm_contrib/ecco_darwin/v4_3deg/results/output.txt
 
-
 # ============================
 # Build and run MPI executable
  cd build
@@ -58,3 +57,12 @@
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
  mpirun -np 8 ./mitgcmuv &
  tail -f STDOUT.0000 | grep advcfl_W
+
+# ============================
+# MATLAB code for computing volume, salt, salinity, and DIC budgets
+ cd ../../MITgcm_contrib/ecco_darwin/v4_3deg/
+ module load matlab
+ matlab
+
+ if using gcmfaces, run budget_v4_3deg_with_gcmfaces.m
+ if not using gcmfaces, run budget_v4_3deg_without_gcmfaces.m 
