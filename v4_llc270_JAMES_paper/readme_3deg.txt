@@ -4,9 +4,8 @@
 # ========
 # 1. Get code
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
- cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm/verification/tutorial_global_oce_biogeo
- cvs co MITgcm_contrib/ecco_darwin/v4_3deg
- cvs co MITgcm_contrib/ecco_darwin/v4_llc270
+ cvs co MITgcm_contrib/ecco_darwin/v4_3deg/data
+ cvs co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
  cd MITgcm/pkg
  ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
@@ -30,7 +29,6 @@
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input/data* .
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/data* .
  cp ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/*data* .
- ln -sf ../verification/tutorial_global_oce_biogeo/input/bathy.bin .
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
  ./mitgcmuv > output.txt
 # Compare to verification output
@@ -53,7 +51,6 @@
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/data* .
  cp ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/*data* .
  mv data_mpi data
- ln -sf ../verification/tutorial_global_oce_biogeo/input/bathy.bin .
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
  mpirun -np 8 ./mitgcmuv &
 # Monitor run
