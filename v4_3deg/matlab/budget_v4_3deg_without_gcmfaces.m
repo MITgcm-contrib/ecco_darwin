@@ -6,10 +6,13 @@ close all
 
 intLevel = 1; %integration k level
 
-%set to 1 to plot budget terms
-plotVolumeBudget = 0;
-plotSalinityBudget = 0;
-plotDICBudget = 0;
+%set to a nonzero value to plot budget terms
+plotVolumeBudget = 1;
+plotSalinityBudget = 1;
+plotDICBudget = 1;
+
+%set to a nonzero value to save as jpg files
+printBudget = 1;
 
 gridDir = '../../../../MITgcm/run/';
 modelDir = '../../../../MITgcm/run/';
@@ -99,6 +102,24 @@ dt = diff([0 tt']);
 dt = dt ./ (secPerDay ./ deltaT) .* hoursPerDay; %hours
 
 numTimeSteps = numel(tt);
+
+%%
+
+if printBudget
+    figDir='../figures';
+    if ~exist(figDir), eval(['mkdir ' figDir]), end
+    if plotVolumeBudget
+        if ~exist([figDir '/VolumeBudget'])
+            eval(['mkdir ' figDir '/VolumeBudget'])
+    end,end
+    if plotSalinityBudget
+        if ~exist([figDir '/SalinityBudget'])
+            eval(['mkdir ' figDir '/SalinityBudget'])
+    end,end
+    if plotDICBudget
+        if ~exist([figDir '/DICBudget'])
+            eval(['mkdir ' figDir '/DICBudget'])
+end,end,end
 
 %%
 
@@ -648,6 +669,10 @@ for timeStep = 1:numFiles
         
         drawnow
         
+        if printBudget
+            eval(['print -djpeg ' figDir '/VolumeBudget/frame_' myint2str(timeStep,3)])
+        end
+        
     end
     
     if plotSalinityBudget
@@ -1143,7 +1168,11 @@ for timeStep = 1:numFiles
         title({'Budget Total - Tend';'(psu m s^-^1)'},'FontWeight','Bold','FontSize',fs);
         
         drawnow
-        
+                        
+        if printBudget
+            eval(['print -djpeg ' figDir '/SalinityBudget/frame_' myint2str(timeStep,3)])
+        end
+
     end
     
     if plotDICBudget
@@ -1463,6 +1492,10 @@ for timeStep = 1:numFiles
         title({'Budget Total - Tend';'(mol m^-^2 s^-^1)'},'FontWeight','Bold','FontSize',fs);
         
         drawnow
+                        
+        if printBudget
+            eval(['print -djpeg ' figDir '/DICBudget/frame_' myint2str(timeStep,3)])
+        end
         
     end
    
