@@ -21,6 +21,7 @@ fs = 12;
 lw = 2;
 
 colors = parula(500);
+%colors = flipud(cbrewer('div','RdBu',500));
 
 %%
 %constants
@@ -61,6 +62,7 @@ RACMat = repmat(RAC,1,1,nz);
 
 mskC = hFacC .* 1;
 mskC(hFacC == 0) = nan;
+mskC(~isnan(mskC)) = 1;
 
 VVV = mskC .* hFacC .* RACMat .* dzMatF;
 
@@ -321,7 +323,7 @@ for timeStep = 1:numFiles
     end
     
     %tendency, mol m^-3 s^-1
-    tendDIC = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendDIC = mskC .* (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences
     ADVx_DIC(nx+1,:,:) = ADVx_DIC(1,:,:);
@@ -332,7 +334,7 @@ for timeStep = 1:numFiles
     fldDIV = (ADVx_DIC(1:end-1,:,:) - ADVx_DIC(2:end,:,:)) + ...
               (ADVy_DIC(:,1:end-1,:) - ADVy_DIC(:,2:end,:));
 
-    adv_hConvDIC = mskC .* fldDIV ./ (VVV);
+    adv_hConvDIC = mskC .* fldDIV ./ (VVV); %add hFacC?
    
     DFxE_DIC(nx+1,:,:) = DFxE_DIC(1,:,:);
     DFyE_DIC(:,ny+1,:) = DFyE_DIC(:,end,:);
@@ -342,7 +344,7 @@ for timeStep = 1:numFiles
     fldDIV = (DFxE_DIC(1:end-1,:,:) - DFxE_DIC(2:end,:,:)) + ...
               (DFyE_DIC(:,1:end-1,:) - DFyE_DIC(:,2:end,:));
 
-    dif_hConvDIC = mskC .* fldDIV ./ (VVV);
+    dif_hConvDIC = mskC .* fldDIV ./ (VVV); %add hFacC?
     
     %vertical divergences
     adv_vConvDIC = 0 .* ADVx_DIC(1:nx,:,:);
@@ -378,17 +380,18 @@ for timeStep = 1:numFiles
         
     end
     
-    forcDIC = mskC .* forcDIC .* hFacC;
+    forcDIC = mskC .* forcDIC;
     
     %biology, mol m^-3 s^-1
-    bioDIC = mskC .* hFacC .* (-CONSUMP_DIC - CONSUMP_DIC_PIC ....
+    bioDIC = mskC .* (-CONSUMP_DIC - CONSUMP_DIC_PIC ....
         + REMIN_DOC + REMIN_POC ...
         + DISSC_PIC);
     
     surfDIC = mskC(:,:,1) .* DIC(:,:,1);
     meanSurf_DIC = nansum(surfDIC(:) .* RAC(:)) ./ nansum(RAC(:));
     
-    virtualFluxDIC = mskC .* forcSal .* (surfDIC ./ surfS) .* hFacC(:,:,1);
+    %virtualFluxDIC = mskC .* forcSal .* (surfDIC ./ surfS);
+    virtualFluxDIC = mskC .* (forcSal - forcS) .* (surfDIC ./ surfS);
     
     %z* correction, as done in salinity budget
     
@@ -415,33 +418,33 @@ for timeStep = 1:numFiles
     %%
     %vertically integrate
     
-    intTendV = nansum(tendV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intHConvV = nansum(adv_hConvV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVConvV = nansum(adv_vConvV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intForcV = nansum(forcV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
+    intTendV = nansum(tendV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intHConvV = nansum(adv_hConvV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVConvV = nansum(adv_vConvV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intForcV = nansum(forcV(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
     
-    intTendS = nansum(tendS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intHAdvS = nansum(adv_hConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVAdvS = nansum(adv_vConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intHDifS = nansum(dif_hConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVDifS = nansum(dif_vConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intForcS = nansum(forcS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
+    intTendS = nansum(tendS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intHAdvS = nansum(adv_hConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVAdvS = nansum(adv_vConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intHDifS = nansum(dif_hConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVDifS = nansum(dif_vConvS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intForcS = nansum(forcS(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
     
-    intTendSal = nansum(tendSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intHAdvSal = nansum(adv_hConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVAdvSal = nansum(adv_vConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intHDifSal = nansum(dif_hConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVDifSal = nansum(dif_vConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intForcSal = nansum(forcSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
+    intTendSal = nansum(tendSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intHAdvSal = nansum(adv_hConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVAdvSal = nansum(adv_vConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intHDifSal = nansum(dif_hConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVDifSal = nansum(dif_vConvSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intForcSal = nansum(forcSal(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
     
-    intTendDIC = nansum(tendDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intHAdvDIC = nansum(adv_hConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVAdvDIC = nansum(adv_vConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intHDifDIC = nansum(dif_hConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVDifDIC = nansum(dif_vConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intForcDIC = nansum(forcDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intVirtualFluxDIC = nansum(virtualFluxDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
-    intBioDIC = nansum(bioDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel),3);
+    intTendDIC = nansum(tendDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intHAdvDIC = nansum(adv_hConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVAdvDIC = nansum(adv_vConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intHDifDIC = nansum(dif_hConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVDifDIC = nansum(dif_vConvDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intForcDIC = nansum(forcDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intVirtualFluxDIC = nansum(virtualFluxDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
+    intBioDIC = nansum(bioDICzs(:,:,1:intLevel) .* dzMat(:,:,1:intLevel) .* hFacC(:,:,1:intLevel),3);
     
     %%
     %plot budgets
@@ -1437,7 +1440,7 @@ for timeStep = 1:numFiles
             + intHDifDIC + intVDifDIC + intForcDIC + intVirtualFluxDIC + intBioDIC));
         
         shading flat
-        caxis([cMin .* 10^-1 cMax .* 10^-1]);
+        caxis([cMin * 10^-2 cMax * 10^-2]);
         
         colormap(colors);
         

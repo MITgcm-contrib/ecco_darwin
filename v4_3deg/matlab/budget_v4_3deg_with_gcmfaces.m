@@ -20,8 +20,8 @@ modelDir = '../../../../MITgcm/run/';
 fs = 12;
 lw = 2;
 
-%colors = parula(500);
-colors = flipud(cbrewer('div','RdBu',500));
+colors = parula(500);
+%colors = flipud(cbrewer('div','RdBu',500));
 
 %%
 %constants
@@ -324,17 +324,17 @@ for timeStep = 1:numFiles
         
     end
     
-    forcDIC = mygrid.mskC .* forcDIC .* mygrid.hFacC;
+    forcDIC = mygrid.mskC .* forcDIC;
     
     %biology, mol m^-3 s^-1
-    bioDIC = mygrid.mskC .* mygrid.hFacC .* (-CONSUMP_DIC - CONSUMP_DIC_PIC ....
+    bioDIC = mygrid.mskC .* (-CONSUMP_DIC - CONSUMP_DIC_PIC ....
         + REMIN_DOC + REMIN_POC ...
         + DISSC_PIC);
     
     surfDIC = mygrid.mskC(:,:,1) .* DIC(:,:,1);
     meanSurf_DIC = nansum(surfDIC(:) .* mygrid.RAC(:)) ./ nansum(mygrid.RAC(:));
     
-    virtualFluxDIC = mygrid.mskC .* forcSal .* (surfDIC ./ surfS) .* mygrid.hFacC(:,:,1);
+    virtualFluxDIC = mygrid.mskC .* (forcSal - forcS) .* (surfDIC ./ surfS) .* mygrid.hFacC(:,:,1);
     
     %z* correction, as done in salinity budget
     
@@ -392,33 +392,33 @@ for timeStep = 1:numFiles
     %%
     %vertically integrate
     
-    intTendV = nansum(tendV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intHConvV = nansum(adv_hConvV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVConvV = nansum(adv_vConvV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intForcV = nansum(forcV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
+    intTendV = nansum(tendV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intHConvV = nansum(adv_hConvV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVConvV = nansum(adv_vConvV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intForcV = nansum(forcV(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
     
-    intTendS = nansum(tendS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intHAdvS = nansum(adv_hConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVAdvS = nansum(adv_vConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intHDifS = nansum(dif_hConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVDifS = nansum(dif_vConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intForcS = nansum(forcS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
+    intTendS = nansum(tendS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intHAdvS = nansum(adv_hConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVAdvS = nansum(adv_vConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intHDifS = nansum(dif_hConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVDifS = nansum(dif_vConvS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intForcS = nansum(forcS(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
     
-    intTendSal = nansum(tendSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intHAdvSal = nansum(adv_hConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVAdvSal = nansum(adv_vConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intHDifSal = nansum(dif_hConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVDifSal = nansum(dif_vConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intForcSal = nansum(forcSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
+    intTendSal = nansum(tendSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intHAdvSal = nansum(adv_hConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVAdvSal = nansum(adv_vConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intHDifSal = nansum(dif_hConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVDifSal = nansum(dif_vConvSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intForcSal = nansum(forcSal(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
     
-    intTendDIC = nansum(tendDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intHAdvDIC = nansum(adv_hConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVAdvDIC = nansum(adv_vConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intHDifDIC = nansum(dif_hConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVDifDIC = nansum(dif_vConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intForcDIC = nansum(forcDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intVirtualFluxDIC = nansum(virtualFluxDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
-    intBioDIC = nansum(bioDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel)),3);
+    intTendDIC = nansum(tendDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intHAdvDIC = nansum(adv_hConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVAdvDIC = nansum(adv_vConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intHDifDIC = nansum(dif_hConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVDifDIC = nansum(dif_vConvDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intForcDIC = nansum(forcDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intVirtualFluxDIC = nansum(virtualFluxDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
+    intBioDIC = nansum(bioDIC(:,:,1:intLevel) .* convert2gcmfaces(dzMat(:,:,1:intLevel) .* convert2gcmfaces(mygrid.hFacC(:,:,1:intLevel))),3);
     
     %%
     %plot budgets
@@ -1414,7 +1414,7 @@ for timeStep = 1:numFiles
             + intHDifDIC + intVDifDIC + intForcDIC + intVirtualFluxDIC + intBioDIC));
         
         shading flat
-        caxis([cMin .* 10^-1 cMax .* 10^-1]);
+        caxis([cMin .* 10^-3 cMax .* 10^-3]);
         
         colormap(colors);
         
