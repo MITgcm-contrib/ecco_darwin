@@ -4,7 +4,7 @@
 # ========
 # 1. Get code
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
- cvs co MITgcm_contrib/ecco_darwin/v4_3deg/
+ cvs co MITgcm_contrib/ecco_darwin/v4_3deg/data
  cvs co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
  cd MITgcm/pkg
@@ -42,7 +42,7 @@
  rm *
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -mo \
-  '../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code'
+  '../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_3deg ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code'
  make depend
  make -j 8
  cd ../run
