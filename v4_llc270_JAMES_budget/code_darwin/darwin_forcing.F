@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin/darwin_forcing.F,v 1.1 2020/02/29 00:34:34 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin/darwin_forcing.F,v 1.2 2020/02/29 19:19:22 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -912,12 +912,12 @@ c ANNA pass extra variables if WAVEBANDS
      I                       pocupl, picupl,
      O                       ddicl, ddocl, dpocl, dpicl,
      O                       dalkl, do2l, dzoocl,
+     O                       consumpDIC(i,j,k,bi,bj),
+     O                       consumpDIC_PIC(i,j,k,bi,bj),
+     O                       PReminC(i,j,k,bi,bj),
+     O                       DOCRemin(i,j,k,bi,bj),
      O                       disscPIC(i,j,k,bi,bj),
 #endif
-     O                       consumpDIC(i,j,k,bi,bj),
-     O			     consumpDIC_PIC(i,j,k,bi,bj),
-     O			     PReminC(i,j,k,bi,bj),
-     O			     DOCRemin(i,j,k,bi,bj),
 #ifdef GEIDER
      O                       phychl,
 #ifdef DYNAMIC_CHL

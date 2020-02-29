@@ -40,7 +40,7 @@
 #    Prerequisite: 1. Get code
  cd build
  rm *
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code/SIZE.h_mpi SIZE.h
+ cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_3deg/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -mo \
   '../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_3deg ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code'
  make depend

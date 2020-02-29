@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin/darwin_plankton.F,v 1.1 2020/02/29 01:06:09 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin/darwin_plankton.F,v 1.2 2020/02/29 19:19:22 dcarroll Exp $
 C $Name:  $
 
 #include "CPP_OPTIONS.h"
@@ -71,6 +71,8 @@ c ANNA pass extra variables if WAVEBANDS
      I                       POCuplocal, PICuplocal,
      O                       dDICdt, dDOCdt, dPOCdt, dPICdt,
      O                       dALKdt, dO2dt, dZOOCdt,
+     O                       consumpDIC,consumpDIC_PIC,
+     O                       preminC,DOCremin,disscPIC,
 #endif
 #ifdef GEIDER
      I                       phychl, 
