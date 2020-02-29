@@ -54,7 +54,6 @@
  mv data_mpi data
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
  mpirun -np 8 ./mitgcmuv &
- mpirun -np 8 ./mitgcmuv &
 # Monitor run
  tail -f STDOUT.0000 | grep advcfl_W
 
