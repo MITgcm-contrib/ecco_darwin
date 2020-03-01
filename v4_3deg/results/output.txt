@@ -8,7 +8,7 @@
 (PID.TID 0000.0001) // MITgcmUV version:  checkpoint66l
 (PID.TID 0000.0001) // Build user:        dmenemen
 (PID.TID 0000.0001) // Build host:        triton
-(PID.TID 0000.0001) // Build date:        Wed Jan 29 17:31:44 PST 2020
+(PID.TID 0000.0001) // Build date:        Sat Feb 29 13:24:48 PST 2020
 (PID.TID 0000.0001) 
 (PID.TID 0000.0001) // =======================================================
 (PID.TID 0000.0001) // Execution Environment parameter file "eedata"
@@ -829,350 +829,208 @@
 (PID.TID 0000.0001) >#                 for the list of all available diag. in this particular config)
 (PID.TID 0000.0001) >#--------------------------------------------------------------------
 (PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># 6-hourly 2-D fields:
-(PID.TID 0000.0001) ># ====================
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># ETAN     Perturbation of Surface (pressure, height) (Pa,m)
-(PID.TID 0000.0001) ># PHIBOT   ocean bottom pressure / top. atmos geo-Potential
-(PID.TID 0000.0001) ># oceTAUX  zonal surface wind stress, >0 increases uVel (N/m^2)
-(PID.TID 0000.0001) ># oceTAUY  meridional surf. wind stress, >0 increases vVel (N/m^2)
-(PID.TID 0000.0001) ># surForcT model surface forcing for Temperature, >0 increases theta (W/m^2)
-(PID.TID 0000.0001) ># oceQsw   net Short-Wave radiation (+=down), >0 increases theta (W/m^2)
-(PID.TID 0000.0001) ># surForcS model surface forcing for Salinity, >0 increases salinity (g/m^2/s)
-(PID.TID 0000.0001) ># KPPhbl   KPP boundary layer depth, bulk Ri criterion
-(PID.TID 0000.0001) ># KPPmld   Mixed layer depth, dT=.8degC density criterion
-(PID.TID 0000.0001) ># SSS      Sea Surface Salinity (g/kg)
-(PID.TID 0000.0001) ># SST      Sea Surface Temperature (degC,K)
-(PID.TID 0000.0001) ># UVEL_k2  Zonal Component of Velocity at level 2 (m/s)
-(PID.TID 0000.0001) ># VVEL_k2  Meridional Component of Velocity at level 2 (m/s)
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># daily 2-D fields:
-(PID.TID 0000.0001) ># =================
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># SIarea   SEAICE fractional ice-covered area [0 to 1]
-(PID.TID 0000.0001) ># SIheff   SEAICE effective ice thickness (m)
-(PID.TID 0000.0001) ># SIuice   SEAICE zonal ice velocity, >0 from West to East (m/s)
-(PID.TID 0000.0001) ># SIvice   SEAICE merid. ice velocity, >0 from South to North (m/s)
-(PID.TID 0000.0001) ># SIhsnow  SEAICE snow thickness (m)
-(PID.TID 0000.0001) ># SIhsalt  SEAICE effective salinity (g/m^2)
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># monthly 2-D fields:
-(PID.TID 0000.0001) ># ===================
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># ETANSQ   Square of Perturbation of Sfc (Pa2,m2)
-(PID.TID 0000.0001) ># EXFhs    Sensible heat flux into ocean, >0 increases theta (W/m^2)
-(PID.TID 0000.0001) ># EXFhl    Latent heat flux into ocean, >0 increases theta (W/m^2)
-(PID.TID 0000.0001) ># EXFlwnet Net upward longwave radiation, >0 decreases theta (W/m^2)
-(PID.TID 0000.0001) ># oceFWflx net surface Fresh-Water flux into ocean, >0 decreases salinity (kg/m^2/s)
-(PID.TID 0000.0001) ># oceSflux net surface Salt flux into the ocean, >0 increases salinity (g/m^2/s)
-(PID.TID 0000.0001) ># oceQnet  net surface heat flux into the ocean, >0 increases theta (W/m^2)
-(PID.TID 0000.0001) ># SRELAX   surface salinity relaxation, >0 increases salt (g/m^2/s)
-(PID.TID 0000.0001) ># TFLUX    total heat flux (match heat-content variations), >0 increases theta (W/m^2)
-(PID.TID 0000.0001) ># SFLUX    total salt flux (match salt-content variations), >0 increases salt (g/m^2/s)
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># monthly 3-D fields:
-(PID.TID 0000.0001) ># ===================
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># SALTanom Salt anomaly (=SALT-35; g/kg)
-(PID.TID 0000.0001) ># THETA    Potential Temperature (degC,K)
-(PID.TID 0000.0001) ># UVELMASS Zonal Mass-Weighted Comp of Velocity (m/s)
-(PID.TID 0000.0001) ># VVELMASS Meridional Mass-Weighted Comp of Velocity (m/s)
-(PID.TID 0000.0001) ># WVELMASS Vertical Mass-Weighted Comp of Velocity (m/s)
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># SALTSQan Square of Salt anomaly (=(SALT-35)^2 (g^2/kg^2)
-(PID.TID 0000.0001) ># THETASQ  Square of Potential Temperature (K2)
-(PID.TID 0000.0001) ># UVELSQ   Square of Zonal Comp of Velocity (m2/s2)
-(PID.TID 0000.0001) ># VVELSQ   Square of Meridional Comp of Velocity (m2/s2)
-(PID.TID 0000.0001) ># WVELSQ   Square of Vertical Comp of Velocity (m2/s2)
-(PID.TID 0000.0001) ># UV_VEL_Z Meridional Transport of Zonal Momentum (m2/s2)
-(PID.TID 0000.0001) ># WU_VEL   Vertical Transport of Zonal Momentum (m^2/s^2)
-(PID.TID 0000.0001) ># WV_VEL   Vertical Transport of Meridional Momentum (m^2/s^2)
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># UTHMASS  Zonal Mass-Weight Transp of Pot Temp (K.m/s)
-(PID.TID 0000.0001) ># VTHMASS  Meridional Mass-Weight Transp of Pot Temp (K.m/s)
-(PID.TID 0000.0001) ># WTHMASS  Vertical Mass-Weight Transp of Pot Temp (K.m/s)
-(PID.TID 0000.0001) ># USLTMASS Zonal Mass-Weight Transp of Salt (g/kg.m/s)
-(PID.TID 0000.0001) ># VSLTMASS Meridional Mass-Weight Transp of Salt (g/kg.m/s)
-(PID.TID 0000.0001) ># WSLTMASS Vertical Mass-Weight Transp of Salt (g/kg.m/s)
-(PID.TID 0000.0001) >#
-(PID.TID 0000.0001) ># RHOAnoma Density Anomaly (=Rho-rhoConst; kg/m^3)
-(PID.TID 0000.0001) ># DRHODR   Stratification: d.Sigma/dr (kg/m3/r_unit; kg/m^4)
-(PID.TID 0000.0001) ># RHOANOSQ Square of Density Anomaly (=(Rho-rhoConst)^2; kg^2/m^6)
-(PID.TID 0000.0001) ># URHOMASS Zonal Transport of Density (kg/m^2/s)
-(PID.TID 0000.0001) ># VRHOMASS Meridional Transport of Density (kg/m^2/s)
-(PID.TID 0000.0001) ># WRHOMASS Vertical Transport of Potential Density (kg/m^2/s)
-(PID.TID 0000.0001) >#
 (PID.TID 0000.0001) > &diagnostics_list
-(PID.TID 0000.0001) >  frequency(1)  = -2635200.,
-(PID.TID 0000.0001) >   timePhase(1) = 0.,
-(PID.TID 0000.0001) >   fields(1,1)  = 'ETAN    ',
-(PID.TID 0000.0001) >   filename(1)  = 'ETAN',
-(PID.TID 0000.0001) >  frequency(2) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,2) = 'SALTanom',
-(PID.TID 0000.0001) >   filename(2) = 'SALTanom',
-(PID.TID 0000.0001) >  frequency(3) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,3) = 'THETA   ',
-(PID.TID 0000.0001) >   filename(3) = 'THETA',
-(PID.TID 0000.0001) >  frequency(4) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,4) = 'TRAC32  ',
-(PID.TID 0000.0001) >   filename(4) = 'DIC',
-(PID.TID 0000.0001) >  frequency(5) = 86400.,
-(PID.TID 0000.0001) >   fields(1,5) = 'DICTFLX ',
-(PID.TID 0000.0001) >   filename(5) = 'DICTFLX',
-(PID.TID 0000.0001) >  frequency(6) = 86400.,
-(PID.TID 0000.0001) >   fields(1,6) = 'DICOFLX ',
-(PID.TID 0000.0001) >   filename(6) = 'DICOFLX',
-(PID.TID 0000.0001) >  frequency(7) = 86400.,
-(PID.TID 0000.0001) >   fields(1,7) = 'DICCFLX ',
-(PID.TID 0000.0001) >   filename(7) = 'DICCFLX',
-(PID.TID 0000.0001) >  frequency(8) = 86400.,
-(PID.TID 0000.0001) >   fields(1,8) = 'DICPCO2 ',
-(PID.TID 0000.0001) >   filename(8) = 'DICPCO2',
-(PID.TID 0000.0001) >  frequency(9) = 86400.,
-(PID.TID 0000.0001) >   fields(1,9) = 'DICPHAV ',
-(PID.TID 0000.0001) >   filename(9) = 'DICPHAV',
-(PID.TID 0000.0001) >  frequency(10) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,10) = 'TRAC01  ',
-(PID.TID 0000.0001) >   filename(10) = 'PO4',
-(PID.TID 0000.0001) >  frequency(11) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,11) = 'TRAC02  ',
-(PID.TID 0000.0001) >   filename(11) = 'NO3',
-(PID.TID 0000.0001) >  frequency(12) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,12) = 'TRAC03  ',
-(PID.TID 0000.0001) >   filename(12) = 'FeT',
-(PID.TID 0000.0001) >  frequency(13) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,13) = 'TRAC04  ',
-(PID.TID 0000.0001) >   filename(13) = 'SiO2',
-(PID.TID 0000.0001) >  frequency(14) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,14) = 'TRAC05  ',
-(PID.TID 0000.0001) >   filename(14) = 'DOP',
-(PID.TID 0000.0001) >  frequency(15) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,15) = 'TRAC06  ',
-(PID.TID 0000.0001) >   filename(15) = 'DON',
-(PID.TID 0000.0001) >  frequency(16) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,16) = 'TRAC07  ',
-(PID.TID 0000.0001) >   filename(16) = 'DOFe',
-(PID.TID 0000.0001) >  frequency(17) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,17) = 'TRAC08  ',
-(PID.TID 0000.0001) >   filename(17) = 'ZOO1P',
-(PID.TID 0000.0001) >  frequency(18) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,18) = 'TRAC09  ',
-(PID.TID 0000.0001) >   filename(18) = 'ZOO1N',
-(PID.TID 0000.0001) >  frequency(19) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,19) = 'TRAC10  ',
-(PID.TID 0000.0001) >   filename(19) = 'ZOO1Fe',
-(PID.TID 0000.0001) >  frequency(20) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,20) = 'TRAC11  ',
-(PID.TID 0000.0001) >   filename(20) = 'ZOO1Si',
-(PID.TID 0000.0001) >  frequency(21) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,21) = 'TRAC12  ',
-(PID.TID 0000.0001) >   filename(21) = 'ZOO2P',
-(PID.TID 0000.0001) >  frequency(22) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,22) = 'TRAC13  ',
-(PID.TID 0000.0001) >   filename(22) = 'ZOO2N',
-(PID.TID 0000.0001) >  frequency(23) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,23) = 'TRAC14  ',
-(PID.TID 0000.0001) >   filename(23) = 'ZOO2Fe',
-(PID.TID 0000.0001) >  frequency(24) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,24) = 'TRAC15  ',
-(PID.TID 0000.0001) >   filename(24) = 'ZOO2Si',
-(PID.TID 0000.0001) >  frequency(25) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,25) = 'TRAC16  ',
-(PID.TID 0000.0001) >   filename(25) = 'POP',
-(PID.TID 0000.0001) >  frequency(26) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,26) = 'TRAC17  ',
-(PID.TID 0000.0001) >   filename(26) = 'PON',
-(PID.TID 0000.0001) >  frequency(27) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,27) = 'TRAC18  ',
-(PID.TID 0000.0001) >   filename(27) = 'POFe',
-(PID.TID 0000.0001) >  frequency(28) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,28) = 'TRAC19  ',
-(PID.TID 0000.0001) >   filename(28) = 'POSi',
-(PID.TID 0000.0001) >  frequency(29) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,29) = 'TRAC20  ',
-(PID.TID 0000.0001) >   filename(29) = 'NH4',
-(PID.TID 0000.0001) >  frequency(30) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,30) = 'TRAC21  ',
-(PID.TID 0000.0001) >   filename(30) = 'NO2',
-(PID.TID 0000.0001) >  frequency(31) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,31) = 'TRAC22  ',
-(PID.TID 0000.0001) >   filename(31) = 'Phy01',
-(PID.TID 0000.0001) >  frequency(32) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,32) = 'TRAC23  ',
-(PID.TID 0000.0001) >   filename(32) = 'Phy02',
-(PID.TID 0000.0001) >  frequency(33) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,33) = 'TRAC24  ',
-(PID.TID 0000.0001) >   filename(33) = 'Phy03',
-(PID.TID 0000.0001) >  frequency(34) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,34) = 'TRAC25  ',
-(PID.TID 0000.0001) >   filename(34) = 'Phy04',
-(PID.TID 0000.0001) >  frequency(35) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,35) = 'TRAC26  ',
-(PID.TID 0000.0001) >   filename(35) = 'Phy05',
-(PID.TID 0000.0001) >  frequency(36) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,36) = 'TRAC33  ',
-(PID.TID 0000.0001) >   filename(36) = 'DOC',
-(PID.TID 0000.0001) >  frequency(37) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,37) = 'TRAC34  ',
-(PID.TID 0000.0001) >   filename(37) = 'POC',
-(PID.TID 0000.0001) >  frequency(38) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,38) = 'TRAC35  ',
-(PID.TID 0000.0001) >   filename(38) = 'PIC',
-(PID.TID 0000.0001) >  frequency(39) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,39) = 'TRAC36  ',
-(PID.TID 0000.0001) >   filename(39) = 'ALK',
-(PID.TID 0000.0001) >  frequency(40) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,40) = 'TRAC37  ',
-(PID.TID 0000.0001) >   filename(40) = 'O2',
-(PID.TID 0000.0001) >  frequency(41) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,41) = 'TRAC38  ',
-(PID.TID 0000.0001) >   filename(41) = 'ZOOC1',
-(PID.TID 0000.0001) >  frequency(42) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,42) = 'TRAC39  ',
-(PID.TID 0000.0001) >   filename(42) = 'ZOOC2',
-(PID.TID 0000.0001) >  frequency(43) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,43) = 'TRAC27  ',
-(PID.TID 0000.0001) >   filename(43) = 'CHL1',
-(PID.TID 0000.0001) >  frequency(44) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,44) = 'TRAC28  ',
-(PID.TID 0000.0001) >   filename(44) = 'CHL2',
-(PID.TID 0000.0001) >  frequency(45) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,45) = 'TRAC29  ',
-(PID.TID 0000.0001) >   filename(45) = 'CHL3',
-(PID.TID 0000.0001) >  frequency(46) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,46) = 'TRAC30  ',
-(PID.TID 0000.0001) >   filename(46) = 'CHL4',
-(PID.TID 0000.0001) >  frequency(47) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,47) = 'TRAC31  ',
-(PID.TID 0000.0001) >   filename(47) = 'CHL5',
-(PID.TID 0000.0001) >  frequency(48) = 86400.,
-(PID.TID 0000.0001) >   fields(1,48) = 'EXFwspee ',
-(PID.TID 0000.0001) >   filename(48) = 'EXFwspee',
-(PID.TID 0000.0001) >  frequency(49)  = 2635200.,
-(PID.TID 0000.0001) >   fields(1,49)  = 'PAR    ',
-(PID.TID 0000.0001) >   filename(49)  = 'PAR',
-(PID.TID 0000.0001) >  frequency(50)  = 2635200.,
-(PID.TID 0000.0001) >   fields(1,50)  = 'PP',
-(PID.TID 0000.0001) >   filename(50)  = 'PP',
-(PID.TID 0000.0001) >  frequency(51) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,51) = 'SIarea ',
-(PID.TID 0000.0001) >   filename(51) = 'SIarea_month',
-(PID.TID 0000.0001) >  frequency(52) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,52) = 'SIheff ',
-(PID.TID 0000.0001) >   filename(52) = 'SIheff_month',
-(PID.TID 0000.0001) >  frequency(53) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,53) = 'EXFapco2 ',
-(PID.TID 0000.0001) >   filename(53) = 'EXFapco2month',
-(PID.TID 0000.0001) >  frequency(54) = -2535200.,
-(PID.TID 0000.0001) >   fields(1,54) = 'EXFapco2 ',
-(PID.TID 0000.0001) >   timePhase(54) = 0.,
-(PID.TID 0000.0001) >   filename(54) = 'EXFapco2snap',
+(PID.TID 0000.0001) >#
+(PID.TID 0000.0001) >   dumpatlast = .TRUE.,
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(1) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:25,1) = 'ETAN    ','SIarea  ','SIheff ','SIhsnow ',
+(PID.TID 0000.0001) >#stuff that is not quite state variables (and may not be quite
+(PID.TID 0000.0001) >#synchroneous) but are added here to reduce number of files
+(PID.TID 0000.0001) >                 'DETADT2 ','PHIBOT  ','sIceLoad',
+(PID.TID 0000.0001) >                 'MXLDEPTH','oceSPDep',
+(PID.TID 0000.0001) >                 'SIatmQnt','SIatmFW ','oceQnet ','oceFWflx',
+(PID.TID 0000.0001) >                 'oceTAUX ','oceTAUY ',
+(PID.TID 0000.0001) >                 'ADVxHEFF','ADVyHEFF','DFxEHEFF','DFyEHEFF',
+(PID.TID 0000.0001) >                 'ADVxSNOW','ADVySNOW','DFxESNOW','DFyESNOW',
+(PID.TID 0000.0001) >                 'SIuice  ','SIvice  ',
+(PID.TID 0000.0001) >   filename(1) = 'diags/state_2d_set1',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(2) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:3,2) = 'THETA   ','SALT    ',
+(PID.TID 0000.0001) >#stuff that is not quite state variables (and may not be quite
+(PID.TID 0000.0001) >#synchronous) but are added here to reduce file number
+(PID.TID 0000.0001) >                 'DRHODR  ',
+(PID.TID 0000.0001) >#                'KPPviscA','KPPdiffT','KPPdiffTS',
+(PID.TID 0000.0001) >#                'GGL90TKE','GGL90Lmx','GGL90Prl',
+(PID.TID 0000.0001) >#                'GGL90ArU','GGL90ArV','GGL90Kr ',
+(PID.TID 0000.0001) >   filename(2) = 'diags/state_3d_set1',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(3) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:5,3) = 'UVELMASS','VVELMASS','WVELMASS',
+(PID.TID 0000.0001) >                 'GM_PsiX ','GM_PsiY ',
+(PID.TID 0000.0001) >#uvel is approximately uvelmass divided by initial hfac, so we dont output the former
+(PID.TID 0000.0001) >#                'UVEL    ','VVEL    ','WVEL     ',
+(PID.TID 0000.0001) >#full 3D temperature fluxes : 'DFxE_TH ','DFyE_TH ','DFrE_TH ','DFrI_TH ','ADVx_TH ','ADVy_TH ','ADVr_TH ',
+(PID.TID 0000.0001) >#but for present computations I only need the vertically integrated horizontal components (see trsp_3d_set2)
+(PID.TID 0000.0001) >   filename(3) = 'diags/trsp_3d_set1',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(4) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:8,4) = 'DFxE_TH ','DFyE_TH ','ADVx_TH ','ADVy_TH ',
+(PID.TID 0000.0001) >                 'DFxE_SLT','DFyE_SLT','ADVx_SLT','ADVy_SLT',
+(PID.TID 0000.0001) >   filename(4) = 'diags/trsp_3d_set2',
+(PID.TID 0000.0001) >#vertically integrate fields we only use to compute vertically integr.
+(PID.TID 0000.0001) >#meridional transports (also omit vertical transports, both to save space)
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(5) = -2635200.0,
+(PID.TID 0000.0001) >   fields(1:6,5) = 'ETAN    ','SIheff  ','SIhsnow ',
+(PID.TID 0000.0001) >                 'SIarea  ','sIceLoad','PHIBOT  ',
+(PID.TID 0000.0001) >   filename(5) = 'diags/budg2d_snap_set1',
+(PID.TID 0000.0001) >   timePhase(5)= 0.,
+(PID.TID 0000.0001) >   fileFlags(5) = 'D       ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(6) = -2635200.0,
+(PID.TID 0000.0001) >   fields(1:2,6) = 'THETA   ','SALT    ',
+(PID.TID 0000.0001) >   filename(6) = 'diags/budg2d_snap_set2',
+(PID.TID 0000.0001) >   timePhase(6)= 0.,
+(PID.TID 0000.0001) >   fileFlags(6) = 'DI      ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(7) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:8,7) = 'oceFWflx','SIatmFW ','TFLUX   ','SItflux ',
+(PID.TID 0000.0001) >                   'SFLUX   ','oceQsw  ','oceSPflx','DICTFLX ',
+(PID.TID 0000.0001) >   filename(7) = 'diags/budg2d_zflux_set1',
+(PID.TID 0000.0001) >   fileFlags(7) = 'D       ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(8) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:13,8) ='UVELMASS','VVELMASS',
+(PID.TID 0000.0001) >                 'ADVx_TH ','ADVy_TH ','DFxE_TH ','DFyE_TH ',
+(PID.TID 0000.0001) >                 'ADVx_SLT','ADVy_SLT','DFxE_SLT','DFyE_SLT',
+(PID.TID 0000.0001) >#the following are not transports but tendencies
+(PID.TID 0000.0001) >                 'oceSPtnd','AB_gT   ','AB_gS   ',
+(PID.TID 0000.0001) >   filename(8) = 'diags/budg2d_hflux_set2',
+(PID.TID 0000.0001) >   fileFlags(8) = 'DI      ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(9) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:8,9) ='ADVxHEFF','ADVyHEFF','DFxEHEFF','DFyEHEFF',
+(PID.TID 0000.0001) >                 'ADVxSNOW','ADVySNOW','DFxESNOW','DFyESNOW',
+(PID.TID 0000.0001) >   filename(9) = 'diags/budg2d_hflux_set1',
+(PID.TID 0000.0001) >   fileFlags(9) = 'D       ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) ># this one is important because it activates the vertical advection diags
+(PID.TID 0000.0001) >#  frequency(10) = 2635200.0,
+(PID.TID 0000.0001) >#   fields(1:7,10) = 'ADVr_TH ','DFrE_TH ','DFrI_TH ',
+(PID.TID 0000.0001) >#                  'ADVr_SLT','DFrE_SLT','DFrI_SLT',
+(PID.TID 0000.0001) >#                  'WVELMASS',
+(PID.TID 0000.0001) >#   filename(10) = 'diags/budg2d_zflux_set3_11',
+(PID.TID 0000.0001) >#   levels(1, 10)= 11.,
+(PID.TID 0000.0001) >#   fileFlags(10) = 'D       ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(11) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:10,11) ='SRELAX  ','TRELAX  ','WTHMASS ','WSLTMASS',
+(PID.TID 0000.0001) >                 'oceSflux','oceQnet ','SIatmQnt',
+(PID.TID 0000.0001) >                 'SIaaflux','SIsnPrcp','SIacSubl',
+(PID.TID 0000.0001) >   filename(11) = 'diags/budg2d_zflux_set2',
+(PID.TID 0000.0001) >   fileFlags(11) = 'D       ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >#  frequency(12) = 2635200.0,
+(PID.TID 0000.0001) >#   fields(1:13,12) ='UVELMASS','VVELMASS',
+(PID.TID 0000.0001) >#                 'ADVx_TH ','ADVy_TH ','DFxE_TH ','DFyE_TH ',
+(PID.TID 0000.0001) >#                 'ADVx_SLT','ADVy_SLT','DFxE_SLT','DFyE_SLT',
+(PID.TID 0000.0001) >#                 'oceSPtnd','AB_gT   ','AB_gS   ',
+(PID.TID 0000.0001) >#   filename(12) = 'diags/budg2d_hflux_set3_11',
+(PID.TID 0000.0001) >#   levels(1:40,12) = 11.,12.,13.,14.,15.,16.,17.,18.,19.,20.,
+(PID.TID 0000.0001) >#                     21.,22.,23.,24.,25.,26.,27.,28.,29.,30.,
+(PID.TID 0000.0001) >#                     31.,32.,33.,34.,35.,36.,37.,38.,39.,40.,
+(PID.TID 0000.0001) >#                     41.,42.,43.,44.,45.,46.,47.,48.,49.,50.,
+(PID.TID 0000.0001) >#   fileFlags(12) = 'DI      ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >#  frequency(13) = -2635200.0,
+(PID.TID 0000.0001) >#   fields(1:2,13) = 'THETA   ','SALT    ',
+(PID.TID 0000.0001) >#   filename(13) = 'diags/budg2d_snap_set3_11',
+(PID.TID 0000.0001) >#   timePhase(13)= 0.,
+(PID.TID 0000.0001) >#   levels(1:40,13) = 11.,12.,13.,14.,15.,16.,17.,18.,19.,20.,
+(PID.TID 0000.0001) >#                     21.,22.,23.,24.,25.,26.,27.,28.,29.,30.,
+(PID.TID 0000.0001) >#                     31.,32.,33.,34.,35.,36.,37.,38.,39.,40.,
+(PID.TID 0000.0001) >#                     41.,42.,43.,44.,45.,46.,47.,48.,49.,50.,
+(PID.TID 0000.0001) >#   fileFlags(13) = 'DI      ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(14) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:8,14) = 'DFxE_TH ','DFyE_TH ','ADVx_TH ','ADVy_TH ',
+(PID.TID 0000.0001) >                 'DFxE_SLT','DFyE_SLT','ADVx_SLT','ADVy_SLT',
+(PID.TID 0000.0001) >   filename(14) = 'diags/trsp_2d_set1',
+(PID.TID 0000.0001) >#vertically integrate fields we only use to compute vertically integr.
+(PID.TID 0000.0001) >#meridional transports (also omit vertical transports, both to save space)
+(PID.TID 0000.0001) >   fileFlags(14) = ' I      ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(15) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:3,15) = 'RHOAnoma','PHIHYD  ','oceSPtnd',
+(PID.TID 0000.0001) >   filename(15) = 'diags/state_3d_set2',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(16) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:7,16) = 'ADVr_TH ','DFrE_TH ','DFrI_TH ',
+(PID.TID 0000.0001) >        'ADVr_SLT','DFrE_SLT','DFrI_SLT','WVELMASS',
+(PID.TID 0000.0001) >   filename(16) = 'diags/trsp_3d_set3',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(17) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:7,17) = 'TFLUX   ','SItflux ','SFLUX   ',
+(PID.TID 0000.0001) >        'oceQsw  ','oceSPflx','SIsnPrcp','SIacSubl',
+(PID.TID 0000.0001) >   filename(17) = 'diags/state_2d_set2',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(18) = -2635200.0,
+(PID.TID 0000.0001) >   fields(1:2,18) = 'SALT    ','TRAC32  ',
+(PID.TID 0000.0001) >   timePhase(18)= 0.,
+(PID.TID 0000.0001) >   filename(18) = 'diags/state_3d_snap_set1',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(19) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:8,19) = 'TRAC32  ','ADVxTr32','ADVyTr32','ADVrTr32',
+(PID.TID 0000.0001) >        'DFxETr32','DFyETr32','DFrETr32','DFrITr32',
+(PID.TID 0000.0001) >   filename(19) = 'diags/dic_physics',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  frequency(20) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1:5,20) = 'BCDIC   ','BCDICPIC','BREMIND ',
+(PID.TID 0000.0001) >        'BREMINP ','DISSCPIC',
+(PID.TID 0000.0001) >  filename(20) = 'diags/dic_biology',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  filename(21) = 'diags/CO2_FLUX_BUDGET_DEPTH',
+(PID.TID 0000.0001) >   frequency(21) = 2635200.0,
+(PID.TID 0000.0001) >   fields(1,21) = 'TRAC32  ','THETA   ','SALT    ',
+(PID.TID 0000.0001) >                  'TRAC36  ','TRAC01  ','TRAC04  ',
+(PID.TID 0000.0001) >#---
+(PID.TID 0000.0001) >  filename(22) = 'diags/CO2_FLUX_BUDGET_SURF',
+(PID.TID 0000.0001) >   frequency(22) = 2635200.0,
+(PID.TID 0000.0001) >   levels(1,22) = 1.,
+(PID.TID 0000.0001) >   fields(1,22) = 'DICCFLX ','DICTFLX ',
+(PID.TID 0000.0001) >#                  'DICPCO2 ','EXFapco2',
 (PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  frequency(55) = 10800.,
-(PID.TID 0000.0001) >   fields(1,55) = 'DICCFLX ',
-(PID.TID 0000.0001) >   filename(55) = 'DICCFLX3hrly',
-(PID.TID 0000.0001) >  frequency(56) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,56) = 'DICFGCO2',
-(PID.TID 0000.0001) >   filename(56) = 'DICFGCO2',
-(PID.TID 0000.0001) >  frequency(57) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,57) = 'UE_VEL_C',
-(PID.TID 0000.0001) >   filename(57) = 'UE_VEL_C',
-(PID.TID 0000.0001) >  frequency(58) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,58) = 'VN_VEL_C',
-(PID.TID 0000.0001) >   filename(58) = 'VN_VEL_C',
-(PID.TID 0000.0001) >  frequency(59) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,59) = 'WVEL     ',
-(PID.TID 0000.0001) >   filename(59) = 'WVEL',
-(PID.TID 0000.0001) >  frequency(60) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,60) = 'DICCFLX  ',
-(PID.TID 0000.0001) >   filename(60) = 'DICCFLXmonth',
-(PID.TID 0000.0001) >  frequency(61) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,61) = 'DICPCO2  ',
-(PID.TID 0000.0001) >   filename(61) = 'DICPCO2month',
-(PID.TID 0000.0001) >  frequency(62) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,62) = 'DICOFLX ',
-(PID.TID 0000.0001) >   filename(62) = 'DICOFLX_month',
-(PID.TID 0000.0001) > frequency(63) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,63) = 'oceQsw  ',
-(PID.TID 0000.0001) >   filename(63) = 'oceQswMonth',
-(PID.TID 0000.0001) > frequency(64) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,64) = 'oceQnet ',
-(PID.TID 0000.0001) >   filename(64) = 'oceQnetMonth',
-(PID.TID 0000.0001) > frequency(65) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,65) = 'EXFwspee ',
-(PID.TID 0000.0001) >   filename(65) = 'EXFwspeeMonth',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(66) = 'surfDiag',
-(PID.TID 0000.0001) >   frequency(66) = 2635200.,
-(PID.TID 0000.0001) >   levels(1,66) = 1.,
-(PID.TID 0000.0001) >   fields(1,66) = 'TFLUX   ','SFLUX   ','MXLDEPTH','oceFWflx ','oceQsw  ',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(67) = 'velMassDiag',
-(PID.TID 0000.0001) >   frequency(67) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,67) = 'UVELMASS ','VVELMASS ','WVELMASS ',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(68) = 'dic_surfDiag',
-(PID.TID 0000.0001) >   frequency(68) = 2635200.,
-(PID.TID 0000.0001) >   levels(1,68) = 1.,
-(PID.TID 0000.0001) >#   timePhase(68) = 0.,
-(PID.TID 0000.0001) >   fields(1,68) = 'DICCFLX ','DICTFLX ',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(69) = 'theta_flxDiag',
-(PID.TID 0000.0001) >   frequency(69) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,69) = 'THETA   ','TOTTTEND',
-(PID.TID 0000.0001) >                  'ADVx_TH ','ADVy_TH ','ADVr_TH ',
-(PID.TID 0000.0001) >                  'DFxE_TH ','DFyE_TH ','DFrE_TH ','DFrI_TH ',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(70) = 'salt_flxDiag',
-(PID.TID 0000.0001) >   frequency(70) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,70) = 'SALT    ','TOTSTEND',
-(PID.TID 0000.0001) >                  'ADVx_SLT','ADVy_SLT','ADVr_SLT',
-(PID.TID 0000.0001) >                  'DFxE_SLT','DFyE_SLT','DFrE_SLT','DFrI_SLT','oceSPtnd',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(71) = 'dic_flxDiag',
-(PID.TID 0000.0001) >   frequency(71) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,71) = 'TRAC32  ',
-(PID.TID 0000.0001) >                  'ADVxTr32','ADVyTr32','ADVrTr32',
-(PID.TID 0000.0001) >                  'DFxETr32','DFyETr32','DFrETr32','DFrITr32',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(72) = 'alk_flxDiag',
-(PID.TID 0000.0001) >   frequency(72) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,72) = 'TRAC36  ',
-(PID.TID 0000.0001) >                  'ADVxTr36','ADVyTr36','ADVrTr36',
-(PID.TID 0000.0001) >                  'DFxETr36','DFyETr36','DFrETr36','DFrITr36',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(73) = 'po4_flxDiag',
-(PID.TID 0000.0001) >   frequency(73) = 2635200.,
-(PID.TID 0000.0001) >   fields(1,73) = 'TRAC01  ',
-(PID.TID 0000.0001) >                  'ADVxTr01','ADVyTr01','ADVrTr01',
-(PID.TID 0000.0001) >                  'DFxETr01','DFyETr01','DFrETr01','DFrITr01',
-(PID.TID 0000.0001) >
-(PID.TID 0000.0001) >  filename(74) = 'snapDiag',
-(PID.TID 0000.0001) >   frequency(74) = -2635200.,
-(PID.TID 0000.0001) >   timePhase(74) = 0.,
-(PID.TID 0000.0001) >   fields(1,74) = 'THETA   ','SALT    ','TRAC32  ','TRAC36  ','TRAC01  ',
 (PID.TID 0000.0001) > /
 (PID.TID 0000.0001) >
+(PID.TID 0000.0001) > /
+(PID.TID 0000.0001) >#
+(PID.TID 0000.0001) >#
 (PID.TID 0000.0001) ># Parameter for Diagnostics of per level statistics:
 (PID.TID 0000.0001) >#-----------------
 (PID.TID 0000.0001) ># for each output-stream:
-(PID.TID 0000.0001) >#  stat_fname(n) : prefix of the output file name (only 8.c long) for
-(PID.TID 0000.0001) >#outp.stream n
+(PID.TID 0000.0001) >#  stat_fname(n) : prefix of the output file name (only 8.c long) for outp.stream n
 (PID.TID 0000.0001) >#  stat_freq(n):< 0 : write snap-shot output every |stat_freq| seconds
 (PID.TID 0000.0001) >#               > 0 : write time-average output every stat_freq seconds
 (PID.TID 0000.0001) >#  stat_phase(n)    : write at time = stat_phase + multiple of |stat_freq|
 (PID.TID 0000.0001) >#  stat_region(:,n) : list of "regions" (default: 1 region only=global)
-(PID.TID 0000.0001) >#  stat_fields(:,n) : list of diagnostics fields (8.c) (see
-(PID.TID 0000.0001) >#"available_diagnostics.log"
-(PID.TID 0000.0001) >#                 file for the list of all available diag. in this particular
-(PID.TID 0000.0001) >#config)
+(PID.TID 0000.0001) >#  stat_fields(:,n) : list of diagnostics fields (8.c) (see "available_diagnostics.log"
+(PID.TID 0000.0001) >#                 file for the list of all available diag. in this particular config)
 (PID.TID 0000.0001) >#-----------------
 (PID.TID 0000.0001) > &DIAG_STATIS_PARMS
-(PID.TID 0000.0001) >#- an example just to check the agreement with MONITOR output:
-(PID.TID 0000.0001) >#stat_fields(1,1)= 'ETAN    ','UVEL    ','VVEL    ','WVEL    ', 'THETA   ',
-(PID.TID 0000.0001) >#   stat_fname(1)= 'dynStDiag',
-(PID.TID 0000.0001) >#    stat_freq(1)= -864000.,
-(PID.TID 0000.0001) >#   stat_phase(1)= 0.,
+(PID.TID 0000.0001) ># diagSt_regMaskFile='basin_masks_eccollc_90x50.bin',
+(PID.TID 0000.0001) ># nSetRegMskFile=1,
+(PID.TID 0000.0001) ># set_regMask(1)= 1,  1,  1,  1,  1,  1,  1,  1,  1,
+(PID.TID 0000.0001) >#                 1,  1,  1,  1,  1,  1,  1,  1
+(PID.TID 0000.0001) ># val_regMask(1)= 1., 2., 3., 4., 5., 6., 7., 8., 9.,
+(PID.TID 0000.0001) >#                10.,11.,12.,13.,14.,15.,16.,17.
+(PID.TID 0000.0001) >##---
+(PID.TID 0000.0001) ># stat_fields(1,1)= 'ETAN    ','ETANSQ  ','DETADT2 ',
+(PID.TID 0000.0001) >#                   'UVEL    ','VVEL    ','WVEL    ',
+(PID.TID 0000.0001) >#                   'THETA   ','SALT    ',
+(PID.TID 0000.0001) >#    stat_fname(1)= 'dynStDiag',
+(PID.TID 0000.0001) >#     stat_freq(1)= 3153600.,
+(PID.TID 0000.0001) ># stat_region(1,1)=  1, 2, 3, 4, 5, 6, 7, 8, 9,
+(PID.TID 0000.0001) >#                   10,11,12,13,14,15,16,17
+(PID.TID 0000.0001) >##---
+(PID.TID 0000.0001) ># stat_fields(1,2)= 'oceTAUX ','oceTAUY ',
+(PID.TID 0000.0001) >#                   'surForcT','surForcS','TFLUX   ','SFLUX   ',
+(PID.TID 0000.0001) >#                   'oceQnet ','oceSflux','oceFWflx',
+(PID.TID 0000.0001) >#    stat_fname(2)= 'surfStDiag',
+(PID.TID 0000.0001) >#     stat_freq(2)= 3153600.,
+(PID.TID 0000.0001) ># stat_region(1,2)=  1, 2, 3, 4, 5, 6, 7, 8, 9,
+(PID.TID 0000.0001) >#                   10,11,12,13,14,15,16,17
 (PID.TID 0000.0001) > /
 (PID.TID 0000.0001) 
 (PID.TID 0000.0001) S/R DIAGNOSTICS_READPARMS, read namelist "diagnostics_list": start
@@ -1181,7 +1039,7 @@
 (PID.TID 0000.0001) S/R DIAGNOSTICS_READPARMS, read namelist "DIAG_STATIS_PARMS": OK
 (PID.TID 0000.0001)  DIAGNOSTICS_READPARMS: global parameter summary:
 (PID.TID 0000.0001)  dumpAtLast = /* always write time-ave diags at the end */
-(PID.TID 0000.0001)                   F
+(PID.TID 0000.0001)                   T
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001)  diag_mnc =   /* write NetCDF output files */
 (PID.TID 0000.0001)                   F
@@ -1201,450 +1059,123 @@
 (PID.TID 0000.0001) -----------------------------------------------------
 (PID.TID 0000.0001)  DIAGNOSTICS_READPARMS: active diagnostics summary:
 (PID.TID 0000.0001) -----------------------------------------------------
-(PID.TID 0000.0001) Creating Output Stream: ETAN
+(PID.TID 0000.0001) Creating Output Stream: diags/state_2d_set1
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    ETAN     SIarea   SIheff   SIhsnow  DETADT2  PHIBOT   sIceLoad MXLDEPTH oceSPDep SIatmQnt
+(PID.TID 0000.0001)  Fields:    SIatmFW  oceQnet  oceFWflx oceTAUX  oceTAUY  ADVxHEFF ADVyHEFF DFxEHEFF DFyEHEFF ADVxSNOW
+(PID.TID 0000.0001)  Fields:    ADVySNOW DFxESNOW DFyESNOW SIuice   SIvice
+(PID.TID 0000.0001) Creating Output Stream: diags/state_3d_set1
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    THETA    SALT     DRHODR
+(PID.TID 0000.0001) Creating Output Stream: diags/trsp_3d_set1
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    UVELMASS VVELMASS WVELMASS GM_PsiX  GM_PsiY
+(PID.TID 0000.0001) Creating Output Stream: diags/trsp_3d_set2
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    DFxE_TH  DFyE_TH  ADVx_TH  ADVy_TH  DFxE_SLT DFyE_SLT ADVx_SLT ADVy_SLT
+(PID.TID 0000.0001) Creating Output Stream: diags/budg2d_snap_set1
+(PID.TID 0000.0001) Output Frequency:   -2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:          0.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02 ; F-Flags="D       "
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    ETAN     SIheff   SIhsnow  SIarea   sIceLoad PHIBOT
+(PID.TID 0000.0001) Creating Output Stream: diags/budg2d_snap_set2
+(PID.TID 0000.0001) Output Frequency:   -2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:          0.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02 ; F-Flags="DI      "
+(PID.TID 0000.0001)  Cumulate all Levels (to be set later)
+(PID.TID 0000.0001)  Fields:    THETA    SALT
+(PID.TID 0000.0001) Creating Output Stream: diags/budg2d_zflux_set1
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02 ; F-Flags="D       "
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    oceFWflx SIatmFW  TFLUX    SItflux  SFLUX    oceQsw   oceSPflx DICTFLX
+(PID.TID 0000.0001) Creating Output Stream: diags/budg2d_hflux_set2
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02 ; F-Flags="DI      "
+(PID.TID 0000.0001)  Cumulate all Levels (to be set later)
+(PID.TID 0000.0001)  Fields:    UVELMASS VVELMASS ADVx_TH  ADVy_TH  DFxE_TH  DFyE_TH  ADVx_SLT ADVy_SLT DFxE_SLT DFyE_SLT
+(PID.TID 0000.0001)  Fields:    oceSPtnd AB_gT    AB_gS
+(PID.TID 0000.0001) Creating Output Stream: diags/budg2d_hflux_set1
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02 ; F-Flags="D       "
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    ADVxHEFF ADVyHEFF DFxEHEFF DFyEHEFF ADVxSNOW ADVySNOW DFxESNOW DFyESNOW
+(PID.TID 0000.0001) Creating Output Stream: diags/budg2d_zflux_set2
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02 ; F-Flags="D       "
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    SRELAX   TRELAX   WTHMASS  WSLTMASS oceSflux oceQnet  SIatmQnt SIaaflux SIsnPrcp SIacSubl
+(PID.TID 0000.0001) Creating Output Stream: diags/trsp_2d_set1
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02 ; F-Flags=" I      "
+(PID.TID 0000.0001)  Cumulate all Levels (to be set later)
+(PID.TID 0000.0001)  Fields:    DFxE_TH  DFyE_TH  ADVx_TH  ADVy_TH  DFxE_SLT DFyE_SLT ADVx_SLT ADVy_SLT
+(PID.TID 0000.0001) Creating Output Stream: diags/state_3d_set2
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    RHOAnoma PHIHYD   oceSPtnd
+(PID.TID 0000.0001) Creating Output Stream: diags/trsp_3d_set3
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    ADVr_TH  DFrE_TH  DFrI_TH  ADVr_SLT DFrE_SLT DFrI_SLT WVELMASS
+(PID.TID 0000.0001) Creating Output Stream: diags/state_2d_set2
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  missing value: -9.990000000000E+02
+(PID.TID 0000.0001)  Levels:    will be set later
+(PID.TID 0000.0001)  Fields:    TFLUX    SItflux  SFLUX    oceQsw   oceSPflx SIsnPrcp SIacSubl
+(PID.TID 0000.0001) Creating Output Stream: diags/state_3d_snap_set1
 (PID.TID 0000.0001) Output Frequency:   -2635200.000000 ; Phase:           0.000000
 (PID.TID 0000.0001)  Averaging Freq.:          0.000000 , Phase:           0.000000 , Cycle:   1
 (PID.TID 0000.0001)  missing value: -9.990000000000E+02
 (PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    ETAN
-(PID.TID 0000.0001) Creating Output Stream: SALTanom
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    SALTanom
-(PID.TID 0000.0001) Creating Output Stream: THETA
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    THETA
-(PID.TID 0000.0001) Creating Output Stream: DIC
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC32
-(PID.TID 0000.0001) Creating Output Stream: DICTFLX
-(PID.TID 0000.0001) Output Frequency:      86400.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:      86400.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICTFLX
-(PID.TID 0000.0001) Creating Output Stream: DICOFLX
-(PID.TID 0000.0001) Output Frequency:      86400.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:      86400.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICOFLX
-(PID.TID 0000.0001) Creating Output Stream: DICCFLX
-(PID.TID 0000.0001) Output Frequency:      86400.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:      86400.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICCFLX
-(PID.TID 0000.0001) Creating Output Stream: DICPCO2
-(PID.TID 0000.0001) Output Frequency:      86400.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:      86400.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICPCO2
-(PID.TID 0000.0001) Creating Output Stream: DICPHAV
-(PID.TID 0000.0001) Output Frequency:      86400.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:      86400.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICPHAV
-(PID.TID 0000.0001) Creating Output Stream: PO4
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC01
-(PID.TID 0000.0001) Creating Output Stream: NO3
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC02
-(PID.TID 0000.0001) Creating Output Stream: FeT
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC03
-(PID.TID 0000.0001) Creating Output Stream: SiO2
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC04
-(PID.TID 0000.0001) Creating Output Stream: DOP
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC05
-(PID.TID 0000.0001) Creating Output Stream: DON
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC06
-(PID.TID 0000.0001) Creating Output Stream: DOFe
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC07
-(PID.TID 0000.0001) Creating Output Stream: ZOO1P
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC08
-(PID.TID 0000.0001) Creating Output Stream: ZOO1N
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC09
-(PID.TID 0000.0001) Creating Output Stream: ZOO1Fe
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC10
-(PID.TID 0000.0001) Creating Output Stream: ZOO1Si
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC11
-(PID.TID 0000.0001) Creating Output Stream: ZOO2P
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC12
-(PID.TID 0000.0001) Creating Output Stream: ZOO2N
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC13
-(PID.TID 0000.0001) Creating Output Stream: ZOO2Fe
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC14
-(PID.TID 0000.0001) Creating Output Stream: ZOO2Si
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC15
-(PID.TID 0000.0001) Creating Output Stream: POP
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC16
-(PID.TID 0000.0001) Creating Output Stream: PON
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC17
-(PID.TID 0000.0001) Creating Output Stream: POFe
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC18
-(PID.TID 0000.0001) Creating Output Stream: POSi
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC19
-(PID.TID 0000.0001) Creating Output Stream: NH4
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC20
-(PID.TID 0000.0001) Creating Output Stream: NO2
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC21
-(PID.TID 0000.0001) Creating Output Stream: Phy01
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC22
-(PID.TID 0000.0001) Creating Output Stream: Phy02
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC23
-(PID.TID 0000.0001) Creating Output Stream: Phy03
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC24
-(PID.TID 0000.0001) Creating Output Stream: Phy04
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC25
-(PID.TID 0000.0001) Creating Output Stream: Phy05
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC26
-(PID.TID 0000.0001) Creating Output Stream: DOC
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC33
-(PID.TID 0000.0001) Creating Output Stream: POC
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC34
-(PID.TID 0000.0001) Creating Output Stream: PIC
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC35
-(PID.TID 0000.0001) Creating Output Stream: ALK
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC36
-(PID.TID 0000.0001) Creating Output Stream: O2
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC37
-(PID.TID 0000.0001) Creating Output Stream: ZOOC1
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC38
-(PID.TID 0000.0001) Creating Output Stream: ZOOC2
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC39
-(PID.TID 0000.0001) Creating Output Stream: CHL1
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC27
-(PID.TID 0000.0001) Creating Output Stream: CHL2
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC28
-(PID.TID 0000.0001) Creating Output Stream: CHL3
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC29
-(PID.TID 0000.0001) Creating Output Stream: CHL4
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC30
-(PID.TID 0000.0001) Creating Output Stream: CHL5
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC31
-(PID.TID 0000.0001) Creating Output Stream: EXFwspee
-(PID.TID 0000.0001) Output Frequency:      86400.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:      86400.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    EXFwspee
-(PID.TID 0000.0001) Creating Output Stream: PAR
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    PAR
-(PID.TID 0000.0001) Creating Output Stream: PP
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    PP
-(PID.TID 0000.0001) Creating Output Stream: SIarea_month
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    SIarea
-(PID.TID 0000.0001) Creating Output Stream: SIheff_month
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    SIheff
-(PID.TID 0000.0001) Creating Output Stream: EXFapco2month
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    EXFapco2
-(PID.TID 0000.0001) Creating Output Stream: EXFapco2snap
-(PID.TID 0000.0001) Output Frequency:   -2535200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:          0.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    EXFapco2
-(PID.TID 0000.0001) Creating Output Stream: DICCFLX3hrly
-(PID.TID 0000.0001) Output Frequency:      10800.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:      10800.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICCFLX
-(PID.TID 0000.0001) Creating Output Stream: DICFGCO2
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICFGCO2
-(PID.TID 0000.0001) Creating Output Stream: UE_VEL_C
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    UE_VEL_C
-(PID.TID 0000.0001) Creating Output Stream: VN_VEL_C
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    VN_VEL_C
-(PID.TID 0000.0001) Creating Output Stream: WVEL
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    WVEL
-(PID.TID 0000.0001) Creating Output Stream: DICCFLXmonth
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICCFLX
-(PID.TID 0000.0001) Creating Output Stream: DICPCO2month
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICPCO2
-(PID.TID 0000.0001) Creating Output Stream: DICOFLX_month
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    DICOFLX
-(PID.TID 0000.0001) Creating Output Stream: oceQswMonth
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    oceQsw
-(PID.TID 0000.0001) Creating Output Stream: oceQnetMonth
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    oceQnet
-(PID.TID 0000.0001) Creating Output Stream: EXFwspeeMonth
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    EXFwspee
-(PID.TID 0000.0001) Creating Output Stream: surfDiag
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001)  Fields:    TFLUX    SFLUX    MXLDEPTH oceFWflx oceQsw
-(PID.TID 0000.0001) Creating Output Stream: velMassDiag
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    UVELMASS VVELMASS WVELMASS
-(PID.TID 0000.0001) Creating Output Stream: dic_surfDiag
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001)  Fields:    DICCFLX  DICTFLX
-(PID.TID 0000.0001) Creating Output Stream: theta_flxDiag
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    THETA    TOTTTEND ADVx_TH  ADVy_TH  ADVr_TH  DFxE_TH  DFyE_TH  DFrE_TH  DFrI_TH
-(PID.TID 0000.0001) Creating Output Stream: salt_flxDiag
-(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
-(PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    SALT     TOTSTEND ADVx_SLT ADVy_SLT ADVr_SLT DFxE_SLT DFyE_SLT DFrE_SLT DFrI_SLT oceSPtnd
-(PID.TID 0000.0001) Creating Output Stream: dic_flxDiag
+(PID.TID 0000.0001)  Fields:    SALT     TRAC32
+(PID.TID 0000.0001) Creating Output Stream: diags/dic_physics
 (PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
 (PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
 (PID.TID 0000.0001)  missing value: -9.990000000000E+02
 (PID.TID 0000.0001)  Levels:    will be set later
 (PID.TID 0000.0001)  Fields:    TRAC32   ADVxTr32 ADVyTr32 ADVrTr32 DFxETr32 DFyETr32 DFrETr32 DFrITr32
-(PID.TID 0000.0001) Creating Output Stream: alk_flxDiag
+(PID.TID 0000.0001) Creating Output Stream: diags/dic_biology
 (PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
 (PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
 (PID.TID 0000.0001)  missing value: -9.990000000000E+02
 (PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC36   ADVxTr36 ADVyTr36 ADVrTr36 DFxETr36 DFyETr36 DFrETr36 DFrITr36
-(PID.TID 0000.0001) Creating Output Stream: po4_flxDiag
+(PID.TID 0000.0001)  Fields:    BCDIC    BCDICPIC BREMIND  BREMINP  DISSCPIC
+(PID.TID 0000.0001) Creating Output Stream: diags/CO2_FLUX_BUDGET_DEPTH
 (PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
 (PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
 (PID.TID 0000.0001)  missing value: -9.990000000000E+02
 (PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    TRAC01   ADVxTr01 ADVyTr01 ADVrTr01 DFxETr01 DFyETr01 DFrETr01 DFrITr01
-(PID.TID 0000.0001) Creating Output Stream: snapDiag
-(PID.TID 0000.0001) Output Frequency:   -2635200.000000 ; Phase:           0.000000
-(PID.TID 0000.0001)  Averaging Freq.:          0.000000 , Phase:           0.000000 , Cycle:   1
+(PID.TID 0000.0001)  Fields:    TRAC32   THETA    SALT     TRAC36   TRAC01   TRAC04
+(PID.TID 0000.0001) Creating Output Stream: diags/CO2_FLUX_BUDGET_SURF
+(PID.TID 0000.0001) Output Frequency:    2635200.000000 ; Phase:           0.000000
+(PID.TID 0000.0001)  Averaging Freq.:    2635200.000000 , Phase:           0.000000 , Cycle:   1
 (PID.TID 0000.0001)  missing value: -9.990000000000E+02
-(PID.TID 0000.0001)  Levels:    will be set later
-(PID.TID 0000.0001)  Fields:    THETA    SALT     TRAC32   TRAC36   TRAC01
+(PID.TID 0000.0001)  Levels:       1.
+(PID.TID 0000.0001)  Fields:    DICCFLX  DICTFLX
 (PID.TID 0000.0001) -----------------------------------------------------
 (PID.TID 0000.0001)  DIAGNOSTICS_READPARMS: statistics diags. summary:
 (PID.TID 0000.0001) -----------------------------------------------------
@@ -2528,100 +2059,121 @@
 (PID.TID 0000.0001)  Total Nb of available Diagnostics: ndiagt=   899
 (PID.TID 0000.0001)  write list of available Diagnostics to file: available_diagnostics.log
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    23 ETAN
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    29 SALTanom
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    26 THETA
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   628 TRAC32
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   752 DICTFLX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   753 DICOFLX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   754 DICCFLX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   756 DICPCO2
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   757 DICPHAV
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   225 TRAC01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   238 TRAC02
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   251 TRAC03
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   264 TRAC04
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   277 TRAC05
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   290 TRAC06
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   303 TRAC07
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   316 TRAC08
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   329 TRAC09
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   342 TRAC10
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   355 TRAC11
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   368 TRAC12
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   381 TRAC13
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   394 TRAC14
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   407 TRAC15
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   420 TRAC16
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   433 TRAC17
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   446 TRAC18
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   459 TRAC19
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   472 TRAC20
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   485 TRAC21
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   498 TRAC22
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   511 TRAC23
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   524 TRAC24
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   537 TRAC25
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   550 TRAC26
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   641 TRAC33
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   654 TRAC34
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   667 TRAC35
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   680 TRAC36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   693 TRAC37
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   706 TRAC38
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   719 TRAC39
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   563 TRAC27
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   576 TRAC28
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   589 TRAC29
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   602 TRAC30
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   615 TRAC31
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   187 EXFwspee
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   746 PAR
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   747 PP
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   826 SIarea
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   829 SIheff
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   198 EXFapco2
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   198 EXFapco2
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   754 DICCFLX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   755 DICFGCO2
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    39 UE_VEL_C
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    40 VN_VEL_C
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    32 WVEL
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   754 DICCFLX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   756 DICPCO2
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   753 DICOFLX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    87 oceQsw
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    86 oceQnet
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   187 EXFwspee
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    93 TFLUX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    94 SFLUX
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   831 SIhsnow
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    25 DETADT2
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    73 PHIBOT
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    83 sIceLoad
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    77 MXLDEPTH
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   899 oceSPDep
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   843 SIatmQnt
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   850 SIatmFW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    86 oceQnet
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    84 oceFWflx
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    87 oceQsw   is already set
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    80 oceTAUX
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    81 oceTAUY
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   870 ADVxHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   871 ADVyHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   872 DFxEHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   873 DFyEHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   878 ADVxSNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   879 ADVySNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   880 DFxESNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   881 DFyESNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   835 SIuice
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   836 SIvice
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    26 THETA
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    27 SALT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    78 DRHODR
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    45 UVELMASS
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    46 VVELMASS
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    47 WVELMASS
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   754 DICCFLX  is already set
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   752 DICTFLX
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    26 THETA    is already set
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    99 TOTTTEND
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   111 ADVx_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   112 ADVy_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   110 ADVr_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   218 GM_PsiX
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   219 GM_PsiY
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   114 DFxE_TH
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   115 DFyE_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   113 DFrE_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   116 DFrI_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    27 SALT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   100 TOTSTEND
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   118 ADVx_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   119 ADVy_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   117 ADVr_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   111 ADVx_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   112 ADVy_TH
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   121 DFxE_SLT
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   122 DFyE_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   118 ADVx_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   119 ADVy_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    23 ETAN
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   829 SIheff
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   831 SIhsnow
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   826 SIarea
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    83 sIceLoad
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    73 PHIBOT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    26 THETA
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    27 SALT
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    84 oceFWflx is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   850 SIatmFW  is already set
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    93 TFLUX
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   844 SItflux
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    94 SFLUX
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    87 oceQsw
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   898 oceSPflx
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   752 DICTFLX
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    45 UVELMASS is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    46 VVELMASS is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   111 ADVx_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   112 ADVy_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   114 DFxE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   115 DFyE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   118 ADVx_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   119 ADVy_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   121 DFxE_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   122 DFyE_SLT is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   897 oceSPtnd
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   104 AB_gT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   105 AB_gS
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   870 ADVxHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   871 ADVyHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   872 DFxEHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   873 DFyEHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   878 ADVxSNOW is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   879 ADVySNOW is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   880 DFxESNOW is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   881 DFyESNOW is already set
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    90 SRELAX
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    89 TRELAX
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    52 WTHMASS
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    55 WSLTMASS
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    85 oceSflux
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    86 oceQnet  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   843 SIatmQnt is already set
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   845 SIaaflux
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   851 SIsnPrcp
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   853 SIacSubl
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   114 DFxE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   115 DFyE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   111 ADVx_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   112 ADVy_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   121 DFxE_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   122 DFyE_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   118 ADVx_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   119 ADVy_SLT is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    64 RHOAnoma
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    71 PHIHYD
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   897 oceSPtnd is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   110 ADVr_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   113 DFrE_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   116 DFrI_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   117 ADVr_SLT
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   120 DFrE_SLT
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   123 DFrI_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   897 oceSPtnd
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   628 TRAC32   is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    47 WVELMASS is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    93 TFLUX    is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   844 SItflux  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    94 SFLUX    is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    87 oceQsw   is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   898 oceSPflx is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   851 SIsnPrcp is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   853 SIacSubl is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    27 SALT     is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   628 TRAC32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   628 TRAC32
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   635 ADVxTr32
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   636 ADVyTr32
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   634 ADVrTr32
@@ -2629,30 +2181,44 @@
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   639 DFyETr32
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   637 DFrETr32
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   640 DFrITr32
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   680 TRAC36   is already set
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   687 ADVxTr36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   688 ADVyTr36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   686 ADVrTr36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   690 DFxETr36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   691 DFyETr36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   689 DFrETr36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   692 DFrITr36
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   225 TRAC01   is already set
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   232 ADVxTr01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   233 ADVyTr01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   231 ADVrTr01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   235 DFxETr01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   236 DFyETr01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   234 DFrETr01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   237 DFrITr01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    26 THETA
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    27 SALT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   628 TRAC32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   781 BCDIC
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   782 BCDICPIC
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   783 BREMIND
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   784 BREMINP
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   785 DISSCPIC
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   628 TRAC32   is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    26 THETA    is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    27 SALT     is already set
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   680 TRAC36
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   225 TRAC01
-(PID.TID 0000.0001)   space allocated for all diagnostics:    1419 levels
-(PID.TID 0000.0001)   set mate pointer for diag #    39  UE_VEL_C , Parms: UMR     MR , mate:    40
-(PID.TID 0000.0001)   set mate pointer for diag #    40  VN_VEL_C , Parms: VMR     MR , mate:    39
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   264 TRAC04
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   754 DICCFLX
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   752 DICTFLX  is already set
+(PID.TID 0000.0001)   space allocated for all diagnostics:     764 levels
+(PID.TID 0000.0001)   set mate pointer for diag #    80  oceTAUX  , Parms: UU      U1 , mate:    81
+(PID.TID 0000.0001)   set mate pointer for diag #    81  oceTAUY  , Parms: VV      U1 , mate:    80
+(PID.TID 0000.0001)   set mate pointer for diag #   870  ADVxHEFF , Parms: UU      M1 , mate:   871
+(PID.TID 0000.0001)   set mate pointer for diag #   871  ADVyHEFF , Parms: VV      M1 , mate:   870
+(PID.TID 0000.0001)   set mate pointer for diag #   872  DFxEHEFF , Parms: UU      M1 , mate:   873
+(PID.TID 0000.0001)   set mate pointer for diag #   873  DFyEHEFF , Parms: VV      M1 , mate:   872
+(PID.TID 0000.0001)   set mate pointer for diag #   878  ADVxSNOW , Parms: UU      M1 , mate:   879
+(PID.TID 0000.0001)   set mate pointer for diag #   879  ADVySNOW , Parms: VV      M1 , mate:   878
+(PID.TID 0000.0001)   set mate pointer for diag #   880  DFxESNOW , Parms: UU      M1 , mate:   881
+(PID.TID 0000.0001)   set mate pointer for diag #   881  DFyESNOW , Parms: VV      M1 , mate:   880
+(PID.TID 0000.0001)   set mate pointer for diag #   835  SIuice   , Parms: UU      M1 , mate:   836
+(PID.TID 0000.0001)   set mate pointer for diag #   836  SIvice   , Parms: VV      M1 , mate:   835
+(PID.TID 0000.0001)   set mate pointer for diag #    45  UVELMASS , Parms: UUr     MR , mate:    46
+(PID.TID 0000.0001)   set mate pointer for diag #    46  VVELMASS , Parms: VVr     MR , mate:    45
+(PID.TID 0000.0001)   set mate pointer for diag #   218  GM_PsiX  , Parms: UU      LR , mate:   219
+(PID.TID 0000.0001)   set mate pointer for diag #   219  GM_PsiY  , Parms: VV      LR , mate:   218
+(PID.TID 0000.0001)   set mate pointer for diag #   114  DFxE_TH  , Parms: UU      MR , mate:   115
+(PID.TID 0000.0001)   set mate pointer for diag #   115  DFyE_TH  , Parms: VV      MR , mate:   114
+(PID.TID 0000.0001)   set mate pointer for diag #   111  ADVx_TH  , Parms: UU      MR , mate:   112
+(PID.TID 0000.0001)   set mate pointer for diag #   112  ADVy_TH  , Parms: VV      MR , mate:   111
+(PID.TID 0000.0001)   set mate pointer for diag #   121  DFxE_SLT , Parms: UU      MR , mate:   122
+(PID.TID 0000.0001)   set mate pointer for diag #   122  DFyE_SLT , Parms: VV      MR , mate:   121
+(PID.TID 0000.0001)   set mate pointer for diag #   118  ADVx_SLT , Parms: UU      MR , mate:   119
+(PID.TID 0000.0001)   set mate pointer for diag #   119  ADVy_SLT , Parms: VV      MR , mate:   118
 (PID.TID 0000.0001)   set mate pointer for diag #    45  UVELMASS , Parms: UUr     MR , mate:    46
 (PID.TID 0000.0001)   set mate pointer for diag #    46  VVELMASS , Parms: VVr     MR , mate:    45
 (PID.TID 0000.0001)   set mate pointer for diag #   111  ADVx_TH  , Parms: UU      MR , mate:   112
@@ -2663,161 +2229,61 @@
 (PID.TID 0000.0001)   set mate pointer for diag #   119  ADVy_SLT , Parms: VV      MR , mate:   118
 (PID.TID 0000.0001)   set mate pointer for diag #   121  DFxE_SLT , Parms: UU      MR , mate:   122
 (PID.TID 0000.0001)   set mate pointer for diag #   122  DFyE_SLT , Parms: VV      MR , mate:   121
+(PID.TID 0000.0001)   set mate pointer for diag #   870  ADVxHEFF , Parms: UU      M1 , mate:   871
+(PID.TID 0000.0001)   set mate pointer for diag #   871  ADVyHEFF , Parms: VV      M1 , mate:   870
+(PID.TID 0000.0001)   set mate pointer for diag #   872  DFxEHEFF , Parms: UU      M1 , mate:   873
+(PID.TID 0000.0001)   set mate pointer for diag #   873  DFyEHEFF , Parms: VV      M1 , mate:   872
+(PID.TID 0000.0001)   set mate pointer for diag #   878  ADVxSNOW , Parms: UU      M1 , mate:   879
+(PID.TID 0000.0001)   set mate pointer for diag #   879  ADVySNOW , Parms: VV      M1 , mate:   878
+(PID.TID 0000.0001)   set mate pointer for diag #   880  DFxESNOW , Parms: UU      M1 , mate:   881
+(PID.TID 0000.0001)   set mate pointer for diag #   881  DFyESNOW , Parms: VV      M1 , mate:   880
+(PID.TID 0000.0001)   set mate pointer for diag #   114  DFxE_TH  , Parms: UU      MR , mate:   115
+(PID.TID 0000.0001)   set mate pointer for diag #   115  DFyE_TH  , Parms: VV      MR , mate:   114
+(PID.TID 0000.0001)   set mate pointer for diag #   111  ADVx_TH  , Parms: UU      MR , mate:   112
+(PID.TID 0000.0001)   set mate pointer for diag #   112  ADVy_TH  , Parms: VV      MR , mate:   111
+(PID.TID 0000.0001)   set mate pointer for diag #   121  DFxE_SLT , Parms: UU      MR , mate:   122
+(PID.TID 0000.0001)   set mate pointer for diag #   122  DFyE_SLT , Parms: VV      MR , mate:   121
+(PID.TID 0000.0001)   set mate pointer for diag #   118  ADVx_SLT , Parms: UU      MR , mate:   119
+(PID.TID 0000.0001)   set mate pointer for diag #   119  ADVy_SLT , Parms: VV      MR , mate:   118
 (PID.TID 0000.0001)   set mate pointer for diag #   635  ADVxTr32 , Parms: UU      MR , mate:   636
 (PID.TID 0000.0001)   set mate pointer for diag #   636  ADVyTr32 , Parms: VV      MR , mate:   635
 (PID.TID 0000.0001)   set mate pointer for diag #   638  DFxETr32 , Parms: UU      MR , mate:   639
 (PID.TID 0000.0001)   set mate pointer for diag #   639  DFyETr32 , Parms: VV      MR , mate:   638
-(PID.TID 0000.0001)   set mate pointer for diag #   687  ADVxTr36 , Parms: UU      MR , mate:   688
-(PID.TID 0000.0001)   set mate pointer for diag #   688  ADVyTr36 , Parms: VV      MR , mate:   687
-(PID.TID 0000.0001)   set mate pointer for diag #   690  DFxETr36 , Parms: UU      MR , mate:   691
-(PID.TID 0000.0001)   set mate pointer for diag #   691  DFyETr36 , Parms: VV      MR , mate:   690
-(PID.TID 0000.0001)   set mate pointer for diag #   232  ADVxTr01 , Parms: UU      MR , mate:   233
-(PID.TID 0000.0001)   set mate pointer for diag #   233  ADVyTr01 , Parms: VV      MR , mate:   232
-(PID.TID 0000.0001)   set mate pointer for diag #   235  DFxETr01 , Parms: UU      MR , mate:   236
-(PID.TID 0000.0001)   set mate pointer for diag #   236  DFyETr01 , Parms: VV      MR , mate:   235
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ETAN
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/state_2d_set1
 (PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: SALTanom
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/state_3d_set1
 (PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: THETA
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/trsp_3d_set1
 (PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DIC
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/trsp_3d_set2
 (PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICTFLX
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/budg2d_snap_set1
 (PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICOFLX
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/budg2d_snap_set2
+(PID.TID 0000.0001)  Sum Levels:   1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/budg2d_zflux_set1
 (PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICCFLX
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/budg2d_hflux_set2
+(PID.TID 0000.0001)  Sum Levels:   1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/budg2d_hflux_set1
 (PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICPCO2
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/budg2d_zflux_set2
 (PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICPHAV
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/trsp_2d_set1
+(PID.TID 0000.0001)  Sum Levels:   1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/state_3d_set2
+(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/trsp_3d_set3
+(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/state_2d_set2
 (PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: PO4
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/state_3d_snap_set1
 (PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: NO3
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/dic_physics
 (PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: FeT
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/dic_biology
 (PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: SiO2
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DOP
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DON
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DOFe
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO1P
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO1N
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO1Fe
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO1Si
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO2P
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO2N
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO2Fe
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOO2Si
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: POP
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: PON
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: POFe
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: POSi
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: NH4
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: NO2
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: Phy01
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: Phy02
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: Phy03
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: Phy04
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: Phy05
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DOC
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: POC
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: PIC
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ALK
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: O2
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOOC1
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: ZOOC2
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: CHL1
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: CHL2
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: CHL3
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: CHL4
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: CHL5
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: EXFwspee
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: PAR
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: PP
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: SIarea_month
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: SIheff_month
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: EXFapco2month
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: EXFapco2snap
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICCFLX3hrly
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICFGCO2
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: UE_VEL_C
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: VN_VEL_C
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: WVEL
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICCFLXmonth
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICPCO2month
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: DICOFLX_month
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: oceQswMonth
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: oceQnetMonth
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: EXFwspeeMonth
-(PID.TID 0000.0001)  Levels:       1.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: velMassDiag
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: theta_flxDiag
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: salt_flxDiag
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: dic_flxDiag
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: alk_flxDiag
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: po4_flxDiag
-(PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
-(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: snapDiag
+(PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/CO2_FLUX_BUDGET_DEPTH
 (PID.TID 0000.0001)  Levels:       1.   2.   3.   4.   5.   6.   7.   8.   9.  10.  11.  12.  13.  14.  15.
 (PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: done
 (PID.TID 0000.0001) ------------------------------------------------------------
@@ -8637,195 +8103,195 @@
 (PID.TID 0000.0001) // =======================================================
 (PID.TID 0000.0001) %CHECKPOINT         4 ckptA
 (PID.TID 0000.0001)   Seconds in section "ALL                    [THE_MODEL_MAIN]":
-(PID.TID 0000.0001)           User time:   18.286894643912092
-(PID.TID 0000.0001)         System time:  0.16136199608445168
-(PID.TID 0000.0001)     Wall clock time:   18.466985940933228
+(PID.TID 0000.0001)           User time:   18.389084383612499
+(PID.TID 0000.0001)         System time:  0.31530601345002651
+(PID.TID 0000.0001)     Wall clock time:   18.725746870040894
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "INITIALISE_FIXED       [THE_MODEL_MAIN]":
-(PID.TID 0000.0001)           User time:  0.53456700337119401
-(PID.TID 0000.0001)         System time:   2.1689999150112271E-002
-(PID.TID 0000.0001)     Wall clock time:  0.56282305717468262
+(PID.TID 0000.0001)           User time:  0.49491799715906382
+(PID.TID 0000.0001)         System time:   2.9038998298346996E-002
+(PID.TID 0000.0001)     Wall clock time:  0.52682590484619141
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "THE_MAIN_LOOP          [THE_MODEL_MAIN]":
-(PID.TID 0000.0001)           User time:   17.752299010753632
-(PID.TID 0000.0001)         System time:  0.13966199755668640
-(PID.TID 0000.0001)     Wall clock time:   17.904131889343262
+(PID.TID 0000.0001)           User time:   17.894139647483826
+(PID.TID 0000.0001)         System time:  0.28625701367855072
+(PID.TID 0000.0001)     Wall clock time:   18.198889017105103
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "INITIALISE_VARIA    [THE_MAIN_LOOP]":
-(PID.TID 0000.0001)           User time:  0.64111196994781494
-(PID.TID 0000.0001)         System time:   7.0820001885294914E-002
-(PID.TID 0000.0001)     Wall clock time:  0.71378111839294434
+(PID.TID 0000.0001)           User time:  0.65579003095626831
+(PID.TID 0000.0001)         System time:   8.4517002105712891E-002
+(PID.TID 0000.0001)     Wall clock time:  0.75287699699401855
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "MAIN LOOP           [THE_MAIN_LOOP]":
-(PID.TID 0000.0001)           User time:   17.111168265342712
-(PID.TID 0000.0001)         System time:   6.8839997053146362E-002
-(PID.TID 0000.0001)     Wall clock time:   17.190331935882568
+(PID.TID 0000.0001)           User time:   17.238329887390137
+(PID.TID 0000.0001)         System time:  0.20173700153827667
+(PID.TID 0000.0001)     Wall clock time:   17.445990800857544
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "MAIN_DO_LOOP        [THE_MAIN_LOOP]":
-(PID.TID 0000.0001)           User time:   17.111137986183167
-(PID.TID 0000.0001)         System time:   6.8838000297546387E-002
-(PID.TID 0000.0001)     Wall clock time:   17.190297842025757
+(PID.TID 0000.0001)           User time:   17.238297224044800
+(PID.TID 0000.0001)         System time:  0.20173500478267670
+(PID.TID 0000.0001)     Wall clock time:   17.445959091186523
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "FORWARD_STEP        [MAIN_DO_LOOP]":
-(PID.TID 0000.0001)           User time:   17.111062407493591
-(PID.TID 0000.0001)         System time:   6.8835005164146423E-002
-(PID.TID 0000.0001)     Wall clock time:   17.190220832824707
+(PID.TID 0000.0001)           User time:   17.238249301910400
+(PID.TID 0000.0001)         System time:  0.20173400640487671
+(PID.TID 0000.0001)     Wall clock time:   17.445911169052124
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_STATEVARS_DIAGS  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.15486848354339600
-(PID.TID 0000.0001)         System time:   3.7699937820434570E-004
-(PID.TID 0000.0001)     Wall clock time:  0.15526890754699707
+(PID.TID 0000.0001)           User time:   4.4509768486022949E-002
+(PID.TID 0000.0001)         System time:   3.4499168395996094E-004
+(PID.TID 0000.0001)     Wall clock time:   4.4864892959594727E-002
 (PID.TID 0000.0001)          No. starts:          12
 (PID.TID 0000.0001)           No. stops:          12
 (PID.TID 0000.0001)   Seconds in section "LOAD_FIELDS_DRIVER  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.15974724292755127
-(PID.TID 0000.0001)         System time:   1.3439953327178955E-003
-(PID.TID 0000.0001)     Wall clock time:  0.16111898422241211
+(PID.TID 0000.0001)           User time:  0.16014623641967773
+(PID.TID 0000.0001)         System time:   1.6130059957504272E-003
+(PID.TID 0000.0001)     Wall clock time:  0.16177606582641602
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "EXF_GETFORCING     [LOAD_FLDS_DRIVER]":
-(PID.TID 0000.0001)           User time:   8.9014887809753418E-002
-(PID.TID 0000.0001)         System time:   1.1420026421546936E-003
-(PID.TID 0000.0001)     Wall clock time:   9.0161085128784180E-002
+(PID.TID 0000.0001)           User time:   8.9894533157348633E-002
+(PID.TID 0000.0001)         System time:   1.3730153441429138E-003
+(PID.TID 0000.0001)     Wall clock time:   9.1284990310668945E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "EXTERNAL_FLDS_LOAD [LOAD_FLDS_DRIVER]":
-(PID.TID 0000.0001)           User time:   4.0984153747558594E-004
-(PID.TID 0000.0001)         System time:   5.9977173805236816E-006
-(PID.TID 0000.0001)     Wall clock time:   4.1937828063964844E-004
+(PID.TID 0000.0001)           User time:   4.7683715820312500E-004
+(PID.TID 0000.0001)         System time:   2.2992491722106934E-005
+(PID.TID 0000.0001)     Wall clock time:   4.9805641174316406E-004
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_ATMOSPHERIC_PHYS [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.3722648620605469E-005
+(PID.TID 0000.0001)           User time:   2.4676322937011719E-005
 (PID.TID 0000.0001)         System time:   4.9993395805358887E-006
-(PID.TID 0000.0001)     Wall clock time:   2.6702880859375000E-005
+(PID.TID 0000.0001)     Wall clock time:   2.7894973754882812E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_OCEANIC_PHYS     [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.85311651229858398
-(PID.TID 0000.0001)         System time:   6.7850053310394287E-003
-(PID.TID 0000.0001)     Wall clock time:  0.85992431640625000
+(PID.TID 0000.0001)           User time:  0.85775685310363770
+(PID.TID 0000.0001)         System time:   8.5250139236450195E-003
+(PID.TID 0000.0001)     Wall clock time:  0.86638712882995605
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "SEAICE_MODEL    [DO_OCEANIC_PHYS]":
-(PID.TID 0000.0001)           User time:  0.36608767509460449
-(PID.TID 0000.0001)         System time:   1.7570033669471741E-003
-(PID.TID 0000.0001)     Wall clock time:  0.36785793304443359
+(PID.TID 0000.0001)           User time:  0.36394286155700684
+(PID.TID 0000.0001)         System time:   2.3200064897537231E-003
+(PID.TID 0000.0001)     Wall clock time:  0.36629104614257812
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "SEAICE_DYNSOLVER   [SEAICE_MODEL]":
-(PID.TID 0000.0001)           User time:  0.32519400119781494
-(PID.TID 0000.0001)         System time:   6.5099447965621948E-004
-(PID.TID 0000.0001)     Wall clock time:  0.32586193084716797
+(PID.TID 0000.0001)           User time:  0.32175230979919434
+(PID.TID 0000.0001)         System time:   9.8802149295806885E-004
+(PID.TID 0000.0001)     Wall clock time:  0.32276892662048340
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "GGL90_CALC [DO_OCEANIC_PHYS]":
-(PID.TID 0000.0001)           User time:  0.21790504455566406
-(PID.TID 0000.0001)         System time:   3.5619884729385376E-003
-(PID.TID 0000.0001)     Wall clock time:  0.22147011756896973
+(PID.TID 0000.0001)           User time:  0.21971297264099121
+(PID.TID 0000.0001)         System time:   4.3759718537330627E-003
+(PID.TID 0000.0001)     Wall clock time:  0.22408795356750488
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "GCHEM_CALC_TENDENCY [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.2172927856445312E-005
-(PID.TID 0000.0001)         System time:   1.9967555999755859E-006
-(PID.TID 0000.0001)     Wall clock time:   2.4795532226562500E-005
+(PID.TID 0000.0001)           User time:   2.3722648620605469E-005
+(PID.TID 0000.0001)         System time:   9.9837779998779297E-007
+(PID.TID 0000.0001)     Wall clock time:   2.4080276489257812E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DYNAMICS            [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.86461222171783447
-(PID.TID 0000.0001)         System time:   4.9759969115257263E-003
-(PID.TID 0000.0001)     Wall clock time:  0.86974501609802246
+(PID.TID 0000.0001)           User time:  0.87039554119110107
+(PID.TID 0000.0001)         System time:   6.0530006885528564E-003
+(PID.TID 0000.0001)     Wall clock time:  0.87646317481994629
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "UPDATE_R_STAR       [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   1.8124103546142578E-002
-(PID.TID 0000.0001)         System time:   5.9902667999267578E-006
-(PID.TID 0000.0001)     Wall clock time:   1.8135309219360352E-002
+(PID.TID 0000.0001)           User time:   1.8624305725097656E-002
+(PID.TID 0000.0001)         System time:   3.9935111999511719E-006
+(PID.TID 0000.0001)     Wall clock time:   1.8634319305419922E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "UPDATE_CG2D         [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   1.1114716529846191E-002
-(PID.TID 0000.0001)         System time:   0.0000000000000000
-(PID.TID 0000.0001)     Wall clock time:   1.1118173599243164E-002
+(PID.TID 0000.0001)           User time:   1.1123299598693848E-002
+(PID.TID 0000.0001)         System time:   9.9837779998779297E-007
+(PID.TID 0000.0001)     Wall clock time:   1.1129617691040039E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "SOLVE_FOR_PRESSURE  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   5.5294394493103027E-002
-(PID.TID 0000.0001)         System time:   1.0999292135238647E-004
-(PID.TID 0000.0001)     Wall clock time:   5.5412054061889648E-002
+(PID.TID 0000.0001)           User time:   5.4788827896118164E-002
+(PID.TID 0000.0001)         System time:   1.3199448585510254E-004
+(PID.TID 0000.0001)     Wall clock time:   5.4927110671997070E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "MOM_CORRECTION_STEP [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   1.6176104545593262E-002
-(PID.TID 0000.0001)         System time:   6.5997242927551270E-005
-(PID.TID 0000.0001)     Wall clock time:   1.6246080398559570E-002
+(PID.TID 0000.0001)           User time:   1.5877842903137207E-002
+(PID.TID 0000.0001)         System time:   8.9034438133239746E-005
+(PID.TID 0000.0001)     Wall clock time:   1.5982151031494141E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "INTEGR_CONTINUITY   [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   3.5251498222351074E-002
-(PID.TID 0000.0001)         System time:   6.9960951805114746E-006
-(PID.TID 0000.0001)     Wall clock time:   3.5258531570434570E-002
+(PID.TID 0000.0001)           User time:   3.5333633422851562E-002
+(PID.TID 0000.0001)         System time:   4.9918889999389648E-006
+(PID.TID 0000.0001)     Wall clock time:   3.5343885421752930E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "CALC_R_STAR         [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   3.5816431045532227E-003
-(PID.TID 0000.0001)         System time:   3.9935111999511719E-006
-(PID.TID 0000.0001)     Wall clock time:   3.5898685455322266E-003
+(PID.TID 0000.0001)           User time:   3.6863088607788086E-003
+(PID.TID 0000.0001)         System time:   9.9837779998779297E-007
+(PID.TID 0000.0001)     Wall clock time:   3.6888122558593750E-003
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "BLOCKING_EXCHANGES  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   5.7011604309082031E-002
-(PID.TID 0000.0001)         System time:   4.5016407966613770E-005
-(PID.TID 0000.0001)     Wall clock time:   5.7062864303588867E-002
+(PID.TID 0000.0001)           User time:   5.9650182723999023E-002
+(PID.TID 0000.0001)         System time:   2.5987625122070312E-005
+(PID.TID 0000.0001)     Wall clock time:   5.9690475463867188E-002
 (PID.TID 0000.0001)          No. starts:           8
 (PID.TID 0000.0001)           No. stops:           8
 (PID.TID 0000.0001)   Seconds in section "THERMODYNAMICS      [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   12.830407977104187
-(PID.TID 0000.0001)         System time:   1.0069005191326141E-002
-(PID.TID 0000.0001)     Wall clock time:   12.842334985733032
+(PID.TID 0000.0001)           User time:   12.799034595489502
+(PID.TID 0000.0001)         System time:   1.2062981724739075E-002
+(PID.TID 0000.0001)     Wall clock time:   12.813073873519897
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "TRC_CORRECTION_STEP [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.3841857910156250E-005
-(PID.TID 0000.0001)         System time:   1.0058283805847168E-006
+(PID.TID 0000.0001)           User time:   2.5272369384765625E-005
+(PID.TID 0000.0001)         System time:   2.0116567611694336E-006
 (PID.TID 0000.0001)     Wall clock time:   2.6226043701171875E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "GCHEM_FORCING_SEP  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   1.0645284652709961
-(PID.TID 0000.0001)         System time:   4.0699988603591919E-003
-(PID.TID 0000.0001)     Wall clock time:   1.0686657428741455
+(PID.TID 0000.0001)           User time:   1.0547561645507812
+(PID.TID 0000.0001)         System time:   3.9820224046707153E-003
+(PID.TID 0000.0001)     Wall clock time:   1.0587506294250488
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "MONITOR             [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.15889072418212891
-(PID.TID 0000.0001)         System time:   3.0699372291564941E-004
-(PID.TID 0000.0001)     Wall clock time:  0.15920734405517578
+(PID.TID 0000.0001)           User time:  0.16119098663330078
+(PID.TID 0000.0001)         System time:   2.4498999118804932E-004
+(PID.TID 0000.0001)     Wall clock time:  0.16144537925720215
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_THE_MODEL_IO     [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.63021278381347656
-(PID.TID 0000.0001)         System time:   3.7429928779602051E-003
-(PID.TID 0000.0001)     Wall clock time:  0.63614583015441895
+(PID.TID 0000.0001)           User time:  0.89384698867797852
+(PID.TID 0000.0001)         System time:   7.0386990904808044E-002
+(PID.TID 0000.0001)     Wall clock time:  0.96568918228149414
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "PTRACERS_RESET      [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.6226043701171875E-005
-(PID.TID 0000.0001)         System time:   1.0058283805847168E-006
-(PID.TID 0000.0001)     Wall clock time:   2.8133392333984375E-005
+(PID.TID 0000.0001)           User time:   2.5749206542968750E-005
+(PID.TID 0000.0001)         System time:   9.9837779998779297E-007
+(PID.TID 0000.0001)     Wall clock time:   2.7656555175781250E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_WRITE_PICKUP     [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.19738197326660156
-(PID.TID 0000.0001)         System time:   3.6801002919673920E-002
-(PID.TID 0000.0001)     Wall clock time:  0.24024486541748047
+(PID.TID 0000.0001)           User time:  0.19677972793579102
+(PID.TID 0000.0001)         System time:   9.8136007785797119E-002
+(PID.TID 0000.0001)     Wall clock time:  0.29732298851013184
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001) // ======================================================
@@ -8843,9 +8309,9 @@
 (PID.TID 0000.0001) //          Total. Y spins =              0
 (PID.TID 0000.0001) //            Avg. Y spins =       0.00E+00
 (PID.TID 0000.0001) // o Thread number: 000001
-(PID.TID 0000.0001) //            No. barriers =           9342
+(PID.TID 0000.0001) //            No. barriers =          10776
 (PID.TID 0000.0001) //      Max. barrier spins =              1
 (PID.TID 0000.0001) //      Min. barrier spins =              1
-(PID.TID 0000.0001) //     Total barrier spins =           9342
+(PID.TID 0000.0001) //     Total barrier spins =          10776
 (PID.TID 0000.0001) //      Avg. barrier spins =       1.00E+00
 PROGRAM MAIN: Execution ended Normally
