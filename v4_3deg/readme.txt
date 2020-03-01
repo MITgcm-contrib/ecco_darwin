@@ -30,6 +30,7 @@
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270/input_darwin/data* .
  cp ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/*data* .
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
+ mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output
  diff output.txt ../../MITgcm_contrib/ecco_darwin/v4_3deg/results/output.txt

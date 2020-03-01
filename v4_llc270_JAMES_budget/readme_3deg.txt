@@ -3,7 +3,7 @@
 
 # ========
 # 1. Get code
- cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_code
+ git clone https://github.com/MITgcm/MITgcm.git
  cvs co MITgcm_contrib/ecco_darwin/v4_3deg/data
  cvs co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
