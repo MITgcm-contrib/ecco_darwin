@@ -4,7 +4,7 @@
 # ========
 # 1. Get code
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_code
- cvs co MITgcm_contrib/ecco_darwin/v4_3deg
+ cvs co MITgcm_contrib/ecco_darwin/v4_3deg/data
  cvs co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
  cd MITgcm/pkg
@@ -49,8 +49,7 @@
  mkdir diags
  ln -sf ../build/mitgcmuv .
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input/data* .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_darwin/data* .
- cp ../../MITgcm_contrib/ecco_darwin/v4_3deg/input/*data* .
+ cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_darwin/*data* .
  mv data_mpi data
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
  mpirun -np 8 ./mitgcmuv &
