@@ -5,10 +5,10 @@
 (PID.TID 0000.0001) // ======================================================
 (PID.TID 0000.0001) // execution environment starting up...
 (PID.TID 0000.0001) 
-(PID.TID 0000.0001) // MITgcmUV version:  checkpoint66o
+(PID.TID 0000.0001) // MITgcmUV version:  checkpoint67p
 (PID.TID 0000.0001) // Build user:        dmenemen
 (PID.TID 0000.0001) // Build host:        triton
-(PID.TID 0000.0001) // Build date:        Sat Feb 29 13:24:43 PST 2020
+(PID.TID 0000.0001) // Build date:        Sat Feb 29 22:29:50 PST 2020
 (PID.TID 0000.0001) 
 (PID.TID 0000.0001) // =======================================================
 (PID.TID 0000.0001) // Execution Environment parameter file "eedata"
@@ -51,6 +51,8 @@
 (PID.TID 0000.0001)                   /*  "mpirun -np 64 ......"                    */
 (PID.TID 0000.0001) useCoupler=    F ;/* Flag used to control communications with   */
 (PID.TID 0000.0001)                   /*  other model components, through a coupler */
+(PID.TID 0000.0001) useNest2W_parent =    F ;/* Control 2-W Nesting comm */
+(PID.TID 0000.0001) useNest2W_child  =    F ;/* Control 2-W Nesting comm */
 (PID.TID 0000.0001) debugMode =    F ; /* print debug msg. (sequence of S/R calls)  */
 (PID.TID 0000.0001) printMapIncludesZeros=    F ; /* print zeros in Std.Output maps */
 (PID.TID 0000.0001) maxLengthPrt1D=   65 /* maxLength of 1D array printed to StdOut */
@@ -794,10 +796,16 @@
 (PID.TID 0000.0001) >      SEAICE_drySnowAlb  = 0.90,
 (PID.TID 0000.0001) >      SEAICE_wetSnowAlb  = 0.8 ,
 (PID.TID 0000.0001) >#default albedos
-(PID.TID 0000.0001) >      SEAICE_dryIceAlb_south   = 0.75
-(PID.TID 0000.0001) >      SEAICE_wetIceAlb_south   = 0.66
-(PID.TID 0000.0001) >      SEAICE_drySnowAlb_south  = 0.84
-(PID.TID 0000.0001) >      SEAICE_wetSnowAlb_south  = 0.7
+(PID.TID 0000.0001) >      SEAICE_dryIceAlb_south   = 0.75,
+(PID.TID 0000.0001) >      SEAICE_wetIceAlb_south   = 0.66,
+(PID.TID 0000.0001) >      SEAICE_drySnowAlb_south  = 0.84,
+(PID.TID 0000.0001) >      SEAICE_wetSnowAlb_south  = 0.7,
+(PID.TID 0000.0001) >#old defaults
+(PID.TID 0000.0001) >      SEAICE_drag           = 0.002,
+(PID.TID 0000.0001) >      SEAICE_waterDrag      = .00534499514091350826,
+(PID.TID 0000.0001) >      SEAICEetaZmethod      = 0,
+(PID.TID 0000.0001) >      SEAICEscaleSurfStress = .FALSE.,
+(PID.TID 0000.0001) >      SEAICEaddSnowMass     = .FALSE.,
 (PID.TID 0000.0001) >#initial conditions
 (PID.TID 0000.0001) >      AreaFile = 'Area.0005184000',
 (PID.TID 0000.0001) >      HeffFile = 'Heff.0005184000',
@@ -1385,6 +1393,9 @@
 (PID.TID 0000.0001) exf_output_interp = /* output directly interpolation result */
 (PID.TID 0000.0001)                   F
 (PID.TID 0000.0001)     ;
+(PID.TID 0000.0001) diags_opOceWeighted = /* weight flux diags by open-ocean fraction */
+(PID.TID 0000.0001)                   T
+(PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) exf_debugLev = /* select EXF-debug printing level */
 (PID.TID 0000.0001)                       1
 (PID.TID 0000.0001)     ;
@@ -1599,9 +1610,12 @@
 (PID.TID 0000.0001)    lon0=-178.50000, nlon=   120, lon_inc= 3.0000000
 (PID.TID 0000.0001)    lat0= -88.50000, nlat=    60, lat_inc= 3.0000000
 (PID.TID 0000.0001) 
-(PID.TID 0000.0001)    Atmospheric pCO2 forcing period is               -12.
-(PID.TID 0000.0001)    Atmospheric pCO2 forcing is read from file:
-(PID.TID 0000.0001)    >>  apCO2_2000  <<
+(PID.TID 0000.0001)    Atmospheric pCO2 period is                          -12.
+(PID.TID 0000.0001)    Atmospheric pCO2 is read from file:
+(PID.TID 0000.0001)    >> apCO2_2000 <<
+(PID.TID 0000.0001)    interpolate "apco2" (method=  1 ):
+(PID.TID 0000.0001)    lon0=-178.50000, nlon=   120, lon_inc= 3.0000000
+(PID.TID 0000.0001)    lat0= -88.50000, nlat=    60, lat_inc= 3.0000000
 (PID.TID 0000.0001) 
 (PID.TID 0000.0001) // =======================================================
 (PID.TID 0000.0001) // External forcing (EXF) climatology configuration :
@@ -1637,6 +1651,9 @@
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) SEAICEuseBDF2  = /* use backw. differencing for mom. eq. */
 (PID.TID 0000.0001)                   F
+(PID.TID 0000.0001)     ;
+(PID.TID 0000.0001) SEAICEupdateOceanStress= /* update Ocean surf. stress */
+(PID.TID 0000.0001)                   T
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) SEAICErestoreUnderIce  = /* restore T and S under ice */
 (PID.TID 0000.0001)                   T
@@ -1680,11 +1697,11 @@
 (PID.TID 0000.0001) SEAICE_drag_south      = /* Southern Ocean SEAICE_drag */
 (PID.TID 0000.0001)                 2.000000000000000E-03
 (PID.TID 0000.0001)     ;
-(PID.TID 0000.0001) SEAICE_waterDrag  = /* water-ice drag * density */
-(PID.TID 0000.0001)                 5.500000000000000E+00
+(PID.TID 0000.0001) SEAICE_waterDrag  = /* water-ice drag */
+(PID.TID 0000.0001)                 5.344995140913508E-03
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) SEAICE_waterDrag_south = /* Southern Ocean waterDrag */
-(PID.TID 0000.0001)                 5.500000000000000E+00
+(PID.TID 0000.0001)                 5.344995140913508E-03
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) SEAICEuseTilt     = /* include surface tilt in dyna. */
 (PID.TID 0000.0001)                   F
@@ -2062,199 +2079,199 @@
 (PID.TID 0000.0001) 
 (PID.TID 0000.0001) ------------------------------------------------------------
 (PID.TID 0000.0001) DIAGNOSTICS_SET_LEVELS: done
-(PID.TID 0000.0001)  Total Nb of available Diagnostics: ndiagt=   861
+(PID.TID 0000.0001)  Total Nb of available Diagnostics: ndiagt=   906
 (PID.TID 0000.0001)  write list of available Diagnostics to file: available_diagnostics.log
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    23 ETAN
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   788 SIarea
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   791 SIheff
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   793 SIhsnow
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   833 SIarea
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   836 SIheff
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   838 SIhsnow
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    25 DETADT2
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    73 PHIBOT
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    83 sIceLoad
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    77 MXLDEPTH
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   861 oceSPDep
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   805 SIatmQnt
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   812 SIatmFW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   906 oceSPDep
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   850 SIatmQnt
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   857 SIatmFW
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    86 oceQnet
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    84 oceFWflx
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    80 oceTAUX
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    81 oceTAUY
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   832 ADVxHEFF
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   833 ADVyHEFF
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   834 DFxEHEFF
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   835 DFyEHEFF
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   840 ADVxSNOW
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   841 ADVySNOW
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   842 DFxESNOW
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   843 DFyESNOW
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   797 SIuice
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   798 SIvice
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   877 ADVxHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   878 ADVyHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   879 DFxEHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   880 DFyEHEFF
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   885 ADVxSNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   886 ADVySNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   887 DFxESNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   888 DFyESNOW
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   842 SIuice
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   843 SIvice
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    26 THETA
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    27 SALT
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    78 DRHODR
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    45 UVELMASS
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    46 VVELMASS
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    47 WVELMASS
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   218 GM_PsiX
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   219 GM_PsiY
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   114 DFxE_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   115 DFyE_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   111 ADVx_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   112 ADVy_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   121 DFxE_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   122 DFyE_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   118 ADVx_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   119 ADVy_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   224 GM_PsiX
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   225 GM_PsiY
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   117 DFxE_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   118 DFyE_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   114 ADVx_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   115 ADVy_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   124 DFxE_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   125 DFyE_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   121 ADVx_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   122 ADVy_SLT
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    23 ETAN
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   791 SIheff
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   793 SIhsnow
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   788 SIarea
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   836 SIheff
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   838 SIhsnow
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   833 SIarea
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    83 sIceLoad
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    73 PHIBOT
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    26 THETA
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    27 SALT
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    84 oceFWflx is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   812 SIatmFW  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   857 SIatmFW  is already set
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    93 TFLUX
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   806 SItflux
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   851 SItflux
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    94 SFLUX
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    87 oceQsw
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   860 oceSPflx
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   739 DICTFLX
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   905 oceSPflx
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   784 DICTFLX
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    45 UVELMASS is already set
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    46 VVELMASS is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   111 ADVx_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   112 ADVy_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   114 DFxE_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   115 DFyE_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   118 ADVx_SLT is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   119 ADVy_SLT is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   121 DFxE_SLT is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   122 DFyE_SLT is already set
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   859 oceSPtnd
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   104 AB_gT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   105 AB_gS
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   832 ADVxHEFF is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   833 ADVyHEFF is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   834 DFxEHEFF is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   835 DFyEHEFF is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   840 ADVxSNOW is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   841 ADVySNOW is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   842 DFxESNOW is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   843 DFyESNOW is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   114 ADVx_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   115 ADVy_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   117 DFxE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   118 DFyE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   121 ADVx_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   122 ADVy_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   124 DFxE_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   125 DFyE_SLT is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   904 oceSPtnd
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   107 AB_gT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   108 AB_gS
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   877 ADVxHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   878 ADVyHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   879 DFxEHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   880 DFyEHEFF is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   885 ADVxSNOW is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   886 ADVySNOW is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   887 DFxESNOW is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   888 DFyESNOW is already set
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    90 SRELAX
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    89 TRELAX
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    52 WTHMASS
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    55 WSLTMASS
 (PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #    85 oceSflux
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    86 oceQnet  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   805 SIatmQnt is already set
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   807 SIaaflux
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   813 SIsnPrcp
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   815 SIacSubl
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   114 DFxE_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   115 DFyE_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   111 ADVx_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   112 ADVy_TH  is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   121 DFxE_SLT is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   122 DFyE_SLT is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   118 ADVx_SLT is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   119 ADVy_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   850 SIatmQnt is already set
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   852 SIaaflux
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   858 SIsnPrcp
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   860 SIacSubl
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   117 DFxE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   118 DFyE_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   114 ADVx_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   115 ADVy_TH  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   124 DFxE_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   125 DFyE_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   121 ADVx_SLT is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   122 ADVy_SLT is already set
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    64 RHOAnoma
 (PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #    71 PHIHYD
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   859 oceSPtnd is already set
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   110 ADVr_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   113 DFrE_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   116 DFrI_TH
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   117 ADVr_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   120 DFrE_SLT
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   123 DFrI_SLT
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   904 oceSPtnd is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   113 ADVr_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   116 DFrE_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   119 DFrI_TH
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   120 ADVr_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   123 DFrE_SLT
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   126 DFrI_SLT
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    47 WVELMASS is already set
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    93 TFLUX    is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   806 SItflux  is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   851 SItflux  is already set
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    94 SFLUX    is already set
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    87 oceQsw   is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   860 oceSPflx is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   813 SIsnPrcp is already set
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   815 SIacSubl is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   905 oceSPflx is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   858 SIsnPrcp is already set
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   860 SIacSubl is already set
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    27 SALT     is already set
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   628 TRAC32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   628 TRAC32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   635 ADVxTr32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   636 ADVyTr32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   634 ADVrTr32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   638 DFxETr32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   639 DFyETr32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   637 DFrETr32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   640 DFrITr32
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   744 BCDIC
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   745 BCDICPIC
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   746 BREMIND
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   747 BREMINP
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   748 DISSCPIC
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   628 TRAC32   is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   665 TRAC32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   665 TRAC32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   673 ADVxTr32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   674 ADVyTr32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   672 ADVrTr32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   676 DFxETr32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   677 DFyETr32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   675 DFrETr32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   678 DFrITr32
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   789 BCDIC
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   790 BCDICPIC
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   791 BREMIND
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   792 BREMINP
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   793 DISSCPIC
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   665 TRAC32   is already set
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    26 THETA    is already set
 (PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #    27 SALT     is already set
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   680 TRAC36
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   225 TRAC01
-(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   264 TRAC04
-(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   741 DICCFLX
-(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   739 DICTFLX  is already set
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   721 TRAC36
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   231 TRAC01
+(PID.TID 0000.0001) SETDIAG: Allocate 15 x  1 Levels for Diagnostic #   273 TRAC04
+(PID.TID 0000.0001) SETDIAG: Allocate  1 x  1 Levels for Diagnostic #   786 DICCFLX
+(PID.TID 0000.0001) - NOTE - SETDIAG:  Diagnostic  #   784 DICTFLX  is already set
 (PID.TID 0000.0001)   space allocated for all diagnostics:     764 levels
 (PID.TID 0000.0001)   set mate pointer for diag #    80  oceTAUX  , Parms: UU      U1 , mate:    81
 (PID.TID 0000.0001)   set mate pointer for diag #    81  oceTAUY  , Parms: VV      U1 , mate:    80
-(PID.TID 0000.0001)   set mate pointer for diag #   832  ADVxHEFF , Parms: UU      M1 , mate:   833
-(PID.TID 0000.0001)   set mate pointer for diag #   833  ADVyHEFF , Parms: VV      M1 , mate:   832
-(PID.TID 0000.0001)   set mate pointer for diag #   834  DFxEHEFF , Parms: UU      M1 , mate:   835
-(PID.TID 0000.0001)   set mate pointer for diag #   835  DFyEHEFF , Parms: VV      M1 , mate:   834
-(PID.TID 0000.0001)   set mate pointer for diag #   840  ADVxSNOW , Parms: UU      M1 , mate:   841
-(PID.TID 0000.0001)   set mate pointer for diag #   841  ADVySNOW , Parms: VV      M1 , mate:   840
-(PID.TID 0000.0001)   set mate pointer for diag #   842  DFxESNOW , Parms: UU      M1 , mate:   843
-(PID.TID 0000.0001)   set mate pointer for diag #   843  DFyESNOW , Parms: VV      M1 , mate:   842
-(PID.TID 0000.0001)   set mate pointer for diag #   797  SIuice   , Parms: UU      M1 , mate:   798
-(PID.TID 0000.0001)   set mate pointer for diag #   798  SIvice   , Parms: VV      M1 , mate:   797
+(PID.TID 0000.0001)   set mate pointer for diag #   877  ADVxHEFF , Parms: UU      M1 , mate:   878
+(PID.TID 0000.0001)   set mate pointer for diag #   878  ADVyHEFF , Parms: VV      M1 , mate:   877
+(PID.TID 0000.0001)   set mate pointer for diag #   879  DFxEHEFF , Parms: UU      M1 , mate:   880
+(PID.TID 0000.0001)   set mate pointer for diag #   880  DFyEHEFF , Parms: VV      M1 , mate:   879
+(PID.TID 0000.0001)   set mate pointer for diag #   885  ADVxSNOW , Parms: UU      M1 , mate:   886
+(PID.TID 0000.0001)   set mate pointer for diag #   886  ADVySNOW , Parms: VV      M1 , mate:   885
+(PID.TID 0000.0001)   set mate pointer for diag #   887  DFxESNOW , Parms: UU      M1 , mate:   888
+(PID.TID 0000.0001)   set mate pointer for diag #   888  DFyESNOW , Parms: VV      M1 , mate:   887
+(PID.TID 0000.0001)   set mate pointer for diag #   842  SIuice   , Parms: UU      M1 , mate:   843
+(PID.TID 0000.0001)   set mate pointer for diag #   843  SIvice   , Parms: VV      M1 , mate:   842
 (PID.TID 0000.0001)   set mate pointer for diag #    45  UVELMASS , Parms: UUr     MR , mate:    46
 (PID.TID 0000.0001)   set mate pointer for diag #    46  VVELMASS , Parms: VVr     MR , mate:    45
-(PID.TID 0000.0001)   set mate pointer for diag #   218  GM_PsiX  , Parms: UU      LR , mate:   219
-(PID.TID 0000.0001)   set mate pointer for diag #   219  GM_PsiY  , Parms: VV      LR , mate:   218
-(PID.TID 0000.0001)   set mate pointer for diag #   114  DFxE_TH  , Parms: UU      MR , mate:   115
-(PID.TID 0000.0001)   set mate pointer for diag #   115  DFyE_TH  , Parms: VV      MR , mate:   114
-(PID.TID 0000.0001)   set mate pointer for diag #   111  ADVx_TH  , Parms: UU      MR , mate:   112
-(PID.TID 0000.0001)   set mate pointer for diag #   112  ADVy_TH  , Parms: VV      MR , mate:   111
-(PID.TID 0000.0001)   set mate pointer for diag #   121  DFxE_SLT , Parms: UU      MR , mate:   122
-(PID.TID 0000.0001)   set mate pointer for diag #   122  DFyE_SLT , Parms: VV      MR , mate:   121
-(PID.TID 0000.0001)   set mate pointer for diag #   118  ADVx_SLT , Parms: UU      MR , mate:   119
-(PID.TID 0000.0001)   set mate pointer for diag #   119  ADVy_SLT , Parms: VV      MR , mate:   118
+(PID.TID 0000.0001)   set mate pointer for diag #   224  GM_PsiX  , Parms: UU      LR , mate:   225
+(PID.TID 0000.0001)   set mate pointer for diag #   225  GM_PsiY  , Parms: VV      LR , mate:   224
+(PID.TID 0000.0001)   set mate pointer for diag #   117  DFxE_TH  , Parms: UU      MR , mate:   118
+(PID.TID 0000.0001)   set mate pointer for diag #   118  DFyE_TH  , Parms: VV      MR , mate:   117
+(PID.TID 0000.0001)   set mate pointer for diag #   114  ADVx_TH  , Parms: UU      MR , mate:   115
+(PID.TID 0000.0001)   set mate pointer for diag #   115  ADVy_TH  , Parms: VV      MR , mate:   114
+(PID.TID 0000.0001)   set mate pointer for diag #   124  DFxE_SLT , Parms: UU      MR , mate:   125
+(PID.TID 0000.0001)   set mate pointer for diag #   125  DFyE_SLT , Parms: VV      MR , mate:   124
+(PID.TID 0000.0001)   set mate pointer for diag #   121  ADVx_SLT , Parms: UU      MR , mate:   122
+(PID.TID 0000.0001)   set mate pointer for diag #   122  ADVy_SLT , Parms: VV      MR , mate:   121
 (PID.TID 0000.0001)   set mate pointer for diag #    45  UVELMASS , Parms: UUr     MR , mate:    46
 (PID.TID 0000.0001)   set mate pointer for diag #    46  VVELMASS , Parms: VVr     MR , mate:    45
-(PID.TID 0000.0001)   set mate pointer for diag #   111  ADVx_TH  , Parms: UU      MR , mate:   112
-(PID.TID 0000.0001)   set mate pointer for diag #   112  ADVy_TH  , Parms: VV      MR , mate:   111
-(PID.TID 0000.0001)   set mate pointer for diag #   114  DFxE_TH  , Parms: UU      MR , mate:   115
-(PID.TID 0000.0001)   set mate pointer for diag #   115  DFyE_TH  , Parms: VV      MR , mate:   114
-(PID.TID 0000.0001)   set mate pointer for diag #   118  ADVx_SLT , Parms: UU      MR , mate:   119
-(PID.TID 0000.0001)   set mate pointer for diag #   119  ADVy_SLT , Parms: VV      MR , mate:   118
-(PID.TID 0000.0001)   set mate pointer for diag #   121  DFxE_SLT , Parms: UU      MR , mate:   122
-(PID.TID 0000.0001)   set mate pointer for diag #   122  DFyE_SLT , Parms: VV      MR , mate:   121
-(PID.TID 0000.0001)   set mate pointer for diag #   832  ADVxHEFF , Parms: UU      M1 , mate:   833
-(PID.TID 0000.0001)   set mate pointer for diag #   833  ADVyHEFF , Parms: VV      M1 , mate:   832
-(PID.TID 0000.0001)   set mate pointer for diag #   834  DFxEHEFF , Parms: UU      M1 , mate:   835
-(PID.TID 0000.0001)   set mate pointer for diag #   835  DFyEHEFF , Parms: VV      M1 , mate:   834
-(PID.TID 0000.0001)   set mate pointer for diag #   840  ADVxSNOW , Parms: UU      M1 , mate:   841
-(PID.TID 0000.0001)   set mate pointer for diag #   841  ADVySNOW , Parms: VV      M1 , mate:   840
-(PID.TID 0000.0001)   set mate pointer for diag #   842  DFxESNOW , Parms: UU      M1 , mate:   843
-(PID.TID 0000.0001)   set mate pointer for diag #   843  DFyESNOW , Parms: VV      M1 , mate:   842
-(PID.TID 0000.0001)   set mate pointer for diag #   114  DFxE_TH  , Parms: UU      MR , mate:   115
-(PID.TID 0000.0001)   set mate pointer for diag #   115  DFyE_TH  , Parms: VV      MR , mate:   114
-(PID.TID 0000.0001)   set mate pointer for diag #   111  ADVx_TH  , Parms: UU      MR , mate:   112
-(PID.TID 0000.0001)   set mate pointer for diag #   112  ADVy_TH  , Parms: VV      MR , mate:   111
-(PID.TID 0000.0001)   set mate pointer for diag #   121  DFxE_SLT , Parms: UU      MR , mate:   122
-(PID.TID 0000.0001)   set mate pointer for diag #   122  DFyE_SLT , Parms: VV      MR , mate:   121
-(PID.TID 0000.0001)   set mate pointer for diag #   118  ADVx_SLT , Parms: UU      MR , mate:   119
-(PID.TID 0000.0001)   set mate pointer for diag #   119  ADVy_SLT , Parms: VV      MR , mate:   118
-(PID.TID 0000.0001)   set mate pointer for diag #   635  ADVxTr32 , Parms: UU      MR , mate:   636
-(PID.TID 0000.0001)   set mate pointer for diag #   636  ADVyTr32 , Parms: VV      MR , mate:   635
-(PID.TID 0000.0001)   set mate pointer for diag #   638  DFxETr32 , Parms: UU      MR , mate:   639
-(PID.TID 0000.0001)   set mate pointer for diag #   639  DFyETr32 , Parms: VV      MR , mate:   638
+(PID.TID 0000.0001)   set mate pointer for diag #   114  ADVx_TH  , Parms: UU      MR , mate:   115
+(PID.TID 0000.0001)   set mate pointer for diag #   115  ADVy_TH  , Parms: VV      MR , mate:   114
+(PID.TID 0000.0001)   set mate pointer for diag #   117  DFxE_TH  , Parms: UU      MR , mate:   118
+(PID.TID 0000.0001)   set mate pointer for diag #   118  DFyE_TH  , Parms: VV      MR , mate:   117
+(PID.TID 0000.0001)   set mate pointer for diag #   121  ADVx_SLT , Parms: UU      MR , mate:   122
+(PID.TID 0000.0001)   set mate pointer for diag #   122  ADVy_SLT , Parms: VV      MR , mate:   121
+(PID.TID 0000.0001)   set mate pointer for diag #   124  DFxE_SLT , Parms: UU      MR , mate:   125
+(PID.TID 0000.0001)   set mate pointer for diag #   125  DFyE_SLT , Parms: VV      MR , mate:   124
+(PID.TID 0000.0001)   set mate pointer for diag #   877  ADVxHEFF , Parms: UU      M1 , mate:   878
+(PID.TID 0000.0001)   set mate pointer for diag #   878  ADVyHEFF , Parms: VV      M1 , mate:   877
+(PID.TID 0000.0001)   set mate pointer for diag #   879  DFxEHEFF , Parms: UU      M1 , mate:   880
+(PID.TID 0000.0001)   set mate pointer for diag #   880  DFyEHEFF , Parms: VV      M1 , mate:   879
+(PID.TID 0000.0001)   set mate pointer for diag #   885  ADVxSNOW , Parms: UU      M1 , mate:   886
+(PID.TID 0000.0001)   set mate pointer for diag #   886  ADVySNOW , Parms: VV      M1 , mate:   885
+(PID.TID 0000.0001)   set mate pointer for diag #   887  DFxESNOW , Parms: UU      M1 , mate:   888
+(PID.TID 0000.0001)   set mate pointer for diag #   888  DFyESNOW , Parms: VV      M1 , mate:   887
+(PID.TID 0000.0001)   set mate pointer for diag #   117  DFxE_TH  , Parms: UU      MR , mate:   118
+(PID.TID 0000.0001)   set mate pointer for diag #   118  DFyE_TH  , Parms: VV      MR , mate:   117
+(PID.TID 0000.0001)   set mate pointer for diag #   114  ADVx_TH  , Parms: UU      MR , mate:   115
+(PID.TID 0000.0001)   set mate pointer for diag #   115  ADVy_TH  , Parms: VV      MR , mate:   114
+(PID.TID 0000.0001)   set mate pointer for diag #   124  DFxE_SLT , Parms: UU      MR , mate:   125
+(PID.TID 0000.0001)   set mate pointer for diag #   125  DFyE_SLT , Parms: VV      MR , mate:   124
+(PID.TID 0000.0001)   set mate pointer for diag #   121  ADVx_SLT , Parms: UU      MR , mate:   122
+(PID.TID 0000.0001)   set mate pointer for diag #   122  ADVy_SLT , Parms: VV      MR , mate:   121
+(PID.TID 0000.0001)   set mate pointer for diag #   673  ADVxTr32 , Parms: UU      MR , mate:   674
+(PID.TID 0000.0001)   set mate pointer for diag #   674  ADVyTr32 , Parms: VV      MR , mate:   673
+(PID.TID 0000.0001)   set mate pointer for diag #   676  DFxETr32 , Parms: UU      MR , mate:   677
+(PID.TID 0000.0001)   set mate pointer for diag #   677  DFyETr32 , Parms: VV      MR , mate:   676
 (PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/state_2d_set1
 (PID.TID 0000.0001)  Levels:       1.
 (PID.TID 0000.0001) DIAGNOSTICS_SET_POINTERS: Set levels for Outp.Stream: diags/state_3d_set1
@@ -2374,6 +2391,9 @@
 (PID.TID 0000.0001)                 0.000000000000000E+00
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) viscC2leithD = /* Leith harmonic viscosity factor (on grad(div),non-dim.)*/
+(PID.TID 0000.0001)                 0.000000000000000E+00
+(PID.TID 0000.0001)     ;
+(PID.TID 0000.0001) viscC2LeithQG = /* QG Leith harmonic viscosity factor (non-dim.)*/
 (PID.TID 0000.0001)                 0.000000000000000E+00
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) viscC2smag = /* Smagorinsky harmonic viscosity factor (non-dim.) */
@@ -2641,14 +2661,12 @@
 (PID.TID 0000.0001) useCDscheme =  /* CD scheme on/off flag */
 (PID.TID 0000.0001)                   T
 (PID.TID 0000.0001)     ;
-(PID.TID 0000.0001) useEnergyConservingCoriolis= /* Flx-Form Coriolis scheme flag */
-(PID.TID 0000.0001)                   F
-(PID.TID 0000.0001)     ;
-(PID.TID 0000.0001) useJamartWetPoints= /* Coriolis WetPoints method flag */
-(PID.TID 0000.0001)                   T
-(PID.TID 0000.0001)     ;
-(PID.TID 0000.0001) useJamartMomAdv= /* V.I Non-linear terms Jamart flag */
-(PID.TID 0000.0001)                   F
+(PID.TID 0000.0001) selectCoriScheme= /* Scheme selector for Coriolis-Term */
+(PID.TID 0000.0001)                       1
+(PID.TID 0000.0001)    = 0 : original discretization (simple averaging, no hFac)
+(PID.TID 0000.0001)    = 1 : Wet-point averaging (Jamar & Ozer 1986)
+(PID.TID 0000.0001)    = 2 : hFac weighted average (Angular Mom. conserving)
+(PID.TID 0000.0001)    = 3 : energy conserving scheme using hFac weighted average
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) useAbsVorticity= /* V.I Works with f+zeta in Coriolis */
 (PID.TID 0000.0001)                   F
@@ -2660,6 +2678,9 @@
 (PID.TID 0000.0001)    = 2 : energy conserving scheme (used by Sadourny in JAS 75 paper)
 (PID.TID 0000.0001)    = 3 : energy (general) and enstrophy (2D, nonDiv.) conserving scheme
 (PID.TID 0000.0001)          from Sadourny (Burridge & Haseler, ECMWF Rep.4, 1977)
+(PID.TID 0000.0001)     ;
+(PID.TID 0000.0001) useJamartMomAdv= /* V.I Non-linear terms Jamart flag */
+(PID.TID 0000.0001)                   F
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) upwindVorticity= /* V.I Upwind bias vorticity flag */
 (PID.TID 0000.0001)                   F
@@ -2753,6 +2774,9 @@
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) writeBinaryPrec = /* Precision used for writing binary files */
 (PID.TID 0000.0001)                      32
+(PID.TID 0000.0001)     ;
+(PID.TID 0000.0001) balancePrintMean  =  /* print means for balancing fluxes */
+(PID.TID 0000.0001)                   F
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001)  rwSuffixType =   /* select format of mds file suffix */
 (PID.TID 0000.0001)                       0
@@ -3780,6 +3804,9 @@
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) subMeso_Lmax = /* maximum grid-scale length [m] */
 (PID.TID 0000.0001)                 1.100000000000000E+05
+(PID.TID 0000.0001)     ;
+(PID.TID 0000.0001) GM_useLeithQG = /* if TRUE => add QG Leith viscosity to GMRedi tensor */
+(PID.TID 0000.0001)                   F
 (PID.TID 0000.0001)     ;
 (PID.TID 0000.0001) EXF_CHECK: #define ALLOW_EXF
 (PID.TID 0000.0001) PTRACERS_CHECK: #define ALLOW_PTRACERS
@@ -8111,195 +8138,195 @@
 (PID.TID 0000.0001) // =======================================================
 (PID.TID 0000.0001) %CHECKPOINT         4 ckptA
 (PID.TID 0000.0001)   Seconds in section "ALL                    [THE_MODEL_MAIN]":
-(PID.TID 0000.0001)           User time:   18.516334425425157
-(PID.TID 0000.0001)         System time:  0.34953598910942674
-(PID.TID 0000.0001)     Wall clock time:   18.898102045059204
+(PID.TID 0000.0001)           User time:   18.652152574621141
+(PID.TID 0000.0001)         System time:  0.32050200668163598
+(PID.TID 0000.0001)     Wall clock time:   18.979180812835693
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "INITIALISE_FIXED       [THE_MODEL_MAIN]":
-(PID.TID 0000.0001)           User time:  0.49665700225159526
-(PID.TID 0000.0001)         System time:   3.4007998649030924E-002
-(PID.TID 0000.0001)     Wall clock time:  0.53827404975891113
+(PID.TID 0000.0001)           User time:  0.50167902023531497
+(PID.TID 0000.0001)         System time:   2.7451999951153994E-002
+(PID.TID 0000.0001)     Wall clock time:  0.52944207191467285
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "THE_MAIN_LOOP          [THE_MODEL_MAIN]":
-(PID.TID 0000.0001)           User time:   18.019649714231491
-(PID.TID 0000.0001)         System time:  0.31549400463700294
-(PID.TID 0000.0001)     Wall clock time:   18.359645128250122
+(PID.TID 0000.0001)           User time:   18.150447845458984
+(PID.TID 0000.0001)         System time:  0.29304500669240952
+(PID.TID 0000.0001)     Wall clock time:   18.449714899063110
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "INITIALISE_VARIA    [THE_MAIN_LOOP]":
-(PID.TID 0000.0001)           User time:  0.65240493416786194
-(PID.TID 0000.0001)         System time:   9.1850001364946365E-002
-(PID.TID 0000.0001)     Wall clock time:  0.75816893577575684
+(PID.TID 0000.0001)           User time:  0.64818805456161499
+(PID.TID 0000.0001)         System time:   8.0913998186588287E-002
+(PID.TID 0000.0001)     Wall clock time:  0.72910714149475098
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "MAIN LOOP           [THE_MAIN_LOOP]":
-(PID.TID 0000.0001)           User time:   17.367226958274841
-(PID.TID 0000.0001)         System time:  0.22364200651645660
-(PID.TID 0000.0001)     Wall clock time:   17.601455926895142
+(PID.TID 0000.0001)           User time:   17.502238273620605
+(PID.TID 0000.0001)         System time:  0.21212900429964066
+(PID.TID 0000.0001)     Wall clock time:   17.720587015151978
 (PID.TID 0000.0001)          No. starts:           1
 (PID.TID 0000.0001)           No. stops:           1
 (PID.TID 0000.0001)   Seconds in section "MAIN_DO_LOOP        [THE_MAIN_LOOP]":
-(PID.TID 0000.0001)           User time:   17.367196202278137
-(PID.TID 0000.0001)         System time:  0.22364100813865662
-(PID.TID 0000.0001)     Wall clock time:   17.601424217224121
+(PID.TID 0000.0001)           User time:   17.502210378646851
+(PID.TID 0000.0001)         System time:  0.21212900429964066
+(PID.TID 0000.0001)     Wall clock time:   17.720556259155273
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "FORWARD_STEP        [MAIN_DO_LOOP]":
-(PID.TID 0000.0001)           User time:   17.367150187492371
-(PID.TID 0000.0001)         System time:  0.22363999485969543
-(PID.TID 0000.0001)     Wall clock time:   17.601376056671143
+(PID.TID 0000.0001)           User time:   17.502161383628845
+(PID.TID 0000.0001)         System time:  0.21212599426507950
+(PID.TID 0000.0001)     Wall clock time:   17.720505952835083
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_STATEVARS_DIAGS  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   4.6400427818298340E-002
-(PID.TID 0000.0001)         System time:   4.5698881149291992E-004
-(PID.TID 0000.0001)     Wall clock time:   4.6874284744262695E-002
+(PID.TID 0000.0001)           User time:   4.7422051429748535E-002
+(PID.TID 0000.0001)         System time:   4.1098892688751221E-004
+(PID.TID 0000.0001)     Wall clock time:   4.7843694686889648E-002
 (PID.TID 0000.0001)          No. starts:          12
 (PID.TID 0000.0001)           No. stops:          12
 (PID.TID 0000.0001)   Seconds in section "LOAD_FIELDS_DRIVER  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.12602949142456055
-(PID.TID 0000.0001)         System time:   2.4649947881698608E-003
-(PID.TID 0000.0001)     Wall clock time:  0.12849998474121094
+(PID.TID 0000.0001)           User time:  0.12763595581054688
+(PID.TID 0000.0001)         System time:   1.4969930052757263E-003
+(PID.TID 0000.0001)     Wall clock time:  0.12918114662170410
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "EXF_GETFORCING     [LOAD_FLDS_DRIVER]":
-(PID.TID 0000.0001)           User time:   8.9775562286376953E-002
-(PID.TID 0000.0001)         System time:   2.1630227565765381E-003
-(PID.TID 0000.0001)     Wall clock time:   9.1943025588989258E-002
+(PID.TID 0000.0001)           User time:   9.0975522994995117E-002
+(PID.TID 0000.0001)         System time:   1.2670010328292847E-003
+(PID.TID 0000.0001)     Wall clock time:   9.2270612716674805E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "EXTERNAL_FLDS_LOAD [LOAD_FLDS_DRIVER]":
-(PID.TID 0000.0001)           User time:   4.1294097900390625E-004
-(PID.TID 0000.0001)         System time:   9.0003013610839844E-006
-(PID.TID 0000.0001)     Wall clock time:   4.2200088500976562E-004
+(PID.TID 0000.0001)           User time:   4.1866302490234375E-004
+(PID.TID 0000.0001)         System time:   7.9944729804992676E-006
+(PID.TID 0000.0001)     Wall clock time:   4.2581558227539062E-004
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_ATMOSPHERIC_PHYS [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.3722648620605469E-005
-(PID.TID 0000.0001)         System time:   3.9935111999511719E-006
-(PID.TID 0000.0001)     Wall clock time:   2.9087066650390625E-005
+(PID.TID 0000.0001)           User time:   2.7537345886230469E-005
+(PID.TID 0000.0001)         System time:   2.9951333999633789E-006
+(PID.TID 0000.0001)     Wall clock time:   2.7894973754882812E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_OCEANIC_PHYS     [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.86479496955871582
-(PID.TID 0000.0001)         System time:   8.3070099353790283E-003
-(PID.TID 0000.0001)     Wall clock time:  0.87337112426757812
+(PID.TID 0000.0001)           User time:  0.86853516101837158
+(PID.TID 0000.0001)         System time:   7.7079832553863525E-003
+(PID.TID 0000.0001)     Wall clock time:  0.87634301185607910
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "SEAICE_MODEL    [DO_OCEANIC_PHYS]":
-(PID.TID 0000.0001)           User time:  0.37064015865325928
-(PID.TID 0000.0001)         System time:   2.3500025272369385E-003
-(PID.TID 0000.0001)     Wall clock time:  0.37299799919128418
+(PID.TID 0000.0001)           User time:  0.37498438358306885
+(PID.TID 0000.0001)         System time:   2.2299811244010925E-003
+(PID.TID 0000.0001)     Wall clock time:  0.37728738784790039
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "SEAICE_DYNSOLVER   [SEAICE_MODEL]":
-(PID.TID 0000.0001)           User time:  0.32769298553466797
-(PID.TID 0000.0001)         System time:   8.7100267410278320E-004
-(PID.TID 0000.0001)     Wall clock time:  0.32857203483581543
+(PID.TID 0000.0001)           User time:  0.33187365531921387
+(PID.TID 0000.0001)         System time:   9.6698850393295288E-004
+(PID.TID 0000.0001)     Wall clock time:  0.33291506767272949
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "GGL90_CALC [DO_OCEANIC_PHYS]":
-(PID.TID 0000.0001)           User time:  0.21943044662475586
-(PID.TID 0000.0001)         System time:   4.1440129280090332E-003
-(PID.TID 0000.0001)     Wall clock time:  0.22370815277099609
+(PID.TID 0000.0001)           User time:  0.21612548828125000
+(PID.TID 0000.0001)         System time:   3.9429962635040283E-003
+(PID.TID 0000.0001)     Wall clock time:  0.22007060050964355
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "GCHEM_CALC_TENDENCY [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.4676322937011719E-005
-(PID.TID 0000.0001)         System time:   9.9837779998779297E-007
-(PID.TID 0000.0001)     Wall clock time:   2.5033950805664062E-005
+(PID.TID 0000.0001)           User time:   2.3722648620605469E-005
+(PID.TID 0000.0001)         System time:   1.9967555999755859E-006
+(PID.TID 0000.0001)     Wall clock time:   2.4795532226562500E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DYNAMICS            [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.88074505329132080
-(PID.TID 0000.0001)         System time:   6.4940005540847778E-003
-(PID.TID 0000.0001)     Wall clock time:  0.88725328445434570
+(PID.TID 0000.0001)           User time:  0.90966081619262695
+(PID.TID 0000.0001)         System time:   6.2490031123161316E-003
+(PID.TID 0000.0001)     Wall clock time:  0.91619610786437988
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "UPDATE_R_STAR       [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   1.8723011016845703E-002
-(PID.TID 0000.0001)         System time:   1.4007091522216797E-005
-(PID.TID 0000.0001)     Wall clock time:   1.8745183944702148E-002
+(PID.TID 0000.0001)           User time:   1.8951773643493652E-002
+(PID.TID 0000.0001)         System time:   1.3008713722229004E-005
+(PID.TID 0000.0001)     Wall clock time:   1.8970966339111328E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "UPDATE_CG2D         [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   1.1250615119934082E-002
-(PID.TID 0000.0001)         System time:   4.9918889999389648E-006
-(PID.TID 0000.0001)     Wall clock time:   1.1257886886596680E-002
+(PID.TID 0000.0001)           User time:   1.1328935623168945E-002
+(PID.TID 0000.0001)         System time:   1.0997056961059570E-005
+(PID.TID 0000.0001)     Wall clock time:   1.1340141296386719E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "SOLVE_FOR_PRESSURE  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   5.6219935417175293E-002
-(PID.TID 0000.0001)         System time:   1.4299154281616211E-004
-(PID.TID 0000.0001)     Wall clock time:   5.6368112564086914E-002
+(PID.TID 0000.0001)           User time:   5.6146621704101562E-002
+(PID.TID 0000.0001)         System time:   1.2099742889404297E-004
+(PID.TID 0000.0001)     Wall clock time:   5.6360721588134766E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "MOM_CORRECTION_STEP [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   1.6804337501525879E-002
-(PID.TID 0000.0001)         System time:   9.3996524810791016E-005
-(PID.TID 0000.0001)     Wall clock time:   1.6907215118408203E-002
+(PID.TID 0000.0001)           User time:   1.6230702400207520E-002
+(PID.TID 0000.0001)         System time:   7.9005956649780273E-005
+(PID.TID 0000.0001)     Wall clock time:   1.6311168670654297E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "INTEGR_CONTINUITY   [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   3.7043213844299316E-002
-(PID.TID 0000.0001)         System time:   3.0979514122009277E-005
-(PID.TID 0000.0001)     Wall clock time:   3.7079095840454102E-002
+(PID.TID 0000.0001)           User time:   3.6341071128845215E-002
+(PID.TID 0000.0001)         System time:   1.8200278282165527E-004
+(PID.TID 0000.0001)     Wall clock time:   3.6531448364257812E-002
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "CALC_R_STAR         [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   3.6861896514892578E-003
-(PID.TID 0000.0001)         System time:   1.9997358322143555E-005
-(PID.TID 0000.0001)     Wall clock time:   3.7069320678710938E-003
+(PID.TID 0000.0001)           User time:   3.6628246307373047E-003
+(PID.TID 0000.0001)         System time:   9.9837779998779297E-007
+(PID.TID 0000.0001)     Wall clock time:   3.6649703979492188E-003
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "BLOCKING_EXCHANGES  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   5.7241678237915039E-002
-(PID.TID 0000.0001)         System time:   2.2009015083312988E-005
-(PID.TID 0000.0001)     Wall clock time:   5.7278633117675781E-002
+(PID.TID 0000.0001)           User time:   5.8833122253417969E-002
+(PID.TID 0000.0001)         System time:   1.3977289199829102E-005
+(PID.TID 0000.0001)     Wall clock time:   5.8857202529907227E-002
 (PID.TID 0000.0001)          No. starts:           8
 (PID.TID 0000.0001)           No. stops:           8
 (PID.TID 0000.0001)   Seconds in section "THERMODYNAMICS      [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   13.107766509056091
-(PID.TID 0000.0001)         System time:   1.3538017868995667E-002
-(PID.TID 0000.0001)     Wall clock time:   13.124264001846313
+(PID.TID 0000.0001)           User time:   13.166687726974487
+(PID.TID 0000.0001)         System time:   9.6950083971023560E-003
+(PID.TID 0000.0001)     Wall clock time:   13.178760290145874
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "TRC_CORRECTION_STEP [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.6226043701171875E-005
-(PID.TID 0000.0001)         System time:   0.0000000000000000
-(PID.TID 0000.0001)     Wall clock time:   2.5987625122070312E-005
+(PID.TID 0000.0001)           User time:   2.5272369384765625E-005
+(PID.TID 0000.0001)         System time:   1.9967555999755859E-006
+(PID.TID 0000.0001)     Wall clock time:   2.5033950805664062E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "GCHEM_FORCING_SEP  [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.88297080993652344
-(PID.TID 0000.0001)         System time:   3.7759989500045776E-003
-(PID.TID 0000.0001)     Wall clock time:  0.88675498962402344
+(PID.TID 0000.0001)           User time:  0.89156055450439453
+(PID.TID 0000.0001)         System time:   3.6590099334716797E-003
+(PID.TID 0000.0001)     Wall clock time:  0.89523029327392578
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "MONITOR             [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.16084337234497070
-(PID.TID 0000.0001)         System time:   8.6198747158050537E-004
-(PID.TID 0000.0001)     Wall clock time:  0.16489195823669434
+(PID.TID 0000.0001)           User time:  0.16096925735473633
+(PID.TID 0000.0001)         System time:   2.2098422050476074E-004
+(PID.TID 0000.0001)     Wall clock time:  0.16120433807373047
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_THE_MODEL_IO     [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.89732885360717773
-(PID.TID 0000.0001)         System time:   8.3535015583038330E-002
-(PID.TID 0000.0001)     Wall clock time:  0.98210215568542480
+(PID.TID 0000.0001)           User time:  0.92000293731689453
+(PID.TID 0000.0001)         System time:   7.4873000383377075E-002
+(PID.TID 0000.0001)     Wall clock time:  0.99514698982238770
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "PTRACERS_RESET      [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:   2.8133392333984375E-005
-(PID.TID 0000.0001)         System time:   9.8347663879394531E-007
-(PID.TID 0000.0001)     Wall clock time:   2.5987625122070312E-005
+(PID.TID 0000.0001)           User time:   2.8610229492187500E-005
+(PID.TID 0000.0001)         System time:   9.9837779998779297E-007
+(PID.TID 0000.0001)     Wall clock time:   3.0040740966796875E-005
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001)   Seconds in section "DO_WRITE_PICKUP     [FORWARD_STEP]":
-(PID.TID 0000.0001)           User time:  0.19857215881347656
-(PID.TID 0000.0001)         System time:  0.10373601317405701
-(PID.TID 0000.0001)     Wall clock time:  0.30527925491333008
+(PID.TID 0000.0001)           User time:  0.20745229721069336
+(PID.TID 0000.0001)         System time:  0.10726501047611237
+(PID.TID 0000.0001)     Wall clock time:  0.31780695915222168
 (PID.TID 0000.0001)          No. starts:           4
 (PID.TID 0000.0001)           No. stops:           4
 (PID.TID 0000.0001) // ======================================================
