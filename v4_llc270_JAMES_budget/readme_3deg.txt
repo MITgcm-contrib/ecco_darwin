@@ -33,7 +33,7 @@
  mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output
- diff output.txt ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/results/output_3deg.txt
+ diff <(grep %MON output.txt) <(grep %MON ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/results/output_3deg.txt)
 
 # ============================
 # 4. Build and run MPI executable
