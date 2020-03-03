@@ -171,7 +171,7 @@
    frequency(22) = 2635200.0,
    levels(1,22) = 1.,
    fields(1,22) = 'DICCFLX ','DICTFLX ',
-#                  'DICPCO2 ','EXFapco2',
+                  'DICPCO2 ','EXFapco2',
  
  &
 
