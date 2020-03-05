@@ -54,6 +54,7 @@
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
  mkdir diags
  mv data_mpi data
+ rm data.exch2
  mpirun -np 8 ./mitgcmuv &
 # Monitor run
  tail -f STDOUT.0000 | grep advcfl_W
