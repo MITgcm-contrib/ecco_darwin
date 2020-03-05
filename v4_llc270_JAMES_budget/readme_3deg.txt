@@ -30,6 +30,7 @@
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_darwin/data* .
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_3deg/*data* .
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
+ rm data.exch2
  mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output

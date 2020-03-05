@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code/SIZE.h,v 1.2 2020/02/29 16:36:37 dcarroll Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code/SIZE.h,v 1.3 2020/03/05 01:48:02 dimitri Exp $
 C $Name:  $
 
 C
@@ -66,4 +66,3 @@ C                routine buffers.
 
       integer     nobcs
       parameter ( nobcs = 4 )
-
