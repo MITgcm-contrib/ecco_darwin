@@ -15,10 +15,10 @@
  viscAh=1.E0,
  viscAhGrid=1.E-2,
 #
- diffKhT=1.E1,
  diffKhS=1.E1,
- diffKrT=1.E-5,
+ diffKhT=1.E1,
  diffKrS=1.E-5,
+ diffKrT=1.E-5,
 #
  bottomDragQuadratic = 0.001,
 #when using ggl90
@@ -60,7 +60,7 @@
  useJamartWetPoints=.TRUE.,
  readBinaryPrec=32,
  writeBinaryPrec=32,
- debugLevel=-1,
+ debugLevel=1,
  /
 
 # Elliptic solver parameters
@@ -72,7 +72,7 @@
 # Time stepping parameters
  &PARM03
  nIter0=1,
- endtime=852055200,
+ nTimeSteps=4,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
 #when using the cd scheme:
@@ -91,7 +91,7 @@
 #
  pChkptFreq  =31536000.0,
  chkptFreq   =31536000.0,
- monitorFreq = 43200.0,
+ monitorFreq = 1.0,
  dumpInitAndLast = .FALSE.,
  adjDumpFreq = 31536000.0,
  adjMonitorFreq = 43200.0,

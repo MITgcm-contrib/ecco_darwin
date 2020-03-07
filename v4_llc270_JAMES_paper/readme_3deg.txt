@@ -4,8 +4,8 @@
 # ========
 # 1. Get code
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
- cvs co MITgcm_contrib/ecco_darwin/v4_3deg/data
- cvs co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_3deg/data
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
  cd MITgcm/pkg
  ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
@@ -30,6 +30,7 @@
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/input_darwin/data* .
  cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/input_3deg/*data* .
  ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
+ rm data.exch2
  ./mitgcmuv > output.txt
 # Compare to verification output
  diff <(grep %MON output.txt) <(grep %MON ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/results/output_3deg.txt)
