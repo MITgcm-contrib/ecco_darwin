@@ -3,9 +3,8 @@
 
 # ========
 # 1. Get code
+ git clone https://github.com/MITgcm-contrib/ecco-darwin.git
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
- cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_3deg
- cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
  cd MITgcm/pkg
  ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
