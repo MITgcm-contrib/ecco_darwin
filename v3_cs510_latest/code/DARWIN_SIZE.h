@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v3_cs510_latest/code/DARWIN_SIZE.h,v 1.1 2017/11/28 20:05:48 dimitri Exp $
-C $Name:  $
-
 c DARWIN_SIZE.h 
 c description: Size specification for generalized ecosystem model
 c      Mick Follows, Scott Grant Fall/Winter 2005

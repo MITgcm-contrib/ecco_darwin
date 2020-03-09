@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_forcing.F,v 1.28 2020/01/29 19:33:29 dcarroll Exp $
-C $Name:  $
-
 #include "CPP_OPTIONS.h"
 #include "PTRACERS_OPTIONS.h"
 #include "DARWIN_OPTIONS.h"

@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin/exf_diagnostics_fill.F,v 1.2 2020/03/01 06:24:05 dimitri Exp $
-C $Name:  $
-
 #include "EXF_OPTIONS.h"
 
 CBOP 0

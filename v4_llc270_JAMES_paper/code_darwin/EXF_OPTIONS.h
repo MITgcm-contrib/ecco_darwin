@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code_darwin/EXF_OPTIONS.h,v 1.1 2020/02/24 18:48:12 dcarroll Exp $
-C $Name:  $
-
 CBOP
 C !ROUTINE: EXF_OPTIONS.h
 C !INTERFACE:

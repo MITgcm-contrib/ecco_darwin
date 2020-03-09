@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v5_llc270/code/GMREDI_OPTIONS.h,v 1.1 2019/04/30 00:36:06 dimitri Exp $
-C $Name:  $
-
 C CPP options file for GM/Redi package
 C
 C Use this file for selecting options within the GM/Redi package

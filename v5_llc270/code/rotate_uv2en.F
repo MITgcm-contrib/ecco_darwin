@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v5_llc270/code/rotate_uv2en.F,v 1.1 2019/04/30 00:36:07 dimitri Exp $
-C $Name:  $
-
 #include "CPP_OPTIONS.h"
 
 C--  File rotate_uv2en.F: Routines to handle a vector coordinate system rotation.

@@ -1,7 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/DIAGNOSTICS_SIZE.h,v 1.2 2018/10/04 05:16:14 dimitri Exp $
-C $Name:  $
-
-
 C     Diagnostics Array Dimension
 C     ---------------------------
 C     ndiagMax   :: maximum total number of available diagnostics

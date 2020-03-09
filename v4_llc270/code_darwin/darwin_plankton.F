@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_plankton.F,v 1.9 2020/01/15 02:57:42 dcarroll Exp $
-C $Name:  $
-
 #include "CPP_OPTIONS.h"
 #include "PTRACERS_OPTIONS.h"
 #include "DARWIN_OPTIONS.h"

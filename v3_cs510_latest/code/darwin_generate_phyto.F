@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v3_cs510_latest/code/darwin_generate_phyto.F,v 1.1 2017/11/28 20:05:48 dimitri Exp $
-C $Name:  $
-
 #include "CPP_OPTIONS.h"
 #include "PTRACERS_OPTIONS.h"
 #include "DARWIN_OPTIONS.h"

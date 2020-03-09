@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v5_llc270/code/ctrl_get_gen_rec.F,v 1.1 2019/04/30 00:36:07 dimitri Exp $
-C $Name:  $
-
 #include "CTRL_OPTIONS.h"
 
       subroutine ctrl_get_gen_rec(

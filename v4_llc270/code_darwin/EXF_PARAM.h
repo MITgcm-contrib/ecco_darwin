@@ -1,5 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/EXF_PARAM.h,v 1.1 2017/12/01 19:02:11 dimitri Exp $
-C $Name:  $
 C
 C     ==================================================================
 C     HEADER EXF_PARAM.h

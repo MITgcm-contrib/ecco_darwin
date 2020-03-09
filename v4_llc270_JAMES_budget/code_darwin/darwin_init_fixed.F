@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin/darwin_init_fixed.F,v 1.1 2020/02/29 01:06:09 dcarroll Exp $
-C $Name:  $
-
 #include "CPP_OPTIONS.h"
 #include "PTRACERS_OPTIONS.h"
 #include "DARWIN_OPTIONS.h"

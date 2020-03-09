@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/exf_readparms.F,v 1.2 2018/10/04 05:16:14 dimitri Exp $
-C $Name:  $
-
 #include "EXF_OPTIONS.h"
 
       SUBROUTINE EXF_READPARMS( myThid )

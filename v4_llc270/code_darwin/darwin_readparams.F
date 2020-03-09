@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/darwin_readparams.F,v 1.2 2019/08/26 05:33:09 dcarroll Exp $
-C $Name:  $
-
 #include "DARWIN_OPTIONS.h"
 
 CBOP

@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code/GGL90_OPTIONS.h,v 1.1 2020/02/24 18:48:12 dcarroll Exp $
-C $Name:  $
-
 C     *=============================================================*
 C     | GGL90_OPTIONS.h
 C     | o CPP options file for GGL90 package.

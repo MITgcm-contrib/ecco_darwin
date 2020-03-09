@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/GGL90.h,v 1.2 2019/08/24 13:10:27 dcarroll Exp $
-C $Name:  $
-
 #ifdef ALLOW_GGL90
 
 CBOP

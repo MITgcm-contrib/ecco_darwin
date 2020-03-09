@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/ptracers_advection.F,v 1.2 2018/10/04 05:16:15 dimitri Exp $
-C $Name:  $
-
 #include "PTRACERS_OPTIONS.h"
 #include "GAD_OPTIONS.h"
 

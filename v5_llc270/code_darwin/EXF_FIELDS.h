@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v5_llc270/code_darwin/EXF_FIELDS.h,v 1.1 2020/01/14 18:23:29 dimitri Exp $
-C $Name:  $
-
 C     ==================================================================
 C     HEADER exf_fields
 C     ==================================================================

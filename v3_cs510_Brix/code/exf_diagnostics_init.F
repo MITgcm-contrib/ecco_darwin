@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v3_cs510_Brix/code/exf_diagnostics_init.F,v 1.1 2017/11/28 19:50:42 dimitri Exp $
-C $Name:  $
-
 #include "EXF_OPTIONS.h"
 
 CBOP

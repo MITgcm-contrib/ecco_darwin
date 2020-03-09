@@ -1,5 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v2_cs510_Brix/code/SIZE.h,v 1.3 2018/10/04 21:48:19 dimitri Exp $
-C $Name:  $
 C
 CBOP
 C    !ROUTINE: SIZE.h

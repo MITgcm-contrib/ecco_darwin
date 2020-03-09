@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code_3deg/SIZE.h,v 1.1 2020/02/28 14:49:10 dimitri Exp $
-C $Name:  $
-
 C
 CBOP
 C    !ROUTINE: SIZE.h

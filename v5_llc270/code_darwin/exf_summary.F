@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v5_llc270/code_darwin/exf_summary.F,v 1.1 2020/01/14 18:23:30 dimitri Exp $
-C $Name:  $
-
 #include "EXF_OPTIONS.h"
 
 C--  File exf_summary.F: Routines to print out EXF settings

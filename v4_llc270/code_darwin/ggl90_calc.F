@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/ggl90_calc.F,v 1.2 2019/08/24 13:10:27 dcarroll Exp $
-C $Name:  $
-
 #include "GGL90_OPTIONS.h"
 CBOP
 C !ROUTINE: GGL90_CALC

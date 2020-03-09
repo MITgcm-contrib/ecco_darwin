@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v3_cs510_latest/code/DARWIN_OPTIONS.h,v 1.1 2017/11/28 20:05:48 dimitri Exp $
-C $Name:  $
-
 #ifndef DARWIN_OPTIONS_H
 #define DARWIN_OPTIONS_H
 #include "PACKAGES_CONFIG.h"

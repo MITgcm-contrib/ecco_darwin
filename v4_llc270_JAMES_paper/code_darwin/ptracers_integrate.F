@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code_darwin/ptracers_integrate.F,v 1.1 2020/02/24 18:48:13 dcarroll Exp $
-C $Name:  $
-
 #include "PTRACERS_OPTIONS.h"
 #ifdef ALLOW_AUTODIFF
 # include "AUTODIFF_OPTIONS.h"
