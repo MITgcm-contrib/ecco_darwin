@@ -35,3 +35,4 @@ Example:
   - delete pickup_dic.0000000001.data so that it does not get used for
     initialization because of above changes
 
+test from hzh@pfe
