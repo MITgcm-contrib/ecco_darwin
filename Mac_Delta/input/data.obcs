@@ -1,0 +1,34 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jsouth =   720*1,
+ OB_Iwest  =  1080*1,
+#
+ useOBCSprescribe=.TRUE.,
+#
+ OBSsFile='OBSs_Mac_720x1080.bin',
+ OBStFile='OBSt_Mac_720x1080.bin',
+ OBSuFile='OBSu_Mac_720x1080.bin',
+ OBSvFile='OBSv_Mac_720x1080.bin',
+#
+ OBWsFile='OBWs_Mac_720x1080.bin',
+ OBWtFile='OBWt_Mac_720x1080.bin',
+ OBWuFile='OBWu_Mac_720x1080.bin',
+ OBWvFile='OBWv_Mac_720x1080.bin',
+#
+ OBSaFile='OBSa_Mac_720x1080.bin',
+ OBShFile='OBSh_Mac_720x1080.bin',
+ OBSslFile='OBSsl_Mac_720x1080.bin',
+ OBSsnFile='OBSsn_Mac_720x1080.bin',
+ OBSuiceFile='OBSuice_Mac_720x1080.bin',
+ OBSviceFile='OBSvice_Mac_720x1080.bin',
+#
+ OBWaFile='OBWa_Mac_720x1080.bin',
+ OBWhFile='OBWh_Mac_720x1080.bin',
+ OBWslFile='OBWsl_Mac_720x1080.bin',
+ OBWsnFile='OBWsn_Mac_720x1080.bin',
+ OBWuiceFile='OBWuice_Mac_720x1080.bin',
+ OBWviceFile='OBWvice_Mac_720x1080.bin',
+#
+ &

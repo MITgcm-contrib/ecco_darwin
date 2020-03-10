@@ -1,0 +1,21 @@
+
+code/
+	diff from GoM_960
+
++ seaice @packages.conf
+
+by pcolor(hcnew') /mypcolor(dcnew') @look_sst.m
+SIZE.h_FULL 720x1080 /30/30 ==>864 & Nr=80
+OBCS.h	def   West/South 
+	undef East/North
+SEAICE_OPTIONS.h	
+	from MITgcm_contrib/llc_hires/llc_4320/code/SEAICE_OPTIONS.h
+
+input/
+	diff from GoM_960
++ useSEAICE @data.pkg
++ data.seaice from /home6/dmenemen/llc_4320/MITgcm/run_485568/
+  data.exch2 (FULL)
+  data.exf OBCS@W+S
+  data.obcs +SI
+  data +bathy; decrease to NR=80
