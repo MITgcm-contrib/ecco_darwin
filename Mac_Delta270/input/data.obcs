@@ -1,0 +1,32 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jsouth =   46*1,
+ OB_Iwest  =   68*1,
+#
+ useOBCSprescribe=.TRUE.,
+#
+ OBSsFile='OBSs_Mac_46x68.stable',
+ OBStFile='OBSt_Mac_46x68.stable',
+ OBSuFile='OBSu_Mac_46x68.bin',
+ OBSvFile='OBSv_Mac_46x68.bin',
+#
+ OBWsFile='OBWs_Mac_46x68.stable',
+ OBWtFile='OBWt_Mac_46x68.stable',
+ OBWuFile='OBWu_Mac_46x68.balance',
+ OBWvFile='OBWv_Mac_46x68.bin',
+#
+ OBSaFile='OBSa_Mac_46x68.bin',
+ OBShFile='OBSh_Mac_46x68.bin',
+ OBSsnFile='OBSsn_Mac_46x68.bin',
+ OBSuiceFile='OBSuice_Mac_46x68.bin',
+ OBSviceFile='OBSvice_Mac_46x68.bin',
+#
+ OBWaFile='OBWa_Mac_46x68.bin',
+ OBWhFile='OBWh_Mac_46x68.bin',
+ OBWsnFile='OBWsn_Mac_46x68.bin',
+ OBWuiceFile='OBWuice_Mac_46x68.bin',
+ OBWviceFile='OBWvice_Mac_46x68.bin',
+#
+ &
