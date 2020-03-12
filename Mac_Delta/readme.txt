@@ -41,8 +41,8 @@ cd ../run
 mkdir diags
 ln -sf ../build/mitgcmuv .
 cp ../../Mac_Delta/input/*data* .
-ln -sf .../../Mac_Delta/input/EOG* .
-ln -sf .../../Mac_Delta/run_template/* .
+ln -sf ../../Mac_Delta/input/EOG* .
+ln -sf ../../Mac_Delta/run_template/* .
 # Run the job (Running on supercomputer might request sbatch submission)
 mpirun -np 2227 ./mitgcmuv
 
