@@ -1,10 +1,18 @@
 #
 # Mackenzie Delta regional setup based on LLC4320
+# WARNING: Before starting make you have an Earthdata account (Or Create it at: https://urs.earthdata.nasa.gov/users/new)
 
 # ========
 # 1. Get code
 git clone https://github.com/MITgcm/MITgcm.git
-git clone https://github.com/MITgcm-contrib/ecco_darwin.git
+svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/Mac_Delta
+# For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
+# Find it at :https://ecco.jpl.nasa.gov/drive
+wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC4320/Mac_Delta/EOG/
+wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC4320/Mac_Delta/run_template 
+mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC4320/Mac_Delta/run_template Mac_Delta/
+mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC4320/Mac_Delta/EOG/* Mac_Delta/input/
+rm -r ecco.jpl.nasa.gov
 cd MITgcm
 mkdir build run
 
@@ -12,7 +20,7 @@ mkdir build run
 # 2. Build MPI executable
 #    Prerequisite: 1. Get code
 cd build
-cp ../code/* .
+cp ../../Mac_Delta/code/* .
     # On Pleiades follow the instructions below:
     module purge
     module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
@@ -31,9 +39,9 @@ make -j 16
 cd ../run
 mkdir diags
 ln -sf ../build/mitgcmuv .
-cp ../input/*data* .
-ln -sf ../input/EOG* .
-ln -sf ../num_template/* .
+cp ../../Mac_Delta/input/*data* .
+ln -sf .../../Mac_Delta/input/EOG* .
+ln -sf .../../Mac_Delta/run_template/* .
 # Run the job (Running on supercomputer might request sbatch submission)
 mpirun -np 2227 ./mitgcmuv
 
