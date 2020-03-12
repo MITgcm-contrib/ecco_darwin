@@ -21,15 +21,16 @@ mkdir build run
 #    Prerequisite: 1. Get code
 cd build
 cp ../../Mac_Delta/code/* .
+
     # On Pleiades follow the instructions below:
     module purge
     module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-    ../tools/genmake2 -of \
-        ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-        -mo ../../ecco_darwin/Mac_Delta/code
+    ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas -mo ../../Mac_Delta/code
+    
     # On other machine, use the following command with build option file ("-of ..") compatible with your machine
     # Following example works on Computecanada:
     ../tools/genmake2 -mpi -of ../tools/build_options/linux_amd64_ifort+gcc -mo ../../Mac_Delta/code
+    
 make depend
 make -j 16
 
