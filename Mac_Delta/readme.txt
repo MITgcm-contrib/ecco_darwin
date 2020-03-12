@@ -29,7 +29,7 @@ cp ../../Mac_Delta/code/* .
         -mo ../../ecco_darwin/Mac_Delta/code
     # On other machine, use the following command with build option file ("-of ..") compatible with your machine
     # Following example works on Computecanada:
-    ../tools/genmake2 -mpi -of ../tools/build_options/linux_amd64_ifort+gcc -mo ../../ecco_darwin/Mac_Delta/code
+    ../tools/genmake2 -mpi -of ../tools/build_options/linux_amd64_ifort+gcc -mo ../../Mac_Delta/code
 make depend
 make -j 16
 
