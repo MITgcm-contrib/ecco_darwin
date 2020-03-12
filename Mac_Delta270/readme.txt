@@ -1,5 +1,5 @@
-# forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5
-
+# forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/RELEASE/era_xx
+# run_template is availale at https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template
 ==============
 # Build executable for Mac Delta based on llc270 iteration 42 optimized solution
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
