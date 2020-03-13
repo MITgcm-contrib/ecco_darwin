@@ -43,11 +43,13 @@ ln -sf ../build/mitgcmuv .
 cp ../../Mac_Delta/input/*data* .
 ln -sf ../../Mac_Delta/input/EOG* .
 ln -sf ../../Mac_Delta/run_template/* .
-# Run the job (Running on supercomputer might request sbatch submission)
+# Run the job (Running on supercomputer might request sbatch submission, see section 4.)
 mpirun -np 2227 ./mitgcmuv
 
 # ================
-# 4. sbacth request file example (running on computecanada)
+# 4. sbacth request 
+# file example runing on pleiades : see Job_Mac_bro_15
+# file example running on computecanada :
 ------------------------
 #!/bin/bash
 #SBATCH --time=01:00:00
