@@ -78,10 +78,10 @@
 #when using the cd scheme:
 # epsAB_CD = 0.25,
 # tauCD=172800.0,
- deltaTmom   =120.,
- deltaTtracer=120.,
- deltaTfreesurf=120.,
- deltaTClock =120.,
+ deltaTmom   =1200.,
+ deltaTtracer=1200.,
+ deltaTfreesurf=1200.,
+ deltaTClock =1200.,
 #when using ab2:
 # abEps = 0.1,
 #when using ab3:
@@ -91,8 +91,7 @@
 #
  pChkptFreq  =31536000.0,
  chkptFreq   =31536000.0,
-# monitorFreq = 43200.0,
- monitorFreq = 1.0,
+ monitorFreq = 43200.0,
  dumpInitAndLast = .FALSE.,
  adjDumpFreq = 31536000.0,
  adjMonitorFreq = 43200.0,
@@ -114,6 +113,4 @@
  &PARM05
  adTapeDir='tapes',
  bathyFile      ='bathy_46x68_Mac',
- hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',
- hydrogSaltFile ='S_OWPv1_M_eccollc_90x50.bin',
  /
