@@ -26,5 +26,5 @@ ln -sf ../build/mitgcmuv .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/Mac_Delta270/run_template/* .
 cp ../../ecco_darwin/Mac_Delta270/input/* .
-qsub job_Mmac270_Bro
+qsub job_Mac270_Bro
 
