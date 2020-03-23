@@ -43,6 +43,8 @@ ln -sf ../build/mitgcmuv .
 cp ../../Mac_Delta/input/*data* .
 ln -sf ../../Mac_Delta/input/EOG* .
 ln -sf ../../Mac_Delta/run_template/* .
+#above for climate runoff; to apply daily runoff:
+#ln -sf data.exf_daily_runoff data.exf
 # Run the job (Running on supercomputer might request sbatch submission, see section 4.)
 mpirun -np 2227 ./mitgcmuv
 
