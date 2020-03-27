@@ -21,6 +21,11 @@ mkdir build run
 #    Prerequisite: 1. Get code
 cd build
 cp ../../Mac_Delta/code/* .
+-+-+-+-+-+-+-+-
+#It is possible to run a light version (requiring 577 CPU < 2277) following this instructions:
+mv SIZE.h SIZE.h_HCPU
+mv SIZE.h_30FULL SIZE.h
+-+-+-+-+-+-+-+-
 
     # On Pleiades follow the instructions below:
     module purge
@@ -43,10 +48,17 @@ ln -sf ../build/mitgcmuv .
 cp ../../Mac_Delta/input/*data* .
 ln -sf ../../Mac_Delta/input/EOG* .
 ln -sf ../../Mac_Delta/run_template/* .
-#above for climate runoff; to apply daily runoff:
-#ln -sf data.exf_daily_runoff data.exf
+-+-+-+-+-+-+-+-
+#light version above:
+mv data.exch2 data.exch_hcpu
+mv data.exch2_30 data.exch2
+# It is possible to replace climate river runoff by daily river runoff following this instructions:
+ln -sf data.exf_daily_runoff data.exf
+-+-+-+-+-+-+-+-
+
 # Run the job (Running on supercomputer might request sbatch submission, see section 4.)
 mpirun -np 2227 ./mitgcmuv
+(light version run: mpirun -np 577 ./mitgcmuv)
 
 # ================
 # 4. sbacth request 
