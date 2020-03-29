@@ -1,0 +1,137 @@
+########################################################
+# Instructions for running MITgcm in VirtualBox 
+
+# Get latest VirtualBox from https://www.virtualbox.org/wiki/Downloads
+# Note: for a 32-bit operating system get VirtualBox 5.2 from
+#       https://www.virtualbox.org/wiki/Download_Old_Builds_5_2
+
+# Get a Linux distribution ISO image, for example,
+# Lubuntu 18.04 Desktop 64-bit from https://lubuntu.me/downloads
+# Note: for 32-bit VirtualBox, download a 32-bit ISO image, e.g.,
+#       Lubuntu 16.04 32-bit PC (i386) desktop image from
+#       http://cdimage.ubuntu.com/lubuntu/releases/16.04/release/
+
+# Install VirtualBox
+# (see two example installation instructions below)
+
+########################################################
+# Example 1: 1-CPU, 1-GB, 32-bit Lubuntu 16.04 installation
+# Start VirtualBox
+#   New
+#     Name: lubuntu-16.04
+#     Version: Ubuntu (32-bit)
+#     Continue (Next on Windows)
+#     Memory size: 1024 MB
+#     Continue (Next on Windows)
+#     • Create a virtual hard disk now
+#     Create
+#     • VDI (VirtualBox Disk Image)
+#     Continue (Next on Windows)
+#     • Dynamically allocated
+#     Continue (Next on Windows)
+#     File location and size: 10 GB
+#     Create
+#   Settings
+#     Storage
+#       Controller: IDE, Click on circle with green plus
+#       Choose disk: Downloads/lubuntu-16.04.6-desktop-i386.iso
+#       Open, OK
+#     Start
+# English, Return
+# Install Lubuntu, Return
+# English, Continue
+# ✓ Download updates while installing Lubuntu
+# ✓ Install third-party software ...
+# Continue
+# • Erase disk and install Lubuntu
+# Install Now
+# Continue
+# Your City, Continue
+# English (US), English (US), Continue
+# Your name: ..., Continue
+# Restart Now
+# Return
+# Software Updater, Install Now
+# Restart Now...
+# To get a terminal: Menu, System Tools, LXTerminal
+ sudo apt install virtualbox-guest-dkms
+ sudo adduser $USER vboxsf
+ sudo reboot
+
+########################################################
+# Example 2: 4-CPU, 4-GB, 64-bit Lubuntu 18.04 installation
+# Start VirtualBox
+#   New
+#     Name: lubuntu-18.04
+#     Continue
+#     Memory size: 4096 MB
+#     Continue
+#     • Create a virtual hard disk now
+#     Create
+#     • VDI (VirtualBox Disk Image)
+#     Continue
+#     • Dynamically allocated
+#     Continue
+#     File location and size: 32 GB
+#     Create
+#   Settings
+#     General > Advanced
+#       Shared Clipboard: Bidirectional
+#       Drag'n'Drop: Bidirectional
+#     System > Processor
+#       Processor: 4 CPUs
+#     Display > Screen
+#       Video Memory: 128 MB
+#     Storage
+#       Controller: IDE, Click on circle with green plus
+#       Add
+#       Choose disk: Downloads/lubuntu-18.04.3-desktop-amd64.iso
+#       Open
+#       Choose
+#     Shared Folders
+#       Click on folder with green plus
+#       Folder Path: Other
+#       Open
+#       ✓ Auto-mount
+#       OK, OK
+#     Start
+# English, Return
+# Install Lubuntu, Return
+# English, Continue
+# English (US), English (US), Continue
+# • Normal installation
+# ✓ Download updates while installing Lubuntu
+# ✓ Install third-party software ...
+# Continue
+# • Erase disk and install Lubuntu
+# Install Now, ..., Restart Now, ...
+# lubuntu-18.04, Start, Software Updater, Install Now, ...
+# Click on "Devices" then "Insert Guest Additions CD image..."
+# Right-click on VBox_GAs_*, Open in Terminal
+ sudo apt install virtualbox-guest-dkms
+ sudo ./VBoxLinuxAdditions.run
+ sudo adduser $USER vboxsf
+ sudo reboot
+
+
+########################################################
+########################################################
+# Get, compile, and run MITgcm
+
+# Extra packages needed to get and compile MITgcm
+ sudo apt install git
+ sudo apt install gfortran
+
+# Extra package needed for parallel MPI compilation
+ sudo apt install libopenmpi-dev
+
+# Get MITgcm code
+ git clone https://github.com/MITgcm/MITgcm.git
+
+# Run a single-CPU verification experiment
+ cd MITgcm/verification
+ ./testreport -t lab_sea
+
+# Run a parallel MPI verification experiment
+ export MPI_INC_DIR=/usr/include/mpi
+ ./testreport -mpi -t lab_sea
