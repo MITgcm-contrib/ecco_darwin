@@ -20,15 +20,15 @@
 #   New
 #     Name: lubuntu-16.04
 #     Version: Ubuntu (32-bit)
-#     Continue (Next on Windows)
+#     Continue (or Next)
 #     Memory size: 1024 MB
-#     Continue (Next on Windows)
+#     Continue (or Next)
 #     • Create a virtual hard disk now
 #     Create
 #     • VDI (VirtualBox Disk Image)
-#     Continue (Next on Windows)
+#     Continue (or Next)
 #     • Dynamically allocated
-#     Continue (Next on Windows)
+#     Continue (or Next)
 #     File location and size: 10 GB
 #     Create
 #   Settings
