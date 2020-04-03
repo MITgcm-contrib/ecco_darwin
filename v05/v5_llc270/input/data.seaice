@@ -50,6 +50,16 @@
       SEAICE_wetIceAlb_south   = 0.66
       SEAICE_drySnowAlb_south  = 0.84
       SEAICE_wetSnowAlb_south  = 0.7 
+#
+# revert to old defaults before 2018-08-25
+  SEAICEscaleSurfStress = .FALSE.,
+  SEAICEaddSnowMass     = .FALSE.,
+  SEAICE_useMultDimSnow = .FALSE.,
+  SEAICEetaZmethod = 0,
+  SEAICE_Olx       = 0,
+  SEAICE_Oly       = 0,
+  SEAICE_drag      = .002,
+  SEAICE_waterDrag = .00534499514091350826,
  /
 #
  &SEAICE_PARM02

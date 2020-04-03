@@ -1,3 +1,6 @@
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code/CTRL_OPTIONS.h,v 1.1 2017/11/28 22:08:59 dimitri Exp $
+C $Name:  $
+
 CBOP
 C !ROUTINE: CTRL_OPTIONS.h
 C !INTERFACE:

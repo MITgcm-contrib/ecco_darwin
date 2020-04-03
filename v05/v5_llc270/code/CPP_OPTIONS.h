@@ -1,3 +1,6 @@
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code/CPP_OPTIONS.h,v 1.2 2017/12/01 19:02:10 dimitri Exp $
+C $Name:  $
+
 #ifndef CPP_OPTIONS_H
 #define CPP_OPTIONS_H
 
@@ -41,7 +44,7 @@ C o Include/exclude balancing surface forcing relaxation code
 #define ALLOW_BALANCE_RELAX
 
 C o Include/exclude checking for negative salinity
-#define CHECK_SALINITY_FOR_NEGATIVE_VALUES
+#undef CHECK_SALINITY_FOR_NEGATIVE_VALUES
 
 C-- Options to discard parts of the main code:
 

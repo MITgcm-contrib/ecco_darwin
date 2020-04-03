@@ -1,3 +1,6 @@
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code/EXF_OPTIONS.h,v 1.2 2017/12/01 19:02:10 dimitri Exp $
+C $Name:  $
+
 CBOP
 C !ROUTINE: EXF_OPTIONS.h
 C !INTERFACE:
@@ -183,7 +186,7 @@ C        be defined but ALLOW_BULKFORMULAE needs to be undef
 
 C-  Other forcing fields
 #define ALLOW_RUNOFF
-#define ALLOW_RUNOFTEMP
+#undef  ALLOW_RUNOFTEMP
 #undef  ALLOW_SALTFLX
 
 #if (defined (ALLOW_BULKFORMULAE) && defined (ATMOSPHERIC_LOADING))

@@ -1,3 +1,6 @@
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code/DIAG_OPTIONS.h,v 1.1 2017/11/28 22:08:59 dimitri Exp $
+C $Name:  $
+
 #ifndef DIAG_OPTIONS_H
 #define DIAG_OPTIONS_H
 #include "PACKAGES_CONFIG.h"

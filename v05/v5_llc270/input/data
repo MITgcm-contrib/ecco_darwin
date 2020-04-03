@@ -57,12 +57,12 @@
  implicitFreeSurface=.TRUE.,
  exactConserv=.TRUE.,
  useSingleCpuIO=.TRUE.,
- tempAdvScheme=33,
- saltAdvScheme=33,
-# tempVertAdvScheme=3,
-# saltVertAdvScheme=3,
-# tempImplVertAdv=.TRUE.,
-# saltImplVertAdv=.TRUE.,
+ tempAdvScheme=30,
+ saltAdvScheme=30,
+ tempVertAdvScheme=3,
+ saltVertAdvScheme=3,
+ tempImplVertAdv=.TRUE.,
+ saltImplVertAdv=.TRUE.,
  staggerTimeStep=.TRUE.,
  vectorInvariantMomentum=.TRUE.,
 #when using the cd scheme:
@@ -82,7 +82,9 @@
 # Time stepping parameters
  &PARM03
  nIter0=1,
- endtime=473299200,
+ pickupSuff='0000000001',
+ endtime=31622400.,
+# endtime=852055200,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
 #when using the cd scheme:

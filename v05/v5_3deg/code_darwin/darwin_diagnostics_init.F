@@ -1,0 +1,1 @@
+../pkg/darwin/darwin_diagnostics_init.F
