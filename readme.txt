@@ -1,18 +1,25 @@
-v2_cs510_Brix
-Optimized solution described in Brix et al. (2015)
+--regions--
+  --mac_delta--
+    /mac_delta_llc4320: mackenzie delta llc4320 cut-out
+    /mac_delta_llc270: mackenzie delta llc270 cut-out
+  --totten--
 
-v3_cs510_Brix
-Unpublished ECCO-Darwin v3 with linear piston velocity
+--v02--
+  /v2_cs510_brix: optimized solution described in Brix et al. (2015)
 
-v3_cs510_latest
-Same as above with newer (checkpoint66o 2018/01/30) MITgcm code
+--v03--
+  /v3_cs510_Brix: unpublished ECCO-Darwin v3 with linear piston velocity and revised ICs
+  /v3_cs510_latest: Same as above with newer (checkpoint66o 2018/01/30) MITgcm code
 
-v4_llc270
-Optimized solution described in Carroll et al. (submitted 2019)
+--v04--
+  /v4_3deg: 3 degree verification experiment
+  /v4_llc270_devel: test solution with nonlinear dissolution and benthic DIC/ALK fluxes
+  /v4_llc270_JAMES_paper: Carroll et al. 2020 solution
+  /v4_llc270_JAMES_budget: same as above with diagnostics for closing budgets 
 
-v5_llc270
-Inclusion of LOAC (Land-Ocean-Aquatic-Coastal) forcing and
-other improvements
+--v05--
+  /v5_llc270_jra55do: Carroll et al. 2020 solution with daily jra55 DO runoff
+
 
 **Team Development Process**
 
