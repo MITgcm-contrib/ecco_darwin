@@ -148,7 +148,7 @@
    filename(17) = 'diags/state_2d_set2',
 #---
   frequency(18) = -2635200.0,
-   fields(1:2,18) = 'SALT    ','TRAC01  ',
+   fields(1:3,18) = 'SALT    ','TRAC01  ','TRAC06  ',
    timePhase(18)= 0.,
    filename(18) = 'diags/state_3d_snap_set1',
 #---
@@ -171,7 +171,22 @@
    levels(1,22) = 1.,
    fields(1,22) = 'fluxCO2 ','gDICsurf',
                   'surfpCO2',
- 
+#---
+  frequency(23) = 2635200.0,
+   fields(1:8,23) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
+        'DFxETr06','DFyETr06','DFrETr06','DFrITr06',
+   filename(23) = 'diags/fe_physics',
+#---
+  frequency(24) = 2635200.0,
+   fields(1:5,24) = 'C_Fe    ','S_Fe    ','gDAR06  ','sedFe   ',
+                    'freeFe  ',
+   filename(24) = 'diags/fe_darwin_3d', 
+#---
+  frequency(25) = 2635200.0,
+   fields(1,25) = 'sfcSolFe',
+   filename(25) = 'diags/fe_darwin_2d',
+#---
+
  &
 
  /
