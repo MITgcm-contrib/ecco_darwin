@@ -14,7 +14,7 @@ cd build
 
 module purge
 module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-../tools/genmake2 -of ../../ecco_darwin/v05/v5_llc270_jra55do/code/linux_amd64_ifort+mpi_ice_nas \
+../tools/genmake2 -of ../../ecco_darwin/v05/v5_llc270/code/linux_amd64_ifort+mpi_ice_nas \
   -mo '../../ecco_darwin/v05/v5_llc270/code_darwin ../../ecco_darwin/v05/v5_llc270/code'
 make depend
 make -j 16
