@@ -1,3 +1,6 @@
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/PTRACERS_SIZE.h,v 1.1 2017/12/01 19:02:11 dimitri Exp $
+C $Name:  $
+
 #ifdef ALLOW_PTRACERS
 
 CBOP
@@ -13,7 +16,7 @@ C  and is set here (default 1)
 C
 C     Number of tracers
       INTEGER PTRACERS_num
-      PARAMETER(PTRACERS_num = 39 )
+      PARAMETER(PTRACERS_num = 31 )
 
 #ifdef ALLOW_AUTODIFF_TAMC
       INTEGER    iptrkey

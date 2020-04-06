@@ -13,113 +13,142 @@ C    !DESCRIPTION:
 C options for darwin package
 CEOP
 
-cHB ----
-#undef  READ_PAR
-#define USE_QSW
-#define USE_EXFWIND
-#define ALLOW_CARBON
-#define USE_EXFCO2
-cHB -----
-#define MINFE
-#undef  NUT_SUPPLY
-#undef  CONS_SUPP
-#undef  OLD_GRAZE
-#undef  ALLOW_DIAZ
-#undef  ALLOW_DENIT
-#undef  DENIT_RELAX
-#undef  OLD_NSCHEME
-#undef  ALLOW_MUTANTS
-#define PORT_RAND
-#undef  OLDSEED
-#undef  CALC_RATE_TOTALS
+C tracer selection
 
-#undef NOTEMP
-#define TEMP_VERSION 2
-#undef TEMP_RANGE 
+C enable nitrogen quotas for all plankton
+#undef  DARWIN_ALLOW_NQUOTA
 
-#undef TWO_SPECIES_SETUP
-#define NINE_SPECIES_SETUP
+C enable phosphorus quotas for all plankton
+#undef  DARWIN_ALLOW_PQUOTA
 
-#define CALC_RATE_TOTALS
-#define IRON_SED_SOURCE
-#define IRON_SED_SOURCE_VARIABLE
-#define PART_SCAV
+C enable iron quotas for all plankton
+#undef  DARWIN_ALLOW_FEQUOTA
 
-#define  GEIDER
-#undef  OASIM
-#undef  WAVEBANDS
-#define  DYNAMIC_CHL
-#undef  DAR_CALC_ACDOM
-#undef  DAR_RADTRANS
-#undef  DAR_RADTRANS_USE_MODEL_CALENDAR
-C truncation to 2 downward decreasing modes a la Aas
-#undef  DAR_RADTRANS_DECREASING
-C iterative solution
-#undef  DAR_RADTRANS_ITERATIVE
-C use rmus for all components to convert to scalar irradiance
-C (not recommended)
-#undef  DAR_RADTRANS_RMUS_PAR
-C define this to turn of reading of phyto backscattering spectra
-C and revert to fixed backscat ratios darwin_bbphy(nabp) set in data.darwin
-#undef  DAR_NONSPECTRAL_BACKSCATTERING_RATIO
+C enable silica quotas for all plankton
+#undef  DARWIN_ALLOW_SIQUOTA
 
-C Define omegaC-dependent dissolution rate
-C following Naviaux et al. 2019 (Marine Chemistry)
-#undef NAVIAUX_DISSOLUTION
+C enable chlorophyll quotas for all phototrophs
+#define DARWIN_ALLOW_CHLQUOTA
 
-C allow DIC and ALK flux from bottom sediments
-C following Sulpis et al. 2018 (PNAS)
-#undef ALLOW_SED_DISS_FLUX
+C enable a dynamic CDOM tracer
+#undef  DARWIN_ALLOW_CDOM
 
-c allow DIC, ALK, and Ca surface flux
-#undef ALLOW_ADKINS_SURF_FLUX
+C enable air-sea carbon exchange and Alk and O2 tracers
+#define DARWIN_ALLOW_CARBON
 
-C compute CO2 flux budget terms
-#define CO2_FLUX_BUDGET
 
-#undef  RELAX_NUTS
-#undef  FLUX_NUTS
+C optional bits
 
-#undef  CHECK_CONS
-#undef  DAR_DIAG_RSTAR
-#undef  DAR_DIAG_DIVER
-#undef  DAR_DIAG_GROW
-#undef  DAR_DIAG_ACDOM
-#undef  DAR_DIAG_ABSORP
-#undef  DAR_DIAG_SCATTER
-#undef  DAR_DIAG_PART_SCATTER
-#undef  DAR_DIAG_IRR
+C enable denitrification code
+#undef  DARWIN_ALLOW_DENIT
 
-C diagnostic chlorophyll
-#undef  DAR_DIAG_CHL
+C enable separate exudation of individual elements
+#undef  DARWIN_ALLOW_EXUDE
 
-C average PAR daily and store previous day
-#undef  ALLOW_PAR_DAY
+C enable old virtualflux code for DIC and Alk
+#undef  ALLOW_OLD_VIRTUALFLUX
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C dependencies
-c if two or nine species setup we don't want specific temperature ranges
-#ifdef  TWO_SPECIES_SETUP
-#undef TEMP_RANGE
-#endif
-#ifdef  NINE_SPECIES_SETUP
-#undef TEMP_RANGE
-#endif
+C reduce nitrate uptake by iron limitation factor
+#undef  DARWIN_NITRATE_FELIMIT
 
-c can use either denit_relax or allow_denit but not both
-#ifdef ALLOW_DENIT
-#undef DENIT_RELAX
-#endif
+C allow organic matter to sink through bottom (sedimentize)
+#define DARWIN_BOTTOM_SINK
 
-#ifdef DAR_DIAG_CHL
-#define ALLOW_PAR_DAY
-#endif
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C overrides
-C if you want to override dependent options, do it here:
-C
-C #define TEMP_RANGE
+C light
+
+C compute average PAR in layer, assuming exponential decay
+C (ignored if ALLOW_RADTRANS)
+#undef  DARWIN_AVPAR
+
+C enable GEIDER light code
+#define DARWIN_ALLOW_GEIDER
+
+C use rho instead of acclimated Chl:C for chlorophyll synthesis
+#undef  DARWIN_GEIDER_RHO_SYNTH
+
+C initialize chl as in darwin2 (if GUD_ALLOW_RADTRANS)
+#define DARWIN_CHL_INIT_LEGACY
+
+C scattering coefficients are per Chlorophyll (if GUD_ALLOW_RADTRANS)
+#undef  DARWIN_SCATTER_CHL
+
+C make diagnostics for instrinsic optical properties available
+#undef  DARWIN_DIAG_IOP
+
+
+C grazing
+
+C for quadratic grazing as in darwin2+quota
+#undef  DARWIN_GRAZING_SWITCH
+
+C compute palat from size ratios
+#undef  DARWIN_ALLOMETRIC_PALAT
+
+C turn off grazing temperature dependence
+#undef  DARWIN_NOZOOTEMP
+
+
+C temperature
+
+C turn off all temperature dependence
+#undef  DARWIN_NOTEMP
+
+C select temperature version: 1, 2 or 3
+#define DARWIN_TEMP_VERSION 2
+
+C restrict phytoplankton growth to a temperature range
+#undef  DARWIN_TEMP_RANGE
+
+
+C iron
+
+C restrict maximum free iron
+#define DARWIN_MINFE
+
+C enable particle scavenging code
+#define DARWIN_PART_SCAV
+
+C enable variable iron sediment source
+#define DARWIN_IRON_SED_SOURCE_VARIABLE
+
+
+C debugging
+
+C turn on debugging output
+#define DARWIN_DEBUG
+
+C compute and print global element totals
+#define DARWIN_ALLOW_CONS
+
+C value for unused traits
+#define DARWIN_UNUSED 0
+
+C fill diagnostics for most tendency terms
+#define DARWIN_DIAG_TENDENCIES
+
+
+C deprecated
+
+C base particle scavenging on POP as in darwin2
+#define DARWIN_PART_SCAV_POP
+
+
+C random trait generation
+
+C assign traits based on random numbers as in darwin2
+#define DARWIN_RANDOM_TRAITS
+
+C set traits for darwin2 2-species setup (requires GUD_RANDOM_TRAITS)
+#undef  DARWIN_TWO_SPECIES_SETUP
+
+C set traits for darwin2 9-species setup (requires GUD_RANDOM_TRAITS)
+#define DARWIN_NINE_SPECIES_SETUP
+
+C enable diazotrophy when using (requires GUD_RANDOM_TRAITS)
+#undef  DARWIN_ALLOW_DIAZ
+
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */
+
