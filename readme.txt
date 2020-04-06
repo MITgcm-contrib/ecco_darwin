@@ -21,7 +21,10 @@
   /v5_llc270_jra55do: Carroll et al. 2020 solution with daily jra55 DO runoff
 
 
-**Team Development Process**
+**Notes**
+v02 to v04 use Darwin 1, v05 uses Darwin 3
+
+**Team Github Guidelines**
 
 When updating ECCO-Darwin code/setup, or anything that may impact ECCO-Darwin: 
 
