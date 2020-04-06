@@ -3,6 +3,7 @@
     /mac_delta_llc4320: mackenzie delta llc4320 cut-out
     /mac_delta_llc270: mackenzie delta llc270 cut-out
   --totten--
+    /
 
 --v02--
   /v2_cs510_brix: optimized solution described in Brix et al. (2015)
@@ -18,11 +19,12 @@
   /v4_llc270_JAMES_budget: same as above with diagnostics for closing budgets 
 
 --v05--
-  /v5_llc270_jra55do: Carroll et al. 2020 solution with daily jra55 DO runoff
-
+  /v5_3deg: 3 degree verification experiment w/ Darwin 3
+  /v5_llc270: Carroll et al. 2020 solution w/ Darwin 3
+  /v5_llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
 
 **Notes**
-v02 to v04 use Darwin 1, v05 uses Darwin 3
+v02 to v04 use Darwin 1, v05 onward uses Darwin 3
 
 **Team Github Guidelines**
 
