@@ -20,7 +20,7 @@ make depend
 make -j 16
 
 ==============
-# 2. Instructions for running ECCO-Darwin v4 with Darwin 3 and JRA55-do for 1992-2018 period
+# 3. Instructions for running ECCO-Darwin v4 with Darwin 3 and JRA55-do for 1992-2018 period
 
 cd ../run
 ln -sf ../build/mitgcmuv .

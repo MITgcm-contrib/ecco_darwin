@@ -1,3 +1,7 @@
+ECCO-Darwin Github Repository
+
+Simulations:
+
 --regions--
   --mac_delta--
     /mac_delta_llc4320: mackenzie delta llc4320 cut-out
@@ -13,13 +17,13 @@
   /v3_cs510_latest: Same as above with newer (checkpoint66o 2018/01/30) MITgcm code
 
 --v04--
-  /v4_3deg: 3 degree verification experiment
+  /v4_3deg: 3 degree verification experiment with budget scripts
   /v4_llc270_devel: test solution with nonlinear dissolution and benthic DIC/ALK fluxes
   /v4_llc270_JAMES_paper: Carroll et al. 2020 solution
   /v4_llc270_JAMES_budget: same as above with diagnostics for closing budgets 
 
 --v05--
-  /v5_3deg: 3 degree verification experiment w/ Darwin 3
+  /v5_3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
   /v5_llc270: Carroll et al. 2020 solution w/ Darwin 3
   /v5_llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
 
