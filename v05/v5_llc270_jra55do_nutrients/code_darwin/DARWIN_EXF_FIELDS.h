@@ -15,22 +15,30 @@ C Requires: SIZE.h
      &    ironfile,
      &    icefile,
      &    windfile,
-     &    pCO2file
-
+     &    pCO2file,
+     &    DOCrunofffile,
+     &    DONrunofffile,
+     &    DOPrunofffile
+     
       CHARACTER*128 PARfile
       CHARACTER*128 ironfile
       CHARACTER*128 icefile
       CHARACTER*128 windfile
       CHARACTER*128 pCO2file
+	  CHARACTER*128 DOCrunofffile
+      CHARACTER*128 DONrunofffile
+      CHARACTER*128 DOPrunofffile
 
       COMMON /darwin_fields_r/
      &    PAR0, PAR1, surfPAR,
      &    iron0, iron1, inputFe,
      &    ice0, ice1, iceFrac,
      &    wind0, wind1, windSpeed,
-     &    pCO20, pCO21, atmospCO2
-
-
+     &    pCO20, pCO21, atmospCO2,
+     &    DOCrunoff0,DOCrunoff1,DOCrunoff,
+     &    DONrunoff0,DONrunoff1,DONrunoff,
+     &    DOPrunoff0,DOPrunoff1,DOPrunoff
+     
       _RL PAR0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL PAR1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL surfPAR(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -50,6 +58,19 @@ C Requires: SIZE.h
       _RL pCO20(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL pCO21(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL atmospCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL DOCrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DOCrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DOCrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL DONrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DONrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DONrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL DOPrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DOPrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DOPrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
 CEOP
 
 #endif /* ALLOW_DARWIN */

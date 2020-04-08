@@ -106,6 +106,48 @@ c--   read forcing fields from files and temporal interpolation
 #endif
      &     mytime, myiter, mythid )
 
+       call exf_set_fld(
+     &     'DOCrunoff', DOCrunofffile, DOCrunoffmask,
+     &     DOCrunoffStartTime, DOCrunoffperiod, DOCrunoffRepCycle,
+     &     darwin_inscal_DOCrunoff,
+     &     DOCrunoff_exfremo_intercept, DOCrunoff_exfremo_slope,
+     &     DOCrunoff, DOCrunoff0, DOCrunoff1,
+#ifdef USE_EXF_INTERPOLATION
+     &     DOCrunoff_lon0, DOCrunoff_lon_inc,
+     &     DOCrunoff_lat0, DOCrunoff_lat_inc,
+     &     DOCrunoff_nlon, DOCrunoff_nlat, xC, yC, 
+     &     DOCrunoff_interpMethod,
+#endif
+     &     mytime, myiter, mythid )
+
+       call exf_set_fld(
+     &     'DONrunoff', DONrunofffile, DONrunoffmask,
+     &     DONrunoffStartTime, DONrunoffperiod, DONrunoffRepCycle,
+     &     darwin_inscal_DONrunoff,
+     &     DONrunoff_exfremo_intercept, DONrunoff_exfremo_slope,
+     &     DONrunoff, DONrunoff0, DONrunoff1,
+#ifdef USE_EXF_INTERPOLATION
+     &     DONrunoff_lon0, DONrunoff_lon_inc,
+     &     DONrunoff_lat0, DONrunoff_lat_inc,
+     &     DONrunoff_nlon, DONrunoff_nlat, xC, yC, 
+     &     DONrunoff_interpMethod,
+#endif
+     &     mytime, myiter, mythid )
+
+       call exf_set_fld(
+     &     'DOPrunoff', DOPrunofffile, DOPrunoffmask,
+     &     DOPrunoffStartTime, DOPrunoffperiod, DOPrunoffRepCycle,
+     &     darwin_inscal_DOPrunoff,
+     &     DOPrunoff_exfremo_intercept, DOPrunoff_exfremo_slope,
+     &     DOPrunoff, DOPrunoff0, DOPrunoff1,
+#ifdef USE_EXF_INTERPOLATION
+     &     DOPrunoff_lon0, DOPrunoff_lon_inc,
+     &     DOPrunoff_lat0, DOPrunoff_lat_inc,
+     &     DOPrunoff_nlon, DOPrunoff_nlat, xC, yC, 
+     &     DOPrunoff_interpMethod,
+#endif
+     &     mytime, myiter, mythid )
+
         _EXCH_XY_RL( surfPAR, myThid )
 
         _EXCH_XY_RL( inputFe, myThid )
@@ -115,6 +157,13 @@ c--   read forcing fields from files and temporal interpolation
         _EXCH_XY_RL( windSpeed, myThid )
 
         _EXCH_XY_RL( atmospCO2, myThid )
+        
+        _EXCH_XY_RL( DOCrunoff, myThid )
+        
+        _EXCH_XY_RL( DONrunoff, myThid )
+        
+        _EXCH_XY_RL( DOPrunoff, myThid )
+        
       ENDIF
 
 #endif /* ALLOW_EXF */

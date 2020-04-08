@@ -53,6 +53,9 @@ C !LOCAL VARIABLES: ====================================================
       LOGICAL darwin_haveIce
       LOGICAL darwin_haveWind
       LOGICAL darwin_havepCO2
+      LOGICAL darwin_haveDOCrunoff
+      LOGICAL darwin_haveDONrunoff
+      LOGICAL darwin_haveDOPrunoff
       INTEGER j, errCount
 
       NAMELIST/darwin_forcing_params/
@@ -118,7 +121,43 @@ C
      &    pCO2_exfremo_intercept,
      &    pCO2_exfremo_slope,
      &    pCO2mask,
-     &    darwin_inscal_pCO2
+     &    darwin_inscal_pCO2,
+C
+     &    DOCrunofffile,
+     &    DOCrunoffperiod,
+     &    DOCrunoffRepCycle,
+     &    DOCrunoffStartTime,
+     &    DOCrunoffstartdate1,
+     &    DOCrunoffstartdate2,
+     &    DOCrunoffconst,
+     &    DOCrunoff_exfremo_intercept,
+     &    DOCrunoff_exfremo_slope,
+     &    DOCrunoffmask,
+     &    darwin_inscal_DOCrunoff,
+C
+     &    DONrunofffile,
+     &    DONrunoffperiod,
+     &    DONrunoffRepCycle,
+     &    DONrunoffStartTime,
+     &    DONrunoffstartdate1,
+     &    DONrunoffstartdate2,
+     &    DONrunoffconst,
+     &    DONrunoff_exfremo_intercept,
+     &    DONrunoff_exfremo_slope,
+     &    DONrunoffmask,
+     &    darwin_inscal_DONrunoff,
+C
+     &    DOPrunofffile,
+     &    DOPrunoffperiod,
+     &    DOPrunoffRepCycle,
+     &    DOPrunoffStartTime,
+     &    DOPrunoffstartdate1,
+     &    DOPrunoffstartdate2,
+     &    DOPrunoffconst,
+     &    DOPrunoff_exfremo_intercept,
+     &    DOPrunoff_exfremo_slope,
+     &    DOPrunoffmask,
+     &    darwin_inscal_DOPrunoff
 
 #ifdef USE_EXF_INTERPOLATION
       NAMELIST/darwin_interp_params/
@@ -161,7 +200,31 @@ C
      &    pCO2_nlat,
      &    pCO2_lon_inc,
      &    pCO2_interpMethod,
-     &    pCO2_lat_inc
+     &    pCO2_lat_inc,
+C
+     &    DOCrunoff_lon0,
+     &    DOCrunoff_lat0,
+     &    DOCrunoff_nlon,
+     &    DOCrunoff_nlat,
+     &    DOCrunoff_lon_inc,
+     &    DOCrunoff_interpMethod,
+     &    DOCrunoff_lat_inc,   
+C
+     &    DONrunoff_lon0,
+     &    DONrunoff_lat0,
+     &    DONrunoff_nlon,
+     &    DONrunoff_nlat,
+     &    DONrunoff_lon_inc,
+     &    DONrunoff_interpMethod,
+     &    DONrunoff_lat_inc,
+C
+     &    DOPrunoff_lon0,
+     &    DOPrunoff_lat0,
+     &    DOPrunoff_nlon,
+     &    DOPrunoff_nlat,
+     &    DOPrunoff_lon_inc,
+     &    DOPrunoff_interpMethod,
+     &    DOPrunoff_lat_inc     
 #endif
 
 C Open and read the data.darwin file
@@ -234,6 +297,45 @@ C Open and read the data.darwin file
 
       darwin_inscal_pCO2    =  1. _d 0
 
+      DOCrunofffile = ' '
+      DOCrunoffperiod             = 0.0 _d 0
+      DOCrunoffRepCycle           = repeatPeriod
+      DOCrunoffStartTime          = UNSET_RL
+      DOCrunoffstartdate1         = 0
+      DOCrunoffstartdate2         = 0
+      DOCrunoffconst              = UNSET_RL
+      DOCrunoff_exfremo_intercept = 0.0 _d 0
+      DOCrunoff_exfremo_slope     = 0.0 _d 0
+      DOCrunoffmask = 'c'
+
+      darwin_inscal_DOCrunoff    =  1. _d 0 
+      
+      DONrunofffile = ' '
+      DONrunoffperiod             = 0.0 _d 0
+      DONrunoffRepCycle           = repeatPeriod
+      DONrunoffStartTime          = UNSET_RL
+      DONrunoffstartdate1         = 0
+      DONrunoffstartdate2         = 0
+      DONrunoffconst              = UNSET_RL
+      DONrunoff_exfremo_intercept = 0.0 _d 0
+      DONrunoff_exfremo_slope     = 0.0 _d 0
+      DONrunoffmask = 'c'
+
+      darwin_inscal_DONrunoff    =  1. _d 0 
+
+      DOPrunofffile = ' '
+      DOPrunoffperiod             = 0.0 _d 0
+      DOPrunoffRepCycle           = repeatPeriod
+      DOPrunoffStartTime          = UNSET_RL
+      DOPrunoffstartdate1         = 0
+      DOPrunoffstartdate2         = 0
+      DOPrunoffconst              = UNSET_RL
+      DOPrunoff_exfremo_intercept = 0.0 _d 0
+      DOPrunoff_exfremo_slope     = 0.0 _d 0
+      DOPrunoffmask = 'c'
+
+      darwin_inscal_DOPrunoff    =  1. _d 0 
+
 #ifdef USE_EXF_INTERPOLATION
       PAR_lon0 = inp_lon0
       PAR_lat0 = inp_lat0
@@ -270,12 +372,36 @@ C Open and read the data.darwin file
       pCO2_lon_inc = inp_dLon
       pCO2_interpMethod  = 1
 
+      DOCrunoff_lon0 = inp_lon0
+      DOCrunoff_lat0 = inp_lat0
+      DOCrunoff_nlon = inp_gNx
+      DOCrunoff_nlat = inp_gNy
+      DOCrunoff_lon_inc = inp_dLon
+      DOCrunoff_interpMethod  = 1
+
+      DONrunoff_lon0 = inp_lon0
+      DONrunoff_lat0 = inp_lat0
+      DONrunoff_nlon = inp_gNx
+      DONrunoff_nlat = inp_gNy
+      DONrunoff_lon_inc = inp_dLon
+      DONrunoff_interpMethod  = 1
+      
+      DOPrunoff_lon0 = inp_lon0
+      DOPrunoff_lat0 = inp_lat0
+      DOPrunoff_nlon = inp_gNx
+      DOPrunoff_nlat = inp_gNy
+      DOPrunoff_lon_inc = inp_dLon
+      DOPrunoff_interpMethod  = 1
+
       DO j=1,MAX_LAT_INC
         PAR_lat_inc(j) = inp_dLat(j)
         iron_lat_inc(j) = inp_dLat(j)
         ice_lat_inc(j) = inp_dLat(j)
         wind_lat_inc(j) = inp_dLat(j)
         pCO2_lat_inc(j) = inp_dLat(j)
+        DOCrunoff_lat_inc(j) = inp_dLat(j)
+        DONrunoff_lat_inc(j) = inp_dLat(j)
+        DOPrunoff_lat_inc(j) = inp_dLat(j)
       ENDDO
 #endif /* USE_EXF_INTERPOLATION */
 
@@ -311,6 +437,21 @@ C set alternate forcing sources
       DARWIN_havepCO2 = pCO2File.NE.' ' .OR. pCO2const.NE.UNSET_RL
       IF (pCO2const.EQ.UNSET_RL) THEN
         pCO2const = 278 _d -6
+      ENDIF
+
+      DARWIN_haveDOCrunoff = DOCrunofffile.NE.' ' .OR. DOCrunoffconst.NE.UNSET_RL
+      IF (DOCrunnoffconst.EQ.UNSET_RL) THEN
+        DOCrunoffconst = 0 _d 0
+      ENDIF
+
+      DARWIN_haveDONrunoff = DONrunofffile.NE.' ' .OR. DONrunoffconst.NE.UNSET_RL
+      IF (DONrunnoffconst.EQ.UNSET_RL) THEN
+        DONrunoffconst = 0 _d 0
+      ENDIF
+
+      DARWIN_haveDOPrunoff = DOPrunofffile.NE.' ' .OR. DOPrunoffconst.NE.UNSET_RL
+      IF (DOPrunnoffconst.EQ.UNSET_RL) THEN
+        DOPrunoffconst = 0 _d 0
       ENDIF
 
       IF (DARWIN_haveSurfPAR .AND. DARWIN_useQsw) THEN
@@ -358,7 +499,7 @@ C set alternate forcing sources
      &    'default pCO2 of ',pCO2const,' atm is used'
         CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
      &                      SQUEEZE_RIGHT, myThid )
-      ENDIF
+      ENDIF      
 #endif
 
 #ifdef ALLOW_RADTRANS
@@ -420,10 +561,31 @@ C     warn if darwin and radtrans ice forcing are different
      &       'useExfYearlyFields AND windRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
-       ENDIF
+       ENDIF    
        IF ( pCO2RepCycle.NE.0. ) THEN
         WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
      &       'useExfYearlyFields AND pCO2RepCycle is not implemented'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+       ENDIF
+      ENDIF
+       IF ( DOCrunoffRepCycle.NE.0. ) THEN
+        WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
+     &       'useExfYearlyFields AND DOCrunoffRepCycle is not implemented'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+       ENDIF
+      ENDIF
+       IF ( DONrunoffRepCycle.NE.0. ) THEN
+        WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
+     &       'useExfYearlyFields AND DONrunoffRepCycle is not implemented'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+       ENDIF
+      ENDIF
+ 	   IF ( DOPrunoffRepCycle.NE.0. ) THEN
+        WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
+     &       'useExfYearlyFields AND DOPrunoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF

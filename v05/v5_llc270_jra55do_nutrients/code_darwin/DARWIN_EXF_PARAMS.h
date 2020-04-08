@@ -15,7 +15,6 @@ C Requires: EXF_INTERP_SIZE.h
      &    darwin_loadFieldsEarly
       LOGICAL darwin_loadFieldsEarly
 
-
 C PAR forcing parameters for exf
 
       _RL PARStartTime
@@ -189,6 +188,111 @@ C pCO2 forcing parameters for exf
       _RL  pCO2_lat0
       _RL  pCO2_lon_inc
       _RL  pCO2_lat_inc(MAX_LAT_INC)
+#endif
+
+C DOC forcing parameters for exf
+
+      _RL DOCrunoffStartTime
+
+      COMMON/darwin_forcing_DOCrunoff_c/
+     &    DOCrunoffmask
+      COMMON/darwin_forcing_DOCrunoff_i/
+     &    DOCrunoffstartdate1, DOCrunoffstartdate2
+      COMMON/darwin_forcing_DOCrunoff_r/
+     &    DOCrunoffStartTime,
+     &    DOCrunoffperiod, DOCrunoffRepCycle, DOCrunoffconst,
+     &    DOCrunoff_exfremo_intercept, DOCrunoff_exfremo_slope,
+     &    darwin_inscal_DOCrunoff
+      CHARACTER*1 DOCrunoffmask
+      INTEGER DOCrunoffstartdate1
+      INTEGER DOCrunoffstartdate2
+      _RL DOCrunoffperiod
+      _RL DOCrunoffRepCycle
+      _RL DOCrunoffconst
+      _RL DOCrunoff_exfremo_intercept
+      _RL DOCrunoff_exfremo_slope
+      _RL darwin_inscal_DOCrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_DOCrunoff_i/
+     &    DOCrunoff_nlon, DOCrunoff_nlat, DOCrunoff_interpMethod
+      COMMON/darwin_interp_DOCrunoff_r/
+     &    DOCrunoff_lon0, DOCrunoff_lat0, DOCrunoff_lon_inc, DOCrunoff_lat_inc
+      INTEGER DOCrunoff_interpMethod, DOCrunoff_nlon, DOCrunoff_nlat
+      _RL  DOCrunoff_lon0
+      _RL  DOCrunoff_lat0
+      _RL  DOCrunoff_lon_inc
+      _RL  DOCrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C DON forcing parameters for exf
+
+      _RL DONrunoffStartTime
+
+      COMMON/darwin_forcing_DONrunoff_c/
+     &    DONrunoffmask
+      COMMON/darwin_forcing_DONrunoff_i/
+     &    DONrunoffstartdate1, DONrunoffstartdate2
+      COMMON/darwin_forcing_DONrunoff_r/
+     &    DONrunoffStartTime,
+     &    DONrunoffperiod, DONrunoffRepCycle, DONrunoffconst,
+     &    DONrunoff_exfremo_intercept, DONrunoff_exfremo_slope,
+     &    darwin_inscal_DONrunoff
+      CHARACTER*1 DONrunoffmask
+      INTEGER DONrunoffstartdate1
+      INTEGER DONrunoffstartdate2
+      _RL DONrunoffperiod
+      _RL DONrunoffRepCycle
+      _RL DONrunoffconst
+      _RL DONrunoff_exfremo_intercept
+      _RL DONrunoff_exfremo_slope
+      _RL darwin_inscal_DONrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_DONrunoff_i/
+     &    DONrunoff_nlon, DONrunoff_nlat, DONrunoff_interpMethod
+      COMMON/darwin_interp_DONrunoff_r/
+     &    DONrunoff_lon0, DONrunoff_lat0, DONrunoff_lon_inc, DONrunoff_lat_inc
+      INTEGER DONrunoff_interpMethod, DONrunoff_nlon, DONrunoff_nlat
+      _RL  DONrunoff_lon0
+      _RL  DONrunoff_lat0
+      _RL  DONrunoff_lon_inc
+      _RL  DONrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C DOP forcing parameters for exf
+
+      _RL DOPrunoffStartTime
+
+      COMMON/darwin_forcing_DOPrunoff_c/
+     &    DOPrunoffmask
+      COMMON/darwin_forcing_DOPrunoff_i/
+     &    DOPrunoffstartdate1, DOPrunoffstartdate2
+      COMMON/darwin_forcing_DOPrunoff_r/
+     &    DOPrunoffStartTime,
+     &    DOPrunoffperiod, DOPrunoffRepCycle, DOPrunoffconst,
+     &    DOPrunoff_exfremo_intercept, DOPrunoff_exfremo_slope,
+     &    darwin_inscal_DOPrunoff
+      CHARACTER*1 DOPrunoffmask
+      INTEGER DOPrunoffstartdate1
+      INTEGER DOPrunoffstartdate2
+      _RL DOPrunoffperiod
+      _RL DOPrunoffRepCycle
+      _RL DOPrunoffconst
+      _RL DOPrunoff_exfremo_intercept
+      _RL DOPrunoff_exfremo_slope
+      _RL darwin_inscal_DOPrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_DOPrunoff_i/
+     &    DOPrunoff_nlon, DOPrunoff_nlat, DOPrunoff_interpMethod
+      COMMON/darwin_interp_DOPrunoff_r/
+     &    DOPrunoff_lon0, DOPrunoff_lat0, DOPrunoff_lon_inc, DOPrunoff_lat_inc
+      INTEGER DOPrunoff_interpMethod, DOPrunoff_nlon, DOPrunoff_nlat
+      _RL  DOPrunoff_lon0
+      _RL  DOPrunoff_lat0
+      _RL  DOPrunoff_lon_inc
+      _RL  DOPrunoff_lat_inc(MAX_LAT_INC)
 #endif
 CEOP
 

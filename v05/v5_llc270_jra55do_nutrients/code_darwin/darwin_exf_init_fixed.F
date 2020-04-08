@@ -95,6 +95,39 @@ C     errCount  :: error counter
      I                           myThid )
       ENDIF
 
+      IF ( DOCrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DOCrunoff',myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I                           'darwin', 'DOCrunoff', DOCrunoffperiod,
+     I                           DOCrunoffstartdate1, DOCrunoffstartdate2,
+     U                           DOCrunoffStartTime, errCount,
+     I                           myThid )
+      ENDIF
+
+      IF ( DONrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DONrunoff',myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I                           'darwin', 'DONrunoff', DONrunoffperiod,
+     I                           DONrunoffstartdate1, DONrunoffstartdate2,
+     U                           DONrunoffStartTime, errCount,
+     I                           myThid )
+      ENDIF
+
+      IF ( DOPrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DOPrunoff',myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I                           'darwin', 'DOPrunoff', DOPrunoffperiod,
+     I                           DOPrunoffstartdate1, DOPrunoffstartdate2,
+     U                           DOPrunoffStartTime, errCount,
+     I                           myThid )
+      ENDIF
+
       IF ( errCount.GE.1 ) THEN
        WRITE(msgBuf,'(A,I3,A)')
      &     'DARWIN_EXF_INIT_FIXED: detected', errCount,' fatal error(s)'
