@@ -1,4 +1,4 @@
-# 3deg Darwin3 verification experiment with volume, salt, salinity, DIC, and FeT budget
+# 3deg Darwin 3 verification experiment with volume, salt, salinity, DIC, and FeT budget
 # diagnostics, initially based on MITgcm/verification/tutorial_global_oce_biogeo
 
 # ========
@@ -56,7 +56,7 @@
  tail -f STDOUT.0000 | grep advcfl_W
 
 # ============================
-# 5. MATLAB code for computing volume, salt, salinity, and DIC budgets
+# 5. MATLAB code for computing volume, salt, salinity, DIC, and Fe budgets
 #    Prerequisite: 4. Build and run MPI executable
 #    Can be executed as soon as 3 or more months of output are available
  cd ../../ecco_darwin/v05/v5_3deg/matlab
