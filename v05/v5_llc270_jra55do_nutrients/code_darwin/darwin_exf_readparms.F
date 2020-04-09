@@ -439,18 +439,21 @@ C set alternate forcing sources
         pCO2const = 278 _d -6
       ENDIF
 
-      DARWIN_haveDOCrunoff = DOCrunofffile.NE.' ' .OR. DOCrunoffconst.NE.UNSET_RL
-      IF (DOCrunnoffconst.EQ.UNSET_RL) THEN
+      DARWIN_haveDOCrunoff = DOCrunofffile.NE.' ' .OR. 
+     & DOCrunoffconst.NE.UNSET_RL
+      IF (DOCrunoffconst.EQ.UNSET_RL) THEN
         DOCrunoffconst = 0 _d 0
       ENDIF
 
-      DARWIN_haveDONrunoff = DONrunofffile.NE.' ' .OR. DONrunoffconst.NE.UNSET_RL
-      IF (DONrunnoffconst.EQ.UNSET_RL) THEN
+      DARWIN_haveDONrunoff = DONrunofffile.NE.' ' .OR. 
+     & DONrunoffconst.NE.UNSET_RL
+      IF (DONrunoffconst.EQ.UNSET_RL) THEN
         DONrunoffconst = 0 _d 0
       ENDIF
 
-      DARWIN_haveDOPrunoff = DOPrunofffile.NE.' ' .OR. DOPrunoffconst.NE.UNSET_RL
-      IF (DOPrunnoffconst.EQ.UNSET_RL) THEN
+      DARWIN_haveDOPrunoff = DOPrunofffile.NE.' ' .OR. 
+     & DOPrunoffconst.NE.UNSET_RL
+      IF (DOPrunoffconst.EQ.UNSET_RL) THEN
         DOPrunoffconst = 0 _d 0
       ENDIF
 
@@ -568,24 +571,24 @@ C     warn if darwin and radtrans ice forcing are different
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF
-      ENDIF
        IF ( DOCrunoffRepCycle.NE.0. ) THEN
         WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
-     &       'useExfYearlyFields AND DOCrunoffRepCycle is not implemented'
+     &   'useExfYearlyFields AND 
+     &   DOCrunoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
-       ENDIF
       ENDIF
        IF ( DONrunoffRepCycle.NE.0. ) THEN
         WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
-     &       'useExfYearlyFields AND DONrunoffRepCycle is not implemented'
+     &   'useExfYearlyFields AND 
+     &   DONrunoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
-       ENDIF
       ENDIF
- 	   IF ( DOPrunoffRepCycle.NE.0. ) THEN
+       IF ( DOPrunoffRepCycle.NE.0. ) THEN
         WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
-     &       'useExfYearlyFields AND DOPrunoffRepCycle is not implemented'
+     &   'useExfYearlyFields AND 
+     &   DOPrunoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF

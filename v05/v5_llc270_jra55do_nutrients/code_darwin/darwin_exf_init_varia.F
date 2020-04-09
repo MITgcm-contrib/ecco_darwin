@@ -95,7 +95,7 @@ C     these load constant forcing fields
       call exf_init_fld (
      &     'DOCrunoff', DOCrunofffile, DOCrunoffmask,
      &     DOCrunoffperiod, darwin_inscal_DOCrunoff, 
-     &.    DOCrunoffconst,
+     &     DOCrunoffconst,
      &     DOCrunoff, DOCrunoff0, DOCrunoff1,
 #ifdef USE_EXF_INTERPOLATION
      &     DOCrunoff_lon0, DOCrunoff_lon_inc,
@@ -108,7 +108,7 @@ C     these load constant forcing fields
       call exf_init_fld (
      &     'DONrunoff', DONrunofffile, DONrunoffmask,
      &     DONrunoffperiod, darwin_inscal_DONrunoff, 
-     &.    DONrunoffconst,
+     &     DONrunoffconst,
      &     DONrunoff, DONrunoff0, DONrunoff1,
 #ifdef USE_EXF_INTERPOLATION
      &     DONrunoff_lon0, DONrunoff_lon_inc,
@@ -121,7 +121,7 @@ C     these load constant forcing fields
       call exf_init_fld (
      &     'DONrunoff', DOPrunofffile, DOPrunoffmask,
      &     DOPrunoffperiod, darwin_inscal_DOPrunoff, 
-     &.    DOPrunoffconst,
+     &     DOPrunoffconst,
      &     DOPrunoff, DOPrunoff0, DOPrunoff1,
 #ifdef USE_EXF_INTERPOLATION
      &     DOPrunoff_lon0, DOPrunoff_lon_inc,

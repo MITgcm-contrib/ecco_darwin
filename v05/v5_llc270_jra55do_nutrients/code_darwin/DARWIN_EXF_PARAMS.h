@@ -217,7 +217,8 @@ C DOC forcing parameters for exf
       COMMON/darwin_interp_DOCrunoff_i/
      &    DOCrunoff_nlon, DOCrunoff_nlat, DOCrunoff_interpMethod
       COMMON/darwin_interp_DOCrunoff_r/
-     &    DOCrunoff_lon0, DOCrunoff_lat0, DOCrunoff_lon_inc, DOCrunoff_lat_inc
+     &    DOCrunoff_lon0, DOCrunoff_lat0, DOCrunoff_lon_inc, 
+     %    DOCrunoff_lat_inc
       INTEGER DOCrunoff_interpMethod, DOCrunoff_nlon, DOCrunoff_nlat
       _RL  DOCrunoff_lon0
       _RL  DOCrunoff_lat0
@@ -252,7 +253,8 @@ C DON forcing parameters for exf
       COMMON/darwin_interp_DONrunoff_i/
      &    DONrunoff_nlon, DONrunoff_nlat, DONrunoff_interpMethod
       COMMON/darwin_interp_DONrunoff_r/
-     &    DONrunoff_lon0, DONrunoff_lat0, DONrunoff_lon_inc, DONrunoff_lat_inc
+     &    DONrunoff_lon0, DONrunoff_lat0, DONrunoff_lon_inc, 
+     &    DONrunoff_lat_inc
       INTEGER DONrunoff_interpMethod, DONrunoff_nlon, DONrunoff_nlat
       _RL  DONrunoff_lon0
       _RL  DONrunoff_lat0
@@ -287,7 +289,8 @@ C DOP forcing parameters for exf
       COMMON/darwin_interp_DOPrunoff_i/
      &    DOPrunoff_nlon, DOPrunoff_nlat, DOPrunoff_interpMethod
       COMMON/darwin_interp_DOPrunoff_r/
-     &    DOPrunoff_lon0, DOPrunoff_lat0, DOPrunoff_lon_inc, DOPrunoff_lat_inc
+     &    DOPrunoff_lon0, DOPrunoff_lat0, DOPrunoff_lon_inc, 
+     &    DOPrunoff_lat_inc
       INTEGER DOPrunoff_interpMethod, DOPrunoff_nlon, DOPrunoff_nlat
       _RL  DOPrunoff_lon0
       _RL  DOPrunoff_lat0

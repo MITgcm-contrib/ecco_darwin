@@ -26,6 +26,7 @@ Simulations:
   /v5_3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
   /v5_llc270: Carroll et al. 2020 solution w/ Darwin 3
   /v5_llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
+  /v5_llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
 
 **Notes**
 v02 to v04 use Darwin 1, v05 onward uses Darwin 3
