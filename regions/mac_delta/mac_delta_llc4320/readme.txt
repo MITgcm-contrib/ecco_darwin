@@ -1,6 +1,6 @@
 #
 # Mackenzie Delta regional setup based on LLC4320
-# WARNING: Before starting make you have an Earthdata account (Or Create it at: https://urs.earthdata.nasa.gov/users/new)
+# WARNING: Before starting make you have an Earthdata account (Or create it at: https://urs.earthdata.nasa.gov/users/new)
 
 # ========
 # 1. Get code

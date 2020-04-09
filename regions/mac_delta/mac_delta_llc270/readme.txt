@@ -1,8 +1,8 @@
 # ========
 #
 # Mackenzie Delta regional setup based on LLC270
-# WARNING: - Before starting make you have an Earthdata account (Or Create it at: https://urs.earthdata.nasa.gov/users/new)
-#          - If you run this setup on your laptop istall a mpi library (as mpich or openmpi)
+# WARNING: - Before starting make you have an Earthdata account (Or create it at: https://urs.earthdata.nasa.gov/users/new)
+#          - If you run this setup on your laptop install a mpi library (as mpich or openmpi)
 #
 # ========
 
