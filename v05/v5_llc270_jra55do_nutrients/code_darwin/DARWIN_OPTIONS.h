@@ -28,13 +28,13 @@ C enable silica quotas for all plankton
 #undef  DARWIN_ALLOW_SIQUOTA
 
 C enable chlorophyll quotas for all phototrophs
-#undef  DARWIN_ALLOW_CHLQUOTA
+#define DARWIN_ALLOW_CHLQUOTA
 
 C enable a dynamic CDOM tracer
 #undef  DARWIN_ALLOW_CDOM
 
 C enable air-sea carbon exchange and Alk and O2 tracers
-#undef  DARWIN_ALLOW_CARBON
+#define DARWIN_ALLOW_CARBON
 
 
 C optional bits
@@ -49,28 +49,28 @@ C enable old virtualflux code for DIC and Alk
 #undef  ALLOW_OLD_VIRTUALFLUX
 
 C reduce nitrate uptake by iron limitation factor
-#undef DARWIN_NITRATE_FELIMIT
+#undef  DARWIN_NITRATE_FELIMIT
 
-C allow organic matter to sink into bottom (sedimentize)
-#undef  DARWIN_BOTTOM_SINK
+C allow organic matter to sink through bottom (sedimentize)
+#define DARWIN_BOTTOM_SINK
 
 
 C light
 
 C compute average PAR in layer, assuming exponential decay
-C (ignored when radtrans package is used)
+C (ignored if ALLOW_RADTRANS)
 #undef  DARWIN_AVPAR
 
 C enable GEIDER light code
-#undef  DARWIN_ALLOW_GEIDER
+#define DARWIN_ALLOW_GEIDER
 
 C use rho instead of acclimated Chl:C for chlorophyll synthesis
 #undef  DARWIN_GEIDER_RHO_SYNTH
 
-C initialize chl as in darwin2 (with radtrans package)
-#undef  DARWIN_CHL_INIT_LEGACY
+C initialize chl as in darwin2 (if GUD_ALLOW_RADTRANS)
+#define DARWIN_CHL_INIT_LEGACY
 
-C scattering coefficients are per Chlorophyll (with radtrans package)
+C scattering coefficients are per Chlorophyll (if GUD_ALLOW_RADTRANS)
 #undef  DARWIN_SCATTER_CHL
 
 C make diagnostics for instrinsic optical properties available
@@ -95,7 +95,7 @@ C turn off all temperature dependence
 #undef  DARWIN_NOTEMP
 
 C select temperature version: 1, 2 or 3
-#define DARWIN_TEMP_VERSION 1
+#define DARWIN_TEMP_VERSION 2
 
 C restrict phytoplankton growth to a temperature range
 #undef  DARWIN_TEMP_RANGE
@@ -107,19 +107,16 @@ C restrict maximum free iron
 #define DARWIN_MINFE
 
 C enable particle scavenging code
-#undef  DARWIN_PART_SCAV
+#define DARWIN_PART_SCAV
 
 C enable variable iron sediment source
-#undef  DARWIN_IRON_SED_SOURCE_VARIABLE
-
-C revert to old variable iron sediment source in terms of POP
-#undef  DARWIN_IRON_SED_SOURCE_POP
+#define DARWIN_IRON_SED_SOURCE_VARIABLE
 
 
 C debugging
 
 C turn on debugging output
-#undef DARWIN_DEBUG
+#define DARWIN_DEBUG
 
 C compute and print global element totals
 #define DARWIN_ALLOW_CONS
@@ -127,27 +124,32 @@ C compute and print global element totals
 C value for unused traits
 #define DARWIN_UNUSED 0
 
+C fill diagnostics for most tendency terms
+#define DARWIN_DIAG_TENDENCIES
+
 
 C deprecated
 
 C base particle scavenging on POP as in darwin2
-#undef  DARWIN_PART_SCAV_POP
+#define DARWIN_PART_SCAV_POP
 
 
 C random trait generation
 
 C assign traits based on random numbers as in darwin2
-#undef  DARWIN_RANDOM_TRAITS
+#define DARWIN_RANDOM_TRAITS
 
-C set traits for darwin2 2-species setup (requires DARWIN_RANDOM_TRAITS)
+C set traits for darwin2 2-species setup (requires GUD_RANDOM_TRAITS)
 #undef  DARWIN_TWO_SPECIES_SETUP
 
-C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
-#undef  DARWIN_NINE_SPECIES_SETUP
+C set traits for darwin2 9-species setup (requires GUD_RANDOM_TRAITS)
+#define DARWIN_NINE_SPECIES_SETUP
 
-C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
+C enable diazotrophy when using (requires GUD_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
+C nutrient runoff
+#define DARWIN_NUTRIENT_RUNOFF
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */

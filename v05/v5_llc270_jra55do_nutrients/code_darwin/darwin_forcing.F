@@ -132,6 +132,17 @@ c      ENDIF
 #endif
       CALL TIMER_STOP ('DARWIN_LIGHT [DARWIN_FORCING]',myThid)
 
+C === nutrient runoff ==================================================
+#ifdef DARWIN_NUTRIENT_RUNOFF
+      DO j=jMin,jMax
+      DO i=iMin,iMax
+        gPtr(i,j,1,iDOC) = gPtr(i,j,1,iDOC) + DOCrunoff(i,j,bi,bj)
+        gPtr(i,j,1,iDON) = gPtr(i,j,1,iDON) + DONrunoff(i,j,bi,bj)
+        gPtr(i,j,1,iDOP)  = gPtr(i,j,1,iDOP) + DOPrunoff(i,j,bi,bj)
+      ENDDO
+      ENDDO
+#endif
+
 C === dic ==============================================================
 #ifdef DARWIN_ALLOW_CARBON
 C carbon air-sea interaction
