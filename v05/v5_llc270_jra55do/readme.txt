@@ -1,3 +1,8 @@
+# iter42/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/iter42/input
+# forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/RELEASE/era_xx
+# LOACv1.4.0_HJ available at https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACv1.4.0_HJ
+# LOACriver_temp available at https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACriver_temp
+
 ==============
 # Build executable for forward-only llc270 iteration 42 optimized solution
 git clone https://github.com/MITgcm-contrib/ecco_darwin
