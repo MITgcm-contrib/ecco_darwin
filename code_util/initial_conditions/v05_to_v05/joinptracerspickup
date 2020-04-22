@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+'''
+Usage: joinptracerspickup <data.ptracers> <indir> <pickup_ptracers>
+
+'''
+import sys
+from os.path import join as pjoin
+import re
+import numpy as np
+
+C2P = 120.
+assgnre = re.compile(r' *([a-z0-9_]*) *(\([^)]*\))? *= *(.*) *,? *$', re.I)
+
+try:
+    ifile, idir, pfile = sys.argv[1:]
+except:
+    sys.exit(__doc__)
+
+num = None
+names = {}
+with open(ifile) as f:
+    for line in f:
+        if line.strip()[:1] in ['&', '/', '#', '']:
+            continue
+
+        m = assgnre.match(line.rstrip())
+        if not m:
+            raise Exception('Cannot parse namelist file')
+
+        name,arg,rhs = m.groups()
+        k = name.lower()
+        rhs = rhs.rstrip(', ')
+        if arg and not arg.strip('()').strip() == ':':
+            args = list(map(int, arg.strip('()').split(':')))
+            if k == 'ptracers_names':
+                assert len(args) == 1
+                names[args[0]] = rhs.strip("'")
+        else:
+            if k == 'ptracers_numinuse':
+                num = int(rhs)
+
+with open(pfile + '.data', 'w') as o:
+    nphy = 0
+    for i in range(1, num+1):
+        name = names[i]
+        iname = pjoin(idir, name)
+        try:
+            p = np.fromfile(iname, '>f8')
+        except IOError:
+            if name[:1] == 'c':
+                i = int(name[1:])
+                iname = pjoin(idir, 'Phy{:02d}'.format(i))
+                try:
+                    p = np.fromfile(iname, '>f8')*C2P
+                except IOError:
+                    iname = pjoin(idir, 'ZOO{}P'.format(i-nphy))
+                    try:
+                        p = np.fromfile(iname, '>f8')*C2P
+                    except IOError:
+                        raise Exception('Cannot find file for ptracer ' + name)
+                else:
+                    nphy = max(nphy, i)
+            else:
+                raise Exception('Cannot find file for ptracer ' + name)
+
+        sys.stderr.write('{0:5d} {1} {2}\n'.format(i, name, iname))
+        p.astype('>f8').tofile(o)
+

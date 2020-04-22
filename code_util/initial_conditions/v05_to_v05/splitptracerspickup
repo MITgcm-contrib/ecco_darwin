@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+'''
+Usage: splitptracerspickup <data.ptracers> <pickup_ptracers> <outdir>
+
+'''
+import sys
+from os.path import join as pjoin
+import re
+from MITgcmutils import rdmds
+
+assgnre = re.compile(r' *([a-z0-9_]*) *(\([^)]*\))? *= *(.*) *,? *$', re.I)
+
+renamemap = {
+    'CDOM01': 'CDOM',
+    }
+
+ifile, pfile, odir = sys.argv[1:]
+
+num = None
+names = {}
+with open(ifile) as f:
+    for line in f:
+        if line.strip()[:1] in ['&', '/', '#', '']:
+            continue
+
+        m = assgnre.match(line.rstrip())
+        if not m:
+            raise()
+
+        name,arg,rhs = m.groups()
+        k = name.lower()
+        rhs = rhs.rstrip(', ')
+        if arg:
+            args = list(map(int, arg.strip('()').split(':')))
+            if k == 'ptracers_names':
+                assert len(args) == 1
+                names[args[0]] = rhs.strip("'")
+        else:
+            if k == 'ptracers_numinuse':
+                num = int(rhs)
+
+for i in range(1, num+1):
+    name = names[i]
+    name = renamemap.get(name, name)
+    sys.stderr.write('{0:5d} {1}\n'.format(i, name))
+    p = rdmds(pfile, rec=i-1)
+    p.astype('>f8').tofile(pjoin(odir, name))
+
