@@ -481,7 +481,7 @@ c set Si:P
 cswd %%%%%%%%%%% OCMIP STYLE for other phyto (not diatom or prochl)
         if (np.eq.2.or.np.eq.3.or.np.eq.8) then
 C ECCO-Darwin V4 JAMES
-          R_PICPOC(np) = 0.0419 _d 0
+          R_PICPOC(np) = 0.04245 _d 0
 cBX GF optizm run ag4         R_PICPOC(np) = 0.133 _d 0
         endif
 c set N:P and iron requirement according to diazotroph status

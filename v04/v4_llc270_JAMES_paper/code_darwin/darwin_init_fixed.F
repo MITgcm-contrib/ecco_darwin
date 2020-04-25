@@ -80,7 +80,7 @@ c for chl
 c iron related
 CDC   alpfe=     0.04 _d 0                  !solubility of Fe dust
 C ECCO-Darwin V4 JAMES
-      alpfe=     0.9273 _d 0                  !solubility of Fe dust
+      alpfe=     0.92831 _d 0                  !solubility of Fe dust
       scav=      0.40 _d 0/(360. _d 0*86400. _d 0) !iron chem scavenging rate (s-1)
       ligand_tot=1. _d -3                   !total ligand (uM)
       ligand_stab=2. _d 5                   !ligand stability rate ratio
@@ -98,7 +98,7 @@ c                                            mmol POC/m3/s
 #ifdef PART_SCAV
 cswd  scav_rat=0.005 _d 0 /(86400.0 _d 0)
 C ECCO-Darwin V4 JAMES
-      scav_rat= 9.3208 _d 0 * 0.005 _d 0 /(86400.0 _d 0)
+      scav_rat=10.41124 _d 0 * 0.005 _d 0 /(86400.0 _d 0)
       scav_inter=0.079 _d 0
       scav_exp=0.58 _d 0
 #endif
@@ -123,8 +123,8 @@ c
 #ifndef GEIDER
 c set growth days ...small or big organism?
 C ECCO-Darwin V4 JAMES
-       Smallgrow = 0.6918 _d 0
-       Biggrow   = 0.4226 _d 0
+       Smallgrow = 0.66098 _d 0
+       Biggrow   = 0.43148 _d 0
        Smallgrowrange = 0. _d 0
        Biggrowrange = 0. _d 0
        diaz_growfac = 2. _d 0
@@ -158,8 +158,8 @@ cswd   smallkinhib =     6.0 _d 0   ! 2.0 _d 0
 c for Pcm -- should be growth rates, but using old variables
 c note these are in terms of days - converted to 1/s later
 C ECCO-Darwin V4 JAMES
-       Smallgrow = 0.6918 _d 0
-       Biggrow   = 0.4226 _d 0
+       Smallgrow = 0.66098 _d 0
+       Biggrow   = 0.43148 _d 0
        Smallgrowrange = 0. _d 0
        Biggrowrange = 0. _d 0
        diaz_growfac = 2. _d 0
@@ -269,7 +269,7 @@ c set palatibility
 c set palatibilty diatom factor
 cswd   diatomgraz = 0.7 _d 0
 C ECCO-Darwin V4 JAMES
-       diatomgraz = 0.8456 _d 0
+       diatomgraz = 0.83003 _d 0
 cswd   coccograz = 0.6 _d 0
        coccograz = 0.85 _d 0
 cswd   olargegraz = 1.0 _d 0
