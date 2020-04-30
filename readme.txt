@@ -19,7 +19,7 @@ Simulations:
 --v04--
   /v4_3deg: 3 degree verification experiment with budget scripts
   /v4_llc270_devel: test solution with nonlinear dissolution and benthic DIC/ALK fluxes
-  /v4_llc270_JAMES_paper: Carroll et al. 2020 solution
+  /v4_llc270_JAMES_paper: Carroll et al. 2020 (JAMES) solution
   /v4_llc270_JAMES_budget: same as above with diagnostics for closing budgets 
 
 --v05--
