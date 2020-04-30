@@ -72,7 +72,7 @@ mpirun -np 2227 ./mitgcmuv
 #SBATCH --ntasks-per-node=40
 #SBATCH --mem=0
 #SBATCH --output=Job_%j.out
-#SBATCH --mail-user=clement.bertin1@univ-lr.fr
+#SBATCH --mail-user=email-adress
 #SBATCH --mail-type=ALL
 
 mpirun -np 2227 ./mitgcmuv
