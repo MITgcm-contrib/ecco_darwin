@@ -63,8 +63,3 @@ ln -sf ../build/mitgcmuv .
   cp ../../Mac_Delta270/input/* .
   mpirun -np 4 ./mitgcmuv &
  ---------------
-
-# To enable diagnostics outputs follow intructions below:
-  vi data.pkg + uncomment "useDiagnostics=.TRUE.," line
-  mv data.diagnostics data.diagnostics_ecco270
-  mv data.diagnostics_ctrl data.diagnostics
