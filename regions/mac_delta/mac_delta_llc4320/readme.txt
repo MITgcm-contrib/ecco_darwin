@@ -5,7 +5,7 @@
 # ========
 # 1. Get code
 git clone https://github.com/MITgcm/MITgcm.git
-svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/Mac_Delta
+svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/mac_delta_llc4320
 # For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
 # Find it at :https://ecco.jpl.nasa.gov/drive
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC4320/Mac_Delta/EOG/
