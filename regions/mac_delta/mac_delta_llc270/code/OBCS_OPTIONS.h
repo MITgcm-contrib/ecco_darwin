@@ -32,7 +32,7 @@ C Allow sponge layer treatment of open boundary conditions
 #undef ALLOW_OBCS_SPONGE
 
 C Include hooks to sponge layer treatment of pkg/seaice variables
-#undef ALLOW_OBCS_SEAICE_SPONGE
+#define ALLOW_OBCS_SEAICE_SPONGE
 
 C balance barotropic velocity
 #undef ALLOW_OBCS_BALANCE
