@@ -15,8 +15,8 @@ svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_del
 # Find it at :https://ecco.jpl.nasa.gov/drive
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/RELEASE/era_xx
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template
-mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template Mac_Delta270/
-mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/RELEASE/era_xx Mac_Delta270/
+mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template mac_delta_llc270/
+mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/RELEASE/era_xx mac_delta_llc270/
 rm -r ecco.jpl.nasa.gov
 
 # ================
@@ -31,15 +31,14 @@ cd build
    module purge
    module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
    ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-   -mo ../../ecco_darwin/Mac_Delta270/code
+   -mo ../../mac_delta_llc270/code
    make depend
    make -j 16
  
  > On a laptop follow instructions below:
    export MPI_INC_DIR=PATH_TO_MPI_ENVIRONMENT_VARIABLE 
    # (path example on macintosh using homebrew: "/usr/local/opt/mpich/bin")
-   cp ../../Mac_Delta270/code/SIZE.h
-   ../tools/genmake2 -mpi -mo ../../Mac_Delta270/code
+   ../tools/genmake2 -mpi -mo ../../mac_delta_llc270/code
    make depend
    make -j 4
 
@@ -55,11 +54,11 @@ ln -sf ../build/mitgcmuv .
 > On Pleiades:
   ln -sf /nobackup/hzhang1/forcing/era_xx .
   ln -sf /nobackup/hzhang1/pub/Mac_Delta270/run_template/* .
-  cp ../../Mac_Delta270/input/* .
+  cp ../../mac_delta_llc270/input/* .
   qsub job_Mac270_Bro
 > On laptop:
-  ln -sf ../../Mac_Delta270/era_xx .
-  ln -sf ../../Mac_Delta270/run_template/* .
-  cp ../../Mac_Delta270/input/* .
+  ln -sf ../../mac_delta_llc270/era_xx .
+  ln -sf ../../mac_delta_llc270/run_template/* .
+  cp ../../mac_delta_llc270/input/* .
   mpirun -np 4 ./mitgcmuv &
  ---------------
