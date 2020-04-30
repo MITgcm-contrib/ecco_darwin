@@ -8,6 +8,6 @@
  useCTRL  = .TRUE.,
  useSMOOTH= .TRUE.,
  useSALT_PlUME=.TRUE.,
-# useDiagnostics=.TRUE.,
+ useDiagnostics=.TRUE.,
  useOBCS  = .TRUE.,
  /
