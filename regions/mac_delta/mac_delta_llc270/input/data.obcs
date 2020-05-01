@@ -5,6 +5,7 @@
  OB_Jsouth =   46*1,
  OB_Iwest  =   68*1,
 #
+ useSeaiceSponge =.TRUE.,
  useOBCSprescribe=.TRUE.,
 #
  OBSsFile='OBSs_Mac_46x68.stable',
@@ -30,3 +31,12 @@
  OBWviceFile='OBWvice_Mac_46x68.bin',
 #
  &
+# Sponge layer parameters
+ &OBCS_PARM05
+  seaiceSpongeThickness = 5,
+  Arelaxobcsinner = 432000.0,
+  Arelaxobcsbound = 86400.0,
+  Hrelaxobcsinner = 432000.0,
+  Hrelaxobcsbound = 86400.0,
+ &
+
