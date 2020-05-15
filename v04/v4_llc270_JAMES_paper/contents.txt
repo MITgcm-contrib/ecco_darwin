@@ -12,7 +12,7 @@ Instructions for llc270 ECCO-Darwin simulation:
    input_darwin
 
 Instructions for llc270 ECCO-Darwin Green's Functions:
-   readme/readme_greens_functions.text 
+   readme/greens_functions/greens_functions_instructions.txt
 
 Instructions for llc270 ECCO-Darwin verification experiment:
    readme/readme_ecco_darwin_verification.txt
