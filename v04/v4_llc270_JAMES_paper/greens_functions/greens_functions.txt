@@ -1,1 +1,10 @@
-Green's Functions
+Instructions for Carroll et al. 2020 (JAMES) Green's Functions
+
+To adjust model parameters:
+
+Iron dust solubility: variable alpfe on L83 in code_darwin/darwin_init_fixed.F  
+Iron scavenging rate: variable scav_rat on L101 in code_darwin/darwin_init_fixed.F  
+Small phytoplankton growth rate: variable Smallgrow on L161 in code_darwin/darwin_init_fixed.F  
+Large phytoplankton growth rate: variable Biggrow on L161 in code_darwin/darwin_init_fixed.F 
+Diatom palatability: variable diatomgraz on L272 in code_darwin/darwin_init_fixed.F  
+PIC/POC ratio: variable R_PICPOC on L484 in code_darwin/darwin_generate_phyto.F
