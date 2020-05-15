@@ -1,8 +1,9 @@
 Instructions for Carroll et al. 2020 (JAMES) Green's Functions Experiments
 
+
 **Initial Condition Experiments**
 
-Initial conditions for Experiments #2–11 (Table 1) and Experiments #L1–4 (Table S1)
+Initial biogeochemical conditions for Experiments #2–11 (Table 1) and Experiments #L1–4 (Table S1)
 are located at the ECCO Data Portal, https://data.nas.nasa.gov/ecco/
 
 under:
@@ -11,8 +12,12 @@ eccodata/llc_270/ecco_darwin_v4/input/darwin_initial_conditions
 
 **Parameter Sensitivity Experiments**
 
+For Experiment #18 (optimized simulation), use the values in code_darwin/
 For Experiments #2–11 and #L1–L3, use the Brix et al. (2015) parameter values shown in Table 1. 
-For Experiments #12–17 and #L4, adjust parameters under:
+
+For Experiments #12–17 and #L4, adjust parameters below to Brix et al. (2015) values 
++ the perturbation listed in the experiment description 
+(Table 1 column B, and Table S1 2nd column):
 
 Iron dust solubility: variable alpfe on L83 in code_darwin/darwin_init_fixed.F  
 Iron scavenging rate: variable scav_rat on L101 in code_darwin/darwin_init_fixed.F  
