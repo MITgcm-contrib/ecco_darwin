@@ -1,27 +1,38 @@
 Instructions for Carroll et al. 2020 (JAMES) Green's Functions Experiments
 
+**Initial Conditions**
 
-**Initial Condition Experiments**
-
-Initial biogeochemical conditions for Experiments #2–11 (Table 1) and Experiments #L1–4 (Table S1)
+Initial biogeochemical conditions for all simulations listed in Table 1 and S1 
 are located at the ECCO Data Portal, https://data.nas.nasa.gov/ecco/
 
 under:
 eccodata/llc_270/ecco_darwin_v4/input/darwin_initial_conditions
 
+Note: for Experiment #12, use initial biogeochemical condition: pickup_ptracers_experiment_06.data
+Note: for Experiments #13–17, use initial biogeochemical condition: pickup_ptracers_experiment_05.data
 
 **Parameter Sensitivity Experiments**
 
 For Experiment #18 (optimized simulation), use the values in code_darwin/
-For Experiments #2–11 and #L1–L3, use the Brix et al. (2015) parameter values shown in Table 1. 
 
-For Experiments #12–17 and #L4, adjust parameters below to Brix et al. (2015) values 
-+ the perturbation listed in the experiment description 
-(Table 1 column B, and Table S1 2nd column):
+For Experiments #2–11 and #L1–L3, use the Brix et al. (2015) parameter values 
+shown in Table 1 column C and Table S1 2nd column:
 
-Iron dust solubility: variable alpfe on L83 in code_darwin/darwin_init_fixed.F  
-Iron scavenging rate: variable scav_rat on L101 in code_darwin/darwin_init_fixed.F  
-Small phytoplankton growth rate: variable Smallgrow on L161 in code_darwin/darwin_init_fixed.F  
-Large phytoplankton growth rate: variable Biggrow on L161 in code_darwin/darwin_init_fixed.F 
-Diatom palatability: variable diatomgraz on L272 in code_darwin/darwin_init_fixed.F  
-PIC/POC ratio: variable R_PICPOC on L484 in code_darwin/darwin_generate_phyto.F
+Experiment #12, set alpfe = 1 on L83 in code_darwin/darwin_init_fixed.F  
+Experiment #13, set scav_rat = 3 on L101 in code_darwin/darwin_init_fixed.F  
+Experiment #14, set Smallgrow = 0.7 on L161 in code_darwin/darwin_init_fixed.F  
+Experiment #15, set Biggrow = 0.4 on L161 in code_darwin/darwin_init_fixed.F 
+Experiment #16, set diatomgraz 0.85 on L272 in code_darwin/darwin_init_fixed.F  
+Experiment #17, set R_PICPOC = 0.04 on L484 in code_darwin/darwin_generate_phyto.F
+Experiment #L4, set alpfe = 1 on L83 in code_darwin/darwin_init_fixed.F  
+
+For Experiments #12–17 and #L4, adjust the following model parameters to be the 
+perturbed values:
+
+Experiment #12, set alpfe = 0.8 on L83 in code_darwin/darwin_init_fixed.F  
+Experiment #13, set scav_rat = 15 on L101 in code_darwin/darwin_init_fixed.F  
+Experiment #14, set Smallgrow = 0.77 on L161 in code_darwin/darwin_init_fixed.F  
+Experiment #15, set Biggrow = 0.44 on L161 in code_darwin/darwin_init_fixed.F 
+Experiment #16, set diatomgraz 0.95 on L272 in code_darwin/darwin_init_fixed.F  
+Experiment #17, set R_PICPOC = 0.048 on L484 in code_darwin/darwin_generate_phyto.F
+Experiment #L4, set alpfe = 0.8 on L83 in code_darwin/darwin_init_fixed.F  
