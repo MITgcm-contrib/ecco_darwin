@@ -9,5 +9,6 @@
  useSMOOTH= .TRUE.,
  useSALT_PlUME=.TRUE.,
  useDiagnostics=.TRUE.,
- useOBCS  = .TRUE.,
+# useOBCS  = .TRUE.,
+  useRBCS  = .TRUE.,
  /
