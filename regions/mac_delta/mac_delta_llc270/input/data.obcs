@@ -5,7 +5,7 @@
  OB_Jsouth =   46*1,
  OB_Iwest  =   68*1,
 #
- useSeaiceSponge =.TRUE.,
+ useSeaiceSponge =.FALSE.,
  useOBCSprescribe=.TRUE.,
 #
  OBSsFile='OBSs_Mac_46x68.stable',
