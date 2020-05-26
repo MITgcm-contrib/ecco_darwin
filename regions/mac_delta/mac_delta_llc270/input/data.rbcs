@@ -1,6 +1,6 @@
 # RBCS package parameters:
  &RBCS_PARM01
-   rbcsForcingOffset=-1314900.0,
+   rbcsForcingOffset=-2629800.0,
    rbcsForcingPeriod=2629800.0,
  &
 # RBCS for pTracers (read this namelist only when ptracers pkg is compiled)
