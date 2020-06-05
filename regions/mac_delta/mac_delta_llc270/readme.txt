@@ -62,3 +62,13 @@ ln -sf ../build/mitgcmuv .
   cp ../../mac_delta_llc270/input/* .
   mpirun -np 4 ./mitgcmuv &
  ---------------
+
+#MORE exps w/ RBCS
+1) emulate OBCS sponge w/ RBCS:
+   ln -sf Mac_rbcs_mask.bin_OBCS Mac_rbcs_mask.bin
+
+2) apply daily area+heff for OBCS/RBCS:
+   ln -sf data.obcs_daily_rbcs data.obcs
+   ln -sf data.rbcs_daily_rbcs data.rbcs
+   ln -sf data.exf_daily_rbcs  data.exf
+
