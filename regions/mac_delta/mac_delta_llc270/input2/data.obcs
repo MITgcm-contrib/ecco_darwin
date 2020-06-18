@@ -1,0 +1,42 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jsouth =   40*1,
+ OB_Iwest  =   62*1,
+#
+ useSeaiceSponge =.TRUE.,
+ useOBCSprescribe=.TRUE.,
+#
+ OBSsFile='OBSs_Mac_40x62.stable',
+ OBStFile='OBSt_Mac_40x62.stable',
+ OBSuFile='OBSu_Mac_40x62.bin',
+ OBSvFile='OBSv_Mac_40x62.bin',
+#
+ OBWsFile='OBWs_Mac_40x62.stable',
+ OBWtFile='OBWt_Mac_40x62.stable',
+ OBWuFile='OBWu_Mac_40x62.balance',
+ OBWvFile='OBWv_Mac_40x62.bin',
+#
+ OBSaFile='OBSa_Mac_40x62.bin_daily',
+ OBShFile='OBSh_Mac_40x62.bin_daily',
+ OBSsnFile='OBSsn_Mac_40x62.bin_daily',
+ OBSuiceFile='OBSuice_Mac_40x62.bin_daily',
+ OBSviceFile='OBSvice_Mac_40x62.bin_daily',
+#
+ OBWaFile='OBWa_Mac_40x62.bin_daily',
+ OBWhFile='OBWh_Mac_40x62.bin_daily',
+ OBWsnFile='OBWsn_Mac_40x62.bin_daily',
+ OBWuiceFile='OBWuice_Mac_40x62.bin_daily',
+ OBWviceFile='OBWvice_Mac_40x62.bin_daily',
+#
+ &
+# Sponge layer parameters
+ &OBCS_PARM05
+  seaiceSpongeThickness = 5,
+  Arelaxobcsinner = 14400.0,
+  Arelaxobcsbound = 2880.0,
+  Hrelaxobcsinner = 14400.0,
+  Hrelaxobcsbound = 2880.0,
+ &
+

@@ -72,3 +72,8 @@ ln -sf ../build/mitgcmuv .
    ln -sf data.rbcs_daily_rbcs data.rbcs
    ln -sf data.exf_daily_rbcs  data.exf
 
+3)
+#SMALL domain w/o touching Bank Islands
+#use obcs sponge only w/o rbcs
+#replace code  + input  + run_template
+#with    code2 + input2 + run_template2
