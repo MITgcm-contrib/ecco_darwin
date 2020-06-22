@@ -30,9 +30,9 @@
  darwin_chlInitBalanced= .FALSE.,
  darwin_chlIter0= 1,
  darwin_seed= 56,
- ALPFE   =  0.92674,
+ ALPFE   =  0.92831,
  FREEFEMAX       =  1E-4,
- SCAV_RAT        =  5.403472222222222E-7,
+ SCAV_RAT        =   6.02502315E-7,
  DEPTHFESED      =   7000.0,
 # KDOC    =  1.157407407407407E-7,
  KDOP    =  2.314814814814815E-7,
@@ -47,6 +47,10 @@
  SURFALKMIN  =   100.0,
  /
  &DARWIN_RANDOM_PARAMS
+ smallgrow=0.66098,
+ biggrow=0.43148,
+ diatomgraz=0.83003,
+ val_R_PICPOC=0.04245,
  /
  &DARWIN_TRAIT_PARAMS
  /
