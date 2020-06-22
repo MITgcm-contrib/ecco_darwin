@@ -13,10 +13,10 @@ svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_del
 # Pleiades users skip to part 2.
 # For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
 # Find it at :https://ecco.jpl.nasa.gov/drive
-wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/RELEASE/era_xx
+wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template
 mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template mac_delta_llc270/
-mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/RELEASE/era_xx mac_delta_llc270/
+mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx mac_delta_llc270/
 rm -r ecco.jpl.nasa.gov
 
 # ================
