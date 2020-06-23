@@ -33,6 +33,7 @@ ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 cp ../../ecco_darwin/v05/v5_llc270/input/* .
 ln -sf /nobackup/dcarrol2/pickup/v05/* .
+mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
 

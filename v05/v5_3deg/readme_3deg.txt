@@ -48,7 +48,7 @@
  cp ../../ecco_darwin/v05/v5_3deg/input_darwin/data* .
  cp ../../ecco_darwin/v05/v5_3deg/input_3deg/* .
  ln -sf ../../ecco_darwin/v05/v5_3deg/data_darwin/* .
- mkdir diags
+ mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  mv data_mpi data
  rm data.exch2
  mpirun -np 8 ./mitgcmuv &
