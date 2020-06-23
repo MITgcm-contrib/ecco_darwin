@@ -37,7 +37,6 @@ ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACv1.4.0_HJ .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACriver_temp .
 cp ../../ecco_darwin/v05/v5_llc270_jra55do/input/* .
 cp ../../ecco_darwin/v05/v5_llc270_jra55do/input_darwin/* .
-ln -sf /nobackup/ojahn/ecco_darwin/v4_llc270/darwin3/pickup_ptracers_optimized.0000000001.data pickup_ptracers.0000000001.data
-ln -sf /nobackup/ojahn/ecco_darwin/v4_llc270/darwin3/pickup_ptracers_optimized.0000000001.meta pickup_ptracers.0000000001.meta
+ln -sf /nobackup/dcarrol2/pickup/v05/* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
