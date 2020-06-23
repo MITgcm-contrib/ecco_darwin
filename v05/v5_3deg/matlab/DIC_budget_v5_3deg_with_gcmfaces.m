@@ -55,29 +55,24 @@ VVV = mygrid.mskC .* mygrid.hFacC .* mk3D(mygrid.RAC,mygrid.mskC) .* mk3D(mygrid
 
 %%
 
-diagDir = [modelDir 'diags/'];
+diagDir = [modelDir 'diags/budget/'];
 
-filename1 = 'budg2d_zflux_set1';
-filename2 = 'trsp_3d_set3';
-filename3 = 'trsp_3d_set2';
-filename4 = 'state_3d_set1';
-filename5 = 'state_3d_set2';
-filename6 = 'state_2d_set1';
-filename7 = 'state_3d_snap_set1';
-filename8 = 'budg2d_snap_set1';
-filename9 = 'trsp_3d_set1';
-filename10 = 'dic_physics';
-filename11 = 'dic_biology';
+filename1 = 'average_2d';
+filename2 = 'average_velmass_3d';
+filename3 = 'average_salt_3d';
+filename4 = 'average_dic_3d';
+filename5 = 'snap_2d';
+filename6 = 'snap_3d';
 
 %%
 
-fn = dir([diagDir filename6 '.*.data']);
+fn = dir([diagDir filename1 '.*.data']);
 tt = zeros(length(fn),1);
 
 for i = 1:length(tt)
     
     nme = fn(i).name;
-    tt(i) = str2num(nme(end-10:end-5));
+    tt(i) = str2num(nme(end-14:end-5));
     
 end
 
@@ -107,41 +102,39 @@ for timeStep = 1:numFiles
     end
     
     %load two-dimensional time-averaged fields
-    ETAN = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',1));
-    oceFWflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',1));
-    SFLUX = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',5));
-    oceSPflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',7));
-    
+    ETAN = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',1));    
+    oceFWflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',2));
+    SFLUX = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',3));
+    oceSPflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',4));
+    DICTFLX = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',5)) .* mmol_to_mol; %mol m^-3 s^-1
+
     %load three-dimensional time-averaged fields
-    UVELMASS = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',1));
-    VVELMASS = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',2));
-    WVELMASS = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',3));
+    UVELMASS = convert2gcmfaces(rdmds([diagDir filename2],ttAverage,'rec',1));
+    VVELMASS = convert2gcmfaces(rdmds([diagDir filename2],ttAverage,'rec',2));
+    WVELMASS = convert2gcmfaces(rdmds([diagDir filename2],ttAverage,'rec',3));
     
-    SALT = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',2));
-    ADVr_SLT = convert2gcmfaces(rdmds([diagDir filename2],ttAverage,'rec',4));
-    ADVx_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',7));
-    ADVy_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',8));
-    DFrI_SLT = convert2gcmfaces(rdmds([diagDir filename2],ttAverage,'rec',6));
-    DFrE_SLT = convert2gcmfaces(rdmds([diagDir filename2],ttAverage,'rec',5));
+    SALT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',1));
+    ADVx_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',2));
+    ADVy_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',3));
+    ADVr_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',4));
     DFxE_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',5));
     DFyE_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',6));
-    oceSPtnd = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',3));
+    DFrE_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',7));
+    DFrI_SLT = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',8));
+    oceSPtnd = convert2gcmfaces(rdmds([diagDir filename3],ttAverage,'rec',9));
     
-    DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
-    ADVx_DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
-    ADVy_DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
-    ADVr_DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
-    DFxE_DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
-    DFyE_DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
-    DFrE_DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
-    DFrI_DIC = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    
-    DICTFLX = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',8)) .* mmol_to_mol; %mol m^-3 s^-1
-
-    BIO_DIC = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',1)) .* mmol_to_mol;  %mol m^-3 s^-1
+    DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    BIO_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
     
     %%
-    %snapshots
+    %load snapshots
     
     ETAN_SNAP = nan*ones(nx,ny,2);
     SALT_SNAP = nan .* ones(nx,ny,numLevels,2);
@@ -150,21 +143,21 @@ for timeStep = 1:numFiles
     if timeStep == 1
         
         %no pre-initial snapshot
-        ETAN_SNAP(:,:,2) = rdmds([diagDir filename8],tt(1),'rec',1);
-        SALT_SNAP(:,:,:,2) = rdmds([diagDir filename7],tt(1),'rec',1);
-        DIC_SNAP(:,:,:,2) = rdmds([diagDir filename7],tt(1),'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
+        ETAN_SNAP(:,:,2) = rdmds([diagDir filename5],tt(1),'rec',1);
+        SALT_SNAP(:,:,:,2) = rdmds([diagDir filename6],tt(1),'rec',1);
+        DIC_SNAP(:,:,:,2) = rdmds([diagDir filename6],tt(1),'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
         
     elseif timeStep == numFiles %no final snapshot
         
-        ETAN_SNAP(:,:,1) = rdmds([diagDir filename8],tt(timeStep-1),'rec',1);
-        SALT_SNAP(:,:,:,1) = rdmds([diagDir filename7],tt(timeStep-1),'rec',1);
-        DIC_SNAP(:,:,:,1) = rdmds([diagDir filename7],tt(timeStep-1),'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
+        ETAN_SNAP(:,:,1) = rdmds([diagDir filename5],tt(timeStep-1),'rec',1);
+        SALT_SNAP(:,:,:,1) = rdmds([diagDir filename6],tt(timeStep-1),'rec',1);
+        DIC_SNAP(:,:,:,1) = rdmds([diagDir filename6],tt(timeStep-1),'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
         
     else %timeStep~=1 & timeStep~=numFiles
         
-        ETAN_SNAP = rdmds([diagDir filename8],ttSnap,'rec',1);
-        SALT_SNAP = rdmds([diagDir filename7],ttSnap,'rec',1);
-        DIC_SNAP = rdmds([diagDir filename7],ttSnap,'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
+        ETAN_SNAP = rdmds([diagDir filename5],ttSnap,'rec',1);
+        SALT_SNAP = rdmds([diagDir filename6],ttSnap,'rec',1);
+        DIC_SNAP = rdmds([diagDir filename6],ttSnap,'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
         
     end
     
