@@ -29,7 +29,7 @@ make -j 16
 cd ../run
 ln -sf ../build/mitgcmuv .
 ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
+ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_forcing/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 cp ../../ecco_darwin/v05/v5_llc270/input/* .
 ln -sf /nobackup/dcarrol2/pickup/v05/* .
