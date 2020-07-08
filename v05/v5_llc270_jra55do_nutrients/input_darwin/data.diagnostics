@@ -41,11 +41,11 @@
 #---
   frequency(6) = 86400.,
    fields(1,6) = 'pCO2    ',
-   filename(6) = 'diags/daily/pco2',   
+   filename(6) = 'diags/daily/pCO2',   
 #---
   frequency(7) = 86400.,
    fields(1,7) = 'surfpCO2',
-   filename(7) = 'diags/daily/apco2',
+   filename(7) = 'diags/daily/apCO2',
 #--- 
  frequency(8) = 86400.,
    fields(1,8) = 'EXFwspee',
@@ -246,7 +246,7 @@
 #---    
   frequency(69) = 2635200.,
    fields(1,69) = 'surfpCO2',
-   filename(69) = 'diags/monthly/apco2',
+   filename(69) = 'diags/monthly/apCO2',
 #---       
 
 #monthly budget diagnostics   
