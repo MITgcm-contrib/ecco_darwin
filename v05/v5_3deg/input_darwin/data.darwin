@@ -3,10 +3,8 @@
  ironperiod = -12,
  darwin_inscal_iron= 1000.,
 #
- pCO2File = 'apCO2',
- pCO2startdate1 = 19920101,
- pCO2startdate2 = 030000,
- pCO2period     = 86400.0,
+ pCO2File = 'apCO2_2000',
+ pCO2period     = -12.,
 #
  darwin_useEXFwind = .TRUE.,
  darwin_useQsw = .TRUE.,
