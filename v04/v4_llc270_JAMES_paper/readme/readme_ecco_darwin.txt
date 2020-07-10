@@ -7,8 +7,8 @@
 ==============
 # Build executable for ECCO-Darwin version 4
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
- cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
+ git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
  cd MITgcm/pkg
  ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
  cd ..
@@ -17,8 +17,8 @@
  module purge
  module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
  ../tools/genmake2 -of \
-  ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code/linux_amd64_ifort+mpi_ice_nas -mo \
-  '../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code'
+  ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code/linux_amd64_ifort+mpi_ice_nas -mo \
+  '../../ecco_darwin/v04/v4_llc270_JAMES_paper/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code'
  make depend
  make -j 16
 
@@ -31,6 +31,6 @@
  ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_initial_conditions/pickup_ptracers_experiment_18.data pickup_ptracers.0000000001.data
  ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_initial_conditions/pickup_ptracers.0000000001.meta .
  ln -sf /nobackup/hzhang1/forcing/era_xx .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/input/* .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/input_darwin/* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input_darwin/* .
  qsub job_ECCO_darwin
