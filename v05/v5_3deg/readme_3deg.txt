@@ -1,4 +1,4 @@
-# 3deg Darwin 3 verification experiment with volume, salt, salinity, DIC, and FeT budget
+# 3deg darwin3 verification experiment with volume, salt, salinity, DIC, and FeT budget
 # diagnostics, initially based on MITgcm/verification/tutorial_global_oce_biogeo
 
 # ========
@@ -35,7 +35,7 @@
 # ============================
 # 4. Build and run MPI executable
 #    Prerequisite: 1. Get code
- cd build
+ cd ../build
  rm *
  cp ../../ecco_darwin/v05/v5_3deg/code_3deg/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -ieee -mo \
@@ -62,4 +62,3 @@
  cd ../../ecco_darwin/v05/v5_3deg/matlab
 # start MATLAB
 # if using gcmfaces: *budget_v4_3deg_with_gcmfaces.m 
-
