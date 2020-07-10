@@ -27,7 +27,7 @@
  cp ../../ecco_darwin/v05/v5_3deg/input_3deg/* .
  ln -sf ../../ecco_darwin/v05/v5_3deg/data_darwin/* .
  rm data.exch2
- mkdir diags
+ mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  ./mitgcmuv > output.txt
 # Compare to verification output
  diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v05/v5_3deg/results/output_3deg.txt)
