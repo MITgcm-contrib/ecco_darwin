@@ -1,3 +1,6 @@
+# development version of ECCO-Darwin with nonlinear water-column dissolution and
+# DIC/ALK fluxes from bottom sediments
+
 # iter42/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/iter42/input
 # ecco_darwin_v4/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/ecco_darwin_v4/input
 # forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
