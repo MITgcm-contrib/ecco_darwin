@@ -23,8 +23,8 @@
  cd ../run
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/v5_3deg/input/data* .
- cp ../../ecco_darwin/v05/v5_3deg/input_darwin/data* .
  cp ../../ecco_darwin/v05/v5_3deg/input_3deg/* .
+ cp ../../ecco_darwin/v05/v5_3deg/input_darwin/data* .
  ln -sf ../../ecco_darwin/v05/v5_3deg/data_darwin/* .
  rm data.exch2
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
@@ -45,9 +45,9 @@
  cd ../run
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/v5_3deg/input/data* .
- cp ../../ecco_darwin/v05/v5_3deg/input_darwin/data* .
  cp ../../ecco_darwin/v05/v5_3deg/input_3deg/* .
- ln -sf ../../ecco_darwin/v05/v5_3deg/data_darwin/* .
+ cp ../../ecco_darwin/v05/v5_3deg/input_darwin/data* .
+ Ln -sf ../../ecco_darwin/v05/v5_3deg/data_darwin/* .
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  mv data_mpi data
  rm data.exch2
