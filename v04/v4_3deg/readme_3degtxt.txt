@@ -25,14 +25,12 @@
 #    Prerequisite: 2. Build executable
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v04/v4_llc270/input/data* .
- cp ../../ecco_darwin/v04/v4_llc270/input_darwin/data* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/data* .
  cp ../../ecco_darwin/v04/v4_3deg/input/*data* .
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
- mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output
- diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v04/v4_3deg/results/output.txt)
+ diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v04/v4_3deg/results/output_3deg.txt)
 
 # ============================
 # 4. Build and run MPI executable
@@ -41,26 +39,14 @@
  rm *
  cp ../../ecco_darwin/v04/v4_3deg/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -mo \
-  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270/code_darwin ../../ecco_darwin/v04/v4_llc270/code'
+  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code'
  make depend
  make -j 8
  cd ../run
- mkdir diags
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v04/v4_llc270/input/data* .
- cp ../../ecco_darwin/v04/v4_llc270/input_darwin/data* .
  cp ../../ecco_darwin/v04/v4_3deg/input/*data* .
  mv data_mpi data
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
  mpirun -np 8 ./mitgcmuv &
 # Monitor run
  tail -f STDOUT.0000 | grep advcfl_W
-
-# ============================
-# 5. MATLAB code for computing volume, salt, salinity, and DIC budgets
-#    Prerequisite: 4. Build and run MPI executable
-#    Can be executed as soon as 3 or more months of output are available
- cd ../../MITgcm_contrib/ecco_darwin/v4_3deg/matlab
-# start matlab
-# if using gcmfaces: budget_v4_3deg_with_gcmfaces
-# if not using gcmfaces: budget_v4_3deg_without_gcmfaces
