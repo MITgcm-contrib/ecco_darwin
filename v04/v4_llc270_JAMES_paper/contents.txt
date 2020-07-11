@@ -18,10 +18,5 @@ Instructions for llc270 ECCO-Darwin verification experiment:
    readme/readme_ecco_darwin_verification.txt
    results
 
-Instructions for ECCO-Darwin 3-degree verification experiment:
-   readme/readme_ecco_darwin_3deg.txt
-   code_3deg
-   input_3deg
-
 Code used for JAMES paper analysis and figures
    matlab

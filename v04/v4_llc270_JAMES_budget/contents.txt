@@ -1,5 +1,6 @@
 Directory contains code and instructions used for the
-JAMES ECCO-Darwin manuscript (Carroll et al. 2020).
+JAMES ECCO-Darwin manuscript (Carroll et al. 2020) with
+budget diagnostics.
 
 Instructions for llc270 physical simulation without Darwin:
    readme.txt
@@ -11,11 +12,3 @@ Instructions for llc270 ECCO-Darwin simulation:
    code_darwin
    input_darwin
 
-Instructions for 3-degree verification experiment:
-   readme_3deg.txt
-   code_3deg
-   input_3deg
-   results
-
-Code used for JAMES paper analysis and figures
-   matlab
