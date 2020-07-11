@@ -5,8 +5,8 @@
 # 1. Get code
  git clone https://github.com/MITgcm/MITgcm.git
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_3deg/data
- cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
+ git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
  cd MITgcm/pkg
  ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
  cd ..
@@ -17,7 +17,7 @@
 #    Prerequisite: 1. Get code
  cd build
  ../tools/genmake2 -ieee -mo \
-  '../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_3deg ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code'
+  '../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_3deg ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code'
  make depend
  make -j 8
 
@@ -26,32 +26,32 @@
 #    Prerequisite: 2. Build executable
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input/data* .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_darwin/data* .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_3deg/*data* .
- ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_budget/input/data* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_budget/input_darwin/data* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_budget/input_3deg/*data* .
+ ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
  rm data.exch2
  mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output
- diff <(grep %MON output.txt) <(grep %MON ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/results/output_3deg.txt)
+ diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v04/v4_llc270_JAMES_budget/results/output_3deg.txt)
 
 # ============================
 # 4. Build and run MPI executable
 #    Prerequisite: 1. Get code
  cd build
  rm *
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_3deg/SIZE.h_mpi SIZE.h
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_3deg/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -mo \
-  '../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_3deg ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_darwin ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code'
+  '../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_3deg ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code'
  make depend
  make -j 8
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input/data* .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_darwin/data* .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/input_3deg/*data* .
- ln -sf ../../MITgcm_contrib/ecco_darwin/v4_3deg/data/* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_budget/input/data* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_budget/input_darwin/data* .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_budget/input_3deg/*data* .
+ ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
  mkdir diags
  mv data_mpi data
  rm data.exch2

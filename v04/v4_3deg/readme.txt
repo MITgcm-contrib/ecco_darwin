@@ -3,9 +3,9 @@
 
 # ========
 # 1. Get code
- git clone https://github.com/MITgcm-contrib/ecco-darwin.git
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "03/22/18" MITgcm_contrib/darwin/pkg/darwin
+ git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
  cd MITgcm/pkg
  ln -sf ../../MITgcm_contrib/darwin/pkg/darwin .
  cd ..
@@ -16,7 +16,7 @@
 #    Prerequisite: 1. Get code
  cd build
  ../tools/genmake2 -ieee -mo \
-  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270/code_darwin ../../ecco_darwin/v04/v4_llc270/code'
+  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code'
  make depend
  make -j 8
 
