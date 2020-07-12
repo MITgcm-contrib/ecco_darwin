@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270/code_darwin/PTRACERS_SIZE.h,v 1.1 2017/12/01 19:02:11 dimitri Exp $
-C $Name:  $
-
 #ifdef ALLOW_PTRACERS
 
 CBOP

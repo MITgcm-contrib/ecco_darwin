@@ -14,7 +14,7 @@ mkdir build
 cd build
 module purge
 module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-MOD="../../ecco_darwin/v05/v5_llc270_jra55do"
+MOD="../../ecco_darwin/v05/llc270_jra55do"
 ../tools/genmake2 -of ${MOD}/code/linux_amd64_ifort+mpi_ice_nas \
 	          -mo ${MOD}/code
 make depend

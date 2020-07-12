@@ -20,8 +20,8 @@ cd build
 
 module purge
 module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-../tools/genmake2 -of ../../ecco_darwin/v05/v5_llc270_jra55do/code/linux_amd64_ifort+mpi_ice_nas \
-  -mo '../../ecco_darwin/v05/v5_llc270_jra55do/code_darwin ../../ecco_darwin/v05/v5_llc270_jra55do/code'
+../tools/genmake2 -of ../../ecco_darwin/v05/llc270_jra55do/code/linux_amd64_ifort+mpi_ice_nas \
+  -mo '../../ecco_darwin/v05/llc270_jra55do/code_darwin ../../ecco_darwin/v05/llc270_jra55do/code'
 make depend
 make -j 16
 
@@ -35,8 +35,8 @@ ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACv1.4.0_HJ .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACriver_temp .
-cp ../../ecco_darwin/v05/v5_llc270_jra55do/input/* .
-cp ../../ecco_darwin/v05/v5_llc270_jra55do/input_darwin/* .
+cp ../../ecco_darwin/v05/llc270_jra55do/input/* .
+cp ../../ecco_darwin/v05/llc270_jra55do/input_darwin/* .
 ln -sf /nobackup/dcarrol2/pickup/v05/* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH

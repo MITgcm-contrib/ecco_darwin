@@ -23,10 +23,10 @@ Simulations:
   /v4_llc270_JAMES_budget: same as above with diagnostics for closing budgets 
 
 --v05--
-  /v5_3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
-  /v5_llc270: Carroll et al. 2020 solution w/ Darwin 3
-  /v5_llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
-  /v5_llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
+  /3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
+  /llc270: Carroll et al. 2020 solution w/ Darwin 3
+  /llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
+  /llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
 
 **Notes**
 v02 to v04 use Darwin 1, v05 onward uses Darwin 3
@@ -51,4 +51,3 @@ Example:
   - remove PTRACERS_Iter0 and PTRACERS_initialFile from data.ptracers
   - delete pickup_dic.0000000001.data so that it does not get used for
     initialization because of above changes
-
