@@ -29,8 +29,6 @@
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
  mkdir diags
  ./mitgcmuv > output.txt
-# Compare to verification output
- diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v04/v4_3deg/results/output_3deg_budget.txt)
 
 # ============================
 # 4. Build and run MPI executable
@@ -39,7 +37,7 @@
  rm *
  cp ../../ecco_darwin/v04/v4_3deg/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -mo \
-  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code'
+  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code'
  make depend
  make -j 8
  cd ../run

@@ -24,8 +24,6 @@ C     == global variables ==
 #include "SIZE.h"
 #include "GRID.h"
 #include "EXF_PARAM.h"
-#include "EXF_INTERP_SIZE.h"
-#include "EXF_INTERP_PARAM.h"
 #include "EXF_FIELDS.h"
 #ifdef ALLOW_BULK_OFFLINE
 # include "PARAMS.h"
@@ -453,8 +451,8 @@ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 # endif
       DO bj=myByLo(myThid),myByHi(myThid)
        DO bi=myBxLo(myThid),myBxHi(myThid)
-         DO j=1-OLy,sNy+OLy
-          DO i=1-OLx,sNx+OLx
+         DO j=1-oLy,sNy+oLy
+          DO i=1-oLx,sNx+oLx
 # ifdef ALLOW_CLIMSST_RELAXATION
            IF ( climsstfile .NE. ' ' .AND.
      &          climsstperiod .EQ. 0. )

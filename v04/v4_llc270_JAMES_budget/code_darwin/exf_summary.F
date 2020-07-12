@@ -43,23 +43,19 @@ C     !USES:
 C     === Global variables ===
 #include "EEPARAMS.h"
 #include "SIZE.h"
-#include "EXF_PARAM.h"
 #include "EXF_CONSTANTS.h"
-#include "EXF_INTERP_SIZE.h"
-#include "EXF_INTERP_PARAM.h"
+#include "EXF_PARAM.h"
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     myThid  :: My thread Id number
       INTEGER myThid
 
 C     !FUNCTIONS:
-#ifdef ALLOW_RUNOFTEMP
       INTEGER  ILNBLNK
       EXTERNAL ILNBLNK
-      INTEGER iL
-#endif
 
 C     !LOCAL VARIABLES:
+      INTEGER il
       LOGICAL prtBlkLn, addBlkLn
       CHARACTER*1 blkLin
       CHARACTER*(MAX_LEN_MBUF) msgBuf
@@ -106,9 +102,6 @@ C--   Print general parameters:
      &  'exf_output_interp =',
      &  ' /* output directly interpolation result */')
 #endif
-      CALL WRITE_0D_L( diags_opOceWeighted, INDEX_NONE,
-     &  'diags_opOceWeighted =',
-     &  ' /* weight flux diags by open-ocean fraction */')
       CALL WRITE_0D_I( exf_debugLev, INDEX_NONE, 'exf_debugLev =',
      &  ' /* select EXF-debug printing level */')
       CALL WRITE_0D_RL( exf_monFreq, INDEX_NONE, 'exf_monFreq  =',
@@ -587,12 +580,12 @@ c      CALL EXF_FLD_SUMMARY( 'Runoff temp.',
 c    I      runoftempfile, runoffRepCycle, runoffperiod,
 c    I      runoffStartTime, useExfYearlyFields, addBlkLn, myThid )
 c      addBlkLn = .TRUE.
-       iL = ILNBLNK(runoftempfile)
+       il = ILNBLNK(runoftempfile)
        WRITE(msgBuf,'(A)')
      & '   Runoff temp. is read from file:'
        CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
      &                     SQUEEZE_RIGHT, myThid )
-       WRITE(msgBuf,'(3A)') '   >> ', runoftempfile(1:iL), ' <<'
+       WRITE(msgBuf,'(3A)') '   >> ', runoftempfile(1:il), ' <<'
        CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
      &                     SQUEEZE_RIGHT, myThid )
        prtBlkLn = .TRUE.
@@ -713,17 +706,23 @@ C--   Fractional ice-covered area
 #endif /* EXF_SEAICE_FRACTION */
 
 C--   Atmospheric pCO2
-      IF ( apco2file.NE.' ' ) THEN
-       CALL EXF_FLD_SUMMARY( 'Atmospheric pCO2',
-     I      apco2file, apco2RepCycle, apco2period,
-     I      apco2StartTime, useExfYearlyFields, addBlkLn, myThid )
-#ifdef USE_EXF_INTERPOLATION
-       CALL EXF_PRINT_INTERP( 'apco2', apco2_lon0,
-     &  apco2_lon_inc, apco2_lat0, apco2_lat_inc,
-     &  apco2_nlon, apco2_nlat, apco2_interpMethod, myThid )
-#endif
-       prtBlkLn = .TRUE.
-      ENDIF
+      il = ilnblnk(apco2file)
+      write(msgbuf,'(a)') ' '
+      call print_message( msgbuf, standardmessageunit,
+     &                    SQUEEZE_RIGHT , mythid)
+      write(msgbuf,'(a,f12.0)')
+     &'   Atmospheric pCO2 forcing period is       ',
+     &    apco2period
+      call print_message( msgbuf, standardmessageunit,
+     &                    SQUEEZE_RIGHT , mythid)
+      write(msgbuf,'(a)')
+     &'   Atmospheric pCO2 forcing is read from file:'
+      call print_message( msgbuf, standardmessageunit,
+     &                    SQUEEZE_RIGHT , mythid)
+      write(msgbuf,'(a,a,a)')
+     &'   >>  ',apco2file(1:il),'  <<'
+      call print_message( msgbuf, standardmessageunit,
+     &                    SQUEEZE_RIGHT , mythid)
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 
