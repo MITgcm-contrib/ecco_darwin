@@ -27,7 +27,7 @@
  cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  rm data.ctrl data.exch2 data.smooth
- mkdir diags
+ mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  ./mitgcmuv > output.txt
 # Compare to verification output
  diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v05/3deg/results/output_3deg.txt)
@@ -49,7 +49,7 @@
  cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
  cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
- mkdir diags
+ mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  mv data_mpi data
  rm data.ctrl data.exch2 data.smooth
  mpirun -np 8 ./mitgcmuv &
