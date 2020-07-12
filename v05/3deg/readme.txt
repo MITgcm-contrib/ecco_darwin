@@ -26,7 +26,7 @@
  cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
  cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
- rm data.exch2
+ rm data.ctrl data.exch2 data.smooth
  mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output
