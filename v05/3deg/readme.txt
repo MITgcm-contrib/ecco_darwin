@@ -36,19 +36,20 @@
 # 4. Build and run MPI executable
 #    Prerequisite: 1. Get code
  cd ../build
- rm *
+# rm *
  cp ../../ecco_darwin/v05/3deg/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -ieee -mo \
  '../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code'
  make depend
  make -j 8
  cd ../run
+# rm -rf *
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/llc270/input/data* .
  cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
  cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
- mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
+ mkdir diags
  mv data_mpi data
  rm data.ctrl data.exch2 data.smooth
  mpirun -np 8 ./mitgcmuv &
@@ -58,7 +59,8 @@
 # ============================
 # 5. MATLAB code for computing volume, salt, salinity, DIC, and Fe budgets
 #    Prerequisite: 4. Build and run MPI executable
-#    Can be executed as soon as 3 or more months of output are available
+#    Can be executed as soon as 3 or more days of output are available
  cd ../../ecco_darwin/v05/3deg/matlab
 # start MATLAB
-# if using gcmfaces: *budget_v4_3deg_with_gcmfaces.m 
+# with gcmfaces use: *budget_with_gcmfaces*.m 
+# without gcmfaces use: *budget_without_gcmfaces*.m
