@@ -5,7 +5,7 @@
 # 1. Get code
  git clone --depth 1 https://github.com/darwinproject/darwin3
  git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
- cd darwin3/
+ cd darwin3
  mkdir build run
  cd build
 
@@ -22,12 +22,12 @@
 #    Prerequisite: 2. Build executable
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v05/3deg/input/data* .
+ cp ../../ecco_darwin/v05/llc270/input/data* .
+ cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
  cp ../../ecco_darwin/v05/3deg/input_3deg/* .
- cp ../../ecco_darwin/v05/3deg/input_darwin/data* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  rm data.exch2
- mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
+ mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output
  diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v05/3deg/results/output_3deg.txt)
@@ -45,9 +45,9 @@
  cd ../run
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/3deg/input/data* .
- cp ../../ecco_darwin/v05/3deg/input_3deg/* .
  cp ../../ecco_darwin/v05/3deg/input_darwin/data* .
- Ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
+ cp ../../ecco_darwin/v05/3deg/input_3deg/* .
+ ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  mv data_mpi data
  rm data.exch2
