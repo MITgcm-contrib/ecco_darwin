@@ -39,18 +39,18 @@
  rm *
  cp ../../ecco_darwin/v05/3deg/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -ieee -mo \
- '../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/3deg/code_darwin ../../ecco_darwin/v05/3deg/code'
+ '../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code'
  make depend
  make -j 8
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v05/3deg/input/data* .
- cp ../../ecco_darwin/v05/3deg/input_darwin/data* .
+ cp ../../ecco_darwin/v05/llc270/input/data* .
+ cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
  cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  mv data_mpi data
- rm data.exch2
+ rm data.ctrl data.exch2 data.smooth
  mpirun -np 8 ./mitgcmuv &
 # Monitor run
  tail -f STDOUT.0000 | grep advcfl_W
