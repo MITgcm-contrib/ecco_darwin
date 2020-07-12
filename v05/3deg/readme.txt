@@ -24,7 +24,7 @@
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/llc270/input/data* .
  cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
- cp ../../ecco_darwin/v05/3deg/input_3deg/* .
+ cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  rm data.exch2
  mkdir diags
@@ -46,7 +46,7 @@
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/3deg/input/data* .
  cp ../../ecco_darwin/v05/3deg/input_darwin/data* .
- cp ../../ecco_darwin/v05/3deg/input_3deg/* .
+ cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  mv data_mpi data
