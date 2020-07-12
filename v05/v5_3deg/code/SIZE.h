@@ -1,4 +1,4 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code/SIZE.h,v 1.3 2020/03/05 01:48:02 dimitri Exp $
+C $Header: /u/gcmpack/MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/code_3deg/SIZE.h,v 1.2 2020/03/05 01:48:02 dimitri Exp $
 C $Name:  $
 
 C
@@ -44,17 +44,17 @@ C     Nr  :: No. points in Z for full process domain.
       INTEGER Ny
       INTEGER Nr
       PARAMETER (
-     &           sNx =  30,
-     &           sNy =  30,
+     &           sNx = 128,
+     &           sNy =  64,
      &           OLx =   4,
      &           OLy =   4,
      &           nSx =   1,
      &           nSy =   1,
-     &           nPx =1053-286,
+     &           nPx =   1,
      &           nPy =   1,
      &           Nx  = sNx*nSx*nPx,
      &           Ny  = sNy*nSy*nPy,
-     &           Nr  =  50 )
+     &           Nr  =  15)
 
 C     MAX_OLX :: Set to the maximum overlap region size of any array
 C     MAX_OLY    that will be exchanged. Controls the sizing of exch

@@ -13,7 +13,7 @@
 # 2. Build executable
 #    Prerequisite: 1. Get code
  ../tools/genmake2 -ieee -mo \
- '../../ecco_darwin/v05/v5_3deg/code_3deg ../../ecco_darwin/v05/v5_3deg/code_darwin ../../ecco_darwin/v05/v5_3deg/code'
+ '../../ecco_darwin/v05/v5_3deg/code ../../ecco_darwin/v05/v5_llc270/code_darwin ../../ecco_darwin/v05/v5_llc270/code'
  make depend
  make -j 8
 
@@ -37,9 +37,9 @@
 #    Prerequisite: 1. Get code
  cd ../build
  rm *
- cp ../../ecco_darwin/v05/v5_3deg/code_3deg/SIZE.h_mpi SIZE.h
+ cp ../../ecco_darwin/v05/v5_3deg/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -ieee -mo \
- '../../ecco_darwin/v05/v5_3deg/code_3deg ../../ecco_darwin/v05/v5_3deg/code_darwin ../../ecco_darwin/v05/v5_3deg/code'
+ '../../ecco_darwin/v05/v5_3deg/code ../../ecco_darwin/v05/v5_3deg/code_darwin ../../ecco_darwin/v05/v5_3deg/code'
  make depend
  make -j 8
  cd ../run
