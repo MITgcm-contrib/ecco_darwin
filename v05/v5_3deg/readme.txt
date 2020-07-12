@@ -13,7 +13,7 @@
 # 2. Build executable
 #    Prerequisite: 1. Get code
  ../tools/genmake2 -ieee -mo \
- '../../ecco_darwin/v05/v5_3deg/code_3deg ../../ecco_darwin/v05/v5_3deg/code_darwin ../../ecco_darwin/v05/v5_3deg/code'
+ '../../ecco_darwin/v05/v5_3deg/code_3deg ../../ecco_darwin/v05/v5_llc270/code_darwin ../../ecco_darwin/v05/v5_llc270/code'
  make depend
  make -j 8
 
