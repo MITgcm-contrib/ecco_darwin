@@ -16,7 +16,7 @@
 #    Prerequisite: 1. Get code
  cd build
  ../tools/genmake2 -ieee -mo \
-  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_paper/code'
+  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code'
  make depend
  make -j 8
 
@@ -25,12 +25,12 @@
 #    Prerequisite: 2. Build executable
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/data* .
- cp ../../ecco_darwin/v04/v4_3deg/input/*data* .
+ cp ../../ecco_darwin/v04/v4_3deg/input_budget/*data* .
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
+ mkdir diags
  ./mitgcmuv > output.txt
 # Compare to verification output
- diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v04/v4_3deg/results/output_3deg.txt)
+ diff <(grep %MON output.txt) <(grep %MON ../../ecco_darwin/v04/v4_3deg/results/output_3deg_budget.txt)
 
 # ============================
 # 4. Build and run MPI executable
@@ -44,9 +44,10 @@
  make -j 8
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v04/v4_3deg/input/*data* .
+ cp ../../ecco_darwin/v04/v4_3deg/input_budget/*data* .
  mv data_mpi data
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
+ mkdir diags
  mpirun -np 8 ./mitgcmuv &
 # Monitor run
  tail -f STDOUT.0000 | grep advcfl_W

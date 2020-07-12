@@ -14,7 +14,7 @@
 #
    dumpatlast = .TRUE.,
 #---
-  frequency(1) = 2635200.0,
+  frequency(1) = 86400.0,
    fields(1:25,1) = 'ETAN    ','SIarea  ','SIheff ','SIhsnow ',
 #stuff that is not quite state variables (and may not be quite
 #synchroneous) but are added here to reduce number of files
@@ -27,7 +27,7 @@
                  'SIuice  ','SIvice  ',
    filename(1) = 'diags/state_2d_set1',
 #---
-  frequency(2) = 2635200.0,
+  frequency(2) = 86400.0,
    fields(1:3,2) = 'THETA   ','SALT    ',
 #stuff that is not quite state variables (and may not be quite
 #synchronous) but are added here to reduce file number
@@ -37,7 +37,7 @@
 #                'GGL90ArU','GGL90ArV','GGL90Kr ',
    filename(2) = 'diags/state_3d_set1',
 #---
-  frequency(3) = 2635200.0,
+  frequency(3) = 86400.0,
    fields(1:5,3) = 'UVELMASS','VVELMASS','WVELMASS',
                  'GM_PsiX ','GM_PsiY ',
 #uvel is approximately uvelmass divided by initial hfac, so we dont output the former
@@ -46,33 +46,33 @@
 #but for present computations I only need the vertically integrated horizontal components (see trsp_3d_set2)
    filename(3) = 'diags/trsp_3d_set1',
 #---
-  frequency(4) = 2635200.0,
+  frequency(4) = 86400.0,
    fields(1:8,4) = 'DFxE_TH ','DFyE_TH ','ADVx_TH ','ADVy_TH ',
                  'DFxE_SLT','DFyE_SLT','ADVx_SLT','ADVy_SLT',
    filename(4) = 'diags/trsp_3d_set2',
 #vertically integrate fields we only use to compute vertically integr.
 #meridional transports (also omit vertical transports, both to save space)
 #---
-  frequency(5) = -2635200.0,
+  frequency(5) = -86400.0,
    fields(1:6,5) = 'ETAN    ','SIheff  ','SIhsnow ',
                  'SIarea  ','sIceLoad','PHIBOT  ',
    filename(5) = 'diags/budg2d_snap_set1',
    timePhase(5)= 0.,
    fileFlags(5) = 'D       ',
 #---
-  frequency(6) = -2635200.0,
+  frequency(6) = -86400.0,
    fields(1:2,6) = 'THETA   ','SALT    ',
    filename(6) = 'diags/budg2d_snap_set2',
    timePhase(6)= 0.,
    fileFlags(6) = 'DI      ',
 #---
-  frequency(7) = 2635200.0,
+  frequency(7) = 86400.0,
    fields(1:8,7) = 'oceFWflx','SIatmFW ','TFLUX   ','SItflux ',
                    'SFLUX   ','oceQsw  ','oceSPflx','DICTFLX ',
    filename(7) = 'diags/budg2d_zflux_set1',
    fileFlags(7) = 'D       ',
 #---
-  frequency(8) = 2635200.0,
+  frequency(8) = 86400.0,
    fields(1:13,8) ='UVELMASS','VVELMASS',
                  'ADVx_TH ','ADVy_TH ','DFxE_TH ','DFyE_TH ',
                  'ADVx_SLT','ADVy_SLT','DFxE_SLT','DFyE_SLT',
@@ -81,14 +81,14 @@
    filename(8) = 'diags/budg2d_hflux_set2',
    fileFlags(8) = 'DI      ',
 #---
-  frequency(9) = 2635200.0,
+  frequency(9) = 86400.0,
    fields(1:8,9) ='ADVxHEFF','ADVyHEFF','DFxEHEFF','DFyEHEFF',
                  'ADVxSNOW','ADVySNOW','DFxESNOW','DFyESNOW',
    filename(9) = 'diags/budg2d_hflux_set1',
    fileFlags(9) = 'D       ',
 #---
 # this one is important because it activates the vertical advection diags
-#  frequency(10) = 2635200.0,
+#  frequency(10) = 86400.0,
 #   fields(1:7,10) = 'ADVr_TH ','DFrE_TH ','DFrI_TH ',
 #                  'ADVr_SLT','DFrE_SLT','DFrI_SLT',
 #                  'WVELMASS',
@@ -96,14 +96,14 @@
 #   levels(1, 10)= 11.,
 #   fileFlags(10) = 'D       ',
 #---
-  frequency(11) = 2635200.0,
+  frequency(11) = 86400.0,
    fields(1:10,11) ='SRELAX  ','TRELAX  ','WTHMASS ','WSLTMASS',
                  'oceSflux','oceQnet ','SIatmQnt',
                  'SIaaflux','SIsnPrcp','SIacSubl',
    filename(11) = 'diags/budg2d_zflux_set2',
    fileFlags(11) = 'D       ',
 #---
-#  frequency(12) = 2635200.0,
+#  frequency(12) = 86400.0,
 #   fields(1:13,12) ='UVELMASS','VVELMASS',
 #                 'ADVx_TH ','ADVy_TH ','DFxE_TH ','DFyE_TH ',
 #                 'ADVx_SLT','ADVy_SLT','DFxE_SLT','DFyE_SLT',
@@ -115,7 +115,7 @@
 #                     41.,42.,43.,44.,45.,46.,47.,48.,49.,50.,
 #   fileFlags(12) = 'DI      ',
 #---
-#  frequency(13) = -2635200.0,
+#  frequency(13) = -86400.0,
 #   fields(1:2,13) = 'THETA   ','SALT    ',
 #   filename(13) = 'diags/budg2d_snap_set3_11',
 #   timePhase(13)= 0.,
@@ -125,7 +125,7 @@
 #                     41.,42.,43.,44.,45.,46.,47.,48.,49.,50.,
 #   fileFlags(13) = 'DI      ',
 #---
-  frequency(14) = 2635200.0,
+  frequency(14) = 86400.0,
    fields(1:8,14) = 'DFxE_TH ','DFyE_TH ','ADVx_TH ','ADVy_TH ',
                  'DFxE_SLT','DFyE_SLT','ADVx_SLT','ADVy_SLT',
    filename(14) = 'diags/trsp_2d_set1',
@@ -133,42 +133,42 @@
 #meridional transports (also omit vertical transports, both to save space)
    fileFlags(14) = ' I      ',
 #---
-  frequency(15) = 2635200.0,
+  frequency(15) = 86400.0,
    fields(1:3,15) = 'RHOAnoma','PHIHYD  ','oceSPtnd',
    filename(15) = 'diags/state_3d_set2',
 #---
-  frequency(16) = 2635200.0,
+  frequency(16) = 86400.0,
    fields(1:7,16) = 'ADVr_TH ','DFrE_TH ','DFrI_TH ',
         'ADVr_SLT','DFrE_SLT','DFrI_SLT','WVELMASS',
    filename(16) = 'diags/trsp_3d_set3',
 #---
-  frequency(17) = 2635200.0,
+  frequency(17) = 86400.0,
    fields(1:7,17) = 'TFLUX   ','SItflux ','SFLUX   ',
         'oceQsw  ','oceSPflx','SIsnPrcp','SIacSubl',
    filename(17) = 'diags/state_2d_set2',
 #---
-  frequency(18) = -2635200.0,
+  frequency(18) = -86400.0,
    fields(1:2,18) = 'SALT    ','TRAC32  ',
    timePhase(18)= 0.,
    filename(18) = 'diags/state_3d_snap_set1',
 #---
-  frequency(19) = 2635200.0,
+  frequency(19) = 86400.0,
    fields(1:8,19) = 'TRAC32  ','ADVxTr32','ADVyTr32','ADVrTr32',
         'DFxETr32','DFyETr32','DFrETr32','DFrITr32',
    filename(19) = 'diags/dic_physics',
 #---
-  frequency(20) = 2635200.0,
+  frequency(20) = 86400.0,
    fields(1:5,20) = 'BCDIC   ','BCDICPIC','BREMIND ',
         'BREMINP ','DISSCPIC',
   filename(20) = 'diags/dic_biology',
 #---
   filename(21) = 'diags/CO2_FLUX_BUDGET_DEPTH',
-   frequency(21) = 2635200.0,
+   frequency(21) = 86400.0,
    fields(1,21) = 'TRAC32  ','THETA   ','SALT    ',
                   'TRAC36  ','TRAC01  ','TRAC04  ',
 #---
   filename(22) = 'diags/CO2_FLUX_BUDGET_SURF',
-   frequency(22) = 2635200.0,
+   frequency(22) = 86400.0,
    levels(1,22) = 1.,
    fields(1,22) = 'DICCFLX ','DICTFLX ',
                   'DICPCO2 ','EXFapco2',

@@ -73,7 +73,7 @@
 # Time stepping parameters
  &PARM03
  nIter0=0,
- nTimeSteps=4,
+ nTimeSteps=504,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
 #when using the cd scheme:
