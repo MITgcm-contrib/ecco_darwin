@@ -10,17 +10,18 @@ Simulations:
     /
 
 --v02--
-  /v2_cs510_brix: optimized solution described in Brix et al. (2015)
+  /cs510_brix: optimized solution described in Brix et al. (2015)
+  /manizza_2019: Manizza et al. (2019) simulation
 
 --v03--
-  /v3_cs510_Brix: unpublished ECCO-Darwin v3 with linear piston velocity and revised ICs
-  /v3_cs510_latest: Same as above with newer (checkpoint66o 2018/01/30) MITgcm code
+  /cs510_brix: unpublished ECCO-Darwin v3 with linear piston velocity and revised ICs
+  /cs510_latest: Same as above with newer (checkpoint66o 2018/01/30) MITgcm code
 
 --v04--
-  /v4_3deg: 3 degree verification experiment with budget scripts
-  /v4_llc270_devel: test solution with nonlinear dissolution and benthic DIC/ALK fluxes
-  /v4_llc270_JAMES_paper: Carroll et al. 2020 (JAMES) solution
-  /v4_llc270_JAMES_budget: same as above with diagnostics for closing budgets 
+  /3deg: 3 degree verification experiment with budget scripts
+  /llc270_devel: test solution with nonlinear dissolution and benthic DIC/ALK fluxes
+  /llc270_JAMES_paper: Carroll et al. 2020 (JAMES) solution
+  /llc270_JAMES_budget: same as above with diagnostics for closing budgets 
 
 --v05--
   /3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
