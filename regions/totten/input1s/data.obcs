@@ -1,0 +1,208 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jnorth =   720*-1,
+ OB_Jsouth =   720*1,
+ OB_Ieast  =   280*-1,
+ OB_Iwest  =   280*1,
+#
+ useOBCSprescribe =.TRUE.,
+ useOBCSbalance=.TRUE.,
+#useOBCSsponge    =.TRUE.,
+ OBCSsponge_UatNS =.FALSE.
+ OBCSsponge_VatEW =.FALSE.
+#
+ OBNsFile='OBNs_Tot_.bin',
+ OBNtFile='OBNt_Tot_.bin',
+ OBNuFile='OBNu_Tot_.bin',
+ OBNvFile='OBNv_Tot_.bin',
+ OBNptrFile(1)='OBNtr1_Tot.bin'
+ OBNptrFile(2)='OBNtr2_Tot.bin'
+ OBNptrFile(3)='OBNtr3_Tot.bin'
+ OBNptrFile(4)='OBNtr4_Tot.bin'
+ OBNptrFile(5)='OBNtr5_Tot.bin'
+ OBNptrFile(6)='OBNtr6_Tot.bin'
+ OBNptrFile(7)='OBNtr7_Tot.bin'
+ OBNptrFile(8)='OBNtr8_Tot.bin'
+ OBNptrFile(9)='OBNtr9_Tot.bin'
+ OBNptrFile(10)='OBNtr10_Tot.bin'
+ OBNptrFile(11)='OBNtr11_Tot.bin'
+ OBNptrFile(12)='OBNtr12_Tot.bin'
+ OBNptrFile(13)='OBNtr13_Tot.bin'
+ OBNptrFile(14)='OBNtr14_Tot.bin'
+ OBNptrFile(15)='OBNtr15_Tot.bin'
+ OBNptrFile(16)='OBNtr16_Tot.bin'
+ OBNptrFile(17)='OBNtr17_Tot.bin'
+ OBNptrFile(18)='OBNtr18_Tot.bin'
+ OBNptrFile(19)='OBNtr19_Tot.bin'
+ OBNptrFile(20)='OBNtr20_Tot.bin'
+ OBNptrFile(21)='OBNtr21_Tot.bin'
+ OBNptrFile(22)='OBNtr22_Tot.bin'
+ OBNptrFile(23)='OBNtr23_Tot.bin'
+ OBNptrFile(24)='OBNtr24_Tot.bin'
+ OBNptrFile(25)='OBNtr25_Tot.bin'
+ OBNptrFile(26)='OBNtr26_Tot.bin'
+ OBNptrFile(27)='OBNtr27_Tot.bin'
+ OBNptrFile(28)='OBNtr28_Tot.bin'
+ OBNptrFile(29)='OBNtr29_Tot.bin'
+ OBNptrFile(30)='OBNtr30_Tot.bin'
+ OBNptrFile(31)='OBNtr31_Tot.bin'
+#
+ OBSsFile='OBSs_Tot_.bin',
+ OBStFile='OBSt_Tot_.bin',
+ OBSuFile='OBSu_Tot_.bin',
+ OBSvFile='OBSv_Tot_.bin',
+ OBSptrFile(1)='OBStr1_Tot.bin'
+ OBSptrFile(2)='OBStr2_Tot.bin'
+ OBSptrFile(3)='OBStr3_Tot.bin'
+ OBSptrFile(4)='OBStr4_Tot.bin'
+ OBSptrFile(5)='OBStr5_Tot.bin'
+ OBSptrFile(6)='OBStr6_Tot.bin'
+ OBSptrFile(7)='OBStr7_Tot.bin'
+ OBSptrFile(8)='OBStr8_Tot.bin'
+ OBSptrFile(9)='OBStr9_Tot.bin'
+ OBSptrFile(10)='OBStr10_Tot.bin'
+ OBSptrFile(11)='OBStr11_Tot.bin'
+ OBSptrFile(12)='OBStr12_Tot.bin'
+ OBSptrFile(13)='OBStr13_Tot.bin'
+ OBSptrFile(14)='OBStr14_Tot.bin'
+ OBSptrFile(15)='OBStr15_Tot.bin'
+ OBSptrFile(16)='OBStr16_Tot.bin'
+ OBSptrFile(17)='OBStr17_Tot.bin'
+ OBSptrFile(18)='OBStr18_Tot.bin'
+ OBSptrFile(19)='OBStr19_Tot.bin'
+ OBSptrFile(20)='OBStr20_Tot.bin'
+ OBSptrFile(21)='OBStr21_Tot.bin'
+ OBSptrFile(22)='OBStr22_Tot.bin'
+ OBSptrFile(23)='OBStr23_Tot.bin'
+ OBSptrFile(24)='OBStr24_Tot.bin'
+ OBSptrFile(25)='OBStr25_Tot.bin'
+ OBSptrFile(26)='OBStr26_Tot.bin'
+ OBSptrFile(27)='OBStr27_Tot.bin'
+ OBSptrFile(28)='OBStr28_Tot.bin'
+ OBSptrFile(29)='OBStr29_Tot.bin'
+ OBSptrFile(30)='OBStr30_Tot.bin'
+ OBSptrFile(31)='OBStr31_Tot.bin'
+#
+ OBEsFile='OBEs_Tot_.bin',
+ OBEtFile='OBEt_Tot_.bin',
+ OBEuFile='OBEu_Tot_.bin',
+ OBEvFile='OBEv_Tot_.bin',
+ OBEptrFile(1)='OBEtr1_Tot.bin'
+ OBEptrFile(2)='OBEtr2_Tot.bin'
+ OBEptrFile(3)='OBEtr3_Tot.bin'
+ OBEptrFile(4)='OBEtr4_Tot.bin'
+ OBEptrFile(5)='OBEtr5_Tot.bin'
+ OBEptrFile(6)='OBEtr6_Tot.bin'
+ OBEptrFile(7)='OBEtr7_Tot.bin'
+ OBEptrFile(8)='OBEtr8_Tot.bin'
+ OBEptrFile(9)='OBEtr9_Tot.bin'
+ OBEptrFile(10)='OBEtr10_Tot.bin'
+ OBEptrFile(11)='OBEtr11_Tot.bin'
+ OBEptrFile(12)='OBEtr12_Tot.bin'
+ OBEptrFile(13)='OBEtr13_Tot.bin'
+ OBEptrFile(14)='OBEtr14_Tot.bin'
+ OBEptrFile(15)='OBEtr15_Tot.bin'
+ OBEptrFile(16)='OBEtr16_Tot.bin'
+ OBEptrFile(17)='OBEtr17_Tot.bin'
+ OBEptrFile(18)='OBEtr18_Tot.bin'
+ OBEptrFile(19)='OBEtr19_Tot.bin'
+ OBEptrFile(20)='OBEtr20_Tot.bin'
+ OBEptrFile(21)='OBEtr21_Tot.bin'
+ OBEptrFile(22)='OBEtr22_Tot.bin'
+ OBEptrFile(23)='OBEtr23_Tot.bin'
+ OBEptrFile(24)='OBEtr24_Tot.bin'
+ OBEptrFile(25)='OBEtr25_Tot.bin'
+ OBEptrFile(26)='OBEtr26_Tot.bin'
+ OBEptrFile(27)='OBEtr27_Tot.bin'
+ OBEptrFile(28)='OBEtr28_Tot.bin'
+ OBEptrFile(29)='OBEtr29_Tot.bin'
+ OBEptrFile(30)='OBEtr30_Tot.bin'
+ OBEptrFile(31)='OBEtr31_Tot.bin'
+#
+ OBWsFile='OBWs_Tot_.bin',
+ OBWtFile='OBWt_Tot_.bin',
+ OBWuFile='OBWu_Tot_.bin',
+ OBWvFile='OBWv_Tot_.bin',
+ OBWptrFile(1)='OBWtr1_Tot.bin'
+ OBWptrFile(2)='OBWtr2_Tot.bin'
+ OBWptrFile(3)='OBWtr3_Tot.bin'
+ OBWptrFile(4)='OBWtr4_Tot.bin'
+ OBWptrFile(5)='OBWtr5_Tot.bin'
+ OBWptrFile(6)='OBWtr6_Tot.bin'
+ OBWptrFile(7)='OBWtr7_Tot.bin'
+ OBWptrFile(8)='OBWtr8_Tot.bin'
+ OBWptrFile(9)='OBWtr9_Tot.bin'
+ OBWptrFile(10)='OBWtr10_Tot.bin'
+ OBWptrFile(11)='OBWtr11_Tot.bin'
+ OBWptrFile(12)='OBWtr12_Tot.bin'
+ OBWptrFile(13)='OBWtr13_Tot.bin'
+ OBWptrFile(14)='OBWtr14_Tot.bin'
+ OBWptrFile(15)='OBWtr15_Tot.bin'
+ OBWptrFile(16)='OBWtr16_Tot.bin'
+ OBWptrFile(17)='OBWtr17_Tot.bin'
+ OBWptrFile(18)='OBWtr18_Tot.bin'
+ OBWptrFile(19)='OBWtr19_Tot.bin'
+ OBWptrFile(20)='OBWtr20_Tot.bin'
+ OBWptrFile(21)='OBWtr21_Tot.bin'
+ OBWptrFile(22)='OBWtr22_Tot.bin'
+ OBWptrFile(23)='OBWtr23_Tot.bin'
+ OBWptrFile(24)='OBWtr24_Tot.bin'
+ OBWptrFile(25)='OBWtr25_Tot.bin'
+ OBWptrFile(26)='OBWtr26_Tot.bin'
+ OBWptrFile(27)='OBWtr27_Tot.bin'
+ OBWptrFile(28)='OBWtr28_Tot.bin'
+ OBWptrFile(29)='OBWtr29_Tot.bin'
+ OBWptrFile(30)='OBWtr30_Tot.bin'
+ OBWptrFile(31)='OBWtr31_Tot.bin'
+#
+ OBNaFile   = 'OBNa_Tot_.bin',
+ OBNhFile   = 'OBNh_Tot_.bin',
+ OBNsnFile  = 'OBNsn_Tot_.bin',
+ OBNuiceFile= 'OBNuice_Tot_.bin',
+ OBNviceFile= 'OBNvice_Tot_.bin',
+#
+ OBSaFile   = 'OBSa_Tot_.bin',
+ OBShFile   = 'OBSh_Tot_.bin',
+ OBSsnFile  = 'OBSsn_Tot_.bin',
+ OBSuiceFile= 'OBSuice_Tot_.bin',
+ OBSviceFile= 'OBSvice_Tot_.bin',
+#
+ OBEaFile   = 'OBEa_Tot_.bin',
+ OBEhFile   = 'OBEh_Tot_.bin',
+ OBEsnFile  = 'OBEsn_Tot_.bin',
+ OBEuiceFile= 'OBEuice_Tot_.bin',
+ OBEviceFile= 'OBEvice_Tot_.bin',
+#
+ OBWaFile   = 'OBWa_Tot_.bin',
+ OBWhFile   = 'OBWh_Tot_.bin',
+ OBWsnFile  = 'OBWsn_Tot_.bin',
+ OBWuiceFile= 'OBWuice_Tot_.bin',
+ OBWviceFile= 'OBWvice_Tot_.bin',
+#
+ useOBCStides = .FALSE.,
+#components   = M2       S2     N2       K2       K1      O1       P1       Q1       Mf         Mm
+#periods (hr) = 12.4206  12     12.6583  11.9672  23.9345 25.8193  24.0659  26.8684  327.8599   661.31
+# tidalPeriod  = 44714.16,43200.,45569.88,43081.92,86164.2,92949.48,86637.24,96726.24,1180295.64,2380716.,
+# OBSamFile='OBSam.seaice_obcs',
+# OBNamFile='OBNam.seaice_obcs.v',
+# OBNamtFile='OBNam.seaice_obcs.u',
+# OBEamFile='OBEam.seaice_obcs',
+# OBWamFile='OBWam.seaice_obcs',
+# OBSphFile='OBSph.seaice_obcs',
+# OBNphFile='OBNph.seaice_obcs.v',
+# OBNphtFile='OBNph.seaice_obcs.u',
+# OBEphFile='OBEph.seaice_obcs',
+# OBWphFile='OBWph.seaice_obcs',
+ &
+# *****************************************
+# Sponge Layer Parameters.
+# *****************************************
+ &OBCS_PARM03
+ Urelaxobcsinner=1296000.E0,
+ Urelaxobcsbound=43200.E0,
+ Vrelaxobcsinner=1296000.E0,
+ Vrelaxobcsbound=43200.E0,
+ spongeThickness=3,
+ &
