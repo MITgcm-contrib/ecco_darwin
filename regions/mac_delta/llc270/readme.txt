@@ -9,7 +9,7 @@
 # ==============
 # 1. Get code
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
-svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/mac_delta_llc270
+svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270
 # Pleiades users skip to part 2.
 # For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
 # Find it at :https://ecco.jpl.nasa.gov/drive
@@ -31,14 +31,14 @@ cd build
    module purge
    module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
    ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-   -mo ../../mac_delta_llc270/code
+   -mo ../../llc270/code
    make depend
    make -j 16
  
  > On a laptop follow instructions below:
    export MPI_INC_DIR=PATH_TO_MPI_ENVIRONMENT_VARIABLE 
    # (path example on macintosh using homebrew: "/usr/local/opt/mpich/bin")
-   ../tools/genmake2 -mpi -mo ../../mac_delta_llc270/code
+   ../tools/genmake2 -mpi -mo ../../llc270/code
    make depend
    make -j 4
 
@@ -54,12 +54,12 @@ ln -sf ../build/mitgcmuv .
 > On Pleiades:
   ln -sf /nobackup/hzhang1/forcing/era_xx .
   ln -sf /nobackup/hzhang1/pub/Mac_Delta270/run_template/* .
-  cp ../../mac_delta_llc270/input/* .
+  cp ../../llc270/input/* .
   qsub job_Mac270_Bro
 > On laptop:
-  ln -sf ../../mac_delta_llc270/era_xx .
-  ln -sf ../../mac_delta_llc270/run_template/* .
-  cp ../../mac_delta_llc270/input/* .
+  ln -sf ../../llc270/era_xx .
+  ln -sf ../../llc270/run_template/* .
+  cp ../../llc270/input/* .
   mpirun -np 4 ./mitgcmuv &
  ---------------
 

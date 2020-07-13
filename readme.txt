@@ -4,8 +4,8 @@ Simulations:
 
 --regions--
   --mac_delta--
-    /mac_delta_llc4320: mackenzie delta llc4320 cut-out
-    /mac_delta_llc270: mackenzie delta llc270 cut-out
+    /llc4320: mackenzie delta llc4320 cut-out
+    /llc270: mackenzie delta llc270 cut-out
   --totten--
     /
 
