@@ -26,7 +26,7 @@
  cd ../run
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/data* .
- cp ../../ecco_darwin/v04/v4_3deg/input/data* .
+ cp ../../ecco_darwin/v04/v4_3deg/input/*data* .
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
  ./mitgcmuv > output.txt
 # Compare to verification output
@@ -44,6 +44,7 @@
  make -j 8
  cd ../run
  ln -sf ../build/mitgcmuv .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/data* .
  cp ../../ecco_darwin/v04/v4_3deg/input/*data* .
  mv data_mpi data
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
