@@ -7,15 +7,15 @@
 ==============
 # Build executable for forward-only llc270 iteration 42 optimized solution
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
- cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper
+ cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co MITgcm_contrib/ecco_darwin/llc270_JAMES_paper
  cd MITgcm
  mkdir build run
  cd build
  module purge
  module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
  ../tools/genmake2 -of \
-  ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code/linux_amd64_ifort+mpi_ice_nas \
-  -mo ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/code
+  ../../MITgcm_contrib/ecco_darwin/llc270_JAMES_paper/code/linux_amd64_ifort+mpi_ice_nas \
+  -mo ../../MITgcm_contrib/ecco_darwin/llc270_JAMES_paper/code
  make depend
  make -j 16
 
@@ -25,7 +25,7 @@
  ln -sf ../build/mitgcmuv .
  ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
  ln -sf /nobackup/hzhang1/forcing/era_xx .
- cp ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_paper/input/* .
+ cp ../../MITgcm_contrib/ecco_darwin/llc270_JAMES_paper/input/* .
  qsub job_ECCO_darwin
 
 ==============
@@ -36,7 +36,7 @@
  cp /nobackup/hzhang1/obs/input/bathy270_filled_noCaspian_r4 .
  cp /nobackup/hzhang1/obs/pri_err/smooth* .
  cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup*meta .
- cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup.0000000001.data_it42_v4_xxr8 pickup.0000000001.data
+ cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup.0000000001.data_it42_xxr8 pickup.0000000001.data
  cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup_seaice.0000000001.data .
  cp /nobackup/hzhang1/pub/llc270_FWD/input/19920101/pickup_ggl90.0000000001.data .
  cp /nobackup/hzhang1/pub/llc270_FWD/input/wkapgmFld.data .

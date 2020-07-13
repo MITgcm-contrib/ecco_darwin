@@ -17,7 +17,7 @@
 #    Prerequisite: 1. Get code
  cd build
  ../tools/genmake2 -ieee -mo \
-  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code'
+  '../../ecco_darwin/v04/3deg/code ../../ecco_darwin/v04/llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/llc270_JAMES_budget/code'
  make depend
  make -j 8
 
@@ -26,9 +26,9 @@
 #    Prerequisite: 2. Build executable
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/data* .
- cp ../../ecco_darwin/v04/v4_3deg/input_budget/*data* .
- ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
+ cp ../../ecco_darwin/v04/llc270_JAMES_paper/input/data* .
+ cp ../../ecco_darwin/v04/3deg/input_budget/*data* .
+ ln -sf ../../ecco_darwin/v04/3deg/data/* .
  mkdir diags
  ./mitgcmuv > output.txt
 
@@ -37,17 +37,17 @@
 #    Prerequisite: 1. Get code
  cd build
  rm *
- cp ../../ecco_darwin/v04/v4_3deg/code/SIZE.h_mpi SIZE.h
+ cp ../../ecco_darwin/v04/3deg/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -mpi -mo \
-  '../../ecco_darwin/v04/v4_3deg/code ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/v4_llc270_JAMES_budget/code'
+  '../../ecco_darwin/v04/3deg/code ../../ecco_darwin/v04/llc270_JAMES_budget/code_darwin ../../ecco_darwin/v04/llc270_JAMES_budget/code'
  make depend
  make -j 8
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/data* .
- cp ../../ecco_darwin/v04/v4_3deg/input_budget/*data* .
+ cp ../../ecco_darwin/v04/llc270_JAMES_paper/input/data* .
+ cp ../../ecco_darwin/v04/3deg/input_budget/*data* .
  mv data_mpi data
- ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
+ ln -sf ../../ecco_darwin/v04/3deg/data/* .
  mkdir diags
  mpirun -np 8 ./mitgcmuv &
 # Monitor run
@@ -57,7 +57,7 @@
 # 5. MATLAB code for computing volume, salt, salinity, and DIC budgets
 #    Prerequisite: 4. Build and run MPI executable
 #    Can be executed as soon as 3 or more months of output are available
- cd ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/matlab
+ cd ../../MITgcm_contrib/ecco_darwin/llc270_JAMES_budget/matlab
 # start matlab
-# if using gcmfaces: budget_v4_3deg_with_gcmfaces
-# if not using gcmfaces: budget_v4_3deg_without_gcmfaces
+# if using gcmfaces: budget_3deg_with_gcmfaces
+# if not using gcmfaces: budget_3deg_without_gcmfaces

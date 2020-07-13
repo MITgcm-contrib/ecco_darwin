@@ -18,8 +18,8 @@ cd build
 module purge
 module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 ../tools/genmake2 -of \
-  ../../ecco_darwin/v04/v4_llc270_devel/code/linux_amd64_ifort+mpi_ice_nas -mo \
-  '../../ecco_darwin/v04/v4_llc270_devel/code_darwin ../../ecco_darwin/v04/v4_llc270_devel/code'
+  ../../ecco_darwin/v04/llc270_devel/code/linux_amd64_ifort+mpi_ice_nas -mo \
+  '../../ecco_darwin/v04/llc270_devel/code_darwin ../../ecco_darwin/v04/llc270_devel/code'
 make depend
 make -j 16
 
@@ -33,7 +33,7 @@ ln -sf ../build/mitgcmuv .
 ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-cp ../../ecco_darwin/v04/v4_llc270_devel/input/* .
-cp ../../ecco_darwin/v04/v4_llc270_devel/input_darwin/* .
+cp ../../ecco_darwin/v04/llc270_devel/input/* .
+cp ../../ecco_darwin/v04/llc270_devel/input_darwin/* .
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
