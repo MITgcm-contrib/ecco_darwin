@@ -7,9 +7,9 @@ close all
 intLevel = 1; %integration k level
 
 %set to 1 to plot budget terms
-plotVolumeBudget = 0;
-plotSalinityBudget = 0;
-plotDICBudget = 0;
+plotVolumeBudget = 1;
+plotSalinityBudget = 1;
+plotDICBudget = 1;
 
 gridDir = '../../../../MITgcm/run/';
 modelDir = '../../../../MITgcm/run/';

@@ -38,8 +38,7 @@
    filename(2) = 'diags/state_3d_set1',
 #---
   frequency(3) = 86400.0,
-   fields(1:5,3) = 'UVELMASS','VVELMASS','WVELMASS',
-                 'GM_PsiX ','GM_PsiY ',
+   fields(1:3,3) = 'UVELMASS','VVELMASS','WVELMASS',
 #uvel is approximately uvelmass divided by initial hfac, so we dont output the former
 #                'UVEL    ','VVEL    ','WVEL     ',
 #full 3D temperature fluxes : 'DFxE_TH ','DFyE_TH ','DFrE_TH ','DFrI_TH ','ADVx_TH ','ADVy_TH ','ADVr_TH ',
@@ -73,11 +72,11 @@
    fileFlags(7) = 'D       ',
 #---
   frequency(8) = 86400.0,
-   fields(1:13,8) ='UVELMASS','VVELMASS',
+   fields(1:11,8) ='UVELMASS','VVELMASS',
                  'ADVx_TH ','ADVy_TH ','DFxE_TH ','DFyE_TH ',
                  'ADVx_SLT','ADVy_SLT','DFxE_SLT','DFyE_SLT',
 #the following are not transports but tendencies
-                 'oceSPtnd','AB_gT   ','AB_gS   ',
+                 'oceSPtnd',
    filename(8) = 'diags/budg2d_hflux_set2',
    fileFlags(8) = 'DI      ',
 #---
@@ -97,7 +96,7 @@
 #   fileFlags(10) = 'D       ',
 #---
   frequency(11) = 86400.0,
-   fields(1:10,11) ='SRELAX  ','TRELAX  ','WTHMASS ','WSLTMASS',
+   fields(1:8,11) = 'WTHMASS ','WSLTMASS',
                  'oceSflux','oceQnet ','SIatmQnt',
                  'SIaaflux','SIsnPrcp','SIacSubl',
    filename(11) = 'diags/budg2d_zflux_set2',

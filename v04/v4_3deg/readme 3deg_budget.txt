@@ -1,5 +1,6 @@
 # Verification experiment, initially based on
-# MITgcm/verification/tutorial_global_oce_biogeo
+# MITgcm/verification/tutorial_global_oce_biogeo 
+# with volume, salt, salinity, and DIC budget
 
 # ========
 # 1. Get code
@@ -43,6 +44,7 @@
  make -j 8
  cd ../run
  ln -sf ../build/mitgcmuv .
+ cp ../../ecco_darwin/v04/v4_llc270_JAMES_paper/input/data* .
  cp ../../ecco_darwin/v04/v4_3deg/input_budget/*data* .
  mv data_mpi data
  ln -sf ../../ecco_darwin/v04/v4_3deg/data/* .
@@ -50,3 +52,12 @@
  mpirun -np 8 ./mitgcmuv &
 # Monitor run
  tail -f STDOUT.0000 | grep advcfl_W
+
+# ============================
+# 5. MATLAB code for computing volume, salt, salinity, and DIC budgets
+#    Prerequisite: 4. Build and run MPI executable
+#    Can be executed as soon as 3 or more months of output are available
+ cd ../../MITgcm_contrib/ecco_darwin/v4_llc270_JAMES_budget/matlab
+# start matlab
+# if using gcmfaces: budget_v4_3deg_with_gcmfaces
+# if not using gcmfaces: budget_v4_3deg_without_gcmfaces
