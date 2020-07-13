@@ -1533,7 +1533,7 @@ c ANNA end TAVE
      &                         0,1,2,bi,bj,myThid )
         CALL DIAGNOSTICS_FILL( pH(1-Olx,1-Oly,bi,bj), 'DICPHAV ',
      &                         0,1,2,bi,bj,myThid )
-        CALL DIAGNOSTICS_FILL(disscPIC(1-Olx,1-Oly,1,bi,bj), 'DISSC   ',
+        CALL DIAGNOSTICS_FILL(disscPIC(1-Olx,1-Oly,1,bi,bj), 'DISSCPIC',
      &                         0,Nr,2,bi,bj,myThid)
 #endif /* ALLOW_CARBON */
         CALL DIAGNOSTICS_FILL(
