@@ -1,0 +1,6 @@
+Known Bugs:
+
+1. There are negative shortwave radiation values in LLC 270,
+this causes negative values in the PAR, biomass, and Chl-a fields.
+Users should set values < 0 to 0 to avoid this issue. This bug is
+fixed in v05, and we recommend users migrate to that solution.
