@@ -12,152 +12,306 @@
 #
  &diagnostics_list
 #
-   dumpatlast = .TRUE.,
+  dumpatlast = .TRUE.,
+   
+#3-hourly diagnostics
 #---
-  frequency(1) = 2635200.0,
-   fields(1:25,1) = 'ETAN    ','SIarea  ','SIheff ','SIhsnow ',
-#stuff that is not quite state variables (and may not be quite
-#synchroneous) but are added here to reduce number of files
-                 'DETADT2 ','PHIBOT  ','sIceLoad',
-                 'MXLDEPTH','oceSPDep',
-                 'SIatmQnt','SIatmFW ','oceQnet ','oceFWflx',
-                 'oceTAUX ','oceTAUY ',
-                 'ADVxHEFF','ADVyHEFF','DFxEHEFF','DFyEHEFF',
-                 'ADVxSNOW','ADVySNOW','DFxESNOW','DFyESNOW',
-                 'SIuice  ','SIvice  ',
-   filename(1) = 'diags/state_2d_set1',
+  frequency(1) = 10800.,
+   fields(1,1) = 'fluxCO2 ',
+   filename(1) = 'diags/3hourly/CO2_flux',
 #---
-  frequency(2) = 2635200.0,
-   fields(1:3,2) = 'THETA   ','SALT    ',
-#stuff that is not quite state variables (and may not be quite
-#synchronous) but are added here to reduce file number
-                 'DRHODR  ',
-#                'KPPviscA','KPPdiffT','KPPdiffTS',
-#                'GGL90TKE','GGL90Lmx','GGL90Prl',
-#                'GGL90ArU','GGL90ArV','GGL90Kr ',
-   filename(2) = 'diags/state_3d_set1',
+
+#daily diagnostics
 #---
-  frequency(3) = 2635200.0,
-   fields(1:5,3) = 'UVELMASS','VVELMASS','WVELMASS',
-                 'GM_PsiX ','GM_PsiY ',
-#uvel is approximately uvelmass divided by initial hfac, so we dont output the former
-#                'UVEL    ','VVEL    ','WVEL     ',
-#full 3D temperature fluxes : 'DFxE_TH ','DFyE_TH ','DFrE_TH ','DFrI_TH ','ADVx_TH ','ADVy_TH ','ADVr_TH ',
-#but for present computations I only need the vertically integrated horizontal components (see trsp_3d_set2)
-   filename(3) = 'diags/trsp_3d_set1',
+  frequency(2) = 86400.,
+   fields(1,2) = 'fluxCO2 ',
+   filename(2) = 'diags/daily/CO2_flux',   
 #---
-  frequency(4) = 2635200.0,
-   fields(1:8,4) = 'DFxE_TH ','DFyE_TH ','ADVx_TH ','ADVy_TH ',
-                 'DFxE_SLT','DFyE_SLT','ADVx_SLT','ADVy_SLT',
-   filename(4) = 'diags/trsp_3d_set2',
-#vertically integrate fields we only use to compute vertically integr.
-#meridional transports (also omit vertical transports, both to save space)
+  frequency(3) = 86400.,
+   fields(1,3) = 'gDICsurf',
+   filename(3) = 'diags/daily/surfDIC_tend',
 #---
-  frequency(5) = -2635200.0,
-   fields(1:6,5) = 'ETAN    ','SIheff  ','SIhsnow ',
-                 'SIarea  ','sIceLoad','PHIBOT  ',
-   filename(5) = 'diags/budg2d_snap_set1',
-   timePhase(5)= 0.,
-   fileFlags(5) = 'D       ',
+  frequency(4) = 86400.,
+   fields(1,4) = 'gO2surf ',
+   filename(4) = 'diags/daily/O2_flux',
 #---
-  frequency(6) = -2635200.0,
-   fields(1:2,6) = 'THETA   ','SALT    ',
-   filename(6) = 'diags/budg2d_snap_set2',
-   timePhase(6)= 0.,
-   fileFlags(6) = 'DI      ',
+  frequency(5) = 86400.,
+   fields(1,5) = 'pH      ',
+   filename(5) = 'diags/daily/pH',
 #---
-  frequency(7) = 2635200.0,
-   fields(1:7,7) = 'oceFWflx','SIatmFW ','TFLUX   ','SItflux ',
-                   'SFLUX   ','oceQsw  ','oceSPflx',
-   filename(7) = 'diags/budg2d_zflux_set1',
-   fileFlags(7) = 'D       ',
+  frequency(6) = 86400.,
+   fields(1,6) = 'pCO2    ',
+   filename(6) = 'diags/daily/pCO2',   
 #---
-  frequency(8) = 2635200.0,
-   fields(1:13,8) ='UVELMASS','VVELMASS',
-                 'ADVx_TH ','ADVy_TH ','DFxE_TH ','DFyE_TH ',
-                 'ADVx_SLT','ADVy_SLT','DFxE_SLT','DFyE_SLT',
-#the following are not transports but tendencies
-                 'oceSPtnd','AB_gT   ','AB_gS   ',
-   filename(8) = 'diags/budg2d_hflux_set2',
-   fileFlags(8) = 'DI      ',
+  frequency(7) = 86400.,
+   fields(1,7) = 'surfpCO2',
+   filename(7) = 'diags/daily/apCO2',
+#--- 
+ frequency(8) = 86400.,
+   fields(1,8) = 'EXFwspee',
+   filename(8) = 'diags/daily/wspeed',
+#---   
+  frequency(9) = 86400.,
+   fields(1,9) = 'SIarea ',
+   filename(9) = 'diags/daily/SIarea',
 #---
-  frequency(9) = 2635200.0,
-   fields(1:8,9) ='ADVxHEFF','ADVyHEFF','DFxEHEFF','DFyEHEFF',
-                 'ADVxSNOW','ADVySNOW','DFxESNOW','DFyESNOW',
-   filename(9) = 'diags/budg2d_hflux_set1',
-   fileFlags(9) = 'D       ',
+  frequency(10) = 86400.,
+   fields(1,10) = 'SIheff ',
+   filename(10) = 'diags/daily/SIheff',
+#--- 
+  frequency(11) = 86400.,
+   fields(1,11) = 'THETA   ',
+   levels(1,11) = 1.,
+   filename(11) = 'diags/daily/SST',
+#---     
+  frequency(12) = 86400.,
+   fields(1,12) = 'SALTanom',
+   levels(1,12) = 1.,
+   filename(12) = 'diags/daily/SSSanom',
+#---  
+  frequency(13) = 86400.,
+   fields(1,13) = 'TRAC27  ',
+   levels(1,13) = 1.,
+   filename(13) = 'diags/daily/surfChl1',
+#---  
+  frequency(14) = 86400.,
+   fields(1,14) = 'TRAC28  ',
+   levels(1,14) = 1.,
+   filename(14) = 'diags/daily/surfChl2',
+#---  
+  frequency(15) = 86400.,
+   fields(1,15) = 'TRAC29  ',
+   levels(1,15) = 1.,
+   filename(15) = 'diags/daily/surfChl3',
+#---  
+  frequency(16) = 86400.,
+   fields(1,16) = 'TRAC30  ',
+   levels(1,16) = 1.,
+   filename(16) = 'diags/daily/surfChl4',
+#---  
+  frequency(17) = 86400.,
+   fields(1,17) = 'TRAC31  ',
+   levels(1,17) = 1.,
+   filename(17) = 'diags/daily/surfChl5',
+#---           
+   frequency(18) = 86400.,
+   fields(1,18) = 'MXLDEPTH',
+   filename(18) = 'diags/daily/mldDepth',
+#---  
+
+#monthly diagnostics
 #---
-# this one is important because it activates the vertical advection diags
-  frequency(10) = 2635200.0,
-   fields(1:7,10) = 'ADVr_TH ','DFrE_TH ','DFrI_TH ',
-                  'ADVr_SLT','DFrE_SLT','DFrI_SLT',
-                  'WVELMASS',
-   filename(10) = 'diags/budg2d_zflux_set3_11',
-   levels(1, 10)= 11.,
-   fileFlags(10) = 'D       ',
+  frequency(19) = 2635200.,
+   fields(1,19) = 'THETA   ',
+   filename(19) = 'diags/monthly/THETA',   
 #---
-  frequency(11) = 2635200.0,
-   fields(1:10,11) ='SRELAX  ','TRELAX  ','WTHMASS ','WSLTMASS',
-                 'oceSflux','oceQnet ','SIatmQnt',
-                 'SIaaflux','SIsnPrcp','SIacSubl',
-   filename(11) = 'diags/budg2d_zflux_set2',
-   fileFlags(11) = 'D       ',
+  frequency(20) = 2635200.,
+   fields(1,20) = 'SALTanom',
+   filename(20) = 'diags/monthly/SALTanom',
+#--- 
+  frequency(21) = 2635200.,
+   fields(1,21) = 'THETA   ',
+   levels(1,21) = 1.,
+   filename(21) = 'diags/monthly/SST',
+#--- 
+  frequency(22) = 2635200.,
+   fields(1,22) = 'SALTanom',
+   levels(1,22) = 1.,
+   filename(22) = 'diags/monthly/SSSanom',
 #---
-  frequency(12) = 2635200.0,
-   fields(1:13,12) ='UVELMASS','VVELMASS',
-                 'ADVx_TH ','ADVy_TH ','DFxE_TH ','DFyE_TH ',
-                 'ADVx_SLT','ADVy_SLT','DFxE_SLT','DFyE_SLT',
-                 'oceSPtnd','AB_gT   ','AB_gS   ',
-   filename(12) = 'diags/budg2d_hflux_set3_11',
-   levels(1:40,12) = 11.,12.,13.,14.,15.,16.,17.,18.,19.,20.,
-                     21.,22.,23.,24.,25.,26.,27.,28.,29.,30.,
-                     31.,32.,33.,34.,35.,36.,37.,38.,39.,40.,
-                     41.,42.,43.,44.,45.,46.,47.,48.,49.,50.,
-   fileFlags(12) = 'DI      ',
+  frequency(23) = 2635200.,
+   fields(1,23) = 'MXLDEPTH',
+   filename(23) = 'diags/monthly/mldDepth',
 #---
-  frequency(13) = -2635200.0,
-   fields(1:2,13) = 'THETA   ','SALT    ',
-   filename(13) = 'diags/budg2d_snap_set3_11',
-   timePhase(13)= 0.,
-   levels(1:40,13) = 11.,12.,13.,14.,15.,16.,17.,18.,19.,20.,
-                     21.,22.,23.,24.,25.,26.,27.,28.,29.,30.,
-                     31.,32.,33.,34.,35.,36.,37.,38.,39.,40.,
-                     41.,42.,43.,44.,45.,46.,47.,48.,49.,50.,
-   fileFlags(13) = 'DI      ',
+  frequency(24) = 2635200.,
+   fields(1,24) = 'oceQsw  ',
+   filename(24) = 'diags/monthly/oceanQsw',
+#---    
+  frequency(25) = 2635200.,
+   fields(1,25) = 'oceQnet ',
+   filename(25) = 'diags/monthly/oceanQnet',
+#---    
+  frequency(26) = 2635200.,
+   fields(1,26) = 'EXFwspee ',
+   filename(26) = 'diags/monthly/wspeed',
+#--- 
+  frequency(27) = 2635200.,
+   fields(1,27) = 'SIarea ',
+   filename(27) = 'diags/monthly/SIarea',
+#--- 
+  frequency(28) = 2635200.,
+   fields(1,28) = 'SIheff ',
+   filename(28) = 'diags/monthly/SIheff',
+#---    
+  frequency(29) = 2635200.,
+   fields(1,29) = 'UE_VEL_C',
+   filename(29) = 'diags/monthly/uVel_C',
+#--- 
+  frequency(30) = 2635200.,
+   fields(1,30) = 'VN_VEL_C',
+   filename(30) = 'diags/monthly/vVel_C',
+#--- 
+  frequency(31) = 2635200.,
+   fields(1,31) = 'WVEL     ',
+   filename(31) = 'diags/monthly/wVel',
+#---  
+  frequency(32:62) = 31*2635200.,
+   fields(1,32) = 'TRAC01  ',  
+   fields(1,33) = 'TRAC02  ',
+   fields(1,34) = 'TRAC03  ',
+   fields(1,35) = 'TRAC04  ',
+   fields(1,36) = 'TRAC05  ',
+   fields(1,37) = 'TRAC06  ',
+   fields(1,38) = 'TRAC07  ',
+   fields(1,39) = 'TRAC08  ',
+   fields(1,40) = 'TRAC09  ',
+   fields(1,41) = 'TRAC10  ',
+   fields(1,42) = 'TRAC11  ',
+   fields(1,43) = 'TRAC12  ',
+   fields(1,44) = 'TRAC13  ',
+   fields(1,45) = 'TRAC14  ',
+   fields(1,46) = 'TRAC15  ',
+   fields(1,47) = 'TRAC16  ',
+   fields(1,48) = 'TRAC17  ',
+   fields(1,49) = 'TRAC18  ',
+   fields(1,50) = 'TRAC19  ',
+   fields(1,51) = 'TRAC20  ',
+   fields(1,52) = 'TRAC21  ',
+   fields(1,53) = 'TRAC22  ',
+   fields(1,54) = 'TRAC23  ',
+   fields(1,55) = 'TRAC24  ',
+   fields(1,56) = 'TRAC25  ',
+   fields(1,57) = 'TRAC26  ',
+   fields(1,58) = 'TRAC27  ',
+   fields(1,59) = 'TRAC28  ',
+   fields(1,60) = 'TRAC29  ',
+   fields(1,61) = 'TRAC30  ',
+   fields(1,62) = 'TRAC31  ',
+   
+   filename(32)= 'diags/monthly/DIC',  
+   filename(33)= 'diags/monthly/NO3',
+   filename(34)= 'diags/monthly/NO2',
+   filename(35)= 'diags/monthly/NH4',
+   filename(36)= 'diags/monthly/PO4',
+   filename(37)= 'diags/monthly/FeT',
+   filename(38)= 'diags/monthly/SiO2',
+   filename(39)= 'diags/monthly/DOC',
+   filename(40)= 'diags/monthly/DON',
+   filename(41)= 'diags/monthly/DOP',
+   filename(42)= 'diags/monthly/DOFe',
+   filename(43)= 'diags/monthly/POC',
+   filename(44)= 'diags/monthly/PON',
+   filename(45)= 'diags/monthly/POP',
+   filename(46)= 'diags/monthly/POFe',
+   filename(47)= 'diags/monthly/POSi',
+   filename(48)= 'diags/monthly/PIC',
+   filename(49)= 'diags/monthly/ALK',
+   filename(50)= 'diags/monthly/O2',
+   filename(51)= 'diags/monthly/c1',
+   filename(52)= 'diags/monthly/c2',
+   filename(53)= 'diags/monthly/c3',
+   filename(54)= 'diags/monthly/c4',
+   filename(55)= 'diags/monthly/c5',
+   filename(56)= 'diags/monthly/c6',
+   filename(57)= 'diags/monthly/c7',
+   filename(58)= 'diags/monthly/Chl1',
+   filename(59)= 'diags/monthly/Chl2',
+   filename(60)= 'diags/monthly/Chl3',
+   filename(61)= 'diags/monthly/Chl4',
+   filename(62)= 'diags/monthly/Chl5',
+#---  
+  frequency(63)  = 2635200.,
+   fields(1,63)  = 'PAR    ',
+   filename(63)  = 'diags/monthly/PAR',
+#--- 
+  frequency(64)  = 2635200.,
+   fields(1,64)  = 'PP',
+   filename(64)  = 'diags/monthly/primProd',
+#--- 
+  frequency(65) = 2635200.,
+   fields(1,65) = 'fluxCO2  ',
+   filename(65) = 'diags/monthly/CO2_flux',
+#--- 
+  frequency(66) = 2635200.,
+   fields(1,66) = 'gO2surf ',
+   filename(66) = 'diags/monthly/O2_flux',
+#--- 
+  frequency(67) = 2635200.,
+   fields(1,67) = 'fugfCO2 ',
+   filename(67) = 'diags/monthly/fugCO2', 
+#--- 
+  frequency(68) = 2635200.,
+   fields(1,68) = 'pCO2     ',
+   filename(68) = 'diags/monthly/pCO2',
+#---    
+  frequency(69) = 2635200.,
+   fields(1,69) = 'surfpCO2',
+   filename(69) = 'diags/monthly/apCO2',
+#---       
+
+#monthly budget diagnostics   
 #---
-  frequency(14) = 2635200.0,
-   fields(1:8,14) = 'DFxE_TH ','DFyE_TH ','ADVx_TH ','ADVy_TH ',
-                 'DFxE_SLT','DFyE_SLT','ADVx_SLT','ADVy_SLT',
-   filename(14) = 'diags/trsp_2d_set1',
-#vertically integrate fields we only use to compute vertically integr.
-#meridional transports (also omit vertical transports, both to save space)
-   fileFlags(14) = ' I      ',
+  frequency(70) = 2635200.0,
+   fields(1:5,70) = 'ETAN    ','oceFWflx','SFLUX   ',
+                   'oceSPflx','gDICsurf',
+   filename(70) = 'diags/budget/average_2d',
 #---
-  frequency(15) = 2635200.0,
-   fields(1:3,15) = 'RHOAnoma','PHIHYD  ','oceSPtnd',
-   filename(15) = 'diags/state_3d_set2',
+  frequency(71) = 2635200.0,
+   fields(1:3,71) = 'UVELMASS','VVELMASS','WVELMASS',
+   filename(71) = 'diags/budget/average_velmass_3d',
 #---
-  frequency(16) = 2635200.0,
-   fields(1:7,16) = 'ADVr_TH ','DFrE_TH ','DFrI_TH ',
-        'ADVr_SLT','DFrE_SLT','DFrI_SLT','WVELMASS',
-   filename(16) = 'diags/trsp_3d_set3',
+  frequency(72) = 2635200.0,
+   fields(1:9,72) = 'SALT    ','ADVx_SLT','ADVy_SLT','ADVr_SLT',
+                   'DFxE_SLT','DFyE_SLT','DFrE_SLT','DFrI_SLT',
+	           'oceSPtnd',
+   filename(72) = 'diags/budget/average_salt_3d',
 #---
-  frequency(17) = 2635200.0,
-   fields(1:7,17) = 'TFLUX   ','SItflux ','SFLUX   ',
-        'oceQsw  ','oceSPflx','SIsnPrcp','SIacSubl',
-   filename(17) = 'diags/state_2d_set2',
+  frequency(73) = 2635200.0,
+   fields(1:9,73) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
+        'DFxETr01','DFyETr01','DFrETr01','DFrITr01','gDAR01  ',
+   filename(73) = 'diags/budget/average_dic_3d',
 #---
-#  frequency(18) = 604800.0,
-#   fields(1:2,18) = 'VISCA4D ',
-#   filename(18) = 'diags/visc_3d_set1',
+  frequency(74) = 2635200.0,
+   fields(1:8,74) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
+        'DFxETr06','DFyETr06','DFrETr06','DFrITr06',
+   filename(74) = 'diags/budget/average_fe_3d',
 #---
-#  frequency(19) = -604800.0,
-#   fields(1:2,19) = 'VISCA4D ',
-#   filename(19) = 'diags/visc_3d_set2',
-#   timePhase(19)= 0.,
+  frequency(75) = 2635200.0,
+   fields(1:5,75) = 'C_Fe    ','S_Fe    ','gDAR06  ','sedFe   ',
+                    'freeFe  ',
+   filename(75) = 'diags/budget/average_fe_darwin_3d',
+#---
+  frequency(76) = 2635200.0,
+   fields(1,76) = 'sfcSolFe',
+   filename(76) = 'diags/budget/average_fe_darwin_2d',
+#---
+  frequency(77) = -2635200.0,
+   fields(1,77) = 'ETAN    ',
+   timePhase(77)= 0.,
+   filename(77) = 'diags/budget/snap_2d',
+#---
+  frequency(78) = -2635200.0,
+   fields(1:3,78) = 'SALT    ','TRAC01  ','TRAC06  ',
+   timePhase(78)= 0.,
+   filename(78) = 'diags/budget/snap_3d',
+#---
+  frequency(79) = 2635200.0,
+   levels(1,79) = 1.,
+   fields(1,79) = 'fluxCO2 ','gDICsurf',
+                  'surfpCO2',
+  filename(79) = 'diags/budget/co2_flux_budget_2d',
+#---
+  frequency(80) = 2635200.0,
+   fields(1,80) = 'TRAC01  ','THETA   ','SALT    ',
+                  'TRAC18  ','TRAC05  ','TRAC07  ',
+  filename(80) = 'diags/budget/co2_flux_budget_3d',
+#---
+
+ &
+
  /
-#
-#
+
+
 # Parameter for Diagnostics of per level statistics:
 #-----------------
 # for each output-stream:
@@ -170,26 +324,5 @@
 #                 file for the list of all available diag. in this particular config)
 #-----------------
  &DIAG_STATIS_PARMS
-# diagSt_regMaskFile='basin_masks_eccollc_90x50.bin',
-# nSetRegMskFile=1,
-# set_regMask(1)= 1,  1,  1,  1,  1,  1,  1,  1,  1,
-#                 1,  1,  1,  1,  1,  1,  1,  1
-# val_regMask(1)= 1., 2., 3., 4., 5., 6., 7., 8., 9.,
-#                10.,11.,12.,13.,14.,15.,16.,17.
-##---
-# stat_fields(1,1)= 'ETAN    ','ETANSQ  ','DETADT2 ',
-#                   'UVEL    ','VVEL    ','WVEL    ',
-#                   'THETA   ','SALT    ',
-#    stat_fname(1)= 'dynStDiag',
-#     stat_freq(1)= 3153600.,
-# stat_region(1,1)=  1, 2, 3, 4, 5, 6, 7, 8, 9,
-#                   10,11,12,13,14,15,16,17
-##---
-# stat_fields(1,2)= 'oceTAUX ','oceTAUY ',
-#                   'surForcT','surForcS','TFLUX   ','SFLUX   ',
-#                   'oceQnet ','oceSflux','oceFWflx',
-#    stat_fname(2)= 'surfStDiag',
-#     stat_freq(2)= 3153600.,
-# stat_region(1,2)=  1, 2, 3, 4, 5, 6, 7, 8, 9,
-#                   10,11,12,13,14,15,16,17
+
  /
