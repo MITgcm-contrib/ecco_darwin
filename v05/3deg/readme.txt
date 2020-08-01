@@ -23,7 +23,6 @@
  cd ../run
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/llc270/input/data* .
- cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
  cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  rm data.ctrl data.exch2 data.smooth
@@ -46,7 +45,6 @@
 # rm -rf *
  ln -sf ../build/mitgcmuv .
  cp ../../ecco_darwin/v05/llc270/input/data* .
- cp ../../ecco_darwin/v05/llc270/input_darwin/data* .
  cp ../../ecco_darwin/v05/3deg/input/* .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
