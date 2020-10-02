@@ -37,7 +37,7 @@ ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACv1.4.0_HJ .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACriver_temp .
-Ln -sf /nobackup/dcarrol2/LOAC/write_bin/globalNEWS/* .
+ln -sf /nobackup/dcarrol2/LOAC/write_bin/globalNEWS/* .
 cp ../../ecco_darwin/v05/llc270_jra55do/input/* .
 cp ../../ecco_darwin/v05/llc270_jra55do/input_darwin/* .
 ln -sf /nobackup/dcarrol2/pickup/v05/* .
