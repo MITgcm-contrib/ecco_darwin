@@ -257,64 +257,6 @@
   frequency(71) = 2635200.,
    fields(1,71) = 'surfpCO2',
    filename(71) = 'diags/monthly/apCO2',
-#---       
-
-#monthly budget diagnostics   
-#---
-  frequency(72) = 2635200.0,
-   fields(1:5,72) = 'ETAN    ','oceFWflx','SFLUX   ',
-                   'oceSPflx','gDICsurf',
-   filename(72) = 'diags/budget/average_2d',
-#---
-  frequency(73) = 2635200.0,
-   fields(1:3,73) = 'UVELMASS','VVELMASS','WVELMASS',
-   filename(73) = 'diags/budget/average_velmass_3d',
-#---
-  frequency(74) = 2635200.0,
-   fields(1:9,74) = 'SALT    ','ADVx_SLT','ADVy_SLT','ADVr_SLT',
-                   'DFxE_SLT','DFyE_SLT','DFrE_SLT','DFrI_SLT',
-	           'oceSPtnd',
-   filename(74) = 'diags/budget/average_salt_3d',
-#---
-  frequency(75) = 2635200.0,
-   fields(1:9,75) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
-        'DFxETr01','DFyETr01','DFrETr01','DFrITr01','gDAR01  ',
-   filename(75) = 'diags/budget/average_dic_3d',
-#---
-  frequency(76) = 2635200.0,
-   fields(1:8,76) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
-        'DFxETr06','DFyETr06','DFrETr06','DFrITr06',
-   filename(76) = 'diags/budget/average_fe_3d',
-#---
-  frequency(77) = 2635200.0,
-   fields(1:5,77) = 'C_Fe    ','S_Fe    ','gDAR06  ','sedFe   ',
-                    'freeFe  ',
-   filename(77) = 'diags/budget/average_fe_darwin_3d',
-#---
-  frequency(78) = 2635200.0,
-   fields(1,78) = 'sfcSolFe',
-   filename(78) = 'diags/budget/average_fe_darwin_2d',
-#---
-  frequency(79) = -2635200.0,
-   fields(1,79) = 'ETAN    ',
-   timePhase(79)= 0.,
-   filename(79) = 'diags/budget/snap_2d',
-#---
-  frequency(80) = -2635200.0,
-   fields(1:3,80) = 'SALT    ','TRAC01  ','TRAC06  ',
-   timePhase(80)= 0.,
-   filename(80) = 'diags/budget/snap_3d',
-#---
-  frequency(81) = 2635200.0,
-   levels(1,81) = 1.,
-   fields(1,81) = 'fluxCO2 ','gDICsurf',
-                  'surfpCO2',
-  filename(71) = 'diags/budget/co2_flux_budget_2d',
-#---
-  frequency(82) = 2635200.0,
-   fields(1,82) = 'TRAC01  ','THETA   ','SALT    ',
-                  'TRAC18  ','TRAC05  ','TRAC07  ',
-  filename(82) = 'diags/budget/co2_flux_budget_3d',
 #---
 
  &
