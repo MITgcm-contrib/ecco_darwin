@@ -29,6 +29,9 @@
  /
  &DARWIN_INTERP_PARAMS
  iron_interpMethod = 0,
+ DOCrunoff_interpMethod = 0,
+ DONrunoff_interpMethod = 0,
+ DOPrunoff_interpMethod = 0,
 #
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,
