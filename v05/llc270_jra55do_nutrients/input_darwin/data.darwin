@@ -8,6 +8,21 @@
  pCO2startdate2 = 030000,
  pCO2period     = 86400.0,
 #
+ DOCrunofffile = 'DOC',
+ DOCrunoffstartdate1 = 19920101,
+ DOCrunoffstartdate2 = 030000,
+ DOCrunoffperiod     = 86400.0,
+#
+ DONrunofffile = 'DON',
+ DONrunoffstartdate1 = 19920101,
+ DONrunoffstartdate2 = 030000,
+ DONrunoffperiod     = 86400.0,
+#
+ DOPrunofffile = 'DOP',
+ DOPrunoffstartdate1 = 19920101,
+ DOPrunoffstartdate2 = 030000,
+ DOPrunoffperiod     = 86400.0,
+#
  darwin_useEXFwind = .TRUE.,
  darwin_useQsw = .TRUE.,
  darwin_useSEAICE = .TRUE.,
