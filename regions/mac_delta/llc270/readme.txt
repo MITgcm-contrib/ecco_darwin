@@ -8,6 +8,7 @@
 
 # ==============
 # 1. Get code
+# ==============
 cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
 svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270
 # Pleiades users skip to part 2.
@@ -22,7 +23,7 @@ rm -r ecco.jpl.nasa.gov
 # ================
 # 2. Build executable for Mac Delta based on llc270 iteration 42 optimized solution
 #    Prerequisite: 1. Get code
-==============
+# ==============
 cd MITgcm
 mkdir build run
 cd build
@@ -47,6 +48,7 @@ cd build
 #    Prerequisite: 2. Build executable
 #    Default running doesn't output diagnostic files
 #    To enable diagnostics outputs follow instructions at the end of the readme
+# ================
 cd ../run
 mkdir diags
 ln -sf ../build/mitgcmuv .
@@ -63,17 +65,28 @@ ln -sf ../build/mitgcmuv .
   mpirun -np 4 ./mitgcmuv &
  ---------------
 
-#MORE exps w/ RBCS
-1) emulate OBCS sponge w/ RBCS:
+# ================
+# 4. MORE exps w/ Mac270 setup
+# ================
+
+1) Emulate OBCS sponge w/ RBCS:
    ln -sf Mac_rbcs_mask.bin_OBCS Mac_rbcs_mask.bin
 
-2) apply daily area+heff for OBCS/RBCS:
+2) apply daily Sea Ice area + heff for OBCS/RBCS:
    ln -sf data.obcs_daily_rbcs data.obcs
    ln -sf data.rbcs_daily_rbcs data.rbcs
    ln -sf data.exf_daily_rbcs  data.exf
 
-3)
-#SMALL domain w/o touching Bank Islands
-#use obcs sponge only w/o rbcs
-#replace code  + input  + run_template
-#with    code2 + input2 + run_template2
+3) Use small domain (40x62) w/o touching Bank Islands
+   (use obcs sponge only w/o rbcs)
+   replace code  + input  + run_template
+   with    code2 + input2 + run_template2
+   
+4) Add JRA55-do (Tsujino et al. 2018) river runoff
+   cp ../../llc270/input/data.exf_JRA55 data.exf
+
+5) AddJRA55-do (Tsujino et al. 2018) river runoff + set river temperature
+   in code/EXF_OPTION.h set ALLOW_RUNOFTEMP to define (line 186)
+   restart compiling from step 2.
+   cp ../../llc270/input/data.exf_JRA55 data.exf
+   uncomment line 36 ("runoftempfile") in data.exf file
