@@ -306,11 +306,7 @@
                   'TRAC18  ','TRAC05  ','TRAC07  ',
   filename(80) = 'diags/budget/co2_flux_budget_3d',
 #---
-  frequency(81) = -3600.0,
-   fields(1:3,81) = 'UVELMASS','VVELMASS','WVELMASS',
-   timePhase(81)= 0.,
-   filename(81) = 'diags/budget/snap_velmass_3d',
-#---
+
  &
 
  /
