@@ -66,6 +66,7 @@ C  k                    :: vertical level
       _RL PAR(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr, nlam)
       _RL diags(1-OLx:sNx+OLx,1-OLy:sNy+OLy, Nr, darwin_nDiag)
       _RL gDIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
+      _RL gDICsurfFW(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL gALK(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL gO2(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL surfFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
@@ -159,6 +160,8 @@ C carbon air-sea interaction
         gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + gDIC(i,j)
         gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + gALK(i,j)
         gPtr(i,j,1,iO2)  = gPtr(i,j,1,iO2)  + gO2(i,j)
+        gDICsurfFW(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC) 
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)	
       ENDDO
       ENDDO
 #endif
@@ -431,6 +434,8 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(fugf,   'fugfCO2 ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(FluxCO2,'fluxCO2 ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gDIC,   'gDICsurf',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gDICsurfFW,'DICsurFw',0,1,2,
+     &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
 #endif

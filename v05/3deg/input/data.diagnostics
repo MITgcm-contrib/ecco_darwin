@@ -252,8 +252,8 @@
 #budget diagnostics   
 #---
   frequency(70) = 3600.0,
-   fields(1:5,70) = 'ETAN    ','oceFWflx','SFLUX   ',
-                   'oceSPflx','gDICsurf',
+   fields(1:6,70) = 'ETAN    ','oceFWflx','SFLUX   ',
+                   'oceSPflx','gDICsurf','DICsurFw',
    filename(70) = 'diags/budget/average_2d',
 #---
   frequency(71) = 3600.0,
