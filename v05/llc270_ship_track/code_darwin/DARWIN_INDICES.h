@@ -36,6 +36,7 @@ C these cannot be modified for now
       INTEGER efe
       INTEGER esi
       INTEGER eChl
+      INTEGER eCA
       INTEGER nDarwin
       PARAMETER (iDIC   =1)
       PARAMETER (iNO3   =iDIC+1)
