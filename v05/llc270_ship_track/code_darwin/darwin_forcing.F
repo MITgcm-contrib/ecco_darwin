@@ -296,7 +296,7 @@ C === plankton =========================================================
 
 C calcium in mmol m^-3
 C             calcium(i,j,k,bi,bj) = 1.028 _d -2 
-      &        * salt(i,j,k,bi,bj)/35. _d 0
+C     &        * salt(i,j,k,bi,bj)/35. _d 0
 C     &        * 1. _d 3
      
         DO iTr=1,nDarwin
