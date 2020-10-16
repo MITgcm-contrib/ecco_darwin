@@ -207,7 +207,8 @@ c !LOCAL VARIABLES: ====================================================
       _RL reminPOFe
       _RL disscPIC
       _RL calciumLocal
-	  _RL CO3Local
+      _RL CO3Local
+      _RL omegaCLocal
       _RL KspTPLocal
       _RL prodNO2
       _RL prodNO3

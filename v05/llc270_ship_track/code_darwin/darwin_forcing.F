@@ -86,9 +86,7 @@ C  k                    :: vertical level
       _RL uptakeTempFunc
       _RL tmp
       _RL sedFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy,Nr)
-      _RL consumDIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy,Nr)
-      _RL consumDIC_PIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
-
+      _RL dcal
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
       ENDDO
@@ -252,8 +250,8 @@ C === plankton =========================================================
      I                 ptr,
      U                 gtr,
      O                 chlout, diagsl,
-     O				   consumDIC(i,j,k),
-	 O                 consumDIC_PIC(i,j,k),
+     O				   consumDIC(i,j,k,bi,bj),
+     O                 consumDIC_PIC(i,j,k,bi,bj),
      I                 PARl, photoTempFunc,
      I                 grazTempFunc,
      I                 reminTempFunc,
@@ -261,7 +259,7 @@ C === plankton =========================================================
      I                 uptakeTempFunc,
      I			       calcium(i,j,k,bi,bj),
      I 				   CO3(i,j,bi,k,bj),
-     I                 Ksp_TP_Calc(i,j,k,bi,bj),
+     I                 Ksp_TP(i,j,k,bi,bj),
 #ifdef DARWIN_DEBUG
      I                 myxgloballo+(bi-1)*sNx+i-1,
      I                 myygloballo+(bj-1)*sNy+j-1,
@@ -288,6 +286,19 @@ C === plankton =========================================================
         chlPrev(i, j, k, bi, bj) = tmp
 #endif
 #endif
+             dcal = dcal - consumDIC_PIC(i,j,k,bi,bj) +
+     &        disscPIC(i,j,k,bi,bj)
+
+             Ptr(i,j,k,bi,bj,iCA) = MAX(Ptr(i,j,k,bi,bj,iCA) +
+     &        deltaTClock*dcal,0. _d 0)
+
+             calcium(i,j,k,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
+
+C calcium in mmol m^-3
+C             calcium(i,j,k,bi,bj) = 1.028 _d -2 
+      &        * salt(i,j,k,bi,bj)/35. _d 0
+C     &        * 1. _d 3
+     
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
         ENDDO
