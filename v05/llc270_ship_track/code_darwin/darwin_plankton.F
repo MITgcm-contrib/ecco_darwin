@@ -6,9 +6,10 @@ C !INTERFACE: ==========================================================
       SUBROUTINE DARWIN_PLANKTON(
      I     Ptr,
      U     gTr,
-     O     chlout, diags,
+     O     chlout, diags,consumDIC,consumDIC_PIC
      I     PAR, photoTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
+     I     calciumLocal,CO3Local,KspTPLocal,
 #ifdef DARWIN_DEBUG
      I     iG, jG, k, dT,
 #endif
@@ -205,7 +206,9 @@ c !LOCAL VARIABLES: ====================================================
       _RL reminPOSi
       _RL reminPOFe
       _RL disscPIC
-
+      _RL calciumLocal
+	  _RL CO3Local
+      _RL KspTPLocal
       _RL prodNO2
       _RL prodNO3
 
@@ -900,7 +903,26 @@ C if running with bacteria
 #endif
 #endif
 
-      disscPIC = Kdissc*PIC
+C units in mol m^-3
+           omegaCLocal = (calciumLocal * 1. _d -3)
+     &      * CO3Local / KspTPLocal
+
+#ifdef NAVIAUX_DISSOLUTION
+c Naviaux et al. 2019, Marine Chemistry dissolution rate law
+           if (omegaCLocal .LT. 1.0 _d 0) then
+            if (omegaCLocal .LT. 0.8272 _d 0) then
+ 	     disscPIC = PIC*5.22 _d -9 *
+     &       (1-omegaCLocal)**0.11 _d 0
+            else
+             disscPIC = PIC*1.65 _d -5 *
+     &       (1-omegaCLocal)**4.7 _d 0
+            endif
+           else
+            disscPIC = 0.0 _d 0
+           endif
+#else /* NAVIAUX_DISSOLUTION */
+           disscPIC = Kdissc*PIC
+#endif /* NAVIAUX_DISSOLUTION */
 
 c nitrogen chemistry
 c NH4 -> NO2 -> NO3 by bacterial action, parameterized

@@ -148,6 +148,9 @@ C set traits for darwin2 9-species setup (requires GUD_RANDOM_TRAITS)
 C enable diazotrophy when using (requires GUD_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
+C Define omegaC-dependent dissolution rate
+C following Naviaux et al. 2019 (Marine Chemistry)
+#define NAVIAUX_DISSOLUTION
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */

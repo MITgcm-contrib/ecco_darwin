@@ -86,7 +86,9 @@ C  k                    :: vertical level
       _RL uptakeTempFunc
       _RL tmp
       _RL sedFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy,Nr)
-      
+      _RL consumDIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy,Nr)
+      _RL consumDIC_PIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
+
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
       ENDDO
@@ -250,11 +252,16 @@ C === plankton =========================================================
      I                 ptr,
      U                 gtr,
      O                 chlout, diagsl,
+     O				   consumDIC(i,j,k),
+	 O                 consumDIC_PIC(i,j,k),
      I                 PARl, photoTempFunc,
      I                 grazTempFunc,
      I                 reminTempFunc,
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
+     I			       calcium(i,j,k,bi,bj),
+     I 				   CO3(i,j,bi,k,bj),
+     I                 Ksp_TP_Calc(i,j,k,bi,bj),
 #ifdef DARWIN_DEBUG
      I                 myxgloballo+(bi-1)*sNx+i-1,
      I                 myygloballo+(bj-1)*sNy+j-1,
