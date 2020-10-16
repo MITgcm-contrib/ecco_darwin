@@ -252,6 +252,7 @@ C === plankton =========================================================
      O                 chlout, diagsl,
      O				   consumDIC(i,j,k,bi,bj),
      O                 consumDIC_PIC(i,j,k,bi,bj),
+     O                 disscPIC(i,j,k,bi,bj),
      I                 PARl, photoTempFunc,
      I                 grazTempFunc,
      I                 reminTempFunc,

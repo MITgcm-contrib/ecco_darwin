@@ -6,7 +6,7 @@ C !INTERFACE: ==========================================================
       SUBROUTINE DARWIN_PLANKTON(
      I     Ptr,
      U     gTr,
-     O     chlout, diags,consumDIC,consumDIC_PIC,
+     O     chlout, diags,consumDIC,consumDIC_PIC,disscPIC,
      I     PAR, photoTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
      I     calciumLocal,CO3Local,KspTPLocal,

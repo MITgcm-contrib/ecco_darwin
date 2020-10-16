@@ -80,6 +80,7 @@ C Fugacity Factor added by Val Bennington Nov. 2010
       _RL  Ksp_TP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  consumDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  consumDIC_PIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+      _RL  disscPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 
 CEOP
 #endif /* ALLOW_DARWIN */
