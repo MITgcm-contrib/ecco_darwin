@@ -290,10 +290,11 @@ C === plankton =========================================================
              dcal = dcal - consumDIC_PIC(i,j,k,bi,bj) +
      &        disscPIC(i,j,k,bi,bj)
 
-             Ptr(i,j,k,bi,bj,iCA) = MAX(Ptr(i,j,k,bi,bj,iCA) +
+             pTracer(i,j,k,bi,bj,iCA) = 
+     &        MAX(Ptracer(i,j,k,bi,bj,iCA) +
      &        deltaTClock*dcal,0. _d 0)
 
-             calcium(i,j,k,bi,bj) = Ptr(i,j,k,bi,bj,iCa)
+             calcium(i,j,k,bi,bj) = Ptracer(i,j,k,bi,bj,iCa)
 
 C calcium in mmol m^-3
 C             calcium(i,j,k,bi,bj) = 1.028 _d -2 

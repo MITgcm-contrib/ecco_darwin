@@ -36,7 +36,6 @@ C these cannot be modified for now
       INTEGER efe
       INTEGER esi
       INTEGER eChl
-      INTEGER eCA
       INTEGER nDarwin
       PARAMETER (iDIC   =1)
       PARAMETER (iNO3   =iDIC+1)
@@ -109,9 +108,10 @@ C these cannot be modified for now
       PARAMETER (eChl   =efe)
 #endif
 	  INTEGER iCA
+	  INTEGER eCA
 	  PARAMETER (iCA = eChl+1)
 	  PARAMETER (eCA = iCA)
-      PARAMETER (nDarwin=iCA)
+      PARAMETER (nDarwin = eCA)
 
 CEOP
 #endif /* ALLOW_DARWIN */
