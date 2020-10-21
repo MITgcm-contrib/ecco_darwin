@@ -373,6 +373,14 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SM      L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     
+           WRITE(diagName,'(A)')'calcium'
+      WRITE(diagTitle,'(A)')'Calcium'
+      diagUnits = 'mmol Ca/m3/s    '
+      diagCode  = 'SMRP    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
 #endif /* DARWIN_ALLOW_CARBON */
 
 #ifdef ALLOW_EXF

@@ -453,6 +453,7 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(gDIC,   'gDICsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(calcium,'calcium ',0,Nr,1,bi,bj,myThid)
 #endif
        CALL TIMER_STOP ('DIAGS_FILL [DARWIN_FORCING]',myThid)
       ENDIF
