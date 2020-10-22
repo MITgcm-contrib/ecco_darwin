@@ -14,9 +14,8 @@ plotSalinityBudget = 1;
 printBudget = 0;
 
 %adjust dirs as needed
-gridDir = '../../../darwin3/run_equation_12/';
-modelDir = '../../../darwin3/run_equation_12/';
-
+gridDir = '../../../../../darwin3/run/';
+modelDir = '../../../../../darwin3/run/';
 saveDir = '/Users/carrolld/Documents/research/v05_budget/mat/salinity_budget/';
 
 %%
