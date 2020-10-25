@@ -309,7 +309,7 @@
    levels(1,81) = 1.,
    fields(1,81) = 'fluxCO2 ','gDICsurf',
                   'surfpCO2',
-  filename(71) = 'diags/budget/co2_flux_budget_2d',
+  filename(81) = 'diags/budget/co2_flux_budget_2d',
 #---
   frequency(82) = 2635200.0,
    fields(1,82) = 'TRAC01  ','THETA   ','SALT    ',
