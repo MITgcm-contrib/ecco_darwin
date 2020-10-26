@@ -63,6 +63,7 @@ C  k                    :: vertical level
       _RL dTsub(Nr)
       _RL midTime, subTime
       _RL gPtr(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr, nDarwin)
+      _RL gPtrTemp(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr, nDarwin)
       _RL PAR(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr, nlam)
       _RL diags(1-OLx:sNx+OLx,1-OLy:sNy+OLy, Nr, darwin_nDiag)
       _RL gDIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
@@ -398,11 +399,24 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsFe),'S_Fe    ',
      &       0,Nr,2,bi,bj,myThid)
 
+      DO iTr=1,nDarwin
+       DO k=1,Nr
+        DO j=1,sNy
+         DO i=1,sNx
+          gPtrTemp(i,j,k,iTr) = hFacC(i,j,k,bi,bj)*
+     &     gPtr(i,j,k,iTr)
+         ENDDO
+        ENDDO
+       ENDDO
+      ENDDO
+
        DO iTr=1,nDarwin
         diagname = 'gDAR'//PTRACERS_ioLabel(iTr)
-        CALL DIAGNOSTICS_FILL(gPtr(1-OLx,1-OLy,1,iTr), diagname,
-     &          0,Nr,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(gPtrTemp(1-OLx,1-OLy,1,iTr), diagname,
+     &   0,Nr,2,bi,bj,myThid)
+     &  
        ENDDO
+
        DO iTr=1,nPPplank
         WRITE(diagname, '(A,I4.4)') 'PP', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iPPplank+iTr-1),
