@@ -67,8 +67,14 @@ C  k                    :: vertical level
       _RL PAR(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr, nlam)
       _RL diags(1-OLx:sNx+OLx,1-OLy:sNy+OLy, Nr, darwin_nDiag)
       _RL gDIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
-      _RL gDICsurfFW(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL gALK(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
+      _RL gDICsurfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL gNO3surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL gNO2surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL gNH4surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)  
+      _RL gPO4surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL gFeTsurfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL gSiO2surfForc(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL gO2(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL surfFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL freeFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
@@ -87,8 +93,20 @@ C  k                    :: vertical level
       _RL mort2TempFunc
       _RL uptakeTempFunc
       _RL tmp
-      _RL sedFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy,Nr)
-      
+      _RL sedFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cNO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cNH4(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)      
+      _RL cPO4(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cSi(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL sNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL sNO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL sNH4(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL sPO4(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL sSi(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL sFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
       ENDDO
@@ -161,11 +179,29 @@ C carbon air-sea interaction
         gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + gDIC(i,j)
         gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + gALK(i,j)
         gPtr(i,j,1,iO2)  = gPtr(i,j,1,iO2)  + gO2(i,j)
-        gDICsurfFW(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC) 
+        gDICsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC) 
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)	
       ENDDO
       ENDDO
 #endif
+
+C surface fluxes from E/P/runoff
+      DO j=jMin,jMax
+      DO i=iMin,iMax
+        gNO3surfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iNO3)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gNO2surfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iNO2)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gNH4surfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iNH4)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPO4surfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iPO4)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gFeTsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iFeT)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gSiO2surfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iSiO2)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+      ENDDO
+      ENDDO
 
 C === iron =============================================================
       CALL TIMER_START('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
@@ -327,7 +363,8 @@ C     re-apply free iron limit to FeT
       DO k=1,Nr
       DO j=jMin,jMax
       DO i=iMin,iMax
-        diffFe(i,j,k) = (diffFe1(i,j,k) + diffFe2(i,j,k)) / deltaTClock
+        diffFe(i,j,k) = hFacC(i,j,k,bi,bj) 
+     &   * ((diffFe1(i,j,k) + diffFe2(i,j,k)) / deltaTClock)
       ENDDO
       ENDDO
       ENDDO
@@ -362,16 +399,38 @@ C === diagnostics ======================================================
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iDenitN),'DenitN  ',
      &       0,Nr,2,bi,bj,myThid)
 
+       DO k=1,Nr
+        DO j=1,sNy
+         DO i=1,sNx
+          cNO3(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsNO3)
+          cNO2(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsNO2)   
+          cNH4(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsNH4)
+          cPO4(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsPO4)
+          cSi(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsSi)
+          cFe(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsFe)
+         ENDDO
+        ENDDO
+       ENDDO
+
 C      nutrient consumption diagnostics
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsDIN),'C_DIN   ',
-     &       0,Nr,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsPO4),'C_PO4   ',
-     &       0,Nr,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsSi),'C_Si    ',
-     &       0,Nr,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsFe),'C_Fe    ',
-     &       0,Nr,2,
-     &          bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(cNO3(1-OLx,1-OLy,1),
+     &  'C_NO3   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(cNO2(1-OLx,1-OLy,1),
+     &  'C_NO2   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(cNH4(1-OLx,1-OLy,1),
+     &  'C_NH4   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(cPO4(1-OLx,1-OLy,1),
+     &  'C_PO4   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(cSi(1-OLx,1-OLy,1),
+     &  'C_Si    ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(cFe(1-OLx,1-OLy,1),
+     & 'C_Fe    ',0,Nr,1,bi,bj,myThid)
 
 C      compute 'source' diagnostics: tendencies without consumption;
 C      add full tendencies to consumption and store result back into
@@ -379,25 +438,34 @@ C      diags(iCons*) for convenience
        DO k=1,Nr
         DO j=1,sNy
          DO i=1,sNx
-            diags(i,j,k,iConsDIN) = diags(i,j,k,iConsDIN)
-     &         + gPtr(i,j,k,iNH4) + gPtr(i,j,k,iNO2) + gPtr(i,j,k,iNO3)
-            diags(i,j,k,iConsPO4) = diags(i,j,k,iConsPO4)
-     &                            + gPtr(i,j,k,iPO4)
-            diags(i,j,k,iConsSi) = diags(i,j,k,iConsSi)
-     &                           + gPtr(i,j,k,iSiO2)
-            diags(i,j,k,iConsFe) = diags(i,j,k,iConsFe)
-     &                           + gPtr(i,j,k,iFeT)
+          sNO3(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsNO3)
+     &     + gPtr(i,j,k,iNO3))
+          sNO2(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsNO2)
+     &     + gPtr(i,j,k,iNO2))
+          sNH4(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsNH4)
+     &     + gPtr(i,j,k,iNH4))
+          sPO4(i,j,k) = hFacC(i,j,k,bi,bj) * ((diags(i,j,k,iConsPO4))
+     &     + gPtr(i,j,k,iPO4))
+          sSi(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsSi)
+     &     + gPtr(i,j,k,iSiO2))
+          sFe(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsFe)
+     &     + gPtr(i,j,k,iFeT))
          ENDDO
         ENDDO
        ENDDO
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsDIN),'S_DIN   ',
-     &       0,Nr,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsPO4),'S_PO4   ',
-     &       0,Nr,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsSi),'S_Si    ',
-     &       0,Nr,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsFe),'S_Fe    ',
-     &       0,Nr,2,bi,bj,myThid)
+
+       CALL DIAGNOSTICS_FILL(sNO3(1-OLx,1-OLy,1),
+     &  'S_NO3   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(sNO2(1-OLx,1-OLy,1),
+     &  'S_NO2   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(sNH4(1-OLx,1-OLy,1),
+     &  'S_NH4   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(sPO4(1-OLx,1-OLy,1),
+     &  'S_PO4   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(sSi(1-OLx,1-OLy,1),
+     &  'S_Si    ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(sFe(1-OLx,1-OLy,1),
+     &  'S_Fe    ',0,Nr,1,bi,bj,myThid)
 
       DO iTr=1,nDarwin
        DO k=1,Nr
@@ -448,7 +516,19 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(fugf,   'fugfCO2 ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(FluxCO2,'fluxCO2 ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gDIC,   'gDICsurf',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(gDICsurfFW,'DICsurFw',0,1,2,
+       CALL DIAGNOSTICS_FILL(gDICsurfForc,'gDICEpr ',0,1,2,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gNO3surfForc,'gNO3Epr ',0,1,2,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gNO2surfForc,'gNO2Epr ',0,1,2,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gNH4surfForc,'gNH4Epr ',0,1,2,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gPO4surfForc,'gPO4Epr ',0,1,2,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gFeTsurfForc,'gFeTPEpr ',0,1,2,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gSiO2surfForc,'gSiO2Epr',0,1,2,
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
