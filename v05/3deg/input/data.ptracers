@@ -8,6 +8,12 @@
  PTRACERS_useGMRedi(:)= 31*.TRUE.,
 #
  PTRACERS_EvPrRn( 1)= 0.,
+ PTRACERS_EvPrRn( 2)= 0.,
+ PTRACERS_EvPrRn( 3)= 0.,
+ PTRACERS_EvPrRn( 4)= 0.,
+ PTRACERS_EvPrRn( 5)= 0.,
+ PTRACERS_EvPrRn( 6)= 0.,
+ PTRACERS_EvPrRn( 7)= 0.,
  PTRACERS_EvPrRn(18)= 0.,
 #
  PTRACERS_names( 1)= 'DIC',
