@@ -22,6 +22,7 @@
 ==============
 # Instructions for running forward-only llc270 optimized solution (1992-2017)
  cd ../run
+ mkdir -p diags
  ln -sf ../build/mitgcmuv .
  ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
  ln -sf /nobackup/hzhang1/forcing/era_xx .
