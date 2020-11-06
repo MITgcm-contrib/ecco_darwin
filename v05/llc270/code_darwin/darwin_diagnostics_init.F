@@ -366,48 +366,6 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      WRITE(diagName,'(A)')'cDIC'
-      WRITE(diagTitle,'(A)')'Consumption of DIC'
-      diagUnits = 'mmol C/m3/s     '
-      diagCode  = 'SMRP    MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'cDIC_PIC'
-      WRITE(diagTitle,'(A)')'Consumption of DIC due to PIC'
-      diagUnits = 'mmol C/m3/s     '
-      diagCode  = 'SMRP    MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'respDIC'
-      WRITE(diagTitle,'(A)')'DIC from respiration'
-      diagUnits = 'mmol C/m3/s     '
-      diagCode  = 'SMRP    MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'rDIC_DOC'
-      WRITE(diagTitle,'(A)')'DIC from remineralization of DOC'
-      diagUnits = 'mmol C/m3/s     '
-      diagCode  = 'SMRP    MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'rDIC_POC'
-      WRITE(diagTitle,'(A)')'DIC from respiration of POC'
-      diagUnits = 'mmol C/m3/s     '
-      diagCode  = 'SMRP    MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-     WRITE(diagName,'(A)')'dDIC_PIC'
-      WRITE(diagTitle,'(A)')'DIC from dissolution of PIC'
-      diagUnits = 'mmol C/m3/s     '
-      diagCode  = 'SMRP    MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
       WRITE(diagName,'(A)')'fugfCO2'
       WRITE(diagTitle,'(A)')'Fugacity factor of CO2 (atm)'
       diagUnits = 'atm             '
