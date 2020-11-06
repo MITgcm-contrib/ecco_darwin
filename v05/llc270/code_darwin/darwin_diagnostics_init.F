@@ -387,8 +387,8 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      WRITE(diagName,'(A)')'rDIC'
-      WRITE(diagTitle,'(A)')'DIC from remineralization'
+      WRITE(diagName,'(A)')'rDIC_DOC'
+      WRITE(diagTitle,'(A)')'DIC from remineralization of DOC'
       diagUnits = 'mmol C/m3/s     '
       diagCode  = 'SMRP    MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,

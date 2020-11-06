@@ -456,8 +456,8 @@ C      DIC biology diagnostics
      & 'cDIC_PIC',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(respirDIC(1-OLx,1-OLy,1),
      & 'respDIC ',0,Nr,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(reminDIC(1-OLx,1-OLy,1),
-     & 'rDIC    ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(reminDIC_DOC(1-OLx,1-OLy,1),
+     & 'rDIC_DOC',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(reminDIC_POC(1-OLx,1-OLy,1),
      & 'rDIC_POC',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(disscDIC_PIC(1-OLx,1-OLy,1),
