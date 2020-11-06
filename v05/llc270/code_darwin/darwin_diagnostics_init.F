@@ -457,6 +457,48 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SM      L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'cDIC'
+      WRITE(diagTitle,'(A)')'Consumption of DIC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'cDIC_PIC'
+      WRITE(diagTitle,'(A)')'Consumption of DIC due to PIC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'respDIC'
+      WRITE(diagTitle,'(A)')'DIC due to respiration'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'rDIC_DOC'
+      WRITE(diagTitle,'(A)')'DIC due to remineralization of DOC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'rDIC_POC'
+      WRITE(diagTitle,'(A)')'DIC due to remineralization of POC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'dDIC_PIC'
+      WRITE(diagTitle,'(A)')'DIC due to dissolution of PIC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 #endif /* DARWIN_ALLOW_CARBON */
 
 #ifdef ALLOW_EXF
