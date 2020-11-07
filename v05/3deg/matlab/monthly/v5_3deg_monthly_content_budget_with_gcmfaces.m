@@ -19,8 +19,8 @@ plotPO4Budget = 0;
 plotFeBudget = 1;
 plotSiO2Budget = 0;
 
-gridDir = '../../../../darwin3/run/';
-modelDir = '../../../../darwin3/run/';
+gridDir = '../../../../../darwin3/run/';
+modelDir = '../../../../../darwin3/run/';
 
 figureDir = '/Users/carrolld/Documents/research/v05_budget/figures/v5_3deg_budget/';
 

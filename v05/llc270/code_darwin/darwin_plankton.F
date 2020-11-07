@@ -854,6 +854,10 @@ C=======================================================================
 C=======================================================================
 
       gTr(iDIC )=gTr(iDIC ) - consumDIC - consumDIC_PIC
+      
+      diags(iConsumDIC) = consumDIC
+      diags(iConsumDIC_PIC) = consumDIC_PIC
+
       gTr(iNH4 )=gTr(iNH4 ) - consumNH4
       gTr(iNO2 )=gTr(iNO2 ) - consumNO2
       gTr(iNO3 )=gTr(iNO3 ) - consumNO3
@@ -971,6 +975,10 @@ c loss of O2 by remineralization
 #endif /* DARWIN_ALLOW_CARBON */
 
       gTr(iDIC )=gTr(iDIC ) + reminDOC + disscPIC
+      
+      diags(iReminDIC_DOC) = reminDOC
+      diags(iDisscDIC_PIC) = disscPIC
+
       gTr(iNH4 )=gTr(iNH4 ) + reminDON - prodNO2
       gTr(iNO2 )=gTr(iNO2 ) + prodNO2 - prodNO3
       gTr(iNO3 )=gTr(iNO3 ) + prodNO3
@@ -1017,6 +1025,9 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
       gTr(iCDOM)=gTr(iCDOM) + reminPOP_CDOM - degrCDOM_DOP
 #else
       gTr(iDIC )=gTr(iDIC ) + reminPOC
+     
+      diags(iReminDIC_POC) = reminPOC
+ 
       gTr(iNH4 )=gTr(iNH4 ) + reminPON
       gTr(iPO4 )=gTr(iPO4 ) + reminPOP
       gTr(iFeT )=gTr(iFeT ) + reminPOFe
@@ -1029,7 +1040,7 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
       diags(iConsPO4) = consumPO4
       diags(iConsSi)  = consumSiO2
       diags(iConsFe)  = consumFeT
-     
+  
 C==== grazing ==========================================================
 
       DO j=1,nplank
@@ -1371,7 +1382,9 @@ C==== mortality ========================================================
 #endif
 
       gTr(iDIC )=gTr(iDIC ) + respir
-
+      
+      diags(iRespirDIC) = respir
+ 
       gTr(iDOC )=gTr(iDOC ) + exude_DOC
       gTr(iDON )=gTr(iDON ) + exude_DON
       gTr(iDOP )=gTr(iDOP ) + exude_DOP
@@ -1391,7 +1404,6 @@ C==== mortality ========================================================
       gTr(iDOP )=gTr(iDOP ) - exude_CDOM
       gTr(iDOFe)=gTr(iDOFe)              - R_FeP_CDOM*exude_CDOM
 #endif
-
 #endif /* ALLOW_DARWIN */
 
       RETURN

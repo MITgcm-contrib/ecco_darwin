@@ -270,8 +270,10 @@
    filename(72) = 'diags/budget/average_salt_3d',
 #---
   frequency(73) = 2635200.0,
-   fields(1:9,73) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
+   fields(1:15,73) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
         'DFxETr01','DFyETr01','DFrETr01','DFrITr01','gDAR01  ',
+        'cDIC    ','cDIC_PIC','respDIC ','rDIC_DOC','rDIC_POC',
+        'dDIC_PIC',
    filename(73) = 'diags/budget/average_DIC_3d',
 #---
   frequency(74) = 2635200.0,

@@ -420,6 +420,7 @@ C === diagnostics ======================================================
      &     * diags(i,j,k,iConsSi)
           cFe(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iConsFe)
+
           consumDIC(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iConsumDIC)
           consumDIC_PIC(i,j,k) = hFacC(i,j,k,bi,bj)
@@ -427,11 +428,12 @@ C === diagnostics ======================================================
           respirDIC(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iRespirDIC)
           reminDIC_DOC(i,j,k) = hFacC(i,j,k,bi,bj)
-     &     * diags(i,j,k,iRespirDIC)
-          reminDIC_POC(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iReminDIC_DOC)
+          reminDIC_POC(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iReminDIC_POC)
           disscDIC_PIC(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iDisscDIC_PIC)    
+
          ENDDO
         ENDDO
        ENDDO
@@ -449,6 +451,7 @@ C      nutrient consumption diagnostics
      &  'C_Si    ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(cFe(1-OLx,1-OLy,1),
      & 'C_Fe    ',0,Nr,1,bi,bj,myThid)
+
 C      DIC biology diagnostics     
        CALL DIAGNOSTICS_FILL(consumDIC(1-OLx,1-OLy,1),
      & 'cDIC    ',0,Nr,1,bi,bj,myThid)
