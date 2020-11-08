@@ -5,18 +5,18 @@ close all
 %settings, modify as needed
 
 savePlot = 0;
-intLevel = 2; %integration k level
+intLevel = 1; %integration k level
 
 %set to 1 to plot budget terms
 plotVolumeBudget = 0;
 plotSalinityBudget = 0;
 
-plotDICBudget = 0;
+plotDICBudget = 1;
 plotNO3Budget = 0;
 plotNO2Budget = 0;
 plotNH4Budget = 0;
 plotPO4Budget = 0;
-plotFeBudget = 1;
+plotFeBudget = 0;
 plotSiO2Budget = 0;
 
 gridDir = '../../../../../darwin3/run/';
@@ -172,6 +172,14 @@ for timeStep = 1:numFiles
     DFrI_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
     gDAR_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
     
+    %bio decomposition
+    cDIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
+    cDIC_PIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    respDIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',12)) .* mmol_to_mol;  %mol m^-3 s^-1
+    rDIC_DOC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',13)) .* mmol_to_mol;  %mol m^-3 s^-1
+    rDIC_POC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',14)) .* mmol_to_mol;  %mol m^-3 s^-1
+    dDIC_PIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',15)) .* mmol_to_mol;  %mol m^-3 s^-1
+   
     %NO3 content
     NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
     ADVx_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
@@ -456,8 +464,7 @@ for timeStep = 1:numFiles
     dif_vConvDIC = dif_vConvDIC ./ VVV;
     
     %DIC tendency due to air-sea CO2 flux, mol m^-3 s^-1
-    forcDIC1 = 0 .* oceSPtnd;
-    forcDIC2 = 0 .* oceSPtnd;
+    forcDIC = 0 .* oceSPtnd;
     
     %DIC tendency due to E/P/runoff, mol m^-3 s^-1
     virtualFluxDIC = 0 .* oceSPtnd;
@@ -466,32 +473,35 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            forcDIC1(:,:,1) = DICTFLX;
-            forcDIC2(:,:,1) = fluxCO2;
-            
+            forcDIC(:,:,1) = fluxCO2;
             virtualFluxDIC(:,:,1) =  DIC_Epr;
             
         else
             
-            forcDIC1(:,:,nz) = 0;
-            forcDIC2(:,:,nz) = 0;
-            
+            forcDIC(:,:,nz) = 0;
             virtualFluxDIC(:,:,nz) =  0;
             
         end
         
     end
     
-    gDAR_DIC = (gDAR_DIC - (forcDIC2 ./ dzMat)) ./ mygrid.hFacC; %remove air-sea CO2 flux from gDAR, so it is just biology
-    %gDAR_DIC = mygrid.mskC .* (gDAR_DIC ./ mygrid.hFacC); %remove air-sea CO2 flux from gDAR, so it is just biology
+    gDAR_DIC = (gDAR_DIC - (forcDIC ./ dzMat)) ./ mygrid.hFacC; %remove air-sea CO2 flux from gDAR, so it is just biology
     
-    forcDIC = forcDIC2 ./ dzMat;
-    forcDIC = mygrid.mskC .* forcDIC;
+    forcDIC = mygrid.mskC .* (forcDIC ./ dzMat);
+   
     virtualFluxDIC = mygrid.mskC .* virtualFluxDIC .* 0;
     
-    %biology, mol m^-3 s^-1
+    %net biology, mol m^-3 s^-1
     bioDIC = mygrid.mskC .* gDAR_DIC;
     
+    %individual biology terms
+    bioCons_DIC = mygrid.mskC .* (-cDIC ./ mygrid.hFacC);
+    bioCons_DIC_PIC = mygrid.mskC .* (-cDIC_PIC ./ mygrid.hFacC);
+    bioResp_DIC = mygrid.mskC .* (respDIC ./ mygrid.hFacC);
+    bioRemin_DIC_DOC = mygrid.mskC .* (rDIC_DOC ./ mygrid.hFacC);
+    bioRemin_DIC_POC = mygrid.mskC .* (rDIC_POC ./ mygrid.hFacC);
+    bioDissc_DIC_PIC = mygrid.mskC .* (dDIC_PIC ./ mygrid.hFacC);
+
     %%
     %NO3 budget
     
@@ -929,6 +939,13 @@ for timeStep = 1:numFiles
     gDARDIC = convert2gcmfaces(gDAR_DIC);
     bioDIC = convert2gcmfaces(bioDIC);
     
+    bioConsDIC = convert2gcmfaces(bioCons_DIC);
+    bioConsDIC_PIC = convert2gcmfaces(bioCons_DIC_PIC);
+    bioRespDIC = convert2gcmfaces(bioResp_DIC);
+    bioReminDIC_DOC = convert2gcmfaces(bioRemin_DIC_DOC);
+    bioReminDIC_POC = convert2gcmfaces(bioRemin_DIC_POC);
+    bioDisscDIC_PIC = convert2gcmfaces(bioDissc_DIC_PIC);
+    
     tendNO3 = convert2gcmfaces(tendNO3);
     adv_hConvNO3 = convert2gcmfaces(adv_hConvNO3);
     adv_vConvNO3 = convert2gcmfaces(adv_vConvNO3);
@@ -1020,8 +1037,18 @@ for timeStep = 1:numFiles
     intForcDIC = forcDIC(:,:,intLevel);
     intVirtualFluxDIC = virtualFluxDIC(:,:,intLevel);
     intGDARDIC = gDARDIC(:,:,intLevel);
-    intBioDIC = bioDIC(:,:,intLevel);
+    %intBioDIC = bioDIC(:,:,intLevel);
     
+    intBioConsDIC = bioConsDIC(:,:,intLevel);
+    intBioConsDIC_PIC = bioConsDIC_PIC(:,:,intLevel); 
+    intBioRespDIC = bioRespDIC(:,:,intLevel);
+    intBioReminDIC_DOC = bioReminDIC_DOC(:,:,intLevel);
+    intBioReminDIC_POC = bioReminDIC_POC(:,:,intLevel);
+    intBioDisscDIC_PIC = bioDisscDIC_PIC(:,:,intLevel);
+
+    intBioDIC = intBioConsDIC + intBioConsDIC_PIC + intBioRespDIC + ...
+        intBioReminDIC_DOC + intBioReminDIC_POC + intBioDisscDIC_PIC;
+   
     intDICResidual = intTendDIC - (intHAdvDIC + intVAdvDIC ...
         + intHDifDIC + intVDifDIC + intForcDIC + intVirtualFluxDIC.*0 + intBioDIC);
 
