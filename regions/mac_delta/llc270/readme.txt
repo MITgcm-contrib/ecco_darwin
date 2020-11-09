@@ -10,15 +10,15 @@
 # 1. Get code
 # ==============
 git clone https://github.com/MITgcm/MITgcm.git
-svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270
+svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270 Mac270
 
 # Pleiades users skip to part 2.
 # For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
 # Find it at :https://ecco.jpl.nasa.gov/drive
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template
-mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx Mac270_forcings/
-mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template Mac270_forcings/
+mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx Mac270_forcings/era_xx/
+mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template Mac270_forcings/run_template/
 rm -r ecco.jpl.nasa.gov
 
 # ================
@@ -40,7 +40,7 @@ cd build
  > On a laptop follow instructions below:
    export MPI_INC_DIR=PATH_TO_MPI_ENVIRONMENT_VARIABLE 
    # (path example on macintosh using homebrew: "/usr/local/opt/mpich/bin")
-   ../tools/genmake2 -mpi -mo ../../llc270/code
+   ../tools/genmake2 -mpi -mo ../../Mac270/code
    make depend
    make -j 4
 
@@ -51,7 +51,6 @@ cd build
 #    To enable diagnostics outputs follow instructions at the end of the readme
 # ================
 cd ../run
-mkdir diags
 ln -sf ../build/mitgcmuv .
 ----------------
 > On Pleiades:
@@ -62,6 +61,6 @@ ln -sf ../build/mitgcmuv .
 > On laptop:
   ln -sf ../../Mac270_forcings/era_xx .
   ln -sf ../../Mac270_forcings/run_template/* .
-  cp ../../llc270/input/* .
+  cp ../../Mac270/input/* .
   mpirun -np 4 ./mitgcmuv &
  ---------------
