@@ -9,7 +9,7 @@
 # ==============
 # 1. Get code
 # ==============
-cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
+git clone https://github.com/MITgcm/MITgcm.git
 svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270
 
 # Pleiades users skip to part 2.
