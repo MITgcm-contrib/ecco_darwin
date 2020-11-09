@@ -32,8 +32,7 @@
  vwindfile         = 'era_xx/EIG_v10m',
  swdownfile        = 'era_xx/EIG_dsw_plus_ECCO_v4r1_ctrl',
  lwdownfile        = 'era_xx/EIG_dlw_plus_ECCO_v4r1_ctrl',
- runofffile        = 'ArcticGRO/ArcticGRO_runoff_mack270',
-# runoftempfile     = 'river_temp/jra55_do_wattmp_mack270',
+# runofffile        = 'Set path to Interannual forcing file',
 #
  atempstartdate1   = 19920101,
  atempstartdate2   = 000000,
