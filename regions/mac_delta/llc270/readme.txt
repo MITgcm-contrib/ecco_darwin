@@ -17,8 +17,8 @@ svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_del
 # Find it at :https://ecco.jpl.nasa.gov/drive
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template
-mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx Mac270_forcings/era_xx/
-mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template Mac270_forcings/run_template/
+mv ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx llc270_forcings/era_xx/
+mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/Mac_Delta/run_template llc270_forcings/run_template_Mac270/
 rm -r ecco.jpl.nasa.gov
 
 # ================
@@ -59,8 +59,8 @@ ln -sf ../build/mitgcmuv .
   cp ../../llc270/input/* .
   qsub job_Mac270_Bro
 > On laptop:
-  ln -sf ../../Mac270_forcings/era_xx .
-  ln -sf ../../Mac270_forcings/run_template/* .
+  ln -sf ../../llc270_forcings/era_xx .
+  ln -sf ../../llc270_forcings/run_template_Mac270/* .
   cp ../../Mac270/input/* .
   mpirun -np 4 ./mitgcmuv &
  ---------------
