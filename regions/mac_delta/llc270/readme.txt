@@ -83,9 +83,19 @@ ln -sf ../build/mitgcmuv .
    with    code2 + input2 + run_template2
    
 4) Add JRA55-do (Tsujino et al. 2018) river runoff
+   # Before Runing MITgcm download JRA55-do runoff llc270 forcing files
+   wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACv1.4.0_HJ
+   # Create Mac270 river runoff forcing file from llc270 files with
+   frc_gen.py
+   # Then do:
    cp ../../llc270/input/data.exf_JRA55 data.exf
 
 5) AddJRA55-do (Tsujino et al. 2018) river runoff + set river temperature
+   # Before Runing MITgcm download JRA55-do rivert Temperature llc270 forcing files
+   wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACriver_temp
+   # Create Mac270 river runoff forcing file from llc270 files with
+   frc_gen.py
+   # Then do:
    in code/EXF_OPTION.h set ALLOW_RUNOFTEMP to define (line 186)
    restart compiling from step 2.
    cp ../../llc270/input/data.exf_JRA55 data.exf
