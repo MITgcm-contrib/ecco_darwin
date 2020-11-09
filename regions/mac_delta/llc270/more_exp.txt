@@ -22,32 +22,37 @@
       a) Add JRA55-do (Tsujino et al. 2018) river runoff
          # Before Runing MITgcm download JRA55-do runoff llc270 forcing files
          wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACv1.4.0_HJ
-         mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACv1.4.0_HJ Mac270_forcings/
-         # Create Mac270 river runoff forcing file from llc270 files with : 
-         LOAC_frc_gen.py
+         mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACv1.4.0_HJ llc270_forcings/JRA55_runoff
+         # Create Mac270 river runoff forcing file from llc270 files :
+         cd Mac270/python
+         python LOAC_frc_gen.py
          # Then do:
-         cp ../../llc270/input/data.exf_JRA55 data.exf
-         ln -sf ../../Mac270_forcings/LOACv1.4.0_HJMack270 .
+         cd MITgcm/run
+         cp ../../Mac270/input/data.exf_JRA55 data.exf
+         # Verify runofffile (line 35) jra55 mac270 filename correspond to the name you have chosen
+         ln -sf ../../llc270_forcings/JRA55_runoff/Mack270 .
 
       b) AddJRA55-do (Tsujino et al. 2018) river runoff + set river temperature (Tokuda et al. 2019)
          # Before Runing MITgcm download JRA55-do river Temperature llc270 forcing files
          wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACriver_temp
-         mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACriver_temp Mac270_forcings/
+         mv ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACriver_temp llc270_forcings/JRA55_riverT
          # Create Mac270 river Temperature forcing file from llc270 files with : 
-         LOAC_frc_gen.py
+         cd Mac270/python
+         python LOAC_frc_gen.py
          # Then do:
          in code/EXF_OPTION.h set ALLOW_RUNOFTEMP to define (line 186)
          restart compiling from step 2.
          cp ../../llc270/input/data.exf_JRA55 data.exf
          uncomment line 36 ("runoftempfile") in data.exf file
-         ln -sf ../../Mac270_forcings/LOACriver_tempMac270 .
+         ln -sf ../../llc270_forcings/JRA55riverT/Mac270 .
          
       c) Add interannual forcing based on a discharge time series
          # Create Mac270 river runoff forcing file from llc270 files with :
-         Intan_frc_gen.py
+         cd Mac270/python
+         python Intan_frc_gen.py
          # Then do:
          cp ../../llc270/input/data.exf_Intan data.exf
          line 35 : - uncomment ("runofffile") in data.exf file
                    - Set path to Interannual forcing data
-         ln -sf ../../Mac270_forcings/IntanMac270 .
+         ln -sf ../../llc270_forcings/IntanMac270 .
          
