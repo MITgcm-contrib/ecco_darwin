@@ -530,12 +530,20 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      WRITE(diagName,'(A)')'surfpCO2'
-      WRITE(diagTitle,'(A)')'surface pCO2'
-      diagUnits = 'mol/mol         '
+      WRITE(diagName,'(A)')'apCO2'
+      WRITE(diagTitle,'(A)')'atmospheric pCO2'
+      diagUnits = 'atm             '
       diagCode  = 'SM P    L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     
+      WRITE(diagName,'(A)')'apCO2sat'
+      WRITE(diagTitle,'(A)')'atmospheric pCO2 sat'
+      diagUnits = 'atm             '
+      diagCode  = 'SM P    L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     
 #endif
 
 #endif /* ALLOW_DIAGNOSTICS */
