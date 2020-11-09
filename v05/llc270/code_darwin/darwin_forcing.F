@@ -560,7 +560,7 @@ C      diags(iCons*) for convenience
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gPO4surfForc,'gPO4Epr ',0,1,2,
      &  bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(gFeTsurfForc,'gFeTPEpr ',0,1,2,
+       CALL DIAGNOSTICS_FILL(gFeTsurfForc,'gFeTEpr ',0,1,2,
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gSiO2surfForc,'gSiO2Epr',0,1,2,
      &  bi,bj,myThid)
