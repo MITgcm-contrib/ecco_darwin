@@ -45,14 +45,3 @@
          cp ../../llc270/input/data.exf_JRA55 data.exf
          uncomment line 36 ("runoftempfile") in data.exf file
          ln -sf ../../llc270_forcings/JRA55riverT/Mac270 .
-         
-      c) Add interannual forcing based on a discharge time series
-         # Create Mac270 river runoff forcing file from llc270 files with :
-         cd Mac270/python
-         python Intan_frc_gen.py
-         # Then do:
-         cp ../../llc270/input/data.exf_Intan data.exf
-         line 35 : - uncomment ("runofffile") in data.exf file
-                   - Set path to Interannual forcing data
-         ln -sf ../../llc270_forcings/IntanMac270 .
-         
