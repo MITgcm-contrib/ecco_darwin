@@ -32,7 +32,7 @@ C Allow sponge layer treatment of open boundary conditions
 #undef ALLOW_OBCS_SPONGE
 
 C Include hooks to sponge layer treatment of pkg/seaice variables
-#define ALLOW_OBCS_SEAICE_SPONGE
+#undef ALLOW_OBCS_SEAICE_SPONGE
 
 C balance barotropic velocity
 #undef ALLOW_OBCS_BALANCE
@@ -43,7 +43,7 @@ C add tidal contributions to normal OB flow
 C Use older implementation of obcs in seaice-dynamics
 C note: most of the "experimental" options listed below have not yet
 C       been implementated in new version.
-#undef OBCS_UVICE_OLD
+#define OBCS_UVICE_OLD
 
 #ifdef OBCS_UVICE_OLD
 C     The following five CPP options are experimental and aim to deal
@@ -61,7 +61,7 @@ C     Smooth the component of sea ice velocity parallel to the edge.
 #undef OBCS_SEAICE_SMOOTH_UVICE_PAR
 
 C     Compute rather than specify seaice velocities at the edges.
-#undef OBCS_SEAICE_COMPUTE_UVICE
+#define OBCS_SEAICE_COMPUTE_UVICE
 #endif /* OBCS_UVICE_OLD */
 
 C     Smooth the tracer sea-ice variables near the edges.
