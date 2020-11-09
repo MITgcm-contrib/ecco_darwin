@@ -42,7 +42,7 @@ def bin_save(fnm, array):
 # Set path to data
 inpath = input("Set the path to llc270 Yearly files\n")
 outpath = inpath+"Mack270/"
-fnm = input("Set generic name of file (w/o year)\n")
+fnm = input("Set generic name of input file (w/o year)\n")
 fnm_out = input("Set generic name of output file (w/o year)\n")
 
 # Set date window
