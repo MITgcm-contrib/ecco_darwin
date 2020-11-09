@@ -1,6 +1,6 @@
 #!/usr/bin/python
 ###############################################################################
-#  Function to convert global llc270 binary files itnoon Mackenzie llc270
+#  Function to convert global llc270 binary files into Mackenzie llc270
 #  binary files zoomed on the region
 #
 # Clément BERTIN, Université de La Rochelle
