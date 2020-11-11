@@ -10,5 +10,5 @@
  useSALT_PlUME=.TRUE.,
  useDiagnostics=.TRUE.,
  useOBCS  = .TRUE.,
- useRBCS  = .TRUE.,
+# useRBCS  = .TRUE.,
  /
