@@ -33,7 +33,7 @@ cd build
    module purge
    module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
    ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-   -mo ../../llc270/code
+   -mo ../../Mac270/code
    make depend
    make -j 16
  
@@ -56,7 +56,7 @@ ln -sf ../build/mitgcmuv .
 > On Pleiades:
   ln -sf /nobackup/hzhang1/forcing/era_xx .
   ln -sf /nobackup/hzhang1/pub/Mac_Delta270/run_template/* .
-  cp ../../llc270/input/* .
+  cp ../../Mac270/input/* .
   qsub job_Mac270_Bro
 > On laptop:
   ln -sf ../../llc270_forcings/era_xx .
