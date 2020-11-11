@@ -1,0 +1,70 @@
+# Diagnostic Package Choices
+#-----------------
+# for each output-stream:
+#  filename(n) : prefix of the output file name (only 8.c long) for outp.stream n
+#  frequency(n):< 0 : write snap-shot output every multiple of |frequency| (iter)
+#               > 0 : write time-average output every multiple of frequency (iter)
+#  levels(:,n) : list of levels to write to file (Notes: declared as REAL)
+#                 when this entry is missing, select all common levels of this list
+#  fields(:,n) : list of diagnostics fields (8.c) (see "available_diagnostics" file
+#                 for the list of all available diag. in this particular config)
+#--------------------------------------------------------------------
+#
+# fields details:
+# =================
+# HAno     Perturbation of Surface (pressure, height) (Pa,m)
+# SSS      Sea Surface Salinity (g/kg)
+# SST      Sea Surface Temperature (DegC)
+# Vel      Surface Velocity, Zonal & Meridional (m/s)
+# WSpeed   10-m wind speed modulus (m/s)
+# SIarea   SEAICE fractional ice-covered area [0 to 1]
+# SIheff   SEAICE effective ice thickness (m)
+# SIVel    SEAICE velocity, Zonal & Meridional (m/s)
+# oceFWflx net surface Fresh-Water flux into the ocean (+=down), >0 decreases salinity
+# =================
+#
+ &diagnostics_list
+  filename(1) = 'SIarea',
+   frequency(1) = -86400.,
+   timePhase(1) = 0.,
+   fields(1,1) = 'SIarea   ',
+  filename(2) = 'SIheff',
+   frequency(2) = -86400.,
+   timePhase(2) = 0.,
+   fields(1,2) = 'SIheff   ',
+  filename(3) = 'SIuice',
+   frequency(3) = -86400.,
+   timePhase(3) = 0.,
+   fields(1,3) = 'SIuice   ',
+  filename(4) = 'SIvice',
+   frequency(4) = -86400.,
+   timePhase(4) = 0.,
+   fields(1,4) = 'SIvice   ',
+  filename(5) = 'SST',
+   frequency(5) = -86400.,
+   timePhase(5) = 0.,
+   levels(1,5) = 1.,
+   fields(1,5) = 'THETA   '
+ &
+#
+# Parameter for Diagnostics of per level statistics:
+#-----------------
+# for each output-stream:
+#  stat_fname(n) : prefix of the output file name (only 8.c long) for
+#outp.stream n
+#  stat_freq(n):< 0 : write snap-shot output every |stat_freq| seconds
+#               > 0 : write time-average output every stat_freq seconds
+#  stat_phase(n)    : write at time = stat_phase + multiple of |stat_freq|
+#  stat_region(:,n) : list of "regions" (default: 1 region only=global)
+#  stat_fields(:,n) : list of diagnostics fields (8.c) (see
+#"available_diagnostics.log"
+#                 file for the list of all available diag. in this particular
+#config)
+#-----------------
+ &DIAG_STATIS_PARMS
+#- an example just to check the agreement with MONITOR output:
+#stat_fields(1,1)= 'ETAN    ','UVEL    ','VVEL    ','WVEL    ', 'THETA   ',
+#   stat_fname(1)= 'dynStDiag',
+#    stat_freq(1)= -864000.,
+#   stat_phase(1)= 0.,
+ &
