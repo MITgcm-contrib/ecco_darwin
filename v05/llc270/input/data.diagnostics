@@ -229,7 +229,7 @@
    filename(64)  = 'diags/monthly/primProd',
 #--- 
   frequency(65) = 2635200.,
-   fields(1,65) = 'fluxCO2 ',
+   fields(1,65) = 'fluxCO2  ',
    filename(65) = 'diags/monthly/CO2_flux',
 #--- 
   frequency(66) = 2635200.,
