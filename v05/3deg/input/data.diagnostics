@@ -44,7 +44,7 @@
    filename(6) = 'diags/daily/pCO2',   
 #---
   frequency(7) = 86400.,
-   fields(1,7) = 'surfpCO2',
+   fields(1,7) = 'apCO2   ',
    filename(7) = 'diags/daily/apCO2',
 #--- 
   frequency(8) = 86400.,
