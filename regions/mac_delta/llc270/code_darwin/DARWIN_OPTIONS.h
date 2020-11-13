@@ -104,7 +104,7 @@ C restrict phytoplankton growth to a temperature range
 C iron
 
 C restrict maximum free iron
-#undef DARWIN_MINFE
+#define DARWIN_MINFE
 
 C enable particle scavenging code
 #define DARWIN_PART_SCAV
@@ -148,6 +148,8 @@ C set traits for darwin2 9-species setup (requires GUD_RANDOM_TRAITS)
 C enable diazotrophy when using (requires GUD_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
+C nutrient runoff
+#define DARWIN_NUTRIENT_RUNOFF
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */
