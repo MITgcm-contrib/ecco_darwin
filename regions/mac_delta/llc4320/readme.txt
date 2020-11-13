@@ -5,7 +5,8 @@
 # ========
 # 1. Get code
 git clone https://github.com/MITgcm/MITgcm.git
-svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/mac_delta_llc4320
+svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc4320 Mac4320
+
 # For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
 # Find it at :https://ecco.jpl.nasa.gov/drive
 wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC4320/Mac_Delta/EOG/
@@ -20,7 +21,7 @@ mkdir build run
 # 2. Build MPI executable
 #    Prerequisite: 1. Get code
 cd build
-cp ../../Mac_Delta/code/* .
+#cp ../../Mac4320/code/* .
 -+-+-+-+-+-+-+-
 #It is possible to run a light version (requiring 577 CPU < 2277) following this instructions:
 mv SIZE.h SIZE.h_HCPU
@@ -30,11 +31,11 @@ mv SIZE.h_30FULL SIZE.h
     # On Pleiades follow the instructions below:
     module purge
     module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-    ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas -mo ../../Mac_Delta/code
+    ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas -mo ../../Mac4320/code
     
     # On other machine, use the following command with build option file ("-of ..") compatible with your machine
     # Following example works on Computecanada:
-    ../tools/genmake2 -mpi -of ../tools/build_options/linux_amd64_ifort+gcc -mo ../../Mac_Delta/code
+    ../tools/genmake2 -mpi -of ../tools/build_options/linux_amd64_ifort+gcc -mo ../../Mac4320/code
     
 make depend
 make -j 16
@@ -45,7 +46,11 @@ make -j 16
 cd ../run
 mkdir diags
 ln -sf ../build/mitgcmuv .
-cp ../../Mac_Delta/input/*data* .
+cp ../../Mac4320/input/* .
+#Pleiades: 2 lines
+ln -sf /nobackup/dmenemen/forcing/ECMWF_operational/EOG* .
+ln -sf /nobackup/hzhang1/pub/Mac_Delta/run_template/* .
+#other machine: 2 lines
 ln -sf ../../Mac_Delta/input/EOG* .
 ln -sf ../../Mac_Delta/run_template/* .
 -+-+-+-+-+-+-+-
