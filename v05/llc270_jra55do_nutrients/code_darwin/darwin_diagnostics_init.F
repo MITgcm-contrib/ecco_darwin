@@ -203,8 +203,22 @@ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
 c nutrient consumption
-      WRITE(diagName,'(A)')'C_DIN'
-      WRITE(diagTitle,'(A)')'consumption of DIN'
+      WRITE(diagName,'(A)')'C_NO3'
+      WRITE(diagTitle,'(A)')'consumption of NO3'
+      diagUnits = 'mmolN/m3/s      '
+      diagCode  = 'SM P    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'C_NO2'
+      WRITE(diagTitle,'(A)')'consumption of NO2'
+      diagUnits = 'mmolN/m3/s      '
+      diagCode  = 'SM P    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'C_NH4'
+      WRITE(diagTitle,'(A)')'consumption of NH4'
       diagUnits = 'mmolN/m3/s      '
       diagCode  = 'SM P    MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
@@ -232,8 +246,22 @@ c nutrient consumption
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
 c additional source terms of nutrients
-      WRITE(diagName,'(A)')'S_DIN'
-      WRITE(diagTitle,'(A)')'non-transport source of DIN'
+      WRITE(diagName,'(A)')'S_NO3'
+      WRITE(diagTitle,'(A)')'non-transport source of NO3'
+      diagUnits = 'mmolN/m3/s      '
+      diagCode  = 'SM      MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'S_NO2'
+      WRITE(diagTitle,'(A)')'non-transport source of NO2'
+      diagUnits = 'mmolN/m3/s      '
+      diagCode  = 'SM      MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'S_NH4'
+      WRITE(diagTitle,'(A)')'non-transport source of NH4'
       diagUnits = 'mmolN/m3/s      '
       diagCode  = 'SM      MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
@@ -360,6 +388,62 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+      WRITE(diagName,'(A)')'gDICEpr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of DIC due to E/P/runoff'
+      diagUnits = 'mmol C/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gNO3Epr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of DIC due to E/P/runoff'
+      diagUnits = 'mmol N/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gNO2Epr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of DIC due to E/P/runoff'
+      diagUnits = 'mmol N/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gNH4Epr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of DIC due to E/P/runoff'
+      diagUnits = 'mmol N/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gPO4Epr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of PO4 due to E/P/runoff'
+      diagUnits = 'mmol P/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gFeTEpr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of FeT due to E/P/runoff'
+      diagUnits = 'mmol C/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gSiO2Epr'
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of SiO2 due to E/P/runoff'
+      diagUnits = 'mmol Si/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
       WRITE(diagName,'(A)')'gALKsurf'
       WRITE(diagTitle,'(A)')'Tendency of ALK due to oldvirt.flux'
       diagUnits = 'mmol eq/m3/s    '
@@ -371,6 +455,48 @@ C-      use units & names from data.ptracers :
       WRITE(diagTitle,'(A)')'Tendency of O2 due to air-sea exch'
       diagUnits = 'mmol O2/m3/s    '
       diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'cDIC'
+      WRITE(diagTitle,'(A)')'Consumption of DIC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'cDIC_PIC'
+      WRITE(diagTitle,'(A)')'Consumption of DIC due to PIC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'respDIC'
+      WRITE(diagTitle,'(A)')'DIC due to respiration'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'rDIC_DOC'
+      WRITE(diagTitle,'(A)')'DIC due to remineralization of DOC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'rDIC_POC'
+      WRITE(diagTitle,'(A)')'DIC due to remineralization of POC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'dDIC_PIC'
+      WRITE(diagTitle,'(A)')'DIC due to dissolution of PIC'
+      diagUnits = 'mmol C/m3/s    '
+      diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 #endif /* DARWIN_ALLOW_CARBON */
@@ -404,12 +530,20 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      WRITE(diagName,'(A)')'surfpCO2'
-      WRITE(diagTitle,'(A)')'surface pCO2'
-      diagUnits = 'mol/mol         '
+      WRITE(diagName,'(A)')'apCO2'
+      WRITE(diagTitle,'(A)')'atmospheric pCO2'
+      diagUnits = 'atm             '
       diagCode  = 'SM P    L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     
+      WRITE(diagName,'(A)')'apCO2sat'
+      WRITE(diagTitle,'(A)')'atmospheric pCO2 sat'
+      diagUnits = 'atm             '
+      diagCode  = 'SM P    L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     
 #endif
 
 #endif /* ALLOW_DIAGNOSTICS */
