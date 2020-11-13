@@ -73,7 +73,7 @@
  &PARM03
  nIter0=289296,
  pickupSuff='0000289296',
- endtime=94672800,
+ endtime=820540800,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
 #when using the cd scheme:

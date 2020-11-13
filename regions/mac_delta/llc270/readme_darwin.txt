@@ -6,7 +6,6 @@
 # 1. Get code
 # ==============
 git clone --depth 1 https://github.com/darwinproject/darwin3
-git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270 Mac270
 
 # ================
