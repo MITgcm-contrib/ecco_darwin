@@ -10,7 +10,7 @@
  useSALT_PlUME=.TRUE.,
  useDiagnostics=.TRUE.,
  useOBCS  = .TRUE.,
- useRBCS  = .TRUE.,
+ useRBCS  = .FALSE.,
  usePTRACERS   = .TRUE.,
  useGCHEM      = .TRUE.,
  /
