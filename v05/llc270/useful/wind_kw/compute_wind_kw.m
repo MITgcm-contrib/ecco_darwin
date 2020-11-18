@@ -3,7 +3,7 @@ clear all
 
 gridDir = '/Users/carrolld/Documents/research/carbon/simulations/grid/LLC_270/';
 
-dataDir = '/Users/carrolld/Documents/research/darwin3/mat/wind_kw/';
+dataDir = '/Users/carrolld/Documents/research/darwin3/mat/wind_a/';
 
 %% 
 
@@ -38,26 +38,28 @@ T = meanField2;
 ice = meanField3;
 
 Uavg2 = Uavg .^ 2;
-U2 = (Uavg2 + Ustd) .^ 2;
+U2 = Uavg2 + (Ustd .^ 2); %add variance
 
-Sc = schmidt_number(T);
+Sc = schmidt_number(T); %input in deg C, converted to K
 
-Sc660 = (Sc ./ 660) .^ -0.5;
+Sc660 = (Sc ./ 660) .^ -0.5; %660, Wannikhof (2014) equation 4
 
 a = calculate_scaled_alpha(U2,Sc660,ice,scaling);
 
-kw = a .* Uavg2 .* Sc660;
+kw1 = a .* Uavg2 .* Sc660;
+kw2 = a .* U2 .* Sc660;
 
 %% 
 
-meanKw = nanmean(nanmean(kw .* RAC)) ./ nanmean(nanmean(RAC));
+meanA = nanmean(nanmean(a .* RAC)) ./ nanmean(nanmean(RAC));
 
 hFig1 = figure(1);
 set(hFig1,'units','normalized','outerposition',[0 0 1 1]);
 set(gcf,'color',[1 1 1]);
 set(gca,'color',[0.5 0.5 0.5]);
 
-colors = cmocean('speed',1000);
+%colors = cmocean('speed',1000);
+colors = jet(1000);
 
 lw = 2;
 fs = 24;
@@ -66,13 +68,15 @@ hold on
 
 set(gca,'Color',[0.5 0.5 0.5]);
 
-quikplot_llc(kw);
+quikplot_llc(kw2);
 
 colormap(colors);
 
 hcb = colorbar
 
-set(get(hcb,'ylabel'),'String',{'Kw'});
+caxis([0 40]);
+
+set(get(hcb,'ylabel'),'String',{'kw'});
 
 axis tight
 
@@ -80,4 +84,4 @@ box on
 set(gca,'LineWidth',lw);
 set(gca,'FontSize',fs);
 
-title(['Global Area-weighted Mean Kw = ' num2str(meanKw)]);
+title(['Global Area-weighted Mean a = ' num2str(meanA)]);
