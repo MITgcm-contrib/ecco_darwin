@@ -1,0 +1,27 @@
+#!/bin/csh
+##PBS -l select=1:ncpus=1:model=ivy
+#PBS -l select=1:ncpus=1:model=cas_ait
+##PBS -l select=39:ncpus=20:model=ivy
+
+##PBS -l walltime=00:00:00
+##PBS -q debug
+##PBS -q devel
+
+#PBS -l walltime=120:00:00
+#PBS -q long
+
+#PBS -e error.txt
+#PBS -o output.txt
+
+#PBS -j oe
+#PBS -m abe
+#PBS -N offline_budget
+
+module purge
+module load matlab
+module load gcc/4.9.4
+module list
+
+cd /nobackup/dcarrol2/v05_DIC_budget/m_files/budget
+./run_script.sh $MATLAB
+
