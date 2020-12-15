@@ -104,7 +104,7 @@ C restrict phytoplankton growth to a temperature range
 C iron
 
 C restrict maximum free iron
-#undef DARWIN_MINFE
+#define DARWIN_MINFE
 
 C enable particle scavenging code
 #define DARWIN_PART_SCAV

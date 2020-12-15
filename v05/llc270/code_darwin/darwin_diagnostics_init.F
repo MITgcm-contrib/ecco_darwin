@@ -396,6 +396,14 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+      WRITE(diagName,'(A)')'gALKEpr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of ALK due to E/P/runoff'
+      diagUnits = 'mmol eq./m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
       WRITE(diagName,'(A)')'gNO3Epr '
       WRITE(diagTitle,'(A)')
      &            'Tendency of DIC due to E/P/runoff'
