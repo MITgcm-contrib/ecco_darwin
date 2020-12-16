@@ -4,41 +4,56 @@ close all
 %%
 %settings, modify as needed
 
+runOnline = 0;
 savePlot = 1;
-saveMat = 0;
+saveMat = 0; %save budget .mat files 
 
-useVol = 0; %integrate w/ volume
-useLLC270 = 0;
+useVol = 1; %integrate w/ volume
+useLLC270 = 0; %use LLC270 grid
 
 startIntLevel = 1; %vertical integration start k level
-endIntLevel = 1;
+endIntLevel = 15;
 
 %set to 1 to plot budget terms
-plotBudgetVolume = 0; 
-plotBudgetSalinity = 0; 
-plotBudgetDIC = 0; 
+plotBudgetVolume = 0;
+plotBudgetSalinity = 0;
+plotBudgetDIC = 0;
+plotBudgetALK = 1;
 plotBudgetNO3 = 0;
-plotBudgetNO2 = 0; 
+plotBudgetNO2 = 0;
 plotBudgetNH4 = 0;
-plotBudgetPO4 = 0; 
-plotBudgetFe = 0; 
-plotBudgetSiO2 = 0; 
+plotBudgetPO4 = 0;
+plotBudgetFe = 0;
+plotBudgetSiO2 = 0;
 
 nanString = 'omitnan';
 
-%% 
+%%
 
-gridDir = '../../../../../darwin3/run/';
-
-modelDir = '../../../../../darwin3/run/';
+if runOnline
+    
+    addpath(genpath('/nobackup/dcarrol2/MATLAB'));
+    
+    gridDir = '/nobackup/dcarrol2/grid/LLC_270/';
+    modelDir = '/nobackup/dcarrol2/v05_DIC_budget/darwin3/run/';
+    
+else
+    
+    gridDir = '../../../../../darwin3/run/';
+    modelDir = '../../../../../darwin3/run/';
+    
+end
 
 figureDir = 'figures/';
 saveDir = 'mat/';
 
+mkdir figures
+mkdir mat
+
 %%
 %plotting parameters
 
-fs = 18;
+fs = 12;
 lw = 2;
 
 colors = cmocean('balance',1000);
@@ -74,17 +89,19 @@ if useLLC270
     
     grid_load(gridDir,5,'compact');
     plotString = 'quikplot_llc';
-
+    flipString = [];
 else
     
     plotString = 'pcolor';
-
+    
     nF = 1;
     fileFormat = 'straight';
     
     grid_load(gridDir,nF,fileFormat);
     
     mygrid.domainPeriodicity = [1 0];
+    
+    flipString = '''';
     
 end
 
@@ -115,15 +132,16 @@ filename1 = 'average_2d';
 filename2 = 'average_velmass_3d';
 filename3 = 'average_salt_3d';
 filename4 = 'average_DIC_3d';
-filename5 = 'average_NO3_3d';
-filename6 = 'average_NO2_3d';
-filename7 = 'average_NH4_3d';
-filename8 = 'average_PO4_3d';
-filename9 = 'average_Fe_3d';
-filename10 = 'average_Fe_darwin_2d';
-filename11 = 'average_SiO2_3d';
-filename12 = 'snap_2d';
-filename13 = 'snap_3d';
+filename5 = 'average_ALK_3d';
+filename6 = 'average_NO3_3d';
+filename7 = 'average_NO2_3d';
+filename8 = 'average_NH4_3d';
+filename9 = 'average_PO4_3d';
+filename10 = 'average_Fe_3d';
+filename11 = 'average_Fe_darwin_2d';
+filename12 = 'average_SiO2_3d';
+filename13 = 'snap_2d';
+filename14 = 'snap_3d';
 
 %%
 
@@ -175,12 +193,13 @@ for timeStep = 1:numFiles
     
     %two-dimensional surface forcing
     DIC_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',7)) .* mmol_to_mol; %mol m^-3 s^-1
-    NO3_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',8)) .* mmol_to_mol; %mol m^-3 s^-1
-    NO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',9)) .* mmol_to_mol; %mol m^-3 s^-1
-    NH4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
-    PO4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
-    Fe_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',12)) .* mmol_to_mol; %mol m^-3 s^-1
-    SiO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',13)) .* mmol_to_mol; %mol m^-3 s^-1
+    ALK_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',8)) .* mmol_to_mol; %mol m^-3 s^-1
+    NO3_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',9)) .* mmol_to_mol; %mol m^-3 s^-1
+    NO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    NH4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
+    PO4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',12)) .* mmol_to_mol; %mol m^-3 s^-1
+    Fe_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',13)) .* mmol_to_mol; %mol m^-3 s^-1
+    SiO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',14)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %three-dimensional time-averaged fields
     %
@@ -217,87 +236,99 @@ for timeStep = 1:numFiles
     rDIC_DOC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',13)) .* mmol_to_mol;  %mol m^-3 s^-1
     rDIC_POC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',14)) .* mmol_to_mol;  %mol m^-3 s^-1
     dDIC_PIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',15)) .* mmol_to_mol;  %mol m^-3 s^-1
+    
+    %ALK content
+    ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    gDAR_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
    
     %NO3 content
-    NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
-    ADVx_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
-    ADVy_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
-    ADVr_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
-    DFxE_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
-    DFyE_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
-    DFrE_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
-    DFrI_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_NO3 = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    gDAR_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
+    C_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
+    S_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
     
     %NO2 content
-    NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
-    ADVx_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
-    ADVy_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
-    ADVr_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
-    DFxE_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
-    DFyE_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
-    DFrE_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
-    DFrI_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_NO2 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    gDAR_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
+    C_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
+    S_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
     
     %NH4 content
-    NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
-    ADVx_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
-    ADVy_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
-    ADVr_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
-    DFxE_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
-    DFyE_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
-    DFrE_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
-    DFrI_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_NH4 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    gDAR_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
+    C_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
+    S_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
     
     %PO4 content
-    PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
-    ADVx_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
-    ADVy_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
-    ADVr_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
-    DFxE_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
-    DFyE_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
-    DFrE_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
-    DFrI_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_PO4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    gDAR_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
+    C_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
+    S_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
     
     %Fe content
-    Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
-    ADVx_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
-    ADVy_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
-    ADVr_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
-    DFxE_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
-    DFyE_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
-    DFrE_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
-    DFrI_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
-    C_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_Fe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
-    SEDFe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',12)) .* mmol_to_mol;  %mol m^-3 s^-1
-    FREEFe = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',13)) .* mmol_to_mol;  %mol m^-3 s^-1
-    SFCSOLFe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',1)) .* mmol_to_mol;  %mol m^-2 s^-1
+    Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    gDAR_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
+    C_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
+    S_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    SEDFe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',12)) .* mmol_to_mol;  %mol m^-3 s^-1
+    FREEFe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',13)) .* mmol_to_mol;  %mol m^-3 s^-1
+    %2d surface dust forcing
+    SFCSOLFe = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',1)) .* mmol_to_mol;  %mol m^-2 s^-1
     
     %SiO2 content
-    SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
-    ADVx_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
-    ADVy_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
-    ADVr_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
-    DFxE_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
-    DFyE_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
-    DFrE_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
-    DFrI_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
-    C_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_SiO2 = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
+    ADVx_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
+    ADVy_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',3)) .* mmol_to_mol; %mol s^-1
+    ADVr_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',4)) .* mmol_to_mol; %mol s^-1
+    DFxE_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',5)) .* mmol_to_mol; %mol s^-1
+    DFyE_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
+    DFrE_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
+    DFrI_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
+    gDAR_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
+    C_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
+    S_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
     
     %%
     %load snapshots
@@ -305,6 +336,7 @@ for timeStep = 1:numFiles
     ETAN_SNAP = nan*ones(nx,ny,2);
     SALT_SNAP = nan .* ones(nx,ny,numLevels,2);
     DIC_SNAP = nan .* ones(nx,ny,numLevels,2);
+    ALK_SNAP = nan .* ones(nx,ny,numLevels,2);
     NO3_SNAP = nan .* ones(nx,ny,numLevels,2);
     NO2_SNAP = nan .* ones(nx,ny,numLevels,2);
     NH4_SNAP = nan .* ones(nx,ny,numLevels,2);
@@ -315,48 +347,52 @@ for timeStep = 1:numFiles
     if timeStep == 1
         
         %no pre-initial snapshot
-        ETAN_SNAP(:,:,2) = rdmds([diagDir filename12],tt(1),'rec',1);
+        ETAN_SNAP(:,:,2) = rdmds([diagDir filename13],tt(1),'rec',1);
         
-        SALT_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',1);
-        DIC_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO3_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO2_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1
-        NH4_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
-        PO4_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
-        Fe_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
-        SiO2_SNAP(:,:,:,2) = rdmds([diagDir filename13],tt(1),'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
+        SALT_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',2);
+        DIC_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
+        ALK_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1
+        NO3_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
+        NO2_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
+        NH4_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
+        PO4_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
+        Fe_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',9) .* mmol_to_mol;  %mol m^-3 s^-1
+        SiO2_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',10) .* mmol_to_mol;  %mol m^-3 s^-1
         
     elseif timeStep == numFiles %no final snapshot
         
-        ETAN_SNAP(:,:,1) = rdmds([diagDir filename12],tt(timeStep-1),'rec',1);
+        ETAN_SNAP(:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',1);
         
-        SALT_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',1);
-        DIC_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO3_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO2_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1
-        NH4_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
-        PO4_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
-        Fe_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
-        SiO2_SNAP(:,:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
+        SALT_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',2);
+        DIC_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
+        ALK_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1
+        NO3_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
+        NO2_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
+        NH4_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
+        PO4_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
+        Fe_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',9) .* mmol_to_mol;  %mol m^-3 s^-1
+        SiO2_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',10) .* mmol_to_mol;  %mol m^-3 s^-1
         
     else %timeStep~=1 & timeStep~=numFiles
         
-        ETAN_SNAP = rdmds([diagDir filename12],ttSnap,'rec',1);
+        ETAN_SNAP = rdmds([diagDir filename13],ttSnap,'rec',1);
         
-        SALT_SNAP = rdmds([diagDir filename13],ttSnap,'rec',1);
-        DIC_SNAP = rdmds([diagDir filename13],ttSnap,'rec',2) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO3_SNAP = rdmds([diagDir filename13],ttSnap,'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO2_SNAP = rdmds([diagDir filename13],ttSnap,'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1
-        NH4_SNAP = rdmds([diagDir filename13],ttSnap,'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
-        PO4_SNAP = rdmds([diagDir filename13],ttSnap,'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
-        Fe_SNAP = rdmds([diagDir filename13],ttSnap,'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
-        SiO2_SNAP = rdmds([diagDir filename13],ttSnap,'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
+        SALT_SNAP = rdmds([diagDir filename14],ttSnap,'rec',2);
+        DIC_SNAP = rdmds([diagDir filename14],ttSnap,'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
+        ALK_SNAP = rdmds([diagDir filename14],ttSnap,'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1      
+        NO3_SNAP = rdmds([diagDir filename14],ttSnap,'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
+        NO2_SNAP = rdmds([diagDir filename14],ttSnap,'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
+        NH4_SNAP = rdmds([diagDir filename14],ttSnap,'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
+        PO4_SNAP = rdmds([diagDir filename14],ttSnap,'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
+        Fe_SNAP = rdmds([diagDir filename14],ttSnap,'rec',9) .* mmol_to_mol;  %mol m^-3 s^-1
+        SiO2_SNAP = rdmds([diagDir filename14],ttSnap,'rec',10) .* mmol_to_mol;  %mol m^-3 s^-1
         
     end
     
     ETAN_SNAP = convert2gcmfaces(ETAN_SNAP);
     SALT_SNAP = convert2gcmfaces(SALT_SNAP);
     DIC_SNAP = convert2gcmfaces(DIC_SNAP);
+    ALK_SNAP = convert2gcmfaces(ALK_SNAP);
     NO3_SNAP = convert2gcmfaces(NO3_SNAP);
     NO2_SNAP = convert2gcmfaces(NO2_SNAP);
     NH4_SNAP = convert2gcmfaces(NH4_SNAP);
@@ -526,7 +562,7 @@ for timeStep = 1:numFiles
     gDAR_DIC = (gDAR_DIC - (forcDIC ./ dzMat)) ./ mygrid.hFacC; %remove air-sea CO2 flux from gDAR, so it is just biology
     
     forcDIC = mygrid.mskC .* (forcDIC ./ dzMat);
-   
+    
     virtualFluxDIC = mygrid.mskC .* virtualFluxDIC .* 0;
     
     %net biology, mol m^-3 s^-1
@@ -539,7 +575,66 @@ for timeStep = 1:numFiles
     bioRemin_DIC_DOC = mygrid.mskC .* (rDIC_DOC ./ mygrid.hFacC);
     bioRemin_DIC_POC = mygrid.mskC .* (rDIC_POC ./ mygrid.hFacC);
     bioDissc_DIC_PIC = mygrid.mskC .* (dDIC_PIC ./ mygrid.hFacC);
-
+    
+    %%
+    %ALK budget
+    
+    D_snap = 0 .* ALK_SNAP;
+    sStar = 0 .* ALK_SNAP;
+    
+    for nt = 1:2
+        
+        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
+        
+        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* ALK_SNAP(:,:,:,nt);
+        
+    end
+    
+    %tendency, mol m^-3 s^-1
+    tendALK = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    
+    %horizontal divergences, mol m^-3 s^-1
+    adv_hConvALK = calc_UV_conv(ADVx_ALK,ADVy_ALK) ./ VVV;
+    dif_hConvALK = calc_UV_conv(DFxE_ALK,DFyE_ALK) ./ VVV;
+    
+    %vertical divergences, mol m^-3 s^-1
+    adv_vConvALK = 0 .* ADVx_ALK;
+    dif_vConvALK = 0 .* ADVx_ALK;
+    
+    for nz = 1:numLevels
+        
+        nzp1 = min([nz+1,numLevels]);
+        
+        adv_vConvALK(:,:,nz) = squeeze(ADVr_ALK(:,:,nzp1) .* double(nz~=numLevels) - ADVr_ALK(:,:,nz));
+        dif_vConvALK(:,:,nz) = squeeze(DFrI_ALK(:,:,nzp1) .* double(nz~=numLevels) - DFrI_ALK(:,:,nz) ...
+            + DFrE_ALK(:,:,nzp1) .* double(nz~=numLevels) - DFrE_ALK(:,:,nz));
+        
+    end
+    
+    adv_vConvALK = adv_vConvALK ./ VVV;
+    dif_vConvALK = dif_vConvALK ./ VVV;
+    
+    %ALK tendency due to E/P/runoff, mol m^-3 s^-1
+    virtualFluxALK = 0 .* oceSPtnd;
+    
+    for nz = 1:numLevels
+        
+        if nz == 1
+            
+            virtualFluxALK(:,:,1) =  ALK_Epr;
+            
+        else
+            
+            virtualFluxALK(:,:,nz) =  0;
+            
+        end
+        
+    end
+    
+    gDAR_ALK = mygrid.mskC .* (gDAR_ALK ./ mygrid.hFacC);
+    
+    virtualFluxALK = mygrid.mskC .* virtualFluxALK .* 0;
+    
     %%
     %NO3 budget
     
@@ -607,7 +702,7 @@ for timeStep = 1:numFiles
     
     clear sStar
     
-    %% 
+    %%
     %NO2 budget
     
     D_snap = 0 .* NO2_SNAP;
@@ -671,10 +766,10 @@ for timeStep = 1:numFiles
     
     %bio source
     bioS_NO2 = mygrid.mskC .* (S_NO2 ./ mygrid.hFacC);
-       
+    
     clear sStar
     
-    %% 
+    %%
     %NH4 budget
     
     D_snap = 0 .* NH4_SNAP;
@@ -869,11 +964,11 @@ for timeStep = 1:numFiles
     virtualFluxFe = mygrid.mskC .* virtualFluxFe;
     
     gDar_Fe = mygrid.mskC .* (gDAR_Fe ./ mygrid.hFacC);
-
+    
     forcFe = mygrid.mskC .* (forcFe ./ mygrid.hFacC);
     sedFe = mygrid.mskC .* (SEDFe ./ mygrid.hFacC);
     freeFe = mygrid.mskC .* (FREEFe  ./ mygrid.hFacC);
-
+    
     bioFe = gDAR_Fe - forcFe - SEDFe; %remove iron dust and sediment flu from gDAR
     
     clear sStar
@@ -982,6 +1077,14 @@ for timeStep = 1:numFiles
     bioReminDIC_DOC = convert2gcmfaces(bioRemin_DIC_DOC);
     bioReminDIC_POC = convert2gcmfaces(bioRemin_DIC_POC);
     bioDisscDIC_PIC = convert2gcmfaces(bioDissc_DIC_PIC);
+    
+    tendALK = convert2gcmfaces(tendALK);
+    adv_hConvALK = convert2gcmfaces(adv_hConvALK);
+    adv_vConvALK = convert2gcmfaces(adv_vConvALK);
+    dif_hConvALK = convert2gcmfaces(dif_hConvALK);
+    dif_vConvALK = convert2gcmfaces(dif_vConvALK);
+    virtualFluxALK = convert2gcmfaces(virtualFluxALK);
+    gDARALK = convert2gcmfaces(gDAR_ALK);
     
     tendNO3 = convert2gcmfaces(tendNO3);
     adv_hConvNO3 = convert2gcmfaces(adv_hConvNO3);
@@ -1096,15 +1199,32 @@ for timeStep = 1:numFiles
     intBioReminDIC_DOC = sum((bioReminDIC_DOC(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intBioReminDIC_POC = sum((bioReminDIC_POC(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intBioDisscDIC_PIC = sum((bioDisscDIC_PIC(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
-
+    
     intBioDIC = intBioConsDIC + intBioConsDIC_PIC + intBioRespDIC + ...
         intBioReminDIC_DOC + intBioReminDIC_POC + intBioDisscDIC_PIC;
-  
+    
     intTotalDIC = intHAdvDIC + intVAdvDIC ...
         + intHDifDIC + intVDifDIC + intForcDIC + intVirtualFluxDIC.*0 + intBioDIC;
-
+    
     intResidualDIC = intTendDIC - intTotalDIC;
+    
+    %ALK
+    intTendALK = sum((tendALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intHAdvALK = sum((adv_hConvALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intVAdvALK = sum((adv_vConvALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intHDifALK = sum((dif_hConvALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intVDifALK = sum((dif_vConvALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intVirtualFluxALK = sum((virtualFluxALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intGDARALK = sum((gDARALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intBioCALK = intGDARALK; %placeholder
+    intBioSALK = intGDARALK; %placeholder
 
+    intTotalALK = intHAdvALK + intVAdvALK ...
+        + intHDifALK + intVDifALK + intVirtualFluxALK.*0 ...
+        + intBioCALK.*0 + intBioSALK.*0 + intGDARALK;
+    
+    intResidualALK = intTendALK - intTotalALK;
+    
     %NO3
     intTendNO3 = sum((tendNO3(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intHAdvNO3 = sum((adv_hConvNO3(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
@@ -1149,11 +1269,11 @@ for timeStep = 1:numFiles
     intGDARNH4 = sum((gDARNH4(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intBioCNH4 = sum((bioCNH4(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intBioSNH4 = sum((bioSNH4(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
-
+    
     intTotalNH4 = intHAdvNH4 + intVAdvNH4 ...
         + intHDifNH4 + intVDifNH4 + intVirtualFluxNH4.*0 ...
         + intBioCNH4 + intBioSNH4;
-
+    
     intResidualNH4 = intTendNH4 - intTotalNH4;
     
     %PO4
@@ -1170,7 +1290,7 @@ for timeStep = 1:numFiles
     intTotalPO4 = intHAdvPO4 + intVAdvPO4 ...
         + intHDifPO4 + intVDifPO4 + intVirtualFluxPO4.*0 ...
         + intBioCPO4 + intBioSPO4;
-
+    
     intResidualPO4 = intTendPO4 - intTotalPO4;
     
     %Fe
@@ -1185,10 +1305,10 @@ for timeStep = 1:numFiles
     intBioFe = sum((bioFe(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intSedFe = sum((sedFe(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intFreeFe = sum((freeFe(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
-
+    
     intTotalFe = intHAdvFe + intVAdvFe + intHDifFe + intVDifFe ...
         + intGDARFe + intFreeFe;
-
+    
     intResidualFe = intTendFe - intTotalFe;
     
     %SiO2
@@ -1202,7 +1322,7 @@ for timeStep = 1:numFiles
     intBioCSiO2 = sum((bioCSiO2(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intBioSSiO2 = sum((bioSSiO2(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     
-     intTotalSiO2 = intHAdvSiO2 + intVAdvSiO2 ...
+    intTotalSiO2 = intHAdvSiO2 + intVAdvSiO2 ...
         + intHDifSiO2 + intVDifSiO2 + intVirtualFluxSiO2.*0 ...
         + intBioCSiO2 + intBioSSiO2;
     
@@ -1228,11 +1348,11 @@ for timeStep = 1:numFiles
             cMax = 10^-10;
             
         end
-           
+        
         subplot(161);
-            
-        eval([plotString '(intTendV'')']);
-
+        
+        eval([plotString '(intTendV' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1241,12 +1361,12 @@ for timeStep = 1:numFiles
         box on
         set(gca,'LineWidth',lw);
         set(gca,'FontSize',fs);
-      
+        
         title({'Volume Tendency, ';'Timestep: ';num2str(tt(timeStep))},'FontWeight','Bold','FontSize',fs);
         
         subplot(162);
         
-        eval([plotString '(intHConvV'')']);
+        eval([plotString '(intHConvV' flipString ')']);
         
         shading flat
         caxis([cMin.*10^3 cMax.*10^3]);
@@ -1261,8 +1381,8 @@ for timeStep = 1:numFiles
         
         subplot(163);
         
-        eval([plotString '(intVConvV'')']);
-
+        eval([plotString '(intVConvV' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^3 cMax.*10^3]);
         colormap(colors);
@@ -1276,8 +1396,8 @@ for timeStep = 1:numFiles
         
         subplot(164);
         
-        eval([plotString '(intForcV'')']);
-
+        eval([plotString '(intForcV' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^1 cMax.*10^1]);
         colormap(colors);
@@ -1291,8 +1411,8 @@ for timeStep = 1:numFiles
         
         subplot(165);
         
-        eval([plotString '(intTotalV'')']);
-
+        eval([plotString '(intTotalV' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1306,8 +1426,8 @@ for timeStep = 1:numFiles
         
         subplot(166);
         
-        eval([plotString '(intResidualV'')']);
-
+        eval([plotString '(intResidualV' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-6 cMax.*10^-6]);
         colormap(colors);
@@ -1323,7 +1443,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'volume_budget' num2str(timeStep) '.png']);
+            print('-dpng',[figureDir 'volume_budget_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -1349,7 +1469,7 @@ for timeStep = 1:numFiles
         
         subplot(281);
         
-        eval([plotString '(intTendS'')']);
+        eval([plotString '(intTendS' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1364,7 +1484,7 @@ for timeStep = 1:numFiles
         
         subplot(282);
         
-        eval([plotString '(intHAdvS'')']);
+        eval([plotString '(intHAdvS' flipString ')']);
         
         shading flat
         caxis([cMin.*10^1 cMax.*10^1]);
@@ -1381,7 +1501,7 @@ for timeStep = 1:numFiles
         
         pcolor(intVAdvS);
         
-        eval([plotString '(intVAdvS'')']);
+        eval([plotString '(intVAdvS' flipString ')']);
         
         shading flat
         caxis([cMin.*10^1 cMax.*10^1]);
@@ -1396,7 +1516,7 @@ for timeStep = 1:numFiles
         
         subplot(284);
         
-        eval([plotString '(intHDifS'')']);
+        eval([plotString '(intHDifS' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1411,7 +1531,7 @@ for timeStep = 1:numFiles
         
         subplot(285);
         
-        eval([plotString '(intVDifS'')']);
+        eval([plotString '(intVDifS' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1426,7 +1546,7 @@ for timeStep = 1:numFiles
         
         subplot(286);
         
-        eval([plotString '(intForcS'')']);
+        eval([plotString '(intForcS' flipString ')']);
         
         shading flat
         caxis([cMin.*10^-2 cMax.*10^-2]);
@@ -1441,7 +1561,7 @@ for timeStep = 1:numFiles
         
         subplot(287);
         
-        eval([plotString '(intTotalS'')']);
+        eval([plotString '(intTotalS' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1456,7 +1576,7 @@ for timeStep = 1:numFiles
         
         subplot(288);
         
-        eval([plotString '(intResidualS'')']);
+        eval([plotString '(intResidualS' flipString ')']);
         
         shading flat
         caxis([cMin.*10^-7 cMax.*10^-7]);
@@ -1470,8 +1590,8 @@ for timeStep = 1:numFiles
         title({'Residual'},'FontWeight','Bold','FontSize',fs);
         
         subplot(289);
-   
-        eval([plotString '(intTendSal'')']);
+        
+        eval([plotString '(intTendSal' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1486,7 +1606,7 @@ for timeStep = 1:numFiles
         
         subplot(2,8,10);
         
-        eval([plotString '(intHAdvSal'')']);
+        eval([plotString '(intHAdvSal' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1501,7 +1621,7 @@ for timeStep = 1:numFiles
         
         subplot(2,8,11);
         
-        eval([plotString '(intVAdvSal'')']);
+        eval([plotString '(intVAdvSal' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1516,7 +1636,7 @@ for timeStep = 1:numFiles
         
         subplot(2,8,12);
         
-        eval([plotString '(intHDifSal'')']);
+        eval([plotString '(intHDifSal' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1531,7 +1651,7 @@ for timeStep = 1:numFiles
         
         subplot(2,8,13);
         
-        eval([plotString '(intVDifSal'')']);
+        eval([plotString '(intVDifSal' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -1546,8 +1666,8 @@ for timeStep = 1:numFiles
         
         subplot(2,8,14);
         
-        eval([plotString '(intForcSal'')']);
-
+        eval([plotString '(intForcSal' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1560,11 +1680,11 @@ for timeStep = 1:numFiles
         title({'Surface';'Volume';'Forcing'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,8,15);
-         
+        
         pcolor(intTotalSal);
-       
-        eval([plotString '(intTotalSal'')']);
-
+        
+        eval([plotString '(intTotalSal' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1580,8 +1700,8 @@ for timeStep = 1:numFiles
         
         pcolor(intResidualSal);
         
-        eval([plotString '(intResidualSal'')']);
-
+        eval([plotString '(intResidualSal' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-7 cMax.*10^-7]);
         colormap(colors);
@@ -1595,7 +1715,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'salinity_budget' num2str(timeStep) '.png']);
+            print('-dpng',[figureDir 'salinity_budget_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -1622,9 +1742,9 @@ for timeStep = 1:numFiles
         end
         
         subplot(2,5,1);
-      
-        eval([plotString '(intTendDIC'')']);
-      
+        
+        eval([plotString '(intTendDIC' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1637,9 +1757,9 @@ for timeStep = 1:numFiles
         title({'DIC Tendency,';'Timestep: ';num2str(tt(timeStep))},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,2);
- 
-        eval([plotString '(intHAdvDIC'')']);
- 
+        
+        eval([plotString '(intHAdvDIC' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1653,8 +1773,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,3);
         
-        eval([plotString '(intVAdvDIC'')']);
- 
+        eval([plotString '(intVAdvDIC' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1667,9 +1787,9 @@ for timeStep = 1:numFiles
         title({'Vertical Advection'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,4);
-       
-        eval([plotString '(intHDifDIC'')']);
- 
+        
+        eval([plotString '(intHDifDIC' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1682,9 +1802,9 @@ for timeStep = 1:numFiles
         title({'Horizontal Diffusion'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,5);
-       
-        eval([plotString '(intVDifDIC'')']);
- 
+        
+        eval([plotString '(intVDifDIC' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1698,8 +1818,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,6);
         
-        eval([plotString '(intForcDIC'')']);
- 
+        eval([plotString '(intForcDIC' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-1 cMax.*10^-1]);
         colormap(colors);
@@ -1713,8 +1833,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,7);
         
-        eval([plotString '(intVirtualFluxDIC'')']);
- 
+        eval([plotString '(intVirtualFluxDIC' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1728,8 +1848,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,8);
         
-        eval([plotString '(intBioDIC'')']);
- 
+        eval([plotString '(intBioDIC' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-1 cMax.*10^-1]);
         colormap(colors);
@@ -1743,8 +1863,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,9);
         
-        eval([plotString '(intTotalDIC'')']);
- 
+        eval([plotString '(intTotalDIC' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1758,8 +1878,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,10);
         
-        eval([plotString '(intResidualDIC'')']);
- 
+        eval([plotString '(intResidualDIC' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-6 cMax.*10^-6]);
         colormap(colors);
@@ -1775,7 +1895,185 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'DIC_budget' num2str(timeStep) '.png']);
+            print('-dpng',[figureDir 'DIC_budget_' num2str(tt(timeStep)) '.png']);
+            
+        end
+        
+    end
+    
+    if plotBudgetALK
+        
+        hFig4 = figure(4);
+        set(hFig4,'units','normalized','outerposition',[0 0 1 1]);
+        set(gcf,'color',[1 1 1]);
+        
+      if useVol
+            
+            cMin = -10^7;
+            cMax = 10^7;
+            
+        else
+            
+            cMin = -10^-9;
+            cMax = 10^-9;
+            
+        end
+        
+        subplot(2,5,1);
+        
+        eval([plotString '(intTendALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'ALK Tendency, ';'Timestep: ';num2str(tt(timeStep))},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,2);
+        
+        eval([plotString '(intHAdvALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Horizontal Advection'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,3);
+        
+        eval([plotString '(intVAdvALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Vertical Advection'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,4);
+        
+        eval([plotString '(intHDifALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Horizontal Diffusion'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,5);
+        
+        eval([plotString '(intVDifALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Vertical Diffusion'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,6);
+        
+        eval([plotString '(intGDARALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Bio Consum'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,7);
+        
+        eval([plotString '(intGDARALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Bio Source'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,8);
+        
+        eval([plotString '(intGDARALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'gDAR'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,9);
+        
+        eval([plotString '(intTotalALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Total'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,10);
+        
+        eval([plotString '(intResidualALK' flipString ')']);
+        
+        shading flat
+        caxis([cMin.*10^-6 cMax.*10^-6]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Residual'},'FontWeight','Bold','FontSize',fs);
+        
+        drawnow
+        
+        if savePlot
+            
+            print('-dpng',[figureDir 'ALK_budget_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -1783,8 +2081,8 @@ for timeStep = 1:numFiles
     
     if plotBudgetNO3
         
-        hFig4 = figure(4);
-        set(hFig4,'units','normalized','outerposition',[0 0 1 1]);
+        hFig5 = figure(5);
+        set(hFig5,'units','normalized','outerposition',[0 0 1 1]);
         set(gcf,'color',[1 1 1]);
         
         if useVol
@@ -1800,9 +2098,9 @@ for timeStep = 1:numFiles
         end
         
         subplot(2,5,1);
-     
-        eval([plotString '(intTendNO3'')']);
- 
+        
+        eval([plotString '(intTendNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1816,8 +2114,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,2);
         
-        eval([plotString '(intHAdvNO3'')']);
-
+        eval([plotString '(intHAdvNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1831,8 +2129,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,3);
         
-        eval([plotString '(intVAdvNO3'')']);
-       
+        eval([plotString '(intVAdvNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1846,8 +2144,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,4);
         
-        eval([plotString '(intHDifNO3'')']);
-
+        eval([plotString '(intHDifNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1861,8 +2159,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,5);
         
-        eval([plotString '(intVDifNO3'')']);
-
+        eval([plotString '(intVDifNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1875,9 +2173,9 @@ for timeStep = 1:numFiles
         title({'Vertical Diffusion'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,6);
-            
-        eval([plotString '(intBioCNO3'')']);
-
+        
+        eval([plotString '(intBioCNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1891,8 +2189,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,7);
         
-        eval([plotString '(intBioSNO3'')']);
-
+        eval([plotString '(intBioSNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1906,8 +2204,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,8);
         
-        eval([plotString '(intGDARNO3'')']);
-
+        eval([plotString '(intGDARNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1921,8 +2219,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,9);
         
-        eval([plotString '(intTotalNO3'')']);
-
+        eval([plotString '(intTotalNO3' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1936,8 +2234,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,10);
         
-        eval([plotString '(intResidualNO3'')']);
-
+        eval([plotString '(intResidualNO3' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-6 cMax.*10^-6]);
         colormap(colors);
@@ -1953,7 +2251,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'NO3_budget' num2str(timeStep) '.png']);
+            print('-dpng',[figureDir 'NO3_budget_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -1961,8 +2259,8 @@ for timeStep = 1:numFiles
     
     if plotBudgetNO2
         
-        hFig5 = figure(5);
-        set(hFig5,'units','normalized','outerposition',[0 0 1 1]);
+        hFig6 = figure(6);
+        set(hFig6,'units','normalized','outerposition',[0 0 1 1]);
         set(gcf,'color',[1 1 1]);
         
         if useVol
@@ -1979,8 +2277,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,1);
         
-        eval([plotString '(intTendNO2'')']);
-
+        eval([plotString '(intTendNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -1994,8 +2292,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,2);
         
-        eval([plotString '(intHAdvNO2'')']);
-
+        eval([plotString '(intHAdvNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2009,8 +2307,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,3);
         
-        eval([plotString '(intVAdvNO2'')']);
-
+        eval([plotString '(intVAdvNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2024,8 +2322,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,4);
         
-        eval([plotString '(intHDifNO2'')']);
-
+        eval([plotString '(intHDifNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2039,8 +2337,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,5);
         
-        eval([plotString '(intVDifNO2'')']);
-
+        eval([plotString '(intVDifNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2054,8 +2352,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,6);
         
-        eval([plotString '(intBioCNO2'')']);
-
+        eval([plotString '(intBioCNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2069,7 +2367,7 @@ for timeStep = 1:numFiles
         
         subplot(2,5,7);
         
-        eval([plotString '(intBioSNO2'')']);
+        eval([plotString '(intBioSNO2' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -2084,8 +2382,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,8);
         
-        eval([plotString '(intGDARNO2'')']);
-
+        eval([plotString '(intGDARNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2099,8 +2397,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,9);
         
-        eval([plotString '(intTotalNO2'')']);
-
+        eval([plotString '(intTotalNO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2114,7 +2412,7 @@ for timeStep = 1:numFiles
         
         subplot(2,5,10);
         
-        eval([plotString '(intResidualNO2'')']);
+        eval([plotString '(intResidualNO2' flipString ')']);
         
         shading flat
         caxis([cMin.*10^-6 cMax.*10^-6]);
@@ -2131,191 +2429,13 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'NO2_budget' num2str(timeStep) '.png']);
+            print('-dpng',[figureDir 'NO2_budget_' num2str(tt(timeStep)) '.png']);
             
         end
         
     end
     
     if plotBudgetNH4
-        
-        hFig6 = figure(6);
-        set(hFig6,'units','normalized','outerposition',[0 0 1 1]);
-        set(gcf,'color',[1 1 1]);
-        
-        if useVol
-            
-            cMin = -10^2;
-            cMax = 10^2;
-            
-        else
-            
-            cMin = -10^-10;
-            cMax = 10^-10;
-            
-        end
-        
-        subplot(2,5,1);
-        
-        eval([plotString '(intTendNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'NH4 Tendency, ';'Timestep: ';num2str(tt(timeStep))},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,2);
-        
-        eval([plotString '(intHAdvNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Horizontal Advection'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,3);
-        
-        eval([plotString '(intVAdvNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Vertical Advection'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,4);
-        
-        eval([plotString '(intHDifNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Horizontal Diffusion'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,5);
-        
-        eval([plotString '(intVDifNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Vertical Diffusion'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,6);
-       
-        eval([plotString '(intBioCNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Bio Consum'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,7);
-        
-        eval([plotString '(intBioSNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Bio Source'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,8);
-        
-        eval([plotString '(intGDARNH4'')']);
-
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'gDAR'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,9);
-        
-        eval([plotString '(intTotalNH4'')']);
-        
-        shading flat
-        caxis([cMin cMax]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Total'},'FontWeight','Bold','FontSize',fs);
-        
-        subplot(2,5,10);
-        
-        eval([plotString '(intResidualNH4'')']);
-
-        shading flat
-        caxis([cMin.*10^-6 cMax.*10^-6]);
-        colormap(colors);
-        colorbar
-        axis tight
-        box on
-        set(gca,'LineWidth',lw);
-        set(gca,'FontSize',fs);
-        
-        title({'Residual'},'FontWeight','Bold','FontSize',fs);
-        
-        drawnow
-        
-        if savePlot
-            
-            print('-dpng',[figureDir 'NH4_budget' num2str(timeStep) '.png']);
-            
-        end
-        
-    end
-    
-    if plotBudgetPO4
         
         hFig7 = figure(7);
         set(hFig7,'units','normalized','outerposition',[0 0 1 1]);
@@ -2332,11 +2452,11 @@ for timeStep = 1:numFiles
             cMax = 10^-10;
             
         end
-  
+        
         subplot(2,5,1);
         
-        eval([plotString '(intTendPO4'')']);
-
+        eval([plotString '(intTendNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2346,12 +2466,12 @@ for timeStep = 1:numFiles
         set(gca,'LineWidth',lw);
         set(gca,'FontSize',fs);
         
-        title({'PO4 Tendency, ';'Timestep: ';num2str(tt(timeStep))},'FontWeight','Bold','FontSize',fs);
+        title({'NH4 Tendency, ';'Timestep: ';num2str(tt(timeStep))},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,2);
         
-        eval([plotString '(intHAdvPO4'')']);
-
+        eval([plotString '(intHAdvNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2361,12 +2481,12 @@ for timeStep = 1:numFiles
         set(gca,'LineWidth',lw);
         set(gca,'FontSize',fs);
         
-        title({'Horizontal Advection';'(mol m^-^3 s^-^1)'},'FontWeight','Bold','FontSize',fs);
+        title({'Horizontal Advection'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,3);
         
-        eval([plotString '(intVAdvPO4'')']);
-
+        eval([plotString '(intVAdvNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2380,8 +2500,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,4);
         
-        eval([plotString '(intHDifPO4'')']);
-
+        eval([plotString '(intHDifNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2395,8 +2515,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,5);
         
-        eval([plotString '(intVDifPO4'')']);
-
+        eval([plotString '(intVDifNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2409,9 +2529,9 @@ for timeStep = 1:numFiles
         title({'Vertical Diffusion'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,6);
-     
-        eval([plotString '(intBioCPO4'')']);
-
+        
+        eval([plotString '(intBioCNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2425,8 +2545,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,7);
         
-        eval([plotString '(intBioSPO4'')']);
-
+        eval([plotString '(intBioSNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2440,8 +2560,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,8);
         
-        eval([plotString '(intGDARPO4'')']);
-
+        eval([plotString '(intGDARNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2455,8 +2575,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,9);
         
-        eval([plotString '(intTotalPO4'')']);
-
+        eval([plotString '(intTotalNH4' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2470,8 +2590,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,10);
         
-        eval([plotString '(intResidualPO4'')']);
-
+        eval([plotString '(intResidualNH4' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-6 cMax.*10^-6]);
         colormap(colors);
@@ -2487,7 +2607,185 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'PO4_budget' num2str(timeStep) '.png']);
+            print('-dpng',[figureDir 'NH4_budget_' num2str(tt(timeStep)) '.png']);
+            
+        end
+        
+    end
+    
+    if plotBudgetPO4
+        
+        hFig8 = figure(8);
+        set(hFig8,'units','normalized','outerposition',[0 0 1 1]);
+        set(gcf,'color',[1 1 1]);
+        
+        if useVol
+            
+            cMin = -10^2;
+            cMax = 10^2;
+            
+        else
+            
+            cMin = -10^-10;
+            cMax = 10^-10;
+            
+        end
+        
+        subplot(2,5,1);
+        
+        eval([plotString '(intTendPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'PO4 Tendency, ';'Timestep: ';num2str(tt(timeStep))},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,2);
+        
+        eval([plotString '(intHAdvPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Horizontal Advection';'(mol m^-^3 s^-^1)'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,3);
+        
+        eval([plotString '(intVAdvPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Vertical Advection'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,4);
+        
+        eval([plotString '(intHDifPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Horizontal Diffusion'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,5);
+        
+        eval([plotString '(intVDifPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Vertical Diffusion'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,6);
+        
+        eval([plotString '(intBioCPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Bio Consum'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,7);
+        
+        eval([plotString '(intBioSPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Bio Source'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,8);
+        
+        eval([plotString '(intGDARPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'gDAR'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,9);
+        
+        eval([plotString '(intTotalPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin cMax]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Total'},'FontWeight','Bold','FontSize',fs);
+        
+        subplot(2,5,10);
+        
+        eval([plotString '(intResidualPO4' flipString ')']);
+        
+        shading flat
+        caxis([cMin.*10^-6 cMax.*10^-6]);
+        colormap(colors);
+        colorbar
+        axis tight
+        box on
+        set(gca,'LineWidth',lw);
+        set(gca,'FontSize',fs);
+        
+        title({'Residual'},'FontWeight','Bold','FontSize',fs);
+        
+        drawnow
+        
+        if savePlot
+            
+            print('-dpng',[figureDir 'PO4_budget_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -2495,8 +2793,8 @@ for timeStep = 1:numFiles
     
     if plotBudgetFe
         
-        hFig8 = figure(8);
-        set(hFig8,'units','normalized','outerposition',[0 0 1 1]);
+        hFig9 = figure(9);
+        set(hFig9,'units','normalized','outerposition',[0 0 1 1]);
         set(gcf,'color',[1 1 1]);
         
         if useVol
@@ -2513,8 +2811,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,1);
         
-        eval([plotString '(intTendFe'')']);
-
+        eval([plotString '(intTendFe' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2528,8 +2826,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,2);
         
-        eval([plotString '(intHAdvFe'')']);
-
+        eval([plotString '(intHAdvFe' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2542,9 +2840,9 @@ for timeStep = 1:numFiles
         title({'Horizontal Advection'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,3);
-       
-        eval([plotString '(intVAdvFe'')']);
-
+        
+        eval([plotString '(intVAdvFe' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2558,8 +2856,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,4);
         
-        eval([plotString '(intHDifFe'')']);
-
+        eval([plotString '(intHDifFe' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2573,8 +2871,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,5);
         
-        eval([plotString '(intVDifFe'')']);
-
+        eval([plotString '(intVDifFe' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2588,8 +2886,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,6);
         
-        eval([plotString '(intForcFe'')']);
-
+        eval([plotString '(intForcFe' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2602,9 +2900,9 @@ for timeStep = 1:numFiles
         title({'Surface Dust Flux'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,7);
-      
-        eval([plotString '(intSedFe'')']);
-
+        
+        eval([plotString '(intSedFe' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-1 cMax.*10^-1]);
         colormap(colors);
@@ -2618,8 +2916,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,8);
         
-        eval([plotString '(intBioFe'')']);
-
+        eval([plotString '(intBioFe' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2633,8 +2931,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,9);
         
-        eval([plotString '(intFreeFe'')']);
-
+        eval([plotString '(intFreeFe' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-5 cMax.*10^-5]);
         colormap(colors);
@@ -2648,10 +2946,10 @@ for timeStep = 1:numFiles
         
         subplot(2,5,10);
         
-        eval([plotString '(intResidualFe'')']);
-
+        eval([plotString '(intResidualFe' flipString ')']);
+        
         shading flat
-        caxis([cMin.*10^0 cMax.*10^0]);
+        caxis([cMin.*10^-3 cMax.*10^-3]);
         colormap(colors);
         colorbar
         axis tight
@@ -2663,12 +2961,17 @@ for timeStep = 1:numFiles
         
         drawnow
         
+        if savePlot
+            
+            print('-dpng',[figureDir 'Fe_budget_' num2str(tt(timeStep)) '.png']);
+            
+        end
     end
     
     if plotBudgetSiO2
         
-        hFig9 = figure(9);
-        set(hFig9,'units','normalized','outerposition',[0 0 1 1]);
+        hFig10 = figure(10);
+        set(hFig10,'units','normalized','outerposition',[0 0 1 1]);
         set(gcf,'color',[1 1 1]);
         
         if useVol
@@ -2685,8 +2988,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,1);
         
-        eval([plotString '(intTendSiO2'')']);
-
+        eval([plotString '(intTendSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2700,8 +3003,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,2);
         
-        eval([plotString '(intHAdvSiO2'')']);
-
+        eval([plotString '(intHAdvSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2714,9 +3017,9 @@ for timeStep = 1:numFiles
         title({'Horizontal Advection'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,3);
-       
-        eval([plotString '(intVAdvSiO2'')']);
-
+        
+        eval([plotString '(intVAdvSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2729,9 +3032,9 @@ for timeStep = 1:numFiles
         title({'Vertical Advection'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,4);
-       
-        eval([plotString '(intHDifSiO2'')']);
-
+        
+        eval([plotString '(intHDifSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^2 cMax.*10^2]);
         colormap(colors);
@@ -2745,8 +3048,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,5);
         
-        eval([plotString '(intVDifSiO2'')']);
-
+        eval([plotString '(intVDifSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2760,8 +3063,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,6);
         
-        eval([plotString '(intBioCSiO2'')']);
-
+        eval([plotString '(intBioCSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2775,8 +3078,8 @@ for timeStep = 1:numFiles
         
         subplot(2,5,7);
         
-        eval([plotString '(intBioSSiO2'')']);
-
+        eval([plotString '(intBioSSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2789,9 +3092,9 @@ for timeStep = 1:numFiles
         title({'Bio Source'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,8);
-      
-        eval([plotString '(intGDARSiO2'')']);
-
+        
+        eval([plotString '(intGDARSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2804,9 +3107,9 @@ for timeStep = 1:numFiles
         title({'gDAR'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,9);
-       
-        eval([plotString '(intTotalSiO2'')']);
-
+        
+        eval([plotString '(intTotalSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin cMax]);
         colormap(colors);
@@ -2819,9 +3122,9 @@ for timeStep = 1:numFiles
         title({'Total Budget'},'FontWeight','Bold','FontSize',fs);
         
         subplot(2,5,10);
-       
-        eval([plotString '(intResidualSiO2'')']);
-
+        
+        eval([plotString '(intResidualSiO2' flipString ')']);
+        
         shading flat
         caxis([cMin.*10^-6 cMax.*10^-6]);
         colormap(colors);
@@ -2837,50 +3140,49 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'SiO2_budget' num2str(timeStep) '.png']);
+            print('-dpng',[figureDir 'SiO2_budget_' num2str(tt(timeStep)) '.png']);
             
         end
         
     end
     
-    %% 
+    %%
     %save budget
     
     if saveMat
         
-    save([saveDir 'volume_' num2str(tt(i)) '_budget.mat'],'intTendV','intHConvV','intVConvV','intForcV','intTotalV','intResidualV','v7.3');
-    
-    save([saveDir 'salt_' num2str(tt(i)) '_budget.mat'],'intTendS','intHAdvS','intVAdvS','intHDifS','intVDifS','intForcS','intTotalS','intResidualS','v7.3');
-    
-    save([saveDir 'salinity_' num2str(tt(i)) '_budget.mat'],'intTendSal','intHAdvSal','intVAdvSal','intHDifSal','intVDifSal','intForcSal','intTotalSal','intResidualSal','v7.3');
-    
-    save([saveDir 'DIC_' num2str(tt(i)) '_budget.mat'],'intTendDIC','intHAdvDIC','intVAdvDIC','intHDifDIC','intVDifDIC','intForcDIC', ...
-        'intBioConsDIC','intBioConsDIC_PIC','intBioRespDIC','intBioReminDIC_DOC','intBioReminDIC_POC','intBioDisscDIC_PIC','intTotalDIC','intResidualDIC','v7.3');
-    
-    save([saveDir 'NO3_' num2str(tt(i)) '_budget.mat'],'intTendNO3','intHAdvNO3','intVAdvNO3','intHDifNO3','intVDifNO3','intBioCNO3','intBioSNO3','intTotalNO3','intResidualNO3','v7.3');
-    
-    save([saveDir 'NO2_' num2str(tt(i)) '_budget.mat'],'intTendNO2','intHAdvNO2','intVAdvNO2','intHDifNO2','intVDifNO2','intBioCNO2','intBioSNO2','intTotalNO2','intResidualNO2','v7.3');
-    
-    save([saveDir 'NH4_' num2str(tt(i)) '_budget.mat'],'intTendNH4','intHAdvNH4','intVAdvNH4','intHDifNH4','intVDifNH4','intBioCNH4','intBioSNH4','intTotalNH4','intResidualNH4','v7.3');
-    
-    save([saveDir 'PO4_' num2str(tt(i)) '_budget.mat'],'intTendPO4','intHAdvPO4','intVAdvPO4','intHDifPO4','intVDifPO4','intBioCPO4','intBioSPO4','intTotalPO4','intResidualPO4','v7.3');
-    
-    save([saveDir 'Fe_' num2str(tt(i)) '_budget.mat'],'intTendFe','intHAdvFe','intVAdvFe','intHDifFe','intVDifFe','intForcFe','intBioFe','intSedFe','intFreeFe','intTotalFe','intResidualFe','v7.3');
-    
-    save([saveDir 'SiO2_' num2str(tt(i)) '_budget.mat'],'intTendSiO2','intHAdvSiO2','intVAdvSiO2','intHDifSiO2','intVDifSiO2','intBioCSiO2','intBioSSiO2','intTotalSiO2','intResidualSiO2','v7.3');
-    
+        save([saveDir 'volume_' num2str(tt(timeStep)) '_budget.mat'],'intTendV','intHConvV','intVConvV','intForcV','intTotalV','intResidualV','-v7.3');
+        
+        save([saveDir 'salt_' num2str(tt(timeStep)) '_budget.mat'],'intTendS','intHAdvS','intVAdvS','intHDifS','intVDifS','intForcS','intTotalS','intResidualS','-v7.3');
+        
+        save([saveDir 'salinity_' num2str(tt(timeStep)) '_budget.mat'],'intTendSal','intHAdvSal','intVAdvSal','intHDifSal','intVDifSal','intForcSal','intTotalSal','intResidualSal','-v7.3');
+        
+        save([saveDir 'DIC_' num2str(tt(timeStep)) '_budget.mat'],'intTendDIC','intHAdvDIC','intVAdvDIC','intHDifDIC','intVDifDIC','intForcDIC', ...
+            'intBioConsDIC','intBioConsDIC_PIC','intBioRespDIC','intBioReminDIC_DOC','intBioReminDIC_POC','intBioDisscDIC_PIC','intTotalDIC','intResidualDIC','-v7.3');
+        
+        save([saveDir 'NO3_' num2str(tt(timeStep)) '_budget.mat'],'intTendNO3','intHAdvNO3','intVAdvNO3','intHDifNO3','intVDifNO3','intBioCNO3','intBioSNO3','intTotalNO3','intResidualNO3','-v7.3');
+        
+        save([saveDir 'NO2_' num2str(tt(timeStep)) '_budget.mat'],'intTendNO2','intHAdvNO2','intVAdvNO2','intHDifNO2','intVDifNO2','intBioCNO2','intBioSNO2','intTotalNO2','intResidualNO2','-v7.3');
+        
+        save([saveDir 'NH4_' num2str(tt(timeStep)) '_budget.mat'],'intTendNH4','intHAdvNH4','intVAdvNH4','intHDifNH4','intVDifNH4','intBioCNH4','intBioSNH4','intTotalNH4','intResidualNH4','-v7.3');
+        
+        save([saveDir 'PO4_' num2str(tt(timeStep)) '_budget.mat'],'intTendPO4','intHAdvPO4','intVAdvPO4','intHDifPO4','intVDifPO4','intBioCPO4','intBioSPO4','intTotalPO4','intResidualPO4','-v7.3');
+        
+        save([saveDir 'Fe_' num2str(tt(timeStep)) '_budget.mat'],'intTendFe','intHAdvFe','intVAdvFe','intHDifFe','intVDifFe','intForcFe','intBioFe','intSedFe','intFreeFe','intTotalFe','intResidualFe','-v7.3');
+        
+        save([saveDir 'SiO2_' num2str(tt(timeStep)) '_budget.mat'],'intTendSiO2','intHAdvSiO2','intVAdvSiO2','intHDifSiO2','intVDifSiO2','intBioCSiO2','intBioSSiO2','intTotalSiO2','intResidualSiO2','-v7.3');
+        
     end
     
-%% 
-
+    %%
     %clear gcmfaces objects to avoid memory leaks
     
     clear ETAN oceFWflx SFLUX  oceSPflx UVELMASS VVELMASS WVELMASS ...
         SALT ADVr_SLT ADVx_SLT ADVy_SLT DFrI_SLT DFrE_SLT DFxE_SLT DFyE_SLT oceSPtnd ...
         DIC ADVx_DIC ADVy_DIC ADVr_DIC DFxE_DIC DFyE_DIC DFrE_DIC DFrI_DIC DICTFLX ...
         CONSUMP_DIC CONSUMP_DIC_PIC REMIN_DOC REMIN_POC DISSC_PIC ...
-        ETAN_SNAP SALT_SNAP DIC_SNAP NO3_SNAP NO2_SNAP NH4_SNAP PO4_SNAP Fe_SNAP SiO2_SNAP ...
-       
+        ETAN_SNAP SALT_SNAP DIC_SNAP ALK_SNAP NO3_SNAP NO2_SNAP NH4_SNAP PO4_SNAP Fe_SNAP SiO2_SNAP ...
+        
     clear tendV adv_hConvV adv_vConvV forcV
     clear tendS adv_hConvS adv_vConvS dif_hConvS dif_vConvS forcS
     clear tendSal adv_hConvSal adv_vConvSal dif_hConvSal dif_vConvSal forcSal
@@ -2892,7 +3194,7 @@ for timeStep = 1:numFiles
     clear tendPO4 adv_hConvPO4 adv_vConvPO4 dif_hConvPO4 dif_vConvPO4 virtualFluxPO4 gDAR_PO4 bioC_PO4 bioS_PO4
     clear tendFe adv_hConvFe adv_vConvFe dif_hConvFe dif_vConvFe forcFe virtualFluxFe gDAR_Fe bioFe sedFe freeFe
     clear tendSiO2 dv_hConvSiO2 adv_vConvSiO2 dif_hConvSiO2 dif_vConvSiO2 virtualFluxSiO2 gDAR_SiO2 bioC_SiO2 bioS_SiO2
-
+    
     if(savePlot)
         
         close all
