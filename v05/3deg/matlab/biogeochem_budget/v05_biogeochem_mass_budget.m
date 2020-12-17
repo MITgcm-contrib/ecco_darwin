@@ -6,7 +6,7 @@ close all
 
 runOnline = 0;
 savePlot = 1;
-saveMat = 0; %save budget .mat files 
+saveMat = 1; %save budget .mat files
 
 useVol = 1; %integrate w/ volume
 useLLC270 = 0; %use LLC270 grid
@@ -15,16 +15,16 @@ startIntLevel = 1; %vertical integration start k level
 endIntLevel = 15;
 
 %set to 1 to plot budget terms
-plotBudgetVolume = 0;
-plotBudgetSalinity = 0;
-plotBudgetDIC = 0;
+plotBudgetVolume = 1;
+plotBudgetSalinity = 1;
+plotBudgetDIC = 1;
 plotBudgetALK = 1;
-plotBudgetNO3 = 0;
-plotBudgetNO2 = 0;
-plotBudgetNH4 = 0;
-plotBudgetPO4 = 0;
-plotBudgetFe = 0;
-plotBudgetSiO2 = 0;
+plotBudgetNO3 = 1;
+plotBudgetNO2 = 1;
+plotBudgetNH4 = 1;
+plotBudgetPO4 = 1;
+plotBudgetFe = 1;
+plotBudgetSiO2 = 1;
 
 nanString = 'omitnan';
 
@@ -227,15 +227,15 @@ for timeStep = 1:numFiles
     DFyE_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
     DFrE_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
+    gDAR_DIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',9)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %bio decomposition
-    cDIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    cDIC_PIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
-    respDIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',12)) .* mmol_to_mol;  %mol m^-3 s^-1
-    rDIC_DOC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',13)) .* mmol_to_mol;  %mol m^-3 s^-1
-    rDIC_POC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',14)) .* mmol_to_mol;  %mol m^-3 s^-1
-    dDIC_PIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',15)) .* mmol_to_mol;  %mol m^-3 s^-1
+    cDIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    cDIC_PIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
+    respDIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',12)) .* mmol_to_mol; %mol m^-3 s^-1
+    rDIC_DOC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',13)) .* mmol_to_mol; %mol m^-3 s^-1
+    rDIC_POC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',14)) .* mmol_to_mol; %mol m^-3 s^-1
+    dDIC_PIC = convert2gcmfaces(rdmds([diagDir filename4],ttAverage,'rec',15)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %ALK content
     ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
@@ -246,8 +246,10 @@ for timeStep = 1:numFiles
     DFyE_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
     DFrE_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
-   
+    gDAR_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',9)) .* mmol_to_mol; %mol m^-3 s^-1
+    C_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    S_ALK = convert2gcmfaces(rdmds([diagDir filename5],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
+    
     %NO3 content
     NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
     ADVx_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',2)) .* mmol_to_mol; %mol s^-1
@@ -258,8 +260,8 @@ for timeStep = 1:numFiles
     DFrE_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
     gDAR_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    C_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    S_NO3 = convert2gcmfaces(rdmds([diagDir filename6],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %NO2 content
     NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
@@ -271,8 +273,8 @@ for timeStep = 1:numFiles
     DFrE_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
     gDAR_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    C_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    S_NO2 = convert2gcmfaces(rdmds([diagDir filename7],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %NH4 content
     NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
@@ -284,8 +286,8 @@ for timeStep = 1:numFiles
     DFrE_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
     gDAR_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    C_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    S_NH4 = convert2gcmfaces(rdmds([diagDir filename8],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %PO4 content
     PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
@@ -297,8 +299,8 @@ for timeStep = 1:numFiles
     DFrE_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
     gDAR_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',9)) .* mmol_to_mol; %mol s^-1
-    C_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    C_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    S_PO4 = convert2gcmfaces(rdmds([diagDir filename9],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %Fe content
     Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
@@ -309,13 +311,13 @@ for timeStep = 1:numFiles
     DFyE_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
     DFrE_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
-    C_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
-    SEDFe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',12)) .* mmol_to_mol;  %mol m^-3 s^-1
-    FREEFe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',13)) .* mmol_to_mol;  %mol m^-3 s^-1
+    gDAR_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',9)) .* mmol_to_mol; %mol m^-3 s^-1
+    C_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    S_Fe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
+    SEDFe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',12)) .* mmol_to_mol; %mol m^-3 s^-1
+    FREEFe = convert2gcmfaces(rdmds([diagDir filename10],ttAverage,'rec',13)) .* mmol_to_mol; %mol m^-3 s^-1
     %2d surface dust forcing
-    SFCSOLFe = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',1)) .* mmol_to_mol;  %mol m^-2 s^-1
+    SFCSOLFe = convert2gcmfaces(rdmds([diagDir filename11],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-2 s^-1
     
     %SiO2 content
     SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',1)) .* mmol_to_mol; %mol m^-3
@@ -326,9 +328,9 @@ for timeStep = 1:numFiles
     DFyE_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',6)) .* mmol_to_mol; %mol s^-1
     DFrE_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',7)) .* mmol_to_mol; %mol s^-1
     DFrI_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',8)) .* mmol_to_mol; %mol s^-1
-    gDAR_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',9)) .* mmol_to_mol;  %mol m^-3 s^-1
-    C_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',10)) .* mmol_to_mol;  %mol m^-3 s^-1
-    S_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',11)) .* mmol_to_mol;  %mol m^-3 s^-1
+    gDAR_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',9)) .* mmol_to_mol; %mol m^-3 s^-1
+    C_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
+    S_SiO2 = convert2gcmfaces(rdmds([diagDir filename12],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %%
     %load snapshots
@@ -350,42 +352,42 @@ for timeStep = 1:numFiles
         ETAN_SNAP(:,:,2) = rdmds([diagDir filename13],tt(1),'rec',1);
         
         SALT_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',2);
-        DIC_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
-        ALK_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO3_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO2_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
-        NH4_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
-        PO4_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
-        Fe_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',9) .* mmol_to_mol;  %mol m^-3 s^-1
-        SiO2_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',10) .* mmol_to_mol;  %mol m^-3 s^-1
+        DIC_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',3) .* mmol_to_mol; %mol m^-3 s^-1
+        ALK_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',4) .* mmol_to_mol; %mol m^-3 s^-1
+        NO3_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',5) .* mmol_to_mol; %mol m^-3 s^-1
+        NO2_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',6) .* mmol_to_mol; %mol m^-3 s^-1
+        NH4_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',7) .* mmol_to_mol; %mol m^-3 s^-1
+        PO4_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',8) .* mmol_to_mol; %mol m^-3 s^-1
+        Fe_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',9) .* mmol_to_mol; %mol m^-3 s^-1
+        SiO2_SNAP(:,:,:,2) = rdmds([diagDir filename14],tt(1),'rec',10) .* mmol_to_mol; %mol m^-3 s^-1
         
     elseif timeStep == numFiles %no final snapshot
         
         ETAN_SNAP(:,:,1) = rdmds([diagDir filename13],tt(timeStep-1),'rec',1);
         
         SALT_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',2);
-        DIC_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
-        ALK_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO3_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO2_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
-        NH4_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
-        PO4_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
-        Fe_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',9) .* mmol_to_mol;  %mol m^-3 s^-1
-        SiO2_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',10) .* mmol_to_mol;  %mol m^-3 s^-1
+        DIC_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',3) .* mmol_to_mol; %mol m^-3 s^-1
+        ALK_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',4) .* mmol_to_mol; %mol m^-3 s^-1
+        NO3_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',5) .* mmol_to_mol; %mol m^-3 s^-1
+        NO2_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',6) .* mmol_to_mol; %mol m^-3 s^-1
+        NH4_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',7) .* mmol_to_mol; %mol m^-3 s^-1
+        PO4_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',8) .* mmol_to_mol; %mol m^-3 s^-1
+        Fe_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',9) .* mmol_to_mol; %mol m^-3 s^-1
+        SiO2_SNAP(:,:,:,1) = rdmds([diagDir filename14],tt(timeStep-1),'rec',10) .* mmol_to_mol; %mol m^-3 s^-1
         
     else %timeStep~=1 & timeStep~=numFiles
         
         ETAN_SNAP = rdmds([diagDir filename13],ttSnap,'rec',1);
         
         SALT_SNAP = rdmds([diagDir filename14],ttSnap,'rec',2);
-        DIC_SNAP = rdmds([diagDir filename14],ttSnap,'rec',3) .* mmol_to_mol;  %mol m^-3 s^-1
-        ALK_SNAP = rdmds([diagDir filename14],ttSnap,'rec',4) .* mmol_to_mol;  %mol m^-3 s^-1      
-        NO3_SNAP = rdmds([diagDir filename14],ttSnap,'rec',5) .* mmol_to_mol;  %mol m^-3 s^-1
-        NO2_SNAP = rdmds([diagDir filename14],ttSnap,'rec',6) .* mmol_to_mol;  %mol m^-3 s^-1
-        NH4_SNAP = rdmds([diagDir filename14],ttSnap,'rec',7) .* mmol_to_mol;  %mol m^-3 s^-1
-        PO4_SNAP = rdmds([diagDir filename14],ttSnap,'rec',8) .* mmol_to_mol;  %mol m^-3 s^-1
-        Fe_SNAP = rdmds([diagDir filename14],ttSnap,'rec',9) .* mmol_to_mol;  %mol m^-3 s^-1
-        SiO2_SNAP = rdmds([diagDir filename14],ttSnap,'rec',10) .* mmol_to_mol;  %mol m^-3 s^-1
+        DIC_SNAP = rdmds([diagDir filename14],ttSnap,'rec',3) .* mmol_to_mol; %mol m^-3 s^-1
+        ALK_SNAP = rdmds([diagDir filename14],ttSnap,'rec',4) .* mmol_to_mol; %mol m^-3 s^-1
+        NO3_SNAP = rdmds([diagDir filename14],ttSnap,'rec',5) .* mmol_to_mol; %mol m^-3 s^-1
+        NO2_SNAP = rdmds([diagDir filename14],ttSnap,'rec',6) .* mmol_to_mol; %mol m^-3 s^-1
+        NH4_SNAP = rdmds([diagDir filename14],ttSnap,'rec',7) .* mmol_to_mol; %mol m^-3 s^-1
+        PO4_SNAP = rdmds([diagDir filename14],ttSnap,'rec',8) .* mmol_to_mol; %mol m^-3 s^-1
+        Fe_SNAP = rdmds([diagDir filename14],ttSnap,'rec',9) .* mmol_to_mol; %mol m^-3 s^-1
+        SiO2_SNAP = rdmds([diagDir filename14],ttSnap,'rec',10) .* mmol_to_mol; %mol m^-3 s^-1
         
     end
     
@@ -404,7 +406,14 @@ for timeStep = 1:numFiles
     %volume budget, s^-1
     
     sStarMean = (mygrid.Depth + ETAN) ./ mygrid.Depth;
+    sStarSnap = 0 .* SALT_SNAP;
     
+    for nt = 1:2
+        
+        sStarSnap(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
+        
+    end
+
     %total tendency
     tendV = (1 ./ mk3D(mygrid.Depth,mygrid.mskC)) .* mk3D((ETAN_SNAP(:,:,2) - ETAN_SNAP(:,:,1)) ...
         ./ (secPerHour .* dt(timeStep)),mygrid.mskC);
@@ -435,7 +444,7 @@ for timeStep = 1:numFiles
     
     for nt = 1:2
         
-        S_snap(:,:,:,nt) = (SALT_SNAP(:,:,:,nt) .* (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat)));
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* SALT_SNAP(:,:,:,nt);
         
     end
     
@@ -482,39 +491,34 @@ for timeStep = 1:numFiles
     %%
     %salinity budget
     
-    rstarfac = (mygrid.Depth + ETAN) ./ mygrid.Depth;
-    
     %tendency
     tendSal = mygrid.mskC .* (SALT_SNAP(:,:,:,2) - SALT_SNAP(:,:,:,1)) ...
         ./ (secPerHour .* dt(timeStep));
     
     %advection
-    adv_hConvSal = ((-SALT .* adv_hConvV) + adv_hConvS) ./ rstarfac;
-    adv_vConvSal = ((-SALT .* adv_vConvV) + adv_vConvS) ./ rstarfac;
+    adv_hConvSal = ((-SALT .* adv_hConvV) + adv_hConvS) ./ sStarMean;
+    adv_vConvSal = ((-SALT .* adv_vConvV) + adv_vConvS) ./ sStarMean;
     
     %diffusion
-    dif_hConvSal = dif_hConvS ./ rstarfac;
-    dif_vConvSal = dif_vConvS ./ rstarfac;
+    dif_hConvSal = dif_hConvS ./ sStarMean;
+    dif_vConvSal = dif_vConvS ./ sStarMean;
     
     %forcing
-    forcSal = ((-SALT .* forcV) + forcS) ./ rstarfac;
+    forcSal = ((-SALT .* forcV) + forcS) ./ sStarMean;
     
     %%
     %DIC budget
     
-    D_snap = 0 .* DIC_SNAP;
-    sStar = 0 .* DIC_SNAP;
+    S_snap = 0 .* SALT_SNAP;
     
     for nt = 1:2
         
-        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
-        
-        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* DIC_SNAP(:,:,:,nt);
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* DIC_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendDIC = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendDIC = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvDIC = calc_UV_conv(ADVx_DIC,ADVy_DIC) ./ VVV;
@@ -548,12 +552,12 @@ for timeStep = 1:numFiles
         if nz == 1
             
             forcDIC(:,:,1) = fluxCO2;
-            virtualFluxDIC(:,:,1) =  DIC_Epr;
+            virtualFluxDIC(:,:,1) = DIC_Epr;
             
         else
             
             forcDIC(:,:,nz) = 0;
-            virtualFluxDIC(:,:,nz) =  0;
+            virtualFluxDIC(:,:,nz) = 0;
             
         end
         
@@ -564,9 +568,6 @@ for timeStep = 1:numFiles
     forcDIC = mygrid.mskC .* (forcDIC ./ dzMat);
     
     virtualFluxDIC = mygrid.mskC .* virtualFluxDIC .* 0;
-    
-    %net biology, mol m^-3 s^-1
-    bioDIC = mygrid.mskC .* gDAR_DIC;
     
     %individual biology terms
     bioCons_DIC = mygrid.mskC .* (-cDIC ./ mygrid.hFacC);
@@ -579,19 +580,16 @@ for timeStep = 1:numFiles
     %%
     %ALK budget
     
-    D_snap = 0 .* ALK_SNAP;
-    sStar = 0 .* ALK_SNAP;
+    S_snap = 0 .* ALK_SNAP;
     
     for nt = 1:2
         
-        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
-        
-        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* ALK_SNAP(:,:,:,nt);
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* ALK_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendALK = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendALK = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvALK = calc_UV_conv(ADVx_ALK,ADVy_ALK) ./ VVV;
@@ -621,11 +619,11 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            virtualFluxALK(:,:,1) =  ALK_Epr;
+            virtualFluxALK(:,:,1) = ALK_Epr;
             
         else
             
-            virtualFluxALK(:,:,nz) =  0;
+            virtualFluxALK(:,:,nz) = 0;
             
         end
         
@@ -635,22 +633,25 @@ for timeStep = 1:numFiles
     
     virtualFluxALK = mygrid.mskC .* virtualFluxALK .* 0;
     
+    %bio consumption
+    bioC_ALK = mygrid.mskC .* (-C_ALK ./ mygrid.hFacC);
+    
+    %bio source
+    bioS_ALK = mygrid.mskC .* (S_ALK ./ mygrid.hFacC);
+    
     %%
     %NO3 budget
     
-    D_snap = 0 .* NO3_SNAP;
-    sStar = 0 .* NO3_SNAP;
+    S_snap = 0 .* NO3_SNAP;
     
     for nt = 1:2
         
-        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
-        
-        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* NO3_SNAP(:,:,:,nt);
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* NO3_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendNO3 = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendNO3 = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvNO3 = calc_UV_conv(ADVx_NO3,ADVy_NO3) ./ VVV;
@@ -680,11 +681,11 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            virtualFluxNO3(:,:,1) =  NO3_Epr;
+            virtualFluxNO3(:,:,1) = NO3_Epr;
             
         else
             
-            virtualFluxNO3(:,:,nz) =  0;
+            virtualFluxNO3(:,:,nz) = 0;
             
         end
         
@@ -700,24 +701,19 @@ for timeStep = 1:numFiles
     %bio source
     bioS_NO3 = mygrid.mskC .* (S_NO3 ./ mygrid.hFacC);
     
-    clear sStar
-    
     %%
     %NO2 budget
     
-    D_snap = 0 .* NO2_SNAP;
-    sStar = 0 .* NO2_SNAP;
+    S_snap = 0 .* NO2_SNAP;
     
     for nt = 1:2
         
-        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
-        
-        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* NO2_SNAP(:,:,:,nt);
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* NO2_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendNO2 = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendNO2 = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvNO2 = calc_UV_conv(ADVx_NO2,ADVy_NO2) ./ VVV;
@@ -747,11 +743,11 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            virtualFluxNO2(:,:,1) =  NO2_Epr;
+            virtualFluxNO2(:,:,1) = NO2_Epr;
             
         else
             
-            virtualFluxNO2(:,:,nz) =  0;
+            virtualFluxNO2(:,:,nz) = 0;
             
         end
         
@@ -767,24 +763,19 @@ for timeStep = 1:numFiles
     %bio source
     bioS_NO2 = mygrid.mskC .* (S_NO2 ./ mygrid.hFacC);
     
-    clear sStar
-    
     %%
     %NH4 budget
     
-    D_snap = 0 .* NH4_SNAP;
-    sStar = 0 .* NH4_SNAP;
+    S_snap = 0 .* NH4_SNAP;
     
     for nt = 1:2
         
-        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
-        
-        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* NH4_SNAP(:,:,:,nt);
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* NH4_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendNH4 = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendNH4 = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvNH4 = calc_UV_conv(ADVx_NH4,ADVy_NH4) ./ VVV;
@@ -814,11 +805,11 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            virtualFluxNH4(:,:,1) =  NH4_Epr;
+            virtualFluxNH4(:,:,1) = NH4_Epr;
             
         else
             
-            virtualFluxNH4(:,:,nz) =  0;
+            virtualFluxNH4(:,:,nz) = 0;
             
         end
         
@@ -834,24 +825,19 @@ for timeStep = 1:numFiles
     %bio source
     bioS_NH4 = mygrid.mskC .* (S_NH4 ./ mygrid.hFacC);
     
-    clear sStar
-    
     %%
     %PO4 budget
     
-    D_snap = 0 .* PO4_SNAP;
-    sStar = 0 .* PO4_SNAP;
+    S_snap = 0 .* PO4_SNAP;
     
     for nt = 1:2
         
-        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
-        
-        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* PO4_SNAP(:,:,:,nt);
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* PO4_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendPO4 = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendPO4 = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvPO4 = calc_UV_conv(ADVx_PO4,ADVy_PO4) ./ VVV;
@@ -881,11 +867,11 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            virtualFluxPO4(:,:,1) =  PO4_Epr;
+            virtualFluxPO4(:,:,1) = PO4_Epr;
             
         else
             
-            virtualFluxPO4(:,:,nz) =  0;
+            virtualFluxPO4(:,:,nz) = 0;
             
         end
         
@@ -902,21 +888,21 @@ for timeStep = 1:numFiles
     %bio source
     bioS_PO4 = mygrid.mskC .* (S_PO4 ./ mygrid.hFacC);
     
-    clear sStar
-    
     %%
     %Fe budget
     
-    F_snap = 0 .* Fe_SNAP;
+    S_snap = 0 .* Fe_SNAP;
     
     for nt = 1:2
         
-        F_snap(:,:,:,nt) = (Fe_SNAP(:,:,:,nt) .* (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat)));
+        %S_snap(:,:,:,nt) = (Fe_SNAP(:,:,:,nt) .* (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat)));
+        
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* Fe_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendFe = (F_snap(:,:,:,2) - F_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendFe = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvFe = calc_UV_conv(ADVx_Fe,ADVy_Fe) ./ VVV;
@@ -949,13 +935,13 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            forcFe(:,:,1) =  SFCSOLFe ./ dzMat(:,:,1);
-            virtualFluxFe(:,:,1) =  Fe_Epr;
+            forcFe(:,:,1) = SFCSOLFe ./ dzMat(:,:,1);
+            virtualFluxFe(:,:,1) = Fe_Epr;
             
         else
             
             forcFe(:,:,nz) = 0;
-            virtualFluxFe(:,:,nz) =  0;
+            virtualFluxFe(:,:,nz) = 0;
             
         end
         
@@ -967,28 +953,23 @@ for timeStep = 1:numFiles
     
     forcFe = mygrid.mskC .* (forcFe ./ mygrid.hFacC);
     sedFe = mygrid.mskC .* (SEDFe ./ mygrid.hFacC);
-    freeFe = mygrid.mskC .* (FREEFe  ./ mygrid.hFacC);
+    freeFe = mygrid.mskC .* (FREEFe ./ mygrid.hFacC);
     
     bioFe = gDAR_Fe - forcFe - SEDFe; %remove iron dust and sediment flu from gDAR
-    
-    clear sStar
     
     %%
     %SiO2 budget
     
-    D_snap = 0 .* SiO2_SNAP;
-    sStar = 0 .* SiO2_SNAP;
+    S_snap = 0 .* SiO2_SNAP;
     
     for nt = 1:2
         
-        sStar(:,:,:,nt) = (1+mk3D(ETAN_SNAP(:,:,nt) ./ mygrid.Depth,dzMat));
-        
-        D_snap(:,:,:,nt) = sStar(:,:,:,nt) .* SiO2_SNAP(:,:,:,nt);
+        S_snap(:,:,:,nt) = sStarSnap(:,:,:,nt) .* SiO2_SNAP(:,:,:,nt);
         
     end
     
     %tendency, mol m^-3 s^-1
-    tendSiO2 = (D_snap(:,:,:,2) - D_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
+    tendSiO2 = (S_snap(:,:,:,2) - S_snap(:,:,:,1)) ./ (secPerHour .* dt(timeStep));
     
     %horizontal divergences, mol m^-3 s^-1
     adv_hConvSiO2 = calc_UV_conv(ADVx_SiO2,ADVy_SiO2) ./ VVV;
@@ -1018,11 +999,11 @@ for timeStep = 1:numFiles
         
         if nz == 1
             
-            virtualFluxSiO2(:,:,1) =  SiO2_Epr;
+            virtualFluxSiO2(:,:,1) = SiO2_Epr;
             
         else
             
-            virtualFluxSiO2(:,:,nz) =  0;
+            virtualFluxSiO2(:,:,nz) = 0;
             
         end
         
@@ -1038,10 +1019,12 @@ for timeStep = 1:numFiles
     %bio source
     bioS_SiO2 = mygrid.mskC .* (S_SiO2 ./ mygrid.hFacC);
     
-    clear sStar
-    
     %%
     %convert gcmfaces objects to matrices
+    
+    
+    sStarMean = convert2gcmfaces(sStarMean);
+    sStarSnap = convert2gcmfaces(sStarSnap);
     
     tendV = convert2gcmfaces(tendV);
     adv_hConvV = convert2gcmfaces(adv_hConvV);
@@ -1085,6 +1068,8 @@ for timeStep = 1:numFiles
     dif_vConvALK = convert2gcmfaces(dif_vConvALK);
     virtualFluxALK = convert2gcmfaces(virtualFluxALK);
     gDARALK = convert2gcmfaces(gDAR_ALK);
+    bioCALK = convert2gcmfaces(bioC_ALK);
+    bioSALK = convert2gcmfaces(bioS_ALK);
     
     tendNO3 = convert2gcmfaces(tendNO3);
     adv_hConvNO3 = convert2gcmfaces(adv_hConvNO3);
@@ -1216,8 +1201,8 @@ for timeStep = 1:numFiles
     intVDifALK = sum((dif_vConvALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intVirtualFluxALK = sum((virtualFluxALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
     intGDARALK = sum((gDARALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
-    intBioCALK = intGDARALK; %placeholder
-    intBioSALK = intGDARALK; %placeholder
+    intBioCALK = sum((bioCALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
+    intBioSALK = sum((bioSALK(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
 
     intTotalALK = intHAdvALK + intVAdvALK ...
         + intHDifALK + intVDifALK + intVirtualFluxALK.*0 ...
@@ -1443,7 +1428,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'volume_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'volume_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -1715,7 +1700,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'salinity_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'salinity_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -1895,7 +1880,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'DIC_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'DIC_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -1907,7 +1892,7 @@ for timeStep = 1:numFiles
         set(hFig4,'units','normalized','outerposition',[0 0 1 1]);
         set(gcf,'color',[1 1 1]);
         
-      if useVol
+        if useVol
             
             cMin = -10^7;
             cMax = 10^7;
@@ -1996,7 +1981,7 @@ for timeStep = 1:numFiles
         
         subplot(2,5,6);
         
-        eval([plotString '(intGDARALK' flipString ')']);
+        eval([plotString '(intBioCALK' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -2011,7 +1996,7 @@ for timeStep = 1:numFiles
         
         subplot(2,5,7);
         
-        eval([plotString '(intGDARALK' flipString ')']);
+        eval([plotString '(intBioSALK' flipString ')']);
         
         shading flat
         caxis([cMin cMax]);
@@ -2073,7 +2058,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'ALK_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'ALK_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -2251,7 +2236,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'NO3_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'NO3_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -2429,7 +2414,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'NO2_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'NO2_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -2607,7 +2592,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'NH4_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'NH4_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -2785,7 +2770,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'PO4_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'PO4_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -2963,7 +2948,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'Fe_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'Fe_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
     end
@@ -3140,7 +3125,7 @@ for timeStep = 1:numFiles
         
         if savePlot
             
-            print('-dpng',[figureDir 'SiO2_budget_' num2str(tt(timeStep)) '.png']);
+            print('-dpng',[figureDir 'SiO2_budget_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '.png']);
             
         end
         
@@ -3150,44 +3135,59 @@ for timeStep = 1:numFiles
     %save budget
     
     if saveMat
+
+        save([saveDir 'sStar_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'sStarMean','sStarSnap','-v7.3');
+
+        save([saveDir 'volume_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendV','intHConvV','intVConvV','intForcV','intTotalV','intResidualV','-v7.3');
         
-        save([saveDir 'volume_' num2str(tt(timeStep)) '_budget.mat'],'intTendV','intHConvV','intVConvV','intForcV','intTotalV','intResidualV','-v7.3');
+        save([saveDir 'salt_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendS','intHAdvS','intVAdvS','intHDifS','intVDifS','intForcS','intTotalS','intResidualS','-v7.3');
         
-        save([saveDir 'salt_' num2str(tt(timeStep)) '_budget.mat'],'intTendS','intHAdvS','intVAdvS','intHDifS','intVDifS','intForcS','intTotalS','intResidualS','-v7.3');
+        save([saveDir 'salinity_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendSal','intHAdvSal','intVAdvSal','intHDifSal','intVDifSal','intForcSal','intTotalSal','intResidualSal','-v7.3');
         
-        save([saveDir 'salinity_' num2str(tt(timeStep)) '_budget.mat'],'intTendSal','intHAdvSal','intVAdvSal','intHDifSal','intVDifSal','intForcSal','intTotalSal','intResidualSal','-v7.3');
-        
-        save([saveDir 'DIC_' num2str(tt(timeStep)) '_budget.mat'],'intTendDIC','intHAdvDIC','intVAdvDIC','intHDifDIC','intVDifDIC','intForcDIC', ...
+        save([saveDir 'DIC_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendDIC','intHAdvDIC','intVAdvDIC','intHDifDIC','intVDifDIC','intForcDIC', ...
             'intBioConsDIC','intBioConsDIC_PIC','intBioRespDIC','intBioReminDIC_DOC','intBioReminDIC_POC','intBioDisscDIC_PIC','intTotalDIC','intResidualDIC','-v7.3');
         
-        save([saveDir 'NO3_' num2str(tt(timeStep)) '_budget.mat'],'intTendNO3','intHAdvNO3','intVAdvNO3','intHDifNO3','intVDifNO3','intBioCNO3','intBioSNO3','intTotalNO3','intResidualNO3','-v7.3');
+        save([saveDir 'NO3_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendNO3','intHAdvNO3','intVAdvNO3','intHDifNO3','intVDifNO3','intBioCNO3','intBioSNO3','intTotalNO3','intResidualNO3','-v7.3');
         
-        save([saveDir 'NO2_' num2str(tt(timeStep)) '_budget.mat'],'intTendNO2','intHAdvNO2','intVAdvNO2','intHDifNO2','intVDifNO2','intBioCNO2','intBioSNO2','intTotalNO2','intResidualNO2','-v7.3');
+        save([saveDir 'NO2_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendNO2','intHAdvNO2','intVAdvNO2','intHDifNO2','intVDifNO2','intBioCNO2','intBioSNO2','intTotalNO2','intResidualNO2','-v7.3');
         
-        save([saveDir 'NH4_' num2str(tt(timeStep)) '_budget.mat'],'intTendNH4','intHAdvNH4','intVAdvNH4','intHDifNH4','intVDifNH4','intBioCNH4','intBioSNH4','intTotalNH4','intResidualNH4','-v7.3');
+        save([saveDir 'NH4_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendNH4','intHAdvNH4','intVAdvNH4','intHDifNH4','intVDifNH4','intBioCNH4','intBioSNH4','intTotalNH4','intResidualNH4','-v7.3');
         
-        save([saveDir 'PO4_' num2str(tt(timeStep)) '_budget.mat'],'intTendPO4','intHAdvPO4','intVAdvPO4','intHDifPO4','intVDifPO4','intBioCPO4','intBioSPO4','intTotalPO4','intResidualPO4','-v7.3');
+        save([saveDir 'PO4_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendPO4','intHAdvPO4','intVAdvPO4','intHDifPO4','intVDifPO4','intBioCPO4','intBioSPO4','intTotalPO4','intResidualPO4','-v7.3');
         
-        save([saveDir 'Fe_' num2str(tt(timeStep)) '_budget.mat'],'intTendFe','intHAdvFe','intVAdvFe','intHDifFe','intVDifFe','intForcFe','intBioFe','intSedFe','intFreeFe','intTotalFe','intResidualFe','-v7.3');
+        save([saveDir 'Fe_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendFe','intHAdvFe','intVAdvFe','intHDifFe','intVDifFe','intForcFe','intBioFe','intSedFe','intFreeFe','intTotalFe','intResidualFe','-v7.3');
         
-        save([saveDir 'SiO2_' num2str(tt(timeStep)) '_budget.mat'],'intTendSiO2','intHAdvSiO2','intVAdvSiO2','intHDifSiO2','intVDifSiO2','intBioCSiO2','intBioSSiO2','intTotalSiO2','intResidualSiO2','-v7.3');
+        save([saveDir 'SiO2_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendSiO2','intHAdvSiO2','intVAdvSiO2','intHDifSiO2','intVDifSiO2','intBioCSiO2','intBioSSiO2','intTotalSiO2','intResidualSiO2','-v7.3');
         
     end
     
     %%
     %clear gcmfaces objects to avoid memory leaks
     
-    clear ETAN oceFWflx SFLUX  oceSPflx UVELMASS VVELMASS WVELMASS ...
+    clear ETAN oceFWflx SFLUX oceSPflx UVELMASS VVELMASS WVELMASS ...
         SALT ADVr_SLT ADVx_SLT ADVy_SLT DFrI_SLT DFrE_SLT DFxE_SLT DFyE_SLT oceSPtnd ...
         DIC ADVx_DIC ADVy_DIC ADVr_DIC DFxE_DIC DFyE_DIC DFrE_DIC DFrI_DIC DICTFLX ...
         CONSUMP_DIC CONSUMP_DIC_PIC REMIN_DOC REMIN_POC DISSC_PIC ...
         ETAN_SNAP SALT_SNAP DIC_SNAP ALK_SNAP NO3_SNAP NO2_SNAP NH4_SNAP PO4_SNAP Fe_SNAP SiO2_SNAP ...
-        
+     
+    clear sStarMean sStarSnap
     clear tendV adv_hConvV adv_vConvV forcV
     clear tendS adv_hConvS adv_vConvS dif_hConvS dif_vConvS forcS
     clear tendSal adv_hConvSal adv_vConvSal dif_hConvSal dif_vConvSal forcSal
     clear tendDIC adv_hConvDIC adv_vConvDIC dif_hConvDIC dif_vConvDIC forcDIC virtualFluxDIC gDAR_DIC bioDIC
     clear bioCons_DIC bioCons_DIC_PIC bioResp_DIC bioRemin_DIC_DOC bioRemin_DIC_POC bioDissc_DIC_PIC
+    clear tendALK adv_hConvALK adv_vConvALK dif_hConvALK dif_vConvALK forcALK virtualFluxALK gDAR_ALK bioC_ALK bioS_ALK
     clear tendNO3 adv_hConvNO3 adv_vConvNO3 dif_hConvNO3 dif_vConvNO3 virtualFluxNO3 gDAR_NO3 bioC_NO3 bioS_NO3
     clear tendNO2 adv_hConvNO2 adv_vConvNO2 dif_hConvNO2 dif_vConvNO2 virtualFluxNO2 gDAR_NO2 bioC_NO2 bioS_NO2
     clear tendNH4 adv_hConvNH4 adv_vConvNH4 dif_hConvNH4 dif_vConvNH4 virtualFluxNH4 gDAR_NH4 bioC_NH4 bioS_NH4

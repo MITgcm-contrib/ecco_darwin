@@ -855,8 +855,8 @@ C=======================================================================
 
       gTr(iDIC )=gTr(iDIC ) - consumDIC - consumDIC_PIC
       
-      diags(iConsumDIC) = consumDIC
-      diags(iConsumDIC_PIC) = consumDIC_PIC
+      diags(iConsDIC) = consumDIC
+      diags(iConsDIC_PIC) = consumDIC_PIC
 
       gTr(iNH4 )=gTr(iNH4 ) - consumNH4
       gTr(iNO2 )=gTr(iNO2 ) - consumNO2
@@ -1033,6 +1033,8 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
       gTr(iFeT )=gTr(iFeT ) + reminPOFe
 #endif /* DARWIN_ALLOW_CDOM */
 
+      diags(iConsALK) = (prodNO3 - consumNO3)
+     & +2.0 _d 0*(consumDIC_PIC - disscPIC)
       diags(iConsDIN) = consumNH4 + consumNO2 + consumNO3
       diags(iConsNO3) = consumNO3
       diags(iConsNO2) = consumNO2
