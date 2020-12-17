@@ -287,8 +287,9 @@
    filename(75) = 'diags/budget/average_DIC_3d',
 #---
   frequency(76) = 2635200.0,
-   fields(1:9,76) = 'TRAC18  ','ADVxTr18','ADVyTr18','ADVrTr18',
+   fields(1:11,76) = 'TRAC18  ','ADVxTr18','ADVyTr18','ADVrTr18',
         'DFxETr18','DFyETr18','DFrETr18','DFrITr18','gDAR18  ',
+        'C_ALK   ','S_ALK   ',
    filename(76) = 'diags/budget/average_ALK_3d',
 #---
   frequency(77) = 2635200.0,
@@ -337,7 +338,7 @@
    filename(84) = 'diags/budget/snap_2d',
 #---
   frequency(85) = -2635200.0,
-   fields(1:10,85) = 'SALT    ','THETA   ',
+   fields(1:10,85) = 'THETA    ','SALT    ',
                     'TRAC01  ','TRAC18  ','TRAC02  ',
    		    'TRAC03  ','TRAC04  ','TRAC05  ',
                     'TRAC06  ','TRAC07  ',
