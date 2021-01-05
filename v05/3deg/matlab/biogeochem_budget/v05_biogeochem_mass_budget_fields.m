@@ -3152,6 +3152,9 @@ for timeStep = 1:numFiles
             'intTendDIC','intHAdvDIC','intVAdvDIC','intHDifDIC','intVDifDIC','intForcDIC', ...
             'intBioConsDIC','intBioConsDIC_PIC','intBioRespDIC','intBioReminDIC_DOC','intBioReminDIC_POC','intBioDisscDIC_PIC','intTotalDIC','intResidualDIC','-v7.3');
         
+        save([saveDir 'ALK_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
+            'intTendALK','intHAdvALK','intVAdvALK','intHDifALK','intVDifALK','intBioCALK','intBioSALK','intTotalALK','intResidualALK','-v7.3');
+ 
         save([saveDir 'NO3_' num2str(startIntLevel) '_' num2str(endIntLevel) '_' num2str(tt(timeStep)) '_budget.mat'], ...
             'intTendNO3','intHAdvNO3','intVAdvNO3','intHDifNO3','intVDifNO3','intBioCNO3','intBioSNO3','intTotalNO3','intResidualNO3','-v7.3');
         
