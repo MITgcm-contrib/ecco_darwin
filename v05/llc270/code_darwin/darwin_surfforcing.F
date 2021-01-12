@@ -279,6 +279,10 @@ C then account for Schmidt number
          Kwexch(i,j) = Kwexch0(i,j)
      &                 / sqrt(SchmidtNoDIC(i,j)/660.0 _d 0)
 
+C compute fugacity of CO2     
+         fCO2(i,j,bi,bj) = 
+     &    pCO2(i,j,ks,bi,bj)*fugf(i,j,bi,bj)
+     
 c Flux = kw*rho*(ff*pCO2atm-k0*FugFac*pCO2ocean)
          FluxCO2(i,j,bi,bj) =
      &          Kwexch(i,j)*(
@@ -326,7 +330,8 @@ C update tendency
        ENDDO
       ENDDO
 
-      CALL DIAGNOSTICS_FILL(fugf,   'fugfCO2 ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(fugf,'fugfCO2 ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(fCO2,'fCO2    ',0,1,1,bi,bj,myThid)
 
 C     k is at surface
       ENDIF
