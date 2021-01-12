@@ -280,7 +280,7 @@ C then account for Schmidt number
      &                 / sqrt(SchmidtNoDIC(i,j)/660.0 _d 0)
 
 C compute fugacity of CO2     
-         fCO2(i,j,bi,bj) = 
+         fugCO2(i,j,bi,bj) = 
      &    pCO2(i,j,ks,bi,bj)*fugf(i,j,bi,bj)
      
 c Flux = kw*rho*(ff*pCO2atm-k0*FugFac*pCO2ocean)
@@ -331,7 +331,7 @@ C update tendency
       ENDDO
 
       CALL DIAGNOSTICS_FILL(fugf,'fugfCO2 ',0,1,1,bi,bj,myThid)
-      CALL DIAGNOSTICS_FILL(fCO2,'fCO2    ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(fugCO2,'fCO2    ',0,1,1,bi,bj,myThid)
 
 C     k is at surface
       ENDIF

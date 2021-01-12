@@ -72,7 +72,7 @@ C Carbon Variables
       _RL  ff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 C Fugacity Factor added by Val Bennington Nov. 2010
       _RL  fugf(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL  fCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL  fugCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  ft(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  st(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  bt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
