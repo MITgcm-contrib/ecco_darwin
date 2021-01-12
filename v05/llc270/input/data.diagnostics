@@ -238,7 +238,7 @@
 #--- 
   frequency(67) = 2635200.,
    fields(1,67) = 'fugfCO2 ',
-   filename(67) = 'diags/monthly/fugCO2', 
+   filename(67) = 'diags/monthly/fugfCO2', 
 #--- 
   frequency(68) = 2635200.,
    fields(1,68) = 'fCO2    ',
