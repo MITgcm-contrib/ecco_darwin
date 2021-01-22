@@ -69,6 +69,7 @@ C  k                    :: vertical level
       _RL gDIC(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL gALK(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL gDICsurfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL gALKsurfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL gNO3surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL gNO2surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL gNH4surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)  
@@ -106,12 +107,14 @@ C  k                    :: vertical level
       _RL sPO4(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sSi(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL consumDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL consumDIC_PIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL consDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL consDIC_PIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL respirDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL reminDIC_DOC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL reminDIC_POC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL disscDIC_PIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL sALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -196,8 +199,8 @@ C carbon air-sea interaction
         gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + gDIC(i,j)
         gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + gALK(i,j)
         gPtr(i,j,1,iO2)  = gPtr(i,j,1,iO2)  + gO2(i,j)
-        gDICsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC) 
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)	
+C        gDICsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC) 
+C     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)	
       ENDDO
       ENDDO
 #endif
@@ -205,6 +208,10 @@ C carbon air-sea interaction
 C surface fluxes from E/P/runoff
       DO j=jMin,jMax
       DO i=iMin,iMax
+        gDICsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gALKsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iALK)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gNO3surfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iNO3)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gNO2surfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iNO2)
@@ -431,11 +438,10 @@ C === diagnostics ======================================================
      &     * diags(i,j,k,iConsSi)
           cFe(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iConsFe)
-
-          consumDIC(i,j,k) = hFacC(i,j,k,bi,bj)
-     &     * diags(i,j,k,iConsumDIC)
-          consumDIC_PIC(i,j,k) = hFacC(i,j,k,bi,bj)
-     &     * diags(i,j,k,iConsumDIC_PIC)
+          consDIC(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsDIC)
+          consDIC_PIC(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsDIC_PIC)
           respirDIC(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iRespirDIC)
           reminDIC_DOC(i,j,k) = hFacC(i,j,k,bi,bj)
@@ -444,7 +450,8 @@ C === diagnostics ======================================================
      &     * diags(i,j,k,iReminDIC_POC)
           disscDIC_PIC(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iDisscDIC_PIC)    
-
+          cALK(i,j,k) = hFacC(i,j,k,bi,bj)
+     &     * diags(i,j,k,iConsALK)
          ENDDO
         ENDDO
        ENDDO
@@ -462,11 +469,9 @@ C      nutrient consumption diagnostics
      &  'C_Si    ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(cFe(1-OLx,1-OLy,1),
      & 'C_Fe    ',0,Nr,1,bi,bj,myThid)
-
-C      DIC biology diagnostics     
-       CALL DIAGNOSTICS_FILL(consumDIC(1-OLx,1-OLy,1),
+       CALL DIAGNOSTICS_FILL(consDIC(1-OLx,1-OLy,1),
      & 'cDIC    ',0,Nr,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(consumDIC_PIC(1-OLx,1-OLy,1),
+       CALL DIAGNOSTICS_FILL(consDIC_PIC(1-OLx,1-OLy,1),
      & 'cDIC_PIC',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(respirDIC(1-OLx,1-OLy,1),
      & 'respDIC ',0,Nr,1,bi,bj,myThid)
@@ -475,14 +480,18 @@ C      DIC biology diagnostics
        CALL DIAGNOSTICS_FILL(reminDIC_POC(1-OLx,1-OLy,1),
      & 'rDIC_POC',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(disscDIC_PIC(1-OLx,1-OLy,1),
-     & 'dDIC_PIC',0,Nr,1,bi,bj,myThid)
-     
+     & 'dDIC_PIC',0,Nr,1,bi,bj,myThid)     
+       CALL DIAGNOSTICS_FILL(cALK(1-OLx,1-OLy,1),
+     & 'C_ALK   ',0,Nr,1,bi,bj,myThid)
+
 C      compute 'source' diagnostics: tendencies without consumption;
 C      add full tendencies to consumption and store result back into
 C      diags(iCons*) for convenience
        DO k=1,Nr
         DO j=1,sNy
          DO i=1,sNx
+          sALK(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsALK)
+     &     + gPtr(i,j,k,iALK))
           sNO3(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsNO3)
      &     + gPtr(i,j,k,iNO3))
           sNO2(i,j,k) = hFacC(i,j,k,bi,bj) * (diags(i,j,k,iConsNO2)
@@ -499,6 +508,8 @@ C      diags(iCons*) for convenience
         ENDDO
        ENDDO
 
+       CALL DIAGNOSTICS_FILL(sALK(1-OLx,1-OLy,1),
+     &  'S_ALK   ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(sNO3(1-OLx,1-OLy,1),
      &  'S_NO3   ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(sNO2(1-OLx,1-OLy,1),
@@ -554,15 +565,15 @@ C      diags(iCons*) for convenience
         CALL DIAGNOSTICS_FILL(sedFe,'sedFe   ',0,Nr,1,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(diffFe,'freeFe  ',0,Nr,1,bi,bj,myThid)
        ENDIF
-       
+
 #ifdef DARWIN_ALLOW_CARBON
        CALL DIAGNOSTICS_FILL(pH,     'pH      ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(pCO2,   'pCO2    ',0,Nr,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(apCO2Sat,'apCO2sat',0,1,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(fugf,   'fugfCO2 ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(FluxCO2,'fluxCO2 ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gDIC,   'gDICsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gDICsurfForc,'gDICEpr ',0,1,2,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(gALKsurfForc,'gALKEpr ',0,1,2,
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gNO3surfForc,'gNO3Epr ',0,1,2,
      &  bi,bj,myThid)

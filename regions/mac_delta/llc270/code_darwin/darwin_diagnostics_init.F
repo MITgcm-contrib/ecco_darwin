@@ -373,6 +373,13 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+      WRITE(diagName,'(A)')'fCO2'
+      WRITE(diagTitle,'(A)')'Fugacity of CO2 (atm)'
+      diagUnits = 'atm             '
+      diagCode  = 'SM P    L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
       WRITE(diagName,'(A)')'fluxCO2'
       WRITE(diagTitle,'(A)')'Flux of CO2 - air-sea exch'
       diagUnits = 'mmol C/m2/s     '
@@ -392,6 +399,14 @@ C-      use units & names from data.ptracers :
       WRITE(diagTitle,'(A)')
      &            'Tendency of DIC due to E/P/runoff'
       diagUnits = 'mmol C/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gALKEpr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of ALK due to E/P/runoff'
+      diagUnits = 'mmol eq./m3/s     '
       diagCode  = 'SM      L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
@@ -499,6 +514,21 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'C_ALK'
+      WRITE(diagTitle,'(A)')'Consumption of alkalinity'
+      diagUnits = 'mmol eq./m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'S_ALK'
+      WRITE(diagTitle,'(A)')'Non-transport source of alkalinity'
+      diagUnits = 'mmol eq./m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
 #endif /* DARWIN_ALLOW_CARBON */
 
 #ifdef ALLOW_EXF
