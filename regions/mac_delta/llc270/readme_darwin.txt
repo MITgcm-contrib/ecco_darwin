@@ -35,4 +35,5 @@ ln -sf ../build/mitgcmuv .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/Mac_Delta270/run_template/* .
 cp ../../Mac270/input_darwin/* .
+mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 qsub job_Mac270_Bro
