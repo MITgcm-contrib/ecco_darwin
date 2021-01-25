@@ -1,0 +1,10 @@
+# Packages
+ &PACKAGES
+ useSEAICE      = .TRUE.,
+ useKPP         = .TRUE.,
+ useEXF         = .TRUE.,
+ useDiagnostics = .TRUE.,
+ usePTRACERS    = .TRUE..,
+ useGCHEM       = .TRUE.,
+ useMNC         = .FALSE.,
+ &

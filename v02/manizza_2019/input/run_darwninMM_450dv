@@ -1,0 +1,16 @@
+#!/bin/csh
+#PBS -l select=23:ncpus=20:model=ivy
+#PBS -q devel
+#PBS -l walltime=2:00:00
+#PBS -j oe
+#PBS -N darwin44_cg1
+#PBS -m abe
+#PBS -M mmanizza@ucsd.edu
+
+setenv FORT_BUFFERED 1
+
+
+cd $PBS_O_WORKDIR
+limit stacksize unlimited
+./modpickup
+mpiexec -np 450 ./mitgcmuv > ! output.txt

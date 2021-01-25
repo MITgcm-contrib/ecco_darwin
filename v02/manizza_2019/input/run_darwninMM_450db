@@ -1,0 +1,20 @@
+#!/bin/csh
+#PBS -l select=23:ncpus=20:model=ivy
+##PBS -q debug 
+##PBS -l walltime=2:00:00
+#PBS -q debug 
+#PBS -l walltime=2:00:00
+#PBS -j oe
+#PBS -N darwin_cg1
+#PBS -m abe
+#PBS -M mmanizza@ucsd.edu
+
+setenv FORT_BUFFERED 1
+
+module load comp-intel/2012.0.032
+module load mpi-sgi/mpt.2.11r13 netcdf/4.0
+
+cd $PBS_O_WORKDIR
+limit stacksize unlimited
+./modpickup
+mpiexec -np 450 ./mitgcmuv
