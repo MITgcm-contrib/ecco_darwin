@@ -20,7 +20,7 @@ module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mp
 mv  ../../Mac270/code/packages.conf ../../Mac270/code/packages.conf_org
 ln -s ../../Mac270/code_darwin/packages.conf ../../Mac270/code
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
--mo '../../Mac270/code ../../Mac270/code_darwin'
+-mo '../../Mac270/code_darwin ../../Mac270/code'
 make depend
 make -j 16
 
