@@ -8,9 +8,9 @@
  pCO2startdate2 = 030000,
  pCO2period     = 86400.0,
 #
-# DOCrunofffile = 'DOC',
+# DOCrunofffile = 'Bertin_etal_21/tDOC_runoff_mack270',
 # DOCrunoffstartdate1 = 19920101,
-# DOCrunoffstartdate2 = 030000,
+# DOCrunoffstartdate2 = 120000,
 # DOCrunoffperiod     = 86400.0,
 #
 # DONrunofffile = 'DON',
