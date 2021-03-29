@@ -80,17 +80,17 @@
  OBWptrFile(30)='OBWtr30_Mac_46x68.bin',
  OBWptrFile(31)='OBWtr31_Mac_46x68.bin',
 #
- OBSaFile='OBSa_Mac_46x68.bin_daily',
- OBShFile='OBSh_Mac_46x68.bin_daily',
- OBSsnFile='OBSsn_Mac_46x68.bin_daily',
- OBSuiceFile='OBSuice_Mac_46x68.bin_daily',
- OBSviceFile='OBSvice_Mac_46x68.bin_daily',
+ OBSaFile='OBSa_Mac_46x68.bin_26yrs',
+ OBShFile='OBSh_Mac_46x68.bin_26yrs',
+ OBSsnFile='OBSsn_Mac_46x68.bin_26yrs',
+ OBSuiceFile='OBSuice_Mac_46x68.bin_26yrs',
+ OBSviceFile='OBSvice_Mac_46x68.bin_26yrs',
 #
- OBWaFile='OBWa_Mac_46x68.bin_daily',
- OBWhFile='OBWh_Mac_46x68.bin_daily',
- OBWsnFile='OBWsn_Mac_46x68.bin_daily',
- OBWuiceFile='OBWuice_Mac_46x68.bin_daily',
- OBWviceFile='OBWvice_Mac_46x68.bin_daily',
+ OBWaFile='OBWa_Mac_46x68.bin_26yrs',
+ OBWhFile='OBWh_Mac_46x68.bin_26yrs',
+ OBWsnFile='OBWsn_Mac_46x68.bin_26yrs',
+ OBWuiceFile='OBWuice_Mac_46x68.bin_26yrs',
+ OBWviceFile='OBWvice_Mac_46x68.bin_26yrs',
 #
  &
 # Sponge layer parameters
