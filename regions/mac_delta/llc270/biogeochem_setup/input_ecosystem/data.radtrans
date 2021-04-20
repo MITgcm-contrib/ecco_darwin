@@ -1,0 +1,37 @@
+#######################
+ &RADTRANS_FORCING_PARAMS
+ RT_EdFile( 1)='oasim_edp01_below.bin',
+ RT_EdFile( 2)='oasim_edp02_below.bin',
+ RT_EdFile( 3)='oasim_edp03_below.bin',
+ RT_EdFile( 4)='oasim_edp04_below.bin',
+ RT_EdFile( 5)='oasim_edp05_below.bin',
+ RT_EdFile( 6)='oasim_edp06_below.bin',
+ RT_EdFile( 7)='oasim_edp07_below.bin',
+ RT_EdFile( 8)='oasim_edp08_below.bin',
+ RT_EdFile( 9)='oasim_edp09_below.bin',
+ RT_EdFile(10)='oasim_edp10_below.bin',
+ RT_EdFile(11)='oasim_edp11_below.bin',
+ RT_EdFile(12)='oasim_edp12_below.bin',
+ RT_EdFile(13)='oasim_edp13_below.bin',
+ RT_EsFile( 1)='oasim_esp01_below.bin',
+ RT_EsFile( 2)='oasim_esp02_below.bin',
+ RT_EsFile( 3)='oasim_esp03_below.bin',
+ RT_EsFile( 4)='oasim_esp04_below.bin',
+ RT_EsFile( 5)='oasim_esp05_below.bin',
+ RT_EsFile( 6)='oasim_esp06_below.bin',
+ RT_EsFile( 7)='oasim_esp07_below.bin',
+ RT_EsFile( 8)='oasim_esp08_below.bin',
+ RT_EsFile( 9)='oasim_esp09_below.bin',
+ RT_EsFile(10)='oasim_esp10_below.bin',
+ RT_EsFile(11)='oasim_esp11_below.bin',
+ RT_EsFile(12)='oasim_esp12_below.bin',
+ RT_EsFile(13)='oasim_esp13_below.bin',
+ RT_E_period= -12.,
+ /
+########################
+ &RADTRANS_PARAMS
+ RT_useMeanCosSolz=.TRUE.,
+ RT_kmax=22,
+ RT_wbEdges=400,412.5,437.5,462.5,487.5,512.5,537.5,562.5,587.5,612.5,637.5,662.5,687.5,700,
+ RT_wbRefWLs=400,425,450,475,500,525,550,575,600,625,650,675,700,
+ /
