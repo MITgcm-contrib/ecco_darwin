@@ -312,23 +312,30 @@ C-      use units & names from data.ptracers :
      I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
       ENDDO
 
-      DO j = 1, nPPplank
+#ifdef DARWIN_DIAG_PERTYPE
+      DO j = 1, nplank
         WRITE(diagName,'(A,I4.4)')'PP',j
         WRITE(diagTitle,'(A,I4)')'Primary Production plankton ',j
         diagUnits = 'mmol C/m^3/s    '
         diagCode  = 'SMRP    MR      '
         CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-      ENDDO
 
-      DO j = 1, nGRplank
         WRITE(diagName,'(A,I4.4)')'GR',j
         WRITE(diagTitle,'(A,I4)')'Grazing loss of plankton ',j
         diagUnits = 'mmol C/m^3/s    '
         diagCode  = 'SMRP    MR      '
         CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+        WRITE(diagName,'(A,I4.4)')'GrGn',j
+        WRITE(diagTitle,'(A,I4)')'Grazing gain of plankton ',j
+        diagUnits = 'mmol C/m^3/s    '
+        diagCode  = 'SMRP    MR      '
+        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
       ENDDO
+#endif
 
       WRITE(diagName,'(A)')'sfcSolFe'
       WRITE(diagTitle,'(A)')'Soluble iron input at sea surface'
@@ -367,8 +374,8 @@ C-      use units & names from data.ptracers :
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
       WRITE(diagName,'(A)')'fugfCO2'
-      WRITE(diagTitle,'(A)')'Fugacity factor of CO2 (atm)'
-      diagUnits = 'atm             '
+      WRITE(diagTitle,'(A)')'Fugacity factor of CO2 at surface'
+      diagUnits = '1               '
       diagCode  = 'SM P    L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )

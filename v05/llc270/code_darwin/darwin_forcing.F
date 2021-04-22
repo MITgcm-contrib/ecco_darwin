@@ -83,11 +83,12 @@ C  k                    :: vertical level
       _RL diffFe2(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
       _RL diffFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
       _RL scv,scav_poc
-      _RL flx
+      _RL flx, POCl
       _RL ptr(nDarwin), gtr(nDarwin), PARl(nlam)
       _RL chlout(nPhoto)
       _RL diagsl(darwin_nDiag)
       _RL photoTempFunc(nplank)
+      _RL hetTempFunc(nplank)
       _RL grazTempFunc(nplank)
       _RL reminTempFunc
       _RL mortTempFunc
@@ -268,8 +269,14 @@ C     iron sediment source (in bottom grid cell above kMaxFeSed)
          IF (hFacC(i,j,k,bi,bj) .GT. 0. .AND.
      &       (hFacC(i,j,kdn,bi,bj) .EQ. 0. .OR. k .EQ. Nr)) THEN
 #ifdef DARWIN_IRON_SED_SOURCE_VARIABLE
+# ifdef DARWIN_IRON_SED_SOURCE_POP
           flx = fesedflux_pcm*wp_sink*R_CP_fesed*
      &            MAX(0 _d 0, Ptracer(i,j,k-1,bi,bj,iPOP))
+#else
+          POCl = MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPOC))
+          flx = fesedflux_pcm*wc_sink*POCl - fesedflux_min
+          flx = MAX(0. _d 0, flx)
+# endif
 #else
           flx = fesedflux
 #endif
@@ -289,8 +296,8 @@ C === plankton =========================================================
       do i=iMin,iMax
       if (hFacC(i,j,k,bi,bj) .GT. 0.) then
         CALL DARWIN_TEMPFUNC(Theta(i,j,k,bi,bj),
-     &         photoTempFunc, grazTempFunc, reminTempFunc,
-     &         mortTempFunc, mort2TempFunc,
+     &         photoTempFunc, hetTempFunc, grazTempFunc,
+     &         reminTempFunc, mortTempFunc, mort2TempFunc,
      &         uptakeTempFunc, myThid)
         DO iTr=1,nDarwin
          ptr(iTr) = Ptracer(i, j, k, bi, bj, iTr)
@@ -304,6 +311,7 @@ C === plankton =========================================================
      U                 gtr,
      O                 chlout, diagsl,
      I                 PARl, photoTempFunc,
+     I                 hetTempFunc,
      I                 grazTempFunc,
      I                 reminTempFunc,
      I                 mortTempFunc, mort2TempFunc,
@@ -530,16 +538,19 @@ C      diags(iCons*) for convenience
      &  
        ENDDO
 
-       DO iTr=1,nPPplank
+#ifdef DARWIN_DIAG_PERTYPE
+       DO iTr=1,nplank
         WRITE(diagname, '(A,I4.4)') 'PP', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iPPplank+iTr-1),
      &        diagname,0,Nr,2,bi,bj,myThid)
-       ENDDO
-       DO iTr=1,nGRplank
         WRITE(diagname, '(A,I4.4)') 'GR', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iGRplank+iTr-1),
      &        diagname,0,Nr,2,bi,bj,myThid)
+        WRITE(diagname, '(A,I4.4)') 'GrGn', iTr
+        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iGrGn+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
        ENDDO
+#endif
        IF (DIAGNOSTICS_IS_ON('sfcSolFe', myThid)) THEN
         DO j=jMin,jMax
          DO i=iMin,iMax

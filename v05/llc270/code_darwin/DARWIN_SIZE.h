@@ -14,22 +14,16 @@ C             (for allometric trait generation)
 C nopt     :: number of optical types (spectra to read in)
 C nPhoto   :: number of phototrophs
 C             (will have Chl tracer if DARWIN_ALLOW_CHL is defined)
-C nPPplank :: number of primary production diagnostics to collect
-C nGRplank :: number of grazing loss diagnostics to collect
 C nlam     :: number of wavebands (set in radtrans package if compiled)
 
       integer nplank
       integer nGroup
       integer nopt
       integer nPhoto
-      integer nPPplank
-      integer nGRplank
       parameter(nplank=7)
       parameter(nGroup=6)
       parameter(nopt=1)
       parameter(nPhoto=5)
-      parameter(nPPplank=0)
-      parameter(nGRplank=0)
 
 #ifndef ALLOW_RADTRANS
       integer nlam
