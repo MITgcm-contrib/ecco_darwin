@@ -51,14 +51,14 @@ C enable old virtualflux code for DIC and Alk
 C reduce nitrate uptake by iron limitation factor
 #undef  DARWIN_NITRATE_FELIMIT
 
-C allow organic matter to sink through bottom (sedimentize)
+C allow organic matter to sink into bottom (sedimentize)
 #define DARWIN_BOTTOM_SINK
 
 
 C light
 
 C compute average PAR in layer, assuming exponential decay
-C (ignored if ALLOW_RADTRANS)
+C (ignored when radtrans package is used)
 #undef  DARWIN_AVPAR
 
 C enable GEIDER light code
@@ -67,10 +67,10 @@ C enable GEIDER light code
 C use rho instead of acclimated Chl:C for chlorophyll synthesis
 #undef  DARWIN_GEIDER_RHO_SYNTH
 
-C initialize chl as in darwin2 (if GUD_ALLOW_RADTRANS)
+C initialize chl as in darwin2 (with radtrans package)
 #define DARWIN_CHL_INIT_LEGACY
 
-C scattering coefficients are per Chlorophyll (if GUD_ALLOW_RADTRANS)
+C scattering coefficients are per Chlorophyll (with radtrans package)
 #undef  DARWIN_SCATTER_CHL
 
 C make diagnostics for instrinsic optical properties available
@@ -112,6 +112,15 @@ C enable particle scavenging code
 C enable variable iron sediment source
 #define DARWIN_IRON_SED_SOURCE_VARIABLE
 
+C revert to old variable iron sediment source in terms of POP
+#undef  DARWIN_IRON_SED_SOURCE_POP
+
+
+C diagnostics
+
+C include code for per-type diagnostics
+#undef  DARWIN_DIAG_PERTYPE
+
 
 C debugging
 
@@ -139,13 +148,13 @@ C random trait generation
 C assign traits based on random numbers as in darwin2
 #define DARWIN_RANDOM_TRAITS
 
-C set traits for darwin2 2-species setup (requires GUD_RANDOM_TRAITS)
+C set traits for darwin2 2-species setup (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_TWO_SPECIES_SETUP
 
-C set traits for darwin2 9-species setup (requires GUD_RANDOM_TRAITS)
+C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
 #define DARWIN_NINE_SPECIES_SETUP
 
-C enable diazotrophy when using (requires GUD_RANDOM_TRAITS)
+C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
 C nutrient runoff
