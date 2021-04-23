@@ -971,6 +971,8 @@ c loss of O2 by remineralization
         gTr(iO2)=gTr(iO2) - consumO2
       ENDIF
 
+      diags(iConsO2) = consumO2
+
       gTr(iALK)=gTr(iALK) - (prodNO3 - consumNO3)
      &                    - 2.0 _d 0*(consumDIC_PIC - disscPIC)
 #endif /* DARWIN_ALLOW_CARBON */
