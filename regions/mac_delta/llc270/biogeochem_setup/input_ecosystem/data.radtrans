@@ -26,9 +26,9 @@
  RT_EsFile(11)='OASIM/edsEs11',
  RT_EsFile(12)='OASIM/edsEs12',
  RT_EsFile(13)='OASIM/edsEs13',
- #
+#
  RT_E_startdate1=19920101,
- RT_E_startdate2=000000
+ RT_E_startdate2=120000
  RT_E_period= 2629800.0,
  /
 ########################
