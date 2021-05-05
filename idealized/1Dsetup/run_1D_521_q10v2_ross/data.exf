@@ -1,0 +1,25 @@
+# *********************
+# External Forcing Data
+# *********************
+#
+ &EXF_NML_01
+# exf_albedo        = 0.15,
+ exf_iprec         = 32,
+ exf_yftype        = 'RL',
+# useExfYearlyFields= .TRUE.,
+# twoDigitYear      = .TRUE.,
+ useExfCheckRange  = .FALSE.,
+ repeatPeriod = 31104000.,
+ &
+#
+ &EXF_NML_02
+ &
+#
+ &EXF_NML_03
+ &
+#
+ &EXF_NML_04
+ &
+#
+ &EXF_NML_OBCS
+ &
