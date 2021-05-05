@@ -418,6 +418,14 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+      WRITE(diagName,'(A)')'gO2Epr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of O2 due to E/P/runoff'
+      diagUnits = 'mmol eq./m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
       WRITE(diagName,'(A)')'gNO3Epr '
       WRITE(diagTitle,'(A)')
      &            'Tendency of DIC due to E/P/runoff'
@@ -532,6 +540,20 @@ C-      use units & names from data.ptracers :
       WRITE(diagName,'(A)')'S_ALK'
       WRITE(diagTitle,'(A)')'Non-transport source of alkalinity'
       diagUnits = 'mmol eq./m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'C_O2'
+      WRITE(diagTitle,'(A)')'Consumption of oxygen'
+      diagUnits = 'mmol O/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'S_O2'
+      WRITE(diagTitle,'(A)')'Non-transport source of oxygen'
+      diagUnits = 'mmol O/m3/s    '
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )

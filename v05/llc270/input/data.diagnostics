@@ -340,29 +340,35 @@
         'C_Si    ','S_Si    ',
    filename(85) = 'diags/budget/average_SiO2_3d',
 #---
-  frequency(86) = -2635200.0,
-   fields(1,86) = 'ETAN    ',
-   timePhase(86)= 0.,
-   filename(86) = 'diags/budget/snap_2d',
+  frequency(86) = 2635200.0,
+   fields(1:11,86) = 'TRAC19  ','ADVxTr19','ADVyTr19','ADVrTr19',
+        'DFxETr19','DFyETr19','DFrETr19','DFrITr19','gDAR19  ',
+        'C_O2    ','S_O2    ',
+   filename(86) = 'diags/budget/average_O2_3d',
 #---
   frequency(87) = -2635200.0,
-   fields(1:10,87) = 'THETA    ','SALT    ',
+   fields(1,87) = 'ETAN    ',
+   timePhase(87)= 0.,
+   filename(87) = 'diags/budget/snap_2d',
+#---
+  frequency(88) = -2635200.0,
+   fields(1:11,88) = 'THETA    ','SALT    ',
                     'TRAC01  ','TRAC18  ','TRAC02  ',
    		    'TRAC03  ','TRAC04  ','TRAC05  ',
-                    'TRAC06  ','TRAC07  ',
-   timePhase(87)= 0.,
-   filename(87) = 'diags/budget/snap_3d',
-#---
-  frequency(88) = 2635200.0,
-   levels(1,88) = 1.,
-   fields(1:4,88) = 'fluxCO2 ','gDICsurf',
-                    'apCO2   ','apCO2sat',
-  filename(88) = 'diags/budget/CO2_flux_budget_2d',
+                    'TRAC06  ','TRAC07  ','TRAC19  ',
+   timePhase(88)= 0.,
+   filename(88) = 'diags/budget/snap_3d',
 #---
   frequency(89) = 2635200.0,
-   fields(1:6,89) = 'TRAC01  ','THETA   ','SALT    ',
+   levels(1,89) = 1.,
+   fields(1:4,89) = 'fluxCO2 ','gDICsurf',
+                    'apCO2   ','apCO2sat',
+  filename(89) = 'diags/budget/CO2_flux_budget_2d',
+#---
+  frequency(90) = 2635200.0,
+   fields(1:6,90) = 'TRAC01  ','THETA   ','SALT    ',
                   'TRAC18  ','TRAC05  ','TRAC07  ',
-  filename(89) = 'diags/budget/CO2_flux_budget_3d',
+  filename(90) = 'diags/budget/CO2_flux_budget_3d',
 #---
 
  &

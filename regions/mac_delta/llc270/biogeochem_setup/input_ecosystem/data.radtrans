@@ -26,10 +26,16 @@
  RT_EsFile(11)='OASIM/edsEs11',
  RT_EsFile(12)='OASIM/edsEs12',
  RT_EsFile(13)='OASIM/edsEs13',
- #
- RT_E_startdate1=19920101,
- RT_E_startdate2=000000
- RT_E_period= 2629800.0,
+ RT_E_period= -1.,
+ /
+########################
+ &RADTRANS_INTERP_PARAMS
+ RT_E_lon0=-179.5,
+ RT_E_lat0=-89.5,
+ RT_E_nlon=360,
+ RT_E_nlat=180,
+ RT_E_lon_inc=1.,
+ RT_E_lat_inc=179*1.,
  /
 ########################
  &RADTRANS_PARAMS
