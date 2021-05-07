@@ -32,7 +32,7 @@ ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
 ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2019/xx*42.data .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2020/xx*42.data .
 cp ../../ecco_darwin/v05/llc270/input/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_ECCO_darwin as needed
