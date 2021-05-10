@@ -3,15 +3,15 @@ ARCTIC ECOSYSTEM README FILE:
 The new Darwin Ecosystem has been created to simulate the general plankton dynamic taking place in the Arctic Ocean.
 This Arctic Ecosystem contains:
   > 5 phytoplankton types:
-      - Pico-eukaryote (analog of Micromonas spp - low light adapted)
-        nominal size: 3um ESD, quantum yield=6e-5 mmolC/mgChl/s
+      - Pico-eukaryote (analog of Micromonas spp - low light adapted) => c1 and chl1 variables 
+        nominal size: 3um ESD, quantum yield=6e-5 mmolC/mgChl/s => c2 and chl2 variables 
       - Haptophyte (which could be Phaeocystis)
         nominal size: 4.5um ESD, quantum yield=4e-5
-      - High-light adapted diatoms (analog of centric diatom – potentially Thalassioira or Chaetoceras spp)
+      - High-light adapted diatoms (analog of centric diatom – potentially Thalassioira or Chaetoceras spp) => c3 and chl3 variables 
         nominal size: 10um ESD, quantum yield=4e-5
-      - Low-light adapted diatom (analog of pennate diatom – potentially Fragilariopsis spp)
+      - Low-light adapted diatom (analog of pennate diatom – potentially Fragilariopsis spp) => c4 and chl4 variables 
         nominal size: 10um ESD, quantum yield=6e-5; growth rate 0.8*diatom(3) as cost for LL adaption, and inhibition value 1.2
-      - Dinoflagellate (which will be mixotrophic, feeding on pico-euk and bacteria)
+      - Dinoflagellate (which will be mixotrophic, feeding on pico-euk and bacteria) => c5 and chl5 variables 
         nominal size: 10um ESD, quantum yield=4e-5
   > 2 Zooplankton types:
       - Small zooplankton (will feed on pico-euk, and bacteria)
