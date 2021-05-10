@@ -1,0 +1,115 @@
+#
+# ******************************
+# Model parameters
+# Continuous equation parameters
+# ******************************
+&PARM01
+tRef= 26.5, 26.1, 26.0, 25.5, 25.4, 
+      24.9, 24.5, 24.0, 23.7, 23.3, 
+      23.1, 22.8, 22.5, 22.1, 21.6, 
+      20.6, 19.5, 18.4, 17.3, 16.6, 
+      15.5, 13.8, 11.6, 10.1,  7.7,  
+       5.3,  4.6,  4.1,  3.9,  3.8,
+       3.7,  3.6,  3.5,  3.4,  3.3,
+       3.2,  3.1,  3.0,  2.9,  2.8,
+       2.7,  2.6,  2.5,  2.4,  2.3,
+       2.2,  2.2,  2.2,  2.2,  2.2,
+sRef= 50*35.00,
+no_slip_sides=.false.,
+no_slip_bottom=.TRUE.,
+viscAz=0.e0,
+viscAh=0.e0,
+diffKhT=1.E2,
+diffKzT=1.E-4,
+diffKhS=0.D0,
+diffKzS=0.D0,
+beta=1.E-11,
+tAlpha=2.E-4,
+sBeta =7.4E-4,
+gravity=9.81,
+gBaro=9.81,
+rigidLid=.TRUE.,
+implicitFreeSurface=.false.,
+eosType='JMD95Z',
+saltStepping=.FALSE.,
+tempStepping=.TRUE.,
+tempAdvection=.TRUE.,
+momStepping=.FALSE.,
+implicitDiffusion=.true.,
+implicitViscosity=.true., 
+allowFreezing=.false.,
+useSingleCpuIO=.TRUE.,
+useCDscheme=.FALSE.,
+tempAdvScheme = 3,
+saltAdvScheme = 3,
+writeBinaryPrec= 64,
+/
+
+# **************************
+# Elliptic solver parameters
+# **************************
+&PARM02
+cg2dMaxIters=300,
+cg2dTargetResidual=1.E-7,
+/
+
+# ************************
+# Time stepping parameters
+# ************************
+&PARM03
+ nIter0=0,
+ nTimeSteps=259200,
+#nTimeSteps=4,
+ deltaTmom= 3600.,
+ deltaTtracer= 3600.,
+ deltaTClock = 3600.,
+ cAdjFreq    = 0.,
+ abEps=0.1,
+ pChkptFreq  = 31104000.0,
+ chkptFreq   = 31104000.0,
+ dumpFreq = 31104000.0,
+ dumpInitAndLast = .TRUE.,
+ taveFreq    = 2592000.,
+ monitorFreq = 2592000.,
+#taveFreq    = 86400.,
+#monitorFreq = 86400.,
+#monitorFreq = 1.,
+ tauThetaClimRelax=86400.,
+ tauSaltClimRelax=0.,
+ periodicExternalForcing=.TRUE.,
+ externForcingPeriod=2592000.,
+ externForcingCycle=31104000.,
+/
+
+# *******************
+# Gridding parameters
+# *******************
+&PARM04
+usingCartesianGrid=.FALSE.,
+usingSphericalPolarGrid=.TRUE.,
+delX=1*1.E0,
+delY=1*1.E0,
+delZ=10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.01,
+ 10.03, 10.11, 10.32, 10.80, 11.76, 13.42, 16.04 , 19.82, 24.85,
+ 31.10, 38.42, 46.50, 55.00, 63.50, 71.58, 78.90, 85.15, 90.18,
+ 93.96, 96.58, 98.25, 99.25,100.01,101.33,104.56,111.33,122.83,
+ 139.09,158.94,180.83,203.55,226.50,249.50,272.50,295.50,318.50,
+ 341.50,364.50,387.50,410.50,433.50,456.50,
+xgOrigin=0,
+ygOrigin=-45.,
+/
+
+# **********
+# Data Files
+# **********
+&PARM05
+bathyFile=       '/home/stephdut/Input/OneD_input/ROSS/bathyneg.bin',
+hydrogThetaFile= '/home/stephdut/Input/OneD_input/ROSS/ross_temp_janprof.bin',
+hydrogSaltFile=  '/home/stephdut/Input/OneD_input/ROSS/ross_salt_janprof.bin',
+zonalWindFile=   '/home/stephdut/Input/OneD_input/ROSS/ross_taux_15x.bin',
+meridWindFile=   '/home/stephdut/Input/OneD_input/ROSS/ross_tauy_15x.bin',
+thetaClimFile=   '/home/stephdut/Input/OneD_input/ROSS/ross_temp_surf.bin',
+saltClimFile=    '',
+surfQFile=       '',
+EmPmRFile=       '',
+/
