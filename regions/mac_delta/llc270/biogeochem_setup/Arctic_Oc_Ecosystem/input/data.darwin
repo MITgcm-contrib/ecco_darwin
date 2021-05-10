@@ -3,25 +3,25 @@
  ironfile = 'iron_dust_46x68_Mac',
  ironperiod = -12,
  darwin_inscal_iron= 1000.,
+
+ pCO2File = 'apCO2',
+ pCO2startdate1 = 19920101,
+ pCO2startdate2 = 030000,
+ pCO2period     = 86400.0,
 #
-# pCO2File = 'apCO2',
-#  pCO2startdate1 = 19920101,
-#   pCO2startdate2 = 030000,
-#    pCO2period     = 86400.0,
-#    #
-#    # DOCrunofffile = 'Bertin_etal_21/tDOC_runoff_mack270',
-#    # DOCrunoffstartdate1 = 19920101,
-#    # DOCrunoffstartdate2 = 120000,
-#    # DOCrunoffperiod     = 86400.0,
-#    #
-#    # DONrunofffile = 'DON',
-#    # DONrunoffstartdate1 = 19920101,
-#    # DONrunoffstartdate2 = 030000,
-#    # DONrunoffperiod     = 86400.0,
-#    #
-#    # DOPrunofffile = 'DOP',
-#    # DOPrunoffstartdate1 = 19920101,
-#    # DOPrunoffstartdate2 = 030000,
+# DOCrunofffile = 'Bertin_etal_21/tDOC_runoff_mack270',
+# DOCrunoffstartdate1 = 19920101,
+# DOCrunoffstartdate2 = 120000,
+# DOCrunoffperiod     = 86400.0,
+#
+# DONrunofffile = 'DON',
+# DONrunoffstartdate1 = 19920101,
+# DONrunoffstartdate2 = 030000,
+# DONrunoffperiod     = 86400.0,
+#
+# DOPrunofffile = 'DOP',
+# DOPrunoffstartdate1 = 19920101,
+# DOPrunoffstartdate2 = 030000,
 #
  darwin_useEXFwind = .TRUE.,
  darwin_useQsw = .TRUE.,
@@ -30,9 +30,9 @@
  &DARWIN_INTERP_PARAMS
  iron_interpMethod = 0,
 # DOCrunoff_interpMethod = 0,
-# # DONrunoff_interpMethod = 0,
-# # DOPrunoff_interpMethod = 0,
-# #
+# DONrunoff_interpMethod = 0,
+# DOPrunoff_interpMethod = 0,
+#
 
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,
@@ -65,15 +65,15 @@
  scav_rat= 0.2,
  scav_inter=9.14351851851E-7,
  scav_r_poppoc=0.786161635,
- kdoc=  0.5000000000000000E-7,  ! 1/30day
- kdop=  0.5000000000000000E-7,  ! 1/30day
- kdon=  0.5000000000000000E-7,  ! 1/30day
- kdofe= 0.5000000000000000E-7,  ! 1/30day
+ kdoc=  0.5000000000000000E-7,  ! 1/231day
+ kdop=  0.5000000000000000E-7,  ! 1/231day
+ kdon=  0.5000000000000000E-7,  ! 1/231day
+ kdofe= 0.5000000000000000E-7,  ! 1/231day
  kPOC=  3.8580246913580247E-7,  ! 1/30day
  kPOP=  3.8580246913580247E-7,  ! 1/30day
  kPON=  3.8580246913580247E-7,  ! 1/30day
  kPOFe= 3.8580246913580247E-7,  ! 1/30day
- kPOSi= 1.5432e-07,             ! 1/75day
+ kPOSi= 1.5432E-07,             ! 1/75day
  phygrazmin= 120E-10,
  hollexp = 1.E0,
 #CSD added these from your version
@@ -92,9 +92,9 @@
   CDOMcoeff = 21.,
  /
  &DARWIN_RADTRANS_PARAMS
- darwin_waterabsorbFile='DIRNAME/optics_water_Aug2014_bandave25.txt',
- darwin_phytoabsorbFile='DIRNAME/optics_phyto_10_bandave25_newsize5_diffsyn_zoo_bact3_AHbacteria_ecol.txt',
- darwin_particleabsorbFile='DIRNAME/optics_detritus_8_sameas4_bandave25.txt',
+ darwin_waterabsorbFile='Optics/optics_water_Aug2014_bandave25.txt',
+ darwin_phytoabsorbFile='Optics/optics_phyto_10_bandave25_newsize5_diffsyn_zoo_bact3_AHbacteria_ecol.txt',
+ darwin_particleabsorbFile='Optics/optics_detritus_8_sameas4_bandave25.txt',
  darwin_Sdom=0.0145000,
  darwin_aCDOM_fac = 0.30,
  darwin_part_size_P = 1e-15,
@@ -122,29 +122,29 @@
  grp_names= 'PicoEuk', 'Hapto', 'LL Diat', 'HL Diat', 'Dino', 'Zoo','Bact'
 #
 #                        s  C  D1 D2 l  Z    b
- grp_nplank(:)=          1, 1, 1, 1, 1, 2, 1, 
+ grp_nplank(:)=          1, 1, 1, 1, 1, 2, 1,
  grp_photo(:)=           1, 1, 1, 1, 1, 0, 0,
  grp_pred(:)=            0, 0, 0, 0, 1, 1, 0,
- grp_prey(:)=            1, 1, 1, 1, 1, 1, 1, 
+ grp_prey(:)=            1, 1, 1, 1, 1, 1, 1,
  grp_hasSi(:)=           0, 0, 1, 1, 0, 0, 0,
  grp_hasPIC(:)=          0, 0, 0, 0, 0, 0, 0,
- grp_DIAZO(:)=           0, 0, 0, 0, 0, 0, 0,  
+ grp_DIAZO(:)=           0, 0, 0, 0, 0, 0, 0,
  grp_useNH4(:)=          1, 1, 1, 1, 1, 0, 0,
  grp_useNO2(:)=          1, 1, 1, 1, 1, 0, 0,
- grp_useNO3(:)=          1, 1, 1, 1, 1, 0, 0, 
- grp_combNO(:)=          1, 1, 1, 1, 1, 0, 0, 
- grp_bacttype(:)=        0, 0, 0, 0, 0, 0, 2,  
- grp_aerobic(:)=         0, 0, 0, 0, 0, 0, 1, 
- grp_denit(:)=           0, 0, 0, 0, 0, 0, 0, 
- grp_tempMort(:)=        0, 0, 0, 0, 0, 0, 0, 
+ grp_useNO3(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_combNO(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_bacttype(:)=        0, 0, 0, 0, 0, 0, 2,
+ grp_aerobic(:)=         0, 0, 0, 0, 0, 0, 1,
+ grp_denit(:)=           0, 0, 0, 0, 0, 0, 0,
+ grp_tempMort(:)=        0, 0, 0, 0, 0, 0, 0,
  grp_tempMort2(:)=       0, 0, 0, 0, 0, 0, 0,
  grp_aptype(:)=          1, 6, 5, 5, 9, 11, 12,
 #
- a_Xmin(:)= 5*1e-3, 1e-3, 1e-3,  
+ a_Xmin(:)= 5*1e-3, 1e-3, 1e-3,
 #7*120E-20,
 
 
- a_phytoTempAe= 5*0.0095, 
+ a_phytoTempAe= 5*0.0095,
  a_hetTempAe=5*0.0631,
  a_grazTempAe=5*0.1100,
 
@@ -188,14 +188,14 @@
  b_grazemax(6)= -0.16,
 #
  a_mort(:)= 5*8e-07, 2*2e-7,
- a_mort2(:)= 7*6.e-8, 
+ a_mort2(:)= 7*6.e-8,
  a_phytoTempExp2= 7*.0003,
  a_R_PC(:)= 6*0.008333333333333333, 0.010600000000,
  a_R_FeC(:)= 7*0.008333333333333333E-3,
- a_R_NC(:)= 7*0.13333333333333333, 
+ a_R_NC(:)= 7*0.13333333333333333,
  a_R_SiC(:)= 2*0., 2*0.26666666666666666, 3*0.,
  a_R_PICPOC(:)= 7*0.,
- a_kgrazesat(:)= 7*3.5, 
+ a_kgrazesat(:)= 7*3.5,
  b_kgrazesat(:)= 7*0,
 #
  grp_ass_eff(:,:)=49*0.32,

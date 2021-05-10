@@ -1,3 +1,5 @@
+ARCTIC ECOSYSTEM README FILE:
+
 The new Darwin Ecosystem has been created to simulate the general plankton dynamic taking place in the Arctic Ocean.
 This Arctic Ecosystem contains:
   > 5 phytoplankton types:
@@ -22,7 +24,7 @@ This Arctic Ecosystem contains:
 
 The new Ecosystem set up involve RADTRANS package and CDOM treatment (upcoming updates)
 
-I. First approach adopted for (unknown) Initial/Boundary Conditions
+I. First approach adopted for (not avalaible) Initial/Boundary Conditions
   a. Initial conditions
       - Phytoplankton: Use the same initial condition fiels for 5 phyto types (Haptophytes are intially not considered s set to 0)
                        The field is set constant at 0.2 mmolN/m3 from 0 to 100m and 0.002 from 100m to bottom (see Le Fouest et al. 2015)
