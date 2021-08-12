@@ -1,0 +1,15 @@
+ nDims = [   3 ];
+ dimList = [
+    46,    1,   46,
+    68,    1,   68,
+    44,    1,   44
+ ];
+ dataprec = [ 'float64' ];
+ nrecords = [    32 ];
+ timeStepNumber = [     289296 ];
+ timeInterval = [  3.471552000000E+08 ];
+ nFlds = [   32 ];
+ fldList = {
+ 'pTr01   ' 'pTr02   ' 'pTr03   ' 'pTr04   ' 'pTr05   ' 'pTr06   ' 'pTr07   ' 'pTr08   ' 'pTr09   ' 'pTr10   ' 'pTr11   ' 'pTr12   ' 'pTr13   ' 'pTr14   ' 'pTr15   ' 'pTr16   ' 'pTr17   ' 'pTr18   ' 'pTr19   ' 'pTr20   '
+ 'pTr21   ' 'pTr22   ' 'pTr23   ' 'pTr24   ' 'pTr25   ' 'pTr26   ' 'pTr27   ' 'pTr28   ' 'pTr29   ' 'pTr30   ' 'pTr31   ' 'pTr32   '
+ };
