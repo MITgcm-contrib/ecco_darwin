@@ -33,7 +33,7 @@
    filename(4) = 'diags/daily/DIC',
 #---
   frequency(5) = 86400.,
-   fields(1,5) = 'TRAC18  ',
+   fields(1,5) = 'TRAC19  ',
    filename(5) = 'diags/daily/Alk',
 #---
   frequency(6) = 86400.,
@@ -53,45 +53,48 @@
    filename(9) = 'diags/daily/apCO2sat',
 #---
   frequency(10) = 86400.,
-   fields(1,10) = 'UE_VEL_C  ',
-   filename(10) = 'diags/daily/East_vel',
+   fields(1,10) = 'TRAC08  ',
+   filename(10) = 'diags/daily/DOC',
 #---
   frequency(11) = 86400.,
-   fields(1,11) = 'VN_VEL_C  ',
-   filename(11) = 'diags/daily/North_vel',
-#---
-  frequency(12) = 86400.,
-   fields(1,12) = 'SIarea  ',
-   filename(12) = 'diags/daily/SIarea',
-#---
-  frequency(13) = 86400.,
-   fields(1,13) = 'SIheff  ',
-   filename(13) = 'diags/daily/SIheff',
+   fields(1,11) = 'TRAC09  ',
+   filename(11) = 'diags/daily/tDOC',
 #---
 
 #Monthly budget diagnostics
 #---
-  frequency(14) = 2635200.0,
-   fields(1:10,14) = 'THETA   ','ADVx_TH ','ADVy_TH ','ADVr_TH ',
+  frequency(12) = 2635200.0,
+   fields(1:10,12) = 'THETA   ','ADVx_TH ','ADVy_TH ','ADVr_TH ',
                    'DFxE_TH ','DFyE_TH ','DFrE_TH ','DFrI_TH ',
                    'TFLUX   ','SItflux  ',
-   filename(14) = 'diags/budget/theta_budg_3d',
+   filename(12) = 'diags/budget/theta_budg_3d',
 #---
-  frequency(15) = 2635200.0,
-   fields(1:9,15) = 'SALT    ','ADVx_SLT','ADVy_SLT','ADVr_SLT',
+  frequency(13) = 2635200.0,
+   fields(1:9,13) = 'SALT    ','ADVx_SLT','ADVy_SLT','ADVr_SLT',
                    'DFxE_SLT','DFyE_SLT','DFrE_SLT','DFrI_SLT',
                    'SFLUX',
-   filename(15) = 'diags/budget/salt_budg_3d',
+   filename(13) = 'diags/budget/salt_budg_3d',
 #---
-  frequency(16) = 2635200.0,
-   fields(1:14,16) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
+  frequency(14) = 2635200.0,
+   fields(1:14,14) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
         'DFxETr01','DFyETr01','DFrETr01','DFrITr01','cDIC',
         'cDIC_PIC','respDIC ','rDIC_DOC','rDIC_POC','dDIC_PIC',
-   filename(16) = 'diags/budget/DIC_budg_3d',
+   filename(14) = 'diags/budget/DIC_budg_3d',
+#---
+  frequency(15) = 2635200.0,
+   fields(1:5,15) = 'fluxCO2  ','pCO2','apCO2','apCO2sat','TRAC19',
+   filename(15) = 'diags/budget/CO2_budg_2d',
+#---
+  frequency(16) = 2635200.0,
+   fields(1:16,16) = 'TRAC08  ','ADVxTr08','ADVyTr08','ADVrTr08','DFxETr08',
+        'DFyETr08','DFrETr08','DFrITr08','TRAC09  ','ADVxTr09','ADVyTr09',
+        'ADVrTr09','DFxETr09','DFyETr09','DFrETr09','DFrITr09',
+   filename(16) = 'diags/budget/DOC_budg_3d',
 #---
   frequency(17) = 2635200.0,
-   fields(1:4,17) = 'fluxCO2  ','pCO2','apCO2','apCO2sat',
-   filename(17) = 'diags/budget/CO2_budg_2d',
+   fields(1:12,17) = 'TRAC21','TRAC22','TRAC23','TRAC24','TRAC25','TRAC26',
+        'TRAC27','TRAC28','TRAC29','TRAC30','TRAC31','TRAC32',
+   filename(17) = 'diags/budget/Eco_budg_3d',
 #---
 
  &
