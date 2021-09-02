@@ -1,33 +1,17 @@
 ARCTIC ECOSYSTEM README FILE:
 
 The new Darwin Ecosystem has been created to simulate the general plankton dynamic taking place in the Arctic Ocean.
-
-The new Ecosystem set up involve RADTRANS package and allow CDOM treatment (upcoming updates).
-
-This set up involves 33 passive tracers:
-1. DIC     12. POC    23. c3
-2. NO3     13. PON    24. c4
-3. NO2     14. POP    25. c5
-4. NH4     15. POFe   26. c6
-5. PO4     16. POSi   27. c7
-6. FeT     17. PIC    28. c8
-7. SiO2    18. ALK    29. Chl1
-8. DOC     19. O2     30. Chl2
-9. DON     20. CDOM   31. Chl3
-10. DOP    21. c1     32. Chl4
-11. DOFe   22. c2     33. Chl5
-
 This Arctic Ecosystem contains:
   > 5 phytoplankton types:
-      - Pico-eukaryote (analog of Micromonas spp - low light adapted)
-        nominal size: 3um ESD, quantum yield=6e-5 mmolC/mgChl/s
+      - Pico-eukaryote (analog of Micromonas spp - low light adapted) => c1 and chl1 variables 
+        nominal size: 3um ESD, quantum yield=6e-5 mmolC/mgChl/s => c2 and chl2 variables 
       - Haptophyte (which could be Phaeocystis)
         nominal size: 4.5um ESD, quantum yield=4e-5
-      - High-light adapted diatoms (analog of centric diatom – potentially Thalassioira or Chaetoceras spp)
+      - High-light adapted diatoms (analog of centric diatom – potentially Thalassioira or Chaetoceras spp) => c3 and chl3 variables 
         nominal size: 10um ESD, quantum yield=4e-5
-      - Low-light adapted diatom (analog of pennate diatom – potentially Fragilariopsis spp)
+      - Low-light adapted diatom (analog of pennate diatom – potentially Fragilariopsis spp) => c4 and chl4 variables 
         nominal size: 10um ESD, quantum yield=6e-5; growth rate 0.8*diatom(3) as cost for LL adaption, and inhibition value 1.2
-      - Dinoflagellate (which will be mixotrophic, feeding on pico-euk and bacteria)
+      - Dinoflagellate (which will be mixotrophic, feeding on pico-euk and bacteria) => c5 and chl5 variables 
         nominal size: 10um ESD, quantum yield=4e-5
   > 2 Zooplankton types:
       - Small zooplankton (will feed on pico-euk, and bacteria)
@@ -38,13 +22,25 @@ This Arctic Ecosystem contains:
       - Free-living heterotrophic bacteria
         nominal size 0.6um ESD
 
-First approach adopted for (unknown) Initial/Boundary Conditions
-  > Tracers 1 to 19: Use same initial/Boundary conditions than Carroll et al. (2020) set up
-  > Tracer 20 (CDOM): Use DOP initial/Boundary conditions (the unit is the same mmolP/m3)
-  > Tracer 21, 23, 24 & 25 (Phytoplankton): Use sum of 5 PFTs of the Carroll et al. (2020) set up divide by 4.
-                                                  Absolute value of the 5 PFTs fields is used to get rid of very small existing values in its.
-  > Tracer 22 : Use initial/Boundary conditions set to 0 on the whole volume (Haptophytes are not considered in the Mackenzie shelf)
-  > Tracer 26 & 27 (Zooplankton): Use sum of 2 zoo's (absolute value) fields of the Carroll et al. (2020) set up divide by 2.
-  > Tracer 28 (Bacteria): Field is set constant at 0.1 mmolN/m3 [0-100m] & 0.001 mmolN/m3 [100m-bottom] (see Le Fouest et al. 2015, Le Fouest et al. 2013)
-                          Field in mmolN/m3 is then converted into mmolC/m3 using R_CN ratio set to 120/16
-  > Tracer 29 to 33: Use same method as PFTs concentration with Chlorophyll fields (Reminder : Haptophytes not considered yet Tracer 3à set to 0)
+The new Ecosystem set up involve RADTRANS package and CDOM treatment (upcoming updates)
+
+I. First approach adopted for (not avalaible) Initial/Boundary Conditions
+  a. Initial conditions
+      - Phytoplankton: Use the same initial condition fiels for 5 phyto types (Haptophytes are intially not considered s set to 0)
+                       The field is set constant at 0.2 mmolN/m3 from 0 to 100m and 0.002 from 100m to bottom (see Le Fouest et al. 2015)
+                       the field was converted into mmolC/m3 using R_CN ratio set to 120/16
+      - Chlorophyll: convert Phytoplankton field from mmolC/m3 into mmolChl/m3 using R_ChlC ratio set to 16/120
+      - Zooplankton & Bacteria: Use the same initial condition field for 2 zoo types and Bacteria
+                                The field is set constant at 0.1 mmolN/m3 from 0 to 100m and 0.001 from 100m to bottom (see Le Fouest et al. 2015, Le Fouest et al. 2013)
+                                the field was converted into mmolC/m3 using R_CN ratio set to 120/16
+      - CDOM: Use DOP initial conditions (the unit is the same mmolP/m3)
+
+  b. Boundary conditions
+      - Phytoplankton: Sum the concentration of the 5 Phytoplankton fields of old ecosystem
+                       Divide the sum by 4 to distribute it on the 4 new phytoplankton types (Reminder: Haptophytes not considered yet)
+      - Chlorophyll: Sum the concentration of the 5 Chlorophyll fields of old ecosystem
+                     Divide the sum by 4 to distribute it on the 4 new phytoplankton types (Reminder: Haptophytes not considered yet)
+      - Zooplankton: Sum the concentration of the 2 zooplankton fields of old ecosystem
+                     Divide the sum by 2 to distribute it on the 2 new zooplankton types
+      - Bacteria: Set same Boundary conditions as initial field
+      - CDOM: Use DOP boundary conditions
