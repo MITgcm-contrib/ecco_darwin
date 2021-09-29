@@ -7,7 +7,10 @@
 ==============
 # 1. Get code
 
-git clone --depth 1 https://github.com/darwinproject/darwin3
+git clone https://github.com/darwinproject/darwin3
+cd darwin3/pkg/darwin
+git checkout bdeda14b
+cd ../../../
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 cd darwin3
 mkdir build run
