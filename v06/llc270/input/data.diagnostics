@@ -268,8 +268,8 @@
    fields(1,74) = 'pH      ',
    filename(74) = 'diags/monthly/pH',
 #---
-  frequency(75:152) = 2635200.,
-   levels(1,75:152) = 20.,
+  frequency(75:152) = 78*2635200.,
+   levels(1,75:152) = 78*20.,
 
    fields(1,75) = 'a001    ',
    fields(1,76) = 'a002    ',
@@ -429,8 +429,8 @@
    filename(151) = 'diags/monthly/IOPS/bbplk012',
    filename(152) = 'diags/monthly/IOPS/bbplk013',
 #---  
-  frequency(153:204) = 2635200.,
-   levels(1,153:204) = 20.,
+  frequency(153:204) = 52*2635200.,
+   levels(1,153:204) = 52*20.,
 
    fields(1,153) = 'Ed001   ',
    fields(1,154) = 'Ed002   ',
@@ -538,8 +538,8 @@
    filename(203) = 'diags/monthly/PAR/PAR012',
    filename(204) = 'diags/monthly/PAR/PAR013',
 #---  
-  frequency(205:217) = 2635200.,
-   levels(1,205:217) = 1.,
+  frequency(205:217) = 13*2635200.,
+   levels(1,205:217) = 13*1.,
 
    fields(1,205) = 'Rirr001 ',
    fields(1,206) = 'Rirr002 ',
