@@ -4,10 +4,10 @@ Simulations:
 
 --regions--
   --mac_delta--
-    /llc4320: mackenzie delta llc4320 cut-out
     /llc270: mackenzie delta llc270 cut-out
+    /llc4320: mackenzie delta llc4320 cut-out
   --totten--
-    /
+    /llc1080: totten lon lat  
 
 --v02--
   /cs510_brix: optimized solution described in Brix et al. (2015)
@@ -28,6 +28,9 @@ Simulations:
   /llc270: Carroll et al. 2020 solution w/ Darwin 3
   /llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
   /llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
+
+--v06--
+  /llc270: v05 llc270 w/ new ecosystem and radiative transfer package
 
 **Notes**
 v02 to v04 use Darwin 1, v05 onward uses Darwin 3
