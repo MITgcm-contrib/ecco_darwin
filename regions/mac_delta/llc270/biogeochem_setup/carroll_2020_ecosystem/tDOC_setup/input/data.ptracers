@@ -1,6 +1,6 @@
  &PTRACERS_PARM01
  PTRACERS_numInUse= 32,
- PTRACERS_Iter0= 289296,
+ PTRACERS_Iter0= 1,
 #
  PTRACERS_advScheme(:)= 32*33,
  PTRACERS_diffKh(:)= 32*0.E3,
