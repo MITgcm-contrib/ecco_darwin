@@ -167,6 +167,18 @@ C     errCount  :: error counter
      I  myThid )
       ENDIF
 
+      IF ( ALKrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START ALKrunoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I  'darwin', 'ALKrunoff', ALKrunoffperiod,
+     I  ALKrunoffstartdate1, ALKrunoffstartdate2,
+     U  ALKrunoffStartTime, errCount,
+     I  myThid )
+      ENDIF
+
       IF ( errCount.GE.1 ) THEN
        WRITE(msgBuf,'(A,I3,A)')
      &     'DARWIN_EXF_INIT_FIXED: detected', errCount,' fatal error(s)'

@@ -184,6 +184,7 @@ C === nutrient runoff ==================================================
         gPtr(i,j,1,iDON) = gPtr(i,j,1,iDON) + DONrunoff(i,j,bi,bj)
         gPtr(i,j,1,iDOP)  = gPtr(i,j,1,iDOP) + DOPrunoff(i,j,bi,bj)
         gPtr(i,j,1,iDIC)  = gPtr(i,j,1,iDIC) + DICrunoff(i,j,bi,bj)
+        gPtr(i,j,1,iALK)  = gPtr(i,j,1,iALK) + ALKrunoff(i,j,bi,bj)
         gPtr(i,j,1,iSiO2)  = gPtr(i,j,1,iSiO2) + DSirunoff(i,j,bi,bj)
       ENDDO
       ENDDO

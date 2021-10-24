@@ -4,9 +4,9 @@
     68,    1,   68
  ];
  dataprec = [ 'float64' ];
- nrecords = [   355 ];
- timeStepNumber = [      78841 ];
- timeInterval = [  9.460920000000E+07 ];
+ nrecords = [        355 ];
+ timeStepNumber = [     289296 ];
+ timeInterval = [  3.471552000000E+08 ];
  nFlds = [   11 ];
  fldList = {
  'Uvel    ' 'Vvel    ' 'Theta   ' 'Salt    ' 'GuNm1   ' 'GuNm2   ' 'GvNm1   ' 'GvNm2   ' 'EtaN    ' 'dEtaHdt ' 'EtaH    '
