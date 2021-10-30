@@ -1,8 +1,8 @@
 # iter42/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/iter42/input
-# ecco_darwin_v4/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/ecco_darwin_v4/input
+# ecco_darwin_v5/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/ecco_darwin_v5/input
 # forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
 
-# Instructions for building and running ECCO-Darwin v4 with Darwin 3
+# Instructions for building and running ECCO-Darwin v05 with Darwin 3
 
 ==============
 # 1. Get code
@@ -17,7 +17,7 @@ mkdir build run
 cd build
 
 ==============
-# 2. Build executable for ECCO-Darwin v4 with Darwin 3
+# 2. Build executable
 
 module purge
 module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
@@ -27,7 +27,7 @@ make depend
 make -j 16
 
 ==============
-# 2. Instructions for running ECCO-Darwin v4 with Darwin 3 for 1992-2019 period
+# 2. Instructions for running simulation (1992-2020 period)
 
 cd ../run
 ln -sf ../build/mitgcmuv .
