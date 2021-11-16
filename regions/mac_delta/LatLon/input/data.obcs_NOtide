@@ -1,0 +1,63 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jnorth =  1224*-1,
+ OB_Iwest  =   744*1,
+ OB_Ieast  =   744*-1,
+#
+ useOBCSprescribe=.TRUE.,
+ useOBCSbalance=.TRUE.,
+ OBCS_balanceFacN = 1,
+ OBCS_balanceFacW = 0,
+ OBCS_balanceFacE = 0,
+#
+ OBNsFile='OBNs_Mac.stable',
+ OBNtFile='OBNt_Mac.stable',
+ OBNuFile='OBNu_Mac.bin',
+ OBNvFile='OBNv_Mac.balance',
+#
+ OBWsFile='OBWs_Mac.stable',
+ OBWtFile='OBWt_Mac.stable',
+ OBWuFile='OBWu_Mac.bin',
+ OBWvFile='OBWv_Mac.bin',
+#
+ OBEsFile='OBEs_Mac.stable',
+ OBEtFile='OBEt_Mac.stable',
+ OBEuFile='OBEu_Mac.bin',
+ OBEvFile='OBEv_Mac.bin',
+#
+ OBNaFile='OBNa_Mac.bin',
+ OBNhFile='OBNh_Mac.bin',
+ OBNsnFile='OBNsn_Mac.bin',
+ OBNuiceFile='OBNuice_Mac.bin',
+ OBNviceFile='OBNvice_Mac.bin',
+#
+ OBWaFile='OBWa_Mac.bin',
+ OBWhFile='OBWh_Mac.bin',
+ OBWsnFile='OBWsn_Mac.bin',
+ OBWuiceFile='OBWuice_Mac.bin',
+ OBWviceFile='OBWvice_Mac.bin',
+#
+ OBEaFile='OBEa_Mac.bin',
+ OBEhFile='OBEh_Mac.bin',
+ OBEsnFile='OBEsn_Mac.bin',
+ OBEuiceFile='OBEuice_Mac.bin',
+ OBEviceFile='OBEvice_Mac.bin',
+#
+#MITgcm/verification/seaice_obcs/input.tides
+# useOBCStides = .TRUE.,
+##components   = M2       S2     N2       K2       K1      O1       P1       Q1
+##periods (hr) = 12.4206  12     12.6583  11.9672  23.9345 25.8193  24.0659  26.8684
+##period(sec)  = 44714.165 43200.001 45570.054 43082.05 86164.077 92949.636 86637.2 96726.086
+ tidalPeriod =  44714.16431337780, 43200.00001728000, 45570.05357245878, 43082.04528908103,
+                86164.09057816206, 92949.63009971760, 86637.20483483445, 96726.08376243486 
+#sprintf('%15.5f',2*pi*omega_data.^-1)
+ OBNamFile='OBN_TdlAmp_trans20060101.bin',
+ OBWamFile='OBW_TdlAmp_trans20060101.bin',
+ OBEamFile='OBE_TdlAmp_trans20060101.bin',
+ OBNphFile='OBN_TdlPhs_trans20060101.bin',
+ OBWphFile='OBW_TdlPhs_trans20060101.bin',
+ OBEphFile='OBE_TdlPhs_trans20060101.bin',
+#
+ &

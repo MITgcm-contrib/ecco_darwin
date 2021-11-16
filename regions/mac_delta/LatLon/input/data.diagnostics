@@ -1,0 +1,110 @@
+# Diagnostic Package Choices
+#
+# 6-hourly 2-D fields:
+# ====================
+# 
+# oceTAUX  zonal surface wind stress, >0 increases uVel (N/m^2)
+# oceTAUY  meridional surf. wind stress, >0 increases vVel (N/m^2)
+# oceFWflx net surface Fresh-Water flux into ocean, >0 decreases salinity (kg/m^2/s)
+# oceSflux net surface Salt flux into the ocean, >0 increases salinity (g/m^2/s)
+# oceQnet  net surface heat flux into the ocean, >0 increases theta (W/m^2)
+# oceQsw   net Short-Wave radiation (+=down), >0 increases theta (W/m^2)
+# KPPhbl   KPP boundary layer depth, bulk Ri criterion
+# MXLDEPTH Mixed layer depth, dT=.8degC density criterion
+# SST      Sea Surface Temperature (degC,K)
+#
+# daily 2-D fields:
+# =================
+#
+# ETAN     Perturbation of Surface (pressure, height) (Pa,m)
+# PHIBOT   ocean bottom pressure / top. atmos geo-Potential
+# SSS      Sea Surface Salinity (g/kg)
+# SIarea   SEAICE fractional ice-covered area [0 to 1]
+# SIheff   SEAICE effective ice thickness (m)
+# SIuice   SEAICE zonal ice velocity, >0 from West to East (m/s)
+# SIvice   SEAICE merid. ice velocity, >0 from South to North (m/s)
+# SIhsnow  SEAICE snow thickness (m)
+# SIhsalt  SEAICE effective salinity (g/m^2)
+#
+# 3-day 3-D fields:
+# =================
+# 
+# SALTanom Salt anomaly (=SALT-35; g/kg)
+# THETA    Potential Temperature (degC)
+# UVELMASS Zonal Mass-Weighted Comp of Velocity (m/s)
+# VVELMASS Meridional Mass-Weighted Comp of Velocity (m/s)
+# WVELMASS Vertical Mass-Weighted Comp of Velocity (m/s)
+#
+# monthly 3-D fields:
+# ===================
+# 
+# WTHMASS  Vertical Mass-Weight Transp of Pot Temp (degC.m/s)
+# WSLTMASS Vertical Mass-Weight Transp of Salinity (PSU.m/s)
+# ADVr_TH  Vertical   Advective Flux of Pot.Temperature (degC.m^3/s)
+# ADVx_TH  Zonal      Advective Flux of Pot.Temperature (degC.m^3/s)
+# ADVy_TH  Meridional Advective Flux of Pot.Temperature (degC.m^3/s)
+# DFrI_TH  Vertical Diffusive Flux of Pot.Temperature (Implicit part)
+# ADVr_SLT Vertical   Advective Flux of Salinity
+# ADVx_SLT Zonal      Advective Flux of Salinity
+# ADVy_SLT Meridional Advective Flux of Salinity
+# DFrI_SLT Vertical Diffusive Flux of Salinity    (Implicit part)
+# KPPdiffT Vertical diffusion coefficient for heat
+# KPPghat  Nonlocal transport coefficient
+# KPPfrac  Short-wave flux fraction penetrating mixing layer
+#
+ &diagnostics_list
+#
+  dumpatlast = .TRUE.,
+  diagMdsDir = 'diags',
+#---
+  frequency(1) = 86400.,
+   fields(1,1) = 'VVEL    ',
+   levels(1,1) = 1.,
+   filename(1) = 'VVEL_k1',
+  frequency(2) = 86400.,
+   fields(1,2) = 'UVEL    ',
+   levels(1,2) = 1.,
+   filename(2) = 'UVEL_k1',
+  frequency(3) = 86400.,
+   fields(1,3) = 'SALT    ',
+   levels(1,3) = 1.,
+   filename(3) = 'SSS',
+  frequency(4) = 86400.,
+   fields(1,4) = 'THETA   ',
+   levels(1,4) = 1.,
+   filename(4) = 'SST',
+  frequency(5) = 86400.,
+   fields(1,5) = 'ETAN    ',
+   filename(5) = 'ETAN',
+  frequency(6) = 86400.,
+   fields(1,6) = 'SIarea  ',
+   filename(6) = 'SIarea',
+  frequency(7) = 86400.,
+   fields(1,7) = 'SIheff  ',
+   filename(7) = 'SIheff',
+  frequency(8) = 86400.,
+   fields(1,8) = 'SIhsnow ',
+   filename(8) = 'SIhsnow',
+ &
+
+# Parameter for Diagnostics of per level statistics:
+#-----------------
+# for each output-stream:
+#  stat_fname(n) : prefix of the output file name (only 8.c long) for
+#outp.stream n
+#  stat_freq(n):< 0 : write snap-shot output every |stat_freq| seconds
+#               > 0 : write time-average output every stat_freq seconds
+#  stat_phase(n)    : write at time = stat_phase + multiple of |stat_freq|
+#  stat_region(:,n) : list of "regions" (default: 1 region only=global)
+#  stat_fields(:,n) : list of diagnostics fields (8.c) (see
+#"available_diagnostics.log"
+#                 file for the list of all available diag. in this particular
+#config)
+#-----------------
+ &DIAG_STATIS_PARMS
+#- an example just to check the agreement with MONITOR output:
+#stat_fields(1,1)= 'ETAN    ','UVEL    ','VVEL    ','WVEL    ', 'THETA   ',
+#   stat_fname(1)= 'dynStDiag',
+#    stat_freq(1)= -864000.,
+#   stat_phase(1)= 0.,
+ &
