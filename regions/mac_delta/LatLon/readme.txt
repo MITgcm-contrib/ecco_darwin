@@ -11,7 +11,8 @@ git clone https://github.com/MITgcm-contrib/ecco_darwin
 
  cd MITgcm
 #revert to 68c b/c https://github.com/MITgcm/MITgcm/pull/545 broken
- git checkout checkpoint68c
+# git checkout checkpoint68c
+#no revert b/c https://github.com/MITgcm/MITgcm/pull/562 fixed
  mkdir build run
 
 #=========
