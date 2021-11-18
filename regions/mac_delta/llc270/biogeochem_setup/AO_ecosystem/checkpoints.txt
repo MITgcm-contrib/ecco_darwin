@@ -1,0 +1,63 @@
+*** Arctic Ocean Setup v0 (4/20/2021) ***
+Steph changes to Carroll et al. (2020) Setup:
+
+      > Added two options that were not in your code:
+          - Packages_conf: added radtrans and sun
+          - DARWIN_ION_SED_SOURCE_POP (undef)
+          - DARWIN_DIAG_PERTYPE (define)
+          - Removed DARWIN_DIAG_TENDENCIES
+          (NOTE: did not include DARWIN_ALLOW_DENIT : seems not important in AO?
+          But also no nitrogen fixers, so might as well make nitrogen conversed.
+          But will need to change if shifting to global.)
+
+      > Update tracers for Arctic ocean:
+          - DARWIN_SIZE.h : changes for new number plankton, groups and optical types
+          (NOTE: nPPplank and nGRplank are obsolete in newest code)
+          - PTRACERS_SIZE.h: add two new ptracers (CDOM and bacteria)
+          - data.ptracers: additional tracers CDOM (ptracer20) and bacteria (ptracer 28)
+          (NOTE: these will need initial files, and that ptracer20 onward from your last
+          set up to match new)
+          - data.darwin : Used Steph original file and added in Carroll Setup
+          - data.traits: completely new contents
+          DARWIN_FORCING_PARAMS and DARWIN_INTERP_PARAMS.
+          (NOTE : Search for CSD for couple other comments)
+          - DARWIN_OPTIONS.h : made several changes, including adding in ptracer CDOM
+          (will need initial condition for this).
+
+      > Add radiative transfer option:
+          - RADTRANS_SIZE.h: new file for this mod
+          - data.pkg : to include radtrans
+          - data.radtrans : new file – need to add in pathways and filenames for OASIM
+          input, and your own periodicity (currently just month climatology –
+          would be better to use actual monthly if that is what Oliver has)​
+          - DARWIN_RADTRANS_PARAMS : you’ll need new pathways (DIRNAME) for the three
+          optics files (also attached)
+
+*** Arctic Ocean Setup v1 (11/16/2021) ***
+Clément changes to Setup v0:
+
+      > Moved to darwin3 v68c with CDOM in carbon units (NOTE: several update were made
+      in the code_darwin/ files)
+
+      > Set CDOM in carbon units:
+          - DARWIN_OPTION.h : set define DARWIN_CDOM_UNITS_CARBON (NOTE: The CDOM forcing
+          field should be converted from Phosphorus units to carbon units)
+
+      > Modify constants to adapt to Mackenzie delta situation:
+          - data.darwin : Set a_Xmin fortotal phytoplankton parameter to 0.05 mmolC/m3. It
+          corresponds to set the 4 phytoplankton types (not 5 because haptophytes are set
+          to 0) to 0.0125 mmolC/m3.
+          - data.darwin : Set Dissolved organic constituents degradation rate to 1/1000 days
+          (NOTE: Bacteria are available so degradation rate should be close to 0)
+
+      > Add refractory DOC variable (RDOC):
+          - DARWIN_INDICES.h : Duplicate DOC variable and change it to RDOC
+          - DARWIN_PARAMS.h & darwin_read_params.F : Add krdoc constant
+          - PTRACERS_SIZE.h : Set number of tracers to 34
+          - darwin_plankton.F : Add RDOC fields into the Carbon loop
+
+      > Add RDOC, DIC, DSi and ALK river runoffs parametrization:
+          - DARWIN_EXF_FIELDS.h, DARWIN_EXF_PARAMS.h, darwin_exf_init_fixed.F,
+            darwin_exf_init_varia.F, darwin_exf_load.F, darwin_exf_readparms.F,
+            darwin_monitor.F, darwin_forcing.F, data.darwin : Duplicate DOC runoff lines
+            and change with RDOC, DIC, ALK and DSi.
