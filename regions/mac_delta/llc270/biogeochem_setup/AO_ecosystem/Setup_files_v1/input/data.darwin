@@ -120,7 +120,7 @@
  darwin_Sdom=0.0145000,
  darwin_aCDOM_fac = 0.30,
  darwin_part_size_P = 1e-15,
- darwin_rCDOM = 1.0e-4,
+ darwin_rCDOM = 1.2e-2,
  darwin_RPOC = 2.0,
 
  darwin_allomSpectra= T,
