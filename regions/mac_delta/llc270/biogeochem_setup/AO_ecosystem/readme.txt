@@ -1,6 +1,8 @@
 The new Darwin ecosystem has been created to simulate general plankton dynamics taking place in the Arctic Ocean.
 The new ecosystem setup includes the RADTRANS package and allows for CDOM.
 
+Use git clone -b cdom-carbon https://github.com/jahn/darwin3
+
 This set up involves 34 passive tracers (Only 33 in version 0 excluding RDOC):
 
 1. DIC     13. POC    25. c4
@@ -42,19 +44,26 @@ This ecosystem contains:
 
 First approach adopted for (unknown) initial/boundary conditions
   
-  > Tracers 1 to 20: use same initial/boundary conditions as Carroll et al. (2020) with tDOC added
-  
-  > Tracer 21 (CDOM): use DOP initial/boundary conditions (the unit should be converted from mmolP/m3 to mmolC/m3)
+  > Tracers 1 to 20: use same initial/boundary conditions as Carroll et al. (2020) with RDOC added.
+  	
+  	*For tracer 9 RDOC: use IC of 50 uM everywhere and BCs with the same value. The Carroll et al. (2020) ecosystem
+  	is then run for 14 years (2003–2017). Then the last RDOC field from the simulation is used as the IC for a second
+  	14-year simulation with same BCs. The last field from the second simulation is used as the final IC.  		
+  	
+  > Tracer 21 (CDOM): use Carroll et al. (2020) DOP initial/boundary conditions.
+  	Units should be converted from mmol P m^-3 to mmol C m^-3 using R_PC ratio (120/1).
   
   > Tracers 22, 24, 25, and 26 (phytoplankton): use sum of 5 phytoplankton from Carroll et al. (2020) and divide by 4.
-    Absolute value of the 5 PFTs fields is used to remove small values.
+    Set negative values to 0.
   
   > Tracer 23: use initial/boundary conditions set to 0 (Haptophytes are not considered in the Mackenzie shelf)
   
-  > Tracer 27 and 28 (zooplankton): use the sum of 2 zooplankton (absolute value) fields from Carroll et al. (2020) divided by 2.
-  
-  > Tracer 29 (bacteria): field is set constant at 0.1 mmol N m^-3 [0-100m] and 0.001 mmol N m^-3 [100m-bottom] 
+  > Tracer 27 and 28 (zooplankton): use the sum of 2 zooplankton fields from Carroll et al. (2020) divided by 2.
+  	Set negative values to 0.
+  	
+  > Tracer 29 (bacteria): field is set constant at 0.1 mmol N m^-3 from 0-100m and 0.001 mmol N m^-3 from 100m to the bottom. 
     See  Le Fouest et al. 2013 and Le Fouest et al. 2013
-    Field in mmol N m^-3 is then converted into mmol C m^-3 using the R_CN ratio (set to 120/16).
+    Field in mmol N m^-3 is then converted into mmol C m^-3 using the R_CN ratio (120/16).
   
-  > Tracers 30 to 34: use same method as traces 22–26 but with Chl fields (reminder: Haptophytes not considered yet Tracer 3à set to 0)
+  > Tracers 30 to 34: use same method as tracers 22-26 but with Chl fields (reminder: Haptophytes not yet considered, therefore Tracer 31 is set to 0).
+  
