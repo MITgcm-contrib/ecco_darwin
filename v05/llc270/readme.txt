@@ -9,7 +9,7 @@
 
 git clone https://github.com/darwinproject/darwin3
 cd darwin3/pkg/darwin
-git checkout bdeda14b
+git checkout 24885b71
 cd ../../../
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 cd darwin3
