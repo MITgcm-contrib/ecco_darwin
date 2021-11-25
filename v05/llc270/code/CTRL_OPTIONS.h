@@ -31,6 +31,9 @@ C o I/O and pack settings
 #define ALLOW_NONDIMENSIONAL_CONTROL_IO
 #define ALLOW_PACKUNPACK_METHOD2
 
+C Needed for diffKr control
+#define ALLOW_DIFFKR_CONTROL
+
 C This allows for GMREDI controls
 #define ALLOW_KAPGM_CONTROL
 # undef ALLOW_KAPGM_CONTROL_OLD
