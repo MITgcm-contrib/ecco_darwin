@@ -96,7 +96,8 @@
  xx_genarr3d_preproc(1,3)='WC01',
  xx_genarr3d_bounds(1:5,3)=1.E-6,2.E-6,4.E-4,5.E-4,0.,
  mult_genarr3d(3) = 0.,
-#
+
+# Note: the initial condition correction has been added to the pickup file
 # xx_genarr3d_weight(4) = 'wthetaLev.data',
 # xx_genarr3d_file(4)='xx_theta',
 # xx_genarr3d_preproc(1,4)='WC01',
