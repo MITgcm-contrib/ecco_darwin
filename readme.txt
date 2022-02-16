@@ -32,6 +32,9 @@ Simulations:
 --v06--
   /llc270: v05 llc270 w/ new ecosystem and radiative transfer package
 
+--code_util--
+  /LOAC/GlobalNews: biogeochimical exports from rivers (DIN, DON, DIP, DOP, DOC, PN, PP, POC, DSi) based on Mayorga et al., 2010
+
 **Notes**
 v02 to v04 use Darwin 1, v05 onward uses Darwin 3
 
