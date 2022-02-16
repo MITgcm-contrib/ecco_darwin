@@ -1159,7 +1159,7 @@ for timeStep = 1:numFiles
     %%
     %vertical integration
     
-    vol = vol; % ./ sStarMean;
+    vol = vol;
 
     %volume
     intTendV = sum((tendV(:,:,startIntLevel:endIntLevel) .* vol(:,:,startIntLevel:endIntLevel)),3,nanString);
