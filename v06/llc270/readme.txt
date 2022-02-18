@@ -32,7 +32,7 @@ ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
 cp ../../ecco_darwin/v06/llc270/input/* .
 ln -sf /nobackup/ojahn/ecco_darwin/v06/llc270/data_darwin/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
-mkdir diags diags/3hourly diags/daily diags/monthly diags/budget diags
+mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 mkdir diags/monthly/IOPS diags/monthly/PAR diags/monthly/RRS 
 
 # modify job_ECCO_darwin as needed
