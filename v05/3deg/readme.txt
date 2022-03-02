@@ -3,7 +3,10 @@
 
 # ========
 # 1. Get code
- git clone --depth 1 https://github.com/darwinproject/darwin3
+ git clone https://github.com/darwinproject/darwin3
+ cd darwin3/pkg/darwin
+ git checkout 24885b71
+ cd ../../../
  git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
  cd darwin3
  mkdir build run
@@ -38,10 +41,11 @@
  rm *
  module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
  cp ../../ecco_darwin/v05/3deg/code/SIZE.h_mpi SIZE.h
- ../tools/genmake2 -mpi -ieee -mo \
- '../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code'
+ ../tools/genmake2 -of  ../../ecco_darwin/v05/llc270/code/linux_amd64_ifort+mpi_ice_nas  \
+ -mo '../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code'
  make depend
- make -j 8
+ make -j 16
+
  cd ../run
  rm -rf *
  ln -sf ../build/mitgcmuv .
