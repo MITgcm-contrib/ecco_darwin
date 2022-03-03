@@ -1,4 +1,5 @@
 ECCO-Darwin Github Repository
+git clone git@github.com:MITgcm-contrib/ecco_darwin.git
 
 Simulations:
 
