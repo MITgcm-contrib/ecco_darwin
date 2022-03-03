@@ -1,0 +1,20 @@
+#!/bin/csh
+#PBS -l select=10:ncpus=24:model=has
+#PBS -q long
+#PBS -l walltime=12:00:00
+#PBS -j oe
+##PBS -m abe
+
+module load comp-intel/2015.0.090 mpi-sgi/mpt.2.12r23 netcdf/4.0
+umask 027
+cd $PBS_O_WORKDIR
+limit stacksize unlimited
+
+#cp ../datafile/*data* .
+ln -sf /nobackup/hzhang1/forcing/era_xx/
+mkdir diags
+
+# To run 
+#./modpickup
+mpiexec -np 240 ./mitgcmuv
+#mpiexec -np 16 ./mitgcmuv_ad
