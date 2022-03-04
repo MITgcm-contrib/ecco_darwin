@@ -10,23 +10,24 @@ cd ~dmenemen/Documents/projects/LOAC/runoff_products/GlobalNEWS
 load jra55_2000
 
 % globalnews.xlsx is derived from
-% GlobalNEWS2__RH2000Dataset-version1.0.xls
-% obtained from ...
-% the columns are, respectively:
-% basins/mouth_lon
-% basins/mouth_lat
-% hydrology/Qact
-% river export/Ld_DIN
-% river export/Ld_DIP
-% river export/Ld_DON
-% river export/Ld_DOP
-% river export/Ld_DOC
-% river export/Ld_DSi
-% river export/Ld_PN
-% river export/Ld_PP
-% river export/Ld_POC
-% river export/Ld_TSS
+% GlobalNEWS2__RH2000Dataset-version1.0.xls obtained on
+% 3/13/2019 from Emilio Mayorga mayorga@marine.rutgers.edu
+% as per https://marine.rutgers.edu/globalnews/datasets.htm
 
+% The columns of globalnews.xlsx are, respectively:
+%       basins / mouth_lon
+%       basins / mouth_lat
+%    hydrology / Qact
+% river export / Ld_DIN
+% river export / Ld_DIP
+% river export / Ld_DON
+% river export / Ld_DOP
+% river export / Ld_DOC
+% river export / Ld_DSi
+% river export / Ld_PN
+% river export / Ld_PP
+% river export / Ld_POC
+% river export / Ld_TSS
 
 % Load GlobalNEWS2 mouth_lon, mouth_lat, Qact (km3/yr)
 gns=xlsread('globalnews');
