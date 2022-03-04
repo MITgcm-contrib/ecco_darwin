@@ -9,11 +9,8 @@ cd ~dmenemen/Documents/projects/LOAC/runoff_products/GlobalNEWS
 % jns: jra55_do runoff km^3/yr
 load jra55_2000
 
-% globalnews.xlsx is derived from
-% GlobalNEWS2__RH2000Dataset-version1.0.xls obtained on
-% 3/13/2019 from Emilio Mayorga mayorga@marine.rutgers.edu
-% as per https://marine.rutgers.edu/globalnews/datasets.htm
-
+% File globalnews.xlsx is derived from
+% GlobalNEWS2__RH2000Dataset-version1.0.xls
 % The columns of globalnews.xlsx are, respectively:
 %       basins / mouth_lon
 %       basins / mouth_lat
