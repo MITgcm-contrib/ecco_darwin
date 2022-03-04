@@ -1,11 +1,32 @@
 % Snap GlobalNEWS2 2000 time-mean Qact runoff to jra55_do grid
 clear, close all
-cd ~dmenemen/projects/LOAC/runoff_products/GlobalNEWS
+
+% Go to wherever you have GlobalNEWS and output from mk_jra55_2000.m
+cd ~dmenemen/Documents/projects/LOAC/runoff_products/GlobalNEWS
 
 % Load JRA55-do time-mean year-2000 runoff
 % jlat/jlon: latitude/longitude of jra55_do
 % jns: jra55_do runoff km^3/yr
 load jra55_2000
+
+% globalnews.xlsx is derived from
+% GlobalNEWS2__RH2000Dataset-version1.0.xls
+% obtained from ...
+% the columns are, respectively:
+% basins/mouth_lon
+% basins/mouth_lat
+% hydrology/Qact
+% river export/Ld_DIN
+% river export/Ld_DIP
+% river export/Ld_DON
+% river export/Ld_DOP
+% river export/Ld_DOC
+% river export/Ld_DSi
+% river export/Ld_PN
+% river export/Ld_PP
+% river export/Ld_POC
+% river export/Ld_TSS
+
 
 % Load GlobalNEWS2 mouth_lon, mouth_lat, Qact (km3/yr)
 gns=xlsread('globalnews');
@@ -65,9 +86,10 @@ maxsep=9;                        % max separation between GlobalNEWS and JRA55 i
 gQact2jra=sparse(length(jra),1); % GlobalNEWS index for each non-zero JRA55 location
 jx=find(jra);                    % indices of non-zero JRA55 locations
 gx=find(gQact);                  % indices of non-zero GlobalNEWS locations
-for j=1:length(jx)
+for j=1:length(jx)               % loop through all non-zero JRA55 locations
     d=sqrt((glon(gx)-jlon(jx(j))).^2+(glat(gx)-jlat(jx(j))).^2); % distance in deg
-    dx=find(d<maxsep);
+    dx=find(d<maxsep);           % search within maxsep degrees    
+    % select GlobalNEWS location with closest runoff volume to JRA55 within maxsep    
     I=closest(jra(jx(j)),gQact(gx(dx)));
     gQact2jra(jx(j))=gx(dx(I));
 end
