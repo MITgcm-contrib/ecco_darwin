@@ -22,15 +22,10 @@ fin=[pnm 'jra55_do_runoff_' int2str(yr)];
 jra=readbin(fin,[nx ny loy]);              % load whole year, units are m/s
 jra=sum(jra,3).*cellarea*24*60*60/1e9;     % cumulate & convert to km^3/yr
 
-% convert to sparse vectors
-jlon=jlon(:);
-jlat=jlat(:);
-jra=jra(:);
-ix=find(jra==0);
-jlon(ix)=0;
-jlat(ix)=0;
-jra=sparse(jra);
-jlon=sparse(jlon);
-jlat=sparse(jlat);
+% remove locations with no runoff
+ix=find(jra);
+jlon=jlon(ix);
+jlat=jlat(ix);
+jra=jra(ix);
 
 save jra55_2000 j*
