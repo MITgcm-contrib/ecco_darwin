@@ -2,8 +2,13 @@ clear
 close all;
 
 gridDir = '/Users/carrolld/Documents/research/carbon/simulations/grid/LLC_270/';
+dataDir = '/Users/carrolld/Documents/research/LOAC/mat/coast_mask/';
 
 saveDir = '/Users/carrolld/Documents/research/LOAC/mat/coast_mask/';
+
+%%
+
+load([dataDir 'LLC_270_patch_orig.mat']);
 
 %%
 
@@ -29,7 +34,12 @@ mask = convert2gcmfaces(hFacC);
 
 for i = 1:mask.nFaces
     
-    eval(['face = mask.f' num2str(i) ';']);
+    %eval(['face = mask.f' num2str(i) ';']);
+
+    eval(['face = patch.patch' num2str(i) '.field;']);
+    
+    eval(['ix = patch.patch' num2str(i) '.ix;']);
+    eval(['iy = patch.patch' num2str(i) '.iy;']);
     
     tempMask = face .* 0;
     
@@ -56,34 +66,31 @@ for i = 1:mask.nFaces
         
     end
 
+    tempMask = tempMask(ix,iy);
+    
     eval(['mask.f' num2str(i) ' = tempMask;']);
+    
+    disp(num2str(i));
     
 end
 
-%% 
+%%
+
+coastMask = convert2gcmfaces(mask);
+
+temp = coastMask;
 
 hFig1 = figure(1);
 set(hFig1,'units','normalized','outerposition',[0 0 1 1]);
 set(gcf,'color',[1 1 1]);
 set(gca,'color',[0.5 0.5 0.5]);
 
-cMin = 0;
-cMax = 1;
-numC = 1000;
-
-cc = linspace(cMin,cMax,numC);
-
 fs = 30;
 
-hold on
-
-m_map_gcmfaces(mask,-1,{'myCaxis',cc},{'myFontSize',fs}, ...
-    {'doCbar',0},{'do_m_coast',0},{'doLabl',1}, {'doFit',0});
+quikplot_llc(temp);
 
 %% 
 
-coastMask = convert2gcmfaces(mask);
-
-save([saveDir 'LLC_270_coastMask.mat'],'coastMask','-v7.3');
+save([saveDir 'LLC_270_coastMask_orig.mat'],'coastMask','-v7.3');
 
 %%
