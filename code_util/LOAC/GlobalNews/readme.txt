@@ -13,8 +13,14 @@ Seitzinger et al. (2010): https://agupubs.onlinelibrary.wiley.com/doi/10.1029/20
 
 Files:
 
-mk_jra55_2000.m Compute jra55_do time-mean year-2000 runoff
+mk_jra55_2000.m
+Compute jra55_do time-mean year-2000 runoff
 
-SnapGlobalNEWS.m Snap river point sources from GlobalNEWS to JRA-55 point sources
+mk_SnapGlobalNEWS_indices.m 
+Compute indices for snapping river point sources from GlobalNEWS to JRA-55 point sources
 
-Snap_Examples.m Example of using GlobalNews_to_JRA55.mat to add GlobalNEWS2 to JRA55 locations
+Snap_Examples.m
+Example of using GlobalNews_to_JRA55.mat to add GlobalNEWS2 to JRA55 locations
+
+SnapGlobalNEWS.m
+Snap river point sources from GlobalNEWS to JRA-55 point sources

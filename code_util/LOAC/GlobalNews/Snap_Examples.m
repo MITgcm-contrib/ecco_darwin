@@ -62,11 +62,16 @@ for i=1:75
     if ~isempty(ix)
         plot(LON(ix),LAT(ix),'ro','markersize',i+3)
     end
-    ix=find(gQact>(i-1)*100&gQact<=i*100);
+    ix=find(jra>(i-1)*100&jra<=i*100);
     if ~isempty(ix)
-        plot(glon(ix),glat(ix),'bo','markersize',i+3)
+        plot(jlon(ix),jlat(ix),'ro','markersize',i+3)
     end
+    %    ix=find(gQact>(i-1)*100&gQact<=i*100);
+    %    if ~isempty(ix)
+    %        plot(glon(ix),glat(ix),'bo','markersize',i+3)
+    %    end
 end
 title('No Antarctica')
+text(185,-40,['jra ' int2str(sum(JRA(:))) ' km^3/yr'],'color','r')
 text(185,-50,['jra ' int2str(sum(jra)) ' km^3/yr'],'color','r')
 text(185,-60,['gQact ' int2str(sum(gQact)) ' km^3/yr'],'color','b')

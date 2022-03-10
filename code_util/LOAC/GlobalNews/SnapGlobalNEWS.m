@@ -1,97 +1,57 @@
-% Snap GlobalNEWS2 2000 time-mean Qact runoff to jra55_do grid
+% Example snapping of GlobalNEWS2 to JRA55 locations
 clear, close all
+cd ~dmenemen/forcing/jra55_do/GlobalNEWS
+load GlobalNews_to_JRA55
 
-% Go to wherever you have GlobalNEWS and output from mk_jra55_2000.m
-% e.g., cd ~dmenemen/forcing/jra55_do/GlobalNEWS
+% glon  GlobalNEWS2 longitude E (deg)
+% glat  GlobalNEWS2 latitude N (deg)
+% gQact GlobalNEWS2 actual discharge (km^3/yr)
+% gDIN  GlobalNEWS2 load DIN (Mg/yr)
+% gDIP  GlobalNEWS2 load DIP (Mg/yr)
+% gDON  GlobalNEWS2 load DON (Mg/yr)
+% gDOP  GlobalNEWS2 load DON (Mg/yr)
+% gDOC  GlobalNEWS2 load DOC (Mg/yr)
+% gDSi  GlobalNEWS2 load DSi (Mg/yr)
+% gPN   GlobalNEWS2 load PN (Mg/yr)
+% gPP   GlobalNEWS2 load PP (Mg/yr)
+% gPOC  GlobalNEWS2 load POC (Mg/yr)
+% gTSS  GlobalNEWS2 load TSS (Mg/yr)
 
-% Load JRA55-do time-mean year-2000 runoff
-% jlat/jlon: latitude/longitude of jra55_do
-% jns: jra55_do runoff km^3/yr
-load jra55_2000
+% jlat/jlon : latitude/longitude of jra55_do
+% jra       : jra55_do year-2000 runoff km^3/yr
 
-% File globalnews.xlsx is derived from
-% GlobalNEWS2__RH2000Dataset-version1.0.xls
-% The columns of globalnews.xlsx are, respectively:
-%       basins / mouth_lon
-%       basins / mouth_lat
-%    hydrology / Qact
-% river export / Ld_DIN
-% river export / Ld_DIP
-% river export / Ld_DON
-% river export / Ld_DOP
-% river export / Ld_DOC
-% river export / Ld_DSi
-% river export / Ld_PN
-% river export / Ld_PP
-% river export / Ld_POC
-% river export / Ld_TSS
+% gQact2jra : index of GlobalNEWS2 location
+%             for each jra55_do location that
 
-% Load GlobalNEWS2 mouth_lon, mouth_lat, Qact (km3/yr)
-gns=xlsread('globalnews');
-glon=gns(:,1);  % GlobalNEWS2 longitude E (deg)
-ix=find(glon<0); glon(ix)=glon(ix)+360;
-glat=gns(:,2);  % GlobalNEWS2 latitude N (deg)
-gQact=gns(:,3); % GlobalNEWS2 actual discharge (km^3/yr)
-gDIN=gns(:,4);  % GlobalNEWS2 load DIN (Mg/yr)
-gDIP=gns(:,5);  % GlobalNEWS2 load DIP (Mg/yr)
-gDON=gns(:,6);  % GlobalNEWS2 load DON (Mg/yr)
-gDOP=gns(:,7);  % GlobalNEWS2 load DON (Mg/yr)
-gDOC=gns(:,8);  % GlobalNEWS2 load DOC (Mg/yr)
-gDSi=gns(:,9);  % GlobalNEWS2 load DSi (Mg/yr)
-gPN=gns(:,10);  % GlobalNEWS2 load PN (Mg/yr)
-gPP=gns(:,11);  % GlobalNEWS2 load PP (Mg/yr)
-gPOC=gns(:,12); % GlobalNEWS2 load POC (Mg/yr)
-gTSS=gns(:,13); % GlobalNEWS2 load TSS (Mg/yr)
-clear gns ix
+% find indices IX the jlat/jlon location on the jra55_do grid
+lon=0.125:0.25:360; nx=length(lon);
+lat=-89.875:0.25:90; ny=length(lat); 
+[LAT LON]=meshgrid(lat,lon);
+IX=jlat;
+for i=1:length(jlat)
+    IX(i)=find(LAT==jlat(i)&LON==jlon(i)); 
+end
 
-% Plot JRA55 and GlobalNEWS runoff
-figure(1), clf, plotland(.8*[1 1 1],12), hold on
-for i=1:75
-    ix=find(jra>(i-1)*100&jra<=i*100);
-    if ~isempty(ix)
-        plot(jlon(ix),jlat(ix),'ro','markersize',i+3)
-    end
-    ix=find(gQact>(i-1)*100&gQact<=i*100);
-    if ~isempty(ix)
-        plot(glon(ix),glat(ix),'bo','markersize',i+3)
+% Compute weights, that is, the ratio of jra55_do runoff volume relative to
+% the GlobalNEWS2 location associated with each jra55_do location 
+jraWeights=jra*0;
+jraWeights=jra./gQact(gQact2jra);
+
+% Projecct GlobalNEWS2 nutrients to JRA55 locations
+pin='/nobackup/dcarrol2/LOAC/bin/jra55_do/v1.4.0/';
+pout='~dmenemen/forcing/jra55_do/GlobalNEWS/GlobalNEWS2_on_jra55v1.4.0/';
+for yr=1991:2021
+    fin=[pin 'jra55_do_runoff_' int2str(yr)];
+    loy=365;
+    if mod(yr,4)==0, loy=366; end
+    for dy=1:loy, disp([yr dy])
+        Jravol=readbin(fin,[nx ny],1,'real*4',dy-1);
+        for f={'DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS'}
+            fout=[pout f{1} '_' int2str(yr)];
+            eval(['fld=g' f{1} ';'])
+            FLD=0*LAT;
+            FLD(IX)=fld(gQact2jra).*jraWeights;
+            writebin(fout,FLD,1,'real*4',dy-1);
+        end
     end
 end
-title('All runoff locations')
-text(185,-50,['jra ' int2str(sum(jra)) ' km^3/yr'],'color','r')
-text(185,-60,['gQact ' int2str(sum(gQact)) ' km^3/yr'],'color','b')
-print -dpdf AllRunoff
-
-% Remove JRA55 Antarctic locations
-ix=find(jlat>=-60);
-jra=jra(ix);
-jlat=jlat(ix);
-jlon=jlon(ix);
-figure(2), clf, plotland(.8*[1 1 1],12), hold on
-for i=1:75
-    ix=find(jra>(i-1)*100&jra<=i*100);
-    if ~isempty(ix)
-        plot(jlon(ix),jlat(ix),'ro','markersize',i+3)
-    end
-    ix=find(gQact>(i-1)*100&gQact<=i*100);
-    if ~isempty(ix)
-        plot(glon(ix),glat(ix),'bo','markersize',i+3)
-    end
-end
-title('No Antarctica')
-text(185,-50,['jra ' int2str(sum(jra)) ' km^3/yr'],'color','r')
-text(185,-60,['gQact ' int2str(sum(gQact)) ' km^3/yr'],'color','b')
-print -dpdf NoAntacrctic
-
-% Associate each JRA55 runoff with a GlobalNEWS location
-maxsep=9;                        % max separation between GlobalNEWS and JRA55 in deg
-gQact2jra=zeros(length(jra),1);  % GlobalNEWS index for each non-zero JRA55 location
-gx=find(gQact);                  % indices of non-zero GlobalNEWS locations
-for j=1:length(jra)              % loop through all non-zero JRA55 locations
-    d=sqrt((glon(gx)-jlon(j)).^2+(glat(gx)-jlat(j)).^2); % distance in deg
-    dx=find(d<maxsep);           % search within maxsep degrees    
-    % select GlobalNEWS location with closest runoff volume to JRA55 within maxsep    
-    I=closest(jra(j),gQact(gx(dx)));
-    gQact2jra(j)=gx(dx(I));
-end
-clear I d* gx i* j m*
-save GlobalNews_to_JRA55
