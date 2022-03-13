@@ -56,6 +56,7 @@ for yr=1991:2021
         for f={'DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS'}
             fout=[pout f{1} '_' int2str(yr)];
             eval(['fld=g' f{1} ';'])
+            disp(f{1})
             FLD=0*LAT;
             %FLD(IX)=fld(gQact2jra).*jraWeights;
             FLD(IX)=fld(gQact2jra)./gQact(gQact2jra).*jraWeights./1e9.*Jravol.*1e6
@@ -63,13 +64,13 @@ for yr=1991:2021
             % 1e9 conversion from km-3 to m-3
             % 1e6 conversion from Mg to g
             % Following conditions are to convert g to mmol
-            	if f{1 end} == 'N'
+            	if  endsWith(f{1},"N") == 1
             		FLD(IX) = FLD(IX).*gN_to_molN.*1e3;
-            	elseif f{1 end} == 'P'
+            	elseif endsWith(f{1},"P") == 1
             		FLD(IX) = FLD(IX).*gP_to_molP.*1e3;
-            	elseif f{1 end} == 'C'
+            	elseif endsWith(f{1},"C") == 1
             		FLD(IX) = FLD(IX).*gC_to_molC.*1e3;
-            	elseif f{1 2end} == 'Si'
+            	elseif endsWith(f{1},"Si") == 1
             		FLD(IX) = FLD(IX).*gSi_to_molSi.*1e3;            		
             	else %no C, N, P or Si
             		%do nothing: TSS remain in g m-2 s-1
