@@ -47,7 +47,7 @@ gN_to_molN = 0.071394404106606;
 gC_to_molC = 0.083259093974539;
 gSi_to_molSi = 0.03560556158872;
 
-for yr=1991:2021
+for yr=1994
     fin=[pin 'jra55_do_runoff_' int2str(yr)];
     loy=365;
     if mod(yr,4)==0, loy=366; end
@@ -56,10 +56,9 @@ for yr=1991:2021
         for f={'DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS'}
             fout=[pout f{1} '_' int2str(yr)];
             eval(['fld=g' f{1} ';'])
-            disp(f{1})
             FLD=0*LAT;
             %FLD(IX)=fld(gQact2jra).*jraWeights;
-            FLD(IX)=fld(gQact2jra)./gQact(gQact2jra).*jraWeights./1e9.*Jravol.*1e6
+            FLD(IX)=fld(gQact2jra)./gQact(gQact2jra).*jraWeights./1e9.*Jravol(IX).*1e6;
             % result in g m-2 s-1
             % 1e9 conversion from km-3 to m-3
             % 1e6 conversion from Mg to g
