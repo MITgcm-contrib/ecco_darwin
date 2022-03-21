@@ -1,6 +1,9 @@
 % Snap GlobalNEWS2 2000 time-mean Qact runoff to jra55_do grid
 clear, close all
 
+% Go to wherever you have GlobalNEWS and output from mk_jra55_2000.m
+cd ~dmenemen/forcing/jra55_do/GlobalNEWS
+
 % Load JRA55-do time-mean year-2000 runoff
 % jlat/jlon: latitude/longitude of jra55_do
 % jns: jra55_do runoff km^3/yr

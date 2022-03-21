@@ -39,7 +39,7 @@ jraWeights=jra./gQact(gQact2jra);
 
 % Projecct GlobalNEWS2 nutrients to JRA55 locations
 pin='/nobackup/dcarrol2/LOAC/bin/jra55_do/v1.4.0/';
-pout='~dmenemen/forcing/jra55_do/GlobalNEWS/GlobalNEWS2_on_jra55v1.5.0/';
+pout='~dmenemen/forcing/jra55_do/GlobalNEWS/GlobalNEWS2_on_jra55v1.4.0/';
 
 % conversion factors of gram to mol
 gP_to_molP = 0.03228539149637;

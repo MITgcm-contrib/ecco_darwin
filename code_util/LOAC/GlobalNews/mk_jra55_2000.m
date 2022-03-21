@@ -1,7 +1,7 @@
 clear, close all
 
 % pathname below is on pleiades
-pnm='/nobackup/dcarrol2/LOAC/bin/jra55_do/v1.4.0/';
+pnm='/nobackup/hzhang1/forcing/jra55_do/';
 
 % Compute jra55_do time-mean year-2000 runoff
 yr=2000;
@@ -18,7 +18,7 @@ fin=[pnm 'cellarea.bin'];
 cellarea=readbin(fin,[nx ny]);  % area of grid cell in m^2
 
 % read and cumulate runoff
-fin=[pnm 'jra55_do_runoff_' int2str(yr)];
+fin=[pnm 'river_runoff/jra55_do_runoff_' int2str(yr)];
 jra=readbin(fin,[nx ny loy]);              % load whole year, units are m/s
 jra=sum(jra,3).*cellarea*24*60*60/1e9;     % cumulate & convert to km^3/yr
 
