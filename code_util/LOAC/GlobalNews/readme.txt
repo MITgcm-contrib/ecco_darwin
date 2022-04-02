@@ -24,3 +24,8 @@ Example of using GlobalNews_to_JRA55.mat to add GlobalNEWS2 to JRA55 locations
 
 SnapGlobalNEWS.m
 Snap river point sources from GlobalNEWS to JRA-55 point sources
+
+load_jra55_do_LLC_270_NAS.m
+Snap-sum Global NEWS from JRA-55 to LLC_270
+Initially copied on April 2, 2022 from
+/nobackup/dcarrol2/LOAC/m_files/jra55_do/LLC_270
