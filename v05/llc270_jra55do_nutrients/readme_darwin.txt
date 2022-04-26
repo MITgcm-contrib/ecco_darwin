@@ -21,8 +21,8 @@ cd build
 
 module purge
 module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-../tools/genmake2 -of ../../ecco_darwin/v05/llc270_jra55do_nutrients/code/linux_amd64_ifort+mpi_ice_nas \
-  -mo '../../ecco_darwin/v05/llc270_jra55do_nutrients/code_darwin ../../ecco_darwin/v05/llc270_jra55do_nutrients/code'
+../tools/genmake2 -of ../../ecco_darwin/v05/llc270_jra55do_nutrients/code/linux_amd64_ifort+mpi_ice_nas -mpi \
+ -mo '../../ecco_darwin/v05/llc270_jra55do_nutrients/code_darwin ../../ecco_darwin/v05/llc270_jra55do_nutrients/code'
 make depend
 make -j 16
 
