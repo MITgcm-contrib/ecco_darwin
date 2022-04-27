@@ -4,6 +4,12 @@
 # ecco_darwin_v4/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/ecco_darwin_v4/input
 # forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
 
+#This solution is documented in:
+#Carroll, D., Menemenlis, D., Adkins, J. F., Bowman, K. W., Brix, H., & Dutkiewicz, S., et al. (2020). 
+#The ECCO-Darwin data-assimilative global ocean biogeochemistry model: Estimates of seasonal to multidecadal 
+#surface ocean pCO2 and air-sea CO2 flux. Journal of Advances in Modeling Earth Systems, 12, e2019MS001888. 
+#https://doi.org/10.1029/2019MS001888
+
 ==============
 # Build executable for ECCO-Darwin version 4
  cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code

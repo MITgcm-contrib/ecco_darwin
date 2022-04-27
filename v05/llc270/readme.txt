@@ -4,6 +4,11 @@
 
 # Instructions for building and running ECCO-Darwin v05 with Darwin 3
 
+#This solution is documented in:
+#Carroll, D., Menemenlis, D., Dutkiewicz, S., Lauderdale, J. M., Adkins, J. F., Bowman, K. W., et al. (2022). 
+#Attribution of space-time variability in global-ocean dissolved inorganic carbon. Global Biogeochemical Cycles, 
+#36, e2021GB007162. https://doi.org/10.1029/2021GB007162
+
 ==============
 # 1. Get code
 
