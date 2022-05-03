@@ -312,23 +312,30 @@ C-      use units & names from data.ptracers :
      I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
       ENDDO
 
-      DO j = 1, nPPplank
+#ifdef DARWIN_DIAG_PERTYPE
+      DO j = 1, nplank
         WRITE(diagName,'(A,I4.4)')'PP',j
         WRITE(diagTitle,'(A,I4)')'Primary Production plankton ',j
         diagUnits = 'mmol C/m^3/s    '
         diagCode  = 'SMRP    MR      '
         CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-      ENDDO
 
-      DO j = 1, nGRplank
         WRITE(diagName,'(A,I4.4)')'GR',j
         WRITE(diagTitle,'(A,I4)')'Grazing loss of plankton ',j
         diagUnits = 'mmol C/m^3/s    '
         diagCode  = 'SMRP    MR      '
         CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+        WRITE(diagName,'(A,I4.4)')'GrGn',j
+        WRITE(diagTitle,'(A,I4)')'Grazing gain of plankton ',j
+        diagUnits = 'mmol C/m^3/s    '
+        diagCode  = 'SMRP    MR      '
+        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
       ENDDO
+#endif
 
       WRITE(diagName,'(A)')'sfcSolFe'
       WRITE(diagTitle,'(A)')'Soluble iron input at sea surface'
@@ -367,7 +374,14 @@ C-      use units & names from data.ptracers :
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
       WRITE(diagName,'(A)')'fugfCO2'
-      WRITE(diagTitle,'(A)')'Fugacity factor of CO2 (atm)'
+      WRITE(diagTitle,'(A)')'Fugacity factor of CO2 at surface'
+      diagUnits = '1               '
+      diagCode  = 'SM P    L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'fCO2'
+      WRITE(diagTitle,'(A)')'Fugacity of CO2 (atm)'
       diagUnits = 'atm             '
       diagCode  = 'SM P    L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
@@ -392,6 +406,22 @@ C-      use units & names from data.ptracers :
       WRITE(diagTitle,'(A)')
      &            'Tendency of DIC due to E/P/runoff'
       diagUnits = 'mmol C/m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gALKEpr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of ALK due to E/P/runoff'
+      diagUnits = 'mmol eq./m3/s     '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'gO2Epr '
+      WRITE(diagTitle,'(A)')
+     &            'Tendency of O2 due to E/P/runoff'
+      diagUnits = 'mmol eq./m3/s     '
       diagCode  = 'SM      L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
@@ -499,6 +529,35 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'C_ALK'
+      WRITE(diagTitle,'(A)')'Consumption of alkalinity'
+      diagUnits = 'mmol eq./m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'S_ALK'
+      WRITE(diagTitle,'(A)')'Non-transport source of alkalinity'
+      diagUnits = 'mmol eq./m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'C_O2'
+      WRITE(diagTitle,'(A)')'Consumption of oxygen'
+      diagUnits = 'mmol O/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'S_O2'
+      WRITE(diagTitle,'(A)')'Non-transport source of oxygen'
+      diagUnits = 'mmol O/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
 #endif /* DARWIN_ALLOW_CARBON */
 
 #ifdef ALLOW_EXF

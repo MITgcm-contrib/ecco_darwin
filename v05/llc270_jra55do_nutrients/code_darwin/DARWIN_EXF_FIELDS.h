@@ -25,7 +25,7 @@ C Requires: SIZE.h
       CHARACTER*128 icefile
       CHARACTER*128 windfile
       CHARACTER*128 pCO2file
-	  CHARACTER*128 DOCrunofffile
+      CHARACTER*128 DOCrunofffile
       CHARACTER*128 DONrunofffile
       CHARACTER*128 DOPrunofffile
 

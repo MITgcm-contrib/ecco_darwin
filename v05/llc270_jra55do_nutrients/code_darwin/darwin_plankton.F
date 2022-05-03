@@ -7,7 +7,7 @@ C !INTERFACE: ==========================================================
      I     Ptr,
      U     gTr,
      O     chlout, diags,
-     I     PAR, photoTempFunc, grazTempFunc, reminTempFunc,
+     I     PAR, photoTempFunc, hetTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
 #ifdef DARWIN_DEBUG
      I     iG, jG, k, dT,
@@ -38,6 +38,7 @@ C  myThid :: thread number
       _RL Ptr(nDarwin)
       _RL PAR(nlam)
       _RL photoTempFunc(nplank)
+      _RL hetTempFunc(nplank)
       _RL reminTempFunc
       _RL uptakeTempFunc
       _RL grazTempFunc(nplank)
@@ -747,13 +748,13 @@ C==== bacteria =========================================================
         IF (isAerobic(j) .NE. 0) THEN
           muO = yieldO2(j)*pcoefO2*O2
         ELSEIF (isDenit(j) .NE. 0) THEN
-          muO = yieldNO3(j)*pmaxDIN*NO3/(NO3 + ksatDIN)*reminTempFunc
+          muO = yieldNO3(j)*pmaxDIN*NO3/(NO3 + ksatDIN)*hetTempFunc(j)
         ENDIF
 
 C       POM-consuming (particle-associated)
         IF (bactType(j) .EQ. 1) THEN
 
-          PCm = yield(j)*PCmax(j)*reminTempFunc
+          PCm = yield(j)*PCmax(j)*hetTempFunc(j)
           muPON  = PCm*PON/(PON + ksatPON(j))
           muPOC  = PCm*POC/(POC + ksatPOC(j))
           muPOP  = PCm*POP/(POP + ksatPOP(j))
@@ -785,7 +786,7 @@ C         These are the bacteria products for remineralization of POM:
 C       DOM-consuming (free-living):
         ELSEIF (bactType(j) .EQ. 2) THEN
 
-          PCm = yield(j)*PCmax(j)*reminTempFunc
+          PCm = yield(j)*PCmax(j)*hetTempFunc(j)
           muDON  = PCm*DON/(DON + ksatDON(j))
           muDOC  = PCm*DOC/(DOC + ksatDOC(j))
           muDOP  = PCm*DOP/(DOP + ksatDOP(j))
@@ -855,8 +856,8 @@ C=======================================================================
 
       gTr(iDIC )=gTr(iDIC ) - consumDIC - consumDIC_PIC
       
-      diags(iConsumDIC) = consumDIC
-      diags(iConsumDIC_PIC) = consumDIC_PIC
+      diags(iConsDIC) = consumDIC
+      diags(iConsDIC_PIC) = consumDIC_PIC
 
       gTr(iNH4 )=gTr(iNH4 ) - consumNH4
       gTr(iNO2 )=gTr(iNO2 ) - consumNO2
@@ -970,6 +971,8 @@ c loss of O2 by remineralization
         gTr(iO2)=gTr(iO2) - consumO2
       ENDIF
 
+      diags(iConsO2) = consumO2
+
       gTr(iALK)=gTr(iALK) - (prodNO3 - consumNO3)
      &                    - 2.0 _d 0*(consumDIC_PIC - disscPIC)
 #endif /* DARWIN_ALLOW_CARBON */
@@ -1033,6 +1036,8 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
       gTr(iFeT )=gTr(iFeT ) + reminPOFe
 #endif /* DARWIN_ALLOW_CDOM */
 
+      diags(iConsALK) = (prodNO3 - consumNO3)
+     & +2.0 _d 0*(consumDIC_PIC - disscPIC)
       diags(iConsDIN) = consumNH4 + consumNO2 + consumNO3
       diags(iConsNO3) = consumNO3
       diags(iConsNO2) = consumNO2

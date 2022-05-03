@@ -272,13 +272,17 @@ c make sure Schmidt number is not negative (will happen if temp>39C)
          SchmidtNoDIC(i,j) = MAX(1.0 _d -2, SchmidtNoDIC(i,j))
 
 C Determine surface flux (FDIC)
-C first correct pCO2at for surface atmos pressure
-         apCO2Sat(i,j,bi,bj) = AtmosP(i,j,bi,bj)*AtmospCO2(i,j,bi,bj)
+C first correct apCO2 for surface atmos pressure
+         apCO2Sat(i,j,bi,bj) = AtmosP(i,j,bi,bj)*atmospCO2(i,j,bi,bj)
 
 C then account for Schmidt number
          Kwexch(i,j) = Kwexch0(i,j)
      &                 / sqrt(SchmidtNoDIC(i,j)/660.0 _d 0)
 
+C compute fugacity of CO2     
+         fugCO2(i,j,bi,bj) = 
+     &    pCO2(i,j,ks,bi,bj)*fugf(i,j,bi,bj)
+     
 c Flux = kw*rho*(ff*pCO2atm-k0*FugFac*pCO2ocean)
          FluxCO2(i,j,bi,bj) =
      &          Kwexch(i,j)*(
@@ -326,12 +330,18 @@ C update tendency
        ENDDO
       ENDDO
 
+      CALL DIAGNOSTICS_FILL(fugf,'fugfCO2 ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(fugCO2,'fCO2    ',0,1,1,bi,bj,myThid)
+
 C     k is at surface
       ENDIF
 
 C === k ================================================================
       ENDDO
 C ======================================================================
+
+      CALL DIAGNOSTICS_FILL(atmospCO2,'apCO2   ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(apCO2Sat,'apCO2sat',0,1,1,bi,bj,myThid)
 
 #endif /* DARWIN_ALLOW_CARBON */
 #endif /* ALLOW_DARWIN */
