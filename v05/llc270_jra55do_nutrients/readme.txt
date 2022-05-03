@@ -20,7 +20,6 @@ cd build
 # 2. Build executable
 
 module purge
-module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 ../tools/genmake2 -of ../../ecco_darwin/v05/llc270/code/linux_amd64_ifort+mpi_ice_nas \
   -mo '../../ecco_darwin/v05/llc270_jra55do_nutrients/code_darwin ../../ecco_darwin/v05/llc270_jra55do/code'
 make depend
@@ -40,6 +39,7 @@ ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACriver_temp .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
 ln -sf /nobackup/dcarrol2/LOAC/write_bin/globalNEWS/* .
 cp ../../ecco_darwin/v05/llc270_jra55do/input/* .
+cp ../../ecco_darwin/v05/llc270_jra55do_nutrients/input/data.darwin .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
