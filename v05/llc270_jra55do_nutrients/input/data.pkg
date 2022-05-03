@@ -9,4 +9,6 @@
  useSMOOTH= .TRUE.,
  useSALT_PlUME=.TRUE.,
  useDiagnostics=.TRUE.,
+ usePTRACERS   = .TRUE.,
+ useGCHEM      = .TRUE.,
  /

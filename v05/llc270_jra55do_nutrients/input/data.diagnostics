@@ -44,7 +44,7 @@
    filename(6) = 'diags/daily/pCO2',   
 #---
   frequency(7) = 86400.,
-   fields(1,7) = 'surfpCO2',
+   fields(1,7) = 'apCO2   ',
    filename(7) = 'diags/daily/apCO2',
 #--- 
   frequency(8) = 86400.,
@@ -52,11 +52,11 @@
    filename(8) = 'diags/daily/wspeed',
 #---   
   frequency(9) = 86400.,
-   fields(1,9) = 'SIarea ',
+   fields(1,9) = 'SIarea  ',
    filename(9) = 'diags/daily/SIarea',
 #---
   frequency(10) = 86400.,
-   fields(1,10) = 'SIheff ',
+   fields(1,10) = 'SIheff  ',
    filename(10) = 'diags/daily/SIheff',
 #--- 
   frequency(11) = 86400.,
@@ -132,15 +132,15 @@
    filename(25) = 'diags/monthly/oceanQnet',
 #---    
   frequency(26) = 2635200.,
-   fields(1,26) = 'EXFwspee ',
+   fields(1,26) = 'EXFwspee',
    filename(26) = 'diags/monthly/wspeed',
 #--- 
   frequency(27) = 2635200.,
-   fields(1,27) = 'SIarea ',
+   fields(1,27) = 'SIarea  ',
    filename(27) = 'diags/monthly/SIarea',
 #--- 
   frequency(28) = 2635200.,
-   fields(1,28) = 'SIheff ',
+   fields(1,28) = 'SIheff  ',
    filename(28) = 'diags/monthly/SIheff',
 #---    
   frequency(29) = 2635200.,
@@ -152,7 +152,7 @@
    filename(30) = 'diags/monthly/vVel_C',
 #--- 
   frequency(31) = 2635200.,
-   fields(1,31) = 'WVEL     ',
+   fields(1,31) = 'WVEL    ',
    filename(31) = 'diags/monthly/wVel',
 #---  
   frequency(32:62) = 31*2635200.,
@@ -225,11 +225,11 @@
    filename(63)  = 'diags/monthly/PAR',
 #--- 
   frequency(64)  = 2635200.,
-   fields(1,64)  = 'PP',
+   fields(1,64)  = 'PP     ',
    filename(64)  = 'diags/monthly/primProd',
 #--- 
   frequency(65) = 2635200.,
-   fields(1,65) = 'fluxCO2  ',
+   fields(1,65) = 'fluxCO2 ',
    filename(65) = 'diags/monthly/CO2_flux',
 #--- 
   frequency(66) = 2635200.,
@@ -241,15 +241,15 @@
    filename(67) = 'diags/monthly/fugCO2', 
 #--- 
   frequency(68) = 2635200.,
-   fields(1,68) = 'pCO2     ',
+   fields(1,68) = 'pCO2    ',
    filename(68) = 'diags/monthly/pCO2',
 #---    
   frequency(69) = 2635200.,
-   fields(1,69) = 'apCO2    ',
+   fields(1,69) = 'apCO2   ',
    filename(69) = 'diags/monthly/apCO2',
 #---       
   frequency(70) = 2635200.,
-   fields(1,70) = 'apCO2sat ',
+   fields(1,70) = 'apCO2sat',
    filename(70) = 'diags/monthly/apCO2sat',
 #---       
 
