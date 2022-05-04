@@ -38,6 +38,7 @@ ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACv1.4.0_HJ .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACriver_temp .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
+cp ../../ecco_darwin/v05/llc270/input/* .
 cp ../../ecco_darwin/v05/llc270_jra55do/input/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_llc270_fdH as needed
