@@ -12,12 +12,10 @@
 ==============
 # 1. Get code
 
-git clone https://github.com/darwinproject/darwin3
-cd darwin3/pkg/darwin
-git checkout 24885b71
-cd ../../../
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
+git clone https://github.com/darwinproject/darwin3
 cd darwin3
+git checkout 24885b71
 mkdir build run
 cd build
 
