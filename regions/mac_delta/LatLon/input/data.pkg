@@ -2,7 +2,8 @@
  &PACKAGES
  useCAL         = .TRUE.,
  useEXF         = .TRUE.,
- useKPP         = .TRUE.,
+# useKPP        = .TRUE.,
+ useGGL90       = .TRUE.,
  useOBCS	= .TRUE.,
  useDiagnostics = .TRUE.,
  useSEAICE      = .TRUE.,
