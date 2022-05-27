@@ -40,6 +40,9 @@ C o Allow full 3D specification of vertical diffusivity
 C o Allow latitudinally varying BryanLewis79 vertical diffusivity
 #undef ALLOW_BL79_LAT_VARY
 
+C o Include/exclude combined Surf.Pressure and Drag Implicit solver code
+#define ALLOW_SOLVE4_PS_AND_DRAG
+
 C o Include/exclude Implicit vertical advection code
 #define INCLUDE_IMPLVERTADV_CODE
 
