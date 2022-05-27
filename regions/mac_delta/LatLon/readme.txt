@@ -10,9 +10,6 @@ git clone https://github.com/MITgcm/MITgcm.git
 git clone https://github.com/MITgcm-contrib/ecco_darwin
 
  cd MITgcm
-#revert to 68c b/c https://github.com/MITgcm/MITgcm/pull/545 broken
-# git checkout checkpoint68c
-#no revert b/c https://github.com/MITgcm/MITgcm/pull/562 fixed
  mkdir build run
 
 #=========
@@ -22,15 +19,11 @@ git clone https://github.com/MITgcm-contrib/ecco_darwin
  	../pkg/obcs/OBCS_PARAMS.h>OBCS_PARAMS.h
    diff ../pkg/obcs/OBCS_PARAMS.h OBCS_PARAMS.h
 
- sed "s|heffTooHeavy = dzSurf \* 0.2 _d 0|heffTooHeavy = 2.0 _d 0|" \
-        ../pkg/seaice/seaice_growth.F>seaice_growth.F
-   diff ../pkg/seaice/seaice_growth.F seaice_growth.F 
-
  module purge
- module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+ module load comp-intel mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
  MOD="../../ecco_darwin/regions/mac_delta/LatLon"
  ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-                   -mo ${MOD}/code
+                   -mo ${MOD}/code -mpi
  make depend
  make -j 16
 
