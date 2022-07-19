@@ -183,8 +183,11 @@ C === nutrient runoff ==================================================
       DO j=jMin,jMax
       DO i=iMin,iMax
         gPtr(i,j,1,iDOC) = gPtr(i,j,1,iDOC) + DOCrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iDON) = gPtr(i,j,1,iDON) + DONrunoff(i,j,bi,bj)
-        gPtr(i,j,1,iDOP)  = gPtr(i,j,1,iDOP) + DOPrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iDOP) = gPtr(i,j,1,iDOP) + DOPrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
       ENDDO
       ENDDO
 #endif
