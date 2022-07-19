@@ -38,7 +38,7 @@ ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACv1.4.0_HJ .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACriver_temp .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
-ln -sf /nobackup/dcarrol2/LOAC/write_bin/globalNEWS/* .
+ln -sf /nobackup/rsavelli/LOAC/write_bin/jra55_do/v1.4.0/LLC_270/* .
 cp ../../ecco_darwin/v05/llc270/input/* .
 cp ../../ecco_darwin/v05/llc270_jra55do/input/* .
 cp ../../ecco_darwin/v05/llc270_jra55do_nutrients/input/* .

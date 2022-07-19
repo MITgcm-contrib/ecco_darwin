@@ -8,17 +8,17 @@
  pCO2startdate2 = 030000,
  pCO2period     = 86400.0,
 #
- DOCrunofffile = 'DOC',
+ DOCrunofffile = 'DOC_LLC_270',
  DOCrunoffstartdate1 = 19920101,
  DOCrunoffstartdate2 = 030000,
  DOCrunoffperiod     = 86400.0,
 #
- DONrunofffile = 'DON',
+ DONrunofffile = 'DON_LLC_270',
  DONrunoffstartdate1 = 19920101,
  DONrunoffstartdate2 = 030000,
  DONrunoffperiod     = 86400.0,
 #
- DOPrunofffile = 'DOP',
+ DOPrunofffile = 'DOP_LLC_270',
  DOPrunoffstartdate1 = 19920101,
  DOPrunoffstartdate2 = 030000,
  DOPrunoffperiod     = 86400.0,
