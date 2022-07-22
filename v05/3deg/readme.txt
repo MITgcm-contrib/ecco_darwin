@@ -1,4 +1,4 @@
-# 3deg darwin3 verification experiment with volume, salt, salinity, DIC, and FeT budget
+# v05 3deg darwin3 verification experiment with volume, salt, salinity, DIC, and FeT budget
 # diagnostics, initially based on MITgcm/verification/tutorial_global_oce_biogeo
 
 # ========
