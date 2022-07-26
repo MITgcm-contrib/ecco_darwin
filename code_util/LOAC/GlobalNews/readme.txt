@@ -10,6 +10,12 @@ Mayorga et al. (2010): https://www.sciencedirect.com/science/article/pii/S136481
 Beusen et al. (2009): https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2008GB003281
 Seitzinger et al. (2010): https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2009GB003587
 
+DIC runoff is based on forcings from GlobalNEWS (dominant lithology, natural runoff and discharge)
+and is computed from the consumption of CO2 by rock weathering with the formula of Suchet et al 2003
+that is used as a predictor of DIC fluxes along with discharge in the formula of Li et al 2017
+Suchet et al 2003: https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2002GB001891
+Li et al 2017: https://www.sciencedirect.com/science/article/pii/S1470160X17302352
+Details are in BDIC_GlobalNEWS.xlsx and final DIC fluxes in DIC_final_globalnews.xlsx
 
 Files:
 

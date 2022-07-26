@@ -23,6 +23,45 @@
  DOPrunoffstartdate2 = 030000,
  DOPrunoffperiod     = 86400.0,
 #
+ DINrunofffile = 'DIN_LLC_270',
+ DINrunoffstartdate1 = 19920101,
+ DINrunoffstartdate2 = 030000,
+ DINrunoffperiod     = 86400.0,
+ DINratioNO3         = 0.6531,
+ DINratioNO2         = 0.0158,
+ DINratioNH4         = 0.3311,
+#
+ DIPrunofffile = 'DIP_LLC_270',
+ DIPrunoffstartdate1 = 19920101,
+ DIPrunoffstartdate2 = 030000,
+ DIPrunoffperiod     = 86400.0,
+#
+ DSirunofffile = 'DSi_LLC_270',
+ DSirunoffstartdate1 = 19920101,
+ DSirunoffstartdate2 = 030000,
+ DSirunoffperiod     = 86400.0,
+#
+ POCrunofffile = 'POC_LLC_270',
+ POCrunoffstartdate1 = 19920101,
+ POCrunoffstartdate2 = 030000,
+ POCrunoffperiod     = 86400.0,
+#
+ POPrunofffile = 'PP_LLC_270',
+ POPrunoffstartdate1 = 19920101,
+ POPrunoffstartdate2 = 030000,
+ POPrunoffperiod     = 86400.0,
+#
+ PONrunofffile = 'PN_LLC_270',
+ PONrunoffstartdate1 = 19920101,
+ PONrunoffstartdate2 = 030000,
+ PONrunoffperiod     = 86400.0,
+#
+ DICrunofffile = 'DIC_LLC_270',
+ DICrunoffstartdate1 = 19920101,
+ DICrunoffstartdate2 = 030000,
+ DICrunoffperiod     = 86400.0,
+ DICratioALK         = 1.0218,
+#
  darwin_useEXFwind = .TRUE.,
  darwin_useQsw = .TRUE.,
  darwin_useSEAICE = .TRUE.,
@@ -32,6 +71,14 @@
  DOCrunoff_interpMethod = 0,
  DONrunoff_interpMethod = 0,
  DOPrunoff_interpMethod = 0,
+ DINrunoff_interpMethod = 0,
+ DIPrunoff_interpMethod = 0,
+ DSirunoff_interpMethod = 0,
+ DOPrunoff_interpMethod = 0,
+ POCrunoff_interpMethod = 0,
+ POPrunoff_interpMethod = 0,
+ PONrunoff_interpMethod = 0,
+ DICrunoff_interpMethod = 0,
 #
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,
@@ -62,7 +109,7 @@
  KPOFE   =  4.629629629629630E-7,
  KPOSI   =  7.716049382716049E-8,
  SURFDICMIN  =   100.0,
- SURFALKMIN  =   100.0,
+ SURFALKMIN  =   100.0
  /
  &DARWIN_RANDOM_PARAMS
  smallgrow=0.66098,

@@ -297,6 +297,265 @@ C DOP forcing parameters for exf
       _RL  DOPrunoff_lon_inc
       _RL  DOPrunoff_lat_inc(MAX_LAT_INC)
 #endif
+
+C DIN forcing parameters for exf
+
+      _RL DINrunoffStartTime
+
+      COMMON/darwin_forcing_DINrunoff_c/
+     &    DINrunoffmask
+      COMMON/darwin_forcing_DINrunoff_i/
+     &    DINrunoffstartdate1, DINrunoffstartdate2
+      COMMON/darwin_forcing_DINrunoff_r/
+     &    DINrunoffStartTime,
+     &    DINrunoffperiod, DINrunoffRepCycle, DINrunoffconst,
+     &    DINrunoff_exfremo_intercept, DINrunoff_exfremo_slope,
+     &    darwin_inscal_DINrunoff,
+     &    DINratioNO3, DINratioNO2, DINratioNH4
+      CHARACTER*1 DINrunoffmask
+      INTEGER DINrunoffstartdate1
+      INTEGER DINrunoffstartdate2
+      _RL DINrunoffperiod
+      _RL DINrunoffRepCycle
+      _RL DINrunoffconst
+      _RL DINrunoff_exfremo_intercept
+      _RL DINrunoff_exfremo_slope
+      _RL darwin_inscal_DINrunoff
+      _RL DINratioNO3
+      _RL DINratioNO2
+      _RL DINratioNH4
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_DINrunoff_i/
+     &    DINrunoff_nlon, DINrunoff_nlat, DINrunoff_interpMethod
+      COMMON/darwin_interp_DINrunoff_r/
+     &    DINrunoff_lon0, DINrunoff_lat0, DINrunoff_lon_inc,
+     %    DINrunoff_lat_inc
+      INTEGER DINrunoff_interpMethod, DINrunoff_nlon, DINrunoff_nlat
+      _RL  DINrunoff_lon0
+      _RL  DINrunoff_lat0
+      _RL  DINrunoff_lon_inc
+      _RL  DINrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C DIP forcing parameters for exf
+
+      _RL DIPrunoffStartTime
+
+      COMMON/darwin_forcing_DIPrunoff_c/
+     &    DIPrunoffmask
+      COMMON/darwin_forcing_DIPrunoff_i/
+     &    DIPrunoffstartdate1, DIPrunoffstartdate2
+      COMMON/darwin_forcing_DIPrunoff_r/
+     &    DIPrunoffStartTime,
+     &    DIPrunoffperiod, DIPrunoffRepCycle, DIPrunoffconst,
+     &    DIPrunoff_exfremo_intercept, DIPrunoff_exfremo_slope,
+     &    darwin_inscal_DIPrunoff
+      CHARACTER*1 DIPrunoffmask
+      INTEGER DIPrunoffstartdate1
+      INTEGER DIPrunoffstartdate2
+      _RL DIPrunoffperiod
+      _RL DIPrunoffRepCycle
+      _RL DIPrunoffconst
+      _RL DIPrunoff_exfremo_intercept
+      _RL DIPrunoff_exfremo_slope
+      _RL darwin_inscal_DIPrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_DIPrunoff_i/
+     &    DIPrunoff_nlon, DIPrunoff_nlat, DIPrunoff_interpMethod
+      COMMON/darwin_interp_DIPrunoff_r/
+     &    DIPrunoff_lon0, DIPrunoff_lat0, DIPrunoff_lon_inc,
+     %    DIPrunoff_lat_inc
+      INTEGER DIPrunoff_interpMethod, DIPrunoff_nlon, DIPrunoff_nlat
+      _RL  DIPrunoff_lon0
+      _RL  DIPrunoff_lat0
+      _RL  DIPrunoff_lon_inc
+      _RL  DIPrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C DSi forcing parameters for exf
+
+      _RL DSirunoffStartTime
+
+      COMMON/darwin_forcing_DSirunoff_c/
+     &    DSirunoffmask
+      COMMON/darwin_forcing_DSirunoff_i/
+     &    DSirunoffstartdate1, DSirunoffstartdate2
+      COMMON/darwin_forcing_DSirunoff_r/
+     &    DSirunoffStartTime,
+     &    DSirunoffperiod, DSirunoffRepCycle, DSirunoffconst,
+     &    DSirunoff_exfremo_intercept, DSirunoff_exfremo_slope,
+     &    darwin_inscal_DSirunoff
+      CHARACTER*1 DSirunoffmask
+      INTEGER DSirunoffstartdate1
+      INTEGER DSirunoffstartdate2
+      _RL DSirunoffperiod
+      _RL DSirunoffRepCycle
+      _RL DSirunoffconst
+      _RL DSirunoff_exfremo_intercept
+      _RL DSirunoff_exfremo_slope
+      _RL darwin_inscal_DSirunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_DSirunoff_i/
+     &    DSirunoff_nlon, DSirunoff_nlat, DSirunoff_interpMethod
+      COMMON/darwin_interp_DSirunoff_r/
+     &    DSirunoff_lon0, DSirunoff_lat0, DSirunoff_lon_inc,
+     %    DSirunoff_lat_inc
+      INTEGER DSirunoff_interpMethod, DSirunoff_nlon, DSirunoff_nlat
+      _RL  DSirunoff_lon0
+      _RL  DSirunoff_lat0
+      _RL  DSirunoff_lon_inc
+      _RL  DSirunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C POC forcing parameters for exf
+
+      _RL POCrunoffStartTime
+
+      COMMON/darwin_forcing_POCrunoff_c/
+     &    POCrunoffmask
+      COMMON/darwin_forcing_POCrunoff_i/
+     &    POCrunoffstartdate1, POCrunoffstartdate2
+      COMMON/darwin_forcing_POCrunoff_r/
+     &    POCrunoffStartTime,
+     &    POCrunoffperiod, POCrunoffRepCycle, POCrunoffconst,
+     &    POCrunoff_exfremo_intercept, POCrunoff_exfremo_slope,
+     &    darwin_inscal_POCrunoff
+      CHARACTER*1 POCrunoffmask
+      INTEGER POCrunoffstartdate1
+      INTEGER POCrunoffstartdate2
+      _RL POCrunoffperiod
+      _RL POCrunoffRepCycle
+      _RL POCrunoffconst
+      _RL POCrunoff_exfremo_intercept
+      _RL POCrunoff_exfremo_slope
+      _RL darwin_inscal_POCrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_POCrunoff_i/
+     &    POCrunoff_nlon, POCrunoff_nlat, POCrunoff_interpMethod
+      COMMON/darwin_interp_POCrunoff_r/
+     &    POCrunoff_lon0, POCrunoff_lat0, POCrunoff_lon_inc,
+     %    POCrunoff_lat_inc
+      INTEGER POCrunoff_interpMethod, POCrunoff_nlon, POCrunoff_nlat
+      _RL  POCrunoff_lon0
+      _RL  POCrunoff_lat0
+      _RL  POCrunoff_lon_inc
+      _RL  POCrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C POP forcing parameters for exf
+
+      _RL POPrunoffStartTime
+
+      COMMON/darwin_forcing_POPrunoff_c/
+     &    POPrunoffmask
+      COMMON/darwin_forcing_POPrunoff_i/
+     &    POPrunoffstartdate1, POPrunoffstartdate2
+      COMMON/darwin_forcing_POPrunoff_r/
+     &    POPrunoffStartTime,
+     &    POPrunoffperiod, POPrunoffRepCycle, POPrunoffconst,
+     &    POPrunoff_exfremo_intercept, POPrunoff_exfremo_slope,
+     &    darwin_inscal_POPrunoff
+      CHARACTER*1 POPrunoffmask
+      INTEGER POPrunoffstartdate1
+      INTEGER POPrunoffstartdate2
+      _RL POPrunoffperiod
+      _RL POPrunoffRepCycle
+      _RL POPrunoffconst
+      _RL POPrunoff_exfremo_intercept
+      _RL POPrunoff_exfremo_slope
+      _RL darwin_inscal_POPrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_POPrunoff_i/
+     &    POPrunoff_nlon, POPrunoff_nlat, POPrunoff_interpMethod
+      COMMON/darwin_interp_POPrunoff_r/
+     &    POPrunoff_lon0, POPrunoff_lat0, POPrunoff_lon_inc,
+     %    POPrunoff_lat_inc
+      INTEGER POPrunoff_interpMethod, POPrunoff_nlon, POPrunoff_nlat
+      _RL  POPrunoff_lon0
+      _RL  POPrunoff_lat0
+      _RL  POPrunoff_lon_inc
+      _RL  POPrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C PON forcing parameters for exf
+
+      _RL PONrunoffStartTime
+
+      COMMON/darwin_forcing_PONrunoff_c/
+     &    PONrunoffmask
+      COMMON/darwin_forcing_PONrunoff_i/
+     &    PONrunoffstartdate1, PONrunoffstartdate2
+      COMMON/darwin_forcing_PONrunoff_r/
+     &    PONrunoffStartTime,
+     &    PONrunoffperiod, PONrunoffRepCycle, PONrunoffconst,
+     &    PONrunoff_exfremo_intercept,PONrunoff_exfremo_slope,
+     &    darwin_inscal_PONrunoff
+      CHARACTER*1 PONrunoffmask
+      INTEGER PONrunoffstartdate1
+      INTEGER PONrunoffstartdate2
+      _RL PONrunoffperiod
+      _RL PONrunoffRepCycle
+      _RL PONrunoffconst
+      _RL PONrunoff_exfremo_intercept
+      _RL PONrunoff_exfremo_slope
+      _RL darwin_inscal_PONrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_PONrunoff_i/
+     &    PONrunoff_nlon, PONrunoff_nlat, PONrunoff_interpMethod
+      COMMON/darwin_interp_PONrunoff_r/
+     &    PONrunoff_lon0, PONrunoff_lat0, PONrunoff_lon_inc,
+     %    PONrunoff_lat_inc
+      INTEGER PONrunoff_interpMethod, PONrunoff_nlon, PONrunoff_nlat
+      _RL  PONrunoff_lon0
+      _RL  PONrunoff_lat0
+      _RL  PONrunoff_lon_inc
+      _RL  PONrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
+C DIC forcing parameters for exf
+
+      _RL DICrunoffStartTime
+
+      COMMON/darwin_forcing_DICrunoff_c/
+     &    DICrunoffmask
+      COMMON/darwin_forcing_DICrunoff_i/
+     &    DICrunoffstartdate1, DICrunoffstartdate2
+      COMMON/darwin_forcing_DICrunoff_r/
+     &    DICrunoffStartTime,
+     &    DICrunoffperiod, DICrunoffRepCycle, DICrunoffconst,
+     &    DICrunoff_exfremo_intercept,DICrunoff_exfremo_slope,
+     &    darwin_inscal_DICrunoff,
+     &    DICratioALK
+      CHARACTER*1 DICrunoffmask
+      INTEGER DICrunoffstartdate1
+      INTEGER DICrunoffstartdate2
+      _RL DICrunoffperiod
+      _RL DICrunoffRepCycle
+      _RL DICrunoffconst
+      _RL DICrunoff_exfremo_intercept
+      _RL DICrunoff_exfremo_slope
+      _RL darwin_inscal_DICrunoff
+      _RL DICratioALK
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_DICrunoff_i/
+     &    DICrunoff_nlon, DICrunoff_nlat, DICrunoff_interpMethod
+      COMMON/darwin_interp_DICrunoff_r/
+     &    DICrunoff_lon0, DICrunoff_lat0, DICrunoff_lon_inc,
+     %    DICrunoff_lat_inc
+      INTEGER DICrunoff_interpMethod, DICrunoff_nlon, DICrunoff_nlat
+      _RL  DICrunoff_lon0
+      _RL  DICrunoff_lat0
+      _RL  DICrunoff_lon_inc
+      _RL  DICrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
 CEOP
 
 #endif /* ALLOW_DARWIN */

@@ -130,6 +130,27 @@ C       Print some statistics about input forcing fields
         CALL MON_WRITESTATS_RL( 1, DOPrunoff, 'DOPrunoff',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
+        CALL MON_WRITESTATS_RL( 1, DINrunoff, 'DINrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, DIPrunoff, 'DIPrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, DSirunoff, 'DSirunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, POCrunoff, 'POCrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, POPrunoff, 'POPrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, PONrunoff, 'PONrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, DICrunoff, 'DICrunoff',                                        
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid ) 
+
         IF ( MASTER_CPU_IO(myThid) ) THEN
 C--   only the master thread is allowed to switch On/Off mon_write_stdout
 C     & mon_write_mnc (since it is the only thread that uses those flags):

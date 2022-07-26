@@ -18,7 +18,14 @@ C Requires: SIZE.h
      &    pCO2file,
      &    DOCrunofffile,
      &    DONrunofffile,
-     &    DOPrunofffile
+     &    DOPrunofffile,
+     &    DINrunofffile,
+     &    DIPrunofffile,
+     &    DSirunofffile,
+     &    POCrunofffile,
+     &    POPrunofffile,
+     &    PONrunofffile,
+     &    DICrunofffile
      
       CHARACTER*128 PARfile
       CHARACTER*128 ironfile
@@ -28,6 +35,13 @@ C Requires: SIZE.h
       CHARACTER*128 DOCrunofffile
       CHARACTER*128 DONrunofffile
       CHARACTER*128 DOPrunofffile
+      CHARACTER*128 DINrunofffile
+      CHARACTER*128 DIPrunofffile
+      CHARACTER*128 DSirunofffile
+      CHARACTER*128 POCrunofffile
+      CHARACTER*128 POPrunofffile
+      CHARACTER*128 PONrunofffile
+      CHARACTER*128 DICrunofffile
 
       COMMON /darwin_fields_r/
      &    PAR0, PAR1, surfPAR,
@@ -37,7 +51,14 @@ C Requires: SIZE.h
      &    pCO20, pCO21, atmospCO2,
      &    DOCrunoff0,DOCrunoff1,DOCrunoff,
      &    DONrunoff0,DONrunoff1,DONrunoff,
-     &    DOPrunoff0,DOPrunoff1,DOPrunoff
+     &    DOPrunoff0,DOPrunoff1,DOPrunoff,
+     &    DINrunoff0,DINrunoff1,DINrunoff,
+     &    DIPrunoff0,DIPrunoff1,DIPrunoff,
+     &    DSirunoff0,DSirunoff1,DSirunoff,
+     &    POCrunoff0,POCrunoff1,POCrunoff,
+     &    POPrunoff0,POPrunoff1,POPrunoff,
+     &    PONrunoff0,PONrunoff1,PONrunoff,
+     &    DICrunoff0,DICrunoff1,DICrunoff
      
       _RL PAR0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL PAR1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -70,6 +91,34 @@ C Requires: SIZE.h
       _RL DOPrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL DOPrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL DOPrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL DINrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL DINrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL DINrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL DIPrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL DIPrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL DIPrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL DSirunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL DSirunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL DSirunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL POCrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL POCrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL POCrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL POPrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL POPrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL POPrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL PONrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL PONrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
+      _RL PONrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL DICrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)                                         
+      _RL DICrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)                                         
+      _RL DICrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)  
 
 CEOP
 

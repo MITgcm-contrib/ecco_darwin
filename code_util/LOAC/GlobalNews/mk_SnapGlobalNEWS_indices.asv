@@ -41,12 +41,8 @@ gPOC=gns(:,12); % GlobalNEWS2 load POC (Mg/yr)
 gTSS=gns(:,13); % GlobalNEWS2 load TSS (Mg/yr)
 clear gns ix
 
-% File DIC_final_globalnews.xlsx is derived from 
-% computation of DIC fluxes from BDIC_GlobalNEWS.xlsx
 gns=xlsread('DIC_final_globalnews.xlsx');
-gDIC=gns(:,1); % GlobalNEWS2 load DIC (Mg/yr)
-clear gns ix
-
+gTSS=gns(:,13); % GlobalNEWS2 load TSS (Mg/yr)
 
 % Plot JRA55 and GlobalNEWS runoff
 figure(1), clf, plotland(.8*[1 1 1],12), hold on

@@ -42,7 +42,9 @@ C !USES: ===============================================================
 #include "DARWIN_FIELDS.h"
 #include "DARWIN_EXF_FIELDS.h"
 #endif
-
+#ifdef DARWIN_NUTRIENT_RUNOFF                                                                     
+#include "DARWIN_EXF_PARAMS.h"
+#endif
 C !INPUT PARAMETERS: ===================================================
 C  Ptrdummy             :: dummy for darwin2 compatibility
 C  myThid               :: thread number
@@ -188,10 +190,29 @@ C === nutrient runoff ==================================================
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iDOP) = gPtr(i,j,1,iDOP) + DOPrunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iNO3) = gPtr(i,j,1,iNO3) + DINrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DINratioNO3
+        gPtr(i,j,1,iNO2) = gPtr(i,j,1,iNO2) + DINrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DINratioNO2
+        gPtr(i,j,1,iNH4) = gPtr(i,j,1,iNH4) + DINrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DINratioNH4
+        gPtr(i,j,1,iPO4) = gPtr(i,j,1,iPO4) + DIPrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iSiO2) = gPtr(i,j,1,iSiO2) + DSirunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iPOC) = gPtr(i,j,1,iPOC) + POCrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iPOP) = gPtr(i,j,1,iPOP) + POPrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iPON) = gPtr(i,j,1,iPON) + PONrunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + DICrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + DICrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
       ENDDO
       ENDDO
 #endif
-
 C === dic ==============================================================
 #ifdef DARWIN_ALLOW_CARBON
 C carbon air-sea interaction
