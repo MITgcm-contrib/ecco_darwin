@@ -274,7 +274,8 @@ C DOP forcing parameters for exf
      &    DOPrunoffStartTime,
      &    DOPrunoffperiod, DOPrunoffRepCycle, DOPrunoffconst,
      &    DOPrunoff_exfremo_intercept, DOPrunoff_exfremo_slope,
-     &    darwin_inscal_DOPrunoff
+     &    darwin_inscal_DOPrunoff,
+     &    DOPratioDOFe
       CHARACTER*1 DOPrunoffmask
       INTEGER DOPrunoffstartdate1
       INTEGER DOPrunoffstartdate2
@@ -284,6 +285,7 @@ C DOP forcing parameters for exf
       _RL DOPrunoff_exfremo_intercept
       _RL DOPrunoff_exfremo_slope
       _RL darwin_inscal_DOPrunoff
+      _RL DOPratioDOFe
 
 #ifdef USE_EXF_INTERPOLATION
       COMMON/darwin_interp_DOPrunoff_i/
@@ -350,7 +352,8 @@ C DIP forcing parameters for exf
      &    DIPrunoffStartTime,
      &    DIPrunoffperiod, DIPrunoffRepCycle, DIPrunoffconst,
      &    DIPrunoff_exfremo_intercept, DIPrunoff_exfremo_slope,
-     &    darwin_inscal_DIPrunoff
+     &    darwin_inscal_DIPrunoff,
+     &    DIPratioDFe
       CHARACTER*1 DIPrunoffmask
       INTEGER DIPrunoffstartdate1
       INTEGER DIPrunoffstartdate2
@@ -360,6 +363,7 @@ C DIP forcing parameters for exf
       _RL DIPrunoff_exfremo_intercept
       _RL DIPrunoff_exfremo_slope
       _RL darwin_inscal_DIPrunoff
+      _RL DIPratioDFe
 
 #ifdef USE_EXF_INTERPOLATION
       COMMON/darwin_interp_DIPrunoff_i/
@@ -458,7 +462,8 @@ C POP forcing parameters for exf
      &    POPrunoffStartTime,
      &    POPrunoffperiod, POPrunoffRepCycle, POPrunoffconst,
      &    POPrunoff_exfremo_intercept, POPrunoff_exfremo_slope,
-     &    darwin_inscal_POPrunoff
+     &    darwin_inscal_POPrunoff,
+     &    POPratioPOFe
       CHARACTER*1 POPrunoffmask
       INTEGER POPrunoffstartdate1
       INTEGER POPrunoffstartdate2
@@ -468,6 +473,7 @@ C POP forcing parameters for exf
       _RL POPrunoff_exfremo_intercept
       _RL POPrunoff_exfremo_slope
       _RL darwin_inscal_POPrunoff
+      _RL POPratioPOFe
 
 #ifdef USE_EXF_INTERPOLATION
       COMMON/darwin_interp_POPrunoff_i/

@@ -487,6 +487,7 @@ C Open and read the data.darwin file
       DOPrunoffmask = 'c'
 
       darwin_inscal_DOPrunoff    =  1. _d 0
+      DOPratioDOFe               =  3. _d -4
 
       DINrunofffile = ' '
       DINrunoffperiod             = 0.0 _d 0
@@ -516,6 +517,7 @@ C Open and read the data.darwin file
       DIPrunoffmask = 'c'
 
       darwin_inscal_DIPrunoff    =  1. _d 0
+      DIPratioDFe                = 3. _d -4
 
       DSirunofffile = ' '
       DSirunoffperiod             = 0.0 _d 0
@@ -555,6 +557,7 @@ C Open and read the data.darwin file
       POPrunoffmask = 'c'
 
       darwin_inscal_POPrunoff    =  1. _d 0
+      POPratioPOFe               =  3. _d -4
 
       PONrunofffile = ' '
       PONrunoffperiod             = 0.0 _d 0
