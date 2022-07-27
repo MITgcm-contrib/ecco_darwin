@@ -4,6 +4,8 @@
 # LOACv1.4.0_HJ available at https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACv1.4.0_HJ
 # LOACriver_temp available at https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/LOAC/LOACriver_temp
 
+#For details on nutrient loads, please refer to ecco_darwin/code_util/LOAC/GlobalNews/readme.txt
+
 # Instructions for building and running ECCO-Darwin v05 with Darwin 3, JRA55-do, and globalNEWS nutrient runoff
 
 ==============

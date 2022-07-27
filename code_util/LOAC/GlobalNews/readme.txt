@@ -17,6 +17,13 @@ Suchet et al 2003: https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2002GB001
 Li et al 2017: https://www.sciencedirect.com/science/article/pii/S1470160X17302352
 Details are in BDIC_GlobalNEWS.xlsx and final DIC fluxes in DIC_final_globalnews.xlsx
 
+DIN is distributed in NO3, NO2 and NH4 according to a ratio calculated on the Glorich database. 
+DIC to Alkalinity ratio is also computed from this database.
+https://www.geo.uni-hamburg.de/en/geologie/forschung/aquatische-geochemie/glorich.html
+
+Fe runoff is based on a constant P : Fe ratio from Lacroix et al. 2020:
+https://doi.org/10.5194/bg-17-55-2020
+
 Files:
 
 mk_jra55_2000.m
