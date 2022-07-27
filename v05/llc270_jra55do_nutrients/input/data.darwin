@@ -22,6 +22,7 @@
  DOPrunoffstartdate1 = 19920101,
  DOPrunoffstartdate2 = 030000,
  DOPrunoffperiod     = 86400.0,
+ DOPratioDOFe        = 3E-4,
 #
  DINrunofffile = 'DIN_LLC_270',
  DINrunoffstartdate1 = 19920101,
@@ -35,6 +36,7 @@
  DIPrunoffstartdate1 = 19920101,
  DIPrunoffstartdate2 = 030000,
  DIPrunoffperiod     = 86400.0,
+ DIPratioDFe         = 3E-4,
 #
  DSirunofffile = 'DSi_LLC_270',
  DSirunoffstartdate1 = 19920101,
@@ -50,6 +52,7 @@
  POPrunoffstartdate1 = 19920101,
  POPrunoffstartdate2 = 030000,
  POPrunoffperiod     = 86400.0,
+ POPratioPOFe        = 3E-4,
 #
  PONrunofffile = 'PN_LLC_270',
  PONrunoffstartdate1 = 19920101,

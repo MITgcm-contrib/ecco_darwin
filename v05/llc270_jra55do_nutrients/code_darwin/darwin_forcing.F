@@ -210,6 +210,12 @@ C === nutrient runoff ==================================================
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + DICrunoff(i,j,bi,bj)                                
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
+        gPtr(i,j,1,iFeT) = gPtr(i,j,1,iFeT) + DIPrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DIPratioDFe
+        gPtr(i,j,1,iDOFe) = gPtr(i,j,1,iDOFe) + DOPrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DOPratioDOFe
+        gPtr(i,j,1,iPOFe) = gPtr(i,j,1,iPOFe) + POPrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * POPratioPOFe
       ENDDO
       ENDDO
 #endif
