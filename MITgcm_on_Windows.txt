@@ -8,63 +8,60 @@
 # it works only on windows 10 and 11.
 # Option (2) is best for older versions of windows (7 and 8)
 # and can be used to isolate multiple build environments.
-# Option (3) will provide best performance.  
+# Option (3) will provide best performance but some hardware
+# may not be fully supported.
 
 
 #############################################################
 #############################################################
 # (1) Steps for installing Windows Subsystem for Linux (WSL)
-#
-# a) On the windows search bar (bottom left on your screen;
+
+# a) Open the Windows Store
+
+# b) Search for: Ubuntu
+
+# c) Select: Ubuntu App 
+
+# d) Click on "Get"
+#    [THIS MAY TAKE A WHILE, THE FILE SIZE IS ~500 MB]
+
+# e) Once it's finished downloading, make sure to enable
+#    "Windows Subsystem for Linux" under
+#    "Turn Windows features on or off"
+#    You may have to reboot.
+
+# f) Then find Ubuntu an click on it
+
+# g) If everything goes well, you should have Ubuntu. Else..
+
+# h) A black screen would pop up with the message that 
+#    "...Linux optional component is not enabled...". 
+#    There's a website that you can follow to resolve the issues:
+#    https://aka.ms/wslinstall
+
+# i) On the windows search bar (bottom left on your screen;
 #    for most system), search for "Windows PowerShell" and
 #    click on "Run as administrator".
 
-# b) In the Windows PowerShell window run the command:
+# j) In the Windows PowerShell window run the command:
      wsl --install
 
-# c) This should start the installation of WSL and Ubuntu.
+# k) This should start the installation of WSL and Ubuntu.
 
-# d) Once the installation is finished you should see:
+# l) Once the installation is finished you should see:
 #    "The requested operation is successful..."
 
-# e) Reboot or restart your machine.
+# m) Reboot or restart your machine.
 
-# f) After restarting, you may see a message that says
+# n) After restarting, you may see a message that says
 #    "Windows Substem for Linux is resuming a previous installation"
 #    It will take a couple a minutes to finish installing Ubuntu
 
-# g) You will be asked to provide some information like
+# o) You will be asked to provide some information like
 #    username:
 #    password:
 
-# h) After these steps, you will now have Ubuntu on your system.
-
-
-#############################################################
-# PART-2 [This is needed if the above doesn't work]
-#############################################################
-# If your system already has the WSL but no Ubuntu, 
-# you may separately install Ubuntu by following the 
-# following steps:
-#############################################################
-# 1) Open the Windows Store
-
-# 2) Search for: Ubuntu
-
-# 3) Select: Ubuntu App 
-
-# 4) Click on "Get"
-# [THIS MAY TAKE A WHILE, THE FILE SIZE IS ~500 MB]
-#
-# 5) Once it's finished downloading, click on 
-#    "Open"
-
-# 6) If everything goes well, you should have Ubuntu. Else..
-
-# 7) A black screen would pop up with the message that 
-# "...Linux optional component is not enabled...". 
-# There's a website that you can follow to resolve the issues:
-# https://aka.ms/wslinstall
+# p) After these steps, you will now have Ubuntu on your system.
 
 
 #############################################################
@@ -187,6 +184,9 @@
 ########################################################
 ########################################################
 # Get, compile, and run MITgcm on single processor
+
+# Update installation
+ sudo apt-get update
 
 # Extra packages needed to get and compile MITgcm
  sudo apt install git
