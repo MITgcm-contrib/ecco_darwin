@@ -166,6 +166,7 @@ C
      &    DOPrunoff_exfremo_slope,
      &    DOPrunoffmask,
      &    darwin_inscal_DOPrunoff,
+     &    DOPratioDOFe,
 C
      &    DINrunofffile,
      &    DINrunoffperiod,
@@ -193,6 +194,8 @@ C
      &    DIPrunoff_exfremo_slope,
      &    DIPrunoffmask,
      &    darwin_inscal_DIPrunoff,
+     &    DIPratioDFe,
+     &    DIPboundFEMnOxide_ratio,
 C
      &    DSirunofffile,
      &    DSirunoffperiod,
@@ -229,6 +232,7 @@ C
      &    POPrunoff_exfremo_slope,
      &    POPrunoffmask,
      &    darwin_inscal_POPrunoff,
+     &    POPratioPOFe,
 C
      &    PONrunofffile,
      &    PONrunoffperiod,
@@ -518,6 +522,7 @@ C Open and read the data.darwin file
 
       darwin_inscal_DIPrunoff    =  1. _d 0
       DIPratioDFe                = 3. _d -4
+      DIPboundFEMnOxide_ratio    = 0.333 _d 0
 
       DSirunofffile = ' '
       DSirunoffperiod             = 0.0 _d 0

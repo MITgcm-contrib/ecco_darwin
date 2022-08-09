@@ -353,7 +353,7 @@ C DIP forcing parameters for exf
      &    DIPrunoffperiod, DIPrunoffRepCycle, DIPrunoffconst,
      &    DIPrunoff_exfremo_intercept, DIPrunoff_exfremo_slope,
      &    darwin_inscal_DIPrunoff,
-     &    DIPratioDFe
+     &    DIPratioDFe,DIPboundFEMnOxide_ratio
       CHARACTER*1 DIPrunoffmask
       INTEGER DIPrunoffstartdate1
       INTEGER DIPrunoffstartdate2
@@ -364,6 +364,7 @@ C DIP forcing parameters for exf
       _RL DIPrunoff_exfremo_slope
       _RL darwin_inscal_DIPrunoff
       _RL DIPratioDFe
+      _RL DIPboundFEMnOxide_ratio
 
 #ifdef USE_EXF_INTERPOLATION
       COMMON/darwin_interp_DIPrunoff_i/

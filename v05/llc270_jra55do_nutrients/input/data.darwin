@@ -37,6 +37,7 @@
  DIPrunoffstartdate2 = 030000,
  DIPrunoffperiod     = 86400.0,
  DIPratioDFe         = 3E-4,
+ DIPboundFEMnOxide_ratio = 0.333,
 #
  DSirunofffile = 'DSi_LLC_270',
  DSirunoffstartdate1 = 19920101,
