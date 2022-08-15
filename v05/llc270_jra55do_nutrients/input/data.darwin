@@ -64,7 +64,7 @@
  DICrunoffstartdate1 = 19920101,
  DICrunoffstartdate2 = 030000,
  DICrunoffperiod     = 86400.0,
- DICratioALK         = 1.0218,
+ DICratioALK         = 0.9886,
 #
  darwin_useEXFwind = .TRUE.,
  darwin_useQsw = .TRUE.,
