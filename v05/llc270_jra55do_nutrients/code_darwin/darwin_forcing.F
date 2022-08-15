@@ -197,6 +197,7 @@ C === nutrient runoff ==================================================
         gPtr(i,j,1,iNH4) = gPtr(i,j,1,iNH4) + DINrunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DINratioNH4
         gPtr(i,j,1,iPO4) = gPtr(i,j,1,iPO4) + DIPrunoff(i,j,bi,bj)
+     &   * DIPboundFEMnOxide_ratio	
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iSiO2) = gPtr(i,j,1,iSiO2) + DSirunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
