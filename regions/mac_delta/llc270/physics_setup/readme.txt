@@ -10,7 +10,9 @@
 # 1. Get code
 # ==============
 git clone https://github.com/MITgcm/MITgcm.git
-svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270 Mac270
+#svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270 Mac270
+git clone https://github.com/MITgcm-contrib/ecco_darwin
+ln -s ecco_darwin/regions/mac_delta/llc270 Mac270
 
 # Pleiades users skip to part 2.
 # For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
