@@ -488,7 +488,7 @@ C      nutrient consumption diagnostics
        CALL DIAGNOSTICS_FILL(cALK(1-OLx,1-OLy,1),
      & 'C_ALK   ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(cO2(1-OLx,1-OLy,1),
-     & 'C_O2   ',0,Nr,1,bi,bj,myThid)
+     & 'C_O2    ',0,Nr,1,bi,bj,myThid)
 
 C      compute 'source' diagnostics: tendencies without consumption;
 C      add full tendencies to consumption and store result back into
@@ -589,7 +589,7 @@ C      diags(iCons*) for convenience
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALKsurfForc,'gALKEpr ',0,1,2,
      &  bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(gO2surfForc,'gO2Epr ',0,1,2,
+       CALL DIAGNOSTICS_FILL(gO2surfForc, 'gO2Epr  ',0,1,2,
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gNO3surfForc,'gNO3Epr ',0,1,2,
      &  bi,bj,myThid)
