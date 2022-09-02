@@ -26,8 +26,8 @@
 # Instructions for running ECCO-Darwin Version 4 for 1992-2018 period
  cd ../run
  ln -sf ../build/mitgcmuv .
- ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
- ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
+ ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
  ln -sf /nobackup/hzhang1/forcing/era_xx .
  cp ../../ecco_darwin/v04/llc270_JAMES_budget/input/* .
  cp ../../ecco_darwin/v04/llc270_JAMES_budget/input_darwin/* .

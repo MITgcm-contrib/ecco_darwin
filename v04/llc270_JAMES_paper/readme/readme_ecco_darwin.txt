@@ -32,10 +32,10 @@
 # Instructions for running ECCO-Darwin Version 4 for 1992-2018 period
  cd ../run
  ln -sf ../build/mitgcmuv .
- ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
- ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_forcing/* .
- ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_initial_conditions/pickup_ptracers_experiment_18.data pickup_ptracers.0000000001.data
- ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_initial_conditions/pickup_ptracers.0000000001.meta .
+ ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_forcing/* .
+ ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_initial_conditions/pickup_ptracers_experiment_18.data pickup_ptracers.0000000001.data
+ ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v4/input/darwin_initial_conditions/pickup_ptracers.0000000001.meta .
  ln -sf /nobackup/hzhang1/forcing/era_xx .
  cp ../../ecco_darwin/v04/llc270_JAMES_paper/input/* .
  cp ../../ecco_darwin/v04/llc270_JAMES_paper/input_darwin/* .

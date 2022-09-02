@@ -30,8 +30,8 @@ cd ..
 mkdir run
 cd run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v4/input/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 cp ../../ecco_darwin/v04/llc270_devel/input/* .
 cp ../../ecco_darwin/v04/llc270_devel/input_darwin/* .
