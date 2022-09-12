@@ -1,0 +1,52 @@
+#######################
+ &RADTRANS_FORCING_PARAMS
+ RT_EdFile( 1)='i_edsEd01_2000',
+ RT_EdFile( 2)='i_edsEd02_2000',
+ RT_EdFile( 3)='i_edsEd03_2000',
+ RT_EdFile( 4)='i_edsEd04_2000',
+ RT_EdFile( 5)='i_edsEd05_2000',
+ RT_EdFile( 6)='i_edsEd06_2000',
+ RT_EdFile( 7)='i_edsEd07_2000',
+ RT_EdFile( 8)='i_edsEd08_2000',
+ RT_EdFile( 9)='i_edsEd09_2000',
+ RT_EdFile(10)='i_edsEd10_2000',
+ RT_EdFile(11)='i_edsEd11_2000',
+ RT_EdFile(12)='i_edsEd12_2000',
+ RT_EdFile(13)='i_edsEd13_2000',
+ RT_EsFile( 1)='i_edsEs01_2000',
+ RT_EsFile( 2)='i_edsEs02_2000',
+ RT_EsFile( 3)='i_edsEs03_2000',
+ RT_EsFile( 4)='i_edsEs04_2000',
+ RT_EsFile( 5)='i_edsEs05_2000',
+ RT_EsFile( 6)='i_edsEs06_2000',
+ RT_EsFile( 7)='i_edsEs07_2000',
+ RT_EsFile( 8)='i_edsEs08_2000',
+ RT_EsFile( 9)='i_edsEs09_2000',
+ RT_EsFile(10)='i_edsEs10_2000',
+ RT_EsFile(11)='i_edsEs11_2000',
+ RT_EsFile(12)='i_edsEs12_2000',
+ RT_EsFile(13)='i_edsEs13_2000',
+
+#RT_E_period= -1.,
+#RT_E_period= 0.,
+ RT_E_startdate1= 19781216,
+ RT_E_startdate2= 180000,
+ RT_E_period= 86400.0,
+#
+# use seaice pkg for area
+ /
+ &RADTRANS_INTERP_PARAMS
+ #RT_E_lon0    = -179.5,
+ #RT_E_lon_inc = 1.,
+ #RT_E_lat0    = -89.5,
+ #RT_E_lat_inc = 179*1.,
+ #RT_E_nlon    = 360,
+ #RT_E_nlat    = 180,
+ /
+########################
+ &RADTRANS_PARAMS
+ RT_useMeanCosSolz=.TRUE.,
+ RT_kmax=22,
+ RT_wbEdges=400,412.5,437.5,462.5,487.5,512.5,537.5,562.5,587.5,612.5,637.5,662.5,687.5,700,
+ RT_wbRefWLs=400,425,450,475,500,525,550,575,600,625,650,675,700,
+ /
