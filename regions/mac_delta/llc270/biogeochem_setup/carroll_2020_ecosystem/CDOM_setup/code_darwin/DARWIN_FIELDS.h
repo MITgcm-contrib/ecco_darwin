@@ -78,5 +78,10 @@ C Fugacity Factor added by Val Bennington Nov. 2010
       _RL  bt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  Ksp_TP_Calc(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 
+#ifdef DARWIN_ALLOW_CDOM
+       COMMON /DARWIN_CDOM_FIELDS/ attCDOM
+      _RL  attCDOM(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+#endif /* DARWIN_ALLOW_CDOM */
+
 CEOP
 #endif /* ALLOW_DARWIN */
