@@ -21,15 +21,15 @@ The Ecosystem simulated contains (see Carrol et al., 2020):
 
 ## Tracers (n=32)
 
-|1. DIC  | 12. DOFe | 23. c3   |
+|1. DIC  | 12. POC | 23. c4   |
 | ------ | -------- | -------- |
-|2. NO3  | 13. POC  | 24. c4   |
-|3. NO2  | 14. PON  | 25. c5   |
-|4. NH4  | 15. POP  | 26. c6   |
-|5. PO4  | 16. POFe | 27. c7   |
-|6. FeT  | 17. POSi | 28. Chl1 |
-|7. SiO2 | 18. PIC  | 29. Chl2 |
-|8. DOC  | 19. ALK  | 30. Chl3 |
-|9. rDOC | 20. O2   | 31. Chl4 |
-|10. DON | 21. c1   | 32. Chl5 |
-|11. DOP | 22. c2   |          |
+|2. NO3  | 13. PON  | 24. c5   |
+|3. NO2  | 14. POP  | 25. c6   |
+|4. NH4  | 15. POFe | 26. c7   |
+|5. PO4  | 16. POSe | 27. chl1 |
+|6. FeT  | 17. PIC  | 28. Chl2 |
+|7. SiO2 | 18. ALK  | 29. Chl3 |
+|8. DOC  | 19. O2   | 30. Chl4 |
+|9. DON  | 20. c1   | 31. Chl5 |
+|10. DOP | 21. c2   |          |
+|11. DOFe| 22. c3   |          |
