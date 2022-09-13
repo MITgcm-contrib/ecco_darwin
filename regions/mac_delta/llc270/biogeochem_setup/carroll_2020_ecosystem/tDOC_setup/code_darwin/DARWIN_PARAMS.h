@@ -182,9 +182,9 @@ C     Knitb             :: [1/s]              nitrite oxidation rate
 C     PAR_oxi           :: [uEin/m2/s]        critical light level after which oxidation starts
 C
 C     Kdoc              :: [1/s] DOC remineralization rate
-C     Ktdoc             :: [1/s] tDOC remineralization rate
-C     Kdop              :: [1/s] DOP remineralization rate
-C     Kdon              :: [1/s] DON remineralization rate
+C     Krdop              :: [1/s] rDOC remineralization rate
+C     Kdop              :: [1/s] DON remineralization rate
+C     Kdon              :: [1/s] DOP remineralization rate
 C     KdoFe             :: [1/s] DOFe remineralization rate
 C     KPOC              :: [1/s] POC remineralization rate
 C     KPON              :: [1/s] PON remineralization rate
@@ -242,7 +242,6 @@ C     PARmin            :: [uEin/m2/s]        minimum light for photosynthesis; 
 C     aphy_chl_ave      :: [m2/mg Chl]        Chl-specific absorption coefficient
 C     chl2nmax          :: [mg Chl / mmol N]  max Chl:N ratio for Chl synthesis following Moore 2002
 C     synthcost         :: [mmol C / mmol N]  cost of biosynthesis
-C     palat_min         :: []                 min non-zero palatability, smaller palat are set to 0 (was 1D-4 in quota)
 C     inhib_graz        :: [(mmol C m-3)-1]   inverse decay scale for grazing inhibition
 C     inhib_graz_exp    :: []                 exponent for grazing inhibition (0 to turn off inhibition)
 C     hillnumUptake     :: []                 exponent for limiting quota uptake in nutrient uptake
@@ -299,7 +298,7 @@ C     depthdenit        :: [m]             not implemented (depth for denitrific
      &    Knitb,
      &    PAR_oxi,
      &    Kdoc,
-     &    Ktdoc,
+     &    Krdoc,
      &    Kdop,
      &    Kdon,
      &    KdoFe,
@@ -353,7 +352,6 @@ C     depthdenit        :: [m]             not implemented (depth for denitrific
      &    aphy_chl_ave,
      &    chl2nmax,
      &    synthcost,
-     &    palat_min,
      &    inhib_graz,
      &    inhib_graz_exp,
      &    hillnumUptake,
@@ -405,7 +403,7 @@ C     &    yono2,
       _RL Knitb
       _RL PAR_oxi
       _RL Kdoc
-      _RL Ktdoc
+      _RL Krdoc
       _RL Kdop
       _RL Kdon
       _RL KdoFe
@@ -459,7 +457,6 @@ C     &    yono2,
       _RL aphy_chl_ave
       _RL chl2nmax
       _RL synthcost
-      _RL palat_min
       _RL inhib_graz
       _RL inhib_graz_exp
       _RL hillnumUptake
@@ -488,26 +485,44 @@ C     fracCDOM   :: []                  fraction of remineralized POP contributi
 C     CDOMdegrd  :: [1/s]               CDOM degradation rate
 C     CDOMbleach :: [1/s]               CDOM bleaching rate
 C     PARCDOM    :: [uEin/m2/s]         PAR where CDOM bleaching becomes maximal
+C     R_NC_CDOM  :: [mmol N / mmol C]   CDOM N:C ratio
+C     R_FeC_CDOM :: [mmol Fe / mmol C]  CDOM Fe:C ratio
+C     R_PC_CDOM  :: [mmol P / mmol C]   CDOM P:C ratio
 C     R_NP_CDOM  :: [mmol N / mmol P]   CDOM N:P ratio
 C     R_FeP_CDOM :: [mmol Fe / mmol P]  CDOM Fe:P ratio
 C     R_CP_CDOM  :: [mmol C / mmol P]   CDOM C:P ratio
+C     CDOMcoeff  :: [m2 / mmol C]       C-specific absorption coefficient of CDOM
+C                                       (with #define DARWIN_CDOM_UNITS_CARBON)
 C     CDOMcoeff  :: [m2 / mmol P]       P-specific absorption coefficient of CDOM
+C                                       (with #undef DARWIN_CDOM_UNITS_CARBON)
       COMMON /DARWIN_CDOM_PARAMS_r/
      &    fracCDOM,
      &    CDOMdegrd,
      &    CDOMbleach,
      &    PARCDOM,
+# ifdef DARWIN_CDOM_UNITS_CARBON
+     &    R_NC_CDOM,
+     &    R_FeC_CDOM,
+     &    R_PC_CDOM,
+# else
      &    R_NP_CDOM,
      &    R_FeP_CDOM,
      &    R_CP_CDOM,
+# endif
      &    CDOMcoeff
       _RL fracCDOM
       _RL CDOMdegrd
       _RL CDOMbleach
       _RL PARCDOM
+# ifdef DARWIN_CDOM_UNITS_CARBON
+      _RL R_NC_CDOM
+      _RL R_FeC_CDOM
+      _RL R_PC_CDOM
+# else
       _RL R_NP_CDOM
       _RL R_FeP_CDOM
       _RL R_CP_CDOM
+# endif
       _RL CDOMcoeff
 #endif
 

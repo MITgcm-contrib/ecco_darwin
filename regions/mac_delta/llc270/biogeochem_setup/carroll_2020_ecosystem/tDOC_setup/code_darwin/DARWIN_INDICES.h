@@ -18,7 +18,7 @@ C these cannot be modified for now
       INTEGER iFeT
       INTEGER iSiO2
       INTEGER iDOC
-      INTEGER itDOC
+      INTEGER irDOC
       INTEGER iDON
       INTEGER iDOP
       INTEGER iDOFe
@@ -37,17 +37,18 @@ C these cannot be modified for now
       INTEGER efe
       INTEGER esi
       INTEGER eChl
+      INTEGER ech
       INTEGER nDarwin
       PARAMETER (iDIC   =1)
-      PARAMETER (iNO3   =iDIC+1)
+      PARAMETER (iNO3   =iDIC +1)
       PARAMETER (iNO2   =iNO3 +1)
       PARAMETER (iNH4   =iNO2 +1)
       PARAMETER (iPO4   =iNH4 +1)
       PARAMETER (iFeT   =iPO4 +1)
       PARAMETER (iSiO2  =iFeT +1)
       PARAMETER (iDOC   =iSiO2+1)
-      PARAMETER (itDOC  =iDOC +1)
-      PARAMETER (iDON   =itDOC+1)
+      PARAMETER (irDOC   =iDOC +1)
+      PARAMETER (iDON   =irDOC +1)
       PARAMETER (iDOP   =iDON +1)
       PARAMETER (iDOFe  =iDOP +1)
       PARAMETER (iPOC   =iDOFe+1)
@@ -107,9 +108,16 @@ C these cannot be modified for now
       PARAMETER (iChl   =esi +1)
       PARAMETER (eChl   =iChl+nPhoto-1)
 #else
-      PARAMETER (eChl   =efe)
+      PARAMETER (eChl   =esi)
 #endif
-      PARAMETER (nDarwin=eChl)
+#ifdef DARWIN_ALLOW_CSTORE
+      INTEGER ich
+      PARAMETER (ich   =eChl +1)
+      PARAMETER (ech   =ich+nPhoto-1)
+#else
+      PARAMETER (ech   =eChl)
+#endif
+      PARAMETER (nDarwin=ech)
 
 CEOP
 #endif /* ALLOW_DARWIN */

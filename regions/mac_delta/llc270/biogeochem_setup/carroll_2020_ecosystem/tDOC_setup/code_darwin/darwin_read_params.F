@@ -86,7 +86,7 @@
      &    Knitb,
      &    PAR_oxi,
      &    Kdoc,
-     &    Ktdoc,
+     &    Krdoc,
      &    Kdop,
      &    Kdon,
      &    KdoFe,
@@ -140,7 +140,6 @@
      &    aphy_chl_ave,
      &    chl2nmax,
      &    synthcost,
-     &    palat_min,
      &    inhib_graz,
      &    inhib_graz_exp,
      &    hillnumUptake,
@@ -169,9 +168,15 @@ C     &    yono2,
      &    CDOMdegrd,
      &    CDOMbleach,
      &    PARCDOM,
+# ifdef DARWIN_CDOM_UNITS_CARBON
+     &    R_NC_CDOM,
+     &    R_FeC_CDOM,
+     &    R_PC_CDOM,
+# else
      &    R_NP_CDOM,
      &    R_FeP_CDOM,
      &    R_CP_CDOM,
+# endif
      &    CDOMcoeff
 #endif
 
@@ -319,8 +324,8 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       Knita = 1 _d 0/(0.5 _d 0*pday)
       Knitb = 1 _d 0/(10 _d 0*pday)
       PAR_oxi = 10 _d 0
-      Kdoc = 1 _d 0/(365 _d 0*pday)
-      Ktdoc = 1 _d 0/(3650 _d 0*pday)
+      Kdoc = 1 _d 0/(100 _d 0*pday)
+      Krdoc = 1 _d 0/(1000 _d 0*pday)
       Kdop = 1 _d 0/(100 _d 0*pday)
       Kdon = 1 _d 0/(100 _d 0*pday)
       KdoFe = 1 _d 0/(100 _d 0*pday)
@@ -375,7 +380,6 @@ C     O2crit from Lipschultz et al 1990, DSR 37, 1513-1541:
       aphy_chl_ave = 0.02 _d 0
       chl2nmax = 3.00 _d 0
       synthcost = 0.0 _d 0
-      palat_min = 0 _d 0
       inhib_graz = 1.0 _d 0
       inhib_graz_exp = 0.0 _d 0
       hillnumUptake = 1.0 _d 0
@@ -409,10 +413,17 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       CDOMdegrd = 1. _d 0 / (200 _d 0*pday)
       CDOMbleach = 1. _d 0 / (15 _d 0*pday)
       PARCDOM = 20. _d 0
+# ifdef DARWIN_CDOM_UNITS_CARBON
+      R_NC_CDOM = 16. _d 0 / 120 _d 0
+      R_FeC_CDOM = 1. _d -3 / 120 _d 0
+      R_PC_CDOM = 1 _d 0 / 120. _d 0
+      CDOMcoeff = .1 _d -1  / 1. _d -4 / 120 _d 0
+# else
       R_NP_CDOM = 16. _d 0
       R_FeP_CDOM = 1. _d -3
       R_CP_CDOM = 120. _d 0
       CDOMcoeff = .1 _d -1  / 1. _d -4
+# endif
 
       READ(UNIT=iUnit, NML=DARWIN_CDOM_PARAMS)
 #endif

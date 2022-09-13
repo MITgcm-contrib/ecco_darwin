@@ -124,7 +124,7 @@ C       Print some statistics about input forcing fields
         CALL MON_WRITESTATS_RL( 1, DOCrunoff, 'DOCrunoff',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
-        CALL MON_WRITESTATS_RL( 1, tDOCrunoff, 'tDOCrunoff',
+        CALL MON_WRITESTATS_RL( 1, rDOCrunoff, 'rDOCrunoff',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
         CALL MON_WRITESTATS_RL( 1, DONrunoff, 'DONrunoff',

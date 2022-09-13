@@ -28,13 +28,20 @@ C enable silica quotas for all plankton
 #undef  DARWIN_ALLOW_SIQUOTA
 
 C enable chlorophyll quotas for all phototrophs
-#define DARWIN_ALLOW_CHLQUOTA
+#define  DARWIN_ALLOW_CHLQUOTA
+
+C enable internal c store for all phototrophs; also enables exudation
+#undef  DARWIN_ALLOW_CSTORE
+#undef  DARWIN_ALLOW_CSTORE_DIAGS
 
 C enable a dynamic CDOM tracer
 #undef  DARWIN_ALLOW_CDOM
 
 C enable air-sea carbon exchange and Alk and O2 tracers
-#define DARWIN_ALLOW_CARBON
+#define  DARWIN_ALLOW_CARBON
+
+C consistently use the total pH scale for carbon chemistry coefficients
+#undef  DARWIN_TOTALPHSCALE
 
 
 C optional bits
@@ -49,10 +56,16 @@ C enable old virtualflux code for DIC and Alk
 #undef  ALLOW_OLD_VIRTUALFLUX
 
 C reduce nitrate uptake by iron limitation factor
-#undef  DARWIN_NITRATE_FELIMIT
+C only effective with both nitrogen and iron quota
+C this option was used pre-2015 in the quota model, together with Geider,
+C so the iron limitation factor is also applied to alpha_I
+#undef DARWIN_NITRATE_FELIMIT
 
 C allow organic matter to sink into bottom (sedimentize)
-#define DARWIN_BOTTOM_SINK
+#define  DARWIN_BOTTOM_SINK
+
+C CDOM is in carbon units and follows POC
+#undef DARWIN_CDOM_UNITS_CARBON
 
 
 C light
@@ -162,4 +175,3 @@ C nutrient runoff
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */
-

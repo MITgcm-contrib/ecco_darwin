@@ -54,7 +54,7 @@ C !LOCAL VARIABLES: ====================================================
       LOGICAL darwin_haveWind
       LOGICAL darwin_havepCO2
       LOGICAL darwin_haveDOCrunoff
-      LOGICAL darwin_havetDOCrunoff
+      LOGICAL darwin_haverDOCrunoff
       LOGICAL darwin_haveDONrunoff
       LOGICAL darwin_haveDOPrunoff
       LOGICAL darwin_haveDSirunoff
@@ -139,17 +139,17 @@ C
      &    DOCrunoffmask,
      &    darwin_inscal_DOCrunoff,
 C
-     &    tDOCrunofffile,
-     &    tDOCrunoffperiod,
-     &    tDOCrunoffRepCycle,
-     &    tDOCrunoffStartTime,
-     &    tDOCrunoffstartdate1,
-     &    tDOCrunoffstartdate2,
-     &    tDOCrunoffconst,
-     &    tDOCrunoff_exfremo_intercept,
-     &    tDOCrunoff_exfremo_slope,
-     &    tDOCrunoffmask,
-     &    darwin_inscal_tDOCrunoff,
+     &    rDOCrunofffile,
+     &    rDOCrunoffperiod,
+     &    rDOCrunoffRepCycle,
+     &    rDOCrunoffStartTime,
+     &    rDOCrunoffstartdate1,
+     &    rDOCrunoffstartdate2,
+     &    rDOCrunoffconst,
+     &    rDOCrunoff_exfremo_intercept,
+     &    rDOCrunoff_exfremo_slope,
+     &    rDOCrunoffmask,
+     &    darwin_inscal_rDOCrunoff,
 C
      &    DONrunofffile,
      &    DONrunoffperiod,
@@ -262,13 +262,13 @@ C
      &    DOCrunoff_interpMethod,
      &    DOCrunoff_lat_inc,
 C
-     &    tDOCrunoff_lon0,
-     &    tDOCrunoff_lat0,
-     &    tDOCrunoff_nlon,
-     &    tDOCrunoff_nlat,
-     &    tDOCrunoff_lon_inc,
-     &    tDOCrunoff_interpMethod,
-     &    tDOCrunoff_lat_inc,
+     &    rDOCrunoff_lon0,
+     &    rDOCrunoff_lat0,
+     &    rDOCrunoff_nlon,
+     &    rDOCrunoff_nlat,
+     &    rDOCrunoff_lon_inc,
+     &    rDOCrunoff_interpMethod,
+     &    rDOCrunoff_lat_inc,
 C
      &    DONrunoff_lon0,
      &    DONrunoff_lat0,
@@ -394,18 +394,18 @@ C Open and read the data.darwin file
 
       darwin_inscal_DOCrunoff    =  1. _d 0
 
-      tDOCrunofffile = ' '
-      tDOCrunoffperiod             = 0.0 _d 0
-      tDOCrunoffRepCycle           = repeatPeriod
-      tDOCrunoffStartTime          = UNSET_RL
-      tDOCrunoffstartdate1         = 0
-      tDOCrunoffstartdate2         = 0
-      tDOCrunoffconst              = UNSET_RL
-      tDOCrunoff_exfremo_intercept = 0.0 _d 0
-      tDOCrunoff_exfremo_slope     = 0.0 _d 0
-      tDOCrunoffmask = 'c'
+      rDOCrunofffile = ' '
+      rDOCrunoffperiod             = 0.0 _d 0
+      rDOCrunoffRepCycle           = repeatPeriod
+      rDOCrunoffStartTime          = UNSET_RL
+      rDOCrunoffstartdate1         = 0
+      rDOCrunoffstartdate2         = 0
+      rDOCrunoffconst              = UNSET_RL
+      rDOCrunoff_exfremo_intercept = 0.0 _d 0
+      rDOCrunoff_exfremo_slope     = 0.0 _d 0
+      rDOCrunoffmask = 'c'
 
-      darwin_inscal_tDOCrunoff    =  1. _d 0
+      darwin_inscal_rDOCrunoff    =  1. _d 0
 
       DONrunofffile = ' '
       DONrunoffperiod             = 0.0 _d 0
@@ -515,12 +515,12 @@ C Open and read the data.darwin file
       DOCrunoff_lon_inc = inp_dLon
       DOCrunoff_interpMethod  = 1
 
-      tDOCrunoff_lon0 = inp_lon0
-      tDOCrunoff_lat0 = inp_lat0
-      tDOCrunoff_nlon = inp_gNx
-      tDOCrunoff_nlat = inp_gNy
-      tDOCrunoff_lon_inc = inp_dLon
-      tDOCrunoff_interpMethod  = 1
+      rDOCrunoff_lon0 = inp_lon0
+      rDOCrunoff_lat0 = inp_lat0
+      rDOCrunoff_nlon = inp_gNx
+      rDOCrunoff_nlat = inp_gNy
+      rDOCrunoff_lon_inc = inp_dLon
+      rDOCrunoff_interpMethod  = 1
 
       DONrunoff_lon0 = inp_lon0
       DONrunoff_lat0 = inp_lat0
@@ -564,7 +564,7 @@ C Open and read the data.darwin file
         wind_lat_inc(j) = inp_dLat(j)
         pCO2_lat_inc(j) = inp_dLat(j)
         DOCrunoff_lat_inc(j) = inp_dLat(j)
-        tDOCrunoff_lat_inc(j) = inp_dLat(j)
+        rDOCrunoff_lat_inc(j) = inp_dLat(j)
         DONrunoff_lat_inc(j) = inp_dLat(j)
         DOPrunoff_lat_inc(j) = inp_dLat(j)
         DSirunoff_lat_inc(j) = inp_dLat(j)
@@ -613,10 +613,10 @@ C set alternate forcing sources
         DOCrunoffconst = 0 _d 0
       ENDIF
 
-      DARWIN_havetDOCrunoff = tDOCrunofffile.NE.' ' .OR.
-     & tDOCrunoffconst.NE.UNSET_RL
-      IF (tDOCrunoffconst.EQ.UNSET_RL) THEN
-        tDOCrunoffconst = 0 _d 0
+      DARWIN_haverDOCrunoff = rDOCrunofffile.NE.' ' .OR.
+     & rDOCrunoffconst.NE.UNSET_RL
+      IF (rDOCrunoffconst.EQ.UNSET_RL) THEN
+        rDOCrunoffconst = 0 _d 0
       ENDIF
 
       DARWIN_haveDONrunoff = DONrunofffile.NE.' ' .OR.
@@ -770,10 +770,10 @@ C     warn if darwin and radtrans ice forcing are different
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
       ENDIF
-       IF ( tDOCrunoffRepCycle.NE.0. ) THEN
+       IF ( rDOCrunoffRepCycle.NE.0. ) THEN
         WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
      &   'useExfYearlyFields AND',
-     &   'tDOCrunoffRepCycle is not implemented'
+     &   'rDOCrunoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF
