@@ -23,7 +23,7 @@ The Ecosystem simulated contains llc270 global ecosystem (see Carroll et al 2020
   - small zooplankton
   - Large zooplankton
 
-## Tracers (n=32)
+## Tracers (n=33)
 
 |1. DIC  | 12. DOFe | 23. c2   |
 | ------ | -------- | -------- |
