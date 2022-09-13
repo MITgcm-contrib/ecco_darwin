@@ -19,7 +19,7 @@ The Ecosystem simulated contains (see Carrol et al., 2020):
   - small zooplankton
   - Large zooplankton
 
-## Tracers (n=32)
+## Tracers (n=31)
 
 |1. DIC  | 12. POC | 23. c4   |
 | ------ | -------- | -------- |
