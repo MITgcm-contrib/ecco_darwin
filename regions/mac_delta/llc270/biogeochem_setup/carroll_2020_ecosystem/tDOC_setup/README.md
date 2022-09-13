@@ -10,10 +10,13 @@ This setup is an evolution of baseline setup including (See Bertin et al., In Pr
 
 ## Ecosystem Characteristics
 
-The Ecosystem simulated contains llc270 global ecosystem adapted to Arctic Ocean characteristics:
-- 2 phytoplankton type:
+The Ecosystem simulated contains llc270 global ecosystem (see Carroll et al 2020):
+- 5 phytoplankton type:
   - Diatoms
   - Large Eukaryotes
+  - Synechococcus type 1
+  - Synechococcus type 2
+  - Prochlorococcus
 - 2 Zooplankton types:
   - small zooplankton
   - Large zooplankton
