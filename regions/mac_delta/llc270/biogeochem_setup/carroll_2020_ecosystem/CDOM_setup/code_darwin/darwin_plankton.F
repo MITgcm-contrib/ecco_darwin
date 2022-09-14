@@ -27,9 +27,7 @@ C !USES: ===============================================================
 #include "DARWIN_RADTRANS.h"
 #include "DARWIN_PARAMS.h"
 #include "DARWIN_TRAITS.h"
-#ifdef DARWIN_ALLOW_CDOM
-  #include DARWIN_CDOM_FIELDS
-#endif
+
 
 C !INPUT PARAMETERS: ===================================================
 C  Ptr    :: darwin model tracers

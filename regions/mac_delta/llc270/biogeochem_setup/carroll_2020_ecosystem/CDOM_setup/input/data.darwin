@@ -96,7 +96,6 @@
  kPOSi= 7.716049382716049E-8,   ! 1/150day
  SURFDICMIN  =   100.0,
  SURFALKMIN  =   100.0,
- katten_cdom = 0.18,
  /
 ########################
  &DARWIN_CDOM_PARAMS

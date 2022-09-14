@@ -52,26 +52,34 @@
    fields(1,9) = 'MXLDEPTH',
    filename(9) = 'diags/daily/MLD',
 #---
+  frequency(10) = 86400.,
+   fields(1,10) = 'TRAC21',
+   filename(10) = 'diags/daily/CDOM',
+#---
 
 #Monthly budget diagnostics
 #---
-  frequency(10) = 2635200.0,
-   fields(1:5,10) = 'THETA','oceQnet','oceQsw','TFLUX','SItflux',
-   levels(1:5,10) = 1.,
-   filename(10) = 'diags/budget/SST_heat2d',
-#---
   frequency(11) = 2635200.0,
-   fields(1:2,11) = 'SIarea','SIheff',
-   filename(11) = 'diags/budget/SeaIce',
+   fields(1:5,11) = 'THETA','oceQnet','oceQsw','TFLUX','SItflux',
+   levels(1:5,11) = 1.,
+   filename(11) = 'diags/budget/SST_heat2d',
 #---
   frequency(12) = 2635200.0,
-   fields(1:4,12) = 'plankC','Chl','PP','PAR',
-   filename(12) = 'diags/budget/Ecos_3d',
+   fields(1:2,12) = 'SIarea','SIheff',
+   filename(12) = 'diags/budget/SeaIce',
 #---
   frequency(13) = 2635200.0,
-   fields(1:2,13) = 'fluxCO2','pCO2',
-   levels(1:2,13) = 1.,
-   filename(13) = 'diags/budget/CO2_2d',
+   fields(1:4,13) = 'plankC','Chl','PP','PAR',
+   filename(13) = 'diags/budget/Ecos_3d',
+#---
+  frequency(14) = 2635200.0,
+   fields(1:2,14) = 'PARF','TRAC21',
+   filename(14) = 'diags/budget/cdom_3d',
+#---
+  frequency(15) = 2635200.0,
+   fields(1:2,15) = 'fluxCO2','pCO2',
+   levels(1:2,15) = 1.,
+   filename(15) = 'diags/budget/CO2_2d',
 #---
  &
 

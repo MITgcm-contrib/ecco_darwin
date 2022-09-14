@@ -398,6 +398,21 @@ C === apply tendencies to tracers ======================================
       ENDDO
       CALL TIMER_STOP ('DARWIN_STEP [DARWIN_FORCING]',myThid)
 
+C === Compute CDOM attenuation (attCDOM) ===============================
+#ifdef DARWIN_ALLOW_CDOM
+      attCDOM(i,j,k,bi,bj)=-0.13*TANH(-1.63
+     &                     *pTracer(i,j,k,bi,bj,iCDOM)-1.03)+0.13
+      CDOMdecay(i,j,1,bi,bj) = 1
+      DO k=2,Nr
+      DO j=jMin,jMax
+      DO i=iMin,iMax
+        CDOMdecay(i,j,k,bi,bj) = CDOMdecay(i,j,k-1,bi,bj)
+     &               *EXP(-attCDOM(i,j,k-1,bi,bj)*drF(k-1))
+      ENDDO
+      ENDDO
+      ENDDO
+#endif
+
 C === iron =============================================================
 C     re-apply free iron limit to FeT
       CALL TIMER_START('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
