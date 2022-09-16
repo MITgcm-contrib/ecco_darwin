@@ -398,16 +398,19 @@ C === apply tendencies to tracers ======================================
       ENDDO
       CALL TIMER_STOP ('DARWIN_STEP [DARWIN_FORCING]',myThid)
 
-C === Compute CDOM attenuation (attCDOM) ===============================
+C === Compute CDOM decay (CDOMdecay) ===============================
 #ifdef DARWIN_ALLOW_CDOM
-      attCDOM(i,j,k,bi,bj)=-0.13*TANH(-1.63
-     &                     *pTracer(i,j,k,bi,bj,iCDOM)-1.03)+0.13
-      CDOMdecay(i,j,1,bi,bj) = 1
-      DO k=2,Nr
+      DO k=1,Nr
       DO j=jMin,jMax
       DO i=iMin,iMax
+      IF (k .EQ. 1) THEN
+C no decay at first layer
+        CDOMdecay(i,j,k,bi,bj) = 1
+      ELSE
         CDOMdecay(i,j,k,bi,bj) = CDOMdecay(i,j,k-1,bi,bj)
-     &               *EXP(-attCDOM(i,j,k-1,bi,bj)*drF(k-1))
+     &               *EXP(-(-0.13*TANH(-1.63*pTracer(i,j,k,bi,bj,iCDOM)
+     &               -1.03)+0.13)*drF(k-1))
+      ENDIF
       ENDDO
       ENDDO
       ENDDO
