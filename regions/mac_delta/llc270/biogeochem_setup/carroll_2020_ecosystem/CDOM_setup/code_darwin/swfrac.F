@@ -5,6 +5,7 @@ CBOP
 C     !ROUTINE: SWFRAC
 C     !INTERFACE:
       SUBROUTINE SWFRAC(
+     I					i, j, k,
      I                  imax, fact,
      U                  swdk,
      I                  myTime, myIter, myThid )
@@ -35,6 +36,9 @@ C     !USES:
 C     !INPUT/OUTPUT PARAMETERS:
 C     === Routine arguments ===
 C     input arguments
+C     i       :: x-index for CDOM
+C     j       :: y-index for CDOM
+C     k       :: z-index for CDOM
 C     imax    :: number of vertical grid points
 C     fact    :: scale  factor to apply to depth array
 C     myTime  :: Current time in simulation
