@@ -13,6 +13,11 @@ C     Package-specific Options & Macros go here
 C Designed to simplify the Ajoint code:
 #define GMREDI_WITH_STABLE_ADJOINT
 
+C Allows to read-in background 3-D Redi and GM diffusivity coefficients
+C Note: need these to be defined for use as control (pkg/ctrl) parameters
+#define GM_READ_K3D_REDI
+#define GM_READ_K3D_GM
+
 C -- exclude the clipping/tapering part of the code that is not used
 #define GM_EXCLUDE_CLIPPING
 #define GM_EXCLUDE_FM07_TAP
