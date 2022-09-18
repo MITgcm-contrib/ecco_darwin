@@ -5,8 +5,8 @@ CBOP
 C     !ROUTINE: SWFRAC
 C     !INTERFACE:
       SUBROUTINE SWFRAC(
-     I					i, j, k,
-     I                  imax, fact,
+     I                  i, j, k,
+     I                  kmax, fact,
      U                  swdk,
      I                  myTime, myIter, myThid )
 C     !DESCRIPTION: \bv
@@ -47,7 +47,7 @@ C     myThid  :: My Thread Id. number
       INTEGER i
       INTEGER j
       INTEGER k
-      INTEGER imax
+      INTEGER kmax
       _RL     fact
       _RL     myTime
       INTEGER myIter
@@ -56,7 +56,7 @@ C     input/output arguments
 C     swdk    :: on input: vertical depth for desired sw fraction
 C               (fact*swdk) is negative distance (m) from surface
 C     swdk    :: on output: short wave (radiation) fractional decay
-      _RL     swdk(imax)
+      _RL     swdk(kmax)
 
 C     !LOCAL VARIABLES:
 C     === Local variables ===
@@ -65,7 +65,7 @@ C     max number of different water types
       PARAMETER(nwtype=5)
       _RL facz
       _RL rfac(nwtype),a1(nwtype),a2(nwtype)
-      INTEGER i
+      INTEGER ik
 #ifdef ALLOW_CAL
 c     _RL     fac
 c     LOGICAL first, changed
@@ -101,12 +101,12 @@ CML)
       jwtype=2
 #endif /* ALLOW_CAL */
 
-      DO i = 1,imax
+      DO i = 1,kmax
         facz = fact*swdk(i)
         IF ( facz .LT. -200. _d 0 ) THEN
-          swdk(i) = 0. _d 0
+          swdk(ik) = 0. _d 0
         ELSE
-          swdk(i) =       rfac(jwtype)  * exp( facz/a1(jwtype) )
+          swdk(ik) =       rfac(jwtype)  * exp( facz/a1(jwtype) )
      &       + (1. _d 0 - rfac(jwtype)) * exp( facz/a2(jwtype) )
         ENDIF
       ENDDO
