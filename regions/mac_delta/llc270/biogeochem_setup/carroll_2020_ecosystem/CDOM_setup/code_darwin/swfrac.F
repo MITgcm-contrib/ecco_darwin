@@ -44,6 +44,9 @@ C     fact    :: scale  factor to apply to depth array
 C     myTime  :: Current time in simulation
 C     myIter  :: Current iteration number in simulation
 C     myThid  :: My Thread Id. number
+      INTEGER i
+      INTEGER j
+      INTEGER k
       INTEGER imax
       _RL     fact
       _RL     myTime

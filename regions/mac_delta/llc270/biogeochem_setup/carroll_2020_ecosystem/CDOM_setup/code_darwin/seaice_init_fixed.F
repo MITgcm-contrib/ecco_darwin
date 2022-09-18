@@ -79,7 +79,7 @@ C     restart parameter
        swfracba(1) = ABS(rF(1))
        swfracba(2) = ABS(rF(2))
        CALL SWFRAC(
-     I       i, j, kSrf
+     I       i, j, kSrf,
      I       2, tmpFac,
      U       swfracba,
      I       dummyTime, 0, myThid )
