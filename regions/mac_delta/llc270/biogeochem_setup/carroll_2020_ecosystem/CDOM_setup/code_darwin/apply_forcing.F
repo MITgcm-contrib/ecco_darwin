@@ -700,27 +700,18 @@ C     this is the oceanic pressure coordinate case
         km = MAX(k-1,1)
        ENDIF
        CALL SWFRAC(
+     I             i, j, k,
      I             2, oneRL,
      U             swfracb,
      I             myTime, myIter, myThid )
        IF ( k.EQ.km ) swfracb(2) = 0. _d 0
        DO j=0,sNy+1
         DO i=0,sNx+1
-#ifdef DARWIN_ALLOW_CDOM
-         gT_arr(i,j) = gT_arr(i,j)
-     &        - Qsw(i,j,bi,bj)*( swfracb(1)*CDOMdecay(i,j,k,bi,bj)
-     &                           *maskC(i,j,k,bi,bj)
-     &                         - swfracb(2)*CDOMdecay(i,j,k+1,bi,bj)
-     &                           *maskC(i,j,k,bi,bj) )
-     &        *recip_Cp*mass2rUnit
-     &        *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
-#else
          gT_arr(i,j) = gT_arr(i,j)
      &        - Qsw(i,j,bi,bj)*( swfracb(1)*maskC(i,j,k,bi,bj)
      &                         - swfracb(2)*maskC(i,j,km,bi,bj) )
      &        *recip_Cp*mass2rUnit
      &        *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
-#endif
         ENDDO
        ENDDO
 c     ENDIF

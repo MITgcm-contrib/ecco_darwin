@@ -533,31 +533,22 @@ c     IF ( usePenetratingSW ) THEN
        swfracb(1)=abs(rF(kLev))
        swfracb(2)=abs(rF(kLev+1))
        CALL SWFRAC(
+     I             i, j, k,
      I             2, minusOne,
      U             swfracb,
      I             myTime, 1, myThid )
        kp1 = kLev+1
        IF (kLev.EQ.Nr) THEN
         kp1 = kLev
-        swfracb(2)=0. _d 0
+        swfracb(2)=0. _d
        ENDIF
        DO j=1,sNy
         DO i=1,sNx
-#ifdef DARWIN_ALLOW_CDOM
-         gT_arr(i,j) = gT_arr(i,j)
-     &        - Qsw(i,j,bi,bj)*( swfracb(1)*CDOMdecay(i,j,k,bi,bj)
-     &                           *maskC(i,j,k,bi,bj)
-     &                         - swfracb(2)*CDOMdecay(i,j,k+1,bi,bj)
-     &                           *maskC(i,j,k,bi,bj) )
-     &        *recip_Cp*mass2rUnit
-     &        *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
-#else
          gT_arr(i,j) = gT_arr(i,j)
      &        - Qsw(i,j,bi,bj)*( swfracb(1)*maskC(i,j,k,bi,bj)
      &                         - swfracb(2)*maskC(i,j,km,bi,bj) )
      &        *recip_Cp*mass2rUnit
      &        *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
-#endif
         ENDDO
        ENDDO
 c     ENDIF
