@@ -18,9 +18,9 @@ mkdir build run
 cd build
 module purge
 module load comp-intel mpi-sgi hdf4 hdf5 netcdf
-mv  ../../ecco_darwin/PATH/TO/SETUP/FILES/code/packages.conf .../../ecco_darwin/PATH/TO/SETUP/FILES/code/packages.conf_org
-ln -s ../../../../ecco_darwin/PATH/TO/SETUP/FILES/code_darwin/packages.conf ../../../../ecco_darwin/PATH/TO/SETUP/FILES/code
-../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas -mpi -mo '../../../../ecco_darwin/PATH/TO/SETUP/FILES/code_darwin ../../ecco_darwin/PATH/TO/SETUP/FILES/code'
+mv  ../../ecco_darwin/PATH/TO/SETUP/FILES/code/packages.conf ../../ecco_darwin/PATH/TO/SETUP/FILES/code/packages.conf_org
+ln -s ../../ecco_darwin/PATH/TO/SETUP/FILES/code_darwin/packages.conf ../../ecco_darwin/PATH/TO/SETUP/FILES/code
+../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas -mpi -mo '../../ecco_darwin/PATH/TO/SETUP/FILES/code_darwin ../../ecco_darwin/PATH/TO/SETUP/FILES/code'
 make depend
 make -j 16
 ```
