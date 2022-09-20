@@ -168,7 +168,7 @@ CCOG[[[end]]] (checksum: 1cb8d2455d5eee1281aebc01e155b3e8)
 
       _BEGIN_MASTER(myThid)
 
-      IF ( myProcId.EQ.0 .AND. myThid.EQ.1 ) THEN 
+      IF ( myProcId.EQ.0 .AND. myThid.EQ.1 ) THEN
 C      need to copy parameters to variables before we can write to namelist
 CCOG[[[cog
 CCOGcog.out('\n'.join('''
@@ -331,6 +331,18 @@ C check we are not using hollexp and also inhib_graz or DARWIN_GRAZING_SWITCH
       STOP 'ABNORMAL END: S/R DARWIN_CHECK'
 # endif
 #endif
+
+C Bacteria have fixed elemental ratios even when quotas are turned on
+#if defined(DARWIN_ALLOW_NQUOTA) || defined(DARWIN_ALLOW_PQUOTA) || defined(DARWIN_ALLOW_FEQUOTA) || defined(DARWIN_ALLOW_SIQUOTA)
+      DO j=1,nplank
+       IF (bactType(j) .NE. 0) THEN
+        WRITE(msgBuf,'(2A)') 'DARWIN_CHECK: Warning: ',
+     &   'Bacteria have fixed elemental quotas'
+        CALL PRINT_ERROR( msgBuf , 1)
+       ENDIF
+      ENDDO
+#endif
+
 
 C Carbon store is only implemented without quotas
 #ifdef DARWIN_ALLOW_CSTORE
@@ -572,4 +584,3 @@ CCOG[[[end]]] (checksum: 2ffb0a14db96e0f1c12dcae823cbac3a)
 
       RETURN
       END
-

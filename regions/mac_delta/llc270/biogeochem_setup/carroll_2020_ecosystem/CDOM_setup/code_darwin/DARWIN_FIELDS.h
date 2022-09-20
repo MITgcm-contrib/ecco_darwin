@@ -42,14 +42,61 @@ C
      &      DARWIN_Nfix,
      &      DARWIN_Ndenit,
      &      DARWIN_partScav,
-     &      DARWIN_minFeLoss
+     &      DARWIN_minFeLoss,
+     &      DARWIN_O2prod,
+     &      DARWIN_O2cons,
+     &      DARWIN_AlkSrc
       _RL DARWIN_Nfix(sNx,sNy,Nr,nSx,nSy)
       _RL DARWIN_Ndenit(sNx,sNy,Nr,nSx,nSy)
       _RL DARWIN_partScav(sNx,sNy,Nr,nSx,nSy)
       _RL DARWIN_minFeLoss(sNx,sNy,Nr,nSx,nSy)
+      _RL DARWIN_O2prod(sNx,sNy,Nr,nSx,nSy)
+      _RL DARWIN_O2cons(sNx,sNy,Nr,nSx,nSy)
+      _RL DARWIN_AlkSrc(sNx,sNy,Nr,nSx,nSy)
 
-      COMMON /DARWIN_CONS_2D/ ironSedFlux
-      _RL ironSedFlux(sNx,sNy,nSx,nSy)
+      COMMON /DARWIN_CONS_2D/
+     &      ironSedFlx,
+     &      carbSfcFlx,
+     &      carbVirFlx,
+     &      oxySfcFlx,
+     &      alkVirFlx
+      _RL ironSedFlx(sNx,sNy,nSx,nSy)
+      _RL carbSfcFlx(sNx,sNy,nSx,nSy)
+      _RL carbVirFlx(sNx,sNy,nSx,nSy)
+      _RL oxySfcFlx(sNx,sNy,nSx,nSy)
+      _RL alkVirFlx(sNx,sNy,nSx,nSy)
+
+# ifdef DARWIN_BOTTOM_SINK
+      COMMON /DARWIN_CONS_BOTTOM/
+     &      botSnkC,
+     &      botSnkN,
+     &      botSnkP,
+     &      botSnkFe,
+     &      botSnkSi
+      _RL botSnkC(sNx,sNy,nSx,nSy)
+      _RL botSnkN(sNx,sNy,nSx,nSy)
+      _RL botSnkP(sNx,sNy,nSx,nSy)
+      _RL botSnkFe(sNx,sNy,nSx,nSy)
+      _RL botSnkSi(sNx,sNy,nSx,nSy)
+# endif
+
+# ifdef EXACT_CONSERV
+      COMMON /DARWIN_CONS_EPR/
+     &      totEPRC,
+     &      totEPRN,
+     &      totEPRP,
+     &      totEPRFe,
+     &      totEPRSi,
+     &      totEPRA,
+     &      totEPRO
+      _RL totEPRC
+      _RL totEPRN
+      _RL totEPRP
+      _RL totEPRFe
+      _RL totEPRSi
+      _RL totEPRA
+      _RL totEPRO
+# endif
 #endif
 
 C Carbon Variables

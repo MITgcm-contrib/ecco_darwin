@@ -978,12 +978,24 @@ C         DOC respired to DIC
 
         ENDIF
 
+        diags(iDenitN) = diags(iDenitN) + uptakeNO3
 #ifdef DARWIN_DIAG_PERTYPE
         diags(iHPplank+j-1) = diags(iHPplank+j-1) + growth
         diags(iHCplank+j-1) = diags(iHCplank+j-1) + mu
 #endif
 
-        gTr(ic+j-1)=gTr(ic+j-1) + growth
+        gTr(ic+j-1) = gTr(ic+j-1) + growth
+
+C bacteria have fixed elemental ratios for now
+#ifdef DARWIN_ALLOW_NQUOTA
+        gTr(in+j-1) = gTr(in+j-1) + growth*R_NC(j)
+#endif
+#ifdef DARWIN_ALLOW_PQUOTA
+        gTr(ip+j-1) = gTr(ip+j-1) + growth*R_PC(j)
+#endif
+#ifdef DARWIN_ALLOW_FEQUOTA
+        gTr(ife+j-1) = gTr(ife+j-1) + growth*R_FeC(j)
+#endif
 
 C==== Cumulative consum, remin, and prod ===============================
         consumNO3  = consumNO3  + uptakeNO3
@@ -1079,7 +1091,7 @@ C     endif O2, NO3 for DARWIN_ALLOW_DENIT
       ENDIF
 
 #ifdef DARWIN_ALLOW_CARBON
-      IF (O2 .GT. O2crit) THEN
+      IF (O2 .GE. O2crit) THEN
         consumO2  = consumO2  + respDOP*R_OP
 #ifndef DARWIN_ALLOW_CDOM
         consumO2  = consumO2  + respPOP*R_OP
@@ -1138,14 +1150,18 @@ C==== Apply remaining tendencies =======================================
 #ifdef DARWIN_ALLOW_CARBON
 c production of O2 by photosynthesis
       gTr(iO2  )=gTr(iO2  ) + R_OP*consumPO4
+      diags(iProdO2) = diags(iProdO2) + R_OP*consumPO4
 c loss of O2 by remineralization
-      IF (O2 .GT. O2crit) THEN
+      IF (O2 .GE. O2crit) THEN
         gTr(iO2)=gTr(iO2) - consumO2
+        diags(iConsO2) = diags(iConsO2) + consumO2
       ENDIF
 
       diags(iConsO2) = consumO2
 
       gTr(iALK)=gTr(iALK) - (prodNO3 - consumNO3)
+     &                    - 2.0 _d 0*(consumDIC_PIC - disscPIC)
+      diags(iSrcAlk) = diags(iSrcAlk) - (prodNO3 - consumNO3)
      &                    - 2.0 _d 0*(consumDIC_PIC - disscPIC)
 #endif /* DARWIN_ALLOW_CARBON */
 
@@ -1170,7 +1186,8 @@ c loss of O2 by remineralization
         gTr(iNH4)=gTr(iNH4) - denitNH4
         gTr(iNO3)=gTr(iNO3) - denit_NO3/denit_np*denit
         gTr(iALK)=gTr(iALK) + denit_NO3/denit_np*denit
-        diags(iDenitN) = denitNH4 + denit_NO3/denit_np*denit
+        diags(iDenitN)=diags(iDenitN)+denitNH4+denit_NO3/denit_np*denit
+        diags(iSrcAlk)=diags(iSrcAlk)+denit_NO3/denit_np*denit
       ENDIF
 #endif /* DARWIN_ALLOW_DENIT */
 
@@ -1389,9 +1406,7 @@ C     end predator loop
           graz2OP  = graz2OP  + preygraz(jp)*Qp (jp)
           graz2POSi = graz2POSi + preygraz(jp)*Qsi(jp)
           graz2OFe = graz2OFe + preygraz(jp)*Qfe(jp)
-#ifdef DARWIN_ALLOW_CARBON
           graz2PIC = graz2PIC + preygraz(jp)*R_PICPOC(jp)
-#endif
 
           graz2POC  = graz2POC  + preygrazexp(jp)*Qctot(jp)
           graz2PON  = graz2PON  + preygrazexp(jp)*Qn (jp)
@@ -1411,9 +1426,7 @@ C==== Apply grazing tendencies =========================================
       gTr(iPOP )=gTr(iPOP ) + graz2POP
       gTr(iPOSi)=gTr(iPOSi) + graz2POSi
       gTr(iPOFe)=gTr(iPOFe) + graz2POFe
-#ifdef DARWIN_ALLOW_CARBON
       gTr(iPIC )=gTr(iPIC ) + graz2PIC
-#endif
 #ifdef DARWIN_ALLOW_CDOM
 # ifdef DARWIN_CDOM_UNITS_CARBON
       graz2CDOM = fracCDOM*(graz2OC - graz2POC)
