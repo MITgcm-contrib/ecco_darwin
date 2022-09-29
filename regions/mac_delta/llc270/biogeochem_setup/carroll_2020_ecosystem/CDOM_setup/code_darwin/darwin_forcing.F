@@ -39,6 +39,9 @@ C !USES: ===============================================================
 #include "DARWIN_FIELDS.h"
 #include "DARWIN_EXF_FIELDS.h"
 #endif
+#ifdef DARWIN_NUTRIENT_RUNOFF
+#include "DARWIN_EXF_PARAMS.h"
+#endif
 
 C !INPUT PARAMETERS: ===================================================
 C  Ptrdummy             :: dummy for darwin2 compatibility
@@ -156,29 +159,13 @@ c      ENDIF
 #endif
       CALL TIMER_STOP ('DARWIN_LIGHT [DARWIN_FORCING]',myThid)
 
-C === nutrient runoff ==================================================
-#ifdef DARWIN_NUTRIENT_RUNOFF
-      DO j=jMin,jMax
-      DO i=iMin,iMax
-        gPtr(i,j,1,iDOC) = gPtr(i,j,1,iDOC) + DOCrunoff(i,j,bi,bj)
-        gPtr(i,j,1,irDOC) = gPtr(i,j,1,irDOC) + rDOCrunoff(i,j,bi,bj)
-        gPtr(i,j,1,iCDOM) = gPtr(i,j,1,iCDOM) + CDOMrunoff(i,j,bi,bj)
-        gPtr(i,j,1,iDON) = gPtr(i,j,1,iDON) + DONrunoff(i,j,bi,bj)
-        gPtr(i,j,1,iDOP)  = gPtr(i,j,1,iDOP) + DOPrunoff(i,j,bi,bj)
-        gPtr(i,j,1,iDIC)  = gPtr(i,j,1,iDIC) + DICrunoff(i,j,bi,bj)
-        gPtr(i,j,1,iALK)  = gPtr(i,j,1,iALK) + ALKrunoff(i,j,bi,bj)
-        gPtr(i,j,1,iSiO2)  = gPtr(i,j,1,iSiO2) + DSirunoff(i,j,bi,bj)
-      ENDDO
-      ENDDO
-#endif
-
 C === dic ==============================================================
 #ifdef DARWIN_ALLOW_CARBON
 C carbon air-sea interaction
       CALL TIMER_START('DARWIN_SURFFORCING [DARWIN_FORCING]',myThid)
       CALL DARWIN_SURFFORCING(
      O                    gDIC, gALK, gO2,
-     I                    bi,bj,iMin,iMax,jMin,jMax,
+     I                    dTsub,bi,bj,iMin,iMax,jMin,jMax,
      I                    subTime,myIter,myThid)
       CALL TIMER_STOP ('DARWIN_SURFFORCING [DARWIN_FORCING]',myThid)
       DO j=jMin,jMax
@@ -210,7 +197,7 @@ C     Other contributions to gPtr must come after these calls!
 #endif /* DARWIN_ALLOW_CARBON */
 
 #ifdef DARWIN_DIAG_TENDENCIES
-C surface fluxes from E/P/runoff
+C surface fluxes from E/P/runoff with constant/local concentrations
       DO j=jMin,jMax
       DO i=iMin,iMax
         gDICsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC)
@@ -235,6 +222,57 @@ C surface fluxes from E/P/runoff
 #endif
       ENDDO
       ENDDO
+#endif
+
+C === nutrient runoff ==================================================
+#ifdef DARWIN_NUTRIENT_RUNOFF
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iDOC),
+     I                          DOCrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,irDOC),
+     I                          rDOCrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iCDOM),
+     I                          CDOMrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iDON),
+     I                          DONrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iDOP),
+     I                          DOPrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iSiO2),
+     I                          DSirunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iDIC),
+     I                          DICrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iALK),
+     I                          ALKrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
 #endif
 
 C === iron =============================================================
