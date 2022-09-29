@@ -67,6 +67,9 @@ C allow organic matter to sink into bottom (sedimentize)
 C CDOM is in carbon units and follows POC
 #undef DARWIN_CDOM_UNITS_CARBON
 
+C include code for reading nutrient runoff from files
+#define  DARWIN_NUTRIENT_RUNOFF
+
 
 C light
 
@@ -138,7 +141,7 @@ C include code for per-type diagnostics
 C debugging
 
 C turn on debugging output
-#define DARWIN_DEBUG
+#undef DARWIN_DEBUG
 
 C compute and print global element totals
 #define DARWIN_ALLOW_CONS
@@ -169,9 +172,6 @@ C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
 
 C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
-
-C nutrient runoff
-#define DARWIN_NUTRIENT_RUNOFF
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */

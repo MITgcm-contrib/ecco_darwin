@@ -20,6 +20,9 @@
  diffKrS=1.E-5,
  diffKrT=1.E-5,
 #
+ hMIxCriteria=1.5,
+ dRhoSmall=1.E-2,
+#
  bottomDragQuadratic = 0.001,
 #when using ggl90
  ivdc_kappa=10.,

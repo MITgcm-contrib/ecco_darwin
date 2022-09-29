@@ -1,3 +1,4 @@
+########################
  &DARWIN_FORCING_PARAMS
  ironfile = 'iron_dust_46x68_Mac',
  ironperiod = -12,
@@ -13,17 +14,17 @@
  DOCrunoffstartdate2 = 120000,
  DOCrunoffperiod     = 86400.0,
 #
- tDOCrunofffile = 'tDOCr/tDOCr_runoff_mac270',
- tDOCrunoffstartdate1 = 19920101,
- tDOCrunoffstartdate2 = 120000,
- tDOCrunoffperiod     = 86400.0,
+ rDOCrunofffile = 'tDOCr/tDOCr_runoff_mac270',
+ rDOCrunoffstartdate1 = 19920101,
+ rDOCrunoffstartdate2 = 120000,
+ rDOCrunoffperiod     = 86400.0,
 #
  DICrunofffile = 'tDIC/tDIC_runoff_mac270',
  DICrunoffstartdate1 = 19920101,
  DICrunoffstartdate2 = 120000,
  DICrunoffperiod     = 86400.0,
 #
- ALKrunofffile = 'tALK/tALK_runoff_mac270',
+ ALKrunofffile = 'tAlk/tAlk_runoff_mac270',
  ALKrunoffstartdate1 = 19920101,
  ALKrunoffstartdate2 = 120000,
  ALKrunoffperiod     = 86400.0,
@@ -50,7 +51,7 @@
  &DARWIN_INTERP_PARAMS
  iron_interpMethod = 0,
  DOCrunoff_interpMethod = 0,
- tDOCrunoff_interpMethod = 0,
+ rDOCrunoff_interpMethod = 0,
  DICrunoff_interpMethod = 0,
  ALKrunoff_interpMethod = 0,
  DONrunoff_interpMethod = 0,
@@ -66,34 +67,37 @@
  pCO2_nlon    = 2,
  pCO2_nlat    = 256,
  /
+########################
  &DARWIN_PARAMS
 # do not read darwin pickup
  darwin_pickupSuff= ' ',
  darwin_chlInitBalanced= .FALSE.,
  darwin_chlIter0= 1,
  darwin_seed= 56,
- ALPFE   =  0.92831,
- FREEFEMAX       =  1E-4,
- SCAV_RAT        =   6.02502315E-7,
- DEPTHFESED      =   7000.0,
- KDOC    =  3.168808781402895E-8,
- KTDOC   =  3.168808781402895E-9,
- KDOP    =  2.314814814814815E-7,
- KDON    =  2.314814814814815E-7,
- KDOFE   =  2.314814814814815E-7,
-# KPOC    =  2.314814814814815E-7,
- KPOP    =  4.629629629629630E-7,
- KPON    =  4.629629629629630E-7,
- KPOFE   =  4.629629629629630E-7,
- KPOSI   =  7.716049382716049E-8,
+ alpfe= 0.92831,
+ freefemax = .1E-4,
+ depthfesed= 7000.,
+ scav_rat= 6.02502315E-7,
+ kdoc=  3.168808781402895E-8,   ! 1/90days
+ krdoc= 3.168808781402895E-9,   ! 1/10years
+ kdop=  2.314814814814815E-7,   ! 1/50day
+ kdon=  2.314814814814815E-7,   ! 1/50day
+ kdofe= 2.314814814814815E-7,   ! 1/50day
+ kPOC=  2.314814814814815E-7,   ! 1/50day
+ kPOP=  4.629629629629630E-7,   ! 1/25day
+ kPON=  4.629629629629630E-7,   ! 1/25day
+ kPOFe= 4.629629629629630E-7,   ! 1/25day
+ kPOSi= 7.716049382716049E-8,   ! 1/150day
  SURFDICMIN  =   100.0,
  SURFALKMIN  =   100.0,
  /
+########################
  &DARWIN_RANDOM_PARAMS
  smallgrow=0.66098,
  biggrow=0.43148,
  diatomgraz=0.83003,
  val_R_PICPOC=0.04245,
  /
+########################
  &DARWIN_TRAIT_PARAMS
  /
