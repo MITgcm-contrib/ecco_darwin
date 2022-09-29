@@ -89,19 +89,21 @@ print -dpdf NoAntacrctic
 % Associate each JRA55 runoff with a GlobalNEWS location
 % Identification of JRA point according volume.  This may lead to certain
 % high volume location of GlobalNEWS not being used.
-maxsep=9;                        % max separation between GlobalNEWS and JRA55 in deg
-minvol=0;                        % minimum volume for matching volume algorithm
+maxsep=13;                       % max separation between GlobalNEWS and JRA55 in deg
+minvolJRA=0;                     % minimum volume for matching volume algorithm
+minvolGN=.04;                    % minimum volume for matching volume algorithm
 gQact2jra=zeros(length(jra),1);  % GlobalNEWS index for each non-zero JRA55 location
-gx=find(gQact);                  % indices of non-zero GlobalNEWS locations
+gx=find(gQact>minvolGN);         % indices of GlobalNEWS locations with sufficient discharge
 for j=1:length(jra)              % loop through all non-zero JRA55 locations
     d=sqrt((glon(gx)-jlon(j)).^2+(glat(gx)-jlat(j)).^2); % distance in deg
     % select closest non-zero GlobalNEWS location
     [M,I]=min(d);
     gQact2jra(j)=gx(I);
-    if jra(j) > minvol
+    if jra(j) > minvolJRA
         % select GlobalNEWS location with closest runoff
         % volume to JRA55 within maxsep degrees
         dx=find(d<maxsep);
+        if isempty(dx), error('no values found'), end
         I=closest(jra(j),gQact(gx(dx)));
         gQact2jra(j)=gx(dx(I));
     end
