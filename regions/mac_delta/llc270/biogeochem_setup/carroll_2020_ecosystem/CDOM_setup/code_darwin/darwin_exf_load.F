@@ -204,20 +204,6 @@ c--   read forcing fields from files and temporal interpolation
 #endif
      &     mytime, myiter, mythid )
 
-       call exf_set_fld(
-     &     'ALKrunoff', ALKrunofffile, ALKrunoffmask,
-     &     ALKrunoffStartTime, ALKrunoffperiod, ALKrunoffRepCycle,
-     &     darwin_inscal_ALKrunoff,
-     &     ALKrunoff_exfremo_intercept, ALKrunoff_exfremo_slope,
-     &     ALKrunoff, ALKrunoff0, ALKrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     ALKrunoff_lon0, ALKrunoff_lon_inc,
-     &     ALKrunoff_lat0, ALKrunoff_lat_inc,
-     &     ALKrunoff_nlon, ALKrunoff_nlat, xC, yC,
-     &     ALKrunoff_interpMethod,
-#endif
-     &     mytime, myiter, mythid )
-
         _EXCH_XY_RL( surfPAR, myThid )
 
         _EXCH_XY_RL( inputFe, myThid )
@@ -241,8 +227,6 @@ c--   read forcing fields from files and temporal interpolation
         _EXCH_XY_RL( DSirunoff, myThid )
 
         _EXCH_XY_RL( DICrunoff, myThid )
-
-        _EXCH_XY_RL( ALKrunoff, myThid )
 
       ENDIF
 

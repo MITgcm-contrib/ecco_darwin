@@ -268,11 +268,14 @@ C === nutrient runoff ==================================================
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 
+#ifdef DARWIN_ALLOW_CARBON
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iALK),
-     I                          ALKrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          DICrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_ALK_DIC_runoff,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
+#endif
 #endif
 
 C === iron =============================================================

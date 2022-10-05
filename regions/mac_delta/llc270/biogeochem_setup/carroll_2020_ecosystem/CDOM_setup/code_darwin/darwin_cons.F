@@ -421,6 +421,10 @@ c-----------------------------------------------------------------------
      &                   *PTRACERS_dtLev(ks)*area
         tilerunoffC(bi,bj) = tilerunoffC(bi,bj) + DICrunoff(i,j,bi,bj)
      &                   *PTRACERS_dtLev(ks)*area
+#ifdef DARWIN_ALLOW_CARBON
+        tilerunoffA(bi,bj) = tilerunoffA(bi,bj) + DICrunoff(i,j,bi,bj)
+     &                   *PTRACERS_dtLev(ks)*area*R_ALK_DIC_runoff
+#endif
 #endif
         ENDIF
 

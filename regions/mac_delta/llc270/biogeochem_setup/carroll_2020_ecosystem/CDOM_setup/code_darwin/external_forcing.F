@@ -34,9 +34,6 @@ C     == Global data ==
 #include "GRID.h"
 #include "DYNVARS.h"
 #include "FFIELDS.h"
-#ifdef ALLOW_DARWIN
-#include "DARWIN_FIELDS.h"
-#endif
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     == Routine arguments ==
@@ -317,6 +314,11 @@ C     == Global data ==
 #include "DYNVARS.h"
 #include "FFIELDS.h"
 #include "SURFACE.h"
+C     == darwin fields ==
+#ifdef ALLOW_DARWIN
+#include "DARWIN_OPTIONS.h"
+#include "DARWIN_FIELDS.h"
+#endif
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     == Routine arguments ==
@@ -533,26 +535,40 @@ c     IF ( usePenetratingSW ) THEN
        swfracb(1)=abs(rF(kLev))
        swfracb(2)=abs(rF(kLev+1))
        CALL SWFRAC(
-     I             i, j, k,
      I             2, minusOne,
      U             swfracb,
      I             myTime, 1, myThid )
        kp1 = kLev+1
        IF (kLev.EQ.Nr) THEN
         kp1 = kLev
-        swfracb(2)=0. _d
+        swfracb(2)=0. _d 0
        ENDIF
+C Apply CDOM SW radiation attenutation
+#ifdef DARWIN_ALLOW_CDOM
        DO j=1,sNy
         DO i=1,sNx
-         gT_arr(i,j) = gT_arr(i,j)
-     &        - Qsw(i,j,bi,bj)*( swfracb(1)*maskC(i,j,k,bi,bj)
-     &                         - swfracb(2)*maskC(i,j,km,bi,bj) )
-     &        *recip_Cp*mass2rUnit
-     &        *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
+         gT(i,j,kLev,bi,bj) = gT(i,j,kLev,bi,bj)
+     &   -Qsw(i,j,bi,bj)*(swfracb(1)*CDOMdecay(i,j,kLev,bi,bj)
+     &                    *maskC(i,j,kLev,bi,bj)
+     &                   -swfracb(2)*CDOMdecay(i,j,kp1,bi,bj)
+     &                    *maskC(i,j,kp1, bi,bj))
+     &    *recip_Cp*mass2rUnit
+     &    *recip_drF(kLev)*_recip_hFacC(i,j,kLev,bi,bj)
         ENDDO
        ENDDO
+#else
+       DO j=1,sNy
+        DO i=1,sNx
+         gT(i,j,kLev,bi,bj) = gT(i,j,kLev,bi,bj)
+     &   -Qsw(i,j,bi,bj)*(swfracb(1)*maskC(i,j,kLev,bi,bj)
+     &                   -swfracb(2)*maskC(i,j,kp1, bi,bj))
+     &    *recip_Cp*mass2rUnit
+     &    *recip_drF(kLev)*_recip_hFacC(i,j,kLev,bi,bj)
+        ENDDO
+       ENDDO
+#endif /* DARWIN_ALLOW_CDOM */
 c     ENDIF
-#endif
+#endif /* SHORTWAVE_HEATING */
 
 #ifdef ALLOW_FRAZIL
       IF ( useFRAZIL )

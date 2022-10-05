@@ -60,7 +60,6 @@ C !LOCAL VARIABLES: ====================================================
       LOGICAL darwin_haveDOPrunoff
       LOGICAL darwin_haveDSirunoff
       LOGICAL darwin_haveDICrunoff
-      LOGICAL darwin_haveALKrunoff
       INTEGER j, errCount
 
       NAMELIST/darwin_forcing_params/
@@ -211,18 +210,7 @@ C
      &    DICrunoff_exfremo_slope,
      &    DICrunoffmask,
      &    darwin_inscal_DICrunoff,
-C
-     &    ALKrunofffile,
-     &    ALKrunoffperiod,
-     &    ALKrunoffRepCycle,
-     &    ALKrunoffStartTime,
-     &    ALKrunoffstartdate1,
-     &    ALKrunoffstartdate2,
-     &    ALKrunoffconst,
-     &    ALKrunoff_exfremo_intercept,
-     &    ALKrunoff_exfremo_slope,
-     &    ALKrunoffmask,
-     &    darwin_inscal_ALKrunoff
+     &    R_ALK_DIC_runoff
 
 #ifdef USE_EXF_INTERPOLATION
       NAMELIST/darwin_interp_params/
@@ -321,15 +309,7 @@ C
      &    DICrunoff_nlat,
      &    DICrunoff_lon_inc,
      &    DICrunoff_interpMethod,
-     &    DICrunoff_lat_inc,
-C
-     &    ALKrunoff_lon0,
-     &    ALKrunoff_lat0,
-     &    ALKrunoff_nlon,
-     &    ALKrunoff_nlat,
-     &    ALKrunoff_lon_inc,
-     &    ALKrunoff_interpMethod,
-     &    ALKrunoff_lat_inc
+     &    DICrunoff_lat_inc
 #endif
 
 C Open and read the data.darwin file
@@ -482,7 +462,7 @@ C Open and read the data.darwin file
 
       DICrunofffile = ' '
       DICrunoffperiod             = 0.0 _d 0
-      DICrunoffRepCycle           = repeatPeriod
+      DICrunoffRepCycle           = repeatPeriods
       DICrunoffStartTime          = UNSET_RL
       DICrunoffstartdate1         = 0
       DICrunoffstartdate2         = 0
@@ -492,19 +472,7 @@ C Open and read the data.darwin file
       DICrunoffmask = 'c'
 
       darwin_inscal_DICrunoff    =  1. _d 0
-
-      ALKrunofffile = ' '
-      ALKrunoffperiod             = 0.0 _d 0
-      ALKrunoffRepCycle           = repeatPeriod
-      ALKrunoffStartTime          = UNSET_RL
-      ALKrunoffstartdate1         = 0
-      ALKrunoffstartdate2         = 0
-      ALKrunoffconst              = UNSET_RL
-      ALKrunoff_exfremo_intercept = 0.0 _d 0
-      ALKrunoff_exfremo_slope     = 0.0 _d 0
-      ALKrunoffmask = 'c'
-
-      darwin_inscal_ALKrunoff    =  1. _d 0
+      R_ALK_DIC_runoff           = 0.93 _d 0
 
 #ifdef USE_EXF_INTERPOLATION
       PAR_lon0 = inp_lon0
@@ -591,13 +559,6 @@ C Open and read the data.darwin file
       DICrunoff_lon_inc = inp_dLon
       DICrunoff_interpMethod  = 1
 
-      ALKrunoff_lon0 = inp_lon0
-      ALKrunoff_lat0 = inp_lat0
-      ALKrunoff_nlon = inp_gNx
-      ALKrunoff_nlat = inp_gNy
-      ALKrunoff_lon_inc = inp_dLon
-      ALKrunoff_interpMethod  = 1
-
       DO j=1,MAX_LAT_INC
         PAR_lat_inc(j) = inp_dLat(j)
         iron_lat_inc(j) = inp_dLat(j)
@@ -611,7 +572,6 @@ C Open and read the data.darwin file
         DOPrunoff_lat_inc(j) = inp_dLat(j)
         DSirunoff_lat_inc(j) = inp_dLat(j)
         DICrunoff_lat_inc(j) = inp_dLat(j)
-        ALKrunoff_lat_inc(j) = inp_dLat(j)
       ENDDO
 #endif /* USE_EXF_INTERPOLATION */
 
@@ -689,12 +649,6 @@ C set alternate forcing sources
      & DICrunoffconst.NE.UNSET_RL
       IF (DICrunoffconst.EQ.UNSET_RL) THEN
         DICrunoffconst = 0 _d 0
-      ENDIF
-
-      DARWIN_haveALKrunoff = ALKrunofffile.NE.' ' .OR.
-     & ALKrunoffconst.NE.UNSET_RL
-      IF (ALKrunoffconst.EQ.UNSET_RL) THEN
-        ALKrunoffconst = 0 _d 0
       ENDIF
 
       IF (DARWIN_haveSurfPAR .AND. DARWIN_useQsw) THEN
@@ -857,13 +811,6 @@ C     warn if darwin and radtrans ice forcing are different
         WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
      &   'useExfYearlyFields AND',
      &   'DICrunoffRepCycle is not implemented'
-        CALL PRINT_ERROR( msgBuf, myThid )
-        errCount = errCount + 1
-       ENDIF
-       IF ( ALKrunoffRepCycle.NE.0. ) THEN
-        WRITE(msgBuf,'(2A)') 'DARWIN_EXF_READPARMS: The use of ',
-     &   'useExfYearlyFields AND',
-     &   'ALKrunoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF

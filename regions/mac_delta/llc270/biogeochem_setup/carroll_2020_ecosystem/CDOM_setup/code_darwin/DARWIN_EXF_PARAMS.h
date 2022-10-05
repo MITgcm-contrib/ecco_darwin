@@ -417,7 +417,7 @@ C DIC forcing parameters for exf
       COMMON/darwin_forcing_DICrunoff_r/
      &    DICrunoffStartTime,
      &    DICrunoffperiod, DICrunoffRepCycle, DICrunoffconst,
-     &    DICrunoff_exfremo_intercept, DICrunoff_exfremo_slope,
+     &    DICrunoff_exfremo_intercept,DICrunoff_exfremo_slope,
      &    darwin_inscal_DICrunoff
       CHARACTER*1 DICrunoffmask
       INTEGER DICrunoffstartdate1
@@ -434,7 +434,7 @@ C DIC forcing parameters for exf
      &    DICrunoff_nlon, DICrunoff_nlat, DICrunoff_interpMethod
       COMMON/darwin_interp_DICrunoff_r/
      &    DICrunoff_lon0, DICrunoff_lat0, DICrunoff_lon_inc,
-     &    DICrunoff_lat_inc
+     %    DICrunoff_lat_inc
       INTEGER DICrunoff_interpMethod, DICrunoff_nlon, DICrunoff_nlat
       _RL  DICrunoff_lon0
       _RL  DICrunoff_lat0
@@ -442,41 +442,11 @@ C DIC forcing parameters for exf
       _RL  DICrunoff_lat_inc(MAX_LAT_INC)
 #endif
 
-C ALK forcing parameters for exf
-
-      _RL ALKrunoffStartTime
-
-      COMMON/darwin_forcing_ALKrunoff_c/
-     &    ALKrunoffmask
-      COMMON/darwin_forcing_ALKrunoff_i/
-     &    ALKrunoffstartdate1, ALKrunoffstartdate2
-      COMMON/darwin_forcing_ALKrunoff_r/
-     &    ALKrunoffStartTime,
-     &    ALKrunoffperiod, ALKrunoffRepCycle, ALKrunoffconst,
-     &    ALKrunoff_exfremo_intercept, ALKrunoff_exfremo_slope,
-     &    darwin_inscal_ALKrunoff
-      CHARACTER*1 ALKrunoffmask
-      INTEGER ALKrunoffstartdate1
-      INTEGER ALKrunoffstartdate2
-      _RL ALKrunoffperiod
-      _RL ALKrunoffRepCycle
-      _RL ALKrunoffconst
-      _RL ALKrunoff_exfremo_intercept
-      _RL ALKrunoff_exfremo_slope
-      _RL darwin_inscal_ALKrunoff
-
-#ifdef USE_EXF_INTERPOLATION
-      COMMON/darwin_interp_ALKrunoff_i/
-     &    ALKrunoff_nlon, ALKrunoff_nlat, ALKrunoff_interpMethod
-      COMMON/darwin_interp_ALKrunoff_r/
-     &    ALKrunoff_lon0, ALKrunoff_lat0, ALKrunoff_lon_inc,
-     &    ALKrunoff_lat_inc
-      INTEGER ALKrunoff_interpMethod, ALKrunoff_nlon, ALKrunoff_nlat
-      _RL  ALKrunoff_lon0
-      _RL  ALKrunoff_lat0
-      _RL  ALKrunoff_lon_inc
-      _RL  ALKrunoff_lat_inc(MAX_LAT_INC)
-#endif
+C--   COMMON/DARWIN_RUNOFF_PARAMS_r/ Parameters for runoff nutrient input
+C     R_ALK_DIC_runoff  :: [eq/mol C]     ALK:DIC ratio in runoff
+      COMMON/DARWIN_RUNOFF_PARAMS_R/
+     &    R_ALK_DIC_runoff
+      _RL R_ALK_DIC_runoff
 CEOP
 
 #endif /* ALLOW_DARWIN */

@@ -5,8 +5,7 @@ CBOP
 C     !ROUTINE: SWFRAC
 C     !INTERFACE:
       SUBROUTINE SWFRAC(
-     I                  i, j, k,
-     I                  kmax, fact,
+     I                  imax, fact,
      U                  swdk,
      I                  myTime, myIter, myThid )
 C     !DESCRIPTION: \bv
@@ -36,18 +35,12 @@ C     !USES:
 C     !INPUT/OUTPUT PARAMETERS:
 C     === Routine arguments ===
 C     input arguments
-C     i       :: x-index for CDOM
-C     j       :: y-index for CDOM
-C     k       :: z-index for CDOM
 C     imax    :: number of vertical grid points
 C     fact    :: scale  factor to apply to depth array
 C     myTime  :: Current time in simulation
 C     myIter  :: Current iteration number in simulation
 C     myThid  :: My Thread Id. number
-      INTEGER i
-      INTEGER j
-      INTEGER k
-      INTEGER kmax
+      INTEGER imax
       _RL     fact
       _RL     myTime
       INTEGER myIter
@@ -56,7 +49,7 @@ C     input/output arguments
 C     swdk    :: on input: vertical depth for desired sw fraction
 C               (fact*swdk) is negative distance (m) from surface
 C     swdk    :: on output: short wave (radiation) fractional decay
-      _RL     swdk(kmax)
+      _RL     swdk(imax)
 
 C     !LOCAL VARIABLES:
 C     === Local variables ===
@@ -65,7 +58,7 @@ C     max number of different water types
       PARAMETER(nwtype=5)
       _RL facz
       _RL rfac(nwtype),a1(nwtype),a2(nwtype)
-      INTEGER ik
+      INTEGER i
 #ifdef ALLOW_CAL
 c     _RL     fac
 c     LOGICAL first, changed
@@ -101,12 +94,12 @@ CML)
       jwtype=2
 #endif /* ALLOW_CAL */
 
-      DO i = 1,kmax
+      DO i = 1,imax
         facz = fact*swdk(i)
         IF ( facz .LT. -200. _d 0 ) THEN
-          swdk(ik) = 0. _d 0
+          swdk(i) = 0. _d 0
         ELSE
-          swdk(ik) =       rfac(jwtype)  * exp( facz/a1(jwtype) )
+          swdk(i) =       rfac(jwtype)  * exp( facz/a1(jwtype) )
      &       + (1. _d 0 - rfac(jwtype)) * exp( facz/a2(jwtype) )
         ENDIF
       ENDDO

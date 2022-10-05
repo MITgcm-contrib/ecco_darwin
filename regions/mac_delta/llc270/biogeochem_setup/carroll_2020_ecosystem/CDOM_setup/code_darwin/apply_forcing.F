@@ -35,9 +35,6 @@ C     == Global data ==
 #include "GRID.h"
 #include "DYNVARS.h"
 #include "FFIELDS.h"
-#ifdef ALLOW_DARWIN
-#include "DARWIN_FIELDS.h"
-#endif
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     gU_arr    :: the tendency array
@@ -418,6 +415,11 @@ C     == Global data ==
 #include "DYNVARS.h"
 #include "FFIELDS.h"
 #include "SURFACE.h"
+C     == darwin fields ==
+#ifdef ALLOW_DARWIN
+#include "DARWIN_OPTIONS.h"
+#include "DARWIN_FIELDS.h"
+#endif
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     gT_arr    :: the tendency array
@@ -700,11 +702,24 @@ C     this is the oceanic pressure coordinate case
         km = MAX(k-1,1)
        ENDIF
        CALL SWFRAC(
-     I             i, j, k,
      I             2, oneRL,
      U             swfracb,
      I             myTime, myIter, myThid )
        IF ( k.EQ.km ) swfracb(2) = 0. _d 0
+C Apply CDOM SW radiation attenutation
+#ifdef DARWIN_ALLOW_CDOM
+       DO j=0,sNy+1
+        DO i=0,sNx+1
+         gT_arr(i,j) = gT_arr(i,j)
+     &        - Qsw(i,j,bi,bj)*( swfracb(1)*CDOMdecay(i,j,k,bi,bj)
+     &                           *maskC(i,j,k,bi,bj)
+     &                         - swfracb(2)*CDOMdecay(i,j,km,bi,bj)
+     &                           *maskC(i,j,km,bi,bj) )
+     &        *recip_Cp*mass2rUnit
+     &        *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
+        ENDDO
+       ENDDO
+#else
        DO j=0,sNy+1
         DO i=0,sNx+1
          gT_arr(i,j) = gT_arr(i,j)
@@ -714,6 +729,7 @@ C     this is the oceanic pressure coordinate case
      &        *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
         ENDDO
        ENDDO
+#endif /* DARWIN_ALLOW_CDOM */
 c     ENDIF
 #endif /* SHORTWAVE_HEATING */
 
