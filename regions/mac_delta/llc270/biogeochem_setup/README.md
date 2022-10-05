@@ -34,16 +34,16 @@ ln -sf ../build/mitgcmuv .
 ```
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 -- Freswater runnoff --
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Freswater/AGRO_interan .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Freshwater/AGRO_interan .
 ln -sf /nobackup/cbertin/Forcing/river_runoff/Temperature/Tokuda_Mac270modif .
 -- biogeochemical runoff --
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Bertin_etal_21/Interannual/L20_R80/tDOCl .
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Bertin_etal_21/Interannual/L20_R80/tDOCr .
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Tank_etal_12/Interannual/tAlk .
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Tank_etal_12/Interannual/tDIC .
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/GNW2_NutCim/tDON .
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/GNW2_NutCim/tDOP .
-ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/GNW2_NutCim/tDSi .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Bertin_etal_21/Interannual/L20_R80_r44/tDOCl .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Bertin_etal_21/Interannual/L20_R80_r44/tDOCr .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Tank_etal_12/Interannual/r44/tAlk .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/Tank_etal_12/Interannual/r44/tDIC .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/GNW2_NutCim/r44/tDON .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/GNW2_NutCim/r44/tDOP .
+ln -sf /nobackup/cbertin/Forcing/river_runoff/Nutrients/GNW2_NutCim/r44/tDSi .
 -- run files -- 
 ln -sf /nobackup/cbertin/Forcing/run_template/PATH/* .
 ```
