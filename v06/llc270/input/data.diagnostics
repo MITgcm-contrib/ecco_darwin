@@ -230,8 +230,8 @@
 
 #---  
   frequency(65)  = 2635200.,
-   fields(1,65)  = 'PAR    ',
-   filename(65)  = 'diags/monthly/PAR',
+   fields(1,65)  = 'PARF    ',
+   filename(65)  = 'diags/monthly/PARF',
 #--- 
   frequency(66)  = 2635200.,
    fields(1,66)  = 'PP     ',
