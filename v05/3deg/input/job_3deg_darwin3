@@ -1,5 +1,5 @@
 #!/bin/csh
-#PBS -l select=1:ncpus=16:model=has
+#PBS -l select=1:ncpus=8:model=has
 
 ##PBS -l walltime=120:00:00
 ##PBS -q long
@@ -22,4 +22,4 @@ module list
 umask 022
 cd $PBS_O_WORKDIR
 limit stacksize unlimited
-mpiexec -np 16 ./mitgcmuv
+mpiexec -np 8 ./mitgcmuv
