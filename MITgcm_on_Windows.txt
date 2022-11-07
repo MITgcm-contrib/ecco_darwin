@@ -26,8 +26,8 @@
 #    [THIS MAY TAKE A WHILE, THE FILE SIZE IS ~500 MB]
 
 # e) Once it's finished downloading, make sure to enable
-#    "Windows Subsystem for Linux" under
-#    "Turn Windows features on or off"
+#    "Windows Subsystem for Linux", "Virtual Machine Platform" and "Windows Hypervisor Platform
+#    under "Turn Windows features on or off"
 #    You may have to reboot.
 
 # f) Then find Ubuntu an click on it
