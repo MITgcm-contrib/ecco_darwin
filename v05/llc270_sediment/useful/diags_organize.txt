@@ -1,0 +1,234 @@
+#organize v05 ECCO_Darwin public diagnostics
+#daily diagnostics
+
+mkdir daily/CO2_flux
+mv daily/CO2_flux* daily/CO2_flux &
+
+mkdir daily/surfDIC_tend
+mv daily/surfDIC_tend* daily/surfDIC_tend &
+
+mkdir daily/O2_flux
+mv daily/O2_flux* daily/O2_flux &
+
+mkdir daily/pH
+mv daily/pH* daily/pH &
+
+mkdir daily/pCO2
+mv daily/pCO2* daily/pCO2 &
+
+mkdir daily/surfPCO2
+mv daily/surfPCO2* daily/surfPCO2 &
+
+mkdir daily/apCO2
+mv daily/apCO2* daily/apCO2 &
+
+mkdir daily/wspeed
+mv daily/wspeed* daily/wspeed &
+
+mkdir daily/SIarea
+mv daily/SIarea* daily/SIarea &
+
+mkdir daily/SIheff
+mv daily/SIheff* daily/SIheff &
+
+mkdir daily/SST
+mv daily/SST* daily/SST &
+
+mkdir daily/SSSanom
+mv daily/SSSanom* daily/SSSanom &
+
+mkdir daily/surfChl1
+mv daily/surfChl1* daily/surfChl1 &
+
+mkdir daily/surfChl2
+mv daily/surfChl2* daily/surfChl2 &
+
+mkdir daily/surfChl3
+mv daily/surfChl3* daily/surfChl3 &
+
+mkdir daily/surfChl4
+mv daily/surfChl4* daily/surfChl4 &
+
+mkdir daily/surfChl5
+mv daily/surfChl5* daily/surfChl5 &
+
+mkdir daily/mldDepth
+mv daily/mldDepth* daily/mldDepth &
+
+#monthly diagnostics
+
+mkdir monthly/THETA
+mv monthly/THETA* monthly/THETA &
+
+mkdir monthly/SALTanom
+mv monthly/SALTanom* monthly/SALTanom &
+
+mkdir monthly/SST
+mv monthly/SST* monthly/SST &
+
+mkdir monthly/SSSanom
+mv monthly/SSSanom* monthly/SSSanom &
+
+mkdir monthly/mldDepth
+mv monthly/mldDepth* monthly/mldDepth &
+
+mkdir monthly/oceanQsw
+mv monthly/oceanQsw* monthly/oceanQsw &
+
+mkdir monthly/oceanQnet
+mv monthly/oceanQnet* monthly/oceanQnet &
+
+mkdir monthly/wspeed
+mv monthly/wspeed* monthly/wspeed &
+
+mkdir monthly/SIarea
+mv monthly/SIarea* monthly/SIarea &
+
+mkdir monthly/SIheff
+mv monthly/SIheff* monthly/SIheff &
+
+mkdir monthly/uVel_C
+mv monthly/uVel_C* monthly/uVel_C &
+
+mkdir monthly/vVel_C
+mv monthly/vVel_C* monthly/vVel_C &
+
+mkdir monthly/wVel
+mv monthly/wVel* monthly/wVel &
+
+mkdir monthly/DIC
+mv monthly/DIC* monthly/DIC &
+
+mkdir monthly/NO3
+mv monthly/NO3* monthly/NO3 &
+
+mkdir monthly/NO2
+mv monthly/NO2* monthly/NO2 &
+
+mkdir monthly/NH4
+mv monthly/NH4* monthly/NH4 &
+
+mkdir monthly/PO4
+mv monthly/PO4* monthly/PO4 &
+
+mkdir monthly/FeT
+mv monthly/FeT* monthly/FeT &
+
+mkdir monthly/SiO2
+mv monthly/SiO2* monthly/SiO2 &
+
+mkdir monthly/DOC
+mv monthly/DOC* monthly/DOC &
+
+mkdir monthly/DON
+mv monthly/DON* monthly/DON &
+
+mkdir monthly/DOP
+mv monthly/DOP* monthly/DOP &
+
+mkdir monthly/DOFe
+mv monthly/DOFe* monthly/DOFe &
+
+mkdir monthly/POC
+mv monthly/POC* monthly/POC &
+
+mkdir monthly/PON
+mv monthly/PON* monthly/PON &
+
+mkdir monthly/POP
+mv monthly/POP* monthly/POP &
+
+mkdir monthly/POFe
+mv monthly/POFe* monthly/POFe &
+
+mkdir monthly/POSi
+mv monthly/POSi* monthly/POSi &
+
+mkdir monthly/PIC
+mv monthly/PIC* monthly/PIC &
+
+mkdir monthly/ALK
+mv monthly/ALK* monthly/ALK &
+
+mkdir monthly/O2
+mv monthly/O2* monthly/O2 &
+
+mkdir monthly/c1
+mv monthly/c1* monthly/c1 &
+
+mkdir monthly/c2
+mv monthly/c2* monthly/c2 &
+
+mkdir monthly/c3
+mv monthly/c3* monthly/c3 &
+
+mkdir monthly/c4
+mv monthly/c4* monthly/c4 &
+
+mkdir monthly/c5
+mv monthly/c5* monthly/c5 &
+
+mkdir monthly/c6
+mv monthly/c6* monthly/c6 &
+
+mkdir monthly/c7
+mv monthly/c7* monthly/c7 &
+
+mkdir monthly/Chl1
+mv monthly/Chl1* monthly/Chl1 &
+
+mkdir monthly/Chl2
+mv monthly/Chl2* monthly/Chl2 &
+
+mkdir monthly/Chl3
+mv monthly/Chl3* monthly/Chl3 &
+
+mkdir monthly/Chl4
+mv monthly/Chl4* monthly/Chl4 &
+
+mkdir monthly/Chl5
+mv monthly/Chl5* monthly/Chl5 &
+
+mkdir monthly/PAR
+mv monthly/PAR* monthly/PAR &
+
+mkdir monthly/primProd
+mv monthly/primProd* monthly/primProd &
+
+mkdir monthly/CO2_flux
+mv monthly/CO2_flux* monthly/CO2_flux &
+
+mkdir monthly/O2_flux
+mv monthly/O2_flux* monthly/O2_flux &
+
+mkdir monthly/fugCO2
+mv monthly/fugCO2* monthly/fugCO2 &
+
+mkdir monthly/pCO2
+mv monthly/pCO2* monthly/pCO2 &
+
+mkdir monthly/surfPCO2
+mv monthly/surfPCO2* monthly/surfPCO2 &
+
+mkdir monthly/apCO2
+mv monthly/apCO2* monthly/apCO2 &
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
