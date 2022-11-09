@@ -9,10 +9,6 @@ C !INTERFACE: ==========================================================
      O     chlout, diags,
      I     PAR, photoTempFunc, hetTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
-#ifdef DARWIN_ALLOW_CARBON
-     I     PIClocal, CO3Local, calciumlocal, KspTPLocal,
-     O     omegaCLocal,disscPIC,
-#endif DARWIN_ALLOW_CARBON
 #ifdef DARWIN_DEBUG
      I     iG, jG, k, dT,
 #endif
