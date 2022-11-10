@@ -9,6 +9,9 @@ C !INTERFACE: ==========================================================
      O     chlout, diags,
      I     PAR, photoTempFunc, hetTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
+#ifdef DARWIN_ALLOW_CARBON
+     O     disscPIClocal, omegaCLocal,
+#endif              
 #ifdef DARWIN_DEBUG
      I     iG, jG, k, dT,
 #endif
@@ -58,6 +61,10 @@ C !OUTPUT PARAMETERS: ==================================================
 C  chlout :: computed acclimated chlorophyll if not dynamic
       _RL chlout(nPhoto)
       _RL diags(darwin_nDiag)
+#ifdef DARWIN_ALLOW_CARBON                                                                                             
+      _RL omegaCLocal 
+      _RL disscPIClocal
+#endif DARWIN_ALLOW_CARBON   
 CEOP
 
 #ifdef ALLOW_DARWIN
@@ -279,12 +286,10 @@ C for grazing
 #endif
 
 #ifdef DARWIN_ALLOW_CARBON
-      _RL omegaCLocal
       _RL calciumLocal
       _RL CO3Local
       _RL KspTPLocal
       _RL PIClocal
-      _RL disscPIC
 #endif DARWIN_ALLOW_CARBON
 
 C==== precompute a few things ==========================================
@@ -912,7 +917,7 @@ C if running with bacteria
 #endif
 #endif
 
-      disscPIC = Kdissc*PIC
+      disscPIClocal = Kdissc*PIC
 
 c nitrogen chemistry
 c NH4 -> NO2 -> NO3 by bacterial action, parameterized
@@ -981,13 +986,13 @@ c loss of O2 by remineralization
       diags(iConsO2) = consumO2
 
       gTr(iALK)=gTr(iALK) - (prodNO3 - consumNO3)
-     &                    - 2.0 _d 0*(consumDIC_PIC - disscPIC)
+     &                    - 2.0 _d 0*(consumDIC_PIC -  disscPIClocal)
 #endif /* DARWIN_ALLOW_CARBON */
 
-      gTr(iDIC )=gTr(iDIC ) + reminDOC + disscPIC
+      gTr(iDIC )=gTr(iDIC ) + reminDOC + disscPIClocal
       
       diags(iReminDIC_DOC) = reminDOC
-      diags(iDisscDIC_PIC) = disscPIC
+      diags(iDisscDIC_PIC) = disscPIClocal
 
       gTr(iNH4 )=gTr(iNH4 ) + reminDON - prodNO2
       gTr(iNO2 )=gTr(iNO2 ) + prodNO2 - prodNO3
@@ -1019,7 +1024,7 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
       gTr(iDOP )=gTr(iDOP ) + solubilPOP - consumDOP
       gTr(iDOFe)=gTr(iDOFe) + solubilPOFe - consumDOFe
 
-      gTr(iPIC )=gTr(iPIC ) - disscPIC
+      gTr(iPIC )=gTr(iPIC ) - disscPIClocal
       gTr(iPOC )=gTr(iPOC ) - consumPOC
       gTr(iPON )=gTr(iPON ) - consumPON
       gTr(iPOP )=gTr(iPOP ) - consumPOP
@@ -1044,7 +1049,7 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
 #endif /* DARWIN_ALLOW_CDOM */
 
       diags(iConsALK) = (prodNO3 - consumNO3)
-     & +2.0 _d 0*(consumDIC_PIC - disscPIC)
+     & +2.0 _d 0*(consumDIC_PIC - disscPIClocal)
       diags(iConsDIN) = consumNH4 + consumNO2 + consumNO3
       diags(iConsNO3) = consumNO3
       diags(iConsNO2) = consumNO2
@@ -1430,18 +1435,18 @@ C water column dissolution
 C Naviaux et al. 2019, Marine Chemistry dissolution rate law
         if (omegaCLocal .LT. 1.0 _d 0) then
                 if (omegaCLocal .LT. 0.8272 _d 0) then
-                        disscPIC = PIClocal * 5.22 _d -9 *
+                        disscPIClocal = PIClocal * 5.22 _d -9 *
      &                    (1 - omegaCLocal)**0.11 _d 0
                 else
-                        disscPIC = PIClocal * 1.65 _d -5 *
+                        disscPIClocal = PIClocal * 1.65 _d -5 *
      &                    (1 - omegaCLocal)**4.7 _d 0
                 endif
         else
-                disscPIC = 0.0 _d 0
+                disscPIClocal = 0.0 _d 0
         endif
 
 #else /* NAVIAUX_DISSOLUTION */
-        disscPIC = Kdissc * PIClocal
+        disscPIClocal = Kdissc * PIClocal
 #endif /* NAVIAUX_DISSOLUTION */
         
 #endif DARWIN_ALLOW_CARBON

@@ -557,6 +557,20 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     
+      WRITE(diagName,'(A)')'disscPIC'                                   
+      WRITE(diagTitle,'(A)')'dissolution rate of PIC to DIC'            
+      diagUnits = 'mmol C/m3/s    '                                     
+      diagCode  = 'SMR     MR      '                                    
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,    
+     I           diagName, diagCode,diagUnits, diagTitle, 0, myThid ) 
+
+      WRITE(diagName,'(A)')'omegaC  '                                   
+      WRITE(diagTitle,'(A)')'calcite saturation'            
+      diagUnits = 'dimensionless  '                                 
+      diagCode  = 'SMR     MR      '                                    
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName,diagCode,diagUnits, diagTitle, 0, myThid )
 
 #endif /* DARWIN_ALLOW_CARBON */
 

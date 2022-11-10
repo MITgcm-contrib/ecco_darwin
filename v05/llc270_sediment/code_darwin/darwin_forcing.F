@@ -117,9 +117,14 @@ C  k                    :: vertical level
       _RL disscDIC_PIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  
+#ifdef DARWIN_ALLOW_CARBON
+      _RL disscPIClocal
+      _RL omegaCLocal
+      _RL disscPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL omegaC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+#endif 
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
       ENDDO
@@ -321,6 +326,9 @@ C === plankton =========================================================
      I                 reminTempFunc,
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
+#ifdef DARWIN_ALLOW_CARBON
+     O                 disscPIClocal,omegaCLocal,
+#endif   
 #ifdef DARWIN_DEBUG
      I                 myxgloballo+(bi-1)*sNx+i-1,
      I                 myygloballo+(bj-1)*sNy+j-1,
@@ -350,6 +358,11 @@ C === plankton =========================================================
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
         ENDDO
+
+#ifdef DARWIN_ALLOW_CARBON
+        disscPIC(i, j, k) = disscPIClocal
+        omegaC(i, j, k) = omegaCLocal
+#endif
       endif
       enddo
       enddo
@@ -605,6 +618,10 @@ C      diags(iCons*) for convenience
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(disscPIC(1-OLx,1-OLy,1),'disscPIC',0,Nr,1,
+     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(omegaC(1-OLx,1-OLy,1),'omegaC  ',0,Nr,1,
+     &  bi,bj,myThid)
 #endif
        CALL TIMER_STOP ('DIAGS_FILL [DARWIN_FORCING]',myThid)
       ENDIF
