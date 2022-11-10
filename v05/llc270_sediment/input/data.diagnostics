@@ -97,7 +97,14 @@
    frequency(18) = 86400.,
    fields(1,18) = 'MXLDEPTH',
    filename(18) = 'diags/daily/mldDepth',
-#---  
+#--- 
+   frequency(91) = 86400.,                                                                                             
+   fields(1,91) = 'disscPIC',                                                                                          
+   filename(91) = 'diags/daily/DISSCPIC', 
+#--- 
+   frequency(92) = 86400.,
+   fields(1,92) = 'omegaC  ',
+   filename(92) = 'diags/daily/OMEGAC',
 
 #monthly diagnostics
 #---
@@ -260,7 +267,14 @@
    fields(1,72) = 'pH      ',
    filename(72) = 'diags/monthly/pH',
 #---
-
+  frequency(93) = 2635200.,
+   fields(1,93) = 'disscPIC',
+   filename(93) = 'diags/monthly/DISSCPIC',
+#---
+  frequency(94) = 2635200.,
+   fields(1,94) = 'omegaC  ',
+   filename(94) = 'diags/monthly/OMEGAC',
+        
 #budget diagnostics   
 #---
   frequency(73) = 2635200.0,
