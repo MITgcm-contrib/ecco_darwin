@@ -25,8 +25,9 @@
 #    Prerequisite: 2. Build executable
  cd ../run
  ln -sf ../build/mitgcmuv .
- cp ../../ecco_darwin/v05/llc270_sediment/input/data.diagnostics .
+ cp ../../ecco_darwin/v05/llc270_sediment/input/data* .
  cp ../../ecco_darwin/v05/3deg/input/* .
+ cp ../../ecco_darwin/v05/llc270_sediment/input/data.diagnostics .
  ln -sf ../../ecco_darwin/v05/3deg/data_darwin/* .
  rm data.ctrl data.exch2 data.smooth
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
