@@ -120,11 +120,59 @@ C  k                    :: vertical level
       _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 #ifdef DARWIN_ALLOW_CARBON
-      _RL disscPIClocal
-      _RL omegaCLocal
-      _RL disscPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL omegaC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-#endif 
+       _RL  t
+       _RL  s
+       _RL  Tlocal
+       _RL  Slocal
+       _RL  ta
+       _RL  pt
+       _RL  sit
+       _RL  tk
+       _RL  tk100
+       _RL  tk1002
+       _RL  dlogtk
+       _RL  sqrtis
+       _RL  sqrts
+       _RL  s15
+       _RL  scl
+       _RL  x1
+       _RL  x2
+       _RL  s2
+       _RL  xacc
+       _RL  invtk
+       _RL  is
+       _RL  is2
+       _RL  bdepth
+       _RL  cdepth
+       _RL  pressc
+       _RL  Ksp_T_Calc
+       _RL  xvalue
+       _RL  zdum
+       _RL  tmpa1
+       _RL  tmpa2
+       _RL  tmpa3
+       _RL  logKspc
+       _RL  dv
+       _RL  dk
+       _RL  pfactor
+       _RL  bigR
+       
+       _RL dicl
+       _RL docl
+       _RL picl
+       _RL alkl
+       _RL o2l
+       _RL po4l
+       _RL sil    
+
+       _RL pCO2SolverTemp
+       _RL pCO2SolverSal
+       _RL pCO2SolverDic
+       _RL pCO2SolverPo4
+       _RL pCO2SolverSi
+       _RL pCO2SolverAlk
+#endif
+
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
       ENDDO
@@ -316,6 +364,261 @@ C === plankton =========================================================
         DO l=1,nlam
          PARl(l) = MAX(0 _d 0, PAR(i, j, k, l))
         ENDDO
+
+#ifdef DARWIN_ALLOW_CARBON
+c compute Ksp as a function of temperature and pressure
+
+             Tlocal = theta(i,j,k,bi,bj)
+             Slocal = salt(i,j,k,bi,bj)
+
+            bdepth = 0.0d0
+            cdepth = 0.0d0
+            pressc = 1.0d0
+
+            do l = 1,k
+             cdepth = bdepth + 0.5d0*drF(l)
+             bdepth = bdepth + drF(l)
+             pressc = 1.0d0 + 0.1d0*cdepth
+            end do
+
+            if (maskC(i,j,k,bi,bj).NE.0. _d 0) then 
+             t = Tlocal
+             s = max(4. _d 0, Slocal)
+
+             tk = 273.15 + t
+             tk100 = tk/100.0
+             tk1002=tk100*tk100
+             invtk=1.0/tk
+             dlogtk=log(tk)
+             is=19.924*s/(1000.-1.005*s)
+             is2=is*is
+             sqrtis=sqrt(is)
+             s2=s*s
+             sqrts=sqrt(s)
+             s15=s**1.5
+             scl=s/1.80655
+
+c f = k0(1-pH2O)*correction term for non-ideality
+c Weiss & Price (1980, Mar. Chem., 8, 347-359; Eq 13 with table 6 values)
+             ff(i,j,bi,bj) = exp(-162.8301 + 218.2968/tk100 +
+     &        90.9241*log(tk100)-1.47696*tk1002 +
+     &        s*(0.025695-0.025225*tk100 +
+     &        0.0049867*tk1002))
+
+c K0 from Weiss 1974
+             ak0(i,j,bi,bj) = exp(93.4517/tk100-60.2409 + 
+     &        23.3585*log(tk100) +
+     &        s*(0.023517-0.023656*tk100 + 
+     &        0.0047036*tk1002))
+
+c k1 = [H][HCO3]/[H2CO3]
+c k2 = [H][CO3]/[HCO3]
+c Millero p.664 (1995) using Mehrbach et al. data on seawater scale 
+             ak1(i,j,bi,bj)=10**(-1*(3670.7*invtk - 
+     &        62.008+9.7944*dlogtk -
+     &        0.0118*s+0.000116*s2))
+           
+             ak2(i,j,bi,bj)=10**(-1*(1394.7*invtk+4.777 - 
+     &        0.0184*s+0.000118*s2))
+
+c NOW PRESSURE DEPENDENCE:
+c Following Takahashi (1981) GEOSECS report - quoting Culberson and 
+c Pytkowicz (1968)
+c pressc = pressure in bars
+             ak1(i,j,bi,bj) = ak1(i,j,bi,bj) *
+     &        exp((24.2-0.085*t)*(pressc-1.0)/(83.143*tk))
+
+c FIRST GO FOR K2: According to GEOSECS (1982) report
+c            ak2(i,j,bi,bj) = ak2(i,j,bi,bj) *
+c    &        exp((26.4-0.040*t)*(pressc-1.0)/(83.143*tk))
+
+c SECOND GO FOR K2: corrected coeff according to CO2sys documentation
+c E. Lewis and D. Wallace (1998) ORNL/CDIAC-105
+             ak2(i,j,bi,bj) = ak2(i,j,bi,bj) *
+     &        exp((16.4-0.040*t)*(pressc-1.0)/(83.143*tk))
+
+c kb = [H][BO2]/[HBO2]
+c Millero p.669 (1995) using data from dickson (1990)
+             akb(i,j,bi,bj)=exp((-8966.90-2890.53*sqrts-77.942*s +
+     &        1.728*s15-0.0996*s2)*invtk +
+     &        (148.0248+137.1942*sqrts+1.62142*s) +
+     &        (-24.4344-25.085*sqrts-0.2474*s) *
+     &        dlogtk+0.053105*sqrts*tk)
+
+c Mick and Karsten - Dec 04
+c ADDING pressure dependence based on Millero (1995), p675
+c with additional info from CO2sys documentation (E. Lewis and 
+c D. Wallace, 1998 - see endnotes for commentary on Millero, 95)
+             bigR = 83.145 
+             dv = -29.48+0.1622*t+2.608d-3*t*t
+             dk = -2.84d-3
+             pfactor = - (dv/(bigR*tk))*pressc 
+     &        + (0.5*dk/(bigR*tk))*pressc*pressc
+
+             akb(i,j,bi,bj) = akb(i,j,bi,bj)*exp(pfactor)
+
+c k1p = [H][H2PO4]/[H3PO4]
+c DOE(1994) eq 7.2.20 with footnote using data from Millero (1974)
+             ak1p(i,j,bi,bj) = exp(-4576.752*invtk+115.525 - 
+     &        18.453*dlogtk +
+     &        (-106.736*invtk+0.69171)*sqrts +
+     &        (-0.65643*invtk-0.01844)*s)
+
+c k2p = [H][HPO4]/[H2PO4]
+c DOE(1994) eq 7.2.23 with footnote using data from Millero (1974))
+             ak2p(i,j,bi,bj) = exp(-8814.715*invtk+172.0883 - 
+     &        27.927*dlogtk +
+     &        (-160.340*invtk+1.3566)*sqrts +
+     &        (0.37335*invtk-0.05778)*s)
+
+c k3p = [H][PO4]/[HPO4]
+c DOE(1994) eq 7.2.26 with footnote using data from Millero (1974)
+             ak3p(i,j,bi,bj) = exp(-3070.75*invtk-18.141 + 
+     &        (17.27039*invtk+2.81197) *
+     &        sqrts+(-44.99486*invtk-0.09984)*s)
+
+c ksi = [H][SiO(OH)3]/[Si(OH)4]
+c Millero p.671 (1995) using data from Yao and Millero (1995)
+             aksi(i,j,bi,bj) = exp(-8904.2*invtk+117.385 - 
+     &        19.334*dlogtk +
+     &        (-458.79*invtk+3.5913)*sqrtis +
+     &        (188.74*invtk-1.5998)*is +
+     &        (-12.1652*invtk+0.07871)*is2 +
+     &        log(1.0-0.001005*s))
+
+c kw = [H][OH]
+c Millero p.670 (1995) using composite data
+             akw(i,j,bi,bj) = exp(-13847.26*invtk+148.9652 - 
+     &        23.6521*dlogtk + 
+     &        (118.67*invtk-5.977+1.0495*dlogtk) *
+     &        sqrts-0.01615*s)
+
+c ks = [H][SO4]/[HSO4]
+c dickson (1990, J. chem. Thermodynamics 22, 113)
+             aks(i,j,bi,bj)=exp(-4276.1*invtk+141.328 - 
+     &        23.093*dlogtk +
+     &        (-13856*invtk+324.57-47.986*dlogtk)*sqrtis +
+     &        (35474*invtk-771.54+114.723*dlogtk)*is -
+     &        2698*invtk*is**1.5+1776*invtk*is2 +
+     &        log(1.0-0.001005*s))
+
+c kf = [H][F]/[HF]
+c dickson and Riley (1979) -- change pH scale to total
+             akf(i,j,bi,bj)=exp(1590.2*invtk-12.641+1.525*sqrtis +
+     &        log(1.0-0.001005*s) +
+     &        log(1.0+(0.1400/96.062)*(scl)/aks(i,j,bi,bj)))
+
+c Calculate concentrations for borate, sulfate, and fluoride
+c Uppstrom (1974)
+             bt(i,j,bi,bj) = 0.000232*scl/10.811
+
+c Morris & Riley (1966)
+             st(i,j,bi,bj) = 0.14*scl/96.062
+
+c Riley (1965)
+             ft(i,j,bi,bj) = 0.000067*scl/18.9984
+
+c solubility product for calcite
+C Following Mucci (1983) - from Zeebe/Wolf-Gladrow equic.m
+             tmpa1 = -171.9065-(0.077993*tk)+(2839.319/tk) +
+     &        (71.595*log10(tk))
+         
+             tmpa2 = +(-0.77712+(0.0028426*tk)+(178.34/tk))*sqrts
+             tmpa3 = -(0.07711*s)+(0.0041249*s15)
+             logKspc = tmpa1+tmpa2+tmpa3
+             Ksp_T_Calc = 10.0**logKspc
+
+c alternative pressure dependence from Ingle (1975)
+             zdum = (pressc*10.0d0-10.0d0)/10.0d0
+             xvalue = ((48.8d0-0.53d0*t)*zdum +
+     &        (-0.00588d0+0.0001845d0*t)*zdum*zdum) /
+     &        (188.93d0*(t+273.15d0))
+
+             Ksp_TP(i,j,bi,bj) = Ksp_T_Calc*10**(xvalue)
+
+            else
+             ff(i,j,bi,bj)=0.d0
+             ak0(i,j,bi,bj)= 0.d0
+             ak1(i,j,bi,bj)= 0.d0
+             ak2(i,j,bi,bj)= 0.d0
+             akb(i,j,bi,bj)= 0.d0
+             ak1p(i,j,bi,bj) = 0.d0
+             ak2p(i,j,bi,bj) = 0.d0
+             ak3p(i,j,bi,bj) = 0.d0
+             aksi(i,j,bi,bj) = 0.d0
+             akw(i,j,bi,bj) = 0.d0
+             aks(i,j,bi,bj)= 0.d0
+             akf(i,j,bi,bj)= 0.d0
+             bt(i,j,bi,bj) = 0.d0
+             st(i,j,bi,bj) = 0.d0
+             ft(i,j,bi,bj) = 0.d0
+             Ksp_TP(i,j,bi,bj) = 0.d0
+            endif
+
+c compute CO3 for DARWIN_PLANKTON and sediment fluxes
+            if (maskC(i,j,k,bi,bj).NE.0. _d 0) then
+
+             pCO2SolverTemp = max(-4. _d 0, min(39. _d 0, Tlocal))
+             pCO2SolverSal = max(4. _d 0, min(50. _d 0, Slocal))
+              
+c check bounds for PCO2 solver
+             dicl  = max(Ptracer(i,j,k,bi,bj,iDIC  ),0. _d 0)
+             docl  = max(Ptracer(i,j,k,bi,bj,iDOC  ),0. _d 0)
+             pocl  = max(Ptracer(i,j,k,bi,bj,iPOC  ),0. _d 0)
+             picl  = max(Ptracer(i,j,k,bi,bj,iPIC  ),0. _d 0)
+             alkl  = max(Ptracer(i,j,k,bi,bj,iALK  ),0. _d 0)
+             o2l   = max(Ptracer(i,j,k,bi,bj,iO2   ),0. _d 0)
+             po4l  = max(Ptracer(i,j,k,bi,bj,iPO4  ),0. _d 0)
+             sil   = max(Ptracer(i,j,k,bi,bj,iSiO2 ),0. _d 0)
+
+ 	         pCO2SolverDic = max(400. _d 0, min(4000. _d 0,dicl))
+             pCO2SolverAlk = max(400. _d 0, min(4000. _d 0,alkl))
+             pCO2SolverPo4 = max(1. _d -10, min(10. _d 0,po4l))
+             pCO2SolverSi = max(1. _d -8, min(500. _d 0,sil))
+             
+             print *,'pCO2SolverDic =',pCO2SolverDic
+             print *,'pCO2SolverAlk =',pCO2SolverAlk
+             print *,'pCO2SolverPo4 =',pCO2SolverPo4
+             print *,'pCO2SolverSi =',pCO2SolverSi
+c convert to mol m^-3
+             pCO2SolverDic = pCO2SolverDic*1.0 _d -3
+             pCO2SolverAlk = pCO2SolverAlk*1.0 _d -3
+             pCO2SolverPo4 = pCO2SolverPo4*1.0 _d -3
+             pCO2SolverSi = pCO2SolverSi*1.0 _d -3 
+            
+ 
+             CALL DARWIN_CALC_PCO2_APPROX(
+     I        pCO2SolverTemp,pCO2SolverSal,
+     I        pCO2SolverDic,pCO2SolverPo4,
+     I        pCO2SolverSi,pCO2SolverAlk,
+     I        ak1(i,j,bi,bj),ak2(i,j,bi,bj),
+     I        ak1p(i,j,bi,bj),ak2p(i,j,bi,bj),ak3p(i,j,bi,bj),
+     I        aks(i,j,bi,bj),akb(i,j,bi,bj),akw(i,j,bi,bj),
+     I        aksi(i,j,bi,bj),akf(i,j,bi,bj),
+     I        ak0(i,j,bi,bj),fugf(i,j,bi,bj),
+     I        ff(i,j,bi,bj),
+     I        bt(i,j,bi,bj),st(i,j,bi,bj),ft(i,j,bi,bj),
+     U        pH(i,j,k,bi,bj),pCO2(i,j,k,bi,bj),CO3(i,j,k,bi,bj),
+     I        myThid)
+	    
+             else
+
+              pH(i,j,k,bi,bj) = 0. _d 0
+              pCO2(i,j,k,bi,bj) = 0. _d 0
+              CO3(i,j,k,bi,bj) = 0. _d 0
+        
+	     endif
+
+      print *,'darwin_forcing Ksp_TP(i,j,bi,bj) = ',Ksp_TP(i,j,bi,bj)
+      
+      calcium(i,j,k,bi,bj) = 1.028 _d -2*Slocal/35. _d 0
+     &        * 1. _d 3
+      print *,'darwin_forcing picl  = ',picl
+      print *,'darwin_forcing calcium(i,j,k,bi,bj) =',
+     &   calcium(i,j,k,bi,bj) 
+      print *,'darwin_forcing CO3(i,j,bi,bj)=',CO3(i,j,k,bi,bj)
+      
+#endif
         CALL DARWIN_PLANKTON(
      I                 ptr,
      U                 gtr,
@@ -327,7 +630,12 @@ C === plankton =========================================================
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
 #ifdef DARWIN_ALLOW_CARBON
-     O                 disscPIClocal,omegaCLocal,
+     I                 picl,
+     I                 Ksp_TP(i,j,bi,bj), 
+     I                 CO3(i,j,k,bi,bj),
+     I                 calcium(i,j,k,bi,bj),
+     O                 disscPIC(i, j, k, bi, bj),
+     O                 omegaC(i, j, k, bi, bj),
 #endif   
 #ifdef DARWIN_DEBUG
      I                 myxgloballo+(bi-1)*sNx+i-1,
@@ -360,8 +668,10 @@ C === plankton =========================================================
         ENDDO
 
 #ifdef DARWIN_ALLOW_CARBON
-        disscPIC(i, j, k) = disscPIClocal
-        omegaC(i, j, k) = omegaCLocal
+        print *,'darwin_forcing disscPIC(i, j, k, bi, bj) = ',
+     &    disscPIC(i, j, k, bi, bj)
+        print *,'darwin_forcing omegaC(i, j, k, bi, bj) = ', 
+     &    omegaC(i, j, k, bi, bj)
 #endif
       endif
       enddo
@@ -618,10 +928,10 @@ C      diags(iCons*) for convenience
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(disscPIC(1-OLx,1-OLy,1),'disscPIC',0,Nr,1,
-     &  bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(omegaC(1-OLx,1-OLy,1),'omegaC  ',0,Nr,1,
-     &  bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(disscPIC(1-OLx,1-OLy,1,bi,bj),'disscPIC',
+     &  0,Nr,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(omegaC(1-OLx,1-OLy,1,bi,bj),'omegaC  ',
+     &  0,Nr,2,bi,bj,myThid)
 #endif
        CALL TIMER_STOP ('DIAGS_FILL [DARWIN_FORCING]',myThid)
       ENDIF

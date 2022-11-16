@@ -10,7 +10,12 @@ C !INTERFACE: ==========================================================
      I     PAR, photoTempFunc, hetTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
 #ifdef DARWIN_ALLOW_CARBON
-     O     disscPIClocal, omegaCLocal,
+     I     PIClocal,
+     I     KspTPLocal, 
+     I     CO3Local,
+     I     calciumLocal,
+     O     disscPIC,
+     O     omegaC,
 #endif              
 #ifdef DARWIN_DEBUG
      I     iG, jG, k, dT,
@@ -61,9 +66,9 @@ C !OUTPUT PARAMETERS: ==================================================
 C  chlout :: computed acclimated chlorophyll if not dynamic
       _RL chlout(nPhoto)
       _RL diags(darwin_nDiag)
-#ifdef DARWIN_ALLOW_CARBON                                                                                             
-      _RL omegaCLocal 
-      _RL disscPIClocal
+#ifdef DARWIN_ALLOW_CARBON                                                                                       
+      _RL omegaC 
+      _RL disscPIC
 #endif DARWIN_ALLOW_CARBON   
 CEOP
 
@@ -286,10 +291,10 @@ C for grazing
 #endif
 
 #ifdef DARWIN_ALLOW_CARBON
-      _RL calciumLocal
-      _RL CO3Local
-      _RL KspTPLocal
       _RL PIClocal
+      _RL KspTPLocal
+      _RL CO3Local
+      _RL calciumLocal
 #endif DARWIN_ALLOW_CARBON
 
 C==== precompute a few things ==========================================
@@ -917,7 +922,7 @@ C if running with bacteria
 #endif
 #endif
 
-      disscPIClocal = Kdissc*PIC
+      disscPIC = Kdissc*PIC
 
 c nitrogen chemistry
 c NH4 -> NO2 -> NO3 by bacterial action, parameterized
@@ -986,13 +991,13 @@ c loss of O2 by remineralization
       diags(iConsO2) = consumO2
 
       gTr(iALK)=gTr(iALK) - (prodNO3 - consumNO3)
-     &                    - 2.0 _d 0*(consumDIC_PIC -  disscPIClocal)
+     &                    - 2.0 _d 0*(consumDIC_PIC -  disscPIC)
 #endif /* DARWIN_ALLOW_CARBON */
 
-      gTr(iDIC )=gTr(iDIC ) + reminDOC + disscPIClocal
+      gTr(iDIC )=gTr(iDIC ) + reminDOC + disscPIC
       
       diags(iReminDIC_DOC) = reminDOC
-      diags(iDisscDIC_PIC) = disscPIClocal
+      diags(iDisscDIC_PIC) = disscPIC
 
       gTr(iNH4 )=gTr(iNH4 ) + reminDON - prodNO2
       gTr(iNO2 )=gTr(iNO2 ) + prodNO2 - prodNO3
@@ -1024,7 +1029,7 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
       gTr(iDOP )=gTr(iDOP ) + solubilPOP - consumDOP
       gTr(iDOFe)=gTr(iDOFe) + solubilPOFe - consumDOFe
 
-      gTr(iPIC )=gTr(iPIC ) - disscPIClocal
+      gTr(iPIC )=gTr(iPIC ) - disscPIC
       gTr(iPOC )=gTr(iPOC ) - consumPOC
       gTr(iPON )=gTr(iPON ) - consumPON
       gTr(iPOP )=gTr(iPOP ) - consumPOP
@@ -1049,7 +1054,7 @@ C     DOC is created by #4 PA-assoc solubilization and consumed by #5
 #endif /* DARWIN_ALLOW_CDOM */
 
       diags(iConsALK) = (prodNO3 - consumNO3)
-     & +2.0 _d 0*(consumDIC_PIC - disscPIClocal)
+     & +2.0 _d 0*(consumDIC_PIC - disscPIC)
       diags(iConsDIN) = consumNH4 + consumNO2 + consumNO3
       diags(iConsNO3) = consumNO3
       diags(iConsNO2) = consumNO2
@@ -1426,27 +1431,33 @@ C==== mortality ========================================================
 C PIC dissolution rate
 
 C units in mol m^-3
-      omegaCLocal = (calciumLocal * 1. _d -3) 
+      print *,'darwin_plakton calciumlocal = ',calciumLocal
+      print *,'darwin_plankton CO3local = ',CO3Local
+      print *,'darwin_plankton KspTPLocal = ',KspTPLocal
+      omegaC = (calciumLocal * 1. _d -3) 
      &   * CO3Local / KspTPLocal
+      print *,'darwin_plankton omegaC = ',omegaC
 
 C water column dissolution
 #ifdef NAVIAUX_DISSOLUTION
 
 C Naviaux et al. 2019, Marine Chemistry dissolution rate law
-        if (omegaCLocal .LT. 1.0 _d 0) then
-                if (omegaCLocal .LT. 0.8272 _d 0) then
-                        disscPIClocal = PIClocal * 5.22 _d -9 *
-     &                    (1 - omegaCLocal)**0.11 _d 0
+        if (omegaC .LT. 1.0 _d 0) then
+                if (omegaC .LT. 0.8272 _d 0) then
+                        disscPIC = PIClocal * 5.22 _d -9 *
+     &                    (1 - omegaC)**0.11 _d 0
                 else
-                        disscPIClocal = PIClocal * 1.65 _d -5 *
-     &                    (1 - omegaCLocal)**4.7 _d 0
+                        disscPIC = PIClocal * 1.65 _d -5 *
+     &                    (1 - omegaC)**4.7 _d 0
                 endif
         else
-                disscPIClocal = 0.0 _d 0
+                disscPIC = 0.0 _d 0
         endif
+        
+        print *,'darwin_plankton disscPIC = ',disscPIC
 
 #else /* NAVIAUX_DISSOLUTION */
-        disscPIClocal = Kdissc * PIClocal
+        disscPIC = Kdissc * PIClocal
 #endif /* NAVIAUX_DISSOLUTION */
         
 #endif DARWIN_ALLOW_CARBON
