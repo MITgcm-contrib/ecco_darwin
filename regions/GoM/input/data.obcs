@@ -1,0 +1,43 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jnorth =   960*-1,
+ OB_Jsouth =   960*1,
+ OB_Ieast  =   960*-1,
+#
+ useOBCSprescribe=.TRUE.,
+ useOBCSbalance  =.FALSE.,
+#
+ OBNsFile='OBNs_gom_960x960.stable',
+ OBNtFile='OBNt_gom_960x960.stable',
+ OBNuFile='OBNu_gom_960x960.bin',
+ OBNvFile='OBNv_gom_960x960.bin',
+#
+ OBSsFile='OBSs_gom_960x960.stable',
+ OBStFile='OBSt_gom_960x960.stable',
+ OBSuFile='OBSu_gom_960x960.bin',
+ OBSvFile='OBSv_gom_960x960.bin',
+#
+ OBEsFile='OBEs_gom_960x960.stable',
+ OBEtFile='OBEt_gom_960x960.stable',
+ OBEuFile='OBEu_gom_960x960.balance3',
+ OBEvFile='OBEv_gom_960x960.bin',
+#
+ useOBCStides = .FALSE.,
+#DOMINATE COMPONENTS
+#components   = 'm2  ';'s2  ';'k1  ';'o1  '; 'n2  ';'p1  ';'k2  ';'q1  ';'mf  ';'mm  '};
+#sprintf('%15.5f',2*pi*omega_data.^-1)
+# tidalPeriod =  44714.16431337780, 43200.00001728000, 45570.05357245878, 43082.04528908103,
+#                86164.09057816206, 92949.63009971760, 86637.20483483445, 96726.08376243486
+#THESE ARE TPXO CONSTITUENTS
+#CONS = [1:8]  
+#
+# OBNamFile='OBN_TdlAmp_trans19920101.bin',
+# OBSamFile='OBS_TdlAmp_trans19920101.bin',
+# OBEamFile='OBE_TdlAmp_trans19920101.bin',
+# OBNphFile='OBN_TdlPhs_trans19920101.bin',
+# OBSphFile='OBS_TdlPhs_trans19920101.bin',
+# OBEphFile='OBE_TdlPhs_trans19920101.bin',
+#
+ &
