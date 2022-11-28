@@ -248,10 +248,12 @@ c put bounds on tracers so pH solver doesn't blow up
      I        ak0(i,j,bi,bj),  fugf(i,j,bi,bj),
      I        ff(i,j,bi,bj),
      I        bt(i,j,bi,bj), st(i,j,bi,bj), ft(i,j,bi,bj),
-     U        pH(i,j,k,bi,bj), pCO2(i,j,k,bi,bj), co3dummy,
+     U        pH(i,j,k,bi,bj), pCO2(i,j,k,bi,bj), CO3(i,j,k,bi,bj),
      I        i,j,k,bi,bj,myIter,myThid )
         ELSE
          pCO2(i,j,k,bi,bj)=0. _d 0
+         CO3(i,j,k,bi,bj)=0. _d 0
+         pH(i,j,k,bi,bj)=0. _d 0
         ENDIF
        ENDDO
       ENDDO

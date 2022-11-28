@@ -57,7 +57,8 @@ C Carbon Variables
        COMMON /CARBON_CHEM/
      &                     ak0,ak1,ak2,akw,akb,aks,akf,
      &                     ak1p,ak2p,ak3p,aksi, fugf,
-     &                     ff,ft,st,bt, Ksp_TP_Calc
+     &                     ff,ft,st,bt, Ksp_TP_Calc,
+     &                     CO3,disscPIC,omegaC,calcium
       _RL  ak0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  ak1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  ak2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -82,7 +83,6 @@ C Fugacity Factor added by Val Bennington Nov. 2010
       _RL  disscPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  omegaC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
-      _RL  Ksp_TP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 #endif
 CEOP
 #endif /* ALLOW_DARWIN */

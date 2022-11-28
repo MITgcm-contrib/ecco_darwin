@@ -9,16 +9,15 @@ C !INTERFACE: ==========================================================
      O     chlout, diags,
      I     PAR, photoTempFunc, hetTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
-#ifdef DARWIN_ALLOW_CARBON
-     I     PIClocal,
-     I     KspTPLocal, 
-     I     CO3Local,
-     I     calciumLocal,
-     O     disscPIC,
-     O     omegaC,
-#endif              
 #ifdef DARWIN_DEBUG
      I     iG, jG, k, dT,
+#endif
+#ifdef DARWIN_ALLOW_CARBON
+     I                 calciumLocal,
+     I                 CO3Local,
+     I                 Ksp_TP_Local,
+     O                 disscPIC_Local,
+     O                 omegaC_Local,
 #endif
      I     myTime,myIter,myThid)
 
@@ -35,6 +34,7 @@ C !USES: ===============================================================
 #include "DARWIN_RADTRANS.h"
 #include "DARWIN_PARAMS.h"
 #include "DARWIN_TRAITS.h"
+
 C !INPUT PARAMETERS: ===================================================
 C  Ptr    :: darwin model tracers
 C  PAR    :: PAR in uEin/s/m2
@@ -58,6 +58,12 @@ C  myThid :: thread number
       _RL dT
 #endif
 
+#ifdef DARWIN_ALLOW_CARBON
+      _RL Ksp_TP_Local
+      _RL CO3Local
+      _RL calciumLocal
+#endif DARWIN_ALLOW_CARBON
+
 C !INPUT/OUTPUT PARAMETERS: ============================================
 C  gTr    :: accumulates computed tendencies
       _RL gTr(nDarwin)
@@ -66,11 +72,11 @@ C !OUTPUT PARAMETERS: ==================================================
 C  chlout :: computed acclimated chlorophyll if not dynamic
       _RL chlout(nPhoto)
       _RL diags(darwin_nDiag)
-#ifdef DARWIN_ALLOW_CARBON                                                                                       
-      _RL omegaC 
-      _RL disscPIC
-#endif DARWIN_ALLOW_CARBON   
 CEOP
+#ifdef DARWIN_ALLOW_CARBON
+      _RL disscPIC_Local
+      _RL omegaC_Local
+#endif DARWIN_ALLOW_CARBON
 
 #ifdef ALLOW_DARWIN
 
@@ -216,6 +222,7 @@ c !LOCAL VARIABLES: ====================================================
       _RL reminPOP
       _RL reminPOSi
       _RL reminPOFe
+      _RL disscPIC
 
       _RL prodNO2
       _RL prodNO3
@@ -289,13 +296,6 @@ C for grazing
 #ifdef DARWIN_ALLOW_CDOM
       _RL graz2CDOM, exude_CDOM
 #endif
-
-#ifdef DARWIN_ALLOW_CARBON
-      _RL PIClocal
-      _RL KspTPLocal
-      _RL CO3Local
-      _RL calciumLocal
-#endif DARWIN_ALLOW_CARBON
 
 C==== precompute a few things ==========================================
 
@@ -922,7 +922,44 @@ C if running with bacteria
 #endif
 #endif
 
-      disscPIC = Kdissc*PIC
+#ifdef DARWIN_ALLOW_CARBON
+C PIC dissolution rate
+
+C units in mol m^-3
+      print *,'darwin_plakton calciumlocal = ',calciumLocal
+      print *,'darwin_plankton CO3local = ',CO3Local
+      print *,'darwin_plankton KspTPLocal = ',Ksp_TP_Local
+      
+      omegaC_Local = MIN(1., ( MAX(0., calciumLocal) * 1. _d -3) 
+     &   *  MAX(0., CO3Local) / Ksp_TP_Local)
+     
+      print *,'darwin_plankton omegaC = ',omegaC_Local
+
+C water column dissolution
+#ifdef NAVIAUX_DISSOLUTION
+
+C Naviaux et al. 2019, Marine Chemistry dissolution rate law
+        if (omegaC_Local .LT. 1.0 _d 0) then
+                if (omegaC_Local .LT. 0.8272 _d 0) then
+                        disscPIC_Local = PIC * 5.22 _d -9 *
+     &                    (1 - omegaC_Local)**0.11 _d 0
+                else
+                        disscPIC_Local = PIC * 1.65 _d -5 *
+     &                    (1 - omegaC_Local)**4.7 _d 0
+                endif
+        else
+                disscPIC_Local = 0.0 _d 0
+        endif
+        
+        print *,'darwin_plankton disscPIC = ',disscPIC_Local
+
+#else /* NAVIAUX_DISSOLUTION */
+
+        disscPIC_Local = Kdissc * PIC
+        
+#endif /* NAVIAUX_DISSOLUTION */
+        
+#endif DARWIN_ALLOW_CARBON
 
 c nitrogen chemistry
 c NH4 -> NO2 -> NO3 by bacterial action, parameterized
@@ -991,7 +1028,7 @@ c loss of O2 by remineralization
       diags(iConsO2) = consumO2
 
       gTr(iALK)=gTr(iALK) - (prodNO3 - consumNO3)
-     &                    - 2.0 _d 0*(consumDIC_PIC -  disscPIC)
+     &                    - 2.0 _d 0*(consumDIC_PIC - disscPIC)
 #endif /* DARWIN_ALLOW_CARBON */
 
       gTr(iDIC )=gTr(iDIC ) + reminDOC + disscPIC
@@ -1426,42 +1463,6 @@ C==== mortality ========================================================
       gTr(iDOP )=gTr(iDOP ) - exude_CDOM
       gTr(iDOFe)=gTr(iDOFe)              - R_FeP_CDOM*exude_CDOM
 #endif
-
-#ifdef DARWIN_ALLOW_CARBON
-C PIC dissolution rate
-
-C units in mol m^-3
-      print *,'darwin_plakton calciumlocal = ',calciumLocal
-      print *,'darwin_plankton CO3local = ',CO3Local
-      print *,'darwin_plankton KspTPLocal = ',KspTPLocal
-      omegaC = (calciumLocal * 1. _d -3) 
-     &   * CO3Local / KspTPLocal
-      print *,'darwin_plankton omegaC = ',omegaC
-
-C water column dissolution
-#ifdef NAVIAUX_DISSOLUTION
-
-C Naviaux et al. 2019, Marine Chemistry dissolution rate law
-        if (omegaC .LT. 1.0 _d 0) then
-                if (omegaC .LT. 0.8272 _d 0) then
-                        disscPIC = PIClocal * 5.22 _d -9 *
-     &                    (1 - omegaC)**0.11 _d 0
-                else
-                        disscPIC = PIClocal * 1.65 _d -5 *
-     &                    (1 - omegaC)**4.7 _d 0
-                endif
-        else
-                disscPIC = 0.0 _d 0
-        endif
-        
-        print *,'darwin_plankton disscPIC = ',disscPIC
-
-#else /* NAVIAUX_DISSOLUTION */
-        disscPIC = Kdissc * PIClocal
-#endif /* NAVIAUX_DISSOLUTION */
-        
-#endif DARWIN_ALLOW_CARBON
-      
 #endif /* ALLOW_DARWIN */
 
       RETURN
