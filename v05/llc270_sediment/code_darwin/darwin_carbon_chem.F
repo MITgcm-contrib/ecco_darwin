@@ -418,12 +418,10 @@ c ---------------------------------------------------------------------
 c set first guess and brackets for [H+] solvers
 c first guess (for newton-raphson)
         phguess = phlocal
-        print *,'phguess = ',phguess
 cmick - new approx method
 cmick - make estimate of htotal (hydrogen ion conc) using
 cmick   appromate estimate of CA, carbonate alkalinity
         hguess = 10.0**(-phguess)
-        print *,'hguess1 = ',hguess
 cmick - first estimate borate contribution using guess for [H+]
         bohg = btlocal*kblocal/(hguess+kblocal)
 
@@ -446,22 +444,12 @@ cmick - now estimate carbonate alkalinity
         cag = ta - bohg - (kwlocal/hguess) + hguess
      &           - hpo4g - 2.0 _d 0*po4g + h3po4g
      &           - siooh3g
-        print *,'cag = ',cag
-        print *,'ta = ',ta
-        print *,'bohg = ', bohg
-        print *,'kwlocal = ', kwlocal
-        print *,'hguess = ', hguess
-        print *,'hpo4g = ', hpo4g
-        print *,'po4g = ', po4g
-        print *,'siooh3g = ', siooh3g
 cmick - now evaluate better guess of hydrogen ion conc
 cmick   htotal = [H+], hydrogen ion conc
         gamm  = diclocal/cag
         stuff = (1.0 _d 0-gamm)*(1.0 _d 0-gamm)*k1local*k1local
      &          - 4.0 _d 0*k1local*k2local*(1.0 _d 0-2.0 _d 0*gamm)
         hnew  = 0.5 _d 0*( (gamm-1.0 _d 0)*k1local + sqrt(stuff) )
-        print *,'gamm = ', gamm
-        print *,'stuff = ', stuff
 cmick - now determine [CO2*]
         co2s  = diclocal/
      &   (1.0 _d 0 + (k1local/hnew) + (k1local*k2local/(hnew*hnew)))
@@ -471,10 +459,6 @@ cmick - return update pH to main routine
 c NOW EVALUATE CO32-, carbonate ion concentration
 c used in determination of calcite compensation depth
 c Karsten Friis & Mick - Sep 2004
-        print *,'k1local = ', k1local
-        print *,'k2local = ', k2local
-        print *,'diclocal = ', diclocal
-        print *,'hnew = ', hnew
         co3local = k1local*k2local*diclocal /
      &         (hnew*hnew + k1local*hnew + k1local*k2local)
 

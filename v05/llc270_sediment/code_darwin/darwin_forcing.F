@@ -303,16 +303,9 @@ C === plankton =========================================================
       
       if (hFacC(i,j,k,bi,bj) .GT. 0.) then
       
+C     compute calcium concentration for PIC dissolution rate      
       calcium(i,j,k,bi,bj) = 1.028 _d -2*salt(i,j,k,bi,bj)/35. _d 0
      &        * 1. _d 3
-      print *,'darwin_forcing Ksp_TP(i,j,bi,bj) = ',
-     &   Ksp_TP_Calc(i,j,bi,bj)
-      print *,'darwin_forcing picl  = ', Ptracer(i,j,k,bi,bj,iPIC)
-      print *,'darwin_forcing calcium(i,j,k,bi,bj) =',
-     &   calcium(i,j,k,bi,bj) 
-      print *,'darwin_forcing CO3(i,j,bi,bj)=',CO3(i,j,k,bi,bj)
-      print *,'darwin_forcing pCO2(i,j,bi,bj)=',pCO2(i,j,k,bi,bj)
-      print *,'darwin_forcing pH(i,j,bi,bj)=',pH(i,j,k,bi,bj)
       
         CALL DARWIN_TEMPFUNC(Theta(i,j,k,bi,bj),
      &         photoTempFunc, hetTempFunc, grazTempFunc,
@@ -349,10 +342,6 @@ C === plankton =========================================================
 #endif
      I                 subTime, myIter, myThid )
      
-      print *,'darwin_forcing disscPIC(i,j,bi,bj)=',
-     &   disscPIC(i,j,k,bi,bj)
-      print *,'darwin_forcing omegaC(i,j,bi,bj)=',
-     &   omegaC(i,j,k,bi,bj)
      
         DO l=1,darwin_nDiag
          diags(i, j, k, l) = diagsl(l)

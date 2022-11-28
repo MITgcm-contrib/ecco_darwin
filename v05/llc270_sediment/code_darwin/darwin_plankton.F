@@ -925,15 +925,9 @@ C if running with bacteria
 #ifdef DARWIN_ALLOW_CARBON
 C PIC dissolution rate
 
-C units in mol m^-3
-      print *,'darwin_plakton calciumlocal = ',calciumLocal
-      print *,'darwin_plankton CO3local = ',CO3Local
-      print *,'darwin_plankton KspTPLocal = ',Ksp_TP_Local
-      
+C units in mol m^-3      
       omegaC_Local = MIN(1., ( MAX(0., calciumLocal) * 1. _d -3) 
      &   *  MAX(0., CO3Local) / Ksp_TP_Local)
-     
-      print *,'darwin_plankton omegaC = ',omegaC_Local
 
 C water column dissolution
 #ifdef NAVIAUX_DISSOLUTION
@@ -950,8 +944,6 @@ C Naviaux et al. 2019, Marine Chemistry dissolution rate law
         else
                 disscPIC_Local = 0.0 _d 0
         endif
-        
-        print *,'darwin_plankton disscPIC = ',disscPIC_Local
 
 #else /* NAVIAUX_DISSOLUTION */
 
