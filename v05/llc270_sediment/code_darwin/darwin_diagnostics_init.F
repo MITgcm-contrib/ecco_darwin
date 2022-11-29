@@ -571,6 +571,83 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SMR     MR      '                                    
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName,diagCode,diagUnits, diagTitle, 0, myThid )
+     
+           WRITE(diagName,'(A)')'DICFsed '
+      WRITE(diagTitle,'(A)')'DIC sediment flux'
+      diagUnits = 'mmol/m2/s    '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'ALKFsed '
+      WRITE(diagTitle,'(A)')'ALK sediment flux'
+      diagUnits = 'mmol/m2/s    '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'O2Fsed  '
+      WRITE(diagTitle,'(A)')'O2 sediment flux'
+      diagUnits = 'mmol/m2/s    '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'POCFbur '
+      WRITE(diagTitle,'(A)')'POC buried flux'
+      diagUnits = 'mmol/m2/s    '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I     diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+      
+      WRITE(diagName,'(A)')'CALFbur '
+      WRITE(diagTitle,'(A)')'Calcite buried flux'
+      diagUnits = 'mmol/m2/s    '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'fluxPOC '
+      WRITE(diagTitle,'(A)')'POC flux from water column to sediment'
+      diagUnits = 'mmol/m2/s    '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I     diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'fluxPIC '
+      WRITE(diagTitle,'(A)')'PIC flux from water column to sediment'
+      diagUnits = 'mmol/m2/s    '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'TcorrO2 '
+      WRITE(diagTitle,'(A)')'Temperature corretion diffusive O2 flux'
+      diagUnits = 'Celcius      '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I     diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+      
+      WRITE(diagName,'(A)')'TcorrALK'
+      WRITE(diagTitle,'(A)')'Temperature corretion diffusive ALK flux'
+      diagUnits = 'Celcius      '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I     diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+      
+      WRITE(diagName,'(A)')'TcorrDIC'
+      WRITE(diagTitle,'(A)')'Temperature corretion diffusive DIC flux'
+      diagUnits = 'Celcius      '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'OmegaC0 '
+      WRITE(diagTitle,'(A)')'Omega at the seabed'
+      diagUnits = '-            '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
 #endif /* DARWIN_ALLOW_CARBON */
 

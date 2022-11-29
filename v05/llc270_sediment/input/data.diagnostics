@@ -98,13 +98,57 @@
    fields(1,18) = 'MXLDEPTH',
    filename(18) = 'diags/daily/mldDepth',
 #--- 
-   frequency(91) = 86400.,                                                                                             
-   fields(1,91) = 'disscPIC',                                                                                          
-   filename(91) = 'diags/daily/DISSCPIC', 
+   frequency(91) = 86400.,                                                                           
+   fields(1,91) = 'disscPIC',                                                                            filename(91) = 'diags/daily/DISSCPIC', 
 #--- 
    frequency(92) = 86400.,
    fields(1,92) = 'omegaC  ',
    filename(92) = 'diags/daily/OMEGAC',
+#--- 
+   frequency(95) = 86400.,
+   fields(1,95) = 'DICFsed ',
+   filename(95) = 'diags/daily/DICFsed',
+#--- 
+   frequency(96) = 86400.,
+   fields(1,96) = 'ALKFsed ',
+   filename(96) = 'diags/daily/ALKFsed',
+#--- 
+   frequency(97) = 86400.,
+   fields(1,97) = 'O2Fsed  ',
+   filename(97) = 'diags/daily/O2Fsed',
+#--- 
+   frequency(98) = 86400.,
+   fields(1,98) = 'POCFbur ',
+   filename(98) = 'diags/daily/POCFbur',
+#--- 
+   frequency(99) = 86400.,
+   fields(1,99) = 'CALFbur ',
+   filename(99) = 'diags/daily/CALFbur',
+
+#--- 
+   frequency(105) = 86400.,
+   fields(1,105) = 'fluxPOC ',
+   filename(105) = 'diags/daily/fluxPOC',
+#--- 
+   frequency(106) = 86400.,
+   fields(1,106) = 'fluxPIC ',
+   filename(106) = 'diags/daily/fluxPIC',
+#--- 
+   frequency(109) = 86400.,
+   fields(1,109) = 'TcorrO2 ',
+   filename(109) = 'diags/daily/TcorrO2',
+#--- 
+   frequency(111) = 86400.,
+   fields(1,111) = 'OmegaC0 ',
+   filename(111) = 'diags/daily/OmegaC0',
+#--- 
+   frequency(113) = 86400.,
+   fields(1,113) = 'TcorrDIC',
+   filename(113) = 'diags/daily/TcorrDIC',
+#--- 
+   frequency(114) = 86400.,
+   fields(1,114) = 'TcorrALK',
+   filename(114) = 'diags/daily/TcorrALK',
 
 #monthly diagnostics
 #---
@@ -274,7 +318,51 @@
   frequency(94) = 2635200.,
    fields(1,94) = 'omegaC  ',
    filename(94) = 'diags/monthly/OMEGAC',
-        
+#--- 
+   frequency(100) = 2635200.,
+   fields(1,100) = 'DICFsed ',
+   filename(100) = 'diags/monthly/DICFsed',
+#--- 
+   frequency(101) = 2635200.,
+   fields(1,101) = 'ALKFsed ',
+   filename(101) = 'diags/monthly/ALKFsed',
+#--- 
+   frequency(102) = 2635200.,
+   fields(1,102) = 'O2Fsed  ',
+   filename(102) = 'diags/monthly/O2Fsed',
+#--- 
+   frequency(103) = 2635200.,
+   fields(1,103) = 'POCFbur ',
+   filename(103) = 'diags/monthly/POCFbur',
+#--- 
+   frequency(104) = 2635200.,
+   fields(1,104) = 'CALFbur ',
+   filename(104) = 'diags/monthly/CALFbur',
+#--- 
+   frequency(107) = 2635200.,
+   fields(1,107) = 'fluxPOC ',
+   filename(107) = 'diags/monthly/fluxPOC',
+#--- 
+   frequency(108) = 2635200.,
+   fields(1,108) = 'fluxPIC ',
+   filename(108) = 'diags/monthly/fluxPIC',                
+#--- 
+   frequency(110) = 2635200.,
+   fields(1,110) = 'TcorrO2 ',
+   filename(110) = 'diags/monthly/TcorrO2',                
+#--- 
+   frequency(112) = 2635200.,
+   fields(1,112) = 'OmegaC0 ',
+   filename(112) = 'diags/monthly/OmegaC0',                
+#--- 
+   frequency(115) = 2635200.,
+   fields(1,115) = 'TcorrDIC',
+   filename(115) = 'diags/monthly/TcorrDIC',
+#--- 
+   frequency(116) = 2635200.,
+   fields(1,116) = 'TcorrALK',
+   filename(116) = 'diags/monthly/TcorrALK',
+
 #budget diagnostics   
 #---
   frequency(73) = 2635200.0,

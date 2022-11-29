@@ -119,6 +119,51 @@ C  k                    :: vertical level
       _RL sALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 	  _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      
+#ifdef DARWIN_ALLOW_CARBON   
+
+C     Sediment fluxes     
+      _RL DICFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL ALKFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL O2Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL POCFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL CALFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+C     Test variable for a diffusive temperature correction factor (for now only implemented in the O2 flux)
+      _RL TcorrO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy) 
+      _RL TcorrDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL TcorrALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+C     Dependent variables for sediment flux for validation
+      _RL OmegaC0(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL fluxPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL fluxPOC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+C     Constant for sediment fluxes
+      _RL a1
+      _RL b1
+      _RL c1
+      _RL d1
+      _RL a2
+      _RL b2
+      _RL c2
+      _RL d2
+      _RL a3
+      _RL b3
+      _RL c3
+      _RL d3
+      _RL a4
+      _RL b4
+      _RL c4
+      _RL d4
+      _RL a5
+      _RL b5
+      _RL c5
+      _RL d5
+      _RL c
+      
+#endif 
+      
+      
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -371,7 +416,114 @@ C     compute calcium concentration for PIC dissolution rate
       enddo
       enddo
       CALL TIMER_STOP('DARWIN_PLANKTON [DARWIN_FORCING]',myThid)
+      
+     
+#ifdef DARWIN_ALLOW_CARBON 
+C === Sediment fluxes ==========================================================
+      
+      a1=-0.101
+      b1=1.04
+      c1=0.128
+      d1=0.125
+      a2=-0.225
+      b2=0.581
+      c2=0.273
+      d2=0.211
+      a3=-0.018
+      b3=-0.8
+      c3=0.011
+      d3=-0.033
+      a4=0.
+      b4=0.027
+      c4=0.012
+      d4=-0.001
+      a5=0.117
+      b5=-0.251
+      c5=0.852
+      d5=-0.127
+      c = 3.17 _d -5
 
+C     Correction factor of diffusive flux with T, to potentially better resolve sediment fluxes at coastal regions
+      DO j=jMin,jMax
+      DO i=iMin,iMax
+      
+      IF (hFacC(i,j,KLowc(i,j,bi,bj),bi,bj) .GT. 0.) THEN
+      
+        TcorrO2(i,j)=(0.031558+0.001428*
+     &    ABS(Theta(i,j,KLowc(i,j,bi,bj),bi,bj)))/0.0335572
+     
+        TcorrDIC(i,j)=(0.015179+0.000795*
+     &    ABS(Theta(i,j,KLowc(i,j,bi,bj),bi,bj)))/0.016292
+     
+        TcorrALK(i,j)=(0.015179+0.000795*
+     &    ABS(Theta(i,j,KLowc(i,j,bi,bj),bi,bj)))/0.016292
+
+C     Dependent variables
+        fluxPIC(i,j) = wPIC_sink*
+     &    MAX(0.0,Ptracer(i,j,KLowc(i,j,bi,bj),bi,bj,iPIC))
+     
+        fluxPOC(i,j) = wC_sink*
+     &    MAX(0.0,Ptracer(i,j,KLowc(i,j,bi,bj),bi,bj,iPOC))
+     
+        OmegaC0(i,j) = omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)
+             
+        DICFsediment(i,j)=((a1*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
+     &    b1*fluxPOC(i,j)+c1*fluxPIC(i,j)+d1*c)*TcorrDIC(i,j)
+     
+        ALKFsediment(i,j)=((a2*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
+     &    b2*fluxPOC(i,j)+c2*fluxPIC(i,j)+d2*c)*TcorrALK(i,j)
+     
+        O2Fsediment(i,j)=((a3*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
+     &    b3*fluxPOC(i,j)+c3*fluxPIC(i,j)+d3*c)*TcorrO2(i,j)
+     
+        CALFsediment(i,j)=(a5*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
+     &    b5*fluxPOC(i,j)+c5*fluxPIC(i,j)+d5*c
+     
+        POCFsediment(i,j)=(a4*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
+     &    b4*fluxPOC(i,j)+c4*fluxPIC(i,j)+d4*c
+        
+      ELSE
+      
+        TcorrO2(i,j)=0.
+        TcorrDIC(i,j)=0.
+        TcorrALK(i,j)=0.
+        DICFsediment(i,j)=0.
+        ALKFsediment(i,j)=0.
+        O2Fsediment(i,j)=0.
+        CALFsediment(i,j)=0.
+        POCFsediment(i,j)=0.
+        
+      ENDIF
+      
+C     Set the buried fluxes to 0 if negative
+        POCFsediment(i,j)= MAX(0.0, POCFsediment(i,j))
+        CALFsediment(i,j)= MAX(0.0, CALFsediment(i,j))
+
+C     Equations calculating the concentrations at the deepest depth level (Klowc)
+        gPtr(i,j,KLowc(i,j,bi,bj),iDIC) = gPtr(i,j,KLowc(i,j,bi,bj),
+     &    iDIC) + DICFsediment(i,j)*recip_drF(KLowc(i,j,bi,bj))
+     &    *recip_hFacC(i,j,KLowc(i,j,bi,bj),bi,bj)
+     
+         gPtr(i,j,KLowc(i,j,bi,bj),iALK) = gPtr(i,j,KLowc(i,j,bi,bj),
+     &    iALK) + ALKFsediment(i,j)*recip_drF(KLowc(i,j,bi,bj))
+     &    *recip_hFacC(i,j,KLowc(i,j,bi,bj),bi,bj)
+     
+         gPtr(i,j,KLowc(i,j,bi,bj),iO2) = gPtr(i,j,KLowc(i,j,bi,bj),iO2)
+     &    + O2Fsediment(i,j)*recip_drF(KLowc(i,j,bi,bj))
+     &    *recip_hFacC(i,j,KLowc(i,j,bi,bj),bi,bj)
+     
+         gPtr(i,j,KLowc(i,j,bi,bj),iPOC) = gPtr(i,j,KLowc(i,j,bi,bj),
+     &    iPOC)+ POCFsediment(i,j)*recip_drF(KLowc(i,j,bi,bj))
+     &    *recip_hFacC(i,j,KLowc(i,j,bi,bj),bi,bj)
+     
+         gPtr(i,j,KLowc(i,j,bi,bj),iPIC) = gPtr(i,j,KLowc(i,j,bi,bj),
+     &    iPIC) + CALFsediment(i,j)*recip_drF(KLowc(i,j,bi,bj))
+     &    *recip_hFacC(i,j,KLowC(i,j,bi,bj),bi,bj)
+            
+      ENDDO
+      ENDDO
+#endif      
+      
 C === sinking ==========================================================
       CALL TIMER_START('DARWIN_SINKING [DARWIN_FORCING]',myThid)
       CALL DARWIN_SINKING( Ptracer,gPtr,bi,bj,iMin,iMax,jMin,jMax,
@@ -625,6 +777,28 @@ C      diags(iCons*) for convenience
      &  0,Nr,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(omegaC(1-OLx,1-OLy,1,bi,bj),'omegaC  ',
      &  0,Nr,2,bi,bj,myThid)
+            CALL DIAGNOSTICS_FILL(DICFsediment,'DICFsed ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(ALKFsediment,'ALKFsed ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(O2Fsediment,'O2Fsed  ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(POCFsediment,'POCFbur ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(CALFsediment,'CALFbur ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(fluxPIC,'fluxPIC ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(fluxPOC,'fluxPOC ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(TcorrO2,'TcorrO2 ',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(TcorrDIC,'TcorrDIC',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(TcorrALK,'TcorrALK',0,
+     &      1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(OmegaC0,'OmegaC0 ',0,
+     &      1,1,bi,bj,myThid)
 #endif
        CALL TIMER_STOP ('DIAGS_FILL [DARWIN_FORCING]',myThid)
       ENDIF
