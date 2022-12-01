@@ -3,8 +3,8 @@
 # *********************
  &ctrl_nml
  doSinglePrecTapelev=.TRUE.,
- ctrlSmoothCorrel2D=.TRUE.,
- ctrlSmoothCorrel3D=.TRUE.,
+# ctrlSmoothCorrel2D=.TRUE.,
+# ctrlSmoothCorrel3D=.TRUE.,
 #to start from given xx*00.data files
   doinitxx = .TRUE.,
   doMainUnpack = .FALSE.,
