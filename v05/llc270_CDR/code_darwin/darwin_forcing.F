@@ -121,6 +121,8 @@ C  k                    :: vertical level
       _RL sALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 	  _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+	  _RL CDR_DIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+	  _RL CDR_ALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)	  
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -218,6 +220,11 @@ C === nutrient runoff ==================================================
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DOPratioDOFe
         gPtr(i,j,1,iPOFe) = gPtr(i,j,1,iPOFe) + POPrunoff(i,j,bi,bj)                                
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * POPratioPOFe
+         CDR_DIC(i,j) = DICrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)    
+         CDR_ALK(i,j) = DICrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
+     
       ENDDO
       ENDDO
 #endif
@@ -467,6 +474,13 @@ C === diagnostics ======================================================
      &       0,Nr,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iDenitN),'DenitN  ',
      &       0,Nr,2,bi,bj,myThid)
+
+
+C CDR diagnostics
+       CALL DIAGNOSTICS_FILL(CDR_DIC,'CDR_DIC ',0,1,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(CDR_ALK,'CDR_ALK ',0,1,1,bi,bj,myThid)
+
+
 
        DO k=1,Nr
         DO j=1,sNy
