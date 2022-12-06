@@ -38,3 +38,8 @@ git clone https://github.com/MITgcm-contrib/ecco_darwin
 #change data, ... 
  qsub job_gom960_bro
 
+#=========
+#4 Result
+1995-1998 runs
+https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC4320/GoM960/RUNOFF_exps/readme
+
