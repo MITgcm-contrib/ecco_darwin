@@ -1,5 +1,4 @@
-# v05 3deg darwin3 verification experiment with volume, salt, salinity, DIC, and FeT budget
-# diagnostics, initially based on MITgcm/verification/tutorial_global_oce_biogeo
+# v05 3deg Darwin3 setup for Carbon Dioxide Removal (CDR) simulations  
 
 # ========
 # 1. Get code
@@ -58,15 +57,6 @@
  rm data.ctrl data.exch2 data.smooth
 # from model_input copy restarts and directory to the right experiment
 
-
 # modify job_3deg_darwin3 as needed
  qsub job_3deg_darwin3
  
-# ============================
-# 5. MATLAB code for computing volume, salt, salinity, DIC, and Fe budgets
-#    Prerequisite: 4. Build and run MPI executable
-#    Can be executed as soon as 3 or more days of output are available
- cd ../../ecco_darwin/v05/3deg/matlab
-# start MATLAB
-# with gcmfaces use: *budget_with_gcmfaces*.m 
-# without gcmfaces use: *budget_without_gcmfaces*.m
