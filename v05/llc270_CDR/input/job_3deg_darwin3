@@ -1,8 +1,8 @@
 #!/bin/csh
 #PBS -l select=1:ncpus=16:model=has
+
 #PBS -q normal
 #PBS -l walltime=8:00:00
-
 
 ##PBS -l walltime=120:00:00
 ##PBS -q long
@@ -11,12 +11,10 @@
 ##PBS -q debug
 ##PBS -q devel
 
-
-
 #PBS -j oe
 #PBS -m abe
 
-#PBS -N v05_3deg_test
+#PBS -N v05_3deg_CDR
 #PBS -o output
 #PBS -e error
 
