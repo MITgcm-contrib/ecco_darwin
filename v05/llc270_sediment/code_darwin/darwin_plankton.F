@@ -945,7 +945,7 @@ C water column dissolution
 
 C Naviaux et al. 2019, Marine Chemistry dissolution rate law
         if (omegaC_Local .LT. 1.0 _d 0) then
-                if (omegaC_Local .LT. 0.8272 _d 0) then
+                if (omegaC_Local .GT. 0.8272 _d 0) then
                         disscPIC_Local = PIC * 5.22 _d -9 *
      &                    (1 - omegaC_Local)**0.11 _d 0
                 else
