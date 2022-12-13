@@ -348,7 +348,12 @@ C === plankton =========================================================
       
       if (hFacC(i,j,k,bi,bj) .GT. 0.) then
       
-C     compute calcium concentration for PIC dissolution rate      
+
+      write(6,*)'darwin forcing'
+      write(6,*)Ksp_TP_Calc(i,j,k,bi,bj)
+
+      
+C     compute calcium concentration for PIC dissolution rate (mmol m^-3)    
       calcium(i,j,k,bi,bj) = 1.028 _d -2*salt(i,j,k,bi,bj)/35. _d 0
      &        * 1. _d 3
       
@@ -381,11 +386,17 @@ C     compute calcium concentration for PIC dissolution rate
 #ifdef DARWIN_ALLOW_CARBON
      I                 calcium(i,j,k,bi,bj),
      I                 CO3(i,j,k,bi,bj),
-     I                 Ksp_TP_Calc(i,j,bi,bj),
+     I                 Ksp_TP_Calc(i,j,k,bi,bj),
      O                 disscPIC(i,j,k,bi,bj),
      O                 omegaC(i,j,k,bi,bj),
 #endif
      I                 subTime, myIter, myThid )
+     
+         IF(omegaC(i,j,k,bi,bj).LT.1 _d -2) THEN
+            write(6,*)'darwin_forcing'
+            write(6,*)i,j,k,ak1(i,j,bi,bj),ak2(i,j,bi,bj),
+     &           pH(i,j,k,bi,bj)
+          ENDIF
      
      
         DO l=1,darwin_nDiag

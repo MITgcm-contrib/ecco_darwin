@@ -53,6 +53,7 @@ C Carbon Variables
       _RL  apCO2Sat(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  FluxCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  FluxO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL  CO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 
        COMMON /CARBON_CHEM/
      &                     ak0,ak1,ak2,akw,akb,aks,akf,
@@ -77,9 +78,8 @@ C Fugacity Factor added by Val Bennington Nov. 2010
       _RL  ft(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  st(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  bt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL  Ksp_TP_Calc(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 #ifdef DARWIN_ALLOW_CARBON
-      _RL  Ksp_TP_Calc(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL  CO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  disscPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  omegaC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  calcium(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)

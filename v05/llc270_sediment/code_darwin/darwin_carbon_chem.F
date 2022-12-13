@@ -784,7 +784,7 @@ C Following Mucci (1983) - from Zeebe/Wolf-Gladrow equic.m
          tmpa3 = -(0.07711*s) + (0.0041249*s15)
          logKspc = tmpa1 + tmpa2 + tmpa3
          Ksp_T_Calc = 10.0**logKspc
-c        write(6,*)i,j,k,tmpa1,tmpa2,tmpa3,logkspc,Ksp_T_Calc
+c         write(6,*)i,j,k,tmpa1,tmpa2,tmpa3,logkspc,Ksp_T_Calc
 c with pressure dependence Culberson and Pytkowicz (1968)
 c        xvalue  =  (36.0-0.20*t)*(pressc-1.0)/(83.143*tk)
 c        Ksp_TP_Calc(i,j,bi,bj) = Ksp_T_Calc*exp(xvalue)
@@ -805,7 +805,12 @@ c alternative pressure dependence from Ingle (1975)
      &                 + (-0.00588d0 + 0.0001845d0*t)*zdum*zdum)
      &            / (188.93d0*(t + 273.15d0))
 
-           Ksp_TP_Calc(i,j,bi,bj) = Ksp_T_Calc*10**(xvalue)
+           Ksp_TP_Calc(i,j,kLevel,bi,bj) = Ksp_T_Calc*10**(xvalue)
+           if(Ksp_TP_Calc(i,j,kLevel,bi,bj).EQ. 0. _d 0) then
+               write(6,*)'darwin_carbon_chem'
+               write(6,*)i,j,k,zdum,xvalue,Ksp_T_Calc,
+     &          Ksp_TP_Calc(i,j,kLevel,bi,bj)
+           endif
 
 C------------------------------------------------------------------------
          else
@@ -826,7 +831,7 @@ c add Bennington
             bt(i,j,bi,bj) = 0. _d 0
             st(i,j,bi,bj) = 0. _d 0
             ft(i,j,bi,bj) = 0. _d 0
-            Ksp_TP_Calc(i,j,bi,bj) = 0. _d 0
+            Ksp_TP_Calc(i,j,kLevel,bi,bj) = 0. _d 0
          endif
          end do
         end do

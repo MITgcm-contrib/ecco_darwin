@@ -219,6 +219,8 @@ c put bounds on tracers so pH solver doesn't blow up
       CALL DARWIN_CARBON_COEFFS(
      I                   surftemp,surfsalt,
      I                   bi,bj,iMin,iMax,jMin,jMax,k,myThid)
+     
+
 C====================================================================
 
 c pCO2 solver...
@@ -255,6 +257,7 @@ c put bounds on tracers so pH solver doesn't blow up
          CO3(i,j,k,bi,bj)=0. _d 0
          pH(i,j,k,bi,bj)=0. _d 0
         ENDIF
+        
        ENDDO
       ENDDO
 
