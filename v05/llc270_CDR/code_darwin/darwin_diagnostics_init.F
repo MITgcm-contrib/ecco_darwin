@@ -53,9 +53,18 @@ c     CHARACTER*(MAX_LEN_MBUF) msgBuf
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 
 
+
+      WRITE(diagName,'(A)')'CDR_SiO2'
+      WRITE(diagTitle,'(A)')'CDR Si Forcing'
+      diagUnits = 'mmolSi/m^3/s    '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
       WRITE(diagName,'(A)')'CDR_ALK '
       WRITE(diagTitle,'(A)')'CDR ALK Forcing'
-      diagUnits = 'mmol eq C/m^3/s    '
+      diagUnits = 'mmol eq C/m^3/s '
       diagCode  = 'SM      L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )

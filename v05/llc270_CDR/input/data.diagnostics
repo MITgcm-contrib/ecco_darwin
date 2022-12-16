@@ -264,12 +264,13 @@
 #budget diagnostics   
 #---
   frequency(73) = 2635200.0,
-   fields(1:17,73) = 'ETAN    ','oceFWflx','SFLUX   ',
+   fields(1:20,73) = 'ETAN    ','oceFWflx','SFLUX   ',
         'TFLUX   ','oceSPflx','oceQsw  ',
         'fluxCO2 ','gDICsurf', 
         'gDICEpr ','gALKEpr ','gNO3Epr ',
         'gNO2Epr ','gNH4Epr ','gO2Epr '
         'gPO4Epr ','gFeTEpr','gSiO2Epr ',
+        'CDR_DIC ','CDR_ALK ','CDR_SiO2'
    filename(73) = 'diags/budget/average_2d',
 #---
   frequency(74) = 2635200.0,
@@ -288,16 +289,16 @@
    filename(76) = 'diags/budget/average_salt_3d',
 #---
   frequency(77) = 2635200.0,
-   fields(1:16,77) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
+   fields(1:15,77) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
         'DFxETr01','DFyETr01','DFrETr01','DFrITr01','gDAR01  ',
         'cDIC    ','cDIC_PIC','respDIC ','rDIC_DOC','rDIC_POC',
-        'dDIC_PIC','CDR_DIC ',
+        'dDIC_PIC',
    filename(77) = 'diags/budget/average_DIC_3d',
 #---
   frequency(78) = 2635200.0,
-   fields(1:12,78) = 'TRAC18  ','ADVxTr18','ADVyTr18','ADVrTr18',
+   fields(1:11,78) = 'TRAC18  ','ADVxTr18','ADVyTr18','ADVrTr18',
         'DFxETr18','DFyETr18','DFrETr18','DFrITr18','gDAR18  ',
-        'C_ALK   ','S_ALK   ','CDR_ALK ',
+        'C_ALK   ','S_ALK   ',
    filename(78) = 'diags/budget/average_ALK_3d',
 #---
   frequency(79) = 2635200.0,

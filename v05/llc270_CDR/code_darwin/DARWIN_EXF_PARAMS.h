@@ -550,6 +550,32 @@ C DIC forcing parameters for exf
       _RL darwin_inscal_DICrunoff
       _RL DICratioALK
 
+C ALK forcing parameters for exf
+
+      _RL ALKrunoffStartTime
+
+      COMMON/darwin_forcing_ALKrunoff_c/
+     &    ALKrunoffmask
+      COMMON/darwin_forcing_ALKrunoff_i/
+     &    ALKrunoffstartdate1, ALKrunoffstartdate2
+      COMMON/darwin_forcing_ALKrunoff_r/
+     &    ALKrunoffStartTime,
+     &    ALKrunoffperiod, ALKrunoffRepCycle, ALKrunoffconst,
+     &    ALKrunoff_exfremo_intercept,ALKrunoff_exfremo_slope,
+     &    darwin_inscal_ALKrunoff
+      CHARACTER*1 ALKrunoffmask
+      INTEGER ALKrunoffstartdate1
+      INTEGER ALKrunoffstartdate2
+      _RL ALKrunoffperiod
+      _RL ALKrunoffRepCycle
+      _RL ALKrunoffconst
+      _RL ALKrunoff_exfremo_intercept
+      _RL ALKrunoff_exfremo_slope
+      _RL darwin_inscal_ALKrunoff
+
+
+
+
 #ifdef USE_EXF_INTERPOLATION
       COMMON/darwin_interp_DICrunoff_i/
      &    DICrunoff_nlon, DICrunoff_nlat, DICrunoff_interpMethod
@@ -561,6 +587,18 @@ C DIC forcing parameters for exf
       _RL  DICrunoff_lat0
       _RL  DICrunoff_lon_inc
       _RL  DICrunoff_lat_inc(MAX_LAT_INC)
+
+      COMMON/darwin_interp_ALKrunoff_i/
+     &    ALKrunoff_nlon, ALKrunoff_nlat, ALKrunoff_interpMethod
+       COMMON/darwin_interp_ALKrunoff_r/
+     &    ALKrunoff_lon0, ALKrunoff_lat0, ALKrunoff_lon_inc,
+     %    ALKrunoff_lat_inc
+      INTEGER ALKrunoff_interpMethod, ALKrunoff_nlon, ALKrunoff_nlat
+      _RL  ALKrunoff_lon0
+      _RL  ALKrunoff_lat0
+      _RL  ALKrunoff_lon_inc
+      _RL  ALKrunoff_lat_inc(MAX_LAT_INC)
+
 #endif
 
 CEOP

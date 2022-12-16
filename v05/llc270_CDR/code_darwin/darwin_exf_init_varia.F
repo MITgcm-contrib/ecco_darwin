@@ -222,6 +222,23 @@ C     these load constant forcing fields
 #endif                                                                                            
      &     mythid ) 
 
+
+      call exf_init_fld (                                                                         
+     &     'ALKrunoff', ALKrunofffile, ALKrunoffmask,                                             
+     &     ALKrunoffperiod, darwin_inscal_ALKrunoff,                                              
+     &     ALKrunoffconst,                                                                        
+     &     ALKrunoff, ALKrunoff0, ALKrunoff1,                                                     
+#ifdef USE_EXF_INTERPOLATION                                                                      
+     &     ALKrunoff_lon0, ALKrunoff_lon_inc,                                                     
+     &     ALKrunoff_lat0, ALKrunoff_lat_inc,                                                     
+     &     ALKrunoff_nlon, ALKrunoff_nlat, xC, yC,                                                
+     &     ALKrunoff_interpMethod,                                                                
+#endif                                                                                            
+     &     mythid ) 
+
+
+
+
       IF (darwin_loadFieldsEarly) THEN
 C       these load time-varying forcing fields
 C       (usually done in darwin_fields_load, but may be needed for chl)
@@ -429,6 +446,22 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     DICrunoff_interpMethod,                                                                
 #endif                                                                                            
      &     starttime, nIter0, mythid ) 
+     
+     
+         call exf_set_fld(                                                                         
+     &     'ALKrunoff', ALKrunofffile, ALKrunoffmask,                                             
+     &     ALKrunoffStartTime, ALKrunoffperiod, ALKrunoffRepCycle,                                
+     &     darwin_inscal_ALKrunoff,
+     &     ALKrunoff_exfremo_intercept, ALKrunoff_exfremo_slope,                                  
+     &     ALKrunoff, ALKrunoff0, ALKrunoff1,                                                     
+#ifdef USE_EXF_INTERPOLATION                                                                      
+     &     ALKrunoff_lon0, ALKrunoff_lon_inc,                                                     
+     &     ALKrunoff_lat0, ALKrunoff_lat_inc,                                                     
+     &     ALKrunoff_nlon, ALKrunoff_nlat, xC, yC,                                                
+     &     ALKrunoff_interpMethod,                                                                
+#endif                                                                                            
+     &     starttime, nIter0, mythid ) 
+     
 
         _EXCH_XY_RL( surfPAR, myThid )
 
@@ -459,6 +492,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
         _EXCH_XY_RL( PONrunoff, myThid )
 
         _EXCH_XY_RL( DICrunoff, myThid )          
+        
+        _EXCH_XY_RL( ALKrunoff, myThid )    
+        
         
       ENDIF
 

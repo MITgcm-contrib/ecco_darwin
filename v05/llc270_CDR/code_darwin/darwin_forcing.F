@@ -123,6 +123,7 @@ C  k                    :: vertical level
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 	  _RL CDR_DIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 	  _RL CDR_ALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)	  
+	  _RL CDR_SiO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)	
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -186,6 +187,19 @@ C === nutrient runoff ==================================================
 #ifdef DARWIN_NUTRIENT_RUNOFF
       DO j=jMin,jMax
       DO i=iMin,iMax
+      
+C CDR forcing      
+        CDR_DIC(i,j) = DICrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)    
+C ALKforcing = proportional to DICforcing + prescribed     
+     	CDR_ALK(i,j)= DICrunoff(i,j,bi,bj)                                
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
+     &   +ALKrunoff(i,j,bi,bj)*recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+       
+       CDR_SiO2(i,j)= DSirunoff(i,j,bi,bj)
+     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+       
+       
         gPtr(i,j,1,iDOC) = gPtr(i,j,1,iDOC) + DOCrunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iDON) = gPtr(i,j,1,iDON) + DONrunoff(i,j,bi,bj)
@@ -201,18 +215,15 @@ C === nutrient runoff ==================================================
         gPtr(i,j,1,iPO4) = gPtr(i,j,1,iPO4) + DIPrunoff(i,j,bi,bj)
      &   * DIPboundFEMnOxide_ratio	
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iSiO2) = gPtr(i,j,1,iSiO2) + DSirunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+        gPtr(i,j,1,iSiO2) = gPtr(i,j,1,iSiO2) + CDR_SiO2(i,j) 
         gPtr(i,j,1,iPOC) = gPtr(i,j,1,iPOC) + POCrunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iPOP) = gPtr(i,j,1,iPOP) + POPrunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iPON) = gPtr(i,j,1,iPON) + PONrunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + DICrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + DICrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
+        gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + CDR_DIC(i,j)
+        gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + CDR_ALK(i,j)
         gPtr(i,j,1,iFeT) = gPtr(i,j,1,iFeT) + DIPrunoff(i,j,bi,bj)
      &   * DIPboundFEMnOxide_ratio                                
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DIPratioDFe
@@ -220,13 +231,11 @@ C === nutrient runoff ==================================================
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DOPratioDOFe
         gPtr(i,j,1,iPOFe) = gPtr(i,j,1,iPOFe) + POPrunoff(i,j,bi,bj)                                
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * POPratioPOFe
-         CDR_DIC(i,j) = DICrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)    
-         CDR_ALK(i,j) = DICrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
+
      
       ENDDO
       ENDDO
+            
 #endif
 C === dic ==============================================================
 #ifdef DARWIN_ALLOW_CARBON
@@ -248,7 +257,7 @@ C     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
       ENDDO
 #endif
 
-C surface fluxes from E/P/runoff
+C prescribed forcing 
       DO j=jMin,jMax
       DO i=iMin,iMax
         gDICsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC)
@@ -479,7 +488,7 @@ C === diagnostics ======================================================
 C CDR diagnostics
        CALL DIAGNOSTICS_FILL(CDR_DIC,'CDR_DIC ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(CDR_ALK,'CDR_ALK ',0,1,1,bi,bj,myThid)
-
+       CALL DIAGNOSTICS_FILL(CDR_SiO2,'CDR_SiO2',0,1,1,bi,bj,myThid)
 
 
        DO k=1,Nr

@@ -25,8 +25,10 @@ C Requires: SIZE.h
      &    POCrunofffile,
      &    POPrunofffile,
      &    PONrunofffile,
-     &    DICrunofffile
-     
+     &    DICrunofffile,
+     &    ALKrunofffile
+
+
       CHARACTER*128 PARfile
       CHARACTER*128 ironfile
       CHARACTER*128 icefile
@@ -42,6 +44,8 @@ C Requires: SIZE.h
       CHARACTER*128 POPrunofffile
       CHARACTER*128 PONrunofffile
       CHARACTER*128 DICrunofffile
+      CHARACTER*128 ALKrunofffile
+
 
       COMMON /darwin_fields_r/
      &    PAR0, PAR1, surfPAR,
@@ -58,8 +62,10 @@ C Requires: SIZE.h
      &    POCrunoff0,POCrunoff1,POCrunoff,
      &    POPrunoff0,POPrunoff1,POPrunoff,
      &    PONrunoff0,PONrunoff1,PONrunoff,
-     &    DICrunoff0,DICrunoff1,DICrunoff
-     
+     &    DICrunoff0,DICrunoff1,DICrunoff,
+     &    ALKrunoff0,ALKrunoff1,ALKrunoff
+
+
       _RL PAR0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL PAR1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL surfPAR(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -116,9 +122,14 @@ C Requires: SIZE.h
       _RL PONrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)    
       _RL PONrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 
-      _RL DICrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)                                         
-      _RL DICrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)                                         
-      _RL DICrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)  
+      _RL DICrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DICrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL DICrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL ALKrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL ALKrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL ALKrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
 
 CEOP
 

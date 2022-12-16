@@ -150,6 +150,10 @@ C       Print some statistics about input forcing fields
 
         CALL MON_WRITESTATS_RL( 1, DICrunoff, 'DICrunoff',                                        
      &           maskInC, maskInC, rA , drF, dummyRL, myThid ) 
+     
+        CALL MON_WRITESTATS_RL( 1, ALKrunoff, 'ALKrunoff',                                        
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid ) 
+     
 
         IF ( MASTER_CPU_IO(myThid) ) THEN
 C--   only the master thread is allowed to switch On/Off mon_write_stdout
