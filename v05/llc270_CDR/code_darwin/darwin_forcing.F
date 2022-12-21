@@ -98,6 +98,8 @@ C  k                    :: vertical level
       _RL mort2TempFunc
       _RL uptakeTempFunc
       _RL tmp
+      _RL growth_pl(nDarwin), grazing_pl(nDarwin)
+      _RL mortality_pl(nDarwin), respir_pl(nDarwin)      
       _RL sedFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -124,6 +126,10 @@ C  k                    :: vertical level
 	  _RL CDR_DIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 	  _RL CDR_ALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)	  
 	  _RL CDR_SiO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)	
+	  _RL growth_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+	  _RL grazing_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL mortality_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL respir_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -141,6 +147,10 @@ C === reset tendencies =================================================
       DO j=jMin,jMax
       DO i=iMin,iMax
         gPtr(i,j,k,iTr) = 0.0 _d 0
+        growth_plank(i,j,k,iTr)= 0.0 _d 0
+        grazing_plank(i,j,k,iTr)= 0.0 _d 0
+        mortality_plank(i,j,k,iTr)= 0.0 _d 0        
+        respir_plank(i,j,k,iTr)= 0.0 _d 0
       ENDDO
       ENDDO
       ENDDO
@@ -380,6 +390,8 @@ C === plankton =========================================================
      I                 reminTempFunc,
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
+     O                 growth_pl,grazing_pl,
+     O                 mortality_pl,respir_pl,
 #ifdef DARWIN_DEBUG
      I                 myxgloballo+(bi-1)*sNx+i-1,
      I                 myygloballo+(bj-1)*sNy+j-1,
@@ -408,6 +420,13 @@ C === plankton =========================================================
 #endif
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
+         
+        growth_plank(i, j, k, iTr)=growth_pl(iTr)
+        grazing_plank(i, j, k, iTr)=grazing_pl(iTr)
+        mortality_plank(i, j, k, iTr)=mortality_pl(iTr)
+        respir_plank(i, j, k, iTr)=respir_pl(iTr)
+         
+         
         ENDDO
       endif
       enddo
@@ -629,8 +648,30 @@ C      diags(iCons*) for convenience
         WRITE(diagname, '(A,I4.4)') 'GrGn', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iGrGn+iTr-1),
      &        diagname,0,Nr,2,bi,bj,myThid)
+        
        ENDDO
 #endif
+
+       DO iTr=1,nplank
+        WRITE(diagname, '(A,I2.2)') 'GROW_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+
+        WRITE(diagname, '(A,I2.2)') 'GRAZ_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(grazing_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+        WRITE(diagname, '(A,I2.2)') 'MORT_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(mortality_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+             WRITE(diagname, '(A,I2.2)') 'RESP_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(respir_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+
+        ENDDO
+
+
        IF (DIAGNOSTICS_IS_ON('sfcSolFe', myThid)) THEN
         DO j=jMin,jMax
          DO i=iMin,iMax

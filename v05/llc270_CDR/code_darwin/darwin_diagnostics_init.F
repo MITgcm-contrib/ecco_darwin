@@ -84,6 +84,49 @@ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+    
+
+      DO j = 1, nplank
+            
+
+       WRITE(diagName,'(A,I2.2)')'GROW_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton growth rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'GRAZ_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton grazing rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'MORT_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton mortality rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+
+       WRITE(diagName,'(A,I2.2)')'RESP_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton respiration rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+      ENDDO
+
+
+
+
       WRITE(diagName,'(A)')'Nfix'
       WRITE(diagTitle,'(A)')'N fixation'
       diagUnits = 'mmol N/m^3/s    '

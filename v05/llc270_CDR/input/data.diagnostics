@@ -370,8 +370,68 @@
    fields(1:6,90) = 'TRAC01  ','THETA   ','SALT    ',
         'TRAC18  ','TRAC05  ','TRAC07  ',
   filename(90) = 'diags/budget/CO2_flux_budget_3d',
-#---
+#----
+# 7 plankton species
+#----
+  frequency(91) = 2635200.0,
+   fields(1:12,91) = 'GROW_P20','GRAZ_P20','MORT_P20','RESP_P20',
+                    'ADVxTr20','ADVyTr20','ADVrTr20',
+                    'DFxETr20','DFyETr20','DFrETr20','DFrITr20'
+  filename(91) = 'diags/budget/plankton_3d_1',
+
+  frequency(92) = 2635200.0,
+   fields(1:12,92) = 'GROW_P21','GRAZ_P21','MORT_P21','RESP_P21',
+                    'ADVxTr21','ADVyTr21','ADVrTr21',
+                    'DFxETr21','DFyETr21','DFrETr21','DFrITr21'
+  filename(92) = 'diags/budget/plankton_3d_2',
+
+
+  frequency(93) = 2635200.0,
+   fields(1:12,93) = 'GROW_P22','GRAZ_P22','MORT_P22','RESP_P22',
+                    'ADVxTr22','ADVyTr22','ADVrTr22',
+                    'DFxETr22','DFyETr22','DFrETr22','DFrITr22'
+  filename(93) = 'diags/budget/plankton_3d_3',
+
+
+  frequency(94) = 2635200.0,
+   fields(1:12,94) = 'GROW_P23','GRAZ_P23','MORT_P23','RESP_P23',
+                    'ADVxTr23','ADVyTr23','ADVrTr23',
+                    'DFxETr23','DFyETr23','DFrETr23','DFrITr23'
+  filename(94) = 'diags/budget/plankton_3d_4',
+
+
+  frequency(95) = 2635200.0,
+   fields(1:12,95) = 'GROW_P24','GRAZ_P24','MORT_P24','RESP_P24',
+                    'ADVxTr24','ADVyTr24','ADVrTr24',
+                    'DFxETr24','DFyETr24','DFrETr24','DFrITr24'
+  filename(95) = 'diags/budget/plankton_3d_5',
+
+
+  frequency(96) = 2635200.0,
+   fields(1:12,96) = 'GROW_P25','GRAZ_P25','MORT_P25','RESP_P25',
+                    'ADVxTr25','ADVyTr25','ADVrTr25',
+                    'DFxETr25','DFyETr25','DFrETr25','DFrITr25'
+  filename(96) = 'diags/budget/plankton_3d_6',
+
+
+  frequency(97) = 2635200.0,
+   fields(1:12,97) = 'GROW_P26','GRAZ_P26','MORT_P26','RESP_P26',
+                    'ADVxTr26','ADVyTr26','ADVrTr26',
+                    'DFxETr26','DFyETr26','DFrETr26','DFrITr26'
+  filename(97) = 'diags/budget/plankton_3d_7',
+
+
+  frequency(98) = -2635200.0,
+   fields(1:7,98) = 'TRAC20  ','TRAC21  ','TRAC22  ','TRAC23  ',
+                    'TRAC24  ','TRAC25  ','TRAC26  '
+   timePhase(98)= 0.,
+   filename(98) = 'diags/budget/plankton_snap_3d',
+
+
+
+
  &
+
 
  /
 
