@@ -806,11 +806,6 @@ c alternative pressure dependence from Ingle (1975)
      &            / (188.93d0*(t + 273.15d0))
 
            Ksp_TP_Calc(i,j,kLevel,bi,bj) = Ksp_T_Calc*10**(xvalue)
-           if(Ksp_TP_Calc(i,j,kLevel,bi,bj).EQ. 0. _d 0) then
-               write(6,*)'darwin_carbon_chem'
-               write(6,*)i,j,k,zdum,xvalue,Ksp_T_Calc,
-     &          Ksp_TP_Calc(i,j,kLevel,bi,bj)
-           endif
 
 C------------------------------------------------------------------------
          else
