@@ -928,17 +928,6 @@ C PIC dissolution rate
 C units in mol m^-3      
       omegaC_Local = MIN(1., MAX(0., calciumLocal * 1. _d -3
      &   *  CO3Local) / Ksp_TP_Local)
-     
-        IF(omegaC_Local.LT.1e-2)THEN
-          write(6,*)'darwin plankton omegac lower than 1e-2'
-          write(6,*)calciumLocal,CO3Local,Ksp_TP_Local
-        ENDIF
-        
-        IF(omegaC_Local.GT.1e-2)THEN
-          write(6,*)'darwin plankton omegac higher than 1e-2'
-          write(6,*)calciumLocal,CO3Local,Ksp_TP_Local
-        ENDIF
-
 
 C water column dissolution
 #ifdef NAVIAUX_DISSOLUTION
