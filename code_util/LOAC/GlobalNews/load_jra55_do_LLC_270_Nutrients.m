@@ -4,7 +4,7 @@ close all;
 %addpath(genpath('/nobackup/dcarrol2/MATLAB'));
 addpath ~dmenemen/matlab
 
-computeGrid = 0;
+computeGrid = 1;
 
 gridDir = '/nobackup/dcarrol2/LOAC/grid/LLC_270_raw/';
 dataDir = '/nobackup/dcarrol2/LOAC/mat/jra55_do/coast_mask/';
@@ -130,11 +130,12 @@ end
 
 disp(binDir2);
 
-files = dir([binDir2 '*_*']); %go through all nutrient runoff files
+files = dir([binDir2 '*_2000*']); %go through all nutrient runoff files
 
 for i = 1:length(files)
     years(i) = str2num(files(i).name(end-3:end));
 end
+
 
 for i = 1:length(years)
     
