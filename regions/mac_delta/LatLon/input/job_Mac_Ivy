@@ -1,5 +1,5 @@
 #!/bin/csh
-#PBS -l select=43:ncpus=20:model=ivy
+#PBS -l select=45:ncpus=20:model=ivy
 ##PBS -l walltime=48:00:00
 ##PBS -q long
 #PBS -l walltime=2:00:00
@@ -15,5 +15,5 @@ umask 027
 cd $PBS_O_WORKDIR
 limit stacksize unlimited
 #./modpickup
-mpiexec -np 849 ./mitgcmuv
+mpiexec -np 882 ./mitgcmuv
 

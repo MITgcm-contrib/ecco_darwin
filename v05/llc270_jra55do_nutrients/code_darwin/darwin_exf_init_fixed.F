@@ -131,6 +131,90 @@ C     errCount  :: error counter
      I  myThid )
       ENDIF
 
+      IF ( DINrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DINrunoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I  'darwin', 'DINrunoff', DINrunoffperiod,
+     I  DINrunoffstartdate1, DINrunoffstartdate2,
+     U  DINrunoffStartTime, errCount,
+     I  myThid )
+      ENDIF
+
+      IF ( DIPrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DIPrunoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I  'darwin', 'DIPrunoff', DIPrunoffperiod,
+     I  DIPrunoffstartdate1, DIPrunoffstartdate2,
+     U  DIPrunoffStartTime, errCount,
+     I  myThid )
+      ENDIF
+
+      IF ( DSirunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DSirunoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I  'darwin', 'DSirunoff', DSirunoffperiod,
+     I  DSirunoffstartdate1, DSirunoffstartdate2,
+     U  DSirunoffStartTime, errCount,
+     I  myThid )
+      ENDIF
+
+      IF ( POCrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START POCrunoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I  'darwin', 'POCrunoff', POCrunoffperiod,
+     I  POCrunoffstartdate1, POCrunoffstartdate2,
+     U  POCrunoffStartTime, errCount,
+     I  myThid )
+      ENDIF
+
+      IF ( POPrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START POPrunoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I  'darwin', 'POPrunoff', POPrunoffperiod,
+     I  POPrunoffstartdate1, POPrunoffstartdate2,
+     U  POPrunoffStartTime, errCount,
+     I  myThid )
+      ENDIF
+
+      IF ( PONrunofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START PONrunoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I  'darwin', 'PONrunoff', PONrunoffperiod,
+     I  PONrunoffstartdate1, PONrunoffstartdate2,
+     U  PONrunoffStartTime, errCount,
+     I  myThid )
+      ENDIF
+
+      IF ( DICrunofffile .NE. ' ' ) THEN                                                          
+# ifdef ALLOW_DEBUG                                                                               
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DICrunoff',                                
+     &  myThid)                                                                                   
+# endif                                                                                           
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,                                              
+     I  'darwin', 'DICrunoff', DICrunoffperiod,                                                   
+     I  DICrunoffstartdate1, DICrunoffstartdate2,
+     U  DICrunoffStartTime, errCount,                                                             
+     I  myThid )                                                                                  
+      ENDIF  
+
       IF ( errCount.GE.1 ) THEN
        WRITE(msgBuf,'(A,I3,A)')
      &     'DARWIN_EXF_INIT_FIXED: detected', errCount,' fatal error(s)'

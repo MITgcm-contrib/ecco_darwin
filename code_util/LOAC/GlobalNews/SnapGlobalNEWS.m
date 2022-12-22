@@ -16,6 +16,8 @@ load GlobalNews_to_JRA55
 % gPP   GlobalNEWS2 load PP (Mg/yr)
 % gPOC  GlobalNEWS2 load POC (Mg/yr)
 % gTSS  GlobalNEWS2 load TSS (Mg/yr)
+% gDIC  DIC load TSS from Li et al and Suchet et al combined 
+%       in GlobalNEWS (Mg/yr)
 
 % jlat/jlon : latitude/longitude of jra55_do
 % jra       : jra55_do year-2000 runoff km^3/yr
@@ -39,7 +41,7 @@ jraWeights=jra./gQact(gQact2jra);
 
 % Projecct GlobalNEWS2 nutrients to JRA55 locations
 pin='/nobackup/dcarrol2/LOAC/bin/jra55_do/v1.4.0/';
-pout='~dmenemen/forcing/jra55_do/GlobalNEWS/GlobalNEWS2_on_jra55v1.5.0/';
+pout='~dmenemen/forcing/jra55_do/GlobalNEWS/GlobalNEWS2_on_jra55v1.4.0/';
 
 % conversion factors of gram to mol
 gP_to_molP = 0.03228539149637;
@@ -53,8 +55,8 @@ for yr=1991:2021
     if mod(yr,4)==0, loy=366; end
     for dy=1:loy, disp([yr dy])
         Jravol=readbin(fin,[nx ny],1,'real*4',dy-1);
-        for f={'DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS'}
-            fout=[pout f{1} '_' int2str(yr)];
+        for f={'DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS','DIC'}
+           fout=[pout f{1} '_' int2str(yr)];
             eval(['fld=g' f{1} ';'])
             FLD=0*LAT;
             %FLD(IX)=fld(gQact2jra).*jraWeights;

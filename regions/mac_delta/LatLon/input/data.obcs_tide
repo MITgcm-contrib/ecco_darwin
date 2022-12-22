@@ -8,23 +8,20 @@
 #
  useOBCSprescribe=.TRUE.,
  useOBCSbalance=.TRUE.,
- OBCS_balanceFacN = 1,
- OBCS_balanceFacW = 0,
- OBCS_balanceFacE = 0,
 #
  OBNsFile='OBNs_Mac.stable',
  OBNtFile='OBNt_Mac.stable',
  OBNuFile='OBNu_Mac.bin',
- OBNvFile='OBNv_Mac.balance',
+ OBNvFile='OBNv_llc270_Mac.bin',
 #
  OBWsFile='OBWs_Mac.stable',
  OBWtFile='OBWt_Mac.stable',
- OBWuFile='OBWu_Mac.bin',
+ OBWuFile='OBWu_llc270_Mac.bin',
  OBWvFile='OBWv_Mac.bin',
 #
  OBEsFile='OBEs_Mac.stable',
  OBEtFile='OBEt_Mac.stable',
- OBEuFile='OBEu_Mac.bin',
+ OBEuFile='OBEu_llc270_Mac.bin',
  OBEvFile='OBEv_Mac.bin',
 #
  OBNaFile='OBNa_Mac.bin',

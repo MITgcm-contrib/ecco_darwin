@@ -58,7 +58,7 @@ C  i,j                  :: loop indices
 C  k                    :: vertical level
       LOGICAL  DIAGNOSTICS_IS_ON
       EXTERNAL DIAGNOSTICS_IS_ON
-      INTEGER i,j,k,kdn,iTr,l,isub
+      INTEGER i,j,k,kdn,iTr,l,isub,k_debug
       CHARACTER*8 diagname
       _RL dTsub(Nr)
       _RL midTime, subTime
@@ -353,11 +353,7 @@ C === plankton =========================================================
      I                 reminTempFunc,
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
-#ifdef DARWIN_DEBUG
-     I                 myxgloballo+(bi-1)*sNx+i-1,
-     I                 myygloballo+(bj-1)*sNy+j-1,
-     I                 k, dTsub(k),
-#endif
+     I                 0,
      I                 subTime, myIter, myThid )
         DO l=1,darwin_nDiag
          diags(i, j, k, l) = diagsl(l)

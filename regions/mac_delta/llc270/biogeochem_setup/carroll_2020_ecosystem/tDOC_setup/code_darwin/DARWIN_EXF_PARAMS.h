@@ -226,40 +226,40 @@ C DOC forcing parameters for exf
       _RL  DOCrunoff_lat_inc(MAX_LAT_INC)
 #endif
 
-C tDOC forcing parameters for exf
+C rDOC forcing parameters for exf
 
-      _RL tDOCrunoffStartTime
+      _RL rDOCrunoffStartTime
 
-      COMMON/darwin_forcing_tDOCrunoff_c/
-     &    tDOCrunoffmask
-      COMMON/darwin_forcing_tDOCrunoff_i/
-     &    tDOCrunoffstartdate1, tDOCrunoffstartdate2
-      COMMON/darwin_forcing_tDOCrunoff_r/
-     &    tDOCrunoffStartTime,
-     &    tDOCrunoffperiod, tDOCrunoffRepCycle, tDOCrunoffconst,
-     &    tDOCrunoff_exfremo_intercept, tDOCrunoff_exfremo_slope,
-     &    darwin_inscal_tDOCrunoff
-      CHARACTER*1 tDOCrunoffmask
-      INTEGER tDOCrunoffstartdate1
-      INTEGER tDOCrunoffstartdate2
-      _RL tDOCrunoffperiod
-      _RL tDOCrunoffRepCycle
-      _RL tDOCrunoffconst
-      _RL tDOCrunoff_exfremo_intercept
-      _RL tDOCrunoff_exfremo_slope
-      _RL darwin_inscal_tDOCrunoff
+      COMMON/darwin_forcing_rDOCrunoff_c/
+     &    rDOCrunoffmask
+      COMMON/darwin_forcing_rDOCrunoff_i/
+     &    rDOCrunoffstartdate1, rDOCrunoffstartdate2
+      COMMON/darwin_forcing_rDOCrunoff_r/
+     &    rDOCrunoffStartTime,
+     &    rDOCrunoffperiod, rDOCrunoffRepCycle, rDOCrunoffconst,
+     &    rDOCrunoff_exfremo_intercept, rDOCrunoff_exfremo_slope,
+     &    darwin_inscal_rDOCrunoff
+      CHARACTER*1 rDOCrunoffmask
+      INTEGER rDOCrunoffstartdate1
+      INTEGER rDOCrunoffstartdate2
+      _RL rDOCrunoffperiod
+      _RL rDOCrunoffRepCycle
+      _RL rDOCrunoffconst
+      _RL rDOCrunoff_exfremo_intercept
+      _RL rDOCrunoff_exfremo_slope
+      _RL darwin_inscal_rDOCrunoff
 
 #ifdef USE_EXF_INTERPOLATION
-      COMMON/darwin_interp_tDOCrunoff_i/
-     &    tDOCrunoff_nlon, tDOCrunoff_nlat, tDOCrunoff_interpMethod
-      COMMON/darwin_interp_tDOCrunoff_r/
-     &    tDOCrunoff_lon0, tDOCrunoff_lat0, tDOCrunoff_lon_inc,
-     %    tDOCrunoff_lat_inc
-      INTEGER tDOCrunoff_interpMethod, tDOCrunoff_nlon, tDOCrunoff_nlat
-      _RL  tDOCrunoff_lon0
-      _RL  tDOCrunoff_lat0
-      _RL  tDOCrunoff_lon_inc
-      _RL  tDOCrunoff_lat_inc(MAX_LAT_INC)
+      COMMON/darwin_interp_rDOCrunoff_i/
+     &    rDOCrunoff_nlon, rDOCrunoff_nlat, rDOCrunoff_interpMethod
+      COMMON/darwin_interp_rDOCrunoff_r/
+     &    rDOCrunoff_lon0, rDOCrunoff_lat0, rDOCrunoff_lon_inc,
+     %    rDOCrunoff_lat_inc
+      INTEGER rDOCrunoff_interpMethod, rDOCrunoff_nlon, rDOCrunoff_nlat
+      _RL  rDOCrunoff_lon0
+      _RL  rDOCrunoff_lat0
+      _RL  rDOCrunoff_lon_inc
+      _RL  rDOCrunoff_lat_inc(MAX_LAT_INC)
 #endif
 
 C DON forcing parameters for exf

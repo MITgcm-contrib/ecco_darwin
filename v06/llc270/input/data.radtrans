@@ -27,6 +27,35 @@
  RT_EsFile(12)='/nobackup/ojahn/forcing/oasim/C61extrap/below/edsEs12',
  RT_EsFile(13)='/nobackup/ojahn/forcing/oasim/C61extrap/below/edsEs13',
  RT_E_period= -1.,
+ 
+ RT_inscal_Ed(1) = 1,
+ RT_inscal_Ed(2) = 1,
+ RT_inscal_Ed(3) = 1,
+ RT_inscal_Ed(4) = 1,
+ RT_inscal_Ed(5) = 1,
+ RT_inscal_Ed(6) = 1,
+ RT_inscal_Ed(7) = 1,
+ RT_inscal_Ed(8) = 1,
+ RT_inscal_Ed(9) = 1,
+ RT_inscal_Ed(10) = 1,
+ RT_inscal_Ed(11) = 1,
+ RT_inscal_Ed(12) = 1,
+ RT_inscal_Ed(13) = 1,
+
+ RT_inscal_Es(1) = 1,
+ RT_inscal_Es(2) = 1,
+ RT_inscal_Es(3) = 1,
+ RT_inscal_Es(4) = 1,
+ RT_inscal_Es(5) = 1,
+ RT_inscal_Es(6) = 1,
+ RT_inscal_Es(7) = 1,
+ RT_inscal_Es(8) = 1,
+ RT_inscal_Es(9) = 1,
+ RT_inscal_Es(10) = 1,
+ RT_inscal_Es(11) = 1,
+ RT_inscal_Es(12) = 1,
+ RT_inscal_Es(13) = 1,
+ 
 #
 # use seaice pkg for area
  /

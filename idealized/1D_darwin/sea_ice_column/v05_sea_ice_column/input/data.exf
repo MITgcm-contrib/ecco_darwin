@@ -1,0 +1,102 @@
+#
+# *********************
+# External Forcing Data
+# *********************
+ &EXF_NML_01
+#
+ useExfCheckRange  = .TRUE.,
+ repeatPeriod      = 1928966400.0,
+ exf_iprec         = 32,
+#
+ &
+
+# *********************
+ &EXF_NML_02
+#
+ hfluxstartdate1   = 19600101,
+ hfluxstartdate2   = 180000,
+ hfluxperiod       = 2635200.0,
+#
+ sfluxstartdate1   = 19600101,
+ sfluxstartdate2   = 180000,
+ sfluxperiod       = 2635200.0,
+#
+ ustressstartdate1 = 19600101,
+ ustressstartdate2 = 180000,
+ ustressperiod     = 2635200.0,
+#
+ vstressstartdate1 = 19600101,
+ vstressstartdate2 = 180000,
+ vstressperiod     = 2635200.0,
+#
+ atempstartdate1   = 19600101,
+ atempstartdate2   = 180000,
+ atempperiod       = 2635200.0,
+#
+ aqhstartdate1     = 19600101,
+ aqhstartdate2     = 180000,
+ aqhperiod         = 2635200.0,
+#
+#evapstartdate1    = 19781216,
+#evapstartdate2    = 180000,
+#evapperiod        = 2635200.0,
+#
+ precipstartdate1  = 19600101,
+ precipstartdate2  = 180000,
+ precipperiod      = 2635200.0,
+#
+ uwindstartdate1   = 19600101,
+ uwindstartdate2   = 180000,
+ uwindperiod       = 2635200.0,
+#
+ vwindstartdate1   = 19600101,
+ vwindstartdate2   = 180000,
+ vwindperiod       = 2635200.0,
+#
+ swfluxstartdate1  = 19600101,
+ swfluxstartdate2  = 180000,
+ swfluxperiod      = 2635200.0,
+#
+ lwfluxstartdate1  = 19600101,
+ lwfluxstartdate2  = 180000,
+ lwfluxperiod      = 2635200.0,
+#
+ swdownstartdate1  = 19600101,
+ swdownstartdate2  = 180000,
+ swdownperiod      = 2635200.0,
+#
+ lwdownstartdate1  = 19781216,
+ lwdownstartdate2  = 180000,
+ lwdownperiod      = 2635200.0,
+#
+# climsststartdate1  = 19781216,
+# climsststartdate2  = 180000,
+# climsstperiod      = 2635200.0,
+# climsstTauRelax    = 0.0,
+#
+# climsssstartdate1  = 19781216,
+# climsssstartdate2  = 180000,
+# climsssperiod      = 2635200.0,
+# climsssTauRelax    = 4142330.0,
+#
+ hfluxfile         = ' ',
+ sfluxfile         = ' ',
+ ustressfile       = ' ',
+ vstressfile       = ' ',
+ atempfile         ='atemp_era5',
+ lwdownfile        ='dlwrf_era5',
+ swdownfile        ='dswrf_era5',
+ uwindfile         ='u10_era5',
+ vwindfile         ='v10_era5',
+ lwfluxfile        = ' ',
+ swfluxfile        = ' ',
+ runoffFile        = ' '
+ &
+
+# *********************
+ &EXF_NML_03
+ &
+
+# *********************
+ &EXF_NML_04
+ &

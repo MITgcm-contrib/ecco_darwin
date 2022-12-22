@@ -116,16 +116,16 @@ C enable variable iron sediment source
 C debugging
 
 C turn on debugging output
-#define DARWIN_DEBUG
+#undef  DARWIN_DEBUG
 
 C compute and print global element totals
-#define DARWIN_ALLOW_CONS
+#undef  DARWIN_ALLOW_CONS
 
 C value for unused traits
-#define DARWIN_UNUSED 0
+#undef  DARWIN_UNUSED 0
 
 C fill diagnostics for most tendency terms
-#define DARWIN_DIAG_TENDENCIES
+#undef  DARWIN_DIAG_TENDENCIES
 
 
 C deprecated

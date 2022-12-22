@@ -28,11 +28,53 @@ make -j 16
 
 cd ../run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp2/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp2/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 cp ../../ecco_darwin/v05/llc270/input/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_llc270_fdH as needed
 qsub job_llc270_fdH
+
+==============
+# Additional important notes
+
+---------------
+--data.seaice--
+---------------
+
+Lines in data.seaice:
+ # revert to old defaults before 2018-08-25
+  SEAICEscaleSurfStress = .FALSE.,
+  SEAICEaddSnowMass     = .FALSE.,
+  SEAICE_useMultDimSnow = .FALSE.,
+  SEAICEetaZmethod = 0,
+  SEAICE_Olx       = 0,
+  SEAICE_Oly       = 0,
+  SEAICE_drag      = .002,
+  SEAICE_waterDrag = .00534499514091350826,
+
+are needed when switching from:
+        cvs -d :pserver:cvsanon:cvsanon@mitgcm.org:/u/gcmpack co -D "11/28/17" MITgcm_code
+to:
+        git clone git://gud.mit.edu/darwin3-dev darwin3
+        
+because of following change to MITgcm:
+
+checkpoint67d (2018/09/04)
+o pkg/seaice: some new and hopefully more sensible defaults:
+  - SEAICEscaleSurfStress = .TRUE.
+  - SEAICEaddSnowMass = .TRUE.
+  - SEAICEadvScheme = 77
+  - SEAICE_useMultDimSnow = .TRUE.
+  - SEAICE_Olx/y = Olx/y - 2
+  - SEAICEetaZmethod = 3
+  - SEAICE_drag = 0.001
+  - CPP-flag SEAICE_ZETA_SMOOTHREG defined by default
+  - change SEAICE_waterDrag default to 5.5e-3 and add reference density
+    rhoConst to scale it. Add a warning if SEAICE_waterDrag > 1.
+    This change also involves a slight re-organization (= simplification)
+    in seaice_oceandrag_coeffs.F
+    
+----------------

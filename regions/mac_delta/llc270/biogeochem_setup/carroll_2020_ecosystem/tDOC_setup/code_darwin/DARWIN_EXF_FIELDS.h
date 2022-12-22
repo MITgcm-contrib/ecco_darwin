@@ -17,7 +17,7 @@ C Requires: SIZE.h
      &    windfile,
      &    pCO2file,
      &    DOCrunofffile,
-     &    tDOCrunofffile,
+     &    rDOCrunofffile,
      &    DONrunofffile,
      &    DOPrunofffile,
      &    DSirunofffile,
@@ -30,7 +30,7 @@ C Requires: SIZE.h
       CHARACTER*128 windfile
       CHARACTER*128 pCO2file
 	    CHARACTER*128 DOCrunofffile
-	    CHARACTER*128 tDOCrunofffile
+	    CHARACTER*128 rDOCrunofffile
       CHARACTER*128 DONrunofffile
       CHARACTER*128 DOPrunofffile
       CHARACTER*128 DSirunofffile
@@ -44,7 +44,7 @@ C Requires: SIZE.h
      &    wind0, wind1, windSpeed,
      &    pCO20, pCO21, atmospCO2,
      &    DOCrunoff0,DOCrunoff1,DOCrunoff,
-     &    tDOCrunoff0,tDOCrunoff1,tDOCrunoff,
+     &    rDOCrunoff0,rDOCrunoff1,rDOCrunoff,
      &    DONrunoff0,DONrunoff1,DONrunoff,
      &    DOPrunoff0,DOPrunoff1,DOPrunoff,
      &    DSirunoff0,DSirunoff1,DSirunoff,
@@ -75,9 +75,9 @@ C Requires: SIZE.h
       _RL DOCrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL DOCrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 
-      _RL tDOCrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL tDOCrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL tDOCrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL rDOCrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL rDOCrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL rDOCrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 
       _RL DONrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL DONrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)

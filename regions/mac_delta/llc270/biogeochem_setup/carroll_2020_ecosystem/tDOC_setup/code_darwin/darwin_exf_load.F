@@ -121,16 +121,16 @@ c--   read forcing fields from files and temporal interpolation
      &     mytime, myiter, mythid )
 
        call exf_set_fld(
-     &     'tDOCrunoff', tDOCrunofffile, tDOCrunoffmask,
-     &     tDOCrunoffStartTime, tDOCrunoffperiod, tDOCrunoffRepCycle,
-     &     darwin_inscal_tDOCrunoff,
-     &     tDOCrunoff_exfremo_intercept, tDOCrunoff_exfremo_slope,
-     &     tDOCrunoff, tDOCrunoff0, tDOCrunoff1,
+     &     'rDOCrunoff', rDOCrunofffile, rDOCrunoffmask,
+     &     rDOCrunoffStartTime, rDOCrunoffperiod, rDOCrunoffRepCycle,
+     &     darwin_inscal_rDOCrunoff,
+     &     rDOCrunoff_exfremo_intercept, rDOCrunoff_exfremo_slope,
+     &     rDOCrunoff, rDOCrunoff0, rDOCrunoff1,
 #ifdef USE_EXF_INTERPOLATION
-     &     tDOCrunoff_lon0, tDOCrunoff_lon_inc,
-     &     tDOCrunoff_lat0, tDOCrunoff_lat_inc,
-     &     tDOCrunoff_nlon, tDOCrunoff_nlat, xC, yC,
-     &     tDOCrunoff_interpMethod,
+     &     rDOCrunoff_lon0, rDOCrunoff_lon_inc,
+     &     rDOCrunoff_lat0, rDOCrunoff_lat_inc,
+     &     rDOCrunoff_nlon, rDOCrunoff_nlat, xC, yC,
+     &     rDOCrunoff_interpMethod,
 #endif
      &     mytime, myiter, mythid )
 
@@ -216,7 +216,7 @@ c--   read forcing fields from files and temporal interpolation
 
         _EXCH_XY_RL( DOCrunoff, myThid )
 
-        _EXCH_XY_RL( tDOCrunoff, myThid )
+        _EXCH_XY_RL( rDOCrunoff, myThid )
 
         _EXCH_XY_RL( DONrunoff, myThid )
 

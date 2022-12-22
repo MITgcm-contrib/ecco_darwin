@@ -40,9 +40,12 @@
  rhonil=1027.5,
  rhoConstFresh=999.8,
  eosType='JMD95Z',
+ hFacMinDr=1.,
  hFacMin=0.3,
  hFacInf=0.1,
  hFacSup=5.,
+ select_rStar=2,
+ nonlinFreeSurf=4,
  implicitDiffusion=.TRUE.,
  implicitViscosity=.TRUE.,
  viscC4Leith=2.15,
@@ -51,6 +54,7 @@
  useAreaViscLength=.TRUE.,
  highOrderVorticity  = .TRUE.,
  bottomDragQuadratic = 0.0021,
+ selectImplicitDrag  = 2,
  tempAdvScheme=7,
  saltAdvScheme=7,
  StaggerTimeStep=.TRUE.,
@@ -67,8 +71,8 @@
  readBinaryPrec=32,
  writeBinaryPrec=32,
  temp_EvPrRn=0.,
- implicSurfPress = 0.6,
- implicDiv2DFlow = 0.6,
+# implicSurfPress = 0.6,
+# implicDiv2DFlow = 0.6,
  /
 
 # Elliptic solver parameters
@@ -79,10 +83,9 @@
 
 # Time stepping parameters
  &PARM03
- nIter0=1,
-#datenum(2010,01,01)-datenum(2006,01,01) = 731*86400 
- endtime=126230400.,
- deltaT = 25.,
+ nIter0=7573824,
+ endtime=504921600.,
+ deltaT = 50.,
  abEps = 0.1,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
@@ -90,6 +93,7 @@
  pChkptFreq = 31536000.,
 # dumpfreq = 3600.,
  monitorFreq = 43200.,
+# monitorFreq = 1.,
  dumpInitAndLast=.FALSE.,
  /
 
@@ -121,5 +125,5 @@
 
 # Input datasets
  &PARM05
- bathyFile      ='mackenzie_bathy.bin',
+ bathyFile      ='mackenzie_bathy_2m_minimum_threshold.bin',
  /

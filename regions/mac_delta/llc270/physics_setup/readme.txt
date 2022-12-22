@@ -10,7 +10,9 @@
 # 1. Get code
 # ==============
 git clone https://github.com/MITgcm/MITgcm.git
-svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270 Mac270
+#svn checkout https://github.com/MITgcm-contrib/ecco_darwin/trunk/regions/mac_delta/llc270 Mac270
+git clone https://github.com/MITgcm-contrib/ecco_darwin
+ln -s ecco_darwin/regions/mac_delta/llc270 Mac270
 
 # Pleiades users skip to part 2.
 # For the following requests you need your Earthdata username and WebDAV password (different from Earthdata password)
@@ -31,9 +33,9 @@ cd build
 
 > On Pleidas follow intructions below:
    module purge
-   module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+   module load comp-intel mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
    ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-   -mo ../../Mac270/physics_setup/code
+   -mo ../../Mac270/physics_setup/code -mpi
    make depend
    make -j 16
  

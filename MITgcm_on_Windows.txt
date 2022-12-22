@@ -1,0 +1,218 @@
+#############################################################
+# For running MITgcm on Windows, you first need to install a
+# Unix environment or operating system.  Possible options are
+# (1) Windows Subsystem for Linux (WSL),
+# (2) a Linux VirtualBox, and
+# (3) dual boot to Linux.
+# Option (1) is the most convenient and easy to install but
+# it works only on windows 10 and 11.
+# Option (2) is best for older versions of windows (7 and 8)
+# and can be used to isolate multiple build environments.
+# Option (3) will provide best performance but some hardware
+# may not be fully supported.
+
+
+#############################################################
+#############################################################
+# (1) Steps for installing Windows Subsystem for Linux (WSL)
+
+# a) Open the Windows Store
+
+# b) Search for: Ubuntu
+
+# c) Select: Ubuntu App 
+
+# d) Click on "Get"
+#    [THIS MAY TAKE A WHILE, THE FILE SIZE IS ~500 MB]
+
+# e) Once it's finished downloading, make sure to enable
+#    "Windows Subsystem for Linux", "Virtual Machine Platform" and "Windows Hypervisor Platform"
+#    under "Turn Windows features on or off"
+#    You may have to reboot.
+
+# f) Then find Ubuntu an click on it
+
+# g) If everything goes well, you should have Ubuntu. Else..
+
+# h) A black screen would pop up with the message that 
+#    "...Linux optional component is not enabled...". 
+#    There's a website that you can follow to resolve the issues:
+#    https://aka.ms/wslinstall
+
+# i) On the windows search bar (bottom left on your screen;
+#    for most system), search for "Windows PowerShell" and
+#    click on "Run as administrator".
+
+# j) In the Windows PowerShell window run the command:
+     wsl --install
+
+# k) This should start the installation of WSL and Ubuntu.
+
+# l) Once the installation is finished you should see:
+#    "The requested operation is successful..."
+
+# m) Reboot or restart your machine.
+
+# n) After restarting, you may see a message that says
+#    "Windows Substem for Linux is resuming a previous installation"
+#    It will take a couple a minutes to finish installing Ubuntu
+
+# o) You will be asked to provide some information like
+#    username:
+#    password:
+
+# p) After these steps, you will now have Ubuntu on your system.
+
+
+#############################################################
+#############################################################
+# 2) Instructions for running MITgcm in VirtualBox 
+
+# Get latest VirtualBox from https://www.virtualbox.org/wiki/Downloads
+# Note: for a 32-bit operating system get VirtualBox 5.2 from
+#       https://www.virtualbox.org/wiki/Download_Old_Builds_5_2
+
+# Get a Linux distribution ISO image, for example,
+# Lubuntu 18.04 Desktop 64-bit from https://lubuntu.me/downloads
+# Note: for 32-bit VirtualBox, download a 32-bit ISO image, e.g.,
+#       Lubuntu 16.04 32-bit PC (i386) desktop image from
+#       http://cdimage.ubuntu.com/lubuntu/releases/16.04/release/
+
+# Install VirtualBox
+# (see two example installation instructions below)
+
+########################################################
+# Example 1: 1-CPU, 1-GB, 32-bit Lubuntu 16.04 installation
+# Start VirtualBox
+#   New
+#     Name: lubuntu-16.04
+#     Version: Ubuntu (32-bit)
+#     Continue (or Next)
+#     Memory size: 1024 MB
+#     Continue (or Next)
+#     • Create a virtual hard disk now
+#     Create
+#     • VDI (VirtualBox Disk Image)
+#     Continue (or Next)
+#     • Dynamically allocated
+#     Continue (or Next)
+#     File location and size: 10 GB
+#     Create
+#   Settings
+#     Storage
+#       Controller: IDE, Click on circle with green plus
+#       Choose disk: Downloads/lubuntu-16.04.6-desktop-i386.iso
+#       Open, OK
+#     Start
+# English, Return
+# Install Lubuntu, Return
+# English, Continue
+# ✓ Download updates while installing Lubuntu
+# ✓ Install third-party software ...
+# Continue
+# • Erase disk and install Lubuntu
+# Install Now
+# Continue
+# Your City, Continue
+# English (US), English (US), Continue
+# Your name: ..., Continue
+# Restart Now
+# Return
+# Software Updater, Install Now
+# Restart Now...
+# To get a terminal: Menu, System Tools, LXTerminal
+ sudo apt install virtualbox-guest-dkms
+ sudo adduser $USER vboxsf
+ sudo reboot
+
+########################################################
+# Example 2: 4-CPU, 4-GB, 64-bit Lubuntu 18.04 installation
+# Start VirtualBox
+#   New
+#     Name: lubuntu-18.04
+#     Continue
+#     Memory size: 4096 MB
+#     Continue
+#     • Create a virtual hard disk now
+#     Create
+#     • VDI (VirtualBox Disk Image)
+#     Continue
+#     • Dynamically allocated
+#     Continue
+#     File location and size: 32 GB
+#     Create
+#   Settings
+#     General > Advanced
+#       Shared Clipboard: Bidirectional
+#       Drag'n'Drop: Bidirectional
+#     System > Processor
+#       Processor: 4 CPUs
+#     Display > Screen
+#       Video Memory: 128 MB
+#     Storage
+#       Controller: IDE, Click on circle with green plus
+#       Add
+#       Choose disk: Downloads/lubuntu-18.04.3-desktop-amd64.iso
+#       Open
+#       Choose
+#     Shared Folders
+#       Click on folder with green plus
+#       Folder Path: Other
+#       Open
+#       ✓ Auto-mount
+#       OK, OK
+#     Start
+# English, Return
+# Install Lubuntu, Return
+# English, Continue
+# English (US), English (US), Continue
+# • Normal installation
+# ✓ Download updates while installing Lubuntu
+# ✓ Install third-party software ...
+# Continue
+# • Erase disk and install Lubuntu
+# Install Now, ..., Restart Now, ...
+# lubuntu-18.04, Start, Software Updater, Install Now, ...
+# Click on "Devices" then "Insert Guest Additions CD image..."
+# Right-click on VBox_GAs_*, Open in Terminal
+ sudo apt install virtualbox-guest-dkms
+ sudo ./VBoxLinuxAdditions.run
+ sudo adduser $USER vboxsf
+ sudo reboot
+
+
+########################################################
+########################################################
+# Get, compile, and run MITgcm on single processor
+
+# Update installation
+ sudo apt-get update
+
+# Extra packages needed to get and compile MITgcm
+ sudo apt install git
+ sudo apt install make
+ sudo apt install gfortran
+
+# Get MITgcm code
+ git clone --depth 1 https://github.com/MITgcm/MITgcm.git
+
+# Run a single-CPU verification experiment
+ cd MITgcm/verification
+ ./testreport -t lab_sea
+
+# If above step worked fine, you should see
+# Start time: .....
+# End time: .....
+
+
+########################################################
+########################################################
+# Compile and run MITgcm using parallel MPI compilation
+
+# Extra package needed for parallel MPI compilation
+ sudo apt install libopenmpi-dev
+
+# Run a single-CPU verification experiment
+ cd MITgcm/verification
+ export MPI_INC_DIR=/usr/include/mpi
+ ./testreport -mpi -t lab_sea

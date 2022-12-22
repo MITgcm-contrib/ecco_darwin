@@ -1,4 +1,4 @@
-# 3deg darwin3 verification experiment with volume, salt, salinity, DIC, and FeT budget
+# v05 3deg darwin3 verification experiment with volume, salt, salinity, DIC, and FeT budget
 # diagnostics, initially based on MITgcm/verification/tutorial_global_oce_biogeo
 
 # ========
@@ -42,9 +42,9 @@
  module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
  cp ../../ecco_darwin/v05/3deg/code/SIZE.h_mpi SIZE.h
  ../tools/genmake2 -of  ../../ecco_darwin/v05/llc270/code/linux_amd64_ifort+mpi_ice_nas  \
- -mo '../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code'
- make depend
- make -j 16
+ -mo '../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code' -mpi
+  make depend
+ make -j 8
 
  cd ../run
  rm -rf *
@@ -55,10 +55,9 @@
  mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
  mv data_mpi data
  rm data.ctrl data.exch2 data.smooth
- mpirun -np 8 ./mitgcmuv &
-# Monitor run
- tail -f STDOUT.0000 | grep advcfl_W
-
+# modify job_3deg_darwin3 as needed
+ qsub job_3deg_darwin3
+ 
 # ============================
 # 5. MATLAB code for computing volume, salt, salinity, DIC, and Fe budgets
 #    Prerequisite: 4. Build and run MPI executable

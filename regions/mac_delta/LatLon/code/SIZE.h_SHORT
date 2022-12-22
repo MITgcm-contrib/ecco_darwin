@@ -51,7 +51,7 @@ C     Nr  :: No. points in Z for full process domain.
      &           nSx =   1,
      &           nSy =   1,
      &           nPx =  1,
-     &           nPy =  1116-267,
+     &           nPy =  1116-234,
      &           Nx  = sNx*nSx*nPx,
      &           Ny  = sNy*nSy*nPy,
      &           Nr  =  81 )

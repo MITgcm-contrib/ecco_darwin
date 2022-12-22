@@ -107,15 +107,15 @@ C     errCount  :: error counter
      I  myThid )
       ENDIF
 
-      IF ( tDOCrunofffile .NE. ' ' ) THEN
+      IF ( rDOCrunofffile .NE. ' ' ) THEN
 # ifdef ALLOW_DEBUG
-       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START tDOCrunoff',
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START rDOCrunoff',
      &  myThid)
 # endif
        CALL EXF_GETFFIELD_START( useExfYearlyFields,
-     I  'darwin', 'tDOCrunoff', tDOCrunoffperiod,
-     I  tDOCrunoffstartdate1, tDOCrunoffstartdate2,
-     U  tDOCrunoffStartTime, errCount,
+     I  'darwin', 'rDOCrunoff', rDOCrunoffperiod,
+     I  rDOCrunoffstartdate1, rDOCrunoffstartdate2,
+     U  rDOCrunoffStartTime, errCount,
      I  myThid )
       ENDIF
 
