@@ -46,7 +46,7 @@
  ../tools/genmake2 -of ../../ecco_darwin/v05/llc270/code/linux_amd64_ifort+mpi_ice_nas -mo '../../ecco_darwin/v05/llc270_CDR/code_darwin ../../ecco_darwin/v05/3deg/code ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code' -mpi
 
  make depend
- make -j 8
+ make -j 16
 
  cd ../run
  rm -rf *
