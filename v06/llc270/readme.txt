@@ -36,4 +36,4 @@ mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 mkdir diags/monthly/IOPS diags/monthly/PAR diags/monthly/RRS 
 
 # modify job_ECCO_darwin as needed
-qsub job_ecco_darlin
+qsub job_ecco_darwin
