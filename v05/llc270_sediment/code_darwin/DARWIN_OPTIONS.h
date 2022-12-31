@@ -54,6 +54,9 @@ C reduce nitrate uptake by iron limitation factor
 C allow organic matter to sink into bottom (sedimentize)
 #define DARWIN_BOTTOM_SINK
 
+C enable nonlinear dissolute rate 
+#define NAVIAUX_DISSOLUTION
+
 
 C light
 
@@ -115,9 +118,6 @@ C enable variable iron sediment source
 C revert to old variable iron sediment source in terms of POP
 #undef  DARWIN_IRON_SED_SOURCE_POP
 
-
-C sediment burial & remineralization 
-#define NAVIAUX_DISSOLUTION
 
 C diagnostics
 
