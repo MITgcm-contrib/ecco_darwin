@@ -60,7 +60,7 @@
  useCDscheme=.TRUE.,
  useJamartWetPoints=.TRUE.,
  readBinaryPrec=32,
- writeBinaryPrec=64,
+ writeBinaryPrec=32,
  debugLevel=1,
  /
 
