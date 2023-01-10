@@ -16,7 +16,7 @@ git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 git clone https://github.com/darwinproject/darwin3
 cd darwin3
 git checkout 24885b71
-mkdir build run
+mkdir build run run_1985
 cd build
 
 ==============
@@ -40,6 +40,21 @@ ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
 cp ../../ecco_darwin/v05/llc270/input/* .
+mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
+# modify job_ECCO_darwin as needed
+qsub job_ECCO_darwin
+
+==============
+# 4. Instructions for running simulation (1985-2020 period)
+
+cd ../run_1985
+ln -sf ../build/mitgcmuv .
+ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/forcing/exf_1985 .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19850101/pickup* .
+cp ../../ecco_darwin/v05/llc270/input_1985/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_ECCO_darwin as needed
 qsub job_ECCO_darwin
