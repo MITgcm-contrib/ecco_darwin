@@ -16,7 +16,7 @@ C !INTERFACE: ==========================================================
      I                 calciumLocal,
      I                 CO3Local,
      I                 Ksp_TP_Local,
-     O                 disscPIC_Local,
+     O                 disscPIC,
      O                 omegaC_Local,
 #endif
      I     myTime,myIter,myThid)
@@ -74,7 +74,6 @@ C  chlout :: computed acclimated chlorophyll if not dynamic
       _RL diags(darwin_nDiag)
 CEOP
 #ifdef DARWIN_ALLOW_CARBON
-      _RL disscPIC_Local
       _RL omegaC_Local
 #endif DARWIN_ALLOW_CARBON
 
@@ -935,19 +934,19 @@ C water column dissolution
 C Naviaux et al. 2019, Marine Chemistry dissolution rate law
         if (omegaC_Local .LT. 1.0 _d 0) then
                 if (omegaC_Local .GT. 0.8 _d 0) then
-                        disscPIC_Local = PIC * 5.22 _d -9 *
+                        disscPIC = PIC * 5.22 _d -9 *
      &                    (1 - omegaC_Local)**0.11 _d 0
                 else
-                        disscPIC_Local = PIC * 1.65 _d -5 *
+                        disscPIC = PIC * 1.65 _d -5 *
      &                    (1 - omegaC_Local)**4.7 _d 0
                 endif
         else
-                disscPIC_Local = 0.0 _d 0
+                disscPIC = 0.0 _d 0
         endif
 
 #else /* NAVIAUX_DISSOLUTION */
 
-        disscPIC_Local = Kdissc * PIC
+        disscPIC = Kdissc * PIC
         
 #endif /* NAVIAUX_DISSOLUTION */
         
