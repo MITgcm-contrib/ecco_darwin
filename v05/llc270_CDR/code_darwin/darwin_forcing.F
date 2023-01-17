@@ -100,6 +100,9 @@ C  k                    :: vertical level
       _RL tmp
       _RL growth_pl(nDarwin), grazing_pl(nDarwin)
       _RL mortality_pl(nDarwin), respir_pl(nDarwin)      
+      _RL grow_nut(nDarwin),grow_lightT(nDarwin)
+      _RL grow_P_lim(nDarwin),grow_N_lim(nDarwin)
+      _RL grow_Si_lim(nDarwin),grow_Fe_lim(nDarwin)
       _RL sedFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -130,6 +133,16 @@ C  k                    :: vertical level
 	  _RL grazing_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
       _RL mortality_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
       _RL respir_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+	  _RL growth_nut_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_lightT_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_P_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_N_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_Si_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_Fe_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+	  
+	  
+	  
+	  
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -151,6 +164,15 @@ C === reset tendencies =================================================
         grazing_plank(i,j,k,iTr)= 0.0 _d 0
         mortality_plank(i,j,k,iTr)= 0.0 _d 0        
         respir_plank(i,j,k,iTr)= 0.0 _d 0
+        
+        growth_nut_plank(i,j,k,iTr)=0.0 _d 0
+        growth_lightT_plank(i,j,k,iTr)=0.0 _d 0
+        
+        growth_P_lim_plank(i,j,k,iTr)=0.0 _d 0
+        growth_N_lim_plank(i,j,k,iTr)=0.0 _d 0
+        growth_Si_lim_plank(i,j,k,iTr)=0.0 _d 0
+        growth_Fe_lim_plank(i,j,k,iTr)=0.0 _d 0
+        
       ENDDO
       ENDDO
       ENDDO
@@ -392,6 +414,8 @@ C === plankton =========================================================
      I                 uptakeTempFunc,
      O                 growth_pl,grazing_pl,
      O                 mortality_pl,respir_pl,
+     O                 grow_nut,grow_lightT,
+     O     grow_P_lim,grow_N_lim,grow_Si_lim,grow_Fe_lim,
 #ifdef DARWIN_DEBUG
      I                 myxgloballo+(bi-1)*sNx+i-1,
      I                 myygloballo+(bj-1)*sNy+j-1,
@@ -420,11 +444,20 @@ C === plankton =========================================================
 #endif
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
-         
+C budget terms for plankton         
         growth_plank(i, j, k, iTr)=growth_pl(iTr)
         grazing_plank(i, j, k, iTr)=grazing_pl(iTr)
         mortality_plank(i, j, k, iTr)=mortality_pl(iTr)
         respir_plank(i, j, k, iTr)=respir_pl(iTr)
+C nutrient vs light & T limitation to growth        
+        growth_nut_plank(i,j,k,iTr)=grow_nut(iTr)
+        growth_lightT_plank(i,j,k,iTr)=grow_lightT(iTr)
+C nutrient limitations        
+        growth_P_lim_plank(i,j,k,iTr)=grow_P_lim(iTr)
+        growth_N_lim_plank(i,j,k,iTr)=grow_N_lim(iTr)
+        growth_Si_lim_plank(i,j,k,iTr)=grow_Si_lim(iTr)
+        growth_Fe_lim_plank(i,j,k,iTr)=grow_Fe_lim(iTr)
+        
          
          
         ENDDO
@@ -668,6 +701,43 @@ C      diags(iCons*) for convenience
              WRITE(diagname, '(A,I2.2)') 'RESP_P', iTr+ic-1
         CALL DIAGNOSTICS_FILL(respir_plank(1-OLx,1-OLy,1,ic+iTr-1),
      &        diagname,0,Nr,2,bi,bj,myThid)
+     
+     
+c nutrient and T&light fictors
+        WRITE(diagname, '(A,I2.2)') 'GRW_NT', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_nut_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+        WRITE(diagname, '(A,I2.2)') 'GRW_LT', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_lightT_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+c nutrient limitations     
+        WRITE(diagname, '(A,I2.2)') 'GRWPL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_P_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+     
+        WRITE(diagname, '(A,I2.2)') 'GRWNL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_N_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+        WRITE(diagname, '(A,I2.2)') 'GRWSiL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_Si_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+     
+        WRITE(diagname, '(A,I2.2)') 'GRWFeL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_Fe_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)   
+     
+   
+     
 
         ENDDO
 

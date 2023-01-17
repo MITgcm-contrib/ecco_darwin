@@ -122,6 +122,54 @@ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
 
+       WRITE(diagName,'(A,I2.2)')'GRWPL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton P grwth limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+
+       WRITE(diagName,'(A,I2.2)')'GRWNL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton N grwth limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'GRWSiL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton Si grwth limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+       WRITE(diagName,'(A,I2.2)')'GRWFeL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton Fe grwt limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+
+       WRITE(diagName,'(A,I2.2)')'GRW_NT',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton nutrient grwt factor',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+       WRITE(diagName,'(A,I2.2)')'GRW_LT',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton light+temp grwt factor',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
       ENDDO
 
 

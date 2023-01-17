@@ -427,8 +427,30 @@
    timePhase(98)= 0.,
    filename(98) = 'diags/budget/plankton_snap_3d',
 
+  frequency(99)= 2635200.0,
+  fields(6,99)= 'GRW_NT20','GRW_LT20','GRWPL20',
+                'GRWNL20','GRWSiL20','GRWFeL20',
+  filename(99)='diags/monthly/plankton_growth_1',
 
+  frequency(100)= 2635200.0,
+  fields(6,100)= 'GRW_NT21','GRW_LT21','GRWPL21',
+                'GRWNL21','GRWSiL21','GRWFeL21',
+  filename(100)='diags/monthly/plankton_growth_2',
+  
+  frequency(101)= 2635200.0,
+  fields(6,101)= 'GRW_NT22','GRW_LT22','GRWPL22',
+                'GRWNL22','GRWSiL22','GRWFeL22',
+  filename(101)='diags/monthly/plankton_growth_3',
 
+  frequency(102)= 2635200.0,
+  fields(6,102)= 'GRW_NT23','GRW_LT23','GRWPL23',
+                'GRWNL23','GRWSiL23','GRWFeL23',
+  filename(102)='diags/monthly/plankton_growth_4',
+
+  frequency(103)= 2635200.0,
+  fields(6,103)= 'GRW_NT24','GRW_LT24','GRWPL24',
+                'GRWNL24','GRWSiL24','GRWFeL24',
+  filename(103)='diags/monthly/plankton_growth_5',
 
  &
 
