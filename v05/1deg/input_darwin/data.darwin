@@ -5,7 +5,7 @@
 #
  pCO2File = 'apCO2',
  pCO2startdate1 = 19920101,
- pCO2startdate2 = 030000,
+ pCO2startdate2 = 000000,
  pCO2period     = 86400.0,
 #
  darwin_useEXFwind = .TRUE.,
