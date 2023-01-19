@@ -1,5 +1,6 @@
 # v05 1deg Darwin3 simulation based on ECCOV4r4 set-up
 https://www.ecco-group.org/products-ECCO-V4r4.htm
+https://ecco-group.org/docs/v4r4_reproduction_howto.pdf
 
 # ========
 # 1. Get code
@@ -39,4 +40,15 @@ ln -sf ../build/mitgcmuv .
 # wget -r --no-parent --user ${USERNAME} --ask-password
 # https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_ecco
 
-ln -sf /nobackup/hzhang1/pub/Release4/*
+# INPUTDIR='./ecco.jpl.nasa.gov/drive/files/Version4/Release4/'
+INPUTDIR='/nobackup/hzhang1/pub/Release4/'
+
+ln -s ${INPUTDIR}/input_init/NAMELIST/* .
+ln -s ${INPUTDIR}/input_init/error_weight/ctrl_weight/* .
+ln -s ${INPUTDIR}/input_init/error_weight/data_error/* .
+ln -s ${INPUTDIR}/input_init/* .
+ln -s ${INPUTDIR}/input_init/tools/* .
+ln -s ${INPUTDIR}/input_ecco/*/* .
+ln -s ${INPUTDIR}/input_forcing/eccov4r4* .
+python mkdir_subdir_diags.py
+# qsub job_ECCOV4r4

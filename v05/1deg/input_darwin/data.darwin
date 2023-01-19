@@ -1,5 +1,5 @@
  &DARWIN_FORCING_PARAMS
- ironfile = 'llc270_Mahowald_2009_soluble_iron_dust.bin',
+ ironfile = 'llc90_Mahowald_2009_soluble_iron_dust.bin',
  ironperiod = -12,
  darwin_inscal_iron= 1000.,
 #
