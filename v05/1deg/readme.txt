@@ -51,4 +51,10 @@ ln -s ${INPUTDIR}/input_init/tools/* .
 ln -s ${INPUTDIR}/input_ecco/*/* .
 ln -s ${INPUTDIR}/input_forcing/eccov4r4* .
 python mkdir_subdir_diags.py
+
+rm data.exf data.ptracers data.pkg data.diagnostics
+cp ../../../../ecco_darwin/v05/1deg/input_darwin/* .
+ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
+ln -sf /nobackup/dcarrol2/v05_1deg/forcing/iron_dust/* .
+ln -sf /nobackup/dcarrol2/v05_1deg/pickup/* .
 # qsub job_ECCOV4r4
