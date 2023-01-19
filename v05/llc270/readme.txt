@@ -100,5 +100,10 @@ o pkg/seaice: some new and hopefully more sensible defaults:
     in seaice_oceandrag_coeffs.F
     
 ----------------
-        
-        
+
+# Extension to 09/2020
+      
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2022/*
+endtime=946857600
+ 
+ 
