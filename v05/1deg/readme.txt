@@ -57,4 +57,5 @@ cp ../../../../ecco_darwin/v05/1deg/input_darwin/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/dcarrol2/v05_1deg/forcing/iron_dust/* .
 ln -sf /nobackup/dcarrol2/v05_1deg/pickup/* .
+mkdir diags/3hourly diags/daily diags/monthly diags/budget
 # qsub job_ECCOV4r4
