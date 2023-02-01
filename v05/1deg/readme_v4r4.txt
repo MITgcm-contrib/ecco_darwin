@@ -26,8 +26,8 @@ make -j 16
 # 3. Instructions for running simulation (1992-2017 period)
 
 cd ../run
-mkdir -p diags
 rm -rf *
+mkdir -p diags
 ln -sf ../build/mitgcmuv .
 
 INPUTDIR='/nobackup/hzhang1/pub/Release4'
