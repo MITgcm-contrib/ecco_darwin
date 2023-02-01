@@ -264,8 +264,8 @@
 #budget diagnostics   
 #---
   frequency(73) = 2635200.0,
-   fields(1:17,73) = 'ETAN    ','oceFWflx','SFLUX   ',
-        'TFLUX   ','oceSPflx','oceQsw  ',
+   fields(1:17,73) = 'ETAN    ','TFLUX   ','SFLUX   ',
+        'oceQsw  ','oceFWflx','oceSPflx',
         'fluxCO2 ','gDICsurf', 
         'gDICEpr ','gALKEpr ','gNO3Epr ',
         'gNO2Epr ','gNH4Epr ','gO2Epr '
@@ -325,26 +325,26 @@
    filename(82) = 'diags/budget/average_PO4_3d',
 #---
   frequency(83) = 2635200.0,
-   fields(1:13,83) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
-        'DFxETr06','DFyETr06','DFrETr06','DFrITr06','gDAR06  ',
-        'C_Fe    ','S_Fe    ','sedFe   ','freeFe  ',
-   filename(83) = 'diags/budget/average_Fe_3d',
-#---
-  frequency(84) = 2635200.0,
-   fields(1,84) = 'sfcSolFe',
-   filename(84) = 'diags/budget/average_Fe_darwin_2d',
-#---
-  frequency(85) = 2635200.0,
-   fields(1:11,85) = 'TRAC07  ','ADVxTr07','ADVyTr07','ADVrTr07',
+   fields(1:11,83) = 'TRAC07  ','ADVxTr07','ADVyTr07','ADVrTr07',
         'DFxETr07','DFyETr07','DFrETr07','DFrITr07','gDAR07  ',
         'C_Si    ','S_Si    ',
-   filename(85) = 'diags/budget/average_SiO2_3d',
+   filename(83) = 'diags/budget/average_SiO2_3d',
 #---
-  frequency(86) = 2635200.0,
-   fields(1:11,86) = 'TRAC19  ','ADVxTr19','ADVyTr19','ADVrTr19',
+  frequency(84) = 2635200.0,
+   fields(1:11,84) = 'TRAC19  ','ADVxTr19','ADVyTr19','ADVrTr19',
         'DFxETr19','DFyETr19','DFrETr19','DFrITr19','gDAR19  ',
         'C_O2    ','S_O2    ',
-   filename(86) = 'diags/budget/average_O2_3d',
+   filename(84) = 'diags/budget/average_O2_3d',
+#---
+  frequency(85) = 2635200.0,
+   fields(1:13,85) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
+        'DFxETr06','DFyETr06','DFrETr06','DFrITr06','gDAR06  ',
+        'C_Fe    ','S_Fe    ','sedFe   ','freeFe  ',
+   filename(85) = 'diags/budget/average_Fe_3d',
+#---
+  frequency(86) = 2635200.0,
+   fields(1,86) = 'sfcSolFe',
+   filename(86) = 'diags/budget/average_Fe_darwin_2d',
 #---
   frequency(87) = -2635200.0,
    fields(1,87) = 'ETAN    ',
@@ -355,7 +355,7 @@
    fields(1:11,88) = 'THETA    ','SALT    ',
         'TRAC01  ','TRAC18  ','TRAC02  ',
    		'TRAC03  ','TRAC04  ','TRAC05  ',
-        'TRAC06  ','TRAC07  ','TRAC19  ',
+        'TRAC07  ','TRAC19  ','TRAC06  ',
    timePhase(88)= 0.,
    filename(88) = 'diags/budget/snap_3d',
 #---
