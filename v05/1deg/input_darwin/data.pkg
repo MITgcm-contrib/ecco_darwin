@@ -1,5 +1,6 @@
 # Packages
  &PACKAGES
+ useCAL   = .TRUE.,
  useEXF   = .TRUE.,
 #useRBCS  = .TRUE.,
  useGMRedi= .TRUE.,
@@ -12,12 +13,13 @@
 # useDOWN_SLOPE=.TRUE.,
  useDiagnostics=.TRUE.,
 # useECCO=.TRUE.,
- useCTRL=.TRUE.,
+# useCTRL=.TRUE.,
 # useProfiles=.TRUE.,
- useSMOOTH=.TRUE.,
+# useSMOOTH=.TRUE.,
 #useGrdchk=.TRUE.,
 #useLayers=.TRUE.,
+#
+usePtracers=.TRUE.,
+useGCHEM = .TRUE.,
 #useBBL=.TRUE.,
- usePTRACERS = .TRUE.,
- useGCHEM = .TRUE., 
  /
