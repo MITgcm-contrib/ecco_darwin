@@ -475,11 +475,11 @@ C     Dependent variables
         O2Fsediment(i,j)=((a3*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
      &    b3*fluxPOC(i,j)+c3*fluxPIC(i,j)+d3*c)*TcorrO2(i,j)
      
-        CALFsediment(i,j)=(a5*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
-     &    b5*fluxPOC(i,j)+c5*fluxPIC(i,j)+d5*c
+        CALFsediment(i,j)=-((a5*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
+     &    b5*fluxPOC(i,j)+c5*fluxPIC(i,j)+d5*c)
      
-        POCFsediment(i,j)=(a4*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
-     &    b4*fluxPOC(i,j)+c4*fluxPIC(i,j)+d4*c
+        POCFsediment(i,j)=-((a4*omegaC(i,j,KLowc(i,j,bi,bj),bi,bj)*c)+
+     &    b4*fluxPOC(i,j)+c4*fluxPIC(i,j)+d4*c)
         
       ELSE
       
@@ -495,8 +495,8 @@ C     Dependent variables
       ENDIF
       
 C     Set the buried fluxes to 0 if negative
-        POCFsediment(i,j)= MAX(0.0, POCFsediment(i,j))
-        CALFsediment(i,j)= MAX(0.0, CALFsediment(i,j))
+        POCFsediment(i,j)= MIN(POCFsediment(i,j), 0.0)
+        CALFsediment(i,j)= MIN(CALFsediment(i,j), 0.0)
 
 C     Equations calculating the concentrations at the deepest depth level (Klowc)
         gPtr(i,j,KLowc(i,j,bi,bj),iDIC) = gPtr(i,j,KLowc(i,j,bi,bj),
