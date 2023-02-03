@@ -73,8 +73,8 @@
 
 # Time stepping parameters
  &PARM03
- nIter0=1,
- pickupSuff='0000000001',
+ nIter0=2,
+ pickupSuff='0000000002',
 #2 lev2 for testing:
 #nTimeSteps=8,
 #3month
@@ -118,7 +118,7 @@ nTimeSteps=227903,
 # dumpFreq    =31536000.0,
 # monitorFreq = 7200.0,
 # monitorFreq = 6307200.0,
- monitorFreq = 43200.,
+ monitorFreq = 43200.0,
  dumpInitAndLast = .TRUE.,
  adjDumpFreq = 31536000.0,
 #adjDumpFreq = 604800.0,
@@ -140,7 +140,7 @@ nTimeSteps=227903,
 
 # Input datasets
  &PARM05
- diffKrFile='total_diffkr_r009bit11.bin',
+ diffKrFile='eccov4_r4_diffkr.data',
  adTapeDir='tapes',
 #bathyFile      ='bathy_eccollc_90x50.bin',
  bathyFile      ='bathy_eccollc_90x50_min2pts.bin',
