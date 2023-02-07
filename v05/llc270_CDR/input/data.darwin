@@ -6,11 +6,11 @@
  pCO2File = 'apCO2_2000',
   pCO2period     = -12.,
 #
-  DICrunofffile = 'DIC_3deg_test_2090',
+#  DICrunofffile = 'DIC_3deg_test_2090',
 # DICrunoffstartdate1 = 20891201,
 # DICrunoffstartdate2 = 000000,
-  DICrunoffperiod     = 0.,
-  DICratioALK         = 0.,
+#  DICrunoffperiod     = 0.,
+#  DICratioALK         = 0.,
 #
 #
  darwin_useEXFwind = .TRUE.,
