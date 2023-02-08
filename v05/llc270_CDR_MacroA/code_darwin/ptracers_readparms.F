@@ -56,6 +56,7 @@ C     tauTr1ClimRelax :: old parameter (will be removed 1 day)
      &     PTRACERS_advScheme,
      &     PTRACERS_zeroHAdv,
      &     PTRACERS_zeroVAdv,
+     &     PTRACERS_zeroSurf,
      &     PTRACERS_ImplVertAdv,
      &     PTRACERS_diffKh,
      &     PTRACERS_diffK4,
@@ -113,6 +114,8 @@ C     Set defaults values for parameters in PTRACERS.h
         PTRACERS_resetPhase(iTracer) = 0.
         PTRACERS_advScheme(iTracer)=saltAdvScheme
         PTRACERS_zeroVAdv = .FALSE.
+        PTRACERS_zeroHAdv = .FALSE.
+        PTRACERS_zeroSurf = .FALSE.
         PTRACERS_ImplVertAdv = .FALSE.
         PTRACERS_ImplVertAdv(iTracer) = .FALSE.
         PTRACERS_diffKh(iTracer)=diffKhS

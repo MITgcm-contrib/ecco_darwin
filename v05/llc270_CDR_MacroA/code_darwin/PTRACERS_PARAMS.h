@@ -63,14 +63,16 @@ C     PTRACERS_Iter0    :: timestep number when tracers are initialized
       INTEGER PTRACERS_Iter0
       INTEGER PTRACERS_numInUse
       INTEGER PTRACERS_advScheme(PTRACERS_num)
-      LOGICAL PTRACERS_zeroHAdv(PTRACERS_num)
-      LOGICAL PTRACERS_zeroVAdv(PTRACERS_num)
+      LOGICAL PTRACERS_ZeroHAdv(PTRACERS_num)
+      LOGICAL PTRACERS_ZeroVAdv(PTRACERS_num)
+      LOGICAL PTRACERS_ZeroSurf(PTRACERS_num)
       COMMON /PTRACERS_PARAMS_I/
      &     PTRACERS_Iter0,
      &     PTRACERS_numInUse,
      &     PTRACERS_advScheme,
      &     PTRACERS_ZeroHAdv,
-     &     PTRACERS_ZeroVAdv
+     &     PTRACERS_ZeroVAdv,
+     &     PTRACERS_ZeroSurf 
 
 C--   COMMON /PTRACERS_PARAMS_L/ PTRACERS logical-type parameters:
 C     PTRACERS_ImplVertAdv   :: use Implicit Vertical Advection for this tracer
