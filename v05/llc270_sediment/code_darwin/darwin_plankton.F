@@ -925,8 +925,8 @@ C if running with bacteria
 C PIC dissolution rate
 
 C units in mol m^-3      
-      omegaC_Local = MIN(1., MAX(0., calciumLocal * 1. _d -3
-     &   *  CO3Local) / Ksp_TP_Local)
+      omegaC_Local = MAX(0., calciumLocal * 1. _d -3
+     &   *  CO3Local) / Ksp_TP_Local
 
 C water column dissolution
 #ifdef NAVIAUX_DISSOLUTION
