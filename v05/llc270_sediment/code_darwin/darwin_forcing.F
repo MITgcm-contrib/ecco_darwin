@@ -494,7 +494,7 @@ C     Dependent variables
         
       ENDIF
       
-C     Set the buried fluxes to 0 if negative
+C     Set the buried fluxes to 0 if positive
         POCFsediment(i,j)= MIN(POCFsediment(i,j), 0.0)
         CALFsediment(i,j)= MIN(CALFsediment(i,j), 0.0)
 
