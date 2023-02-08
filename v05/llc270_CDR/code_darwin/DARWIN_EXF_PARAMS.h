@@ -538,7 +538,8 @@ C DIC forcing parameters for exf
      &    DICrunoffperiod, DICrunoffRepCycle, DICrunoffconst,
      &    DICrunoff_exfremo_intercept,DICrunoff_exfremo_slope,
      &    darwin_inscal_DICrunoff,
-     &    DICratioALK
+     &    DICratioALK,
+     &    FEratioALK,SIratioALK
       CHARACTER*1 DICrunoffmask
       INTEGER DICrunoffstartdate1
       INTEGER DICrunoffstartdate2
@@ -549,6 +550,8 @@ C DIC forcing parameters for exf
       _RL DICrunoff_exfremo_slope
       _RL darwin_inscal_DICrunoff
       _RL DICratioALK
+      _RL FEratioALK
+      _RL SIratioALK
 
 C ALK forcing parameters for exf
 

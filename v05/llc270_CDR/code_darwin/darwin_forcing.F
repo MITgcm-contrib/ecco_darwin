@@ -139,8 +139,7 @@ C  k                    :: vertical level
       _RL growth_N_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
       _RL growth_Si_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
       _RL growth_Fe_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-	  
-	  
+	  _RL alk_runoff
 	  
 	  
 	  
@@ -216,17 +215,25 @@ c
       CALL TIMER_STOP ('DARWIN_LIGHT [DARWIN_FORCING]',myThid)
 
 C === nutrient runoff ==================================================
+
+       print *,'FEratioALK,SIratioALK',FEratioALK,SIratioALK
+
+
 #ifdef DARWIN_NUTRIENT_RUNOFF
       DO j=jMin,jMax
       DO i=iMin,iMax
       
+    
+      alk_runoff=ALKrunoff(i,j,bi,bj)*recip_drF(1)*
+     & recip_hFacC(i,j,1,bi,bj)
+    
 C CDR forcing      
         CDR_DIC(i,j) = DICrunoff(i,j,bi,bj)                                
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)    
 C ALKforcing = proportional to DICforcing + prescribed     
      	CDR_ALK(i,j)= DICrunoff(i,j,bi,bj)                                
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
-     &   +ALKrunoff(i,j,bi,bj)*recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
+     &   +alk_runoff
        
        CDR_SiO2(i,j)= DSirunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
@@ -247,7 +254,8 @@ C ALKforcing = proportional to DICforcing + prescribed
         gPtr(i,j,1,iPO4) = gPtr(i,j,1,iPO4) + DIPrunoff(i,j,bi,bj)
      &   * DIPboundFEMnOxide_ratio	
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iSiO2) = gPtr(i,j,1,iSiO2) + CDR_SiO2(i,j) 
+        gPtr(i,j,1,iSiO2) = gPtr(i,j,1,iSiO2) + CDR_SiO2(i,j) +
+     &  alk_runoff*SIratioALK   
         gPtr(i,j,1,iPOC) = gPtr(i,j,1,iPOC) + POCrunoff(i,j,bi,bj)
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
         gPtr(i,j,1,iPOP) = gPtr(i,j,1,iPOP) + POPrunoff(i,j,bi,bj)
@@ -257,7 +265,7 @@ C ALKforcing = proportional to DICforcing + prescribed
         gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + CDR_DIC(i,j)
         gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + CDR_ALK(i,j)
         gPtr(i,j,1,iFeT) = gPtr(i,j,1,iFeT) + DIPrunoff(i,j,bi,bj)
-     &   * DIPboundFEMnOxide_ratio                                
+     &   * DIPboundFEMnOxide_ratio + FEratioALK*alk_runoff
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DIPratioDFe
         gPtr(i,j,1,iDOFe) = gPtr(i,j,1,iDOFe) + DOPrunoff(i,j,bi,bj)                                
      &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DOPratioDOFe
