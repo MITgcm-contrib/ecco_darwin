@@ -259,8 +259,6 @@ C
      &    DICrunoffmask,                                                                          
      &    darwin_inscal_DICrunoff,
      &    DICratioALK,
-     &    FEratioALK,
-     $    SIratioALK,
 C
      &    ALKrunofffile,                                                                          
      &    ALKrunoffperiod,                                                                        
@@ -621,10 +619,6 @@ C Open and read the data.darwin file
 
       darwin_inscal_DICrunoff    =  1. _d 0
       DICratioALK                =  1.0218 _d 0
-      FEratioALK                 =  0. _d 0
-      SIratioALK                 =  0. _d 0
-      
-      
       
 C      
       ALKrunofffile = ' '                                                                         

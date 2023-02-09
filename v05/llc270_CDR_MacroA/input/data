@@ -73,10 +73,7 @@
 # Time stepping parameters
  &PARM03
  nIter0=00000859080,
-# ~20 years:
-# nTimeSteps=175440,
-# ~30 years:
- nTimeSteps=263520,
+ nTimeSteps=175440,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
 #when using the cd scheme:

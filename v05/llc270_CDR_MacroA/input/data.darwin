@@ -5,22 +5,12 @@
 #
  pCO2File = 'apCO2_2000',
   pCO2period     = -12.,
-
-# ratios between ALK Fe and ALK perturbations:
-#  FEratioALK = 0.04,
-#  SIratioALK = 0.1,
-# prescribe ALK perturbation:
-#  ALKrunofffile = 'ALK_perturbation',
-#  ALKrunoffstartdate1 = 20900101,
-#  ALKrunoffstartdate2 = 000000,
-#  ALKrunoffperiod     = 86400.,
-
 #
-#  DICrunofffile = 'DIC_3deg_test_2090',
+  DICrunofffile = 'DIC_3deg_test_2090',
 # DICrunoffstartdate1 = 20891201,
 # DICrunoffstartdate2 = 000000,
-#  DICrunoffperiod     = 0.,
-#  DICratioALK         = 0.,
+  DICrunoffperiod     = 0.,
+  DICratioALK         = 0.,
 #
 #
  darwin_useEXFwind = .TRUE.,
