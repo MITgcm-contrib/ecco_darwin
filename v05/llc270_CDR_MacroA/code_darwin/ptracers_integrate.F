@@ -288,16 +288,16 @@ CADJ &      = comlev1_bibj_ptracers, key=iptrkey, byte=isbyte
           IF (debugMode) CALL DEBUG_CALL('GAD_ADVECTION',myThid)
 # endif
 
-         print *,'diagnostics-itracer',itracer,
-     &    PTRACERS_zeroHAdv(itracer),
-     &  PTRACERS_zeroVAdv(itracer),
-     &  PTRACERS_ImplVertAdv(iTracer),
-     & PTRACERS_useGMRedi(iTracer),
-     &       PTRACERS_useKPP(iTracer),
-     &     PTRACERS_stayPositive(iTracer),
-     & implicitdiff_t,
-     & maxval(abs(uFld_t)),maxval(abs(vFld_t)),
-     & maxval(abs(wFld_t))
+C         print *,'diagnostics-itracer',itracer,
+C     &    PTRACERS_zeroHAdv(itracer),
+C     &  PTRACERS_zeroVAdv(itracer),
+C     &  PTRACERS_ImplVertAdv(iTracer),
+C     & PTRACERS_useGMRedi(iTracer),
+C     &       PTRACERS_useKPP(iTracer),
+C     &     PTRACERS_stayPositive(iTracer),
+C     & implicitdiff_t,
+C     & maxval(abs(uFld_t)),maxval(abs(vFld_t)),
+C     & maxval(abs(wFld_t))
          
          
           CALL GAD_ADVECTION(

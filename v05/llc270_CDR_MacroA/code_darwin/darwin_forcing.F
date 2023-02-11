@@ -104,6 +104,7 @@ C  k                    :: vertical level
       _RL grow_nut(nDarwin),grow_lightT(nDarwin)
       _RL grow_P_lim(nDarwin),grow_N_lim(nDarwin)
       _RL grow_Si_lim(nDarwin),grow_Fe_lim(nDarwin)
+      _RL ma_areat,ma_nrest,ma_crest
       _RL sedFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -140,10 +141,12 @@ C  k                    :: vertical level
       _RL growth_N_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
       _RL growth_Si_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
       _RL growth_Fe_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+	  _RL ma_area(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+	  _RL ma_nres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+	  _RL ma_cres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+	  _RL day_yr
 	  
-	  
-	  
-	  
+	        INTEGER curr_date(4), first_day(4),numdays(4)
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -185,6 +188,11 @@ C === reset tendencies =================================================
         diffFe1(i,j,k) = 0.0 _d 0
         diffFe2(i,j,k) = 0.0 _d 0
         diffFe(i,j,k) = 0.0 _d 0
+        
+        ma_area(i,j,k) = 0.0 _d 0
+        ma_nres(i,j,k) = 0.0 _d 0
+        ma_cres(i,j,k) = 0.0 _d 0
+        
       ENDDO
       ENDDO
       ENDDO
@@ -386,6 +394,24 @@ C     iron sediment source (in bottom grid cell above kMaxFeSed)
       ENDDO
       CALL TIMER_STOP ('DARWIN_FE_SED [DARWIN_FORCING]',myThid)
 
+C
+C compute day in a year ... there must be a better way to do this
+C (used for macroalgae)
+C
+
+      CALL CAL_GETDATE(myIter,myTime,curr_date,myThid)
+C first day in a current year       
+       first_day(4)=curr_date(4)
+       first_day(3)=curr_date(3)
+       first_day(2)=0
+       first_day(1)=curr_date(1)-mod(curr_date(1),10000)+101
+    
+      CALL CAL_TIMEPASSED(first_day,curr_date,numdays,myThid )
+      
+      day_yr=real(numdays(1)+1)
+
+        
+
 C === plankton =========================================================
       CALL TIMER_START('DARWIN_PLANKTON [DARWIN_FORCING]',myThid)
       do k=1,Nr
@@ -426,13 +452,32 @@ C === plankton =========================================================
      
 C
 C macroalgae
-C     
+C  
+C TODO: YC should be lat of grid. Is that true for any grid?
+
+   
      	hor_vel=sqrt( 
      &	( 0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)) )**2+
      & 	( 0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)) )**2)
+
         CALL DARWIN_MACROALGAE(
      I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
-     U                  gtr)
+     I   yc(i,j,bi,bj),day_yr,
+     U                  gtr,
+     O    ma_areat,ma_nrest,ma_crest)
+
+C write out outputs
+     
+          ma_area(i,j,k)=ma_areat
+          ma_nres(i,j,k)=ma_nrest
+          ma_cres(i,j,k)=ma_crest
+     
+         
+     
+     
+     
+     
+     
      
      
         DO l=1,darwin_nDiag
@@ -706,6 +751,27 @@ C      diags(iCons*) for convenience
         
        ENDDO
 #endif
+
+
+
+C macroalgage properties
+
+        WRITE(diagname, '(A,I2.2)') 'MA_AREA '
+        CALL DIAGNOSTICS_FILL(ma_area(1-OLx,1-OLy,1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+
+
+        WRITE(diagname, '(A,I2.2)') 'MA_Nres '
+        CALL DIAGNOSTICS_FILL(ma_nres(1-OLx,1-OLy,1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+
+
+
+        WRITE(diagname, '(A,I2.2)') 'MA_Cres '
+        CALL DIAGNOSTICS_FILL(ma_cres(1-OLx,1-OLy,1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+
+
 
        DO iTr=1,nplank
         WRITE(diagname, '(A,I2.2)') 'GROW_P', iTr+ic-1

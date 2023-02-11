@@ -2,16 +2,19 @@
 
 CBOP
 
-
         SUBROUTINE DARWIN_MACROALGAE(
-     &  t,hor_vel,parl,ptr,gtr)
+     I  t,hor_vel,parl,ptr,lat,dayyr,
+     U gtr,
+     O Aalg,Nres,Cres)
 
 C   t:         temperature  [C]
 C   hor_vel:   horizontal velocity [m s-1]
 C   parl: photosynthetic radiation [mu Ein s-1 m-2]
-C   ptr(ndarwin): tracer concentrations  
+C   ptr(ndarwin): tracer concentrations 
+C   lat: latitude [deg]
+C   dayyr: day in a year [0-365/366]
+ 
 C   gtr(ndarwin): tracer tendencies (inout)
-
 
 C
 C macroalgage relevant tracers in ptr
@@ -36,16 +39,22 @@ C Strong-Wright paper https://github.com/jagoosw/SugarKelp.jl
 #include "DARWIN_INDICES.h"
 #include "DARWIN_DIAGS.h"
 
+
+C in outs
+
       _RL ptr(nDarwin)
       _RL gTr(nDarwin)
       _RL t,hor_vel,parl
 
+	  _RL Aalg 
+      _RL NRes
+      _RL CRes 
+      _RL dayyr
+      _RL lat
+
 C   internal variables
 	  _RL NumAlg
-	  _RL Aalg 
 	  _RL WgtStr
-      _RL NRes
-      _RL CRes   		
       _RL f_area
       _RL f_photo
       _RL f_temp
@@ -62,12 +71,18 @@ C   internal variables
       _RL Nenv
       _RL beta
       _RL J
+      _RL lambda
+      _RL tk
+      _RL pmax
 
 C tendencies
       _RL t_FrA
       _RL t_N
       _RL t_C
 
+
+
+C      _RL LENGTH_DAY
       
 C constants (names start with c_)
       _RL c_ka
@@ -94,9 +109,26 @@ C constants (names start with c_)
       _RL c_Nmol
       _RL c_Cstr
       _RL c_Nstr
+      _RL c_a1
+      _RL c_a2
+      _RL c_Tap      
+      _RL c_Tp1
+      _RL c_Tapl
+      _RL c_Tpl
+      _RL c_Taph
+      _RL c_Tph
+      _RL c_P1
+      
+      
+      
 C numerical parameters (names start with n_)      
       _RL n_NumAlg
       _RL n_AAlg
+
+C temp
+      _RL test_day
+      _RL test_lat
+      _RL test_dl
 
 
 C time constant
@@ -154,6 +186,22 @@ C  mass of structural C per mass of structural mass [gC /(g sw)]
       parameter(c_Cstr=0.20)     
 C  mass of structural N per mass of structural mass [gC /(g sw)]
       parameter(c_Nstr=0.01) 
+C photoperiod parameter [-]
+      parameter(c_a1=0.85) 
+C photoperiod parameter [-]
+      parameter(c_a2=0.3) 
+C photosynthetic temperatures, all in [K]      
+C       Tap=1./(1./c_Tp1-1./c_Tp2)*log(c_p2/c_p1)
+      parameter(c_Tap=1649.4)      
+      parameter(c_Tp1=285.)
+      parameter(c_Tapl=27774.)
+      parameter(c_Tpl=271.)
+      parameter(c_Taph=25924.)
+      parameter(c_Tph=296.)
+C max photosynthetic rate at T=Tp1 [g C dm-2 h-1]
+      parameter(c_p1=1.22e-3)
+
+
 
 C
 C   values for numerical stability (n_)
@@ -162,6 +210,10 @@ C minimum amount of algage [#/km^3]
       parameter(n_NumAlg=1.e-12)
 C minimum frond area [dm^2]      
 	  parameter(n_AAlg=1.e-7)	
+
+
+C     temperature in K
+       tk=t+273.16 
 
 
 C number of macroalgage per km^3       
@@ -208,11 +260,16 @@ C   Eq. 4
        ELSE
        f_temp=0.0
        ENDIF
-
-
-
-C Eq. 5 (IMPLEMENT THAT)      
-       f_photo=1.
+       
+C Eq. 5    
+       call LAMBDA_DAY(dayyr,lat,lambda)
+        
+       IF (lambda .ge. 0.) THEN
+       	f_photo=c_a1*(1.+sqrt(lambda))+c_a2
+       ELSE
+        f_photo=c_a1*(1.-sqrt(-lambda))+c_a2
+       ENDIF
+      
        
 C growth function  - mu, Eq. 2 in B&S   [day-1]  
 C - it seems like we just pick-up units of 1/day -       
@@ -232,10 +289,14 @@ C  Eq. 8
       
 C  N uptake, Eq 7 [gN/gDW h-1]     
       Nupt=J/c_ka 
-       
-     
-C solve Eqs. 12 and 13 (this is kind of annoying, also T in K)   (FIX THAT)   
+
+C     Eq. 13
+      pmax=c_p1*exp(c_Tap/c_Tp1-c_Tap/tk)/
+     & (1.+exp(c_Tapl/tk-c_Tapl/c_Tpl)+exp(c_Taph/c_Tph-c_Taph/tk))
+C first approx. for beta
       beta=1.e-9
+C iteratively solve for beta       
+      call SOLVE_BETA(c_alph,pmax,c_Isat,beta)
 
 C     Eq 11     
       ps = c_alph*c_Isat/(log(1.0+c_alph/beta))
@@ -248,9 +309,13 @@ C     Eq. 14
 
 C C uptake - Eq. 9     [gC/gDW h-1]
    	  Cupt=(p*(1.0-e)-R)/c_ka
-   
+ 
+C   
+C extreme carbon limitations 
+C (if expected C<Cmin then increase C, 
+C so that C=Cmin & compute the loss of C and N from structural mass)
+C IMPLEMENT THIS
 
-C extreme carbon limitations (IMPLEMENT THAT)
 
 
 
@@ -278,35 +343,29 @@ C d/dt(Aalg*N_res)=Aalg(N_upt-N_res*nu-mu*Nstr)
 C mu,nu = day-1
 c Nupt = h-1
 
-C      t_N=1.0e-6*NumAlg*c_ka/c_Nmol*Aalg*
-C     & (Nupt/h_in_s-Nres*nu/day_in_s
-C     & -mu*c_Nstr/day_in_s) 
+      t_N=1.0e-6*NumAlg*c_ka/c_Nmol*Aalg*
+     & (Nupt/h_in_s-Nres*nu/day_in_s
+     & -mu*c_Nstr/day_in_s) 
 
 
 
 C d/dt ptr(MaN)
 C same as for C
-C       t_C=1.0e-6*NumAlg*c_ka/c_Cmol*Aalg*
-C     & (Cupt/h_in_s-Cres*nu/day_in_s
-C     & -mu*c_Cstr/day_in_s) 
+       t_C=1.0e-6*NumAlg*c_ka/c_Cmol*Aalg*
+     & (Cupt/h_in_s-Cres*nu/day_in_s
+     & -mu*c_Cstr/day_in_s) 
 
-
-C apply tendencies 
-C      gtr(MaFrA)=gtr(MaFrA)+t_FrA
-C      gtr(MaN)=gtr(MaN)+t_N
-C      gtr(MaC)=gtr(MaC)+t_C 
-      print *,'test'  
-
-
-
-
-
+C
+C apply tendencies to the macroalgage tracers
+C 
+      gtr(MaFrA)=gtr(MaFrA)+t_FrA
+      gtr(MaN)=gtr(MaN)+t_N
+      gtr(MaC)=gtr(MaC)+t_C 
+ 
 
 C
 C source terms for ocean nutrients [their units/s ]
-C
-
-
+C IMPLEMENT THIS
 
 
 
@@ -321,6 +380,12 @@ C
       print *,'inputs, maNum,MaFRA,MaC,MaN',
      & ptr(maNum),ptr(MaFrA),ptr(MaC),ptr(MaN) 
       
+      print *,'other inputs',t,hor_vel,parl,lat,dayyr
+      
+C
+C derived quantities
+C      
+      
       print *,'num_alg [km-3],frond A [dm2], C and N reserves:',
      &  NumAlg,AAlg,Cres,Nres
  
@@ -332,15 +397,129 @@ C
      
       
       print *,'days to dep/doubl frondA, Nres and Cres:',
-     & ptr(MaFrA)/(t_FrA*86400),
-     & ptr(MaN)/(t_N*86400),ptr(MaC)/(t_C*86400)
+     & ptr(MaFrA)/(t_FrA*86400.),
+     & ptr(MaN)/(t_N*86400.),ptr(MaC)/(t_C*86400.)
            
        ENDIF
        ENDIF
-       
-       
-
-
-      
+             
       RETURN
       END SUBROUTINE
+      
+
+      SUBROUTINE SOLVE_BETA(a,pmax,Isat,beta)
+C solve implicit equation for beta - Eqs. 12 & 13
+C
+C find zeros using Newton-Rapson's method
+C x_{n+1}=x_n+f(x_n)/f'(x_n)
+C where:
+C f= Eq. 12 [r.h.s]- Eq. 13 [r.h.s.] 
+      
+      IMPLICIT NONE
+      
+      _RL a
+      _RL pmax
+      _RL Isat
+C in/out: in-first guess, out-final guess      
+      _RL beta
+      
+C internals      
+      integer max_iter,k
+      _RL ax,axx,lax,laxx,a2
+      _RL f1,f2,f3
+      _RL x
+      
+      max_iter=10
+      
+      x=beta
+      
+      DO k=1,max_iter
+
+       ax=a+x
+       axx=(a+x)/x     
+       lax=log(a+x)
+       laxx=log((a+x)/x)       
+       a2=a**2      
+                  
+       f1=(x**(1.-x/a))*ax*laxx
+       f2=a2*isat*(x**(x/a))-pmax*(ax**(ax/a))*laxx
+       f3=a*isat*(a2+x*ax*(log(x)-lax)*laxx)
+C
+C f1*f2/f3=f(x_n)/f'(x_n)
+C (help with wolframalpha.com) 
+C
+       IF (abs(f3) .gt. 1.e-12) THEN           
+       	x=x-f1*f2/f3
+       ENDIF
+       
+       
+      ENDDO
+      
+       beta=x      
+    
+  	  RETURN
+	  END    
+      
+      SUBROUTINE LAMBDA_DAY(dayyr,lat,lambda) 
+C
+C using Broch model for length of day in which the longest 
+C days are at day 173 (N hemisphere) and at 365 (S hemisphere)
+C and days are equally long at equator	
+C
+
+      IMPLICIT NONE
+C in-s
+      _RL lat
+      _RL dayyr 
+
+C out
+      _RL lambda
+C internals
+      _RL day_l
+      _RL day_lm
+      _RL day_max
+      _RL longest_day
+
+C length of the longest day
+C (note that at 0. all days have the same length)
+	  IF (LAT .gt. 0.) THEN
+	  longest_day=173.
+	  ELSE 
+	  longest_day=365.
+	  ENDIF
+
+C length of day    
+      call length_day(dayyr,lat,day_l)  
+C length of day -1      
+      call length_day(dayyr-1.,lat,day_lm)
+C length of the longest day       
+      call length_day(longest_day,lat,day_max) 
+           
+	  lambda=(day_l-day_lm)/day_max
+	  
+	  RETURN
+	  END
+	     
+      SUBROUTINE LENGTH_DAY(dayyr,lat,lenday)
+C Broch 1981 model for length of day 
+C see Forthsyle et al. 1995 https://www.sciencedirect.com/science/article/abs/pii/030438009400034F            
+C Eqs. 4-6         
+       
+       IMPLICIT NONE
+       
+       _RL lenday
+       _RL dayyr
+       _RL lat
+       _RL phi
+       _RL fac
+         
+C 360/365  =   0.98630 ...   
+       phi=23.45 * sind(0.98630136986 *(283.+dayyr)) 
+       fac=tand(phi)*tand(lat)
+       fac=max(min(fac,1.),-1.)
+C need to convert radians to degrees
+C 2/15=0.133 
+C 180/pi = 57.2957      
+       lenday=0.1333333* 57.2957795131*acos(-fac)    
+      RETURN 
+      END      

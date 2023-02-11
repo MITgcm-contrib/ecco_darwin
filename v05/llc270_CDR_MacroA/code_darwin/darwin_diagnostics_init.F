@@ -86,6 +86,31 @@ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 
     
 
+       WRITE(diagName,'(A,I2.2)')'MA_AREA '
+       WRITE(diagTitle,'(A,I4)')'Macroalgage frond area'
+       diagUnits = 'dm^2    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'MA_Cres '
+       WRITE(diagTitle,'(A,I4)')'Macroalgage nutrient reserve'
+       diagUnits = 'g N/g dw    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+       WRITE(diagName,'(A,I2.2)')'MA_Nres '
+       WRITE(diagTitle,'(A,I4)')'Macroalgage  carbon reserve'
+       diagUnits = 'g C/g dw    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+
+
       DO j = 1, nplank
             
 
