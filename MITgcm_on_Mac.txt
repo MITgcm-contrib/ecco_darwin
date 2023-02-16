@@ -1,0 +1,28 @@
+# Instructions below assume that you are using the brew package manager,
+# which can be installed using:
+ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install gfortran
+ brew install gcc
+
+# Get MITgcm code
+ git clone --depth 1 https://github.com/MITgcm/MITgcm.git
+
+# Run a single-CPU verification experiment
+ cd MITgcm/verification
+ ./testreport -t lab_sea
+
+# If above step worked fine, you should see
+# Start time: .....
+# End time: .....
+
+########################################################
+# Compile and run MITgcm using parallel MPI compilation
+
+# Extra package needed for parallel MPI compilation
+ brew install open-mpi
+
+# Run a single-CPU verification experiment
+ cd MITgcm/verification
+ export MPI_INC_DIR=/opt/homebrew/include
+ ./testreport -mpi -t lab_sea
