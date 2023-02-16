@@ -26,6 +26,7 @@ Simulations:
 
 --v05--
   /3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
+  /3deg_CDR_MacroA: Kay's macroalgae (kelp) code development set-up
   /llc270: Carroll et al. 2022 (GBC) solution w/ Darwin 3
   /llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
   /llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
