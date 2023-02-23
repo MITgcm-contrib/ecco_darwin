@@ -5,7 +5,7 @@ https://ecco-group.org/docs/v4r4_reproduction_howto.pdf
 
 # ========
 # 1. Get code
-git clone --branch backport-c66g https://github.com/jahn/darwin3
+git clone --branch darwin_ckpt68d_at_c66g https://github.com/jahn/darwin3
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 cd darwin3
 
