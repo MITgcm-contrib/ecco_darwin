@@ -83,6 +83,9 @@ C  k                    :: vertical level
       _RL diffFe1(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
       _RL diffFe2(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
       _RL diffFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
+#ifndef DARWIN_ALLOW_CHLQUOTA
+      _RL tmp3d(1:sNx,1:sNy,Nr)
+#endif
       _RL scv,scav_poc
       _RL flx, POCl
       _RL ptr(nDarwin), gtr(nDarwin), PARl(nlam)
@@ -117,9 +120,9 @@ C  k                    :: vertical level
       _RL disscDIC_PIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  
+
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
       ENDDO
@@ -157,7 +160,7 @@ C     Note: myIter has already been incremented
 c      IF (myIter-1 .EQ. darwin_chlIter0) THEN
 c        CALL DARWIN_INIT_CHL(bi, bj, subTime, myIter, myThid)
 c      ENDIF
-c
+
 #ifdef ALLOW_SEAICE
       IF (DARWIN_useSEAICE) THEN
        DO j=jMin,jMax
@@ -223,6 +226,15 @@ C surface fluxes from E/P/runoff
       ENDDO
 
 C === iron =============================================================
+#ifdef DARWIN_ALLOW_CONS
+      DO k=1,Nr
+       DO j=jMin,jMax
+        DO i=iMin,iMax
+         DARWIN_minFeLoss(i,j,k,bi,bj) = Ptracer(i,j,k,bi,bj,iFeT)
+        ENDDO
+       ENDDO
+      ENDDO
+#endif
       CALL TIMER_START('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
       CALL DARWIN_FE_CHEM(
      U                 Ptracer(1-OLx,1-OLy,1,bi,bj,iFeT),
@@ -230,6 +242,16 @@ C === iron =============================================================
      O                 freeFe(1-OLx, 1-OLy, 1),
      I                 bi, bj, iMin, iMax, jMin, jMax, myThid)
       CALL TIMER_STOP ('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
+#ifdef DARWIN_ALLOW_CONS
+      DO k=1,Nr
+       DO j=jMin,jMax
+        DO i=iMin,iMax
+         DARWIN_minFeLoss(i,j,k,bi,bj) = DARWIN_minFeLoss(i,j,k,bi,bj)
+     &                                 - Ptracer(i,j,k,bi,bj,iFeT)
+        ENDDO
+       ENDDO
+      ENDDO
+#endif
 
 C     iron dust input
       CALL TIMER_START('DARWIN_FE_DUST [DARWIN_FORCING]',myThid)
@@ -260,6 +282,9 @@ C     scavenging
 #endif
         gPtr(i,j,k,iFeT) = gPtr(i,j,k,iFeT) -
      &                     scv*MAX(0 _d 0, freefe(i,j,k))
+#ifdef DARWIN_ALLOW_CONS
+        DARWIN_partScav(i,j,k,bi,bj) = scv*MAX(0 _d 0, freefe(i,j,k))
+#endif
       ENDDO
       ENDDO
       ENDDO
@@ -267,6 +292,13 @@ C     scavenging
 
 C     iron sediment source (in bottom grid cell above kMaxFeSed)
       CALL TIMER_START('DARWIN_FE_SED [DARWIN_FORCING]',myThid)
+#ifdef DARWIN_ALLOW_CONS
+      DO j=jMin,jMax
+       DO i=iMin,iMax
+        ironSedFlux(i,j,bi,bj) = 0 _d 0
+       ENDDO
+      ENDDO
+#endif
       DO k = kMinFeSed, kMaxFeSed
        kdn = MIN(Nr, k+1)
        DO j=jMin,jMax
@@ -277,7 +309,7 @@ C     iron sediment source (in bottom grid cell above kMaxFeSed)
 # ifdef DARWIN_IRON_SED_SOURCE_POP
           flx = fesedflux_pcm*wp_sink*R_CP_fesed*
      &            MAX(0 _d 0, Ptracer(i,j,k-1,bi,bj,iPOP))
-#else
+# else
           POCl = MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPOC))
           flx = fesedflux_pcm*wc_sink*POCl - fesedflux_min
           flx = MAX(0. _d 0, flx)
@@ -288,6 +320,9 @@ C     iron sediment source (in bottom grid cell above kMaxFeSed)
 	  sedFe(i,j,k) = flx/(drF(k)*hFacC(i,j,k,bi,bj))
           gPtr(i,j,k,iFeT) = gPtr(i,j,k,iFeT) +
      &                             flx/(drF(k)*hFacC(i,j,k,bi,bj))
+#ifdef DARWIN_ALLOW_CONS
+          ironSedFlux(i,j,bi,bj) = flx
+#endif
          ENDIF
         ENDDO
        ENDDO
@@ -356,6 +391,19 @@ C === plankton =========================================================
       enddo
       CALL TIMER_STOP('DARWIN_PLANKTON [DARWIN_FORCING]',myThid)
 
+C === pre-sinking diags ================================================
+#ifdef ALLOW_DIAGNOSTICS
+      IF (useDIAGNOSTICS) THEN
+       CALL TIMER_START('DIAGS_FILL [DARWIN_FORCING]',myThid)
+       DO iTr=1,nDarwin
+        diagname = 'gECO'//PTRACERS_ioLabel(iTr)
+        CALL DIAGNOSTICS_FILL(gPtr(1-OLx,1-OLy,1,iTr), diagname,
+     &          0,Nr,2,bi,bj,myThid)
+       ENDDO
+       CALL TIMER_STOP ('DIAGS_FILL [DARWIN_FORCING]',myThid)
+      ENDIF
+#endif
+
 C === sinking ==========================================================
       CALL TIMER_START('DARWIN_SINKING [DARWIN_FORCING]',myThid)
       CALL DARWIN_SINKING( Ptracer,gPtr,bi,bj,iMin,iMax,jMin,jMax,
@@ -378,6 +426,16 @@ C === apply tendencies to tracers ======================================
 
 C === iron =============================================================
 C     re-apply free iron limit to FeT
+#ifdef DARWIN_ALLOW_CONS
+      DO k=1,Nr
+       DO j=jMin,jMax
+        DO i=iMin,iMax
+         DARWIN_minFeLoss(i,j,k,bi,bj) = DARWIN_minFeLoss(i,j,k,bi,bj)
+     &                                 + Ptracer(i,j,k,bi,bj,iFeT)
+        ENDDO
+       ENDDO
+      ENDDO
+#endif
       CALL TIMER_START('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
       CALL DARWIN_FE_CHEM(
      U                 pTracer(1-OLx,1-OLy,1,bi,bj,iFeT),
@@ -385,6 +443,16 @@ C     re-apply free iron limit to FeT
      O                 freeFe(1-OLx,1-OLy,1),
      I                 bi, bj, iMin, iMax, jMin, jMax, myThid)
       CALL TIMER_STOP ('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
+#ifdef DARWIN_ALLOW_CONS
+      DO k=1,Nr
+       DO j=jMin,jMax
+        DO i=iMin,iMax
+         DARWIN_minFeLoss(i,j,k,bi,bj) = DARWIN_minFeLoss(i,j,k,bi,bj)
+     &                                 - Ptracer(i,j,k,bi,bj,iFeT)
+        ENDDO
+       ENDDO
+      ENDDO
+#endif
 
       DO k=1,Nr
       DO j=jMin,jMax
@@ -416,6 +484,31 @@ C === diagnostics ======================================================
         WRITE(diagname, '(A)') 'PAR'
         CALL DIAGNOSTICS_FILL(PAR,diagname,0,Nr,2,bi,bj,myThid)
        ENDIF
+#ifndef DARWIN_ALLOW_CHLQUOTA
+       IF (DIAGNOSTICS_IS_ON('Chl     ', myThid)) THEN
+#ifdef ALLOW_RADTRANS
+        DO k=1,Nr
+         DO j=1,sNy
+          DO i=1,sNx
+           tmp3d(i,j,k) = 0 _d 0
+          ENDDO
+         ENDDO
+        ENDDO
+        DO l=1,nlam
+         DO k=1,Nr
+          DO j=1,sNy
+           DO i=1,sNx
+            tmp3d(i,j,k) = tmp3d(i,j,k) + chlPrev(i,j,k,bi,bj,l)
+           ENDDO
+          ENDDO
+         ENDDO
+        ENDDO
+        CALL DIAGNOSTICS_FILL(tmp3d,'Chl     ',0,Nr,3,bi,bj,myThid)
+#else
+        CALL DIAGNOSTICS_FILL(chlPrev,'Chl     ',0,Nr,1,bi,bj,myThid)
+#endif
+       ENDIF
+#endif
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iPP),   'PP      ',
      &       0,Nr,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iNfix), 'Nfix    ',
@@ -549,13 +642,15 @@ C      diags(iCons*) for convenience
         diagname = 'gDAR'//PTRACERS_ioLabel(iTr)
         CALL DIAGNOSTICS_FILL(gPtrTemp(1-OLx,1-OLy,1,iTr), diagname,
      &   0,Nr,2,bi,bj,myThid)
-     &  
        ENDDO
 
 #ifdef DARWIN_DIAG_PERTYPE
        DO iTr=1,nplank
         WRITE(diagname, '(A,I4.4)') 'PP', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iPPplank+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+        WRITE(diagname, '(A,I4.4)') 'PC', iTr
+        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iPCplank+iTr-1),
      &        diagname,0,Nr,2,bi,bj,myThid)
         WRITE(diagname, '(A,I4.4)') 'GR', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iGRplank+iTr-1),

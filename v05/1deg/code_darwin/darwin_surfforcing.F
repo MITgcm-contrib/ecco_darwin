@@ -71,9 +71,6 @@ C local variables for carbon chem
       _RL surfsi
       _RL surftemp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL surfsalt(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-#ifdef ALLOW_OLD_VIRTUALFLUX
-      _RL VirtualFlux(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-#endif
       _RL SchmidtNoO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL O2sat(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL aTT
@@ -137,8 +134,11 @@ C NOTE: Be very careful with signs here!
 C Positive EminusPforV => loss of water to atmos and increase
 C in salinity. Thus, also increase in other surface tracers
 C (i.e. positive virtual flux into surface layer)
+         VFluxAlk(i,j,bi,bj) = gsm_ALK*surfaceForcingS(i,j,bi,bj)/gsm_S
          gALK(i,j) =
-     &     recip_drF(ks) * gsm_ALK * surfaceForcingS(i,j,bi,bj) / gsm_S
+     &     recip_drF(ks) * VFluxAlk(i,j,bi,bj)
+        ELSE
+         VFluxAlk(i,j,bi,bj) = 0 _d 0
         ENDIF
        ENDDO
       ENDDO
@@ -303,13 +303,13 @@ C Positive EminusPforV => loss of water to atmos and increase
 C in salinity. Thus, also increase in other surface tracers
 C (i.e. positive virtual flux into surface layer)
 C ...so here, VirtualFLux = dC/dt!
-         VirtualFlux(i,j)=gsm_DIC*surfaceForcingS(i,j,bi,bj)/gsm_S
+         VFluxCO2(i,j,bi,bj)=gsm_DIC*surfaceForcingS(i,j,bi,bj)/gsm_S
 c OR
 c let virtual flux be zero
 c        VirtualFlux(i,j)=0.d0
 c
         ELSE
-         VirtualFlux(i,j)=0. _d 0
+         VFluxCO2(i,j,bi,bj)=0. _d 0
         ENDIF
 #endif /* ALLOW_OLD_VIRTUALFLUX */
        ENDDO
@@ -323,15 +323,20 @@ C update tendency
      &     recip_drF(ks)*recip_hFacC(i,j,ks,bi,bj)*
      &              ( FluxCO2(i,j,bi,bj)
 #ifdef ALLOW_OLD_VIRTUALFLUX
-     &              + VirtualFlux(i,j)
+     &              + VFluxCO2(i,j,bi,bj)
 #endif
      &              )
         ENDIF
        ENDDO
       ENDDO
 
-      CALL DIAGNOSTICS_FILL(fugf,'fugfCO2 ',0,1,1,bi,bj,myThid)
-      CALL DIAGNOSTICS_FILL(fugCO2,'fCO2    ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(fugf,    'fugfCO2 ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(fugCO2,  'fCO2    ',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(FluxO2,  'fluxO2  ',0,1,1,bi,bj,myThid)
+#ifdef ALLOW_OLD_VIRTUALFLUX
+      CALL DIAGNOSTICS_FILL(VFluxCO2,'VfluxCO2',0,1,1,bi,bj,myThid)
+      CALL DIAGNOSTICS_FILL(VFluxAlk,'VfluxAlk',0,1,1,bi,bj,myThid)
+#endif
 
 C     k is at surface
       ENDIF
