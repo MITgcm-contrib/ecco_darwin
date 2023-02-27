@@ -37,3 +37,22 @@ git clone https://github.com/MITgcm-contrib/ecco_darwin
 #change data, ... 
  qsub job_Mac_Ivy
 
+
+#=========
+# regarding pickup generation
+pickup.0000000001.data
+	corresponding to 2006/1/1
+	1.6 m water is added to EtaN to make area mean SSH approximately zero
+pickup.0015147648.data_1.1 (in case of "deltaT = 25.")
+	corresponding to 2018/1/1
+	1.1 m water is added to EtaN to make area mean SSH approximately zero
+pickup.0015147648.data (for "deltaT = 25.")
+	link from pickup.0015147648.data_1.1
+pickup.0007573824.data (for "deltaT = 50.")
+	link from pickup.0015147648.data
+	link from pickup.0015147648.data_1.1
+pickup.0007573824.data
+	
+
+
+
