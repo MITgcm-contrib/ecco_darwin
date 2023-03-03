@@ -38,10 +38,15 @@ cp ${MOD}/input_v4r4/* .
 rm data data.pkg data.diagnostics
 cp ${MOD}/input_darwin/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
-ln -sf /nobackup/dcarrol2/v05_1deg/forcing/iron_dust/* .
-ln -sf /nobackup/dcarrol2/v05_1deg/pickup/* .
+ln -sf /nobackup/dcarrol2/pub/1deg/* .
 mkdir diags/3hourly diags/daily diags/monthly diags/budget
 mv pickup_ptracers.0000000001.data pickup_ptracers.0000000002.data
 mv pickup_ptracers.0000000001.meta pickup_ptracers.0000000002.meta
 # qsub job_ECCOV4r4
+
+==============
+# Additional important notes
+
+to use repetitive 1995 forcing (6-hourly)
+ln -sf /nobackup/hzhang1/pub/Release4/input_forcing_1995clim/* .
 
