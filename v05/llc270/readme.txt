@@ -80,6 +80,25 @@ mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_ECCO_darwin as needed
 qsub job_ECCO_darwin
 
+# 6. Instructions for running simulation (1985-2020 period w/ linear apCO2)
+
+cd ../run_1985_linearCO2
+ln -sf ../build/mitgcmuv .
+ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/linear_apCO2_forcing/apCO2* .
+ln -sf /nobackup/dcarrol2/v05_1985_on/pickup/pickup_ptracers_1985_on.data \
+	pickup_ptracers.0000000001.data
+ln -sf /nobackup/hzhang1/forcing/exf_1985 .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19850101/pickup* .
+cp ../../ecco_darwin/v05/llc270/input_1985/* .
+mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
+# modify job_ECCO_darwin as needed
+qsub job_ECCO_darwin
+
+==============
+# 5. Instructions for running simulation (1985-2020 period w/ repetitive year 1995)
 ==============
 # Additional important notes
 
