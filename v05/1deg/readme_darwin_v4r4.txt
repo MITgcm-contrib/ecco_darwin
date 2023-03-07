@@ -38,7 +38,7 @@ cp ${MOD}/input_v4r4/* .
 rm data data.pkg data.diagnostics
 cp ${MOD}/input_darwin/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
-ln -sf /nobackup/dcarrol2/pub/1deg/* .
+ln -sf /nobackup/dcarrol2/pub/1deg/V4r4/* .
 mkdir diags/3hourly diags/daily diags/monthly diags/budget
 mv pickup_ptracers.0000000001.data pickup_ptracers.0000000002.data
 mv pickup_ptracers.0000000001.meta pickup_ptracers.0000000002.meta
