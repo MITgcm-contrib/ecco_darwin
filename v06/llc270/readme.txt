@@ -28,7 +28,7 @@ ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2022/xx*42.data .
 cp ../../ecco_darwin/v06/llc270/input/* .
 ln -sf /nobackup/ojahn/ecco_darwin/v06/llc270/data_darwin/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
