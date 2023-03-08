@@ -31,7 +31,7 @@ mkdir -p diags
 ln -sf ../build/mitgcmuv .
 
 INPUTDIR='/nobackup/hzhang1/pub/Release4'
-ln -s ${INPUTDIR}/input_clean/* .
+ln -s ${INPUTDIR}/input_bin/* .
 ln -s ${INPUTDIR}/input_forcing/* .
 cp ${MOD}/input_v4r4/* .
 
