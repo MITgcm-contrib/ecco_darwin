@@ -36,7 +36,7 @@ ln -s ${INPUTDIR}/input_forcing/* .
 cp ${MOD}/input_v4r4/* .
 
 rm data data.pkg data.diagnostics
-cp ${MOD}/input_darwin/* .
+cp ${MOD}/input_darwin_v4r4/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/dcarrol2/pub/1deg/V4r4/* .
 mkdir diags/3hourly diags/daily diags/monthly diags/budget
