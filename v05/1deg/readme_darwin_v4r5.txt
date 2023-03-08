@@ -7,7 +7,7 @@
 
 # ========
 # 1. Get code
-git clone --branch darwin_ckpt68d_at_c66g https://github.com/jahn/darwin3
+git clone --branch darwin_ckpt68g https://github.com/jahn/darwin3
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 cd darwin3
 
