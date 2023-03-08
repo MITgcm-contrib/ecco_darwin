@@ -75,6 +75,7 @@
 # Time stepping parameters
  &PARM03
  nIter0=2,
+ pickupSuff='0000000002',
 #2 lev2 for testing:
 #nTimeSteps=8,
 #3month
@@ -92,9 +93,9 @@
 #24y:
 #nTimeSteps=210359,
 #26yr 
-#nTimeSteps=227903,
+nTimeSteps=227902,
 #28yr
- nTimeSteps=245422,
+# nTimeSteps=245422,
 #60 years
 #nTimeSteps=525985,
 #
