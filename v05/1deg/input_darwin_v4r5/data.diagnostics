@@ -264,12 +264,9 @@
 #budget diagnostics   
 #---
   frequency(73) = 2635200.0,
-   fields(1:17,73) = 'ETAN    ','oceFWflx','SFLUX   ',
+   fields(1:8,73) = 'ETAN    ','oceFWflx','SFLUX   ',
         'TFLUX   ','oceSPflx','oceQsw  ',
         'fluxCO2 ','gDICsurf', 
-        'gDICEpr ','gALKEpr ','gNO3Epr ',
-        'gNO2Epr ','gNH4Epr ','gO2Epr '
-        'gPO4Epr ','gFeTEpr','gSiO2Epr ',
    filename(73) = 'diags/budget/average_2d',
 #---
   frequency(74) = 2635200.0,
@@ -290,7 +287,7 @@
   frequency(77) = 2635200.0,
    fields(1:15,77) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
         'DFxETr01','DFyETr01','DFrETr01','DFrITr01','gDAR01  ',
-        'cDIC    ','cDIC_PIC','respDIC ','rDIC_DOC','rDIC_POC',
+        'C_DIC    ','C_DICPIC','respDIC ','rDIC_DOC','rDIC_POC',
         'dDIC_PIC',
    filename(77) = 'diags/budget/average_DIC_3d',
 #---
@@ -327,7 +324,7 @@
   frequency(83) = 2635200.0,
    fields(1:13,83) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
         'DFxETr06','DFyETr06','DFrETr06','DFrITr06','gDAR06  ',
-        'C_Fe    ','S_Fe    ','sedFe   ','freeFe  ',
+        'C_Fe    ','S_Fe    ','sedFe   ','freeFeLs',
    filename(83) = 'diags/budget/average_Fe_3d',
 #---
   frequency(84) = 2635200.0,
