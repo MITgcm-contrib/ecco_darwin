@@ -3,6 +3,7 @@
 ## Introduciton
 
 The following set up is regional configuration of the Southeastern Beaufort Sea extracted from Carroll et al. 2020 ECCO-Darwin globall llc270 setup. 
+There are no modifications to Darwin.
 
 Note: This setup works on the darwin3 checkpoint 67x.
 

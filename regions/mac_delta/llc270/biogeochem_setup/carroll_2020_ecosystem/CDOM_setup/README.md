@@ -1,8 +1,8 @@
 # Baseline Setup Content
 
-## Introduciton
+## Introduction
 
-The following set up is regional configuration of the Southeastern Beaufort Sea extracted from Carroll et al. 2020 ECCO-Darwin globall llc270 setup. 
+The following set up is regional configuration of the Southeastern Beaufort Sea extracted from Carroll et al. 2020 ECCO-Darwin global llc270 setup. 
 
 This setup is an evolution of tDOC setup including (See Bertin et al., In Prep):
 - A explicit refractory DOC (rDOC) tracer.
