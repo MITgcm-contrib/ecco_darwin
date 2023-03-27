@@ -1,0 +1,363 @@
+#include "GMREDI_OPTIONS.h"
+#ifdef ALLOW_PTRACERS
+# include "PTRACERS_OPTIONS.h"
+#endif
+
+CBOP
+C     !ROUTINE: GMREDI_CHECK
+C     !INTERFACE:
+      SUBROUTINE GMREDI_CHECK( myThid )
+
+C     !DESCRIPTION: \bv
+C     *==========================================================*
+C     | SUBROUTINE GMREDI_CHECK
+C     | o Check consistency with model configuration
+C     *==========================================================*
+C     *==========================================================*
+C     \ev
+
+C     !USES:
+      IMPLICIT NONE
+
+C     === Global variables ===
+#include "SIZE.h"
+#include "EEPARAMS.h"
+#include "PARAMS.h"
+#include "GMREDI.h"
+#ifdef ALLOW_GENERIC_ADVDIFF
+# include "GAD.h"
+#endif
+#ifdef ALLOW_PTRACERS
+# include "PTRACERS_SIZE.h"
+# include "PTRACERS_PARAMS.h"
+#endif
+
+C     !INPUT/OUTPUT PARAMETERS:
+C     === Routine arguments ===
+C     myThid :: my Thread Id number
+      INTEGER myThid
+
+#ifdef ALLOW_GMREDI
+C     !LOCAL VARIABLES:
+C     === Local variables ===
+C     msgBuf :: Informational/error message buffer
+      CHARACTER*(MAX_LEN_MBUF) msgBuf
+      INTEGER errCount
+CEOP
+#ifdef ALLOW_PTRACERS
+      INTEGER iTr
+      LOGICAL redFlag
+#endif
+
+      _BEGIN_MASTER(myThid)
+      errCount = 0
+
+       WRITE(msgBuf,'(A)') 'GMREDI_CHECK: #define GMREDI'
+       CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+       IF ( GM_useLeithQG .AND. viscC2LeithQG.EQ.zeroRL ) THEN
+        WRITE(msgBuf,'(2A,I3)') '** WARNING ** GMREDI_CHECK: ',
+     &   'switch OFF GM_useLeithQG since viscC2LeithQG = 0'
+        CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
+     &                      SQUEEZE_RIGHT, myThid )
+        GM_useLeithQG = .FALSE.
+       ENDIF
+
+C- print out some kee parameters :
+       CALL WRITE_0D_L( GM_AdvForm, INDEX_NONE,
+     &  'GM_AdvForm =', '     /* if FALSE => use SkewFlux Form */')
+       CALL WRITE_0D_L( GM_InMomAsStress, INDEX_NONE,
+     &  'GM_InMomAsStress =', ' /* if TRUE => apply as Eddy Stress */')
+       CALL WRITE_0D_L( GM_AdvSeparate, INDEX_NONE,
+     & 'GM_AdvSeparate =',' /* Calc Bolus & Euler Adv. separately */')
+       CALL WRITE_0D_L( GM_ExtraDiag, INDEX_NONE,
+     &  'GM_ExtraDiag =','   /* Tensor Extra Diag (line 1&2) non 0 */')
+       CALL WRITE_0D_RL( GM_isopycK, INDEX_NONE, 'GM_isopycK =',
+     &  '    /* Background Isopyc. Diffusivity [m^2/s] */')
+       CALL WRITE_0D_RL( GM_background_K*GM_skewflx, INDEX_NONE,
+     &  'GM_skewflx*K =',
+     &  '  /* Background GM_SkewFlx Diffusivity [m^2/s] */')
+       CALL WRITE_0D_RL( GM_background_K*GM_advect, INDEX_NONE,
+     &  'GM_advec*K =',
+     &  '    /* Backg. GM-Advec(=Bolus) Diffusivity [m^2/s]*/')
+       CALL WRITE_0D_RL( GM_Kmin_horiz, INDEX_NONE, 'GM_Kmin_horiz =',
+     &  ' /* Minimum Horizontal Diffusivity [m^2/s] */')
+       CALL WRITE_0D_RL( GM_Visbeck_alpha, INDEX_NONE,
+     &  'GM_Visbeck_alpha =', ' /* Visbeck alpha coeff. [-] */')
+       CALL WRITE_0D_RL( GM_Small_Number, INDEX_NONE,
+     &  'GM_Small_Number =', '  /* epsilon used in slope calc */')
+       CALL WRITE_0D_RL( GM_slopeSqCutoff, INDEX_NONE,
+     &  'GM_slopeSqCutoff =', ' /* Slope^2 cut-off value */')
+       CALL WRITE_0D_C( GM_taper_scheme, 0, INDEX_NONE,
+     &  'GM_taper_scheme =',
+     &  '  /* Type of Tapering/Clipping scheme */')
+       CALL WRITE_0D_RL( GM_maxSlope, INDEX_NONE,
+     &  'GM_maxSlope =', '  /* Maximum Slope (Tapering/Clipping) */')
+       CALL WRITE_0D_RL( GM_facTrL2dz, INDEX_NONE,
+     &  'GM_facTrL2dz =',
+     &  ' /* Minimum Trans.Layer Thick. (factor of dz) */')
+       CALL WRITE_0D_RL( GM_facTrL2ML, INDEX_NONE,
+     &  'GM_facTrL2ML =',
+     &  ' /* Max.Trans.Layer Thick. (factor of MxL Depth)*/')
+       CALL WRITE_0D_RL( GM_maxTransLay, INDEX_NONE,
+     &  'GM_maxTransLay =',
+     &  ' /* Maximum Transition Layer Thickness [m] */')
+       CALL WRITE_0D_L( GM_UseBVP, INDEX_NONE,
+     &  'GM_UseBVP =',
+     &  ' /* if TRUE => use bvp a la Ferrari et al. (2010) */')
+       CALL WRITE_0D_I( GM_BVP_ModeNumber, INDEX_NONE,
+     &  'GM_BVP_ModeNumber =',
+     &  ' /* Vertical mode number for BVP wave speed */')
+       CALL WRITE_0D_RL( GM_BVP_cMin, INDEX_NONE,
+     &  'GM_BVP_cMin =',
+     &  ' /* Minimum wave speed for BVP [m/s] */')
+       CALL WRITE_0D_L( GM_useSubMeso, INDEX_NONE,
+     &  'GM_useSubMeso =',
+     &  ' /* if TRUE => use Sub-Meso param. (B.Fox-Kemper) */')
+       CALL WRITE_0D_RL( subMeso_Ceff, INDEX_NONE,
+     &  'subMeso_Ceff =',
+     &  ' /* efficiency coeff. of Mixed-Layer Eddies [-] */')
+       CALL WRITE_0D_RL( subMeso_invTau, INDEX_NONE,
+     &  'subMeso_invTau =',
+     &  ' /* inverse of Sub-Meso mixing time-scale [/s] */')
+       CALL WRITE_0D_RL( subMeso_LfMin, INDEX_NONE,
+     &  'subMeso_LfMin =',' /* minimum length-scale "Lf" [m] */')
+       CALL WRITE_0D_RS( subMeso_Lmax, INDEX_NONE,
+     &  'subMeso_Lmax =',' /* maximum grid-scale length [m] */')
+       CALL WRITE_0D_L( GM_useLeithQG, INDEX_NONE,
+     &  'GM_useLeithQG =',
+     &  ' /* if TRUE => add QG Leith viscosity to GMRedi tensor */')
+
+C--  Check parameters:
+
+C-     GM/Redi needs implicit diffusion (will be packaged later)
+      IF ( .NOT.implicitDiffusion ) THEN
+        WRITE(msgBuf,'(A)') 'GM/Redi needs implicitDiffusion=.true.'
+        CALL PRINT_ERROR( msgBuf , myThid )
+        errCount = errCount + 1
+      ENDIF
+
+#ifndef GM_VISBECK_VARIABLE_K
+C     Make sure we are not trying to use something that is unavailable
+      IF ( GM_Visbeck_alpha.NE.0. ) THEN
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: Visbeck variables used in data.gmredi'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: without #define GM_VISBECK_VARIABLE_K'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+#endif
+
+#ifndef GM_BOLUS_ADVEC
+C     Make sure we are not trying to use some arrays that are unavailable
+      IF ( GM_AdvForm ) THEN
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: GM Advection form used in data.gmredi'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: without #define GM_BOLUS_ADVEC'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+#endif
+
+#ifdef GM_K3D
+# ifndef HAVE_LAPACK
+      WRITE(msgBuf, '(A)')
+     &     'Must use CPP option HAVE_LAPACK when using GM_K3D'
+      CALL PRINT_ERROR( msgBuf, myThid )
+      errCount = errCount + 1
+# endif
+
+      IF ( GM_useK3D) THEN
+        CALL WRITE_0D_L( GM_useK3D, INDEX_NONE,
+     &   'GM_useK3D =', '     /* if TRUE => use K3D for diffusivity */')
+        IF ( GM_K3D_use_constK ) THEN
+          CALL WRITE_0D_L( GM_K3D_use_constK, INDEX_NONE,
+     &         'GM_K3D_use_constK =',
+     &         '     /* if TRUE => Uses a constant K for'//
+     &         ' the eddy transport closure */')
+          CALL WRITE_0D_L( GM_K3D_smooth, INDEX_NONE,
+     &         'GM_K3D_smooth =',
+     &         ' /* if TRUE => Expands in terms of baroclinic modes */')
+          IF ( GM_K3D_smooth ) THEN
+            CALL WRITE_0D_I( GM_K3D_NModes, INDEX_NONE,
+     &           'GM_K3D_NModes =',
+     &           ' /* Number of modes for expansion */')
+          ENDIF
+        ELSE
+          CALL WRITE_0D_I( GM_K3D_NModes, INDEX_NONE,
+     &         'GM_K3D_NModes =',
+     &         ' /* Number of modes for expansion */')
+        ENDIF
+      ENDIF
+
+C     Make sure that we use K3D with the advective form only.
+C     The skew form is not presently supported.
+      IF ( GM_useK3D .AND. .NOT. GM_AdvForm) THEN
+        WRITE(msgBuf,'(A)')
+     &       'GMREDI_CHECK: GM_useK3D=.TRUE. but GM_AdvForm=.FALSE.'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        WRITE(msgBuf,'(A)')
+     &       'GMREDI_CHECK: To use GM_useK3D set GM_AdvForm=.TRUE.'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+
+#endif /* GM_K3D */
+
+#ifndef GM_EXTRA_DIAGONAL
+C     Make sure we are not trying to use some arrays that are unavailable
+      IF ( GM_ExtraDiag ) THEN
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: GM_skew_Flux_K & GM_isopycK not equal'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: without #define GM_EXTRA_DIAGONAL'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+#endif
+
+#ifndef GM_NON_UNITY_DIAGONAL
+      IF ( GM_iso2dFile .NE. ' ' .OR.
+     &     GM_iso1dFile .NE. ' ' ) THEN
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: needs #define GM_NON_UNITY_DIAGONAL'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: to use GM_iso2dFile or GM_iso1dFile'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+      IF ( GM_useLeithQG ) THEN
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: GM_useLeithQG is only implemented for cases'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: with #define GM_NON_UNITY_DIAGONAL'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+#endif
+
+#ifndef ALLOW_GM_LEITH_QG
+      IF ( GM_useLeithQG ) THEN
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: GM_useLeithQG used in data.gmredi without'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: #define ALLOW_GM_LEITH_QG'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+#endif
+      IF ( GM_useLeithQG .AND. .NOT.momStepping ) THEN
+        WRITE(msgBuf,'(2A)') 'GMREDI_CHECK: ',
+     &   'cannot use GM_useLeithQG with "momStepping= FALSE"'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+
+#ifdef GM_EXCLUDE_SUBMESO
+      IF ( GM_useSubMeso ) THEN
+        WRITE(msgBuf,'(2A)') 'GMREDI_CHECK: ',
+     &   'cannot use Sub-Meso (GM_useSubMeso=T)'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        WRITE(msgBuf,'(2A)') 'GMREDI_CHECK: ',
+     &   'when compiled with #define GM_EXCLUDE_SUBMESO'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+#endif /* GM_EXCLUDE_SUBMESO */
+
+      IF ( GM_useSubMeso .AND. .NOT.GM_AdvForm ) THEN
+        WRITE(msgBuf,'(2A)') 'GMREDI_CHECK: ',
+     &   'Sub-Meso only implemented within GM_AdvForm'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+
+      IF ( GM_InMomAsStress ) THEN
+#ifdef ALLOW_EDDYPSI
+        IF (.NOT. GM_AdvForm) THEN
+          WRITE(msgBuf,'(2A)') 'GMREDI_CHECK: ',
+     &         'GM_InMomAsStress=.TRUE. but GM_AdvForm=.FALSE.'
+          CALL PRINT_ERROR( msgBuf, myThid )
+          errCount = errCount + 1
+        ENDIF
+        IF (.NOT. GM_useK3D) THEN
+          WRITE(msgBuf,'(3A)')
+     &         'GMREDI_CHECK: Using GM_InMomAsStress and not',
+     &         ' GM_useK3D. GM_InMomAsStress=.true. has only been',
+     &         ' tested with GM_K3D=.true.'
+        ENDIF
+#else /* ALLOW_EDDYPSI */
+       WRITE(msgBuf,'(2A)')
+     &  'GMREDI_CHECK: need to define ALLOW_EDDYPSI in CPP_OPTIONS.h',
+     &  ' to use GM_InMomAsStress'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+#endif /* ALLOW_EDDYPSI */
+      ENDIF
+      IF ( GM_InMomAsStress .AND. .NOT.GM_AdvForm ) THEN
+       WRITE(msgBuf,'(A)')
+     &   'GMREDI_CHECK: need GM_AdvForm=T to use GM_InMomAsStress'
+       CALL PRINT_ERROR( msgBuf, myThid )
+       errCount = errCount + 1
+      ENDIF
+
+#ifdef ALLOW_PTRACERS
+      IF ( GM_AdvForm .AND. .NOT.GM_AdvSeparate
+     &       .AND. usePTRACERS ) THEN
+        redFlag = .FALSE.
+        DO iTr=1,PTRACERS_numInUse
+         IF ( .NOT.PTRACERS_useGMRedi(iTr) ) THEN
+          redFlag = .TRUE.
+          WRITE(msgBuf,'(2A,I3,A,L5)') 'GMREDI_CHECK:',
+     &     ' pTracers_useGMRedi(',iTr,' )=', PTRACERS_useGMRedi(iTr)
+          CALL PRINT_ERROR( msgBuf, myThid )
+         ENDIF
+        ENDDO
+        IF ( redFlag ) THEN
+          WRITE(msgBuf,'(2A)') 'GMREDI_CHECK:',
+     &     ' but GM Advective Form applies to all tracers !'
+          CALL PRINT_ERROR( msgBuf, myThid )
+          errCount = errCount + 1
+        ENDIF
+      ENDIF
+#endif /* ALLOW_PTRACERS */
+
+#ifdef ALLOW_GENERIC_ADVDIFF
+C     Check size of overlap region
+      IF ( GM_AdvForm .AND. .NOT.GM_AdvSeparate
+     &       .AND. GM_Visbeck_alpha.NE.0.
+     &       .AND. useMultiDimAdvec ) THEN
+C       Visbeck variable K requires 1 more row/column in the overlap:
+C       might need to increase OLx,OLy from 2 to 3 if GM advective
+C       form & multi-dim advection are used. This happens when:
+C       a) using a 5 points stencil advection scheme ; or
+C       b) using a 3 points stencil advection scheme on CS-grid
+        GAD_OlMinSize(2) = MAX( GAD_OlMinSize(2), 1)
+        WRITE(msgBuf,'(A,9I3)')
+     &      'GMREDI_CHECK: GAD_OlMinSize=', GAD_OlMinSize
+        CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                      SQUEEZE_RIGHT , myThid )
+      ENDIF
+#endif /* ALLOW_GENERIC_ADVDIFF */
+
+      IF ( errCount.GE.1 ) THEN
+        WRITE(msgBuf,'(A,I3,A)')
+     &       'GMREDI_CHECK: detected', errCount,' fatal error(s)'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        CALL ALL_PROC_DIE( 0 )
+        STOP 'ABNORMAL END: S/R GMREDI_CHECK'
+      ENDIF
+      _END_MASTER(myThid)
+
+#endif /* ALLOW_GMREDI */
+      RETURN
+      END

@@ -1,0 +1,99 @@
+ &DARWIN_FORCING_PARAMS
+ ironfile = 'iron_dust_46x68_Mac',
+ ironperiod = -12,
+ darwin_inscal_iron= 1000.,
+#
+ pCO2File = 'apCO2',
+ pCO2startdate1 = 19920101,
+ pCO2startdate2 = 030000,
+ pCO2period     = 86400.0,
+#
+ DOCrunofffile = 'tDOCl/tDOCl_runoff_mac270',
+ DOCrunoffstartdate1 = 19920101,
+ DOCrunoffstartdate2 = 120000,
+ DOCrunoffperiod     = 86400.0,
+#
+ tDOCrunofffile = 'tDOCr/tDOCr_runoff_mac270',
+ tDOCrunoffstartdate1 = 19920101,
+ tDOCrunoffstartdate2 = 120000,
+ tDOCrunoffperiod     = 86400.0,
+#
+ DICrunofffile = 'tDIC/tDIC_runoff_mac270',
+ DICrunoffstartdate1 = 19920101,
+ DICrunoffstartdate2 = 120000,
+ DICrunoffperiod     = 86400.0,
+#
+ ALKrunofffile = 'tAlk/tAlk_runoff_mac270',
+ ALKrunoffstartdate1 = 19920101,
+ ALKrunoffstartdate2 = 120000,
+ ALKrunoffperiod     = 86400.0,
+#
+ DONrunofffile = 'tDON/tDON_runoff_mac270',
+ DONrunoffstartdate1 = 19920101,
+ DONrunoffstartdate2 = 120000,
+ DONrunoffperiod     = 86400.0,
+#
+ DOPrunofffile = 'tDOP/tDOP_runoff_mac270',
+ DOPrunoffstartdate1 = 19920101,
+ DOPrunoffstartdate2 = 120000,
+ DOPrunoffperiod     = 86400.0,
+#
+ DSirunofffile = 'tDSi/tDSi_runoff_mac270',
+ DSirunoffstartdate1 = 19920101,
+ DSirunoffstartdate2 = 120000,
+ DSirunoffperiod     = 86400.0,
+#
+ darwin_useEXFwind = .TRUE.,
+ darwin_useQsw = .TRUE.,
+ darwin_useSEAICE = .TRUE.,
+ /
+ &DARWIN_INTERP_PARAMS
+ iron_interpMethod = 0,
+ DOCrunoff_interpMethod = 0,
+ tDOCrunoff_interpMethod = 0,
+ DICrunoff_interpMethod = 0,
+ ALKrunoff_interpMethod = 0,
+ DONrunoff_interpMethod = 0,
+ DOPrunoff_interpMethod = 0,
+ DSirunoff_interpMethod = 0,
+#
+ pCO2_lon0    = 0.0D0,
+ pCO2_lon_inc = 360.0D0,
+ pCO2_lat0    = -89.4628220D0,
+ pCO2_lat_inc = 0.6958694,0.6999817,0.7009048,0.7012634,0.7014313,
+                245*0.7017418,
+                0.7014313,0.7012634,0.7009048,0.6999817,0.6958694
+ pCO2_nlon    = 2,
+ pCO2_nlat    = 256,
+ /
+ &DARWIN_PARAMS
+# do not read darwin pickup
+ darwin_pickupSuff= ' ',
+ darwin_chlInitBalanced= .FALSE.,
+ darwin_chlIter0= 1,
+ darwin_seed= 56,
+ ALPFE   =  0.92831,
+ FREEFEMAX       =  1E-4,
+ SCAV_RAT        =   6.02502315E-7,
+ DEPTHFESED      =   7000.0,
+ KDOC    =  3.858024691358024E-7,
+ KTDOC   =  3.168808781402895E-9,
+ KDOP    =  2.314814814814815E-7,
+ KDON    =  2.314814814814815E-7,
+ KDOFE   =  2.314814814814815E-7,
+# KPOC    =  2.314814814814815E-7,
+ KPOP    =  4.629629629629630E-7,
+ KPON    =  4.629629629629630E-7,
+ KPOFE   =  4.629629629629630E-7,
+ KPOSI   =  7.716049382716049E-8,
+ SURFDICMIN  =   100.0,
+ SURFALKMIN  =   100.0,
+ /
+ &DARWIN_RANDOM_PARAMS
+ smallgrow=0.66098,
+ biggrow=0.43148,
+ diatomgraz=0.83003,
+ val_R_PICPOC=0.04245,
+ /
+ &DARWIN_TRAIT_PARAMS
+ /
