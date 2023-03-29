@@ -33,6 +33,7 @@ cp ../../ecco_darwin/v06/llc270/input/* .
 ln -sf /nobackup/ojahn/ecco_darwin/v06/llc270/data_darwin/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/rsavelli/LLC_270/*
+ln -sf /nobackup/dcarrol2/pub/LLC_270/v06/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 mkdir diags/monthly/IOPS diags/monthly/PAR diags/monthly/RRS 
 
