@@ -182,7 +182,7 @@ C        be defined but ALLOW_BULKFORMULAE needs to be undef
 
 C-  Other forcing fields
 #define ALLOW_RUNOFF
-#undef  ALLOW_RUNOFTEMP
+#define ALLOW_RUNOFTEMP
 #define ALLOW_SALTFLX
 
 c- define zero bounds for forcing fields
