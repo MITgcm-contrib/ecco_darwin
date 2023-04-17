@@ -30,7 +30,7 @@ make depend
 make -j 16
 
 ==============
-# 3. Instructions for running simulation (1992-2022 period)
+# 3. Instructions for running simulation (1992-2023 period)
 
 cd ../run
 ln -sf ../build/mitgcmuv .
@@ -38,7 +38,7 @@ ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2022/xx*42.data .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2023/xx*42.data .
 cp ../../ecco_darwin/v05/llc270/input/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_ECCO_darwin as needed
