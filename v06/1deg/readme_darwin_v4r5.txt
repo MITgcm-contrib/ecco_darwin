@@ -48,4 +48,4 @@ mv pickup_ptracers.0000000001.meta pickup_ptracers.0000000002.meta
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 mkdir diags/monthly/IOPS diags/monthly/PAR diags/monthly/RRS 
 
-# qsub job_ECCOV4
+# qsub job_ECCOV4r5
