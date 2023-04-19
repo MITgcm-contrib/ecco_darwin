@@ -161,7 +161,7 @@ C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 
 #define DARWIN_NUTRIENT_RUNOFF
 
-#define DARWIN_SOLVESAPHE
+#undef DARWIN_SOLVESAPHE
 
 #define DARWIN_TOTALPHSCALE
 
