@@ -46,6 +46,8 @@
  PTRACERS_names(35)= 'Chl05',
  PTRACERS_names(36)= 'Chl06',
 #
+# uM is shorthand for mmol m^-3
+#
  PTRACERS_units( 1)= 'uM C'
  PTRACERS_units( 2)= 'uM N'
  PTRACERS_units( 3)= 'uM N'
