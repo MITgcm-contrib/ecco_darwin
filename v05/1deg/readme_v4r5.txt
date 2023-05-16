@@ -71,7 +71,7 @@ ln -sf ../build2/mitgcmuv .
 INPUTDIR='/nobackup/hzhang1/pub/Release5'
 
 ln -s ${INPUTDIR}/input_bin/* .
-ln -s ${INPUTDIR}/input_forcing/TBADJ .
+ln -s ${INPUTDIR}/TBADJ .
 cp ${MOD}/input_v4r5_v2/* .
 
 qsub job_v4r5
