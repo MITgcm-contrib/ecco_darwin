@@ -43,7 +43,7 @@
  vstressfile       = 'TAUY_adj2v4r4',
  atempfile         = 'T2M_adj2v4r4',
  aqhfile           = 'QV2M_adj2v4r4',
- precipfile        = 'work/PRECTOTCORR_adj2v4r4',
+ precipfile        = 'PRECTOTCORR_adj2v4r4',
  wspeedfile        = 'WSPD10M_adj2v4r4',
  swdownfile        = 'SWGDN_adj2v4r4',
  lwdownfile        = 'LWGAB_adj2v4r4',
