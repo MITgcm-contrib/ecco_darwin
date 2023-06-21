@@ -56,11 +56,17 @@ C
 
       COMMON /DARWIN_CONS_2D/
      &      ironSedFlx,
+#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+     &      ironVentFlx,
+#endif
      &      carbSfcFlx,
      &      carbVirFlx,
      &      oxySfcFlx,
      &      alkVirFlx
       _RL ironSedFlx(sNx,sNy,nSx,nSy)
+#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+      _RL ironVentFlx(sNx,sNy,nSx,nSy)
+#endif
       _RL carbSfcFlx(sNx,sNy,nSx,nSy)
       _RL carbVirFlx(sNx,sNy,nSx,nSy)
       _RL oxySfcFlx(sNx,sNy,nSx,nSy)
@@ -97,24 +103,18 @@ C
       _RL totEPRA
       _RL totEPRO
 # endif
-#endif
+#endif /* DARWIN_ALLOW_CONS */
 
 C Carbon Variables
 
+#ifdef DARWIN_ALLOW_CARBON
+C-     COMMON /CARBON_NEEDS/ main carbon chem arrays
+C  omegaC           :: Local saturation state with respect to calcite
        COMMON /CARBON_NEEDS/
-     &   pH, pCO2, Atmosp, FluxCO2, FluxO2
-#ifdef ALLOW_OLD_VIRTUALFLUX
-     &   ,VFluxCO2, VFluxAlk
-#endif
+     &   pH, omegaC, Atmosp
       _RL  pH(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
-      _RL  pCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+      _RL  omegaC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL  AtmosP(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL  FluxCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL  FluxO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-#ifdef ALLOW_OLD_VIRTUALFLUX
-      _RL  VFluxCO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL  VFluxAlk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-#endif
 
        COMMON /CARBON_CHEM/
      &                     ak0,ak1,ak2,akw,akb,aks,akf,
@@ -138,6 +138,29 @@ C Fugacity Factor added by Val Bennington Nov. 2010
       _RL  st(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  bt(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL  Ksp_TP_Calc(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+#ifdef DARWIN_SOLVESAPHE
+C If using Solvesaphe routines (Munhoven, 2013) then in adittion,
+C  cat  = total calcium concentration, Ref.: Culkin (1965)
+C   akn = the dissociation constant of ammonium [H][NH3]/[NH4]
+C           Ref.: Yao and Millero (1995)
+C   akhs = the dissociation constant of hydrogen sulfide [H][HS]/[H2S]
+C           Ref.: Millero et al. (1988)
+C          (cited by Millero (1995) and Yao and Millero (1995))
+C  aphscale = pH scale conversion factor ; convert from the total to the free
+C          scale for solvesaphe calculations;  Ref.: Munhoven, 2013
+C   Ksp_TP_Arag = solubility product for aragonite, Ref.: Mucci (1983)
+
+       COMMON /DARWIN_SOLVESAPHE/
+     &                     cat, akn, akhs, aphscale, Ksp_TP_Arag
+
+      _RL  cat(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL  akn(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL  akhs(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL  aphscale(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL  Ksp_TP_Arag(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+#endif /* DARWIN_SOLVESAPHE */
+#endif /* DARWIN_ALLOW_CARBON */
 
 #ifdef DARWIN_ALLOW_CDOM
        COMMON /DARWIN_CDOM_FIELDS/ CDOMdecay

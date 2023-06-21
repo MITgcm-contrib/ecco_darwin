@@ -1,6 +1,6 @@
  &PTRACERS_PARM01
  PTRACERS_numInUse= 33,
- PTRACERS_Iter0= 1,
+ PTRACERS_Iter0= 420768,
 #
  PTRACERS_advScheme(:)= 33*33,
  PTRACERS_diffKh(:)= 33*0.E3,
@@ -8,7 +8,13 @@
  PTRACERS_useGMRedi(:)= 33*.TRUE.,
 #
  PTRACERS_EvPrRn( 1)= 0.,
- PTRACERS_EvPrRn(18)= 0.,
+ PTRACERS_EvPrRn( 7)= 0.,
+ PTRACERS_EvPrRn( 8)= 0.,
+ PTRACERS_EvPrRn( 9)= 0.,
+ PTRACERS_EvPrRn(10)= 0.,
+ PTRACERS_EvPrRn(11)= 0.,
+ PTRACERS_EvPrRn(19)= 0.,
+ PTRACERS_EvPrRn(21)= 0.,
 #
  PTRACERS_names( 1)= 'DIC',
  PTRACERS_names( 2)= 'NO3',

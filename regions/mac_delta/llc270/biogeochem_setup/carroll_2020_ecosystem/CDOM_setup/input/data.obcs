@@ -44,6 +44,7 @@
  OBSptrFile(30)='OBStr30_Mac_46x68.bin',
  OBSptrFile(31)='OBStr31_Mac_46x68.bin',
  OBSptrFile(32)='OBStr32_Mac_46x68.bin',
+ OBSptrFile(33)='OBStr33_Mac_46x68.bin',
 #
  OBWsFile='OBWs_Mac_46x68.stable',
  OBWtFile='OBWt_Mac_46x68.stable',
@@ -81,6 +82,7 @@
  OBWptrFile(30)='OBWtr30_Mac_46x68.bin',
  OBWptrFile(31)='OBWtr31_Mac_46x68.bin',
  OBWptrFile(32)='OBWtr32_Mac_46x68.bin',
+ OBWptrFile(33)='OBWtr33_Mac_46x68.bin',
 #
  OBSaFile='OBSa_Mac_46x68.bin_29yrs',
  OBShFile='OBSh_Mac_46x68.bin_29yrs',

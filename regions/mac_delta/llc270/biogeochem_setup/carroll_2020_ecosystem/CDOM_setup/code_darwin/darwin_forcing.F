@@ -17,6 +17,11 @@ C !USES: ===============================================================
 #include "SIZE.h"
 #include "GRID.h"
 #include "EEPARAMS.h"
+#ifdef ALLOW_EXCH2
+#include "W2_EXCH2_SIZE.h"
+#include "W2_EXCH2_TOPOLOGY.h"
+#include "W2_EXCH2_PARAMS.h"
+#endif
 #include "PARAMS.h"
 #include "DYNVARS.h"
 #include "PTRACERS_SIZE.h"
@@ -86,9 +91,32 @@ C  k                    :: vertical level
       _RL gO2(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL surfFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL freeFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
+      _RL sedFlxFe(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
       _RL tmp3d(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
-      _RL scv,scav_poc
+      _RL scavRate(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
+      _RL scavLoss(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
+      _RL scv,scav_pom
       _RL flx, POCl
+#ifdef DARWIN_ALLOW_CARBON
+#ifdef DARWIN_ALLOW_RADI
+C     Sediment fluxes
+      _RL DICFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL ALKFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL O2Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL POCFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL CALFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+C     Test variable for a diffusive temperature correction factor
+C     (for now only implemented in the O2 flux)
+      _RL TcorrO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL TcorrDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL TcorrALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+C     Dependent variables for sediment flux for validation
+      _RL OmegaC0(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL fluxPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL fluxPOC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL absT
+#endif
+#endif
       _RL ptr(nDarwin), gtr(nDarwin), PARl(nlam)
       _RL chlout(nPhoto)
       _RL diagsl(darwin_nDiag)
@@ -99,13 +127,36 @@ C  k                    :: vertical level
       _RL mortTempFunc
       _RL mort2TempFunc
       _RL uptakeTempFunc
+      _RL omegaCl
       _RL tmp, tmpFac
       _RL sedFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+      _RL ventFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+#endif
+      INTEGER k_debug
+#ifdef DARWIN_DEBUG
+      INTEGER iG, jG
+      INTEGER iBase, jBase
+      INTEGER iGjLoc, jGjLoc
+#ifdef ALLOW_EXCH2
+      INTEGER tN
+#endif /* ALLOW_EXCH2 */
+#endif /* DARWIN_DEBUG */
 
       DO k=1,Nr
        DO j=1,sNy
-        DO i=1,sNy
+        DO i=1,sNx
          DARWIN_minFeLoss(i,j,k,bi,bj) = 0 _d 0
+        ENDDO
+       ENDDO
+      ENDDO
+
+      DO l=1,darwin_nDiag
+       DO k=1,Nr
+        DO j=1,sNy
+         DO i=1,sNx
+          diags(i,j,k,l) = 0 _d 0
+         ENDDO
         ENDDO
        ENDDO
       ENDDO
@@ -257,8 +308,54 @@ C === nutrient runoff ==================================================
      I                          myIter, myTime, myThid )
 
       CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iNO3),
+     I                          DINrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_NO3_DIN_runoff,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iNO2),
+     I                          DINrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_NO2_DIN_runoff,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iNH4),
+     I                          DINrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_NH4_DIN_runoff,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iPO4),
+     I                          IPrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_DIP_IP_runoff,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iSiO2),
      I                          DSirunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iPOC),
+     I                          POCrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iPON),
+     I                          PONrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iPOP),
+     I                          POPrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 
@@ -268,17 +365,37 @@ C === nutrient runoff ==================================================
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 
-#ifdef DARWIN_ALLOW_CARBON
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iALK),
-     I                          DICrunoff(1-OLx,1-OLy,bi,bj),
-     I                          R_ALK_DIC_runoff,
+     I                          ALKrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iFeT),
+     I                          IPrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_DIP_IP_runoff*R_DFe_DIP_runoff,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iDOFe),
+     I                          DOPrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_DOFe_DOP_runoff,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
+
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iPOFe),
+     I                          POPrunoff(1-OLx,1-OLy,bi,bj),
+     I                          R_POFe_POP_runoff,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 #endif
-#endif
 
 C === iron =============================================================
+
+C     compute (and limit if DARWIN_MINFE) free iron
       CALL TIMER_START('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
       CALL DARWIN_FE_CHEM(
      U                 Ptracer(1-OLx,1-OLy,1,bi,bj,iFeT),
@@ -287,31 +404,37 @@ C === iron =============================================================
      I                 bi, bj, iMin, iMax, jMin, jMax, myThid)
       CALL TIMER_STOP ('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
 
+C ----------------------------------------------------------------------
 C     scavenging
       CALL TIMER_START('DARWIN_FE_SCAV [DARWIN_FORCING]',myThid)
       DO k=1,Nr
       DO j=jMin,jMax
       DO i=iMin,iMax
+C       compute POM in mg/L
 #ifdef DARWIN_PART_SCAV_POP
-        scav_poc = MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPOP))/scav_R_POPPOC
-        scv = scav_rat*scav_inter*(scav_poc**scav_exp)
+        scav_pom = MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPOP))/scav_R_POPPOC
+        scv = scav_rat*scav_inter*(scav_pom**scav_exp)
 #elif defined(DARWIN_PART_SCAV)
-        scav_poc = MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPOC))
-        scv = scav_rat*scav_inter*(scav_poc**scav_exp)
+        scav_pom = scav_POC_wgt*MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPOC))
+     &           + scav_POSi_wgt*MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPOSi))
+     &           + scav_PIC_wgt*MAX(0 _d 0, Ptracer(i,j,k,bi,bj,iPIC))
+        scv = scav_tau*scav_inter*(scav_pom**scav_exp)
 #else
         scv = scav
 #endif
-        gPtr(i,j,k,iFeT) = gPtr(i,j,k,iFeT) -
-     &                     scv*MAX(0 _d 0, freefe(i,j,k))
+        scavRate(i,j,k) = scv
+        scavLoss(i,j,k) = scv*MAX(0 _d 0, freefe(i,j,k))
+        gPtr(i,j,k,iFeT) = gPtr(i,j,k,iFeT) - scavLoss(i,j,k)
 #ifdef DARWIN_ALLOW_CONS
         DARWIN_partScav(i,j,k,bi,bj) = DARWIN_partScav(i,j,k,bi,bj)
-     &                    + dTsub(k)*scv*MAX(0 _d 0, freefe(i,j,k))
+     &                               + dTsub(k)*scavLoss(i,j,k)
 #endif
       ENDDO
       ENDDO
       ENDDO
       CALL TIMER_STOP ('DARWIN_FE_SCAV [DARWIN_FORCING]',myThid)
 
+C ----------------------------------------------------------------------
 C     iron dust input
       CALL TIMER_START('DARWIN_FE_DUST [DARWIN_FORCING]',myThid)
       DO j=jMin,jMax
@@ -336,14 +459,20 @@ C-    Account for change in level thickness
       ENDDO
       CALL TIMER_STOP ('DARWIN_FE_DUST [DARWIN_FORCING]',myThid)
 
+C ----------------------------------------------------------------------
 C     iron sediment source (in bottom grid cell above kMaxFeSed)
       CALL TIMER_START('DARWIN_FE_SED [DARWIN_FORCING]',myThid)
-      DO k = kMinFeSed, kMaxFeSed
-       kdn = MIN(Nr, k+1)
+      DO k=1,Nr
        DO j=jMin,jMax
         DO i=iMin,iMax
-         IF (hFacC(i,j,k,bi,bj) .GT. 0. .AND.
-     &       (hFacC(i,j,kdn,bi,bj) .EQ. 0. .OR. k .EQ. Nr)) THEN
+         sedFe(i,j,k) = 0 _d 0
+        ENDDO
+       ENDDO
+      ENDDO
+      DO j=jMin,jMax
+       DO i=iMin,iMax
+        k = kLowC(i,j,bi,bj)
+        IF (k .GE. kMinFeSed .AND. k .LE. kMaxFeSed) THEN
 #ifdef DARWIN_IRON_SED_SOURCE_VARIABLE
 # ifdef DARWIN_IRON_SED_SOURCE_POP
           flx = fesedflux_pcm*wp_sink*R_CP_fesed*
@@ -356,15 +485,17 @@ C     iron sediment source (in bottom grid cell above kMaxFeSed)
 #else
           flx = fesedflux
 #endif
+          sedFlxFe(i,j) = flx
           sedFe(i,j,k) = flx/(drF(k)*hFacC(i,j,k,bi,bj))
 #ifdef DARWIN_ALLOW_CONS
           ironSedFlx(i,j,bi,bj) = ironSedFlx(i,j,bi,bj) + dTsub(k)*flx
 #endif
-         ELSE
-          sedFe(i,j,k) = 0 _d 0
-         ENDIF
-        ENDDO
+        ELSE
+         sedFlxFe(i,j) = 0 _d 0
+        ENDIF
        ENDDO
+      ENDDO
+      DO k=kMinFeSed, kMaxFeSed
 #ifdef NONLIN_FRSURF
 C-    Account for change in level thickness
        IF (nonlinFreeSurf.GT.0) THEN
@@ -382,12 +513,101 @@ C-    Account for change in level thickness
       ENDDO
       CALL TIMER_STOP ('DARWIN_FE_SED [DARWIN_FORCING]',myThid)
 
+C ----------------------------------------------------------------------
+C     iron sediment source (in bottom grid cell above kMaxFeSed)
+C     iron source due to hydrothermal input into bottom layer below
+C     kMinFeVents (ventHe3 flux is mmol.m-2.s-1)
+#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+      IF (darwin_haveVentHe3) THEN
+       CALL TIMER_START('DARWIN_FE_VENT [DARWIN_FORCING]',myThid)
+       DO k=1,Nr
+        DO j=jMin,jMax
+         DO i=iMin,iMax
+          ventFe(i,j,k) = 0 _d 0
+         ENDDO
+        ENDDO
+       ENDDO
+       DO j=jMin,jMax
+        DO i=iMin,iMax
+         k = kLowC(i,j,bi,bj)
+         IF (k .GE. kMinFeVent) THEN
+          flx = solFeVent*R_FeHe3_vent*ventHe3(i,j,bi,bj)
+          ventFe(i,j,k) = flx*recip_drF(k)*recip_hFacC(i,j,k,bi,bj)
+# ifdef DARWIN_ALLOW_CONS
+          ironVentFlx(i,j,bi,bj)=ironVentFlx(i,j,bi,bj) + dTsub(k)*flx
+# endif
+         ENDIF
+        ENDDO
+       ENDDO
+       DO k=kMinFeVent,Nr
+# ifdef NONLIN_FRSURF
+C-    Account for change in level thickness
+        IF (nonlinFreeSurf.GT.0) THEN
+         CALL FREESURF_RESCALE_G(
+     I                            bi, bj, k,
+     U                            ventFe,
+     I                            myThid )
+        ENDIF
+# endif /* NONLIN_FRSURF */
+        DO j=jMin,jMax
+         DO i=iMin,iMax
+           gPtr(i,j,k,iFeT) = gPtr(i,j,k,iFeT) + ventFe(i,j,k)
+         ENDDO
+        ENDDO
+       ENDDO
+       CALL TIMER_STOP ('DARWIN_FE_VENT [DARWIN_FORCING]',myThid)
+      ENDIF
+#endif
+
 C === plankton =========================================================
       CALL TIMER_START('DARWIN_PLANKTON [DARWIN_FORCING]',myThid)
+
+#ifdef DARWIN_DEBUG
+C Set dimensions:
+C-    default:
+      iGjLoc = 0
+      jGjLoc = 1
+      iBase = myXGlobalLo-1 + (bi-1)*sNx
+      jBase = myYGlobalLo-1 + (bj-1)*sNy
+#ifdef ALLOW_EXCH2
+      IF ( W2_useE2ioLayOut ) THEN
+        tN = W2_myTileList(bi,bj)
+        iBase = exch2_txGlobalo(tN) - 1
+        jBase = exch2_tyGlobalo(tN) - 1
+        IF   ( exch2_mydNx(tN) .GT. exch2_global_Nx ) THEN
+C-      face x-size larger than glob-size : fold it
+          iGjLoc = 0
+          jGjLoc = exch2_mydNx(tN) / exch2_global_Nx
+        ELSEIF ( exch2_tNy(tN) .GT. exch2_global_Ny ) THEN
+C-      tile y-size larger than glob-size : make a long line
+          iGjLoc = exch2_mydNx(tN)
+          jGjLoc = 0
+        ELSE
+C-      default (face fit into global-IO-array)
+          iGjLoc = 0
+          jGjLoc = 1
+        ENDIF
+      ENDIF
+#endif /* ALLOW_EXCH2 */
+#endif /* DARWIN_DEBUG */
+
       do k=1,Nr
       do j=jMin,jMax
-      do i=iMin,iMax
-      if (hFacC(i,j,k,bi,bj) .GT. 0.) then
+#ifdef DARWIN_DEBUG
+       iG = iBase + (j-1)*iGjLoc
+       jG = jBase + (j-1)*jGjLoc + 1
+#endif /* DARWIN_DEBUG */
+
+       do i=iMin,iMax
+       if (hFacC(i,j,k,bi,bj) .GT. 0.) then
+        k_debug = 0
+#ifdef DARWIN_DEBUG
+        IF (iG+i.eq.iDEBUG.and.jG.eq.jDEBUG) THEN
+         IF (kDEBUG.EQ.0 .OR. k.EQ.kDebug) THEN
+          k_debug = k
+         ENDIF
+        ENDIF
+#endif
         CALL DARWIN_TEMPFUNC(Theta(i,j,k,bi,bj),
      &         photoTempFunc, hetTempFunc, grazTempFunc,
      &         reminTempFunc, mortTempFunc, mort2TempFunc,
@@ -399,6 +619,11 @@ C === plankton =========================================================
         DO l=1,nlam
          PARl(l) = MAX(0 _d 0, PAR(i, j, k, l))
         ENDDO
+#ifdef DARWIN_ALLOW_CARBON
+        omegaCl = omegaC(i,j,k,bi,bj)
+#else
+        omegaCl = 0 _d 0
+#endif
         CALL DARWIN_PLANKTON(
      I                 ptr,
      U                 gtr,
@@ -409,11 +634,8 @@ C === plankton =========================================================
      I                 reminTempFunc,
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
-#ifdef DARWIN_DEBUG
-     I                 myxgloballo+(bi-1)*sNx+i-1,
-     I                 myygloballo+(bj-1)*sNy+j-1,
-     I                 k, dTsub(k),
-#endif
+     I                 omegaCl,
+     I                 k_debug,
      I                 subTime, myIter, myThid )
         DO l=1,darwin_nDiag
          diags(i, j, k, l) = diagsl(l)
@@ -446,8 +668,8 @@ C === plankton =========================================================
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
         ENDDO
-      endif
-      enddo
+       endif
+       enddo
       enddo
       enddo
       CALL TIMER_STOP('DARWIN_PLANKTON [DARWIN_FORCING]',myThid)
@@ -463,6 +685,83 @@ C === pre-sinking diags ================================================
        ENDDO
        CALL TIMER_STOP ('DIAGS_FILL [DARWIN_FORCING]',myThid)
       ENDIF
+#endif
+
+C === Sediment fluxes ==========================================================
+#ifdef DARWIN_ALLOW_CARBON
+#ifdef DARWIN_ALLOW_RADI
+      DO j=jMin,jMax
+      DO i=iMin,iMax
+C      grid cell just above sea floor
+       k = kLowC(i,j,bi,bj)
+       IF (k .GT. 0) THEN
+
+C       Correction factor of diffusive flux with T, to potentially better
+C       resolve sediment fluxes at coastal regions
+        absT = ABS(Theta(i,j,k,bi,bj))
+        TcorrO2(i,j) = (0.031558 _d 0+0.001428 _d 0*absT)/0.0335572 _d 0
+        TcorrDIC(i,j) = (0.015179 _d 0+0.000795 _d 0*absT)/0.016292 _d 0
+        TcorrALK(i,j) = (0.015179 _d 0+0.000795 _d 0*absT)/0.016292 _d 0
+
+C       Dependent variables
+        fluxPIC(i,j) = wPIC_sink*MAX(0.0,Ptracer(i,j,k,bi,bj,iPIC))
+        fluxPOC(i,j) = wC_sink*MAX(0.0,Ptracer(i,j,k,bi,bj,iPOC))
+
+        OmegaC0(i,j) = omegaC(i,j,k,bi,bj)
+
+        DICFsediment(i,j) = (sed_a1*omegaC0(i,j)*sed_c +
+     &                       sed_b1*fluxPOC(i,j) +
+     &                       sed_c1*fluxPIC(i,j) +
+     &                       sed_d1*sed_c)*TcorrDIC(i,j)
+
+        ALKFsediment(i,j) = (sed_a2*omegaC0(i,j)*sed_c +
+     &                       sed_b2*fluxPOC(i,j) +
+     &                       sed_c2*fluxPIC(i,j) +
+     &                       sed_d2*sed_c)*TcorrALK(i,j)
+
+        O2Fsediment(i,j) = (sed_a3*omegaC0(i,j)*sed_c +
+     &                      sed_b3*fluxPOC(i,j) +
+     &                      sed_c3*fluxPIC(i,j) +
+     &                      sed_d3*sed_c)*TcorrO2(i,j)
+
+C       Set the buried fluxes to 0 if positive
+        CALFsediment(i,j) = MIN(0 _d 0, -(sed_a5*omegaC0(i,j)*sed_c +
+     &    sed_b5*fluxPOC(i,j) + sed_c5*fluxPIC(i,j) + sed_d5*sed_c))
+
+        POCFsediment(i,j) = MIN(0 _d 0, -(sed_a4*omegaC0(i,j)*sed_c +
+     &    sed_b4*fluxPOC(i,j) + sed_c4*fluxPIC(i,j) + sed_d4*sed_c))
+
+C       Calculate concentration changes at the deepest depth level
+        gPtr(i,j,k,iDIC) = gPtr(i,j,k,iDIC)
+     &       + DICFsediment(i,j)*recip_drF(k)*recip_hFacC(i,j,k,bi,bj)
+
+        gPtr(i,j,k,iALK) = gPtr(i,j,k,iALK)
+     &       + ALKFsediment(i,j)*recip_drF(k)*recip_hFacC(i,j,k,bi,bj)
+
+        gPtr(i,j,k,iO2) = gPtr(i,j,k,iO2)
+     &       + O2Fsediment(i,j)*recip_drF(k)*recip_hFacC(i,j,k,bi,bj)
+
+        gPtr(i,j,k,iPOC) = gPtr(i,j,k,iPOC)
+     &       + POCFsediment(i,j)*recip_drF(k)*recip_hFacC(i,j,k,bi,bj)
+
+        gPtr(i,j,k,iPIC) = gPtr(i,j,k,iPIC)
+     &       + CALFsediment(i,j)*recip_drF(k)*recip_hFacC(i,j,k,bi,bj)
+
+       ELSE
+
+        TcorrO2(i,j) = 0. _d 0
+        TcorrDIC(i,j) = 0. _d 0
+        TcorrALK(i,j) = 0. _d 0
+        DICFsediment(i,j) = 0. _d 0
+        ALKFsediment(i,j) = 0. _d 0
+        O2Fsediment(i,j) = 0. _d 0
+        CALFsediment(i,j) = 0. _d 0
+        POCFsediment(i,j) = 0. _d 0
+
+       ENDIF
+      ENDDO
+      ENDDO
+#endif
 #endif
 
 C === sinking ==========================================================
@@ -729,7 +1028,10 @@ C      diags(iCons*) for convenience
        ENDDO
 #endif
 #endif
-       CALL DIAGNOSTICS_FILL(sedFe, 'sedFe   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(scavRate,'scavRate',0,Nr,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(scavLoss,'scvLosFe',0,Nr,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(sedFe,   'sedFe   ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(sedFlxFe,'sedFlxFe',0,1,2,bi,bj,myThid)
        IF (DIAGNOSTICS_IS_ON('sfcSolFe', myThid)) THEN
         DO j=jMin,jMax
          DO i=iMin,iMax
@@ -744,12 +1046,22 @@ C      diags(iCons*) for convenience
        ENDIF
 
 #ifdef DARWIN_ALLOW_CARBON
-       CALL DIAGNOSTICS_FILL(pH,     'pH      ',0,Nr,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(pCO2,   'pCO2    ',0,Nr,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(FluxCO2,'fluxCO2 ',0,1,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gDIC,   'gDICsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
+#ifdef DARWIN_ALLOW_RADI
+       CALL DIAGNOSTICS_FILL(DICFsediment,'DICFsed ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(ALKFsediment,'ALKFsed ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(O2Fsediment, 'O2Fsed  ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(POCFsediment,'POCFbur ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(CALFsediment,'CALFbur ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(fluxPIC,     'sedFlPIC',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(fluxPOC,     'sedFlPOC',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(TcorrO2,     'TcorrO2 ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(TcorrDIC,    'TcorrDIC',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(TcorrALK,    'TcorrALK',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(OmegaC0,     'OmegCbot',0,1,2,bi,bj,myThid)
+#endif
 #endif
 
 #ifdef DARWIN_DIAG_TENDENCIES
@@ -791,12 +1103,12 @@ C     isub
         DO k=1,Nr
          tmpFac = 1 _d 0 / PTRACERS_dTLev(k)
          DO j=1,sNy
-          DO i=1,sNy
+          DO i=1,sNx
            tmp3d(i,j,k) = tmpFac*DARWIN_minFeLoss(i,j,k,bi,bj)
           ENDDO
          ENDDO
         ENDDO
-        CALL DIAGNOSTICS_FILL(tmp3d,'freeFeLs',0,Nr,3,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(tmp3d,'freeFeLs',0,Nr,2,bi,bj,myThid)
        ENDIF
       ENDIF
 #endif

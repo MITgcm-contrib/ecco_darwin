@@ -29,14 +29,31 @@ C     !USES:
       IMPLICIT NONE
 #include "SIZE.h"
 #include "EEPARAMS.h"
+#include "EESUPPORT.h"
+#ifdef DARWIN_DEBUG
+#ifdef ALLOW_EXCH2
+#include "W2_EXCH2_SIZE.h"
+#include "W2_EXCH2_TOPOLOGY.h"
+#include "W2_EXCH2_PARAMS.h"
+#endif
+#include "GRID.h"
+#endif
 #include "PARAMS.h"
+#include "EXF_PARAM.h"
 #include "PTRACERS_SIZE.h"
 #include "PTRACERS_PARAMS.h"
 #include "GCHEM.h"
+#ifdef ALLOW_RADTRANS
+#include "RADTRANS_SIZE.h"
+#endif
 #include "DARWIN_SIZE.h"
 #include "DARWIN_INDICES.h"
+#include "DARWIN_EXF_PARAMS.h"
+#include "DARWIN_EXF_FIELDS.h"
 #include "DARWIN_PARAMS.h"
+#include "DARWIN_TRAITPARAMS.h"
 #include "DARWIN_TRAITS.h"
+#include "DARWIN_RADTRANS.h"
 
 C     !INPUT PARAMETERS:
 C     myThid -  Number of this instances
@@ -48,7 +65,9 @@ CEOP
 C     !LOCAL VARIABLES:
 C     msgBuf      - Informational/error meesage buffer
       CHARACTER*(MAX_LEN_MBUF) msgBuf
-      INTEGER j,jz,iPtr,oUnit
+      CHARACTER*80 gname
+      INTEGER j,jz,iPtr,oUnit,g,l
+      _RL dm
 CCOG[[[cog
 CCOGcog.out('\n'.join('''
 CCOG{pre}      INTEGER i_{name}
@@ -106,6 +125,18 @@ CCOG]]]
 #endif
 CCOG[[[end]]] (checksum: de1584df65ac0ce36e2346217bd549b5)
       INTEGER n_DARWIN
+      LOGICAL addBlkLn
+      CHARACTER*1 blkLin
+#ifdef DARWIN_DEBUG
+      INTEGER np,bi,bj,i
+      INTEGER iG,jG
+      INTEGER iBase,jBase
+      INTEGER iGjLoc,jGjLoc
+      _R8 bufl(3), bufg(3,nPx*nPy)
+#ifdef ALLOW_EXCH2
+      INTEGER tN
+#endif /* ALLOW_EXCH2 */
+#endif /* DARWIN_DEBUG */
 
       NAMELIST/DARWIN_INDICES/
 CCOG[[[cog
@@ -343,7 +374,6 @@ C Bacteria have fixed elemental ratios even when quotas are turned on
       ENDDO
 #endif
 
-
 C Carbon store is only implemented without quotas
 #ifdef DARWIN_ALLOW_CSTORE
 # ifdef DARWIN_ALLOW_NQUOTA
@@ -372,6 +402,2329 @@ C Carbon store is only implemented without quotas
 # endif
 #endif
 
+#ifndef DARWIN_ALLOW_CARBON
+      IF (darwin_disscSelect .NE. 0) THEN
+       WRITE(msgBuf,'(2A)') 'DARWIN_CHECK: ERROR: ',
+     &  'darwin_disscSelect.NE.0 requires DARWIN_ALLOW_CARBON'
+       CALL PRINT_ERROR( msgBuf , 1)
+       STOP 'ABNORMAL END: S/R DARWIN_CHECK'
+      ENDIF
+#endif
+
+C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+C--   Print settings of some CPP flags.
+
+      blkLin = ' '
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid )
+      WRITE(msgBuf,'(A)') ' Main CPP flags:'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid )
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid )
+
+#ifdef DARWIN_ALLOW_NQUOTA
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_NQUOTA:                  defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_NQUOTA:              NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_PQUOTA
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_PQUOTA:                  defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_PQUOTA:              NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_FEQUOTA
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_FEQUOTA:                 defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_FEQUOTA:             NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_SIQUOTA
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_SIQUOTA:                 defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_SIQUOTA:             NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_CHLQUOTA
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CHLQUOTA:                defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CHLQUOTA:            NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_CSTORE
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CSTORE:                  defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CSTORE:              NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_CSTORE_DIAGS
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CSTORE_DIAGS:            defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CSTORE_DIAGS:        NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_CDOM
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CDOM:                    defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CDOM:                NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_CARBON
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CARBON:                  defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CARBON:              NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_TOTALPHSCALE
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_TOTALPHSCALE:                  defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_TOTALPHSCALE:              NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_DENIT
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_DENIT:                   defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_DENIT:               NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_EXUDE
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_EXUDE:                   defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_EXUDE:               NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef ALLOW_OLD_VIRTUALFLUX
+      WRITE(msgBuf,'(A)')
+     &'// ALLOW_OLD_VIRTUALFLUX:                defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// ALLOW_OLD_VIRTUALFLUX:            NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_NITRATE_FELIMIT
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NITRATE_FELIMIT:               defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NITRATE_FELIMIT:           NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_BOTTOM_SINK
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_BOTTOM_SINK:                   defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_BOTTOM_SINK:               NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_CDOM_UNITS_CARBON
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_CDOM_UNITS_CARBON:             defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_CDOM_UNITS_CARBON:         NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_NUTRIENT_RUNOFF
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NUTRIENT_RUNOFF:               defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NUTRIENT_RUNOFF:           NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_AVPAR
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_AVPAR:                         defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_AVPAR:                     NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_GEIDER
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_GEIDER:                  defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_GEIDER:              NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_GEIDER_RHO_SYNTH
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_GEIDER_RHO_SYNTH:              defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_GEIDER_RHO_SYNTH:          NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_CHL_INIT_LEGACY
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_CHL_INIT_LEGACY:               defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_CHL_INIT_LEGACY:           NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_SCATTER_CHL
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_SCATTER_CHL:                   defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_SCATTER_CHL:               NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_DIAG_IOP
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DIAG_IOP:                      defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DIAG_IOP:                  NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_GRAZING_SWITCH
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_GRAZING_SWITCH:                defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_GRAZING_SWITCH:            NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOMETRIC_PALAT
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOMETRIC_PALAT:              defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOMETRIC_PALAT:          NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_NOZOOTEMP
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NOZOOTEMP:                     defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NOZOOTEMP:                 NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_NOTEMP
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NOTEMP:                        defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NOTEMP:                    NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+      WRITE(msgBuf,'(A,I8)')
+     &'// DARWIN_TEMP_VERSION:                 ',DARWIN_TEMP_VERSION
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+
+#ifdef DARWIN_TEMP_RANGE
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_TEMP_RANGE:                    defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_TEMP_RANGE:                NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_MINFE
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_MINFE:                         defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_MINFE:                     NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_PART_SCAV
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_PART_SCAV:                     defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_PART_SCAV:                 NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_IRON_SED_SOURCE_VARIABLE
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_IRON_SED_SOURCE_VARIABLE:      defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_IRON_SED_SOURCE_VARIABLE:  NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_IRON_SED_SOURCE_POP
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_IRON_SED_SOURCE_POP:           defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_IRON_SED_SOURCE_POP:       NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_DIAG_PERTYPE
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DIAG_PERTYPE:                  defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DIAG_PERTYPE:              NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_DEBUG
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DEBUG:                         defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DEBUG:                     NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_ALLOW_CONS
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CONS:                    defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_CONS:                NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+      WRITE(msgBuf,'(A,I8)')
+     &'// DARWIN_UNUSED:                       ',DARWIN_UNUSED
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+
+#ifdef DARWIN_DIAG_TENDENCIES
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DIAG_TENDENCIES:               defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_DIAG_TENDENCIES:           NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_PART_SCAV_POP
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_PART_SCAV_POP:                 defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_PART_SCAV_POP:             NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+#endif
+
+#ifdef DARWIN_RANDOM_TRAITS
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_RANDOM_TRAITS:                 defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+
+# ifdef DARWIN_TWO_SPECIES_SETUP
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_TWO_SPECIES_SETUP:             defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+# else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_TWO_SPECIES_SETUP:         NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+# endif
+
+# ifdef DARWIN_NINE_SPECIES_SETUP
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NINE_SPECIES_SETUP:            defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+# else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_NINE_SPECIES_SETUP:        NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+# endif
+
+# ifdef DARWIN_ALLOW_DIAZ
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_DIAZ:                    defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+# else
+      WRITE(msgBuf,'(A)')
+     &'// DARWIN_ALLOW_DIAZ:                NOT defined'
+      CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
+     &                    SQUEEZE_RIGHT , myThid)
+# endif
+#endif /* DARWIN_RANDOM_TRAITS */
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                    SQUEEZE_RIGHT, myThid )
+
+C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+C--   Print forcing parameters.
+
+      CALL WRITE_0D_L(darwin_loadFieldsEarly,INDEX_NONE,
+     &'darwin_loadFieldsEarly =',
+     &' /* whether forcing fields are read during initializaton  */')
+#ifndef ALLOW_RADTRANS
+      CALL WRITE_0D_L(darwin_haveSurfPAR,INDEX_NONE,
+     &'darwin_haveSurfPAR =',
+     &' /* have (and use) PARfile or PARconst */')
+      CALL WRITE_0D_L(darwin_useQsw,INDEX_NONE,
+     &'darwin_useQsw =',
+     &' /* whether to use model shortwave radiation */')
+#endif
+      CALL WRITE_0D_L(darwin_useSEAICE,INDEX_NONE,
+     &'darwin_useSEAICE =',
+     &' /* whether to use ice area from seaice pkg */')
+      CALL WRITE_0D_L(darwin_useEXFwind,INDEX_NONE,
+     &'darwin_useEXFwind =',
+     &' /* whether to use wind speed from exf package */')
+#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+      CALL WRITE_0D_L(darwin_haveVentHe3,INDEX_NONE,
+     &'darwin_haveVentHe3 =',
+     &' /* have ventHe3file or ventHe3const */')
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+#endif
+
+C--   For each data set used the summary prints the calendar data
+C     and the corresponding file from which the data will be read.
+      addBlkLn = .FALSE.
+
+#ifndef ALLOW_RADTRANS
+C--   PAR
+      IF ( PARfile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'PAR forcing',
+     I      PARfile, PARRepCycle, PARperiod,
+     I      PARStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'PAR',
+     &  PAR_lon0, PAR_lon_inc, PAR_lat0, PAR_lat_inc,
+     &  PAR_nlon, PAR_nlat, PAR_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(PAR_exfremo_intercept,INDEX_NONE,
+     &   'PAR_exfremo_intercept =',
+     &   ' /* intercept for PAR forcing mean removal */')
+       CALL WRITE_0D_RL(PAR_exfremo_slope,INDEX_NONE,
+     &   'PAR_exfremo_slope =',
+     &   ' /* slope for PAR forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_PAR,INDEX_NONE,
+     &   'darwin_inscal_PAR =',
+     &   ' /* scaling factor for PAR fields */')
+      ELSE
+       CALL WRITE_0D_RL(PARconst,INDEX_NONE,
+     &   'PARconst =',
+     &   ' /* constant PAR forcing */')
+      ENDIF
+
+      IF ( PARfile.NE.' ' .OR. PARconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(PARmask,-1,INDEX_NONE,
+     &   'PARmask =',
+     &   ' /* mask for PAR forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+#endif
+
+C--   iron
+      IF ( ironfile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'iron forcing',
+     I      ironfile, ironRepCycle, ironperiod,
+     I      ironStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'iron',
+     &  iron_lon0, iron_lon_inc, iron_lat0, iron_lat_inc,
+     &  iron_nlon, iron_nlat, iron_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(iron_exfremo_intercept,INDEX_NONE,
+     &   'iron_exfremo_intercept =',
+     &   ' /* intercept for iron forcing mean removal */')
+       CALL WRITE_0D_RL(iron_exfremo_slope,INDEX_NONE,
+     &   'iron_exfremo_slope =',
+     &   ' /* slope for iron forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_iron,INDEX_NONE,
+     &   'darwin_inscal_iron =',
+     &   ' /* scaling factor for iron fields */')
+      ELSE
+       CALL WRITE_0D_RL(ironconst,INDEX_NONE,
+     &   'ironconst =',
+     &   ' /* constant iron forcing */')
+      ENDIF
+
+      IF ( ironfile.NE.' ' .OR. ironconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(ironmask,-1,INDEX_NONE,
+     &   'ironmask =',
+     &   ' /* mask for iron forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   ice
+      IF ( icefile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'ice forcing',
+     I      icefile, iceRepCycle, iceperiod,
+     I      iceStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'ice',
+     &  ice_lon0, ice_lon_inc, ice_lat0, ice_lat_inc,
+     &  ice_nlon, ice_nlat, ice_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(ice_exfremo_intercept,INDEX_NONE,
+     &   'ice_exfremo_intercept =',
+     &   ' /* intercept for ice forcing mean removal */')
+       CALL WRITE_0D_RL(ice_exfremo_slope,INDEX_NONE,
+     &   'ice_exfremo_slope =',
+     &   ' /* slope for ice forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_ice,INDEX_NONE,
+     &   'darwin_inscal_ice =',
+     &   ' /* scaling factor for ice fields */')
+      ELSE
+       CALL WRITE_0D_RL(iceconst,INDEX_NONE,
+     &   'iceconst =',
+     &   ' /* constant ice forcing */')
+      ENDIF
+
+      IF ( icefile.NE.' ' .OR. iceconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(icemask,-1,INDEX_NONE,
+     &   'icemask =',
+     &   ' /* mask for ice forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   wind
+      IF ( windfile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'wind forcing',
+     I      windfile, windRepCycle, windperiod,
+     I      windStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'wind',
+     &  wind_lon0, wind_lon_inc, wind_lat0, wind_lat_inc,
+     &  wind_nlon, wind_nlat, wind_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(wind_exfremo_intercept,INDEX_NONE,
+     &   'wind_exfremo_intercept =',
+     &   ' /* intercept for wind forcing mean removal */')
+       CALL WRITE_0D_RL(wind_exfremo_slope,INDEX_NONE,
+     &   'wind_exfremo_slope =',
+     &   ' /* slope for wind forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_wind,INDEX_NONE,
+     &   'darwin_inscal_wind =',
+     &   ' /* scaling factor for wind fields */')
+      ELSE
+       CALL WRITE_0D_RL(windconst,INDEX_NONE,
+     &   'windconst =',
+     &   ' /* constant wind forcing */')
+      ENDIF
+
+      IF ( windfile.NE.' ' .OR. windconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(windmask,-1,INDEX_NONE,
+     &   'windmask =',
+     &   ' /* mask for wind forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   pCO2
+      IF ( pCO2file.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'pCO2 forcing',
+     I      pCO2file, pCO2RepCycle, pCO2period,
+     I      pCO2StartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'pCO2',
+     &  pCO2_lon0, pCO2_lon_inc, pCO2_lat0, pCO2_lat_inc,
+     &  pCO2_nlon, pCO2_nlat, pCO2_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(pCO2_exfremo_intercept,INDEX_NONE,
+     &   'pCO2_exfremo_intercept =',
+     &   ' /* intercept for pCO2 forcing mean removal */')
+       CALL WRITE_0D_RL(pCO2_exfremo_slope,INDEX_NONE,
+     &   'pCO2_exfremo_slope =',
+     &   ' /* slope for pCO2 forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_pCO2,INDEX_NONE,
+     &   'darwin_inscal_pCO2 =',
+     &   ' /* scaling factor for pCO2 fields */')
+      ELSE
+       CALL WRITE_0D_RL(pCO2const,INDEX_NONE,
+     &   'pCO2const =',
+     &   ' /* constant pCO2 forcing */')
+      ENDIF
+
+      IF ( pCO2file.NE.' ' .OR. pCO2const.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(pCO2mask,-1,INDEX_NONE,
+     &   'pCO2mask =',
+     &   ' /* mask for pCO2 forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   ventHe3
+#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+      IF (darwin_haveVentHe3) THEN
+       CALL EXF_FLD_SUMMARY( 'ventHe3 forcing',
+     I      ventHe3file, ventHe3RepCycle, ventHe3period,
+     I      ventHe3StartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'ventHe3',
+     &  ventHe3_lon0, ventHe3_lon_inc, ventHe3_lat0, ventHe3_lat
+     &_inc,
+     &  ventHe3_nlon, ventHe3_nlat, ventHe3_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(ventHe3_exfremo_intercept,INDEX_NONE,
+     &   'ventHe3_exfremo_intercept =',
+     &   ' /* intercept for ventHe3 forcing mean removal */')
+       CALL WRITE_0D_RL(ventHe3_exfremo_slope,INDEX_NONE,
+     &   'ventHe3_exfremo_slope =',
+     &   ' /* slope for ventHe3 forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_ventHe3,INDEX_NONE,
+     &   'darwin_inscal_ventHe3 =',
+     &   ' /* scaling factor for ventHe3 fields */')
+      ELSE
+       CALL WRITE_0D_RL(ventHe3const,INDEX_NONE,
+     &   'ventHe3const =',
+     &   ' /* constant ventHe3 forcing */')
+      ENDIF
+
+      IF ( ventHe3file.NE.' ' .OR. ventHe3const.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(ventHe3mask,-1,INDEX_NONE,
+     &   'ventHe3mask =',
+     &   ' /* mask for ventHe3 forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+#endif
+
+C--   DOCrunoff
+      IF ( DOCrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'DOCrunoff forcing',
+     I      DOCrunofffile, DOCrunoffRepCycle, DOCrunoffperiod,
+     I      DOCrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'DOCrunoff',
+     &  DOCrunoff_lon0, DOCrunoff_lon_inc, DOCrunoff_lat0, DOCrunoff_lat
+     &_inc,
+     &  DOCrunoff_nlon, DOCrunoff_nlat, DOCrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(DOCrunoff_exfremo_intercept,INDEX_NONE,
+     &   'DOCrunoff_exfremo_intercept =',
+     &   ' /* intercept for DOCrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(DOCrunoff_exfremo_slope,INDEX_NONE,
+     &   'DOCrunoff_exfremo_slope =',
+     &   ' /* slope for DOCrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_DOCrunoff,INDEX_NONE,
+     &   'darwin_inscal_DOCrunoff =',
+     &   ' /* scaling factor for DOCrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(DOCrunoffconst,INDEX_NONE,
+     &   'DOCrunoffconst =',
+     &   ' /* constant DOCrunoff forcing */')
+      ENDIF
+
+      IF ( DOCrunofffile.NE.' ' .OR. DOCrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(DOCrunoffmask,-1,INDEX_NONE,
+     &   'DOCrunoffmask =',
+     &   ' /* mask for DOCrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   rDOCrunoff
+      IF ( rDOCrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'rDOCrunoff forcing',
+     I      rDOCrunofffile, rDOCrunoffRepCycle, rDOCrunoffperiod,
+     I      rDOCrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'rDOCrunoff',
+     &  rDOCrunoff_lon0, rDOCrunoff_lon_inc, rDOCrunoff_lat0, rDOCrunoff_lat
+     &_inc,
+     &  rDOCrunoff_nlon, rDOCrunoff_nlat, rDOCrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(rDOCrunoff_exfremo_intercept,INDEX_NONE,
+     &   'rDOCrunoff_exfremo_intercept =',
+     &   ' /* intercept for rDOCrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(rDOCrunoff_exfremo_slope,INDEX_NONE,
+     &   'rDOCrunoff_exfremo_slope =',
+     &   ' /* slope for rDOCrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_rDOCrunoff,INDEX_NONE,
+     &   'darwin_inscal_rDOCrunoff =',
+     &   ' /* scaling factor for rDOCrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(rDOCrunoffconst,INDEX_NONE,
+     &   'rDOCrunoffconst =',
+     &   ' /* constant rDOCrunoff forcing */')
+      ENDIF
+
+      IF ( rDOCrunofffile.NE.' ' .OR. rDOCrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(rDOCrunoffmask,-1,INDEX_NONE,
+     &   'rDOCrunoffmask =',
+     &   ' /* mask for rDOCrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   CDOMrunoff
+      IF ( CDOMrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'CDOMrunoff forcing',
+     I      CDOMrunofffile, CDOMrunoffRepCycle, CDOMrunoffperiod,
+     I      CDOMrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'CDOMrunoff',
+     &  CDOMrunoff_lon0, CDOMrunoff_lon_inc, CDOMrunoff_lat0, CDOMrunoff_lat
+     &_inc,
+     &  CDOMrunoff_nlon, CDOMrunoff_nlat, CDOMrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(CDOMrunoff_exfremo_intercept,INDEX_NONE,
+     &   'CDOMrunoff_exfremo_intercept =',
+     &   ' /* intercept for CDOMrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(CDOMrunoff_exfremo_slope,INDEX_NONE,
+     &   'CDOMrunoff_exfremo_slope =',
+     &   ' /* slope for CDOMrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_CDOMrunoff,INDEX_NONE,
+     &   'darwin_inscal_CDOMrunoff =',
+     &   ' /* scaling factor for CDOMrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(CDOMrunoffconst,INDEX_NONE,
+     &   'CDOMrunoffconst =',
+     &   ' /* constant CDOMrunoff forcing */')
+      ENDIF
+
+      IF ( CDOMrunofffile.NE.' ' .OR. CDOMrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(CDOMrunoffmask,-1,INDEX_NONE,
+     &   'CDOMrunoffmask =',
+     &   ' /* mask for CDOMrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   DONrunoff
+      IF ( DONrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'DONrunoff forcing',
+     I      DONrunofffile, DONrunoffRepCycle, DONrunoffperiod,
+     I      DONrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'DONrunoff',
+     &  DONrunoff_lon0, DONrunoff_lon_inc, DONrunoff_lat0, DONrunoff_lat
+     &_inc,
+     &  DONrunoff_nlon, DONrunoff_nlat, DONrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(DONrunoff_exfremo_intercept,INDEX_NONE,
+     &   'DONrunoff_exfremo_intercept =',
+     &   ' /* intercept for DONrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(DONrunoff_exfremo_slope,INDEX_NONE,
+     &   'DONrunoff_exfremo_slope =',
+     &   ' /* slope for DONrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_DONrunoff,INDEX_NONE,
+     &   'darwin_inscal_DONrunoff =',
+     &   ' /* scaling factor for DONrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(DONrunoffconst,INDEX_NONE,
+     &   'DONrunoffconst =',
+     &   ' /* constant DONrunoff forcing */')
+      ENDIF
+
+      IF ( DONrunofffile.NE.' ' .OR. DONrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(DONrunoffmask,-1,INDEX_NONE,
+     &   'DONrunoffmask =',
+     &   ' /* mask for DONrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   DOPrunoff
+      IF ( DOPrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'DOPrunoff forcing',
+     I      DOPrunofffile, DOPrunoffRepCycle, DOPrunoffperiod,
+     I      DOPrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'DOPrunoff',
+     &  DOPrunoff_lon0, DOPrunoff_lon_inc, DOPrunoff_lat0, DOPrunoff_lat
+     &_inc,
+     &  DOPrunoff_nlon, DOPrunoff_nlat, DOPrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(DOPrunoff_exfremo_intercept,INDEX_NONE,
+     &   'DOPrunoff_exfremo_intercept =',
+     &   ' /* intercept for DOPrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(DOPrunoff_exfremo_slope,INDEX_NONE,
+     &   'DOPrunoff_exfremo_slope =',
+     &   ' /* slope for DOPrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_DOPrunoff,INDEX_NONE,
+     &   'darwin_inscal_DOPrunoff =',
+     &   ' /* scaling factor for DOPrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(DOPrunoffconst,INDEX_NONE,
+     &   'DOPrunoffconst =',
+     &   ' /* constant DOPrunoff forcing */')
+      ENDIF
+
+      IF ( DOPrunofffile.NE.' ' .OR. DOPrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(DOPrunoffmask,-1,INDEX_NONE,
+     &   'DOPrunoffmask =',
+     &   ' /* mask for DOPrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   DINrunoff
+      IF ( DINrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'DINrunoff forcing',
+     I      DINrunofffile, DINrunoffRepCycle, DINrunoffperiod,
+     I      DINrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'DINrunoff',
+     &  DINrunoff_lon0, DINrunoff_lon_inc, DINrunoff_lat0, DINrunoff_lat
+     &_inc,
+     &  DINrunoff_nlon, DINrunoff_nlat, DINrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(DINrunoff_exfremo_intercept,INDEX_NONE,
+     &   'DINrunoff_exfremo_intercept =',
+     &   ' /* intercept for DINrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(DINrunoff_exfremo_slope,INDEX_NONE,
+     &   'DINrunoff_exfremo_slope =',
+     &   ' /* slope for DINrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_DINrunoff,INDEX_NONE,
+     &   'darwin_inscal_DINrunoff =',
+     &   ' /* scaling factor for DINrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(DINrunoffconst,INDEX_NONE,
+     &   'DINrunoffconst =',
+     &   ' /* constant DINrunoff forcing */')
+      ENDIF
+
+      IF ( DINrunofffile.NE.' ' .OR. DINrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(DINrunoffmask,-1,INDEX_NONE,
+     &   'DINrunoffmask =',
+     &   ' /* mask for DINrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   IPrunoff
+      IF ( IPrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'IPrunoff forcing',
+     I      IPrunofffile, IPrunoffRepCycle, IPrunoffperiod,
+     I      IPrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'IPrunoff',
+     &  IPrunoff_lon0, IPrunoff_lon_inc, IPrunoff_lat0, IPrunoff_lat_inc
+     &,
+     &  IPrunoff_nlon, IPrunoff_nlat, IPrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(IPrunoff_exfremo_intercept,INDEX_NONE,
+     &   'IPrunoff_exfremo_intercept =',
+     &   ' /* intercept for IPrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(IPrunoff_exfremo_slope,INDEX_NONE,
+     &   'IPrunoff_exfremo_slope =',
+     &   ' /* slope for IPrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_IPrunoff,INDEX_NONE,
+     &   'darwin_inscal_IPrunoff =',
+     &   ' /* scaling factor for IPrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(IPrunoffconst,INDEX_NONE,
+     &   'IPrunoffconst =',
+     &   ' /* constant IPrunoff forcing */')
+      ENDIF
+
+      IF ( IPrunofffile.NE.' ' .OR. IPrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(IPrunoffmask,-1,INDEX_NONE,
+     &   'IPrunoffmask =',
+     &   ' /* mask for IPrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   DSirunoff
+      IF ( DSirunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'DSirunoff forcing',
+     I      DSirunofffile, DSirunoffRepCycle, DSirunoffperiod,
+     I      DSirunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'DSirunoff',
+     &  DSirunoff_lon0, DSirunoff_lon_inc, DSirunoff_lat0, DSirunoff_lat
+     &_inc,
+     &  DSirunoff_nlon, DSirunoff_nlat, DSirunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(DSirunoff_exfremo_intercept,INDEX_NONE,
+     &   'DSirunoff_exfremo_intercept =',
+     &   ' /* intercept for DSirunoff forcing mean removal */')
+       CALL WRITE_0D_RL(DSirunoff_exfremo_slope,INDEX_NONE,
+     &   'DSirunoff_exfremo_slope =',
+     &   ' /* slope for DSirunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_DSirunoff,INDEX_NONE,
+     &   'darwin_inscal_DSirunoff =',
+     &   ' /* scaling factor for DSirunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(DSirunoffconst,INDEX_NONE,
+     &   'DSirunoffconst =',
+     &   ' /* constant DSirunoff forcing */')
+      ENDIF
+
+      IF ( DSirunofffile.NE.' ' .OR. DSirunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(DSirunoffmask,-1,INDEX_NONE,
+     &   'DSirunoffmask =',
+     &   ' /* mask for DSirunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   POCrunoff
+      IF ( POCrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'POCrunoff forcing',
+     I      POCrunofffile, POCrunoffRepCycle, POCrunoffperiod,
+     I      POCrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'POCrunoff',
+     &  POCrunoff_lon0, POCrunoff_lon_inc, POCrunoff_lat0, POCrunoff_lat
+     &_inc,
+     &  POCrunoff_nlon, POCrunoff_nlat, POCrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(POCrunoff_exfremo_intercept,INDEX_NONE,
+     &   'POCrunoff_exfremo_intercept =',
+     &   ' /* intercept for POCrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(POCrunoff_exfremo_slope,INDEX_NONE,
+     &   'POCrunoff_exfremo_slope =',
+     &   ' /* slope for POCrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_POCrunoff,INDEX_NONE,
+     &   'darwin_inscal_POCrunoff =',
+     &   ' /* scaling factor for POCrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(POCrunoffconst,INDEX_NONE,
+     &   'POCrunoffconst =',
+     &   ' /* constant POCrunoff forcing */')
+      ENDIF
+
+      IF ( POCrunofffile.NE.' ' .OR. POCrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(POCrunoffmask,-1,INDEX_NONE,
+     &   'POCrunoffmask =',
+     &   ' /* mask for POCrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   POPrunoff
+      IF ( POPrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'POPrunoff forcing',
+     I      POPrunofffile, POPrunoffRepCycle, POPrunoffperiod,
+     I      POPrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'POPrunoff',
+     &  POPrunoff_lon0, POPrunoff_lon_inc, POPrunoff_lat0, POPrunoff_lat
+     &_inc,
+     &  POPrunoff_nlon, POPrunoff_nlat, POPrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(POPrunoff_exfremo_intercept,INDEX_NONE,
+     &   'POPrunoff_exfremo_intercept =',
+     &   ' /* intercept for POPrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(POPrunoff_exfremo_slope,INDEX_NONE,
+     &   'POPrunoff_exfremo_slope =',
+     &   ' /* slope for POPrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_POPrunoff,INDEX_NONE,
+     &   'darwin_inscal_POPrunoff =',
+     &   ' /* scaling factor for POPrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(POPrunoffconst,INDEX_NONE,
+     &   'POPrunoffconst =',
+     &   ' /* constant POPrunoff forcing */')
+      ENDIF
+
+      IF ( POPrunofffile.NE.' ' .OR. POPrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(POPrunoffmask,-1,INDEX_NONE,
+     &   'POPrunoffmask =',
+     &   ' /* mask for POPrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   PONrunoff
+      IF ( PONrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'PONrunoff forcing',
+     I      PONrunofffile, PONrunoffRepCycle, PONrunoffperiod,
+     I      PONrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'PONrunoff',
+     &  PONrunoff_lon0, PONrunoff_lon_inc, PONrunoff_lat0, PONrunoff_lat
+     &_inc,
+     &  PONrunoff_nlon, PONrunoff_nlat, PONrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(PONrunoff_exfremo_intercept,INDEX_NONE,
+     &   'PONrunoff_exfremo_intercept =',
+     &   ' /* intercept for PONrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(PONrunoff_exfremo_slope,INDEX_NONE,
+     &   'PONrunoff_exfremo_slope =',
+     &   ' /* slope for PONrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_PONrunoff,INDEX_NONE,
+     &   'darwin_inscal_PONrunoff =',
+     &   ' /* scaling factor for PONrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(PONrunoffconst,INDEX_NONE,
+     &   'PONrunoffconst =',
+     &   ' /* constant PONrunoff forcing */')
+      ENDIF
+
+      IF ( PONrunofffile.NE.' ' .OR. PONrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(PONrunoffmask,-1,INDEX_NONE,
+     &   'PONrunoffmask =',
+     &   ' /* mask for PONrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   DICrunoff
+      IF ( DICrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'DICrunoff forcing',
+     I      DICrunofffile, DICrunoffRepCycle, DICrunoffperiod,
+     I      DICrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'DICrunoff',
+     &  DICrunoff_lon0, DICrunoff_lon_inc, DICrunoff_lat0, DICrunoff_lat
+     &_inc,
+     &  DICrunoff_nlon, DICrunoff_nlat, DICrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(DICrunoff_exfremo_intercept,INDEX_NONE,
+     &   'DICrunoff_exfremo_intercept =',
+     &   ' /* intercept for DICrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(DICrunoff_exfremo_slope,INDEX_NONE,
+     &   'DICrunoff_exfremo_slope =',
+     &   ' /* slope for DICrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_DICrunoff,INDEX_NONE,
+     &   'darwin_inscal_DICrunoff =',
+     &   ' /* scaling factor for DICrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(DICrunoffconst,INDEX_NONE,
+     &   'DICrunoffconst =',
+     &   ' /* constant DICrunoff forcing */')
+      ENDIF
+
+      IF ( DICrunofffile.NE.' ' .OR. DICrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(DICrunoffmask,-1,INDEX_NONE,
+     &   'DICrunoffmask =',
+     &   ' /* mask for DICrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   ALKrunoff
+      IF ( ALKrunofffile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'ALKrunoff forcing',
+     I      ALKrunofffile, ALKrunoffRepCycle, ALKrunoffperiod,
+     I      ALKrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'ALKrunoff',
+     &  ALKrunoff_lon0, ALKrunoff_lon_inc, ALKrunoff_lat0, ALKrunoff_lat
+     &_inc,
+     &  ALKrunoff_nlon, ALKrunoff_nlat, ALKrunoff_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(ALKrunoff_exfremo_intercept,INDEX_NONE,
+     &   'ALKrunoff_exfremo_intercept =',
+     &   ' /* intercept for ALKrunoff forcing mean removal */')
+       CALL WRITE_0D_RL(ALKrunoff_exfremo_slope,INDEX_NONE,
+     &   'ALKrunoff_exfremo_slope =',
+     &   ' /* slope for ALKrunoff forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_ALKrunoff,INDEX_NONE,
+     &   'darwin_inscal_ALKrunoff =',
+     &   ' /* scaling factor for ALKrunoff fields */')
+      ELSE
+       CALL WRITE_0D_RL(ALKrunoffconst,INDEX_NONE,
+     &   'ALKrunoffconst =',
+     &   ' /* constant ALKrunoff forcing */')
+      ENDIF
+
+      IF ( ALKrunofffile.NE.' ' .OR. ALKrunoffconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(ALKrunoffmask,-1,INDEX_NONE,
+     &   'ALKrunoffmask =',
+     &   ' /* mask for ALKrunoff forcing */')
+      ENDIF
+
+      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+
+C--   Other forcing parameters
+      CALL WRITE_0D_RL(R_ALK_DIC_runoff,INDEX_NONE,
+     &'R_ALK_DIC_runoff =',
+     &' /* [eq/mol C] ALK:DIC ratio in runoff */')
+      CALL WRITE_0D_RL(R_NO3_DIN_runoff,INDEX_NONE,
+     &'R_NO3_DIN_runoff =',
+     &' /* [mol N/mol N] NO3 fraction of DIN in runoff */')
+      CALL WRITE_0D_RL(R_NO2_DIN_runoff,INDEX_NONE,
+     &'R_NO2_DIN_runoff =',
+     &' /* [mol N/mol N] NO2 fraction of DIN in runoff */')
+      CALL WRITE_0D_RL(R_NH4_DIN_runoff,INDEX_NONE,
+     &'R_NH4_DIN_runoff =',
+     &' /* [mol N/mol N] NH4 fraction of DIN in runoff */')
+      CALL WRITE_0D_RL(R_DIP_IP_runoff,INDEX_NONE,
+     &'R_DIP_IP_runoff =',
+     &' /* [mol P/mol P] ratio of dissolved to total inorganic P in  */'
+     &)
+      CALL WRITE_0D_RL(R_DFe_DIP_runoff,INDEX_NONE,
+     &'R_DFe_DIP_runoff =',
+     &' /* [mol Fe/mol P] Fe:P ratio for inorganic P in runoff */')
+      CALL WRITE_0D_RL(R_DOFe_DOP_runoff,INDEX_NONE,
+     &'R_DOFe_DOP_runoff =',
+     &' /* [mol Fe/mol P] Fe:P ratio for dissolved organic matter in */'
+     &)
+      CALL WRITE_0D_RL(R_POFe_POP_runoff,INDEX_NONE,
+     &'R_POFe_POP_runoff =',
+     &' /* [mol Fe/mol P] Fe:P ratio for particulate organic matter  */'
+     &)
+
+C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+C--   Print parameters from DARWIN_PARAMS.h
+
+      CALL WRITE_0D_L(darwin_chlInitBalanced,INDEX_NONE,
+     &'darwin_chlInitBalanced =',
+     &' /* Initialize Chlorophyll to a balanced value following Geider *
+     &/')
+      CALL WRITE_0D_I(darwin_chlIter0,INDEX_NONE,
+     &'darwin_chlIter0 =',
+     &' /* Iteration number when to initialize Chlorophyll */')
+#ifdef DARWIN_ALLOW_CARBON
+      CALL WRITE_0D_RL(Pa2Atm,INDEX_NONE,
+     &'Pa2Atm =',
+     &' /* Convert pressure in Pascal to atm */')
+      CALL WRITE_0D_RL(ptr2mol,INDEX_NONE,
+     &'ptr2mol =',
+     &' /* convert ptracers (in mmol/m3) to mol/m3 */')
+      CALL WRITE_0D_RL(sca1,INDEX_NONE,
+     &'sca1 =',
+     &' /* Schmidt no. coefficient for CO2 */')
+      CALL WRITE_0D_RL(sca2,INDEX_NONE,
+     &'sca2 =',
+     &' /* Schmidt no. coefficient for CO2 */')
+      CALL WRITE_0D_RL(sca3,INDEX_NONE,
+     &'sca3 =',
+     &' /* Schmidt no. coefficient for CO2 */')
+      CALL WRITE_0D_RL(sca4,INDEX_NONE,
+     &'sca4 =',
+     &' /* Schmidt no. coefficient for CO2 */')
+      CALL WRITE_0D_RL(sox1,INDEX_NONE,
+     &'sox1 =',
+     &' /* Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141,'
+     &' (1998)] */')
+      CALL WRITE_0D_RL(sox2,INDEX_NONE,
+     &'sox2 =',
+     &' /* Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141,'
+     &' (1998)] */')
+      CALL WRITE_0D_RL(sox3,INDEX_NONE,
+     &'sox3 =',
+     &' /* Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141,'
+     &' (1998)] */')
+      CALL WRITE_0D_RL(sox4,INDEX_NONE,
+     &'sox4 =',
+     &' /* Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141,'
+     &' (1998)] */')
+      CALL WRITE_0D_RL(oA0,INDEX_NONE,
+     &'oA0 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oA1,INDEX_NONE,
+     &'oA1 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oA2,INDEX_NONE,
+     &'oA2 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oA3,INDEX_NONE,
+     &'oA3 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oA4,INDEX_NONE,
+     &'oA4 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oA5,INDEX_NONE,
+     &'oA5 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oB0,INDEX_NONE,
+     &'oB0 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oB1,INDEX_NONE,
+     &'oB1 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oB2,INDEX_NONE,
+     &'oB2 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oB3,INDEX_NONE,
+     &'oB3 =',
+     &' /* Coefficient for determining saturation O2 */')
+      CALL WRITE_0D_RL(oC0,INDEX_NONE,
+     &'oC0 =',
+     &' /* Coefficient for determining saturation O2 */')
+#endif
+      CALL WRITE_0D_C(darwin_pickupSuff,-1,INDEX_NONE,
+     &'darwin_pickupSuff =',
+     &' /* pickup suffix for darwin; set to '' '' to disable reading at'
+     &' PTRACERS_Iter0 */')
+      CALL WRITE_0D_L(darwin_strict_check,INDEX_NONE,
+     &'darwin_strict_check =',
+     &' /* stop instead of issuing warnings */')
+      CALL WRITE_0D_L(darwin_linFSConserve,INDEX_NONE,
+     &'darwin_linFSConserve =',
+     &' /* correct non-conservation due to linear free surface (globally
+     &) */')
+      CALL WRITE_0D_L(darwin_read_phos,INDEX_NONE,
+     &'darwin_read_phos =',
+     &' /* initial conditions for plankton biomass are in mmol P/m3 */')
+      CALL WRITE_0D_I(darwin_seed,INDEX_NONE,
+     &'darwin_seed =',
+     &' /* seed for random number generator (for DARWIN_RANDOM_TRAITS) *
+     &/')
+      CALL WRITE_0D_I(iDEBUG,INDEX_NONE,
+     &'iDEBUG =',
+     &' /* index in x dimension for debug prints */')
+      CALL WRITE_0D_I(jDEBUG,INDEX_NONE,
+     &'jDEBUG =',
+     &' /* index in y dimension for debug prints */')
+      CALL WRITE_0D_I(kDEBUG,INDEX_NONE,
+     &'kDEBUG =',
+     &' /* index in z dimension for debug prints */')
+      CALL WRITE_0D_RL(katten_w,INDEX_NONE,
+     &'katten_w =',
+     &' /* atten coefficient water (1/m) */')
+      CALL WRITE_0D_RL(katten_chl,INDEX_NONE,
+     &'katten_chl =',
+     &' /* atten coefficient chl (m2/mg Chl) */')
+      CALL WRITE_0D_RL(parfrac,INDEX_NONE,
+     &'parfrac =',
+     &' /* fraction Qsw that is PAR */')
+      CALL WRITE_0D_RL(parconv,INDEX_NONE,
+     &'parconv =',
+     &' /* conversion from W/m2 to uEin/m2/s (uEin/s/W) */')
+      CALL WRITE_0D_RL(tempnorm,INDEX_NONE,
+     &'tempnorm =',
+     &' /* set temperature function (was 1.0) */')
+      CALL WRITE_0D_RL(TempAeArr,INDEX_NONE,
+     &'TempAeArr =',
+     &' /* slope for pseudo-Arrhenius (TEMP_VERSION 2) (K) */')
+      CALL WRITE_0D_RL(TemprefArr,INDEX_NONE,
+     &'TemprefArr =',
+     &' /* reference temp for pseudo-Arrhenius (TEMP_VERSION 2) (K) */')
+      CALL WRITE_0D_RL(TempCoeffArr,INDEX_NONE,
+     &'TempCoeffArr =',
+     &' /* pre-factor for pseudo-Arrhenius (TEMP_VERSION 2) */')
+      CALL WRITE_0D_RL(reminTempAe,INDEX_NONE,
+     &'reminTempAe =',
+     &' /* temperature coefficient for remineralization (TEMP_VERSION 4)
+     & (1/K) */')
+      CALL WRITE_0D_RL(mortTempAe,INDEX_NONE,
+     &'mortTempAe =',
+     &' /* temperature coefficient for linear mortality (TEMP_VERSION 4)
+     & (1/K) */')
+      CALL WRITE_0D_RL(mort2TempAe,INDEX_NONE,
+     &'mort2TempAe =',
+     &' /* temperature coefficient for quadr. mortality (TEMP_VERSION 4)
+     & (1/K) */')
+      CALL WRITE_0D_RL(uptakeTempAe,INDEX_NONE,
+     &'uptakeTempAe =',
+     &' /* temperature coefficient for uptake (TEMP_VERSION 4) (1/K) */'
+     &)
+      CALL WRITE_0D_RL(alpfe,INDEX_NONE,
+     &'alpfe =',
+     &' /* solubility of Fe dust */')
+      CALL WRITE_0D_RL(ligand_tot,INDEX_NONE,
+     &'ligand_tot =',
+     &' /* total ligand concentration (mol/m3) */')
+      CALL WRITE_0D_RL(ligand_stab,INDEX_NONE,
+     &'ligand_stab =',
+     &' /* ligand stability rate ratio (m3/mol) */')
+      CALL WRITE_0D_RL(freefemax,INDEX_NONE,
+     &'freefemax =',
+     &' /* max concentration of free iron (mol/m3) */')
+#ifdef DARWIN_PART_SCAV_POP
+      CALL WRITE_0D_RL(scav_rat,INDEX_NONE,
+     &'scav_rat =',
+     &' /* rate conversion Th to iron (1/s) */')
+      CALL WRITE_0D_RL(scav_inter,INDEX_NONE,
+     &'scav_inter =',
+     &' /* intercept of scavenging power law (L^e mg^-e) */')
+      CALL WRITE_0D_RL(scav_exp,INDEX_NONE,
+     &'scav_exp =',
+     &' /* exponent e of scavenging power law */')
+      CALL WRITE_0D_RL(scav_R_POPPOC,INDEX_NONE,
+     &'scav_R_POPPOC =',
+     &' /* POP:POC ratio for scavenging (mmol P / g) */')
+#elif defined(DARWIN_PART_SCAV)
+      CALL WRITE_0D_RL(scav_tau,INDEX_NONE,
+     &'scav_tau =',
+     &' /* factor to go from Th scavenging rate to iron */')
+      CALL WRITE_0D_RL(scav_inter,INDEX_NONE,
+     &'scav_inter =',
+     &' /* intercept of scavenging power law (L^e mg^-e s^-1) */')
+      CALL WRITE_0D_RL(scav_exp,INDEX_NONE,
+     &'scav_exp =',
+     &' /* exponent e of scavenging power law */')
+      CALL WRITE_0D_RL(scav_POC_wgt,INDEX_NONE,
+     &'scav_POC_wgt =',
+     &' /* weight of POC in POM for scavenging (g / mmol C) */')
+      CALL WRITE_0D_RL(scav_POSi_wgt,INDEX_NONE,
+     &'scav_POSi_wgt =',
+     &' /* weight of POSi in POM for scavenging (g / mmol Si) */')
+      CALL WRITE_0D_RL(scav_PIC_wgt,INDEX_NONE,
+     &'scav_PIC_wgt =',
+     &' /* weight of PIC in POM for scavenging (g / mmol C) */')
+#else
+      CALL WRITE_0D_RL(scav,INDEX_NONE,
+     &'scav =',
+     &' /* fixed iron scavenging rate (1/s) */')
+#endif
+      CALL WRITE_0D_RL(depthfesed,INDEX_NONE,
+     &'depthfesed =',
+     &' /* depth above which to add sediment source (was -1000) (m) */')
+      CALL WRITE_0D_RL(fesedflux,INDEX_NONE,
+     &'fesedflux =',
+     &' /* fixed iron flux from sediment (mmol Fe /m2/s) */')
+      CALL WRITE_0D_RL(fesedflux_pcm,INDEX_NONE,
+     &'fesedflux_pcm =',
+     &' /* iron input per POC sinking into bottom for DARWIN_IRON_SED_SO
+     &URCE_VARIABLE (mmol Fe / mmol C) */')
+      CALL WRITE_0D_RL(fesedflux_min,INDEX_NONE,
+     &'fesedflux_min =',
+     &' /* min iron input rate subtracted from fesedflux_pcm*wc_sink*POC
+     & (mmol Fe /s) */')
+      CALL WRITE_0D_RL(R_CP_fesed,INDEX_NONE,
+     &'R_CP_fesed =',
+     &' /* POC:POP conversion for DARWIN_IRON_SED_SOURCE_POP (mmol C / m
+     &mol P) */')
+      CALL WRITE_0D_RL(depthFeVent,INDEX_NONE,
+     &'depthFeVent =',
+     &' /* depth below which iron from hydrothermal vents is added (m) '
+     &'*/')
+      CALL WRITE_0D_RL(solFeVent,INDEX_NONE,
+     &'solFeVent = ',
+     &' /* solubility of iron from hydrothermal vents */')
+      CALL WRITE_0D_RL(R_FeHe3_vent,INDEX_NONE,
+     &'R_FeHe3_vent =',
+     &' /* Fe:He3 ratio for hydrothermal vents (mol Fe / mol He3) */')
+      CALL WRITE_0D_RL(Knita,INDEX_NONE,
+     &'Knita =',
+     &' /* ammonia oxidation rate (1/s) */')
+      CALL WRITE_0D_RL(Knitb,INDEX_NONE,
+     &'Knitb =',
+     &' /* nitrite oxidation rate (1/s) */')
+      CALL WRITE_0D_RL(PAR_oxi,INDEX_NONE,
+     &'PAR_oxi =',
+     &' /* critical light level after which oxidation starts (uEin/m2/s)
+     & */')
+      CALL WRITE_0D_RL(Kdoc,INDEX_NONE,
+     &'Kdoc =',
+     &' /* DOC remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(Kdop,INDEX_NONE,
+     &'Kdop =',
+     &' /* DON remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(Kdon,INDEX_NONE,
+     &'Kdon =',
+     &' /* DOP remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(KdoFe,INDEX_NONE,
+     &'KdoFe =',
+     &' /* DOFe remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(KPOC,INDEX_NONE,
+     &'KPOC =',
+     &' /* POC remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(KPON,INDEX_NONE,
+     &'KPON =',
+     &' /* PON remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(KPOP,INDEX_NONE,
+     &'KPOP =',
+     &' /* POP remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(KPOFe,INDEX_NONE,
+     &'KPOFe =',
+     &' /* POFe remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(KPOSi,INDEX_NONE,
+     &'KPOSi =',
+     &' /* POSi remineralization rate (1/s) */')
+      CALL WRITE_0D_RL(wC_sink,INDEX_NONE,
+     &'wC_sink =',
+     &' /* sinking velocity for POC (m/s) */')
+      CALL WRITE_0D_RL(wN_sink,INDEX_NONE,
+     &'wN_sink =',
+     &' /* sinking velocity for PON (m/s) */')
+      CALL WRITE_0D_RL(wP_sink,INDEX_NONE,
+     &'wP_sink =',
+     &' /* sinking velocity for POP (m/s) */')
+      CALL WRITE_0D_RL(wFe_sink,INDEX_NONE,
+     &'wFe_sink =',
+     &' /* sinking velocity for POFe (m/s) */')
+      CALL WRITE_0D_RL(wSi_sink,INDEX_NONE,
+     &'wSi_sink =',
+     &' /* sinking velocity for POSi (m/s) */')
+      CALL WRITE_0D_RL(wPIC_sink,INDEX_NONE,
+     &'wPIC_sink =',
+     &' /* sinking velocity for PIC (m/s) */')
+      CALL WRITE_0D_I(darwin_disscSelect,INDEX_NONE,
+     &'darwin_disscSelect = ',
+     &' /* Switch for PIC dissolution rate formulation */')
+      IF (darwin_disscSelect .EQ. 0) THEN
+       CALL WRITE_0D_RL(Kdissc,INDEX_NONE,
+     & 'Kdissc =',
+     & ' /* dissolution rate for PIC (1/s) */')
+      ELSEIF (darwin_disscSelect .EQ. 1) THEN
+       CALL WRITE_0D_RL(darwin_KeirCoeff,INDEX_NONE,
+     & 'darwin_KeirCoeff =',
+     & ' /* Keir PIC dissolution rate coefficient (1/s) */')
+       CALL WRITE_0D_RL(darwin_KeirExp,INDEX_NONE,
+     & 'darwin_KeirExp =',
+     & ' /* Keir PIC dissolution rate exponent */')
+      ENDIF
+#ifdef DARWIN_ALLOW_CARBON
+      CALL WRITE_0D_RL(R_OP,INDEX_NONE,
+     &'R_OP =',
+     &' /* O:P ratio for respiration and consumption (mmol O2 / mmol P)'
+     &' */')
+      CALL WRITE_0D_RL(R_OC,INDEX_NONE,
+     &'R_OC =',
+     &' /* NOT USED (mmol O2 / mmol C) */')
+      CALL WRITE_0D_RL(m3perkg,INDEX_NONE,
+     &'m3perkg =',
+     &' /* constant for converting per kg to per m^3 (m3/kg) */')
+      CALL WRITE_0D_RL(surfSaltMinInit,INDEX_NONE,
+     &'surfSaltMinInit =',
+     &' /* minimum salt for carbon solver at initialization (ppt) */')
+      CALL WRITE_0D_RL(surfSaltMaxInit,INDEX_NONE,
+     &'surfSaltMaxInit =',
+     &' /* maximum salt for carbon solver at initialization (ppt) */')
+      CALL WRITE_0D_RL(surfTempMinInit,INDEX_NONE,
+     &'surfTempMinInit =',
+     &' /* minimum temp for carbon solver at initialization (degrees C)'
+     &' */')
+      CALL WRITE_0D_RL(surfTempMaxInit,INDEX_NONE,
+     &'surfTempMaxInit =',
+     &' /* maximum temp for carbon solver at initialization (degrees C)'
+     &' */')
+      CALL WRITE_0D_RL(surfDICMinInit,INDEX_NONE,
+     &'surfDICMinInit =',
+     &' /* minimum DIC for carbon solver at initialization (mmol C m^-3)
+     & */')
+      CALL WRITE_0D_RL(surfDICMaxInit,INDEX_NONE,
+     &'surfDICMaxInit =',
+     &' /* maximum DIC for carbon solver at initialization (mmol C m^-3)
+     & */')
+      CALL WRITE_0D_RL(surfALKMinInit,INDEX_NONE,
+     &'surfALKMinInit =',
+     &' /* minimum alkalinity for carbon solver at initialization (meq m
+     &^-3) */')
+      CALL WRITE_0D_RL(surfALKMaxInit,INDEX_NONE,
+     &'surfALKMaxInit =',
+     &' /* maximum alkalinity for carbon solver at initialization (meq m
+     &^-3) */')
+      CALL WRITE_0D_RL(surfPO4MinInit,INDEX_NONE,
+     &'surfPO4MinInit =',
+     &' /* minimum PO4 for carbon solver at initialization (mmol P m^-3)
+     & */')
+      CALL WRITE_0D_RL(surfPO4MaxInit,INDEX_NONE,
+     &'surfPO4MaxInit =',
+     &' /* maximum PO4 for carbon solver at initialization (mmol P m^-3)
+     & */')
+      CALL WRITE_0D_RL(surfSiMinInit,INDEX_NONE,
+     &'surfSiMinInit =',
+     &' /* minimum SiO2 for carbon solver at initialization (mmol Si m^-
+     &3) */')
+      CALL WRITE_0D_RL(surfSiMaxInit,INDEX_NONE,
+     &'surfSiMaxInit =',
+     &' /* maximum SiO2 for carbon solver at initialization (mmol Si m^-
+     &3) */')
+      CALL WRITE_0D_RL(surfSaltMin,INDEX_NONE,
+     &'surfSaltMin =',
+     &' /* minimum salt for carbon solver during run (ppt) */')
+      CALL WRITE_0D_RL(surfSaltMax,INDEX_NONE,
+     &'surfSaltMax =',
+     &' /* maximum salt for carbon solver during run (ppt) */')
+      CALL WRITE_0D_RL(surfTempMin,INDEX_NONE,
+     &'surfTempMin =',
+     &' /* minimum temp for carbon solver during run (degrees C) */')
+      CALL WRITE_0D_RL(surfTempMax,INDEX_NONE,
+     &'surfTempMax =',
+     &' /* maximum temp for carbon solver during run (degrees C) */')
+      CALL WRITE_0D_RL(surfDICMin,INDEX_NONE,
+     &'surfDICMin =',
+     &' /* minimum DIC for carbon solver during run (mmol C m^-3) */')
+      CALL WRITE_0D_RL(surfDICMax,INDEX_NONE,
+     &'surfDICMax =',
+     &' /* maximum DIC for carbon solver during run (mmol C m^-3) */')
+      CALL WRITE_0D_RL(surfALKMin,INDEX_NONE,
+     &'surfALKMin =',
+     &' /* minimum alkalinity for carbon solver during run (meq m^-3) */
+     &')
+      CALL WRITE_0D_RL(surfALKMax,INDEX_NONE,
+     &'surfALKMax =',
+     &' /* maximum alkalinity for carbon solver during run (meq m^-3) */
+     &')
+      CALL WRITE_0D_RL(surfPO4Min,INDEX_NONE,
+     &'surfPO4Min =',
+     &' /* minimum PO4 for carbon solver during run (mmol P m^-3) */')
+      CALL WRITE_0D_RL(surfPO4Max,INDEX_NONE,
+     &'surfPO4Max =',
+     &' /* maximum PO4 for carbon solver during run (mmol P m^-3) */')
+      CALL WRITE_0D_RL(surfSiMin,INDEX_NONE,
+     &'surfSiMin =',
+     &' /* minimum SiO2 for carbon solver during run (mmol Si m^-3) */')
+      CALL WRITE_0D_RL(surfSiMax,INDEX_NONE,
+     &'surfSiMax =',
+     &' /* maximum SiO2 for carbon solver during run (mmol Si m^-3) */')
+#endif
+      CALL WRITE_0D_RL(diaz_ini_fac,INDEX_NONE,
+     &'diaz_ini_fac =',
+     &' /* reduce tracer concentrations by this factor on initialization
+     & */')
+      CALL WRITE_0D_RL(O2crit,INDEX_NONE,
+     &'O2crit =',
+     &' /* critical oxygen for O2/NO3 remineralization (mmol O2 m-3) */'
+     &)
+      CALL WRITE_0D_RL(denit_NP,INDEX_NONE,
+     &'denit_NP =',
+     &' /* ratio of n to p in denitrification process (mmol N / mmol P)'
+     &' */')
+      CALL WRITE_0D_RL(denit_NO3,INDEX_NONE,
+     &'denit_NO3 =',
+     &' /* ratio of NO3 uptake to phos remineralization in denitrificati
+     &on (mmol N / mmol P) */')
+      CALL WRITE_0D_RL(NO3crit,INDEX_NONE,
+     &'NO3crit =',
+     &' /* critical nitrate below which no denit (or remin) happens (mmo
+     &l N m-3) */')
+      CALL WRITE_0D_RL(PARmin,INDEX_NONE,
+     &'PARmin =',
+     &' /* minimum light for photosynthesis; for non-Geider: 1.0 (uEin/m
+     &2/s) */')
+      CALL WRITE_0D_RL(aphy_chl_ave,INDEX_NONE,
+     &'aphy_chl_ave =',
+     &' /* Chl-specific absorption coefficient (m2/mg Chl) */')
+      CALL WRITE_0D_RL(chl2nmax,INDEX_NONE,
+     &'chl2nmax =',
+     &' /* max Chl:N ratio for Chl synthesis following Moore 2002 (mg Ch
+     &l / mmol N) */')
+      CALL WRITE_0D_RL(synthcost,INDEX_NONE,
+     &'synthcost =',
+     &' /* cost of biosynthesis (mmol C / mmol N) */')
+      CALL WRITE_0D_RL(inhib_graz,INDEX_NONE,
+     &'inhib_graz =',
+     &' /* inverse decay scale for grazing inhibition ((mmol C m-3)-1) *
+     &/')
+      CALL WRITE_0D_RL(inhib_graz_exp,INDEX_NONE,
+     &'inhib_graz_exp =',
+     &' /* exponent for grazing inhibition (0 to turn off inhibition) */
+     &')
+      CALL WRITE_0D_RL(hillnumUptake,INDEX_NONE,
+     &'hillnumUptake =',
+     &' /* exponent for limiting quota uptake in nutrient uptake */')
+      CALL WRITE_0D_RL(hillnumGraz,INDEX_NONE,
+     &'hillnumGraz =',
+     &' /* exponent for limiting quota uptake in grazing */')
+      CALL WRITE_0D_RL(hollexp,INDEX_NONE,
+     &'hollexp =',
+     &' /* grazing exponential 1= "Holling 2", 2= "Holling 3" */')
+      CALL WRITE_0D_RL(phygrazmin,INDEX_NONE,
+     &'phygrazmin =',
+     &' /* minimum total prey conc for grazing to occur (mmol C m-3) */'
+     &)
+      CALL WRITE_0D_RL(pcoefO2,INDEX_NONE,
+     &'pcoefO2 =',
+     &' /* max O2-specific O2 uptake rate for aerobic bacteria (m3/mmol'
+     &' O2/s) */')
+      CALL WRITE_0D_RL(pmaxDIN,INDEX_NONE,
+     &'pmaxDIN =',
+     &' /* max DIN uptake rate for denitrifying bacteria (1/s) */')
+      CALL WRITE_0D_RL(ksatDIN,INDEX_NONE,
+     &'ksatDIN =',
+     &' /* half-saturation conc of dissolved inorganic nitrogen (mmol N'
+     &' m-3) */')
+      CALL WRITE_0D_RL(alpha_hydrol,INDEX_NONE,
+     &'alpha_hydrol =',
+     &' /* increase in POM needed due to hydrolysis */')
+      CALL WRITE_0D_RL(yod,INDEX_NONE,
+     &'yod =',
+     &' /* organic matter yield of aerobic bacteria */')
+      CALL WRITE_0D_RL(yoe,INDEX_NONE,
+     &'yoe =',
+     &' /* energy yield of aerobic bacteria */')
+      CALL WRITE_0D_RL(ynd,INDEX_NONE,
+     &'ynd =',
+     &' /* organic matter yield of denitrifying bacteria */')
+      CALL WRITE_0D_RL(yne,INDEX_NONE,
+     &'yne =',
+     &' /* energy yield of denitrifying bacteria */')
+      CALL WRITE_0D_RL(depthdenit,INDEX_NONE,
+     &'depthdenit =',
+     &' /* not implemented (depth for denitrification relaxation to star
+     &t) (m) */')
+#ifdef DARWIN_ALLOW_CDOM
+      CALL WRITE_0D_RL(fracCDOM,INDEX_NONE,
+     &'fracCDOM =',
+     &' /* fraction of remineralized POP contributing to CDOM */')
+      CALL WRITE_0D_RL(CDOMdegrd,INDEX_NONE,
+     &'CDOMdegrd =',
+     &' /* CDOM degradation rate (1/s) */')
+      CALL WRITE_0D_RL(CDOMbleach,INDEX_NONE,
+     &'CDOMbleach =',
+     &' /* CDOM bleaching rate (1/s) */')
+      CALL WRITE_0D_RL(PARCDOM,INDEX_NONE,
+     &'PARCDOM =',
+     &' /* PAR where CDOM bleaching becomes maximal (uEin/m2/s) */')
+# ifdef DARWIN_CDOM_UNITS_CARBON
+      CALL WRITE_0D_RL(R_NC_CDOM,INDEX_NONE,
+     &'R_NC_CDOM =',
+     &' /* CDOM N:C ratio (mmol N / mmol C) */')
+      CALL WRITE_0D_RL(R_FeC_CDOM,INDEX_NONE,
+     &'R_FeC_CDOM =',
+     &' /* CDOM Fe:C ratio (mmol Fe / mmol C) */')
+      CALL WRITE_0D_RL(R_PC_CDOM,INDEX_NONE,
+     &'R_PC_CDOM =',
+     &' /* CDOM P:C ratio (mmol P / mmol C) */')
+# else
+      CALL WRITE_0D_RL(R_NP_CDOM,INDEX_NONE,
+     &'R_NP_CDOM =',
+     &' /* CDOM N:P ratio (mmol N / mmol P) */')
+      CALL WRITE_0D_RL(R_FeP_CDOM,INDEX_NONE,
+     &'R_FeP_CDOM =',
+     &' /* CDOM Fe:P ratio (mmol Fe / mmol P) */')
+      CALL WRITE_0D_RL(R_CP_CDOM,INDEX_NONE,
+     &'R_CP_CDOM =',
+     &' /* CDOM C:P ratio (mmol C / mmol P) */')
+# endif
+      CALL WRITE_0D_RL(CDOMcoeff,INDEX_NONE,
+     &'CDOMcoeff =',
+     &' /* P-specific absorption coefficient of CDOM (m2 / mmol P) */')
+#endif /* DARWIN_ALLOW_CDOM */
+#ifdef ALLOW_RADTRANS
+#ifndef DARWIN_ALLOW_CDOM
+      CALL WRITE_0D_I(laCDOM,INDEX_NONE,
+     &'laCDOM =',
+     &' /* index of reference waveband for CDOM absorption spectrum */')
+#endif
+#endif
+      CALL WRITE_0D_I(kMinFeSed,INDEX_NONE,
+     &'kMinFeSed =',
+     &' /* minimum level index for iron sedimentation */')
+      CALL WRITE_0D_I(kMaxFeSed,INDEX_NONE,
+     &'kMaxFeSed =',
+     &' /* maximum level index for iron sedimentation */')
+      CALL WRITE_0D_I(kMinFeVent,INDEX_NONE,
+     &'kMinFeVent =',
+     &' /* minimum level index for hydrothermal vents */')
+
+C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+C--   Print traits from DARWIN_TRAITS.h
+
+      CALL WRITE_1D_I(isPhoto,nplank,INDEX_NONE,
+     &'isPhoto =',
+     &' /* 1: does photosynthesis, 0: not */')
+      CALL WRITE_1D_I(bactType,nplank,INDEX_NONE,
+     &'bactType =',
+     &' /* 1: particle associated, 2: free living bacteria, 0: not bacte
+     &ria */')
+      CALL WRITE_1D_I(isAerobic,nplank,INDEX_NONE,
+     &'isAerobic =',
+     &' /* 1: is aerobic bacteria (also set bactType), 0: not */')
+      CALL WRITE_1D_I(isDenit,nplank,INDEX_NONE,
+     &'isDenit =',
+     &' /* 1: is dentrifying bacteria (also set (bactType), 0: not */')
+      CALL WRITE_1D_I(hasSi,nplank,INDEX_NONE,
+     &'hasSi =',
+     &' /* 1: uses silica (Diatom), 0: not */')
+      CALL WRITE_1D_I(hasPIC,nplank,INDEX_NONE,
+     &'hasPIC =',
+     &' /* 1: calcifying, 0: set R_PICPOC to zero */')
+      CALL WRITE_1D_I(diazo,nplank,INDEX_NONE,
+     &'diazo =',
+     &' /* 1: use molecular instead of mineral nitrogen, 0: not */')
+      CALL WRITE_1D_I(useNH4,nplank,INDEX_NONE,
+     &'useNH4 =',
+     &' /* 1: can use ammonia, 0: not */')
+      CALL WRITE_1D_I(useNO2,nplank,INDEX_NONE,
+     &'useNO2 =',
+     &' /* 1: can use nitrite, 0: not */')
+      CALL WRITE_1D_I(useNO3,nplank,INDEX_NONE,
+     &'useNO3 =',
+     &' /* 1: can use nitrate, 0: not */')
+      CALL WRITE_1D_I(combNO,nplank,INDEX_NONE,
+     &'combNO =',
+     &' /* 1: combined nitrite/nitrate limitation, 0: not */')
+      CALL WRITE_1D_I(isPrey,nplank,INDEX_NONE,
+     &'isPrey =',
+     &' /* 1: can be grazed, 0: not */')
+      CALL WRITE_1D_I(isPred,nplank,INDEX_NONE,
+     &'isPred =',
+     &' /* 1: can graze, 0: not */')
+      CALL WRITE_1D_I(tempMort,nplank,INDEX_NONE,
+     &'tempMort =',
+     &' /* 1: mortality is temperature dependent, 0: turn dependence off
+     & */')
+      CALL WRITE_1D_I(tempMort2,nplank,INDEX_NONE,
+     &'tempMort2 =',
+     &' /* 1: quadratic mortality is temperature dependent, 0: turn depe
+     &ndence off */')
+      CALL WRITE_1D_I(tempGraz,nplank,INDEX_NONE,
+     &'tempGraz =',
+     &' /* 1: grazing is temperature dependent, 0: turn dependence off *
+     &/')
+      CALL WRITE_1D_RL(Xmin,nplank,INDEX_NONE,
+     &'Xmin =',
+     &' /* minimum abundance for mortality, respiration and exudation (m
+     &mol C m^-3) */')
+      CALL WRITE_1D_RL(amminhib,nplank,INDEX_NONE,
+     &'amminhib =',
+     &' /* coefficient for NH4 inhibition of NO uptake ((mmol N m^-3)^-1
+     &) */')
+      CALL WRITE_1D_RL(acclimtimescl,nplank,INDEX_NONE,
+     &'acclimtimescl =',
+     &' /* rate of chlorophyll acclimation (s^-1) */')
+      CALL WRITE_1D_RL(mort,nplank,INDEX_NONE,
+     &'mort =',
+     &' /* linear mortality rate (s^-1) */')
+      CALL WRITE_1D_RL(mort2,nplank,INDEX_NONE,
+     &'mort2 =',
+     &' /* quadratic mortality coefficient ((mmol C m^-3)^-1 s^-1) */')
+      CALL WRITE_1D_RL(ExportFracMort,nplank,INDEX_NONE,
+     &'ExportFracMort =',
+     &' /* fraction of linear mortality to POM */')
+      CALL WRITE_1D_RL(ExportFracMort2,nplank,INDEX_NONE,
+     &'ExportFracMort2 =',
+     &' /* fraction of quadratic mortality to POM */')
+      CALL WRITE_1D_RL(ExportFracExude,nplank,INDEX_NONE,
+     &'ExportFracExude =',
+     &' /* fraction of exudation to POM */')
+      CALL WRITE_1D_RL(FracExudeC,nplank,INDEX_NONE,
+     &'FracExudeC =',
+     &' /* fraction of excess C exuded */')
+      CALL WRITE_1D_RL(phytoTempCoeff,nplank,INDEX_NONE,
+     &'phytoTempCoeff =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 1 */')
+      CALL WRITE_1D_RL(phytoTempExp1,nplank,INDEX_NONE,
+     &'phytoTempExp1 =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 1 (exp(1/degrees C)) */')
+      CALL WRITE_1D_RL(phytoTempExp2,nplank,INDEX_NONE,
+     &'phytoTempExp2 =',
+     &' /* coefficient for DARWIN_TEMP_RANGE */')
+      CALL WRITE_1D_RL(phytoTempOptimum,nplank,INDEX_NONE,
+     &'phytoTempOptimum =',
+     &' /* coefficient for DARWIN_TEMP_RANGE (degrees C) */')
+      CALL WRITE_1D_RL(phytoDecayPower,nplank,INDEX_NONE,
+     &'phytoDecayPower =',
+     &' /* coefficient for DARWIN_TEMP_RANGE */')
+      CALL WRITE_1D_RL(phytoTempAe,nplank,INDEX_NONE,
+     &'phytoTempAe =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 (1/degrees C) */')
+      CALL WRITE_1D_RL(hetTempAe,nplank,INDEX_NONE,
+     &'hetTempAe =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 (1/degrees C) */')
+      CALL WRITE_1D_RL(hetTempExp2,nplank,INDEX_NONE,
+     &'hetTempExp2 =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 */')
+      CALL WRITE_1D_RL(hetTempOptimum,nplank,INDEX_NONE,
+     &'hetTempOptimum =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 (degrees C) */')
+      CALL WRITE_1D_RL(hetDecayPower,nplank,INDEX_NONE,
+     &'hetDecayPower =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 */')
+      CALL WRITE_1D_RL(grazTempAe,nplank,INDEX_NONE,
+     &'grazTempAe =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 (1/degrees C) */')
+      CALL WRITE_1D_RL(grazTempExp2,nplank,INDEX_NONE,
+     &'grazTempExp2 =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 */')
+      CALL WRITE_1D_RL(grazTempOptimum,nplank,INDEX_NONE,
+     &'grazTempOptimum =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 (degrees C) */')
+      CALL WRITE_1D_RL(grazDecayPower,nplank,INDEX_NONE,
+     &'grazDecayPower =',
+     &' /* coefficient for DARWIN_TEMP_VERSION 4 */')
+      CALL WRITE_1D_RL(R_NC,nplank,INDEX_NONE,
+     &'R_NC =',
+     &' /* nitrogen-carbon ratio (not used with DARWIN_ALLOW_NQUOTA) (mm
+     &ol N (mmol C)^-1) */')
+      CALL WRITE_1D_RL(R_PC,nplank,INDEX_NONE,
+     &'R_PC =',
+     &' /* phosphorus-carbon ratio (not used with DARWIN_ALLOW_PQUOTA) (
+     &mmol P (mmol C)^-1) */')
+      CALL WRITE_1D_RL(R_SiC,nplank,INDEX_NONE,
+     &'R_SiC =',
+     &' /* silica-carbon ratio (not used with DARWIN_ALLOW_SIQUOTA) (mmo
+     &l Si (mmol C)^-1) */')
+      CALL WRITE_1D_RL(R_FeC,nplank,INDEX_NONE,
+     &'R_FeC =',
+     &' /* iron-carbon ratio (not used with DARWIN_ALLOW_FEQUOTA) (mmol'
+     &' Fe (mmol C)^-1) */')
+      CALL WRITE_1D_RL(R_ChlC,nplank,INDEX_NONE,
+     &'R_ChlC =',
+     &' /* chlorophyll-carbon ratio (not used with DARWIN_ALLOW_CHLQUOTA
+     &) (mg Chl (mmol C)^-1) */')
+      CALL WRITE_1D_RL(R_PICPOC,nplank,INDEX_NONE,
+     &'R_PICPOC =',
+     &' /* inorganic-organic carbon ratio (mmol PIC (mmol POC)^-1) */')
+      CALL WRITE_1D_RL(biosink,nplank,INDEX_NONE,
+     &'biosink =',
+     &' /* sinking velocity (positive downwards) (m s^-1) */')
+      CALL WRITE_1D_RL(bioswim,nplank,INDEX_NONE,
+     &'bioswim =',
+     &' /* upward swimming velocity (positive upwards) (m s^-1) */')
+      CALL WRITE_1D_RL(respRate,nplank,INDEX_NONE,
+     &'respRate =',
+     &' /* respiration rate (s^-1) */')
+      CALL WRITE_1D_RL(PCmax,nplank,INDEX_NONE,
+     &'PCmax =',
+     &' /* maximum carbon-specific growth rate (s^-1) */')
+      CALL WRITE_1D_RL(Qnmax,nplank,INDEX_NONE,
+     &'Qnmax =',
+     &' /* maximum nitrogen quota (only with DARWIN_ALLOW_NQUOTA) (mmol'
+     &' N (mmol C)^-1) */')
+      CALL WRITE_1D_RL(Qnmin,nplank,INDEX_NONE,
+     &'Qnmin =',
+     &' /* minimum nitrogen quota (only with DARWIN_ALLOW_NQUOTA) (mmol'
+     &' N (mmol C)^-1) */')
+      CALL WRITE_1D_RL(Qpmax,nplank,INDEX_NONE,
+     &'Qpmax =',
+     &' /* maximum phosphorus quota (only with DARWIN_ALLOW_PQUOTA) (mmo
+     &l P (mmol C)^-1) */')
+      CALL WRITE_1D_RL(Qpmin,nplank,INDEX_NONE,
+     &'Qpmin =',
+     &' /* minimum phosphorus quota (only with DARWIN_ALLOW_PQUOTA) (mmo
+     &l P (mmol C)^-1) */')
+      CALL WRITE_1D_RL(Qsimax,nplank,INDEX_NONE,
+     &'Qsimax =',
+     &' /* maximum silica quota (only with DARWIN_ALLOW_SIQUOTA) (mmol S
+     &i (mmol C)^-1) */')
+      CALL WRITE_1D_RL(Qsimin,nplank,INDEX_NONE,
+     &'Qsimin =',
+     &' /* minimum silica quota (only with DARWIN_ALLOW_SIQUOTA) (mmol S
+     &i (mmol C)^-1) */')
+      CALL WRITE_1D_RL(Qfemax,nplank,INDEX_NONE,
+     &'Qfemax =',
+     &' /* maximum iron quota (only with DARWIN_ALLOW_FEQUOTA) (mmol Fe'
+     &' (mmol C)^-1) */')
+      CALL WRITE_1D_RL(Qfemin,nplank,INDEX_NONE,
+     &'Qfemin =',
+     &' /* minimum iron quota (only with DARWIN_ALLOW_FEQUOTA) (mmol Fe'
+     &' (mmol C)^-1) */')
+      CALL WRITE_1D_RL(VmaxNH4,nplank,INDEX_NONE,
+     &'VmaxNH4 =',
+     &' /* maximum ammonia uptake rate (only with DARWIN_ALLOW_NQUOTA) (
+     &mmol N (mmol C)^-1 s^-1) */')
+      CALL WRITE_1D_RL(VmaxNO2,nplank,INDEX_NONE,
+     &'VmaxNO2 =',
+     &' /* maximum nitrite uptake rate (only with DARWIN_ALLOW_NQUOTA) (
+     &mmol N (mmol C)^-1 s^-1) */')
+      CALL WRITE_1D_RL(VmaxNO3,nplank,INDEX_NONE,
+     &'VmaxNO3 =',
+     &' /* maximum nitrate uptake rate (only with DARWIN_ALLOW_NQUOTA) (
+     &mmol N (mmol C)^-1 s^-1) */')
+      CALL WRITE_1D_RL(VmaxN,nplank,INDEX_NONE,
+     &'VmaxN =',
+     &' /* maximum nitrogen uptake rate for diazotrophs (only with DARWI
+     &N_ALLOW_NQUOTA) (mmol N (mmol C)^-1 s^-1) */')
+      CALL WRITE_1D_RL(VmaxPO4,nplank,INDEX_NONE,
+     &'VmaxPO4 =',
+     &' /* maximum phosphate uptake rate (only with DARWIN_ALLOW_PQUOTA)
+     & (mmol P (mmol C)^-1 s^-1) */')
+      CALL WRITE_1D_RL(VmaxSiO2,nplank,INDEX_NONE,
+     &'VmaxSiO2 =',
+     &' /* maximum silica uptake rate (only with DARWIN_ALLOW_SIQUOTA) (
+     &mmol Si (mmol C)^-1 s^-1) */')
+      CALL WRITE_1D_RL(VmaxFeT,nplank,INDEX_NONE,
+     &'VmaxFeT =',
+     &' /* maximum iron uptake rate (only with DARWIN_ALLOW_FEQUOTA) (mm
+     &ol Fe (mmol C)^-1 s^-1) */')
+      CALL WRITE_1D_RL(ksatNH4,nplank,INDEX_NONE,
+     &'ksatNH4 =',
+     &' /* half-saturation conc. for ammonia uptake/limitation (mmol N m
+     &^-3) */')
+      CALL WRITE_1D_RL(ksatNO2,nplank,INDEX_NONE,
+     &'ksatNO2 =',
+     &' /* half-saturation conc. for nitrite uptake/limitation (mmol N m
+     &^-3) */')
+      CALL WRITE_1D_RL(ksatNO3,nplank,INDEX_NONE,
+     &'ksatNO3 =',
+     &' /* half-saturation conc. for nitrate uptake/limitation (mmol N m
+     &^-3) */')
+      CALL WRITE_1D_RL(ksatPO4,nplank,INDEX_NONE,
+     &'ksatPO4 =',
+     &' /* half-saturation conc. for phosphate uptake/limitation (mmol P
+     & m^-3) */')
+      CALL WRITE_1D_RL(ksatSiO2,nplank,INDEX_NONE,
+     &'ksatSiO2 =',
+     &' /* half-saturation conc. for silica uptake/limitation (mmol Si m
+     &^-3) */')
+      CALL WRITE_1D_RL(ksatFeT,nplank,INDEX_NONE,
+     &'ksatFeT =',
+     &' /* half-saturation conc. for iron uptake/limitation (mmol Fe m^-
+     &3) */')
+      CALL WRITE_1D_RL(kexcc,nplank,INDEX_NONE,
+     &'kexcc =',
+     &' /* exudation rate for carbon (s^-1) */')
+      CALL WRITE_1D_RL(kexcn,nplank,INDEX_NONE,
+     &'kexcn =',
+     &' /* exudation rate for nitrogen (s^-1) */')
+      CALL WRITE_1D_RL(kexcp,nplank,INDEX_NONE,
+     &'kexcp =',
+     &' /* exudation rate for phosphorus (s^-1) */')
+      CALL WRITE_1D_RL(kexcsi,nplank,INDEX_NONE,
+     &'kexcsi =',
+     &' /* exudation rate for silica (s^-1) */')
+      CALL WRITE_1D_RL(kexcfe,nplank,INDEX_NONE,
+     &'kexcfe =',
+     &' /* exudation rate for iron (s^-1) */')
+#ifdef DARWIN_ALLOW_GEIDER
+      CALL WRITE_1D_RL(inhibGeider,nplank,INDEX_NONE,
+     &'inhibGeider =',
+     &' /* photo-inhibition coefficient for Geider growth */')
+#else
+      CALL WRITE_1D_RL(ksatPAR,nplank,INDEX_NONE,
+     &'ksatPAR =',
+     &' /* saturation coefficient for PAR (w/o GEIDER) ((uEin m^-2 s^-1)
+     &^-1) */')
+      CALL WRITE_1D_RL(kinhPAR,nplank,INDEX_NONE,
+     &'kinhPAR =',
+     &' /* inhibition coefficient for PAR (w/o GEIDER) ((uEin m^-2 s^-1)
+     &^-1) */')
+#endif
+      CALL WRITE_1D_RL(mQyield,nplank,INDEX_NONE,
+     &'mQyield =',
+     &' /* maximum quantum yield (mmol C (uEin)^-1) */')
+      CALL WRITE_1D_RL(chl2cmax,nplank,INDEX_NONE,
+     &'chl2cmax =',
+     &' /* maximum Chlorophyll-carbon ratio (mg Chl (mmol C)^-1) */')
+      CALL WRITE_1D_RL(grazemax,nplank,INDEX_NONE,
+     &'grazemax =',
+     &' /* maximum grazing rate (s^-1) */')
+      CALL WRITE_1D_RL(kgrazesat,nplank,INDEX_NONE,
+     &'kgrazesat =',
+     &' /* grazing half-saturation concentration (mmol C m^-3) */')
+      DO l=1,nplank
+      WRITE(msgBuf,'(A,I4,A)')'palat(:,', l, ') ='
+      CALL WRITE_1D_RL(palat(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* palatability matrix */')
+      ENDDO
+      DO l=1,nplank
+      WRITE(msgBuf,'(A,I4,A)')'asseff(:,', l, ') ='
+      CALL WRITE_1D_RL(asseff(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* assimilation efficiency matrix */')
+      ENDDO
+      DO l=1,nplank
+      WRITE(msgBuf,'(A,I4,A)')'ExportFracPreyPred(:,', l, ') ='
+      CALL WRITE_1D_RL(ExportFracPreyPred(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* fraction of unassimilated prey becoming particulate organic m
+     &atter */')
+      ENDDO
+      CALL WRITE_1D_RL(yield,nplank,INDEX_NONE,
+     &'yield =',
+     &' /* bacterial growth yield for all organic matter */')
+      CALL WRITE_1D_RL(yieldO2,nplank,INDEX_NONE,
+     &'yieldO2 =',
+     &' /* bacterial growth yield for oxygen */')
+      CALL WRITE_1D_RL(yieldNO3,nplank,INDEX_NONE,
+     &'yieldNO3 =',
+     &' /* bacterial growth yield for nitrate */')
+      CALL WRITE_1D_RL(ksatPON,nplank,INDEX_NONE,
+     &'ksatPON =',
+     &' /* half-saturation of PON for bacterial growth (mmol N m^-3) */'
+     &)
+      CALL WRITE_1D_RL(ksatPOC,nplank,INDEX_NONE,
+     &'ksatPOC =',
+     &' /* half-saturation of POC for bacterial growth (mmol C m^-3) */'
+     &)
+      CALL WRITE_1D_RL(ksatPOP,nplank,INDEX_NONE,
+     &'ksatPOP =',
+     &' /* half-saturation of POP for bacterial growth (mmol P m^-3) */'
+     &)
+      CALL WRITE_1D_RL(ksatPOFe,nplank,INDEX_NONE,
+     &'ksatPOFe =',
+     &' /* half-saturation of POFe for bacterial growth (mmol Fe m^-3) *
+     &/')
+      CALL WRITE_1D_RL(ksatDON,nplank,INDEX_NONE,
+     &'ksatDON =',
+     &' /* half-saturation of DON for bacterial growth (mmol N m^-3) */'
+     &)
+      CALL WRITE_1D_RL(ksatDOC,nplank,INDEX_NONE,
+     &'ksatDOC =',
+     &' /* half-saturation of DOC for bacterial growth (mmol C m^-3) */'
+     &)
+      CALL WRITE_1D_RL(ksatDOP,nplank,INDEX_NONE,
+     &'ksatDOP =',
+     &' /* half-saturation of DOP for bacterial growth (mmol P m^-3) */'
+     &)
+      CALL WRITE_1D_RL(ksatDOFe,nplank,INDEX_NONE,
+     &'ksatDOFe =',
+     &' /* half-saturation of DOFe for bacterial growth (mmol Fe m^-3) *
+     &/')
+#ifndef DARWIN_RANDOM_TRAITS
+      CALL WRITE_1D_I(group,nplank,INDEX_NONE,
+     &'group =',
+     &' /* which group this type belongs to */')
+      CALL WRITE_1D_I(igroup,nplank,INDEX_NONE,
+     &'igroup =',
+     &' /* index within group */')
+      CALL WRITE_1D_RL(biovol,nplank,INDEX_NONE,
+     &'biovol =',
+     &' /* volume (um^3) */')
+      CALL WRITE_1D_RL(qcarbon,nplank,INDEX_NONE,
+     &'qcarbon =',
+     &' /* cellular carbon content (mmol C/cell) */')
+#endif
+#ifdef ALLOW_RADTRANS
+      CALL WRITE_1D_I(aptype,nplank,INDEX_NONE,
+     &'aptype =',
+     &' /* optical type (for absorption/scattering spectra) */')
+#endif
+#ifndef DARWIN_ALLOW_GEIDER
+      CALL WRITE_1D_RL(normI,nplank,INDEX_NONE,
+     &'normI =',
+     &' /* normalization factor for non-Geider light curve */')
+#endif
+      CALL WRITE_1D_RL(alpha_mean,nplank,INDEX_NONE,
+     &'alpha_mean =',
+     &' /* mean initial slope of light curve (over wavebands) (mmol C s-
+     &1 (uEin m^-2 s^-1)^-1 (mg Chl)^-1) */')
+      CALL WRITE_1D_RL(chl2cmin,nplank,INDEX_NONE,
+     &'chl2cmin =',
+     &' /* minimum Chl:C ratio (function of chl2cmax and alpha_mean) (mg
+     & Chl (mmol C)^-1) */')
+
+C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+C--   Print parameters and traits from DARWIN_RADTRANS.h
+
+#ifdef ALLOW_RADTRANS
+      CALL WRITE_0D_L(darwin_allomSpectra,INDEX_NONE,
+     &'darwin_allomSpectra =',
+     &' /* enable/disable allometric scaling of plankton absorption and'
+     &' scattering spectra */')
+      CALL WRITE_0D_C(darwin_waterAbsorbFile,-1,INDEX_NONE,
+     &'darwin_waterAbsorbFile =',
+     &' /* filename for reading water absorption and scattering spectra'
+     &' */')
+      CALL WRITE_0D_C(darwin_phytoAbsorbFile,-1,INDEX_NONE,
+     &'darwin_phytoAbsorbFile =',
+     &' /* filename for reading plankton absorption and scattering spect
+     &ra */')
+      CALL WRITE_0D_C(darwin_particleAbsorbFile,-1,INDEX_NONE,
+     &'darwin_particleAbsorbFile =',
+     &' /* filename for reading particle absorption and scattering spect
+     &ra */')
+      CALL WRITE_0D_RL(darwin_part_size_P,INDEX_NONE,
+     &'darwin_part_size_P =',
+     &' /* conversion factor for particle absorption and scattering spec
+     &tra (mmol P/particle) */')
+      CALL WRITE_0D_RL(darwin_bbmin,INDEX_NONE,
+     &'darwin_bbmin =',
+     &' /* minimum backscattering ratio (1/m) */')
+      CALL WRITE_0D_RL(darwin_bbw,INDEX_NONE,
+     &'darwin_bbw =',
+     &' /* backscattering ratio of water */')
+      CALL WRITE_0D_RL(darwin_lambda_aCDOM,INDEX_NONE,
+     &'darwin_lambda_aCDOM =',
+     &' /* reference wavelength for CDOM absorption spectra (nm) */')
+      CALL WRITE_0D_RL(darwin_Sdom,INDEX_NONE,
+     &'darwin_Sdom =',
+     &' /* coefficient for CDOM absorption spectra (1/nm) */')
+      CALL WRITE_0D_RL(darwin_aCDOM_fac,INDEX_NONE,
+     &'darwin_aCDOM_fac =',
+     &' /* factor for computing aCDOM from water+Chlorophyll absorption'
+     &' */')
+      CALL WRITE_0D_RL(darwin_rCDOM,INDEX_NONE,
+     &'darwin_rCDOM =',
+     &' /* recalcitrant CDOM concentration (mmol P/m3) */')
+      CALL WRITE_0D_RL(darwin_RPOC,INDEX_NONE,
+     &'darwin_RPOC =',
+     &' /* recalcitrant POC concentration (mmol C/m3) */')
+      CALL WRITE_0D_RL(darwin_aCarCell,INDEX_NONE,
+     &'darwin_aCarCell =',
+     &' /* coefficient coefficient for scaling plankton spectra (mg C/ce
+     &ll) */')
+      CALL WRITE_0D_RL(darwin_bCarCell,INDEX_NONE,
+     &'darwin_bCarCell =',
+     &' /* coefficient coefficient for scaling plankton spectra */')
+      CALL WRITE_0D_RL(darwin_absorpSlope,INDEX_NONE,
+     &'darwin_absorpSlope =',
+     &' /* slope for scaled absorption spectra */')
+      CALL WRITE_0D_RL(darwin_bbbSlope,INDEX_NONE,
+     &'darwin_bbbSlope =',
+     &' /* slope for scaled backscattering ratio spectra */')
+      CALL WRITE_1D_RL(darwin_scatSwitchSizeLog,nlam,INDEX_NONE,
+     &'darwin_scatSwitchSizeLog =',
+     &' /* log of size for switching slopes (log10(um)) */')
+      CALL WRITE_1D_RL(darwin_scatSlopeSmall,nlam,INDEX_NONE,
+     &'darwin_scatSlopeSmall =',
+     &' /* slope for small plankton */')
+      CALL WRITE_1D_RL(darwin_scatSlopeLarge,nlam,INDEX_NONE,
+     &'darwin_scatSlopeLarge =',
+     &' /* slope for large plankton */')
+      CALL WRITE_1D_RL(aw,nlam,INDEX_NONE,
+     &'aw =',
+     &' /* absorption coefficient for water */')
+      CALL WRITE_1D_RL(bw,nlam,INDEX_NONE,
+     &'bw =',
+     &' /* total scattering coefficient for water */')
+      CALL WRITE_1D_RL(apart_P,nlam,INDEX_NONE,
+     &'apart_P =',
+     &' /* P-specific absorption coefficient for detritus */')
+      CALL WRITE_1D_RL(bpart_P,nlam,INDEX_NONE,
+     &'bpart_P =',
+     &' /* P-specific total scattering coefficient for detritus */')
+      CALL WRITE_1D_RL(bbpart_P,nlam,INDEX_NONE,
+     &'bbpart_P =',
+     &' /* P-specific backscattering coefficient for detritus */')
+      CALL WRITE_1D_RL(exCDOM,nlam,INDEX_NONE,
+     &'exCDOM =',
+     &' /* wavelength-dependent part of CDOM absorption spectrum */')
+      DO l=1,nlam
+      WRITE(msgBuf,'(A,I4,A)')'aphy_chl(:,', l, ') ='
+      CALL WRITE_1D_RL(aphy_chl(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* phytoplankton Chl-specific absorption coefficient (m^2 (mg Ch
+     &l)^-1) */')
+      ENDDO
+      DO l=1,nlam
+      WRITE(msgBuf,'(A,I4,A)')'aphy_chl_ps(:,', l, ') ='
+      CALL WRITE_1D_RL(aphy_chl_ps(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* part of aphy_chl that is used in photosynthesis (m^2 (mg Chl)
+     &^-1) */')
+      ENDDO
+      DO l=1,nlam
+      WRITE(msgBuf,'(A,I4,A)')'aphy_mgC(:,', l, ') ='
+      CALL WRITE_1D_RL(aphy_mgC(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* plankton carbon-specific absorption coefficient (m^2 (mg C)^-
+     &1) */')
+      ENDDO
+      DO l=1,nlam
+      WRITE(msgBuf,'(A,I4,A)')'bphy_mgC(:,', l, ') ='
+      CALL WRITE_1D_RL(bphy_mgC(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* carbon-specific total scattering coefficient (m^2 (mg C)^-1)'
+     &' */')
+      ENDDO
+      DO l=1,nlam
+      WRITE(msgBuf,'(A,I4,A)')'bbphy_mgC(:,', l, ') ='
+      CALL WRITE_1D_RL(bbphy_mgC(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* carbon-specific backscattering coefficient (m^2 (mg C)^-1) */
+     &')
+      ENDDO
+#endif /* ALLOW_RADTRANS */
+      DO l=1,nlam
+      WRITE(msgBuf,'(A,I4,A)')'alphachl(:,', l, ') ='
+      CALL WRITE_1D_RL(alphachl(1,l),nplank,INDEX_NONE,
+     &msgBuf,
+     &' /* Chlorophyll-specific initial slope for photosynthesis */')
+      ENDDO
+
+C ======================================================================
 C log tracer names together with what they should be
       WRITE(msgBuf,'(A)')
      &      'DARWIN_CHECK: iPtr darwin       PTRACERS_names'
@@ -578,7 +2931,120 @@ CCOG]]]
 #endif
 CCOG[[[end]]] (checksum: 2ffb0a14db96e0f1c12dcae823cbac3a)
 
-      _END_MASTER(myThid)
+C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+C     Log plankton types with ptracer indices
+
+#ifndef DARWIN_RANDOM_TRAITS
+      WRITE(msgBuf,'(A)') 'DARWIN_CHECK:'
+      CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                   SQUEEZE_RIGHT,myThid)
+      WRITE(msgBuf,'(A,A4,X,A4,X,A24,X,A4,X,A32)')
+     &      'DARWIN_CHECK: ','iPtr','iPlk','ESD','grp','grp_name'
+      CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                   SQUEEZE_RIGHT,myThid)
+      DO j = 1, ec+1-ic
+        iPtr = ic + j - 1
+        dm = (6 _d 0*biovol(j))**(1 _d 0/3 _d 0)
+        g = group(j)
+        gname = grp_names(g)
+        WRITE(msgBuf,'(A,I4,X,I4,X,E24.16,X,I4,X,A32)')
+     &        'DARWIN_CHECK: ', iPtr, j, dm, g, gname
+        CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                     SQUEEZE_RIGHT,myThid)
+      ENDDO
+#endif
+
+C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+C     Find and log debugging location
+
+#ifdef DARWIN_DEBUG
+      DO np = 1, nPx*nPy
+        DO bj=1,nSy
+         DO bi=1,nSx
+           iGjLoc = 0
+           jGjLoc = 1
+#ifdef ALLOW_USE_MPI
+           iBase = mpi_myXGlobalLo(np)-1 + (bi-1)*sNx
+           jBase = mpi_myYGlobalLo(np)-1 + (bj-1)*sNy
+#else
+           iBase = myXGlobalLo-1 + (bi-1)*sNx
+           jBase = myYGlobalLo-1 + (bj-1)*sNy
+#endif
+#ifdef ALLOW_EXCH2
+           IF ( W2_useE2ioLayOut ) THEN
+             tN = W2_procTileList(bi,bj,np)
+             iBase = exch2_txGlobalo(tN)-1
+             jBase = exch2_tyGlobalo(tN)-1
+             IF   ( exch2_mydNx(tN) .GT. exch2_global_Nx ) THEN
+C-           face x-size larger than glob-size : fold it
+               iGjLoc = 0
+               jGjLoc = exch2_mydNx(tN) / exch2_global_Nx
+             ELSEIF ( exch2_tNy(tN) .GT. exch2_global_Ny ) THEN
+C-           tile y-size larger than glob-size : make a long line
+               iGjLoc = exch2_mydNx(tN)
+               jGjLoc = 0
+             ELSE
+C-           default (face fit into global-IO-array)
+               iGjLoc = 0
+               jGjLoc = 1
+             ENDIF
+           ENDIF
+#endif /* ALLOW_EXCH2 */
+           DO j=1,sNy
+             iG = iBase + (j-1)*iGjLoc
+             jG = jBase + (j-1)*jGjLoc + 1
+             DO i=1,sNx
+              IF (iG+i.EQ.iDEBUG.AND.jG.EQ.jDEBUG) THEN
+                CALL PRINT_MESSAGE(' ',standardMessageUnit,
+     &                             SQUEEZE_RIGHT,myThid)
+                WRITE(msgBuf,'(A,2I10)')'DARWIN_DEBUG: iG jG',
+     &                                  iDEBUG,jDEBUG
+                CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                             SQUEEZE_RIGHT,myThid)
+                WRITE(msgBuf,'(A,I10)')'DARWIN_DEBUG: proc ',np-1
+                CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                             SQUEEZE_RIGHT,myThid)
+                WRITE(msgBuf,'(A,2I10)')'DARWIN_DEBUG: bi bj',bi,bj
+                CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                             SQUEEZE_RIGHT,myThid)
+                WRITE(msgBuf,'(A,2I10)')'DARWIN_DEBUG: i j  ',i,j
+                CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                             SQUEEZE_RIGHT,myThid)
+                WRITE(msgBuf,'(A,2I10)')'DARWIN_DEBUG: iBase jBase',
+     &                                  iBase,jBase
+                CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                             SQUEEZE_RIGHT,myThid)
+                bufl(1) = XC(i,j,bi,bj)
+                bufl(2) = YC(i,j,bi,bj)
+                bufl(3) = R_low(i,j,bi,bj)
+                CALL GATHER_VEC_R8(bufg, bufl, 3, myThid)
+#ifdef ALLOW_USE_MPI
+                IF( mpiMyId .EQ. 0 ) THEN
+#else
+                IF( .TRUE. ) THEN
+#endif
+                  WRITE(msgBuf,'(A,2E24.16)')'DARWIN_DEBUG: XC YC',
+     &                                       bufg(1,np), bufg(2,np)
+                  CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                               SQUEEZE_RIGHT,myThid)
+                  WRITE(msgBuf,'(A,E24.16)')'DARWIN_DEBUG: R_low',
+     &                                      bufg(3,np)
+                  CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                               SQUEEZE_RIGHT,myThid)
+                ENDIF
+              ENDIF
+C            enddo i
+             ENDDO
+C          enddo j
+           ENDDO
+C       enddo bi,bj
+         ENDDO
+        ENDDO
+C     enddo np
+      ENDDO
+#endif /* ALLOW_DEBUG */
+
+      _END_MASTER( myThid )
 
 #endif /* ALLOW_DARWIN */
 

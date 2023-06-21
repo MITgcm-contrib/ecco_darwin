@@ -18,7 +18,7 @@ cd ecco_darwin/regions/mac_delta/llc270/biogeochem_setup/carroll_2020_ecosystem/
 mkdir build run
 cd build
 export MPI_INC_DIR=path_toward_MPI_files
-ln -s ../../setup_files/code_darwin/packages.conf ../../code
+ln -s ../../setup_files/code_darwin/packages.conf ../../setup_files/code
 ../tools/genmake2 -mpi -mo '../../setup_files/code_darwin ../../setup_files/code'
 make depend
 make -j 16

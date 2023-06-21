@@ -15,18 +15,21 @@ C Requires: DARWIN_SIZE.h
 
 C--   COMMON/darwin_forcing_params_l/ darwin parameters related to forcing
 C     darwin_chlInitBalanced :: Initialize Chlorophyll to a balanced value following Geider
-C     darwin_haveSurfPAR     ::
+C     darwin_haveSurfPAR     :: whether PAR forcing fields/constant were given
+C     darwin_haveVentHe3     :: whether hydrothermal vent forcing was given
 C     darwin_useSEAICE       :: whether to use ice area from seaice pkg
 C     darwin_useQsw          :: whether to use model shortwave radiation
 C     darwin_useEXFwind      :: whether to use wind speed from exf package
       COMMON/darwin_forcing_params_l/
      &    darwin_chlInitBalanced,
      &    darwin_haveSurfPAR,
+     &    darwin_haveVentHe3,
      &    darwin_useSEAICE,
      &    darwin_useQsw,
      &    darwin_useEXFwind
       LOGICAL darwin_chlInitBalanced
       LOGICAL darwin_haveSurfPAR
+      LOGICAL darwin_haveVentHe3
       LOGICAL darwin_useSEAICE
       LOGICAL darwin_useQsw
       LOGICAL darwin_useEXFwind
@@ -112,6 +115,74 @@ C     oC0 :: Coefficient for determining saturation O2
       _RL oB2
       _RL oB3
       _RL oC0
+
+# ifdef DARWIN_ALLOW_RADI
+C--   COMMON /DARWIN_SED_CONSTANTS_R/ Coefficients for sediment model
+C     sed_a1 :: coefficient for sediment model
+C     sed_b1 :: coefficient for sediment model
+C     sed_c1 :: coefficient for sediment model
+C     sed_d1 :: coefficient for sediment model
+C     sed_a2 :: coefficient for sediment model
+C     sed_b2 :: coefficient for sediment model
+C     sed_c2 :: coefficient for sediment model
+C     sed_d2 :: coefficient for sediment model
+C     sed_a3 :: coefficient for sediment model
+C     sed_b3 :: coefficient for sediment model
+C     sed_c3 :: coefficient for sediment model
+C     sed_d3 :: coefficient for sediment model
+C     sed_a4 :: coefficient for sediment model
+C     sed_b4 :: coefficient for sediment model
+C     sed_c4 :: coefficient for sediment model
+C     sed_d4 :: coefficient for sediment model
+C     sed_a5 :: coefficient for sediment model
+C     sed_b5 :: coefficient for sediment model
+C     sed_c5 :: coefficient for sediment model
+C     sed_d5 :: coefficient for sediment model
+C     sed_c :: coefficient for sediment model
+      COMMON /DARWIN_SED_CONSTANTS_R/
+     &    sed_a1,
+     &    sed_b1,
+     &    sed_c1,
+     &    sed_d1,
+     &    sed_a2,
+     &    sed_b2,
+     &    sed_c2,
+     &    sed_d2,
+     &    sed_a3,
+     &    sed_b3,
+     &    sed_c3,
+     &    sed_d3,
+     &    sed_a4,
+     &    sed_b4,
+     &    sed_c4,
+     &    sed_d4,
+     &    sed_a5,
+     &    sed_b5,
+     &    sed_c5,
+     &    sed_d5,
+     &    sed_c
+      _RL sed_a1
+      _RL sed_b1
+      _RL sed_c1
+      _RL sed_d1
+      _RL sed_a2
+      _RL sed_b2
+      _RL sed_c2
+      _RL sed_d2
+      _RL sed_a3
+      _RL sed_b3
+      _RL sed_c3
+      _RL sed_d3
+      _RL sed_a4
+      _RL sed_b4
+      _RL sed_c4
+      _RL sed_d4
+      _RL sed_a5
+      _RL sed_b5
+      _RL sed_c5
+      _RL sed_d5
+      _RL sed_c
+# endif
 #endif
 
 C     COMMON /DARWIN_PARAMS_c/ General parameters (same for all plankton)
@@ -121,7 +192,6 @@ C     darwin_pickupSuff :: pickup suffix for darwin; set to ' ' to disable readi
 C     darwin_strict_check  :: stop instead of issuing warnings
 C     darwin_linFSConserve :: correct non-conservation due to linear free surface (globally)
 C     darwin_read_phos     :: initial conditions for plankton biomass are in mmol P/m3
-C     DARWIN_useQsw        :: use Qsw for light; if .FALSE., use DARWIN_INSOL
 C--   COMMON /DARWIN_PARAMS_l/ General parameters (same for all plankton)
       COMMON /DARWIN_PARAMS_l/
      &    darwin_strict_check,
@@ -136,12 +206,18 @@ C     darwin_seed :: seed for random number generator (for DARWIN_RANDOM_TRAITS)
 C     iDEBUG      :: index in x dimension for debug prints
 C     jDEBUG      :: index in y dimension for debug prints
 C     kDEBUG      :: index in z dimension for debug prints
+C     DARWIN_disscSelect   :: Switch for PIC dissolution rate formulation
+C                          :: 0: fixed dissolution rate Kdissc
+C                          :: 1: Keir 1980 power law
+C                          :: 2: Naviaux et al. 2019
       COMMON /DARWIN_PARAMS_i/
      &    darwin_seed,
+     &    darwin_disscSelect,
      &    iDEBUG,
      &    jDEBUG,
      &    kDEBUG
       INTEGER darwin_seed
+      INTEGER darwin_disscSelect
       INTEGER iDEBUG
       INTEGER jDEBUG
       INTEGER kDEBUG
@@ -162,72 +238,81 @@ C     mort2TempAe       :: [1/K]            temperature coefficient for quadr. m
 C     uptakeTempAe      :: [1/K]            temperature coefficient for uptake (TEMP_VERSION 4)
 C
 C- Iron parameters
-C     alpfe             :: []                 solubility of Fe dust
-C     scav              :: [1/s]              fixed iron scavenging rate
-C     ligand_tot        :: [mol/m3]           total ligand concentration
-C     ligand_stab       :: [m3/mol]           ligand stability rate ratio
-C     freefemax         :: [mol/m3]           max concentration of free iron
-C     scav_rat          :: [1/s]              rate of POM-based iron scavenging
-C     scav_inter        :: []                 intercept of scavenging power law
-C     scav_exp          :: []                 exponent of scavenging power law
-C     scav_R_POPPOC     :: [mmol P / mmol C]  POP:POC ratio for DARWIN_PART_SCAV_POP
-C     depthfesed        :: [m]                depth above which to add sediment source (was -1000)
-C     fesedflux         :: [mmol Fe /m2/s]    fixed iron flux from sediment
-C     fesedflux_pcm     :: [mmol Fe / mmol C] iron input per POC sinking into bottom for DARWIN_IRON_SED_SOURCE_VARIABLE
-C     fesedflux_min     :: [mmol Fe /s]       min iron input rate subtracted from fesedflux_pcm*wc_sink*POC
-C     R_CP_fesed        :: [mmol C / mmol P]  POC:POP conversion for DARWIN_IRON_SED_SOURCE_POP
+C     alpfe             :: []                  solubility of Fe dust
+C     scav              :: [1/s]               fixed iron scavenging rate (#undef DARWIN_PART_SCAV)
+C     ligand_tot        :: [mol/m3]            total ligand concentration
+C     ligand_stab       :: [m3/mol]            ligand stability rate ratio
+C     freefemax         :: [mol/m3]            max concentration of free iron
+C     scav_tau          :: [1]                 factor to go from Th scavenging rate to iron
+C     scav_inter        :: [L^e mg^-e s^-1]    intercept of scavenging power law (e=scav_exp)
+C     scav_exp          :: [1]                 exponent of scavenging power law
+C     scav_POC_wgt      :: [g / mmol C]        weight POC contributes to POM for scavenging
+C     scav_POSi_wgt     :: [g / mmol Si]       weight POSi contributes to POM for scavenging
+C     scav_PIC_wgt      :: [g / mmol C]        weight PIC contributes to POM for scavenging
+C     scav_rat          :: [1]                 factor Th to iron for DARWIN_PART_SCAV_POP
+C     scav_R_POPPOC     :: [mmol P / g C]      POP:POC ratio for DARWIN_PART_SCAV_POP
+C     depthfesed        :: [m]                 depth above which to add sediment source (was -1000)
+C     fesedflux         :: [mmol Fe /m2/s]     fixed iron flux from sediment
+C     fesedflux_pcm     :: [mmol Fe / mmol C]  iron input per POC sinking into bottom for DARWIN_IRON_SED_SOURCE_VARIABLE
+C     fesedflux_min     :: [mmol Fe /s]        min iron input rate subtracted from fesedflux_pcm*wc_sink*POC
+C     R_CP_fesed        :: [mmol C / mmol P]   POC:POP conversion for DARWIN_IRON_SED_SOURCE_POP
+C     depthFeVent       :: [m]                 depth below which iron from hydrothermal vents is added
+C     solFeVent         :: []                  solubility of iron from hydrothermal vents
+C     R_FeHe3_vent      :: [mmol Fe / mmol He3]  Fe:He3 ratio for hydrothermal vents
 C
-C     Knita             :: [1/s]              ammonia oxidation rate
-C     Knitb             :: [1/s]              nitrite oxidation rate
-C     PAR_oxi           :: [uEin/m2/s]        critical light level after which oxidation starts
+C     Knita             :: [1/s]               ammonia oxidation rate
+C     Knitb             :: [1/s]               nitrite oxidation rate
+C     PAR_oxi           :: [uEin/m2/s]         critical light level after which oxidation starts
 C
-C     Kdoc              :: [1/s] DOC remineralization rate
-C     Krdop              :: [1/s] rDOC remineralization rate
-C     Kdop              :: [1/s] DON remineralization rate
-C     Kdon              :: [1/s] DOP remineralization rate
-C     KdoFe             :: [1/s] DOFe remineralization rate
-C     KPOC              :: [1/s] POC remineralization rate
-C     KPON              :: [1/s] PON remineralization rate
-C     KPOP              :: [1/s] POP remineralization rate
-C     KPOFe             :: [1/s] POFe remineralization rate
-C     KPOSi             :: [1/s] POSi remineralization rate
+C     Kdoc              :: [1/s]  DOC remineralization rate
+C     Krdoc             :: [1/s]  rDOC remineralization rate
+C     Kdop              :: [1/s]  DON remineralization rate
+C     Kdon              :: [1/s]  DOP remineralization rate
+C     KdoFe             :: [1/s]  DOFe remineralization rate
+C     KPOC              :: [1/s]  POC remineralization rate
+C     KPON              :: [1/s]  PON remineralization rate
+C     KPOP              :: [1/s]  POP remineralization rate
+C     KPOFe             :: [1/s]  POFe remineralization rate
+C     KPOSi             :: [1/s]  POSi remineralization rate
 C
-C     wC_sink           :: [m/s] sinking velocity for POC
-C     wN_sink           :: [m/s] sinking velocity for PON
-C     wP_sink           :: [m/s] sinking velocity for POP
-C     wFe_sink          :: [m/s] sinking velocity for POFe
-C     wSi_sink          :: [m/s] sinking velocity for POSi
-C     wPIC_sink         :: [m/s] sinking velocity for PIC
-C     Kdissc            :: [1/s] dissolution rate for PIC
+C     wC_sink           :: [m/s]  sinking velocity for POC
+C     wN_sink           :: [m/s]  sinking velocity for PON
+C     wP_sink           :: [m/s]  sinking velocity for POP
+C     wFe_sink          :: [m/s]  sinking velocity for POFe
+C     wSi_sink          :: [m/s]  sinking velocity for POSi
+C     wPIC_sink         :: [m/s]  sinking velocity for PIC
+C     darwin_KeirCoeff  :: [1/s]  Keir PIC dissolution rate coefficient
+C     darwin_KeirExp    :: [1]    Keir PIC dissolution rate exponent
+C     Kdissc            :: [1/s]  dissolution rate for PIC
 C
 C- Carbon chemistry parameters
-C     R_OP              :: [mmol O2 / mmol P] O:P ratio for respiration and consumption
-C     R_OC              :: [mmol O2 / mmol C] NOT USED
-C     m3perkg           :: [m3/kg]        constant for converting per kg to per m^3
-C     surfSaltMinInit   :: [ppt]          limits for carbon solver input at initialization
-C     surfSaltMaxInit   :: [ppt]          ...
-C     surfTempMinInit   :: [degrees C]
-C     surfTempMaxInit   :: [degrees C]
-C     surfDICMinInit    :: [mmol C m^-3]
-C     surfDICMaxInit    :: [mmol C m^-3]
-C     surfALKMinInit    :: [meq m^-3]
-C     surfALKMaxInit    :: [meq m^-3]
-C     surfPO4MinInit    :: [mmol P m^-3]
-C     surfPO4MaxInit    :: [mmol P m^-3]
-C     surfSiMinInit     :: [mmol Si m^-3]
-C     surfSiMaxInit     :: [mmol Si m^-3]
-C     surfSaltMin       :: [ppt]           limits for carbon solver input during run
-C     surfSaltMax       :: [ppt]           ...
-C     surfTempMin       :: [degrees C]
-C     surfTempMax       :: [degrees C]
-C     surfDICMin        :: [mmol C m^-3]
-C     surfDICMax        :: [mmol C m^-3]
-C     surfALKMin        :: [meq m^-3]
-C     surfALKMax        :: [meq m^-3]
-C     surfPO4Min        :: [mmol P m^-3]
-C     surfPO4Max        :: [mmol P m^-3]
-C     surfSiMin         :: [mmol Si m^-3]
-C     surfSiMax         :: [mmol Si m^-3]
+C     R_OP              :: [mmol O2 / mmol P]  O:P ratio for respiration and consumption
+C     R_OC              :: [mmol O2 / mmol C]  NOT USED
+C     m3perkg           :: [m3/kg]         constant for converting per kg to per m^3
+C     surfSaltMinInit   :: [ppt]           minimum salt for carbon solver at initialization
+C     surfSaltMaxInit   :: [ppt]           maximum salt for carbon solver at initialization
+C     surfTempMinInit   :: [degrees C]     minimum temp for carbon solver at initialization
+C     surfTempMaxInit   :: [degrees C]     maximum temp for carbon solver at initialization
+C     surfDICMinInit    :: [mmol C m^-3]   minimum DIC for carbon solver at initialization
+C     surfDICMaxInit    :: [mmol C m^-3]   maximum DIC for carbon solver at initialization
+C     surfALKMinInit    :: [meq m^-3]      minimum alkalinity for carbon solver at initialization
+C     surfALKMaxInit    :: [meq m^-3]      maximum alkalinity for carbon solver at initialization
+C     surfPO4MinInit    :: [mmol P m^-3]   minimum PO4 for carbon solver at initialization
+C     surfPO4MaxInit    :: [mmol P m^-3]   maximum PO4 for carbon solver at initialization
+C     surfSiMinInit     :: [mmol Si m^-3]  minimum SiO2 for carbon solver at initialization
+C     surfSiMaxInit     :: [mmol Si m^-3]  maximum SiO2 for carbon solver at initialization
+C     surfSaltMin       :: [ppt]           minimum salt for carbon solver during run
+C     surfSaltMax       :: [ppt]           maximum salt for carbon solver during run
+C     surfTempMin       :: [degrees C]     minimum temp for carbon solver during run
+C     surfTempMax       :: [degrees C]     maximum temp for carbon solver during run
+C     surfDICMin        :: [mmol C m^-3]   minimum DIC for carbon solver during run
+C     surfDICMax        :: [mmol C m^-3]   maximum DIC for carbon solver during run
+C     surfALKMin        :: [meq m^-3]      minimum alkalinity for carbon solver during run
+C     surfALKMax        :: [meq m^-3]      maximum alkalinity for carbon solver during run
+C     surfPO4Min        :: [mmol P m^-3]   minimum PO4 for carbon solver during run
+C     surfPO4Max        :: [mmol P m^-3]   maximum PO4 for carbon solver during run
+C     surfSiMin         :: [mmol Si m^-3]  minimum SiO2 for carbon solver during run
+C     surfSiMax         :: [mmol Si m^-3]  maximum SiO2 for carbon solver during run
 C
 C     diaz_ini_fac      :: reduce tracer concentrations by this factor on initialization
 C
@@ -281,19 +366,32 @@ C     depthdenit        :: [m]             not implemented (depth for denitrific
      &    mort2TempAe,
      &    uptakeTempAe,
      &    alpfe,
-     &    scav,
      &    ligand_tot,
      &    ligand_stab,
      &    freefemax,
+#ifdef DARWIN_PART_SCAV_POP
      &    scav_rat,
      &    scav_inter,
      &    scav_exp,
      &    scav_R_POPPOC,
+#elif defined(DARWIN_PART_SCAV)
+     &    scav_tau,
+     &    scav_inter,
+     &    scav_exp,
+     &    scav_POC_wgt,
+     &    scav_POSi_wgt,
+     &    scav_PIC_wgt,
+#else
+     &    scav,
+#endif
      &    depthfesed,
      &    fesedflux,
      &    fesedflux_pcm,
      &    fesedflux_min,
      &    R_CP_fesed,
+     &    depthFeVent,
+     &    solFeVent,
+     &    R_FeHe3_vent,
      &    Knita,
      &    Knitb,
      &    PAR_oxi,
@@ -314,6 +412,8 @@ C     depthdenit        :: [m]             not implemented (depth for denitrific
      &    wSi_sink,
      &    wPIC_sink,
      &    Kdissc,
+     &    DARWIN_KeirCoeff,
+     &    DARWIN_KeirExp,
 #ifdef DARWIN_ALLOW_CARBON
      &    R_OP,
      &    R_OC,
@@ -386,19 +486,32 @@ C     &    yono2,
       _RL mort2TempAe
       _RL uptakeTempAe
       _RL alpfe
-      _RL scav
       _RL ligand_tot
       _RL ligand_stab
       _RL freefemax
+#ifdef DARWIN_PART_SCAV_POP
       _RL scav_rat
       _RL scav_inter
       _RL scav_exp
       _RL scav_R_POPPOC
+#elif defined(DARWIN_PART_SCAV)
+      _RL scav_tau
+      _RL scav_inter
+      _RL scav_exp
+      _RL scav_POC_wgt
+      _RL scav_POSi_wgt
+      _RL scav_PIC_wgt
+#else
+      _RL scav
+#endif
       _RL depthfesed
       _RL fesedflux
       _RL fesedflux_pcm
       _RL fesedflux_min
       _RL R_CP_fesed
+      _RL depthFeVent
+      _RL solFeVent
+      _RL R_FeHe3_vent
       _RL Knita
       _RL Knitb
       _RL PAR_oxi
@@ -419,6 +532,8 @@ C     &    yono2,
       _RL wSi_sink
       _RL wPIC_sink
       _RL Kdissc
+      _RL DARWIN_KeirCoeff
+      _RL DARWIN_KeirExp
 #ifdef DARWIN_ALLOW_CARBON
       _RL R_OP
       _RL R_OC
@@ -479,6 +594,46 @@ C      _RL yno2
 C      _RL yono2
       _RL depthdenit
 
+#ifdef DARWIN_SOLVESAPHE
+C If using Solvesaphe routines (Munhoven, 2013) then in addition,
+C  selectBTconst :: estimates borate concentration from salinity:
+C     =1 :: use default formulation of Uppström (1974)(same as S/R CARBON_COEFFS)
+C     =2 :: use new formulation from Lee et al (2010)
+C
+C  selectFTconst :: estimates fluoride concentration from salinity:
+C     =1 :: use default formulation of Riley (1965) (same as S/R CARBON_COEFFS)
+C     =2 :: use new formulation from Culkin (1965)
+C
+C  selectHFconst :: sets the first dissociation constant for hydrogen fluoride:
+C     =1 :: use default  Dickson and Riley (1979) (same as S/R CARBON_COEFFS)
+C     =2 :: use new formulation of Perez and Fraga (1987)
+C
+C  selectK1K2const :: sets the 1rst & 2nd dissociation constants of carbonic acid:
+C     =1 :: use default formulation of Millero (1995) with data
+C            from Mehrbach et al. (1973) (same as S/R CARBON_COEFFS)
+C     =2 :: use formulation of Roy et al. (1993)
+C     =3 :: use "combination" formulation of Millero (1995)
+C     =4 :: use formulation of Luecker et al. (2000)
+C     =5 :: use formulation of Millero (2010, Mar. Fresh Wat. Res.)
+C     =6 :: use formulation of Waters, Millero, Woosley (2014, Mar. Chem.)
+C  selectPHsolver :: sets the pH solver to use:
+C     =1 :: use the GENERAL solver ;  =2 :: use SEC solver ;
+C     =3 :: use FAST solver routine.
+
+       COMMON /DARWIN_SOLVESAPHE_I/
+     &                     at_maxniter,
+     &                     selectBTconst,selectFTconst,
+     &                     selectHFconst,selectK1K2const,
+     &                     selectPHsolver
+
+      INTEGER at_maxniter
+      INTEGER selectBTconst
+      INTEGER selectFTconst
+      INTEGER selectHFconst
+      INTEGER selectK1K2const
+      INTEGER selectPHsolver
+#endif /* DARWIN_SOLVESAPHE */
+
 #ifdef DARWIN_ALLOW_CDOM
 C--   COMMON /DARWIN_CDOM_PARAMS_r/
 C     fracCDOM   :: []                  fraction of remineralized POP contributing to CDOM
@@ -527,9 +682,10 @@ C                                       (with #undef DARWIN_CDOM_UNITS_CARBON)
 #endif
 
 C--   COMMON /DARWIN_DEPENDENT_PARAMS_i/
-C     laCDOM    :: index of reference waveband for CDOM absorption spectrum
-C     kMinFeSed :: minimum level index for iron sedimentation
-C     kMaxFeSed :: maximum level index for iron sedimentation
+C     laCDOM     :: index of reference waveband for CDOM absorption spectrum
+C     kMinFeSed  :: minimum level index for iron sedimentation
+C     kMaxFeSed  :: maximum level index for iron sedimentation
+C     kMinFeVent :: minimum level index for hydrothermal vents
       COMMON /DARWIN_DEPENDENT_PARAMS_i/
      &    darwin_dependent_i_dummy,
 #ifdef ALLOW_RADTRANS
@@ -539,7 +695,8 @@ C     kMaxFeSed :: maximum level index for iron sedimentation
 #endif
 #endif
      &    kMinFeSed,
-     &    kMaxFeSed
+     &    kMaxFeSed,
+     &    kMinFeVent
       INTEGER darwin_dependent_i_dummy
 #ifdef ALLOW_RADTRANS
 #ifdef DARWIN_ALLOW_CDOM
@@ -549,6 +706,7 @@ C     kMaxFeSed :: maximum level index for iron sedimentation
 #endif
       INTEGER kMinFeSed
       INTEGER kMaxFeSed
+      INTEGER kMinFeVent
 
 
 #endif /* ALLOW_DARWIN */

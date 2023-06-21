@@ -41,7 +41,18 @@ C enable air-sea carbon exchange and Alk and O2 tracers
 #define  DARWIN_ALLOW_CARBON
 
 C consistently use the total pH scale for carbon chemistry coefficients
-#undef  DARWIN_TOTALPHSCALE
+#define  DARWIN_TOTALPHSCALE
+
+C Compile Munhoven (2013) "Solvesaphe" package for pH/pCO2
+C  can still select Follows et al (2006) solver in data.darwin,
+C  but will use solvesaphe dissociation coefficient options.
+#define  DARWIN_SOLVESAPHE
+
+C this needs to be defined for coupling to atmospheric model:
+#undef  DARWIN_USE_PLOAD
+
+C enable RADI sediment model
+#undef  DARWIN_ALLOW_RADI
 
 
 C optional bits
@@ -78,13 +89,13 @@ C (ignored when radtrans package is used)
 #undef  DARWIN_AVPAR
 
 C enable GEIDER light code
-#define DARWIN_ALLOW_GEIDER
+#define  DARWIN_ALLOW_GEIDER
 
 C use rho instead of acclimated Chl:C for chlorophyll synthesis
 #undef  DARWIN_GEIDER_RHO_SYNTH
 
 C initialize chl as in darwin2 (with radtrans package)
-#define DARWIN_CHL_INIT_LEGACY
+#define  DARWIN_CHL_INIT_LEGACY
 
 C scattering coefficients are per Chlorophyll (with radtrans package)
 #undef  DARWIN_SCATTER_CHL
@@ -123,13 +134,16 @@ C restrict maximum free iron
 #define DARWIN_MINFE
 
 C enable particle scavenging code
-#define DARWIN_PART_SCAV
+#define  DARWIN_PART_SCAV
 
 C enable variable iron sediment source
-#define DARWIN_IRON_SED_SOURCE_VARIABLE
+#define  DARWIN_IRON_SED_SOURCE_VARIABLE
 
 C revert to old variable iron sediment source in terms of POP
 #undef  DARWIN_IRON_SED_SOURCE_POP
+
+C add iron source from hydrothermal vents
+#undef  DARWIN_ALLOW_HYDROTHERMAL_VENTS
 
 
 C diagnostics
@@ -150,25 +164,25 @@ C value for unused traits
 #define DARWIN_UNUSED 0
 
 C fill diagnostics for most tendency terms
-#define DARWIN_DIAG_TENDENCIES
+#define  DARWIN_DIAG_TENDENCIES
 
 
 C deprecated
 
 C base particle scavenging on POP as in darwin2
-#define DARWIN_PART_SCAV_POP
+#define  DARWIN_PART_SCAV_POP
 
 
 C random trait generation
 
 C assign traits based on random numbers as in darwin2
-#define DARWIN_RANDOM_TRAITS
+#define  DARWIN_RANDOM_TRAITS
 
 C set traits for darwin2 2-species setup (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_TWO_SPECIES_SETUP
 
 C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
-#define DARWIN_NINE_SPECIES_SETUP
+#define  DARWIN_NINE_SPECIES_SETUP
 
 C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ

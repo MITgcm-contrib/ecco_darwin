@@ -19,7 +19,7 @@
  rDOCrunoffstartdate2 = 120000,
  rDOCrunoffperiod     = 86400.0,
 #
- CDOMrunofffile = 'tDOCcdom/tDOCcdom_runoff_mac270',
+ CDOMrunofffile = 'tDOCc/tDOCc_runoff_mac270',
  CDOMrunoffstartdate1 = 19920101,
  CDOMrunoffstartdate2 = 120000,
  CDOMrunoffperiod     = 86400.0,
@@ -28,7 +28,11 @@
  DICrunoffstartdate1 = 19920101,
  DICrunoffstartdate2 = 120000,
  DICrunoffperiod     = 86400.0,
- R_ALK_DIC_runoff    = 0.93,
+#
+ ALKrunofffile = 'tAlk/tAlk_runoff_mac270',
+ ALKrunoffstartdate1 = 19920101,
+ ALKrunoffstartdate2 = 120000,
+ ALKrunoffperiod     = 86400.0
 #
  DONrunofffile = 'tDON/tDON_runoff_mac270',
  DONrunoffstartdate1 = 19920101,
@@ -55,6 +59,7 @@
  rDOCrunoff_interpMethod = 0,
  CDOMrunoff_interpMethod = 0,
  DICrunoff_interpMethod = 0,
+ ALKrunoff_interpMethod = 0,
  DONrunoff_interpMethod = 0,
  DOPrunoff_interpMethod = 0,
  DSirunoff_interpMethod = 0,
@@ -73,13 +78,14 @@
 # do not read darwin pickup
  darwin_pickupSuff= ' ',
  darwin_chlInitBalanced= .FALSE.,
- darwin_chlIter0= 1,
+ darwin_chlIter0= 420768,
  darwin_seed= 56,
+ selectPHsolver=1,
  alpfe= 0.92831,
  freefemax = .1E-4,
  depthfesed= 7000.,
  scav_rat= 6.02502315E-7,
- kdoc=  3.168808781402895E-8,   ! 1/90days
+ kdoc=  3.168808781402895E-7,   ! 1/90days
  krdoc= 3.168808781402895E-9,   ! 1/10years
  kdop=  2.314814814814815E-7,   ! 1/50day
  kdon=  2.314814814814815E-7,   ! 1/50day
@@ -95,9 +101,9 @@
 ########################
  &DARWIN_CDOM_PARAMS
  fracCDOM = 0.02,
- cdomdegrd  = 3.168808781402895e-8,  ! 1/90days
- CDOMbleach = 7.716049382716049e-07, ! 1/15days
- PARCDOM = 20.,
+ cdomdegrd  = 7.716049382716049E-7, ! 1/15days
+ CDOMbleach = 1.929012345679012E-6, ! 1/6days
+ PARCDOM = 60.,
  /
 ########################
  &DARWIN_RANDOM_PARAMS

@@ -121,6 +121,9 @@ C       Print some statistics about input forcing fields
         CALL MON_WRITESTATS_RL( 1, atmospCO2, 'atmospCO2',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
+        CALL MON_WRITESTATS_RL( 1, ventHe3, 'ventHe3',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
         CALL MON_WRITESTATS_RL( 1, DOCrunoff, 'DOCrunoff',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
@@ -136,10 +139,28 @@ C       Print some statistics about input forcing fields
         CALL MON_WRITESTATS_RL( 1, DOPrunoff, 'DOPrunoff',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
+        CALL MON_WRITESTATS_RL( 1, DINrunoff, 'DINrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, IPrunoff, 'IPrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
         CALL MON_WRITESTATS_RL( 1, DSirunoff, 'DSirunoff',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
+        CALL MON_WRITESTATS_RL( 1, POCrunoff, 'POCrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, POPrunoff, 'POPrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, PONrunoff, 'PONrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
         CALL MON_WRITESTATS_RL( 1, DICrunoff, 'DICrunoff',
+     &           maskInC, maskInC, rA , drF, dummyRL, myThid )
+
+        CALL MON_WRITESTATS_RL( 1, ALKrunoff, 'ALKrunoff',
      &           maskInC, maskInC, rA , drF, dummyRL, myThid )
 
         IF ( MASTER_CPU_IO(myThid) ) THEN

@@ -52,7 +52,7 @@ c#define ALLOW_SMOOTH_CORREL2D
 C  o impose bounds on controls
 #define ALLOW_ADCTRLBOUND
 
-C   o rotate u/v vector control to zonal/meridional
+C   o rotate u/v vector control to zonal/meridional 
 C   components
 #define ALLOW_ROTATE_UV_CONTROLS
 
@@ -60,3 +60,4 @@ C   ==================================================================
 #endif /* ndef ECCO_CPPOPTIONS_H */
 #endif /* ALLOW_CTRL */
 #endif /* CTRL_OPTIONS_H */
+
