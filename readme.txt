@@ -4,11 +4,13 @@ git clone git@github.com:MITgcm-contrib/ecco_darwin.git
 Simulations:
 
 --regions--
+  --CCS--
+    /llc270: California Current System llc270 cut-out for kelp model development
   --mac_delta--
     /llc270: mackenzie delta llc270 cut-out
     /llc4320: mackenzie delta llc4320 cut-out
   --totten--
-    /llc1080: totten lon lat  
+    /llc1080: totten lon lat
 
 --v02--
   /cs510_brix: optimized solution described in Brix et al. (2015)
