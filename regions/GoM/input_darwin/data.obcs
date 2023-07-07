@@ -1,0 +1,169 @@
+# Open-boundaries
+ &OBCS_PARM01
+#
+ OBCSfixTopo =.FALSE.,
+#
+ OB_Jnorth =   960*-1,
+ OB_Jsouth =   960*1,
+ OB_Ieast  =   960*-1,
+#
+ useOBCSsponge = .TRUE.,
+ OBCSsponge_UatNS =.FALSE.
+ OBCSsponge_VatEW =.FALSE.
+#
+ useOBCSbalance = .TRUE.,
+ OBCSbalanceSurf = .TRUE.,
+#
+ useOBCSprescribe = .TRUE.,
+#
+ OBNuFile = 'obcs/L1_BC_north_UVEL',
+ OBEuFile = 'obcs/L1_BC_east_UVEL',
+ OBSuFile = 'obcs/L1_BC_south_UVEL',
+#
+ OBNvFile = 'obcs/L1_BC_north_VVEL',
+ OBEvFile = 'obcs/L1_BC_east_VVEL',
+ OBSvFile = 'obcs/L1_BC_south_VVEL',
+#
+ OBNtFile = 'obcs/L1_BC_north_THETA',
+ OBEtFile = 'obcs/L1_BC_east_THETA',
+ OBStFile = 'obcs/L1_BC_south_THETA',
+#
+ OBNsFile = 'obcs/L1_BC_north_SALT',
+ OBEsFile = 'obcs/L1_BC_east_SALT',
+ OBSsFile = 'obcs/L1_BC_south_SALT',
+#
+ OBNptrFile(1) = 'obcs/L1_BC_north_PTRACE01',
+ OBEptrFile(1) = 'obcs/L1_BC_east_PTRACE01',
+ OBSptrFile(1) = 'obcs/L1_BC_south_PTRACE01',
+#
+ OBNptrFile(2) = 'obcs/L1_BC_north_PTRACE02',
+ OBEptrFile(2) = 'obcs/L1_BC_east_PTRACE02',
+ OBSptrFile(2) = 'obcs/L1_BC_south_PTRACE02',
+#
+ OBNptrFile(3) = 'obcs/L1_BC_north_PTRACE03',
+ OBEptrFile(3) = 'obcs/L1_BC_east_PTRACE03',
+ OBSptrFile(3) = 'obcs/L1_BC_south_PTRACE03',
+#
+ OBNptrFile(4) = 'obcs/L1_BC_north_PTRACE04',
+ OBEptrFile(4) = 'obcs/L1_BC_east_PTRACE04',
+ OBSptrFile(4) = 'obcs/L1_BC_south_PTRACE04',
+#
+ OBNptrFile(5) = 'obcs/L1_BC_north_PTRACE05',
+ OBEptrFile(5) = 'obcs/L1_BC_east_PTRACE05',
+ OBSptrFile(5) = 'obcs/L1_BC_south_PTRACE05',
+#
+ OBNptrFile(6) = 'obcs/L1_BC_north_PTRACE06',
+ OBEptrFile(6) = 'obcs/L1_BC_east_PTRACE06',
+ OBSptrFile(6) = 'obcs/L1_BC_south_PTRACE06',
+#
+ OBNptrFile(7) = 'obcs/L1_BC_north_PTRACE07',
+ OBEptrFile(7) = 'obcs/L1_BC_east_PTRACE07',
+ OBSptrFile(7) = 'obcs/L1_BC_south_PTRACE07',
+#
+ OBNptrFile(8) = 'obcs/L1_BC_north_PTRACE08',
+ OBEptrFile(8) = 'obcs/L1_BC_east_PTRACE08',
+ OBSptrFile(8) = 'obcs/L1_BC_south_PTRACE08',
+#
+ OBNptrFile(9) = 'obcs/L1_BC_north_PTRACE09',
+ OBEptrFile(9) = 'obcs/L1_BC_east_PTRACE09',
+ OBSptrFile(9) = 'obcs/L1_BC_south_PTRACE09',
+#
+ OBNptrFile(10) = 'obcs/L1_BC_north_PTRACE10',
+ OBEptrFile(10) = 'obcs/L1_BC_east_PTRACE10',
+ OBSptrFile(10) = 'obcs/L1_BC_south_PTRACE10',
+#
+ OBNptrFile(11) = 'obcs/L1_BC_north_PTRACE11',
+ OBEptrFile(11) = 'obcs/L1_BC_east_PTRACE11',
+ OBSptrFile(11) = 'obcs/L1_BC_south_PTRACE11',
+#
+ OBNptrFile(12) = 'obcs/L1_BC_north_PTRACE12',
+ OBEptrFile(12) = 'obcs/L1_BC_east_PTRACE12',
+ OBSptrFile(12) = 'obcs/L1_BC_south_PTRACE12',
+#
+ OBNptrFile(13) = 'obcs/L1_BC_north_PTRACE13',
+ OBEptrFile(13) = 'obcs/L1_BC_east_PTRACE13',
+ OBSptrFile(13) = 'obcs/L1_BC_south_PTRACE13',
+#
+ OBNptrFile(14) = 'obcs/L1_BC_north_PTRACE14',
+ OBEptrFile(14) = 'obcs/L1_BC_east_PTRACE14',
+ OBSptrFile(14) = 'obcs/L1_BC_south_PTRACE14',
+#
+ OBNptrFile(15) = 'obcs/L1_BC_north_PTRACE15',
+ OBEptrFile(15) = 'obcs/L1_BC_east_PTRACE15',
+ OBSptrFile(15) = 'obcs/L1_BC_south_PTRACE15',
+#
+ OBNptrFile(16) = 'obcs/L1_BC_north_PTRACE16',
+ OBEptrFile(16) = 'obcs/L1_BC_east_PTRACE16',
+ OBSptrFile(16) = 'obcs/L1_BC_south_PTRACE16',
+#
+ OBNptrFile(17) = 'obcs/L1_BC_north_PTRACE17',
+ OBEptrFile(17) = 'obcs/L1_BC_east_PTRACE17',
+ OBSptrFile(17) = 'obcs/L1_BC_south_PTRACE17',
+#
+ OBNptrFile(18) = 'obcs/L1_BC_north_PTRACE18',
+ OBEptrFile(18) = 'obcs/L1_BC_east_PTRACE18',
+ OBSptrFile(18) = 'obcs/L1_BC_south_PTRACE18',
+#
+ OBNptrFile(19) = 'obcs/L1_BC_north_PTRACE19',
+ OBEptrFile(19) = 'obcs/L1_BC_east_PTRACE19',
+ OBSptrFile(19) = 'obcs/L1_BC_south_PTRACE19',
+#
+ OBNptrFile(20) = 'obcs/L1_BC_north_PTRACE20',
+ OBEptrFile(20) = 'obcs/L1_BC_east_PTRACE20',
+ OBSptrFile(20) = 'obcs/L1_BC_south_PTRACE20',
+#
+ OBNptrFile(21) = 'obcs/L1_BC_north_PTRACE21',
+ OBEptrFile(21) = 'obcs/L1_BC_east_PTRACE21',
+ OBSptrFile(21) = 'obcs/L1_BC_south_PTRACE21',
+#
+ OBNptrFile(22) = 'obcs/L1_BC_north_PTRACE22',
+ OBEptrFile(22) = 'obcs/L1_BC_east_PTRACE22',
+ OBSptrFile(22) = 'obcs/L1_BC_south_PTRACE22',
+#
+ OBNptrFile(23) = 'obcs/L1_BC_north_PTRACE23',
+ OBEptrFile(23) = 'obcs/L1_BC_east_PTRACE23',
+ OBSptrFile(23) = 'obcs/L1_BC_south_PTRACE23',
+#
+ OBNptrFile(24) = 'obcs/L1_BC_north_PTRACE24',
+ OBEptrFile(24) = 'obcs/L1_BC_east_PTRACE24',
+ OBSptrFile(24) = 'obcs/L1_BC_south_PTRACE24',
+#
+ OBNptrFile(25) = 'obcs/L1_BC_north_PTRACE25',
+ OBEptrFile(25) = 'obcs/L1_BC_east_PTRACE25',
+ OBSptrFile(25) = 'obcs/L1_BC_south_PTRACE25',
+#
+ OBNptrFile(26) = 'obcs/L1_BC_north_PTRACE26',
+ OBEptrFile(26) = 'obcs/L1_BC_east_PTRACE26',
+ OBSptrFile(26) = 'obcs/L1_BC_south_PTRACE26',
+#
+ OBNptrFile(27) = 'obcs/L1_BC_north_PTRACE27',
+ OBEptrFile(27) = 'obcs/L1_BC_east_PTRACE27',
+ OBSptrFile(27) = 'obcs/L1_BC_south_PTRACE27',
+#
+ OBNptrFile(28) = 'obcs/L1_BC_north_PTRACE28',
+ OBEptrFile(28) = 'obcs/L1_BC_east_PTRACE28',
+ OBSptrFile(28) = 'obcs/L1_BC_south_PTRACE28',
+#
+ OBNptrFile(29) = 'obcs/L1_BC_north_PTRACE29',
+ OBEptrFile(29) = 'obcs/L1_BC_east_PTRACE29',
+ OBSptrFile(29) = 'obcs/L1_BC_south_PTRACE29',
+#
+ OBNptrFile(30) = 'obcs/L1_BC_north_PTRACE30',
+ OBEptrFile(30) = 'obcs/L1_BC_east_PTRACE30',
+ OBSptrFile(30) = 'obcs/L1_BC_south_PTRACE30',
+#
+ OBNptrFile(31) = 'obcs/L1_BC_north_PTRACE31',
+ OBEptrFile(31) = 'obcs/L1_BC_east_PTRACE31',
+ OBSptrFile(31) = 'obcs/L1_BC_south_PTRACE31',
+ &
+
+ &OBCS_PARM02
+ &
+
+ &OBCS_PARM03
+ spongeThickness = 10,
+ Urelaxobcsinner = 1296000.E0,
+ Vrelaxobcsinner = 1296000.E0,
+ Urelaxobcsbound=43200.E0,
+ Vrelaxobcsbound=43200.E0,
+ &

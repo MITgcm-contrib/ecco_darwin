@@ -1,0 +1,99 @@
+# *********************
+# External Forcing Data
+# *********************
+
+ &EXF_NML_01
+ useAtmWind        = .TRUE.,
+#
+ exf_albedo        = 0.1,
+ useExfZenIncoming = .TRUE., 
+ select_ZenAlbedo  = 1,
+#
+ ocean_emissivity = 0.97,
+ ice_emissivity = 0.95,
+ snow_emissivity = 0.95,
+#
+ exf_iprec         = 32,
+ exf_yftype        = 'RL',
+ useExfYearlyFields= .TRUE.,
+ useExfCheckRange  = .FALSE.,
+ /
+
+ &EXF_NML_02
+ uwindfile       = 'exf/L1_exf_UWIND',
+ vwindfile       = 'exf/L1_exf_VWIND',
+ atempfile         = 'exf/L1_exf_ATEMP',
+ aqhfile           = 'exf/L1_exf_AQH',
+ precipfile        = 'exf/L1_exf_PRECIP',
+ swdownfile        = 'exf/L1_exf_SWDOWN',
+ lwdownfile        = 'exf/L1_exf_LWDOWN',
+ runofffile        = 'exf/L1_exf_RUNOFF',
+#
+ atempstartdate1   = 19920101,
+ atempstartdate2   = 030000,
+ atempperiod       = 21600.0,
+#
+ aqhstartdate1     = 19920101,
+ aqhstartdate2     = 030000,
+ aqhperiod         = 21600.0,
+#
+ precipstartdate1  = 19920101,
+ precipstartdate2  = 030000,
+ precipperiod      = 21600.0,
+#
+ runoffstartdate1  = 19920101,
+ runoffstartdate2  = 030000,
+ runoffperiod      = 21600.0,
+#
+ uwindstartdate1   = 19920101,
+ uwindstartdate2   = 030000,
+ uwindperiod       = 21600.0,
+#
+ vwindstartdate1   = 19920101,
+ vwindstartdate2   = 030000,
+ vwindperiod       = 21600.0,
+#
+ swdownstartdate1  = 19920101,
+ swdownstartdate2  = 030000,
+ swdownperiod      = 21600.0,
+#
+ lwdownstartdate1  = 19920101,
+ lwdownstartdate2  = 030000,
+ lwdownperiod      = 21600.0,
+#
+ /
+
+
+ &EXF_NML_03
+ /
+
+ &EXF_NML_04
+ aqh_interpMethod = 0,
+ atemp_interpMethod = 0,
+ precip_interpMethod = 0,
+ runoff_interpMethod = 0,
+ uwind_interpMethod = 0,
+ vwind_interpMethod = 0,
+ swdown_interpMethod = 0,
+ lwdown_interpMethod = 0,
+#
+ 
+ /
+
+ &EXF_NML_OBCS
+#
+ obcsEstartdate1     = 19920101,
+ obcsEstartdate2     = 120000,
+ obcsEperiod         = 86400.0,
+#
+ obcsSstartdate1     = 19920101,
+ obcsSstartdate2     = 120000,
+ obcsSperiod         = 86400.0,
+#
+ obcsNstartdate1     = 19920101,
+ obcsNstartdate2     = 120000,
+ obcsNperiod         = 86400.0,
+#
+ useOBCSYearlyFields = .TRUE.,
+#
+ &
