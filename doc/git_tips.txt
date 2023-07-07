@@ -1,0 +1,21 @@
+# To get the ECCO-Darwin repository:
+ git clone git@github.com:MITgcm-contrib/ecco_darwin.git
+
+# To update local repository:
+ git pull
+
+# To add file <file_name> to github repository:
+ git pull
+ git add <file_name>
+ git commit
+ git push
+
+# To check if you need to pull changes from somebody else:
+ git remote update
+ git status
+
+# A convenient git revision tree visualizer:
+ sudo apt-get install gitk
+
+# See history of current branch with tags:
+ git log --decorate=full

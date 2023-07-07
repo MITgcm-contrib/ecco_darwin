@@ -3,6 +3,8 @@ git clone git@github.com:MITgcm-contrib/ecco_darwin.git
 
 Simulations:
 
+--doc-- contains some documentation files, including tag-index
+
 --regions--
   --CCS--
     /llc270: California Current System llc270 cut-out for kelp model development
@@ -51,7 +53,7 @@ When updating ECCO-Darwin code/setup, or anything that may impact ECCO-Darwin:
 2.) Test updated ECCO-Darwin from scratch by checking out fresh MITgcm code, 
 and following the instructions line-by-line in the readme.txt file(s). 
 
-3.) Once test is successful, add a full description of changes to MITgcm_contrib/ecco_darwin/tag-index. 
+3.) Once test is successful, add a full description of changes to MITgcm_contrib/ecco_darwin/doc/tag-index. 
 Include the date and list all specific changes.
 
 Example: 
