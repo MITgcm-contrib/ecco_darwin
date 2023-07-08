@@ -1,0 +1,26 @@
+#!/bin/csh
+#PBS -l select=45:ncpus=20:model=ivy
+
+#PBS -l walltime=120:00:00
+#PBS -q long
+
+##PBS -l walltime=2:00:00
+##PBS -q debug
+
+##PBS -j oe
+#PBS -m abe
+
+module purge
+module load comp-intel mpi-hpe hdf4 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module list
+
+#PBS -N mac_delta
+#PBS -o output
+#PBS -e error
+
+umask 027
+cd $PBS_O_WORKDIR
+limit stacksize unlimited
+#./modpickup
+mpiexec -np 882 ./mitgcmuv
+

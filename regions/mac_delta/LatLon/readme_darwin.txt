@@ -1,6 +1,6 @@
 #=========
 #
-# Guld of Mexico regional setup based on LLC4320 grid + LLC270/ECCO-Darwin IC/BC
+# Mackenzie Delta regional setup based on LatLon w/ Darwin
 #
 #=========
 
@@ -27,7 +27,7 @@ module purge
 module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
 MOD="../../ecco_darwin/regions/GoM"
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
- -mo '../../ecco_darwin/regions/GoM/code_darwin ../../ecco_darwin/regions/GoM/code' -mpi
+ -mo '../../ecco_darwin/regions/mac_delta/code_darwin ../../ecco_darwin/regions/mac_delta/code' -mpi
 
 make depend
 make -j 16
@@ -37,13 +37,13 @@ make -j 16
 
 cd ../run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackup/hzhang1/pub/GoM_960/new/run_template/* .
+ln -sf /nobackup/hzhang1/pub/Mac_Delta_LatLon/run_template/* .
 ln -sf /nobackup/hzhang1/forcing/era5 ERA5
-ln -sf /nobackupp12/mwood7/Darwin/darwin3/configurations/downscaled_greenland/L1/L1_GOM/exf . 
-ln -sf /nobackupp12/mwood7/Darwin/darwin3/configurations/downscaled_greenland/L1/L1_GOM/obcs . 
+ln -sf /nobackupp12/mwood7/Darwin/darwin3/configurations/downscaled_greenland/L1/L1_mac_delta/exf . 
+ln -sf /nobackupp12/mwood7/Darwin/darwin3/configurations/downscaled_greenland/L1/L1_mac_delta/obcs . 
 cp ${MOD}/input/* .
 cp ${MOD}/input_darwin/* .
-ln -sf /nobackup/dcarrol2/pub/regions/GoM/* .
+ln -sf /nobackup/dcarrol2/pub/regions/mac_delta/* .
 
 mkdir diags
 mkdir diags/EtaN_day_snap
@@ -60,6 +60,6 @@ mkdir diags/BGC_daily_PO
 mkdir diags/BGC_daily_misc
 mkdir diags/BGC_daily_cx
 mkdir diags/BGC_daily_Chl
-
-# qsub job_gom960_bro
+ 
+#qsub job_Mac_Ivy
 
