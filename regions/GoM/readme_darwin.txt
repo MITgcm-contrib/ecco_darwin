@@ -12,7 +12,6 @@ git clone https://github.com/darwinproject/darwin3
 cd darwin3
 git checkout 24885b71
 mkdir build run
-cd build
 
 #=========
 #2 Build executable
@@ -24,7 +23,7 @@ sed "s|tidalComponents = 10|tidalComponents = 8|" \
 diff ../pkg/obcs/OBCS_PARAMS.h OBCS_PARAMS.h
 
 module purge
-module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
+module load comp-intel/2020.4.304 mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
 MOD="../../ecco_darwin/regions/GoM"
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
  -mo '../../ecco_darwin/regions/GoM/code_darwin ../../ecco_darwin/regions/GoM/code' -mpi
