@@ -8,5 +8,6 @@
  useGCHEM       = .TRUE.,
  useOBCS        = .TRUE.,
  usePTRACERS    = .TRUE.,
- useSALT_PLUME  = .TRUE.,
+ useSALT_PLUME  = .FALSE.,
+ useSEAICE      = .TRUE.,
  &

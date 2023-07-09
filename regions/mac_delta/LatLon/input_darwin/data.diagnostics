@@ -11,9 +11,9 @@
   fileName(2) = 'diags/EtaN_mon_mean/EtaN_mon_mean',
   frequency(2) =  2592000.,
 #
-#  fields(1:5,3) = 'SIarea  ','SIheff  ','SIhsnow ','SIuice ','SIvice ',
-#  fileName(3) = 'diags/SI_daily_snap/SI_daily_snap',
-#  frequency(3) = -86400.,
+  fields(1:5,3) = 'SIarea  ','SIheff  ','SIhsnow ','SIuice ','SIvice ',
+  fileName(3) = 'diags/SI_daily_snap/SI_daily_snap',
+  frequency(3) = -86400.,
 #
   fields(1:2,4) = 'THETA   ','SALT    ',
   fileName(4) = 'diags/TS_surf_daily_snap/TS_surf_daily_snap',

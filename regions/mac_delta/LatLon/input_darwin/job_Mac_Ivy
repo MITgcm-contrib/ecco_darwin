@@ -1,11 +1,11 @@
 #!/bin/csh
 #PBS -l select=45:ncpus=20:model=ivy
 
-#PBS -l walltime=120:00:00
-#PBS -q long
+##PBS -l walltime=120:00:00
+##PBS -q long
 
-##PBS -l walltime=2:00:00
-##PBS -q debug
+#PBS -l walltime=2:00:00
+#PBS -q debug
 
 ##PBS -j oe
 #PBS -m abe
