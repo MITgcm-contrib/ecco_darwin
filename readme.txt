@@ -8,11 +8,14 @@ Simulations:
 --regions--
   --CCS--
     /llc270: California Current System llc270 cut-out for kelp model development
+  --GoM--
+    /: Gulf of Mexico lon-lat
   --mac_delta--
-    /llc270: mackenzie delta llc270 cut-out
-    /llc4320: mackenzie delta llc4320 cut-out
+    /LatLon: Mackenzie Delta lon-lat  
+    /llc270: Mackenzie Delta llc270 cut-out
+    /llc4320: Mackenzie Delta llc4320 cut-out
   --totten--
-    /llc1080: totten lon lat
+    /llc1080: totten lon-lat
 
 --v02--
   /cs510_brix: optimized solution described in Brix et al. (2015)
@@ -29,14 +32,19 @@ Simulations:
   /llc270_JAMES_budget: same as above with diagnostics for closing budgets 
 
 --v05--
+  /1deg: 1 degree solution based on ECCO V4r4/V4r5
+  /1deg_CDR: 1 degree solution based on ECCO V4r4/V4r5 for mCDR simulations
   /3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
   /3deg_CDR_MacroA: Kay's macroalgae (kelp) code development set-up
   /llc270: Carroll et al. 2022 (GBC) solution w/ Darwin 3
   /llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
   /llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
-
+  /llc270_sediment: same as llc270 above but with RADI sediment model
+  
 --v06--
-  /llc270: v05 llc270 w/ new ecosystem and radiative transfer package
+  /1deg: 1 degree solution based on ECCO V4r5
+  /llc270: v05 llc270 w/ Darwin upgrades and new ecosystem, BGC runoff, RADI sediment model, 
+   pH fix and updated solver, hydrothermal vent iron forcing, and radiative transfer package
 
 --code_util--
   /LOAC/GlobalNews: biogeochimical exports from rivers (DIN, DON, DIP, DOP, DOC, PN, PP, POC, DSi) based on Mayorga et al., 2010
@@ -53,7 +61,7 @@ When updating ECCO-Darwin code/setup, or anything that may impact ECCO-Darwin:
 2.) Test updated ECCO-Darwin from scratch by checking out fresh MITgcm code, 
 and following the instructions line-by-line in the readme.txt file(s). 
 
-3.) Once test is successful, add a full description of changes to MITgcm_contrib/ecco_darwin/doc/tag-index. 
+3.) Once test is successful, if needed, add a full description of changes to MITgcm_contrib/ecco_darwin/doc/tag-index. 
 Include the date and list all specific changes.
 
 Example: 

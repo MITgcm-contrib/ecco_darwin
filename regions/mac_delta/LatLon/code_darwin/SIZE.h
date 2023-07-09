@@ -1,3 +1,6 @@
+C $Header: /u/gcmpack/MITgcm_contrib/llc_hires/llc_4320/code/SIZE.h_45x45x73408,v 1.2 2016/04/14 03:51:44 dimitri Exp $
+C $Name:  $
+
 C
 CBOP
 C    !ROUTINE: SIZE.h
@@ -41,17 +44,17 @@ C     Nr  :: No. points in Z for full process domain.
       INTEGER Ny
       INTEGER Nr
       PARAMETER (
-     &           sNx = 128,
-     &           sNy =  64,
+     &           sNx =  34,
+     &           sNy =  24,
      &           OLx =   4,
      &           OLy =   4,
      &           nSx =   1,
      &           nSy =   1,
-     &           nPx =   1,
-     &           nPy =   1,
+     &           nPx =  1,
+     &           nPy =  1116-234,
      &           Nx  = sNx*nSx*nPx,
      &           Ny  = sNy*nSy*nPy,
-     &           Nr  =  15)
+     &           Nr  =  80 )
 
 C     MAX_OLX :: Set to the maximum overlap region size of any array
 C     MAX_OLY    that will be exchanged. Controls the sizing of exch
@@ -60,6 +63,3 @@ C                routine buffers.
       INTEGER MAX_OLY
       PARAMETER ( MAX_OLX = OLx,
      &            MAX_OLY = OLy )
-
-      integer     nobcs
-      parameter ( nobcs = 4 )
