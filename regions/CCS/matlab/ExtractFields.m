@@ -28,15 +28,6 @@ fld=zeros(sum(m),n);
 for f=1:length(fc)
     fld((sum(m(1:f))+1):sum(m(1:(f+1))),:)=tmp{fc(f)};
 end
-m(1)=0;
-for f=1:length(fc)
-    m(f+1)=length(ix{fc(f)});
-end
-n=length(jx{fc(1)});
-fld=zeros(sum(m),n);
-for f=1:length(fc)
-    fld((sum(m(1:f))+1):sum(m(1:(f+1))),:)=tmp{fc(f)};
-end
 quikpcolor(fld'); caxis([0 1])
 RF=-readbin([pin 'RF.data'],51);
 kx=1:min(find(RF(2:end)>mmax(fld)));
@@ -200,14 +191,14 @@ end
 
 % {{{ get and save scalar 3D fields
 fin={'monthly/'};
-for fot={ 'THETA', 'SALTanom', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', ...
-          'FeT', 'SiO2', 'DOC', 'DON', 'DOP', 'DOFe', 'POC', 'PON', ...
-          'POP', 'POFe', 'POSi', 'PIC', 'ALK', 'O2', 'c1', 'c2', 'c3', ...
-          'c4', 'c5', 'c6', 'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5'}
+fld=zeros(sum(m),n,length(kx));
+for fot={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
+         'DOC', 'DON', 'DOP', 'DOFe', 'POC', 'PON', 'POP', 'POFe', ...
+         'POSi', 'PIC', 'ALK', 'O2', 'c1', 'c2', 'c3', 'c4', 'c5', ...
+         'c6', 'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5'}
     eval(['mkdir ' pout fot{1}])
     eval(['cd ' pout fot{1}])
     dnm=dir([pin fin{1} fot{1} '*.data']);
-    fld=zeros(sum(m),n,length(kx));
     for t=1:length(dnm)
         fnm=[dnm(t).folder '/' dnm(t).name];
         l=strfind(fnm,'.000');
@@ -218,12 +209,23 @@ for fot={ 'THETA', 'SALTanom', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', ...
             fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
                 read_llc_fkij(fnm,nx,fc(f),kx,ix{fc(f)},jx{fc(f)});
         end
-        if strcmp(fot{1},'SALTanom')
-            writebin(fout,fld+35);
-        else
-            writebin(fout,fld);
-        end
+        writebin(fout,fld);
     end
+end
+eval(['mkdir ' pout 'SALT'])
+eval(['cd ' pout 'SALT'])
+dnm=dir([pin fin{1} 'SALTanom*.data']);
+for t=1:length(dnm)
+    fnm=[dnm(t).folder '/' dnm(t).name];
+    l=strfind(fnm,'.000');
+    ts=str2num(fnm((l+1):(l+10)));
+    dy=ts2dte(ts,1200,1992,1,1,30);
+    fout=['SALT' suf2 '.' dy];
+    for f=1:length(fc)
+        fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
+            read_llc_fkij(fnm,nx,fc(f),kx,ix{fc(f)},jx{fc(f)});
+    end
+    writebin(fout,fld+35);
 end
 % }}}
 
