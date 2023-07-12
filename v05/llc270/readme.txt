@@ -45,6 +45,22 @@ mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 qsub job_ECCO_darwin
 
 ==============
+# 3.1 Instructions for running simulation (1992-2023 period) w/ unified forcing
+
+cd ../run
+ln -sf ../build/mitgcmuv .
+ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
+ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/forcing/era_xx_it42_v2 .
+cp ../../ecco_darwin/v05/llc270/input/* .
+mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
+mv data.ctrl_UnifiedForcing data.ctrl
+mv data.exf_UnifiedForcing  data.exf
+# modify job_ECCO_darwin as needed
+qsub job_ECCO_darwin
+
+==============
 # 4. Instructions for running simulation (1985-2022 period)
 mkdir run_1985 run_1985_clim95 run_1985_linearCO2 run_1985_clim95_linearCO2
 

@@ -1,0 +1,45 @@
+# *********************
+# ECCO control variables
+# *********************
+ &ctrl_nml
+ doSinglePrecTapelev=.TRUE.,
+ ctrlSmoothCorrel2D=.TRUE.,
+ ctrlSmoothCorrel3D=.TRUE.,
+#to start from given xx*00.data files
+  doinitxx = .TRUE.,
+  doMainUnpack = .FALSE.,
+  doMainPack = .FALSE.,
+#to start from given ecco_ctrl... files
+# doinitxx = .FALSE.,
+ &
+#
+# *********************
+# names for ctrl_pack/unpack
+# *********************
+ &ctrl_packnames
+ &
+#
+# *********************
+# names for CTRL_GENARR2D,3D CTRL_GENTIM2D
+# *********************
+ &CTRL_NML_GENARR
+#
+ xx_genarr3d_weight(1) = 'wkapgmFld.data',
+ xx_genarr3d_file(1)='xx_kapgm',
+ xx_genarr3d_preproc(1,1)='WC01',
+ xx_genarr3d_bounds(1:5,1)=1.E2,2.E2,0.9E4,1.E4,0.,
+ mult_genarr3d(1) = 0.,
+#
+ xx_genarr3d_weight(2) = 'wkaprediFld.data',
+ xx_genarr3d_file(2)='xx_kapredi',
+ xx_genarr3d_preproc(1,2)='WC01',
+ xx_genarr3d_bounds(1:5,2)=1.E2,2.E2,0.9E4,1.E4,0.,
+ mult_genarr3d(2) = 0.,
+#
+ xx_genarr3d_weight(3) = 'wdiffkrFld.data',
+ xx_genarr3d_file(3)='xx_diffkr',
+ xx_genarr3d_preproc(1,3)='WC01',
+ xx_genarr3d_bounds(1:5,3)=1.E-6,2.E-6,4.E-4,5.E-4,0.,
+ mult_genarr3d(3) = 0.,
+#
+ &
