@@ -32,8 +32,6 @@
  vwindfile         = 'era_xx/EIG_v10m',
  swdownfile        = 'era_xx/EIG_dsw_plus_ECCO_v4r1_ctrl',
  lwdownfile        = 'era_xx/EIG_dlw_plus_ECCO_v4r1_ctrl',
- runofffile        = 'ArcticGRO/ArcticGRO_runoff_mack270',
- runoftempfile     = 'river_temp_modif/jra55modif_wattmp_mack270',
 #
  atempstartdate1   = 19920101,
  atempstartdate2   = 000000,

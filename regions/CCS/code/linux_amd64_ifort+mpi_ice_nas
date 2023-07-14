@@ -36,8 +36,8 @@ FFLAGS="$FFLAGS -convert big_endian -assume byterecl"
 CFLAGS="$CFLAGS -fPIC"
 FFLAGS="$FFLAGS -fPIC"
 #- For really big executable (> 2 GB), uncomment following 2 lines
-FFLAGS="$FFLAGS -mcmodel=medium -shared-intel"
-CFLAGS="$CFLAGS -mcmodel=medium -shared-intel"
+#FFLAGS="$FFLAGS -mcmodel=medium -shared-intel"
+#CFLAGS="$CFLAGS -mcmodel=medium -shared-intel"
 #- might want to use '-r8' for fizhi pkg:
 #FFLAGS="$FFLAGS -r8"
 

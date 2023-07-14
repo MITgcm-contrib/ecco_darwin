@@ -3,8 +3,8 @@
 # ***************
  &OBCS_PARM01
  OB_Jnorth =   80*100,
- OB_Jsouth =   46*1,
- OB_Iwest  =   68*1,
+ OB_Jsouth =   80*1,
+ OB_Iwest  =   100*1,
 #
  useOBCSprescribe=.TRUE.,
 #
