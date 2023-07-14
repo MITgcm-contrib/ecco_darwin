@@ -4,22 +4,21 @@
 #
 # Continuous equation parameters
  &PARM01
- tRef           = 15*20.,
- sRef           = 15*35.,
+ tRef           = 3*23.,3*22.,21.,2*20.,19.,2*18.,17.,2*16.,15.,14.,13.,
+                  12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,6*1.,
+ sRef           = 44*34.5,
  no_slip_sides  = .TRUE.,
  no_slip_bottom = .TRUE.,
 #
- viscAr=1.E-3,
+ viscAr=0.5E-4,
 #
- viscAh=2.E5,
+ viscAh=1.E0,
  viscAhGrid=1.E-2,
 #
- diffKhT=0.E3,
- diffKhS=0.E3,
- diffKrBL79surf= 3.E-5,
- diffKrBL79deep= 13.E-5,
- diffKrBL79Ho  = -2000.,
- diffKrBL79scl = 150.,
+ diffKhS=1.E1,
+ diffKhT=1.E1,
+ diffKrS=1.E-5,
+ diffKrT=1.E-5,
 #
  bottomDragQuadratic = 0.001,
 #when using ggl90
@@ -34,7 +33,7 @@
  balanceSaltClimRelax=.TRUE.,
  allowFreezing=.FALSE.,
  hFacMinDr=50.,
- hFacMin=0.1,
+ hFacMin=0.3,
  hFacInf=0.1,
  hFacSup=5.,
  select_rStar=2,
@@ -56,12 +55,10 @@
  saltImplVertAdv=.TRUE.,
  staggerTimeStep=.TRUE.,
  vectorInvariantMomentum=.TRUE.,
-#when using the cd scheme:
- useCDscheme=.TRUE.,
  useJamartWetPoints=.TRUE.,
  readBinaryPrec=32,
  writeBinaryPrec=32,
- debugLevel=1,
+ debugLevel=-1,
  /
 
 # Elliptic solver parameters
@@ -72,53 +69,43 @@
 
 # Time stepping parameters
  &PARM03
- nIter0=00000859080,
- nTimeSteps=175440,
+ nIter0=0,
+ endtime=980788800.,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
-#when using the cd scheme:
-# epsAB_CD = 0.25,
- tauCD=321428.,
- deltaTmom   =3600.,
- deltaTtracer=3600.,
- deltaTfreesurf=3600.,
- deltaTClock =3600.,
-#when using ab2:
-# abEps = 0.1,
+ deltaT=1200.,
 #when using ab3:
  doAB_onGtGs=.FALSE.,
  alph_AB=0.5,
  beta_AB=0.281105,
 #
  pChkptFreq  =31536000.0,
- chkptFreq   =31536000.0,
- monitorFreq = 1.0,
+ monitorFreq = 43200.0,
  dumpInitAndLast = .FALSE.,
- adjDumpFreq = 31536000.0,
- adjMonitorFreq = 43200.0,
  pickupStrictlyMatch=.FALSE.,
- periodicExternalForcing=.TRUE.,
- externForcingPeriod=2592000.,
- externForcingCycle=31104000.,
  /
 
 # Gridding parameters
  &PARM04
+ delR = 
+     10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.01,
+     10.03, 10.11, 10.32, 10.80, 11.76, 13.42, 16.04, 19.82, 24.85,
+     31.10, 38.42, 46.50, 55.00, 63.50, 71.58, 78.90, 85.15, 90.18,
+     93.96, 96.58, 98.25, 99.25,100.01,101.33,104.56,111.33,122.83,
+     139.09,158.94,180.83,203.55,226.50,249.50,272.50,295.50,318.50,
  usingSphericalPolarGrid=.TRUE.,
- delR=  50., 70.,  100., 140., 190., 
-       240., 290., 340., 390., 440., 
-       490., 540., 590., 640., 690.,
- ygOrigin=-90.,
- delX=128*2.8125,
- delY=64*2.8125,
+ xgOrigin = -131.66667,
+ ygOrigin =  19.8998,
+ delX=79*0.333333,
+ delYfile='delYFile',
  /
 
 # Input datasets
  &PARM05
- bathyFile       = 'bathy.bin',
- hydrogThetaFile = 'Theta.0005184000',
- hydrogSaltFile  = 'Salt.0005184000',
- uVelInitFile    = 'Uvel.0005184000',
- vVelInitFile    = 'Vvel.0005184000',
- pSurfInitFile   = 'Eta.0005184000',
+ bathyFile='BATHY_80x100_CCS_kelp',
+ hydrogThetaFile='THETA_80x100x48.16-Jan-1992',
+ hydrogSaltFile ='SALT_80x100x48.16-Jan-1992',
+ uVelInitFile   ='U_80x100x48.16-Jan-1992',
+ vVelInitFile   ='V_80x100x48.16-Jan-1992',
+ pSurfInitFile  ='ETAN_80x100.16-Jan-1992',
  /

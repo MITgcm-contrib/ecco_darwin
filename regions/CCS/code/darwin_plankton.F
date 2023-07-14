@@ -1,4 +1,5 @@
 #include "DARWIN_OPTIONS.h"
+
 CBOP
 C !ROUTINE: DARWIN_PLANKTON
 C !INTERFACE: ==========================================================
@@ -8,9 +9,6 @@ C !INTERFACE: ==========================================================
      O     chlout, diags,
      I     PAR, photoTempFunc, hetTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
-     O     uptake_pl,grazing_pl,mortality_pl,respir_pl,
-     O     grow_nut,grow_lightT,
-     O     grow_P_lim,grow_N_lim,grow_Si_lim,grow_Fe_lim,
 #ifdef DARWIN_DEBUG
      I     iG, jG, k, dT,
 #endif
@@ -61,20 +59,6 @@ C !OUTPUT PARAMETERS: ==================================================
 C  chlout :: computed acclimated chlorophyll if not dynamic
       _RL chlout(nPhoto)
       _RL diags(darwin_nDiag)
-C outputs for computing phytoplankton budgets      
-      _RL uptake_pl(nDarwin)
-      _RL grazing_pl(nDarwin)
-      _RL mortality_pl(nDarwin)
-      _RL respir_pl(nDarwin)
-C outputs for computing growth rates & nutrient limitations      
-      _RL grow_nut(nDarwin)
-      _RL grow_lightT(nDarwin)
-      _RL grow_P_lim(nDarwin)
-      _RL grow_N_lim(nDarwin)
-      _RL grow_Si_lim(nDarwin)
-      _RL grow_Fe_lim(nDarwin)
-      
-      
 CEOP
 
 #ifdef ALLOW_DARWIN
@@ -383,26 +367,6 @@ c ratio if not variable.
       ENDDO
 #endif
 
-
-      DO j = 1,nDarwin
-      	uptake_pl(j)=0.
-        grazing_pl(j)=0.
-        mortality_pl(j)=0.
-        respir_pl(j)=0.
-        
-        grow_nut(j)=0.
-        grow_lightT(j)=0.
-
-        
-        grow_P_lim(j)=0.
-        grow_N_lim(j)=0. 
-        grow_Si_lim(j)=0. 
-        grow_Fe_lim(j)=0.
-        
-
-      ENDDO
-     
-
       consumDIC  = 0.0
       consumDIC_PIC = 0.0
       consumNH4  = 0.0
@@ -640,7 +604,7 @@ C         only 1 waveband without DARWIN_ALLOW_GEIDER
         growth = PC*ngrow*X(j)
 
         uptakeDIC = growth
-        
+
 C non-quota elements are taken up with fixed stoichiometry
 #ifndef DARWIN_ALLOW_NQUOTA
         uptakeN = growth*R_NC(j)
@@ -716,22 +680,6 @@ C=======================================================================
 C=======================================================================
 
         gTr(ic+j-1)=gTr(ic+j-1)  + uptakeDIC
-
-C uptake_pl for plankton        
-        uptake_pl(ic+j-1)= uptake_pl(ic+j-1)+ uptakeDIC
-
-
-
-C  which nutrient is limiting growth?
-        IF (limitnut==limitn)  grow_N_lim(ic+j-1)=1.
-		IF (limitnut==limitp)   grow_P_lim(ic+j-1)=1.
-		IF (limitnut==limitsi)  grow_Si_lim(ic+j-1)=1.
-		IF (limitnut==limitfe)  grow_Fe_lim(ic+j-1)=1.
-
-C factors that go into growth equation
-       grow_lightT(ic+j-1)=photoTempFunc(j)
-	   grow_nut(ic+j-1)=limitnut	
-
 #ifdef DARWIN_ALLOW_NQUOTA
         gTr(in+j-1)=gTr(in+j-1)  + uptakeN
 #endif
@@ -867,10 +815,6 @@ C         DOC respired to DIC
 #endif
 
         gTr(ic+j-1)=gTr(ic+j-1) + growth
-
-C uptake_pl for bacteria        
-        uptake_pl(ic+j-1)=uptake_pl(ic+j-1)+growth
-
 
 C==== Cumulative consum, remin, and prod ===============================
         consumNO3  = consumNO3  + uptakeNO3
@@ -1294,8 +1238,6 @@ C==== tendencies =======================================================
       DO jp = 1, nplank
       IF (isPrey(jp).NE.0) THEN
        gTr(ic+jp-1)= gTr(ic+jp-1) - preygraz(jp)
-       grazing_pl(ic+jp-1)= grazing_pl(ic+jp-1)-preygraz(jp)
-       
 #ifdef DARWIN_ALLOW_NQUOTA
        gTr(in+jp-1)=gTr(in+jp-1) - preygraz(jp)*Qn(jp)
 #endif
@@ -1321,9 +1263,6 @@ C==== tendencies =======================================================
       DO jz = 1, nplank
       IF (isPred(jz).NE.0) THEN
        gTr(ic+jz-1)=gTr(ic+jz-1) + predgrazc(jz)
-       grazing_pl(ic+jz-1)= grazing_pl(ic+jz-1)+predgrazc(jz)
-       
-       
 #ifdef DARWIN_ALLOW_NQUOTA
        gTr(in+jz-1)=gTr(in+jz-1) + predgrazn(jz)
 #endif
@@ -1393,10 +1332,6 @@ C==== mortality ========================================================
         respir = respir + respir_c
 
         gTr(ic+jp-1)=gTr(ic+jp-1)  - mort_c(jp) - respir_c
-        
-        mortality_pl(ic+jp-1)= -mort_c(jp)
-        respir_pl(ic+jp-1)= -respir_c
-        
 #ifdef DARWIN_ALLOW_NQUOTA
         gTr(in+jp-1)=gTr(in+jp-1)  - mort_c(jp)*Qn(jp)
 #endif

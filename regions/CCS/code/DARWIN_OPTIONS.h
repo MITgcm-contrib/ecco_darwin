@@ -131,7 +131,7 @@ C compute and print global element totals
 #undef  DARWIN_ALLOW_CONS
 
 C value for unused traits
-#define DARWIN_UNUSED 0
+#define  DARWIN_UNUSED 0
 
 C fill diagnostics for most tendency terms
 #undef  DARWIN_DIAG_TENDENCIES
@@ -156,9 +156,6 @@ C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
 
 C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
-
-C nutrient runoff
-#define DARWIN_NUTRIENT_RUNOFF
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */

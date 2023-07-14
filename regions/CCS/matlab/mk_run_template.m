@@ -81,7 +81,7 @@ for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
     fnm=dir([pnm '*' fld{1} '*']);
     for t=1:length(fnm)
         fin=[pnm fnm(t).name];
-        tmp=readbin(fin,[nx ny nz]); 
+        tmp=readbin(fin,[nx ny nz]);
         fout=[pout fld{1} '_West']; % western boundary condition
         if fld{1}(1)=='U'
             writebin(fout,squeeze(tmp(2,:,:)),1,prec,t-1)
@@ -94,6 +94,8 @@ for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
         else
             writebin(fout,squeeze(tmp(:,1,:)),1,prec,t-1)
         end
+        fout=[pout fld{1} '_North']; % southern boundary condition
+        writebin(fout,squeeze(tmp(:,1,:)),1,prec,t-1)
     end
 end
 % }}}

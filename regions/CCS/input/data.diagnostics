@@ -264,13 +264,11 @@
 #budget diagnostics   
 #---
   frequency(73) = 2635200.0,
-   fields(1:20,73) = 'ETAN    ','oceFWflx','SFLUX   ',
-        'TFLUX   ','oceSPflx','oceQsw  ',
-        'fluxCO2 ','gDICsurf', 
-        'gDICEpr ','gALKEpr ','gNO3Epr ',
-        'gNO2Epr ','gNH4Epr ','gO2Epr '
-        'gPO4Epr ','gFeTEpr','gSiO2Epr ',
-        'CDR_DIC ','CDR_ALK ','CDR_SiO2'
+   fields(1:14,73) = 'ETAN    ','oceFWflx','SFLUX   ',
+                   'oceSPflx','gDICsurf', 'fluxCO2 ',
+                   'gDICEpr ','gALKEpr ','gNO3Epr ',
+                   'gNO2Epr ','gNH4Epr ',
+                   'gPO4Epr ','gFeTEpr','gSiO2Epr ',
    filename(73) = 'diags/budget/average_2d',
 #---
   frequency(74) = 2635200.0,
@@ -278,14 +276,15 @@
    filename(74) = 'diags/budget/average_velmass_3d',
 #---
   frequency(75) = 2635200.0,
-   fields(1:8,75) = 'THETA   ','ADVx_TH ','ADVy_TH ','ADVr_TH ',
-        'DFxE_TH ','DFyE_TH ','DFrE_TH ','DFrI_TH ',
+   fields(1:10,75) = 'THETA   ','ADVx_TH ','ADVy_TH ','ADVr_TH ',
+                   'DFxE_TH ','DFyE_TH ','DFrE_TH ','DFrI_TH ',
+                   'TFLUX   ','oceQsw  ',
    filename(75) = 'diags/budget/average_theta_3d',
 #---
   frequency(76) = 2635200.0,
    fields(1:9,76) = 'SALT    ','ADVx_SLT','ADVy_SLT','ADVr_SLT',
-        'DFxE_SLT','DFyE_SLT','DFrE_SLT','DFrI_SLT',
-	    'oceSPtnd',
+                   'DFxE_SLT','DFyE_SLT','DFrE_SLT','DFrI_SLT',
+	           'oceSPtnd',
    filename(76) = 'diags/budget/average_salt_3d',
 #---
   frequency(77) = 2635200.0,
@@ -341,119 +340,32 @@
         'C_Si    ','S_Si    ',
    filename(85) = 'diags/budget/average_SiO2_3d',
 #---
-  frequency(86) = 2635200.0,
-   fields(1:11,86) = 'TRAC19  ','ADVxTr19','ADVyTr19','ADVrTr19',
-        'DFxETr19','DFyETr19','DFrETr19','DFrITr19','gDAR19  ',
-        'C_O2    ','S_O2    ',
-   filename(86) = 'diags/budget/average_O2_3d',
+  frequency(86) = -2635200.0,
+   fields(1,86) = 'ETAN    ',
+   timePhase(86)= 0.,
+   filename(86) = 'diags/budget/snap_2d',
 #---
   frequency(87) = -2635200.0,
-   fields(1,87) = 'ETAN    ',
+   fields(1:10,87) = 'THETA    ','SALT    ',
+                    'TRAC01  ','TRAC18  ','TRAC02  ',
+   		    'TRAC03  ','TRAC04  ','TRAC05  ',
+                    'TRAC06  ','TRAC07  ',
    timePhase(87)= 0.,
-   filename(87) = 'diags/budget/snap_2d',
+   filename(87) = 'diags/budget/snap_3d',
 #---
-  frequency(88) = -2635200.0,
-   fields(1:11,88) = 'THETA    ','SALT    ',
-        'TRAC01  ','TRAC18  ','TRAC02  ',
-   		'TRAC03  ','TRAC04  ','TRAC05  ',
-        'TRAC06  ','TRAC07  ','TRAC19  ',
-   timePhase(88)= 0.,
-   filename(88) = 'diags/budget/snap_3d',
+  frequency(88) = 2635200.0,
+   levels(1,88) = 1.,
+   fields(1:4,88) = 'fluxCO2 ','gDICsurf',
+                    'apCO2   ','apCO2sat',
+  filename(88) = 'diags/budget/CO2_flux_budget_2d',
 #---
   frequency(89) = 2635200.0,
-   levels(1,89) = 1.,
-   fields(1:4,89) = 'fluxCO2 ','gDICsurf',
-                    'apCO2   ','apCO2sat',
-  filename(89) = 'diags/budget/CO2_flux_budget_2d',
+   fields(1:6,89) = 'TRAC01  ','THETA   ','SALT    ',
+                  'TRAC18  ','TRAC05  ','TRAC07  ',
+  filename(89) = 'diags/budget/CO2_flux_budget_3d',
 #---
-  frequency(90) = 2635200.0,
-   fields(1:6,90) = 'TRAC01  ','THETA   ','SALT    ',
-        'TRAC18  ','TRAC05  ','TRAC07  ',
-  filename(90) = 'diags/budget/CO2_flux_budget_3d',
-#----
-# 7 plankton species
-#----
-  frequency(91) = 2635200.0,
-   fields(1:12,91) = 'GROW_P20','GRAZ_P20','MORT_P20','RESP_P20',
-                    'ADVxTr20','ADVyTr20','ADVrTr20',
-                    'DFxETr20','DFyETr20','DFrETr20','DFrITr20'
-  filename(91) = 'diags/budget/plankton_3d_1',
-
-  frequency(92) = 2635200.0,
-   fields(1:12,92) = 'GROW_P21','GRAZ_P21','MORT_P21','RESP_P21',
-                    'ADVxTr21','ADVyTr21','ADVrTr21',
-                    'DFxETr21','DFyETr21','DFrETr21','DFrITr21'
-  filename(92) = 'diags/budget/plankton_3d_2',
-
-
-  frequency(93) = 2635200.0,
-   fields(1:12,93) = 'GROW_P22','GRAZ_P22','MORT_P22','RESP_P22',
-                    'ADVxTr22','ADVyTr22','ADVrTr22',
-                    'DFxETr22','DFyETr22','DFrETr22','DFrITr22'
-  filename(93) = 'diags/budget/plankton_3d_3',
-
-
-  frequency(94) = 2635200.0,
-   fields(1:12,94) = 'GROW_P23','GRAZ_P23','MORT_P23','RESP_P23',
-                    'ADVxTr23','ADVyTr23','ADVrTr23',
-                    'DFxETr23','DFyETr23','DFrETr23','DFrITr23'
-  filename(94) = 'diags/budget/plankton_3d_4',
-
-
-  frequency(95) = 2635200.0,
-   fields(1:12,95) = 'GROW_P24','GRAZ_P24','MORT_P24','RESP_P24',
-                    'ADVxTr24','ADVyTr24','ADVrTr24',
-                    'DFxETr24','DFyETr24','DFrETr24','DFrITr24'
-  filename(95) = 'diags/budget/plankton_3d_5',
-
-
-  frequency(96) = 2635200.0,
-   fields(1:12,96) = 'GROW_P25','GRAZ_P25','MORT_P25','RESP_P25',
-                    'ADVxTr25','ADVyTr25','ADVrTr25',
-                    'DFxETr25','DFyETr25','DFrETr25','DFrITr25'
-  filename(96) = 'diags/budget/plankton_3d_6',
-
-
-  frequency(97) = 2635200.0,
-   fields(1:12,97) = 'GROW_P26','GRAZ_P26','MORT_P26','RESP_P26',
-                    'ADVxTr26','ADVyTr26','ADVrTr26',
-                    'DFxETr26','DFyETr26','DFrETr26','DFrITr26'
-  filename(97) = 'diags/budget/plankton_3d_7',
-
-
-  frequency(98) = -2635200.0,
-   fields(1:7,98) = 'TRAC20  ','TRAC21  ','TRAC22  ','TRAC23  ',
-                    'TRAC24  ','TRAC25  ','TRAC26  '
-   timePhase(98)= 0.,
-   filename(98) = 'diags/budget/plankton_snap_3d',
-
-  frequency(99)= 2635200.0,
-  fields(6,99)= 'GRW_NT20','GRW_LT20','GRWPL20',
-                'GRWNL20','GRWSiL20','GRWFeL20',
-  filename(99)='diags/monthly/plankton_growth_1',
-
-  frequency(100)= 2635200.0,
-  fields(6,100)= 'GRW_NT21','GRW_LT21','GRWPL21',
-                'GRWNL21','GRWSiL21','GRWFeL21',
-  filename(100)='diags/monthly/plankton_growth_2',
-  
-  frequency(101)= 2635200.0,
-  fields(6,101)= 'GRW_NT22','GRW_LT22','GRWPL22',
-                'GRWNL22','GRWSiL22','GRWFeL22',
-  filename(101)='diags/monthly/plankton_growth_3',
-
-  frequency(102)= 2635200.0,
-  fields(6,102)= 'GRW_NT23','GRW_LT23','GRWPL23',
-                'GRWNL23','GRWSiL23','GRWFeL23',
-  filename(102)='diags/monthly/plankton_growth_4',
-
-  frequency(103)= 2635200.0,
-  fields(6,103)= 'GRW_NT24','GRW_LT24','GRWPL24',
-                'GRWNL24','GRWSiL24','GRWFeL24',
-  filename(103)='diags/monthly/plankton_growth_5',
 
  &
-
 
  /
 

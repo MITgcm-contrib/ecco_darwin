@@ -42,9 +42,7 @@ C !USES: ===============================================================
 #include "DARWIN_FIELDS.h"
 #include "DARWIN_EXF_FIELDS.h"
 #endif
-#ifdef DARWIN_NUTRIENT_RUNOFF                                                                     
-#include "DARWIN_EXF_PARAMS.h"
-#endif
+
 C !INPUT PARAMETERS: ===================================================
 C  Ptrdummy             :: dummy for darwin2 compatibility
 C  myThid               :: thread number
@@ -98,13 +96,6 @@ C  k                    :: vertical level
       _RL mort2TempFunc
       _RL uptakeTempFunc
       _RL tmp
-      _RL hor_vel
-      _RL growth_pl(nDarwin), grazing_pl(nDarwin)
-      _RL mortality_pl(nDarwin), respir_pl(nDarwin)      
-      _RL grow_nut(nDarwin),grow_lightT(nDarwin)
-      _RL grow_P_lim(nDarwin),grow_N_lim(nDarwin)
-      _RL grow_Si_lim(nDarwin),grow_Fe_lim(nDarwin)
-      _RL ma_areat,ma_nrest,ma_crest
       _RL sedFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cNO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -128,25 +119,6 @@ C  k                    :: vertical level
       _RL sALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 	  _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  _RL CDR_DIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-	  _RL CDR_ALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)	  
-	  _RL CDR_SiO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)	
-	  _RL growth_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-	  _RL grazing_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-      _RL mortality_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-      _RL respir_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-	  _RL growth_nut_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-      _RL growth_lightT_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-      _RL growth_P_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-      _RL growth_N_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-      _RL growth_Si_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-      _RL growth_Fe_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
-	  _RL ma_area(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  _RL ma_nres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  _RL ma_cres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  _RL day_yr
-	  
-	        INTEGER curr_date(4), first_day(4),numdays(4)
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -164,19 +136,6 @@ C === reset tendencies =================================================
       DO j=jMin,jMax
       DO i=iMin,iMax
         gPtr(i,j,k,iTr) = 0.0 _d 0
-        growth_plank(i,j,k,iTr)= 0.0 _d 0
-        grazing_plank(i,j,k,iTr)= 0.0 _d 0
-        mortality_plank(i,j,k,iTr)= 0.0 _d 0        
-        respir_plank(i,j,k,iTr)= 0.0 _d 0
-        
-        growth_nut_plank(i,j,k,iTr)=0.0 _d 0
-        growth_lightT_plank(i,j,k,iTr)=0.0 _d 0
-        
-        growth_P_lim_plank(i,j,k,iTr)=0.0 _d 0
-        growth_N_lim_plank(i,j,k,iTr)=0.0 _d 0
-        growth_Si_lim_plank(i,j,k,iTr)=0.0 _d 0
-        growth_Fe_lim_plank(i,j,k,iTr)=0.0 _d 0
-        
       ENDDO
       ENDDO
       ENDDO
@@ -188,11 +147,6 @@ C === reset tendencies =================================================
         diffFe1(i,j,k) = 0.0 _d 0
         diffFe2(i,j,k) = 0.0 _d 0
         diffFe(i,j,k) = 0.0 _d 0
-        
-        ma_area(i,j,k) = 0.0 _d 0
-        ma_nres(i,j,k) = 0.0 _d 0
-        ma_cres(i,j,k) = 0.0 _d 0
-        
       ENDDO
       ENDDO
       ENDDO
@@ -224,60 +178,6 @@ c
 #endif
       CALL TIMER_STOP ('DARWIN_LIGHT [DARWIN_FORCING]',myThid)
 
-C === nutrient runoff ==================================================
-#ifdef DARWIN_NUTRIENT_RUNOFF
-      DO j=jMin,jMax
-      DO i=iMin,iMax
-      
-C CDR forcing      
-        CDR_DIC(i,j) = DICrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)    
-C ALKforcing = proportional to DICforcing + prescribed     
-     	CDR_ALK(i,j)= DICrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DICratioALK
-     &   +ALKrunoff(i,j,bi,bj)*recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-       
-       CDR_SiO2(i,j)= DSirunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-       
-       
-        gPtr(i,j,1,iDOC) = gPtr(i,j,1,iDOC) + DOCrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iDON) = gPtr(i,j,1,iDON) + DONrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iDOP) = gPtr(i,j,1,iDOP) + DOPrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iNO3) = gPtr(i,j,1,iNO3) + DINrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DINratioNO3
-        gPtr(i,j,1,iNO2) = gPtr(i,j,1,iNO2) + DINrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DINratioNO2
-        gPtr(i,j,1,iNH4) = gPtr(i,j,1,iNH4) + DINrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DINratioNH4
-        gPtr(i,j,1,iPO4) = gPtr(i,j,1,iPO4) + DIPrunoff(i,j,bi,bj)
-     &   * DIPboundFEMnOxide_ratio	
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iSiO2) = gPtr(i,j,1,iSiO2) + CDR_SiO2(i,j) 
-        gPtr(i,j,1,iPOC) = gPtr(i,j,1,iPOC) + POCrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iPOP) = gPtr(i,j,1,iPOP) + POPrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iPON) = gPtr(i,j,1,iPON) + PONrunoff(i,j,bi,bj)
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
-        gPtr(i,j,1,iDIC) = gPtr(i,j,1,iDIC) + CDR_DIC(i,j)
-        gPtr(i,j,1,iALK) = gPtr(i,j,1,iALK) + CDR_ALK(i,j)
-        gPtr(i,j,1,iFeT) = gPtr(i,j,1,iFeT) + DIPrunoff(i,j,bi,bj)
-     &   * DIPboundFEMnOxide_ratio                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DIPratioDFe
-        gPtr(i,j,1,iDOFe) = gPtr(i,j,1,iDOFe) + DOPrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * DOPratioDOFe
-        gPtr(i,j,1,iPOFe) = gPtr(i,j,1,iPOFe) + POPrunoff(i,j,bi,bj)                                
-     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj) * POPratioPOFe
-
-     
-      ENDDO
-      ENDDO
-            
-#endif
 C === dic ==============================================================
 #ifdef DARWIN_ALLOW_CARBON
 C carbon air-sea interaction
@@ -298,7 +198,7 @@ C     &   * recip_drF(1)*recip_hFacC(i,j,1,bi,bj)
       ENDDO
 #endif
 
-C prescribed forcing 
+C surface fluxes from E/P/runoff
       DO j=jMin,jMax
       DO i=iMin,iMax
         gDICsurfForc(i,j) = surfaceForcingPTr(i,j,bi,bj,iDIC)
@@ -394,24 +294,6 @@ C     iron sediment source (in bottom grid cell above kMaxFeSed)
       ENDDO
       CALL TIMER_STOP ('DARWIN_FE_SED [DARWIN_FORCING]',myThid)
 
-C
-C compute day in a year ... there must be a better way to do this
-C (used for macroalgae)
-C
-
-      CALL CAL_GETDATE(myIter,myTime,curr_date,myThid)
-C first day in a current year       
-       first_day(4)=curr_date(4)
-       first_day(3)=curr_date(3)
-       first_day(2)=0
-       first_day(1)=curr_date(1)-mod(curr_date(1),10000)+101
-    
-      CALL CAL_TIMEPASSED(first_day,curr_date,numdays,myThid )
-      
-      day_yr=real(numdays(1)+1)
-
-        
-
 C === plankton =========================================================
       CALL TIMER_START('DARWIN_PLANKTON [DARWIN_FORCING]',myThid)
       do k=1,Nr
@@ -439,47 +321,12 @@ C === plankton =========================================================
      I                 reminTempFunc,
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
-     O                 growth_pl,grazing_pl,
-     O                 mortality_pl,respir_pl,
-     O                 grow_nut,grow_lightT,
-     O     grow_P_lim,grow_N_lim,grow_Si_lim,grow_Fe_lim,
 #ifdef DARWIN_DEBUG
      I                 myxgloballo+(bi-1)*sNx+i-1,
      I                 myygloballo+(bj-1)*sNy+j-1,
      I                 k, dTsub(k),
 #endif
      I                 subTime, myIter, myThid )
-     
-C
-C macroalgae
-C  
-C TODO: YC should be lat of grid. Is that true for any grid?
-
-   
-     	hor_vel=sqrt( 
-     &	( 0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)) )**2+
-     & 	( 0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)) )**2)
-
-        CALL DARWIN_MACROALGAE(
-     I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
-     I   yc(i,j,bi,bj),day_yr,
-     U                  gtr,
-     O    ma_areat,ma_nrest,ma_crest)
-
-C write out outputs
-     
-          ma_area(i,j,k)=ma_areat
-          ma_nres(i,j,k)=ma_nrest
-          ma_cres(i,j,k)=ma_crest
-     
-         
-     
-     
-     
-     
-     
-     
-     
         DO l=1,darwin_nDiag
          diags(i, j, k, l) = diagsl(l)
         ENDDO
@@ -502,22 +349,6 @@ C write out outputs
 #endif
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
-C budget terms for plankton         
-        growth_plank(i, j, k, iTr)=growth_pl(iTr)
-        grazing_plank(i, j, k, iTr)=grazing_pl(iTr)
-        mortality_plank(i, j, k, iTr)=mortality_pl(iTr)
-        respir_plank(i, j, k, iTr)=respir_pl(iTr)
-C nutrient vs light & T limitation to growth        
-        growth_nut_plank(i,j,k,iTr)=grow_nut(iTr)
-        growth_lightT_plank(i,j,k,iTr)=grow_lightT(iTr)
-C nutrient limitations        
-        growth_P_lim_plank(i,j,k,iTr)=grow_P_lim(iTr)
-        growth_N_lim_plank(i,j,k,iTr)=grow_N_lim(iTr)
-        growth_Si_lim_plank(i,j,k,iTr)=grow_Si_lim(iTr)
-        growth_Fe_lim_plank(i,j,k,iTr)=grow_Fe_lim(iTr)
-        
-         
-         
         ENDDO
       endif
       enddo
@@ -530,15 +361,6 @@ C === sinking ==========================================================
       CALL DARWIN_SINKING( Ptracer,gPtr,bi,bj,iMin,iMax,jMin,jMax,
      &                  subTime,myIter,myThid )
       CALL TIMER_STOP ('DARWIN_SINKING [DARWIN_FORCING]',myThid)
-
-
-
-
-
-
-
-
-
 
 C === apply tendencies to tracers ======================================
       CALL TIMER_START('DARWIN_STEP [DARWIN_FORCING]',myThid)
@@ -603,13 +425,6 @@ C === diagnostics ======================================================
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iDenitN),'DenitN  ',
      &       0,Nr,2,bi,bj,myThid)
 
-
-C CDR diagnostics
-       CALL DIAGNOSTICS_FILL(CDR_DIC,'CDR_DIC ',0,1,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(CDR_ALK,'CDR_ALK ',0,1,1,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(CDR_SiO2,'CDR_SiO2',0,1,1,bi,bj,myThid)
-
-
        DO k=1,Nr
         DO j=1,sNy
          DO i=1,sNx
@@ -673,7 +488,7 @@ C      nutrient consumption diagnostics
        CALL DIAGNOSTICS_FILL(cALK(1-OLx,1-OLy,1),
      & 'C_ALK   ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(cO2(1-OLx,1-OLy,1),
-     & 'C_O2   ',0,Nr,1,bi,bj,myThid)
+     & 'C_O2    ',0,Nr,1,bi,bj,myThid)
 
 C      compute 'source' diagnostics: tendencies without consumption;
 C      add full tendencies to consumption and store result back into
@@ -748,88 +563,8 @@ C      diags(iCons*) for convenience
         WRITE(diagname, '(A,I4.4)') 'GrGn', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iGrGn+iTr-1),
      &        diagname,0,Nr,2,bi,bj,myThid)
-        
        ENDDO
 #endif
-
-
-
-C macroalgage properties
-
-        WRITE(diagname, '(A,I2.2)') 'MA_AREA '
-        CALL DIAGNOSTICS_FILL(ma_area(1-OLx,1-OLy,1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-
-
-        WRITE(diagname, '(A,I2.2)') 'MA_Nres '
-        CALL DIAGNOSTICS_FILL(ma_nres(1-OLx,1-OLy,1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-
-
-
-        WRITE(diagname, '(A,I2.2)') 'MA_Cres '
-        CALL DIAGNOSTICS_FILL(ma_cres(1-OLx,1-OLy,1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-
-
-
-       DO iTr=1,nplank
-        WRITE(diagname, '(A,I2.2)') 'GROW_P', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(growth_plank(1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-
-        WRITE(diagname, '(A,I2.2)') 'GRAZ_P', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(grazing_plank(1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-        WRITE(diagname, '(A,I2.2)') 'MORT_P', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(mortality_plank(1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-             WRITE(diagname, '(A,I2.2)') 'RESP_P', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(respir_plank(1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-     
-c nutrient and T&light fictors
-        WRITE(diagname, '(A,I2.2)') 'GRW_NT', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(growth_nut_plank(1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-        WRITE(diagname, '(A,I2.2)') 'GRW_LT', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(growth_lightT_plank
-     &   (1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-c nutrient limitations     
-        WRITE(diagname, '(A,I2.2)') 'GRWPL', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(growth_P_lim_plank
-     &   (1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-     
-        WRITE(diagname, '(A,I2.2)') 'GRWNL', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(growth_N_lim_plank
-     &   (1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-        WRITE(diagname, '(A,I2.2)') 'GRWSiL', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(growth_Si_lim_plank
-     &   (1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-     
-     
-        WRITE(diagname, '(A,I2.2)') 'GRWFeL', iTr+ic-1
-        CALL DIAGNOSTICS_FILL(growth_Fe_lim_plank
-     &   (1-OLx,1-OLy,1,ic+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)   
-     
-   
-     
-
-        ENDDO
-
-
        IF (DIAGNOSTICS_IS_ON('sfcSolFe', myThid)) THEN
         DO j=jMin,jMax
          DO i=iMin,iMax
@@ -854,7 +589,7 @@ c nutrient limitations
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALKsurfForc,'gALKEpr ',0,1,2,
      &  bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(gO2surfForc,'gO2Epr ',0,1,2,
+       CALL DIAGNOSTICS_FILL(gO2surfForc, 'gO2Epr  ',0,1,2,
      &  bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gNO3surfForc,'gNO3Epr ',0,1,2,
      &  bi,bj,myThid)
