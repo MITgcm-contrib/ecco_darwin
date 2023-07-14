@@ -4,8 +4,6 @@
  useCAL   = .TRUE.,
  useGMRedi= .TRUE.,
  useGGL90 = .TRUE.,
-# useCTRL  = .TRUE.,
-# useSMOOTH= .TRUE.,
  useDiagnostics=.TRUE.,
  useOBCS  = .TRUE.,
  usePTRACERS   = .TRUE.,
