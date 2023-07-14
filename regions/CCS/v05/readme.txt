@@ -17,8 +17,8 @@ cd build
 module purge
 module load comp-intel mpi-hpe python3
 module load hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-../tools/genmake2 -mo ../../ecco_darwin/regions/CCS/code -mpi \
-         -of ../../ecco_darwin/regions/CCS/code/linux_amd64_ifort+mpi_ice_nas
+../tools/genmake2 -mo ../../ecco_darwin/regions/CCS/v05/code -mpi \
+         -of ../../ecco_darwin/regions/CCS/v05/code/linux_amd64_ifort+mpi_ice_nas
 make depend
 make -j
 
@@ -34,7 +34,7 @@ ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 #ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2023/xx*42.data .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
-cp ../../ecco_darwin/regions/CCS/input/* .
+cp ../../ecco_darwin/regions/CCS/v05/input/* .
 mpirun -np 16 ./mitgcmuv
 # or modify job_ECCO_darwin as needed and then:
 # qsub job_ECCO_darwin
