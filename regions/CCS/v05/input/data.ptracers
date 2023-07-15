@@ -6,8 +6,7 @@
  PTRACERS_diffKr(:)= 31*1.E-5,
  PTRACERS_useGMRedi(:)= 31*.TRUE.,
 #
- PTRACERS_EvPrRn( 1)= 0.,
- PTRACERS_EvPrRn(18)= 0.,
+ PTRACERS_EvPrRn(:)= 31*0.E3,
 #
  PTRACERS_names( 1)= 'DIC',
  PTRACERS_names( 2)= 'NO3',
@@ -40,6 +39,8 @@
  PTRACERS_names(29)= 'Chl03',
  PTRACERS_names(30)= 'Chl04',
  PTRACERS_names(31)= 'Chl05',
+#
+# uM is shorthand for mmol m^-3
 #
  PTRACERS_units( 1)= 'uM C'
  PTRACERS_units( 2)= 'uM N'

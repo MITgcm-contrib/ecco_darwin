@@ -15,10 +15,10 @@
  viscAh=1.E0,
  viscAhGrid=1.E-2,
 #
- diffKhS=1.E1,
  diffKhT=1.E1,
- diffKrS=1.E-5,
  diffKrT=1.E-5,
+ diffKhS=1.E1,
+ diffKrS=1.E-5,
 #
  bottomDragQuadratic = 0.001,
 #when using ggl90
@@ -30,8 +30,6 @@
  viscA4GridMax=0.5,
  useAreaViscLength=.TRUE.,
  useRealFreshWaterFlux=.TRUE.,
- balanceSaltClimRelax=.TRUE.,
- allowFreezing=.FALSE.,
  hFacMinDr=50.,
  hFacMin=0.3,
  hFacInf=0.1,

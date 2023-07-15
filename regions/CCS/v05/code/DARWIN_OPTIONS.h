@@ -157,6 +157,7 @@ C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
 C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
+
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */
 

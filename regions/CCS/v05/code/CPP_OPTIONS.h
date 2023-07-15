@@ -22,7 +22,7 @@ C Note: this should be a run-time option
 #define SHORTWAVE_HEATING
 
 C o Include/exclude Geothermal Heat Flux at the bottom of the ocean
-#define ALLOW_GEOTHERMAL_FLUX
+#undef ALLOW_GEOTHERMAL_FLUX
 
 C o Allow to account for heating due to friction (and momentum dissipation)
 #undef ALLOW_FRICTION_HEATING
@@ -35,10 +35,10 @@ C o Include pressure loading code
 #define ATMOSPHERIC_LOADING
 
 C o Include/exclude balancing surface forcing fluxes code
-#define ALLOW_BALANCE_FLUXES
+#undef ALLOW_BALANCE_FLUXES
 
 C o Include/exclude balancing surface forcing relaxation code
-#define ALLOW_BALANCE_RELAX
+#undef ALLOW_BALANCE_RELAX
 
 C o Include/exclude checking for negative salinity
 #undef CHECK_SALINITY_FOR_NEGATIVE_VALUES

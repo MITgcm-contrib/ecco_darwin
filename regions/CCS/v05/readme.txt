@@ -1,5 +1,5 @@
 # Instructions for building and running CCS regional simulation
-# Based on ecco_darwin/v05/llc270/readme.txt
+# Based on ecco_darwin/v05/llc270/readme2.txt
 
 ==============
 # 1. Get code
@@ -28,13 +28,10 @@ make -j
 cd ../run
 ln -sf ../build/mitgcmuv .
 ln -sf /nobackup/dmenemen/CCS_kelp/run_template/* .
-#ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-#ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
-#ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2023/xx*42.data .
-mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
+mkdir diags diags/daily diags/monthly
 cp ../../ecco_darwin/regions/CCS/v05/input/* .
-mpirun -np 16 ./mitgcmuv
+mpirun -np 20 ./mitgcmuv
 # or modify job_ECCO_darwin as needed and then:
 # qsub job_ECCO_darwin

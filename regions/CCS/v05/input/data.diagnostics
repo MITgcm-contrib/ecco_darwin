@@ -14,13 +14,6 @@
 #
   dumpatlast = .TRUE.,
    
-#3-hourly diagnostics
-#---
-  frequency(1) = 10800.,
-   fields(1,1) = 'fluxCO2 ',
-   filename(1) = 'diags/3hourly/CO2_flux',
-#---
-
 #daily diagnostics
 #---
   frequency(2) = 86400.,
