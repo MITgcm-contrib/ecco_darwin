@@ -165,9 +165,9 @@ writebin(fouty,fldy);
 % }}}
 
 % {{{ get and save regional fields
+
 pin='/nobackup/dcarrol2/v05_latest/darwin3/run/diags/';
 pout=['/nobackup/dmenemen/' region_name '/'];
-
 % {{{ get and save scalar 2D fields
 fin={'budget/average_2d.'};
 fot={'ETAN'};
@@ -188,7 +188,6 @@ for t=1:length(dnm)
     writebin(fout,fld);
 end
 % }}}
-
 % {{{ get and save scalar 3D fields
 fin={'monthly/'};
 fld=zeros(sum(m),n,length(kx));
@@ -228,7 +227,6 @@ for t=1:length(dnm)
     writebin(fout,fld+35);
 end
 % }}}
-
 % {{{ get and save vector 3D fields
 % note that zonal velocity is U in faces 1/2 and V in faces 4/5
 % and meridional velocity is V in faces 1/2 and -U in faces 4/5
@@ -262,6 +260,60 @@ for t=1:length(dnm)
         end
         writebin(foutu,fldu);
         writebin(foutv,fldv);
+    end
+end
+% }}}
+
+pin='/nobackup/hzhang1/forcing/era_xx_it42_v2/';
+pout=['/nobackup/dmenemen/' region_name '/run_template/era_xx_it42_v2/'];
+% {{{ get and save scalar surface forcing
+fld=zeros(sum(m),n);
+for fot={'aqh', 'atemp', 'lwdn', 'preci', 'swdn', 'uwind', 'vwind'}
+    dnm=dir([pin 'EXF' fot{1} '*']);
+    for d=1:length(dnm)
+        fnm=[dnm(d).folder '/' dnm(d).name];
+        fout=[pout region_name suf1 '_' dnm(d).name];
+        nt=dnm(d).bytes/nx/nx/13/4;
+        for t=1:nt
+            for f=1:length(fc)
+                fld((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+                    read_llc_fkij(fnm,nx,fc(f),t,ix{fc(f)},jx{fc(f)});
+            end
+            writebin(fout,fld,1,'real*4',t-1);
+        end
+    end
+end
+% }}}
+% {{{ get and save vector surface forcing
+% note that zonal velocity is U in faces 1/2 and V in faces 4/5
+% and meridional velocity is V in faces 1/2 and -U in faces 4/5
+fldu=zeros(sum(m),n);
+fldv=zeros(sum(m),n);
+dnmu=dir([pin 'EXFuwind*']);
+dnmv=dir([pin 'EXFvwind*']);
+for d=1:length(dnmu)
+    fnmu=[dnmu(d).folder '/' dnmu(d).name];
+    fnmv=[dnmv(d).folder '/' dnmv(d).name];
+    foutu=[pout region_name suf1 '_' dnmu(d).name];
+    foutv=[pout region_name suf1 '_' dnmv(d).name];
+    nt=dnmu(d).bytes/nx/nx/13/4;
+    for t=1:nt
+        for f=1:length(fc)
+            switch fc(f)
+              case {1,2}
+                fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+                    read_llc_fkij(fnmu,nx,fc(f),t,ix{fc(f)},jx{fc(f)});
+                fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+                    read_llc_fkij(fnmv,nx,fc(f),t,ix{fc(f)},jx{fc(f)});
+              case {4,5}
+                fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+                    read_llc_fkij(fnmv,nx,fc(f),t,ix{fc(f)},jx{fc(f)});
+                fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:) = - ...
+                    read_llc_fkij(fnmu,nx,fc(f),t,ix{fc(f)},jx{fc(f)}-1);
+            end
+            writebin(foutu,fldu,1,'real*4',t-1);
+            writebin(foutv,fldv,1,'real*4',t-1);
+        end
     end
 end
 % }}}

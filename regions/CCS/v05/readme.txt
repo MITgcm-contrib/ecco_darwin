@@ -29,7 +29,6 @@ cd ../run
 ln -sf ../build/mitgcmuv .
 ln -sf /nobackup/dmenemen/CCS_kelp/run_template/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
-ln -sf /nobackup/hzhang1/forcing/era_xx .
 mkdir diags diags/daily diags/monthly
 cp ../../ecco_darwin/regions/CCS/v05/input/* .
 mpirun -np 20 ./mitgcmuv
