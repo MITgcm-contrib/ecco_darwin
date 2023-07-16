@@ -15,18 +15,16 @@
 # GM_AdvForm     :	turn on GM Advective form       (default=Skew flux form)
 
  &GM_PARM01 
-  GM_Small_Number  = 1.D-20,
-  GM_slopeSqCutoff = 1.D+08,
-  GM_AdvForm         = .TRUE.,
-  GM_isopycK         = 100.,
-  GM_background_K    = 100.,
-  GM_maxSlope        = 4.D-3,
-  GM_taper_scheme    = 'stableGmAdjTap',
-  GM_Kmin_horiz      = 10.,
-  GM_Scrit           = 4.D-3,
-  GM_Sd              = 1.D-3,
-#  GM_background_K3dFile='era_xx_it42_v2/llc270_it42_kapgm.data',
-#  GM_isopycK3dFile='era_xx_it42_v2/llc270_it42_kapredi.data',
+  GM_Small_Number       = 1.D-20,
+  GM_slopeSqCutoff      = 1.D+08,
+  GM_AdvForm            = .TRUE.,
+  GM_isopycK            = 100.,
+  GM_background_K       = 100.,
+  GM_maxSlope           = 4.D-3,
+  GM_taper_scheme       = 'stableGmAdjTap',
+  GM_Kmin_horiz         = 10.,
+  GM_Scrit              = 4.D-3,
+  GM_Sd                 = 1.D-3,
+  GM_background_K3dFile = 'era_xx_it42_v2/CCS_kelp_80x100_kapgm',
+  GM_isopycK3dFile      = 'era_xx_it42_v2/CCS_kelp_80x100_kapredi',
  /
-
-

@@ -284,6 +284,18 @@ for fot={'aqh', 'atemp', 'lwdn', 'preci', 'swdn', 'uwind', 'vwind'}
     end
 end
 % }}}
+% {{{ get and save mixing coefficients
+fld=zeros(sum(m),n,length(kx));
+for fot={'diffkr','kapgm','kapredi'}
+    fnm=[pin 'llc270_it42_' fot{1} '.data'];
+    fout=[pout region_name suf1 '_' fot{1}];
+    for f=1:length(fc)
+        fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
+            read_llc_fkij(fnm,nx,fc(f),kx,ix{fc(f)},jx{fc(f)});
+    end
+    writebin(fout,fld);
+end
+% }}}
 % {{{ get and save river discharge
 fld=zeros(sum(m),n,12);
 fnm=['/nobackup/hzhang1/forcing/era-interim/' ...
