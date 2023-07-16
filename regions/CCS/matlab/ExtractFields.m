@@ -234,9 +234,7 @@ end
 % }}}
 % {{{ get and save vector 3D fields
 % Note that zonal velocity is U in faces 1/2 and V in faces 4/5
-% and meridional velocity is V in faces 1/2 and -U in faces 4/5;
-% but not index shift is needed for V in faces 4/5 because
-% EXFuwind and EXfvwind are provided at tracer points.
+% and meridional velocity is V in faces 1/2 and -U in faces 4/5.
 fin={'budget/average_velmass_3d.'};
 eval(['mkdir ' pout 'U'])
 eval(['mkdir ' pout 'V'])
@@ -263,7 +261,7 @@ for t=1:length(dnm)
             fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
                 read_llc_fkij(fnm,nx,fc(f),kxv,ix{fc(f)},jx{fc(f)});
             fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = - ...
-                read_llc_fkij(fnm,nx,fc(f),kxu,ix{fc(f)},jx{fc(f)});
+                read_llc_fkij(fnm,nx,fc(f),kxu,ix{fc(f)},jx{fc(f)}-1);
         end
         writebin(foutu,fldu);
         writebin(foutv,fldv);
@@ -326,8 +324,10 @@ end
 writebin(fout,fld);
 % }}}
 % {{{ get and save vector surface forcing
-% note that zonal velocity is U in faces 1/2 and V in faces 4/5
-% and meridional velocity is V in faces 1/2 and -U in faces 4/5
+% Note that zonal velocity is U in faces 1/2 and V in faces 4/5
+% and meridional velocity is V in faces 1/2 and -U in faces 4/5;
+% but no index shift is needed for V in faces 4/5 because
+% EXFuwind and EXfvwind are provided at tracer points.
 fldu=zeros(sum(m),n);
 fldv=zeros(sum(m),n);
 dnmu=dir([pin 'EXFuwind*']);
@@ -350,7 +350,7 @@ for d=1:length(dnmu)
                 fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
                     read_llc_fkij(fnmv,nx,fc(f),t,ix{fc(f)},jx{fc(f)});
                 fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:) = - ...
-                    read_llc_fkij(fnmu,nx,fc(f),t,ix{fc(f)},jx{fc(f)}-1);
+                    read_llc_fkij(fnmu,nx,fc(f),t,ix{fc(f)},jx{fc(f)});
             end
             writebin(foutu,fldu,1,'real*4',t-1);
             writebin(foutv,fldv,1,'real*4',t-1);

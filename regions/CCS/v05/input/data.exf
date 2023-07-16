@@ -45,7 +45,7 @@
 #
   uwindstartdate1   = 19920101,
   uwindstartdate2   = 000000,
-   uwindperiod       = 21600.0,
+  uwindperiod       = 21600.0,
 #
   vwindstartdate1   = 19920101,
   vwindstartdate2   = 000000,
