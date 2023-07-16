@@ -101,7 +101,7 @@
 
 # Input datasets
  &PARM05
- bathyFile='BATHY_80x100_CCS_kelp',
+ bathyFile      ='BATHY_80x100_CCS_kelp',
  hydrogThetaFile='THETA_80x100x48.16-Jan-1992',
  hydrogSaltFile ='SALT_80x100x48.16-Jan-1992',
  uVelInitFile   ='U_80x100x48.16-Jan-1992',

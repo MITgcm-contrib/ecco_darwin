@@ -1,5 +1,5 @@
  &DARWIN_FORCING_PARAMS
-# ironfile = 'iron_dust_46x68_Mac',
+ ironfile = 'era_xx_it42_v2/CCS_kelp_80x100_iron_dust',
  ironperiod = -12,
  darwin_inscal_iron= 1000.,
 #

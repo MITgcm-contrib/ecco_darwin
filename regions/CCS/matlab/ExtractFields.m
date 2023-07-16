@@ -286,8 +286,20 @@ end
 % }}}
 % {{{ get and save river discharge
 fld=zeros(sum(m),n,12);
-fnm='/nobackup/hzhang1/forcing/era-interim/runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin';
+fnm=['/nobackup/hzhang1/forcing/era-interim/' ...
+     'runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin'];
 fout=[pout region_name suf1 '_Fekete_runoff'];
+for f=1:length(fc)
+    fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
+        read_llc_fkij(fnm,nx,fc(f),1:12,ix{fc(f)},jx{fc(f)});
+end
+writebin(fout,fld);
+% }}}
+% {{{ get and save iron dust
+fld=zeros(sum(m),n,12);
+fnm=['/nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/' ...
+     'darwin_forcing/llc270_Mahowald_2009_soluble_iron_dust.bin'];
+fout=[pout region_name suf1 '_iron_dust'];
 for f=1:length(fc)
     fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
         read_llc_fkij(fnm,nx,fc(f),1:12,ix{fc(f)},jx{fc(f)});
