@@ -6,6 +6,11 @@
 % Boundary conditions span January 16, 1992 to February 13,
 % 2023 with obcsperiod=2615438 (~30.27 days)
 
+% This code is best viewed using a "folding" package with the opening
+% and closing folds marked by, respectively, "% {{{" and "% }}}".
+% For emacs, I use folding.el available here:
+% https://github.com/jaalto/project-emacs--folding-mode/blob/master/folding.el
+
 % {{{ define desired region and initialize some variables
 region_name='CCS_kelp';
 minlat=20;
@@ -57,45 +62,49 @@ writebin([pout 'delYFile'],delY);
 % }}}
 
 % {{{ Generate initial conditions
+eval(['!mkdir ' pout 'init'])
+eval(['cd ' pout 'init'])
 fld={'ETAN'};
 sufin=[suf1 '.19920201T000000'];
 sufout=[suf1 '.16-Jan-1992'];
-eval(['!cp ' pin fld{1} '/' fld{1} sufin ' ' pout fld{1} sufout])
+eval(['!cp ' pin fld{1} '/' fld{1} sufin ' ' fld{1} sufout])
 sufin=[suf2 '.19920201T000000'];
 sufout=[suf2 '.16-Jan-1992'];
 for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
          'DOC', 'DON', 'DOP', 'DOFe', 'POC', 'PON', 'POP', 'POFe', ...
          'POSi', 'PIC', 'ALK', 'O2', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', ...
          'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5', 'SALT', 'U', 'V'}
-    eval(['!cp ' pin fld{1} '/' fld{1} sufin ' ' pout fld{1} sufout])
+    eval(['!cp ' pin fld{1} '/' fld{1} sufin ' fld{1} sufout])
 end
 % }}}
 
 % {{{ Generate lateral boundary conditions
+eval(['!mkdir ' pout 'obcs'])
+eval(['cd ' pout 'obcs'])
 for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
          'DOC', 'DON', 'DOP', 'DOFe', 'POC', 'PON', 'POP', 'POFe', ...
          'POSi', 'PIC', 'ALK', 'O2', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', ...
          'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5', 'SALT', 'U', 'V'}
     disp(fld{1})
     pnm=[pin fld{1} '/'];
-    fnm=dir([pnm '*' fld{1} '*']);
+    fnm=dir([pnm '*' fld{1} '*01T000000']);
     for t=1:length(fnm)
         fin=[pnm fnm(t).name];
         tmp=readbin(fin,[nx ny nz]);
-        fout=[pout fld{1} '_West']; % western boundary condition
+        fout=[region_name suf2 '_' fld{1} '_West']; % western boundary condition
         if fld{1}(1)=='U'
             writebin(fout,squeeze(tmp(2,:,:)),1,prec,t-1)
         else
             writebin(fout,squeeze(tmp(1,:,:)),1,prec,t-1)
         end
-        fout=[pout fld{1} '_South']; % southern boundary condition
+        fout=[region_name suf2 '_' fld{1} '_South']; % southern boundary condition
         if fld{1}=='V'
             writebin(fout,squeeze(tmp(:,2,:)),1,prec,t-1)
         else
             writebin(fout,squeeze(tmp(:,1,:)),1,prec,t-1)
         end
-        fout=[pout fld{1} '_North']; % southern boundary condition
-        writebin(fout,squeeze(tmp(:,1,:)),1,prec,t-1)
+        fout=[region_name suf2 '_' fld{1} '_North']; % norththern boundary condition
+        writebin(fout,squeeze(tmp(:,end,:)),1,prec,t-1)
     end
 end
 % }}}

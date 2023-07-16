@@ -4,6 +4,11 @@
 % lats 20N to 45.5N, lons 131.5W to 105W
 % (example extraction on face 4 and 5, i.e., rotated UV fields)
 
+% This code is best viewed using a "folding" package with the opening
+% and closing folds marked by, respectively, "% {{{" and "% }}}".
+% For emacs, I use folding.el available here:
+% https://github.com/jaalto/project-emacs--folding-mode/blob/master/folding.el
+
 % {{{ define desired region
 region_name='CCS_kelp';
 minlat=20;
@@ -228,8 +233,10 @@ for t=1:length(dnm)
 end
 % }}}
 % {{{ get and save vector 3D fields
-% note that zonal velocity is U in faces 1/2 and V in faces 4/5
-% and meridional velocity is V in faces 1/2 and -U in faces 4/5
+% Note that zonal velocity is U in faces 1/2 and V in faces 4/5
+% and meridional velocity is V in faces 1/2 and -U in faces 4/5;
+% but not index shift is needed for V in faces 4/5 because
+% EXFuwind and EXfvwind are provided at tracer points.
 fin={'budget/average_velmass_3d.'};
 eval(['mkdir ' pout 'U'])
 eval(['mkdir ' pout 'V'])
@@ -256,7 +263,7 @@ for t=1:length(dnm)
             fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
                 read_llc_fkij(fnm,nx,fc(f),kxv,ix{fc(f)},jx{fc(f)});
             fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = - ...
-                read_llc_fkij(fnm,nx,fc(f),kxu,ix{fc(f)},jx{fc(f)}-1);
+                read_llc_fkij(fnm,nx,fc(f),kxu,ix{fc(f)},jx{fc(f)});
         end
         writebin(foutu,fldu);
         writebin(foutv,fldv);
