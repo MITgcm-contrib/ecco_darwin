@@ -10,6 +10,8 @@ Simulations:
     /llc270: California Current System llc270 cut-out for kelp model development
   --GoM--
     /: Gulf of Mexico lon-lat
+  --LR17--
+    /llc270: La Rochelle Coastal System cut-out for sediment model development
   --mac_delta--
     /LatLon: Mackenzie Delta lon-lat  
     /llc270: Mackenzie Delta llc270 cut-out
