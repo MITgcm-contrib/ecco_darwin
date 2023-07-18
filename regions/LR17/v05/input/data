@@ -93,7 +93,7 @@
  usingSphericalPolarGrid=.TRUE.,
  xgOrigin = -4.3333335,
  ygOrigin =  43.188465,
- delX=20*0.333333,
+ delX=10*0.333333,
  delYfile='delYFile',
  /
 

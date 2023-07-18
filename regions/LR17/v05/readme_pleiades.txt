@@ -24,7 +24,7 @@
 # 3. Instructions for running simulation (1992-2023 period)
   cd ../run
   ln -sf ../build/mitgcmuv .
-  ln -sf /nobackup/dmenemen/ecco_darwin/LR17_kelp/run_template/* .
+  ln -sf /nobackup/dmenemen/ecco_darwin/LR17/run_template/* .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
   mkdir diags diags/daily diags/monthly
   cp ../../ecco_darwin/regions/LR17/v05/input/* .
