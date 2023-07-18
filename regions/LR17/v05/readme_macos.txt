@@ -24,7 +24,7 @@
   ln -sf ../build/mitgcmuv .
 #    Get forcing and configuration files from
 #    https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-#    https://nasa-ext.box.com/s/o9y9ecwkdw2dg96lwwxjfqql3pwpv9zv
+#    https://nasa-ext.box.com/s/zionyzanq7h4jf4rdw7aieiuao515kmk
 #    and deposit or link inside the darwin3/run directory.
 #    To save space, you can download only needed years for
 #    apCO2_* and era_xx_it42_v2

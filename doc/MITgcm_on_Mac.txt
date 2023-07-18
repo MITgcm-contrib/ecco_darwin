@@ -1,20 +1,20 @@
 # Instructions below assume that you are using the brew package manager,
 # which can be installed using:
- /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install gfortran
- brew install gcc
+  brew install gcc
 
 # Make sure that /usr/local/bin is in $PATH, e.g.,
 PATH=/usr/local/sbin:$PATH
 export PATH
 
 # Get MITgcm code
- git clone --depth 1 https://github.com/MITgcm/MITgcm.git
+  git clone --depth 1 https://github.com/MITgcm/MITgcm.git
 
 # Run a single-CPU verification experiment
- cd MITgcm/verification
- ./testreport -t lab_sea
+  cd MITgcm/verification
+  ./testreport -t lab_sea
 
 # If above step worked fine, you should see
 # Start time: .....
@@ -24,9 +24,17 @@ export PATH
 # Compile and run MITgcm using parallel MPI compilation
 
 # Extra package needed for parallel MPI compilation
- brew install open-mpi
+  brew install open-mpi
 
 # Run a single-CPU verification experiment
- cd MITgcm/verification
- export MPI_INC_DIR=/opt/homebrew/include
- ./testreport -mpi -t lab_sea
+  cd MITgcm/verification
+  export MPI_INC_DIR=/opt/homebrew/include
+  ./testreport -mpi -t lab_sea
+
+
+########################################################
+# Note that darwin3/tools/darwin/cog requires python
+# If python is not available, one way to install is:
+  brew install python3
+  cd /opt/homebrew/bin
+  sudo ln -sf python3 python
