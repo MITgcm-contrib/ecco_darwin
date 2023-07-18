@@ -42,7 +42,7 @@ suf2=[suf1 'x' int2str(length(kx))];
 
 % {{{ get and save grid information
 close all
-pout=['/nobackup/dmenemen/' region_name '/grid/'];
+pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/grid/'];
 eval(['mkdir ' pout])
 eval(['cd ' pout])
 
@@ -172,7 +172,7 @@ writebin(fouty,fldy);
 % {{{ get and save regional fields
 
 pin='/nobackup/dcarrol2/v05_latest/darwin3/run/diags/';
-pout=['/nobackup/dmenemen/' region_name '/'];
+pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/'];
 % {{{ get and save scalar 2D fields
 fin={'budget/average_2d.'};
 fot={'ETAN'};
@@ -270,10 +270,10 @@ end
 % }}}
 
 pin='/nobackup/hzhang1/forcing/era_xx_it42_v2/';
-pout=['/nobackup/dmenemen/' region_name '/run_template/era_xx_it42_v2/'];
+pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/run_template/era_xx_it42_v2/'];
 % {{{ get and save scalar surface forcing
 fld=zeros(sum(m),n);
-for fot={'aqh', 'atemp', 'lwdn', 'preci', 'swdn', 'uwind', 'vwind'}
+for fot={'aqh', 'atemp', 'lwdn', 'preci', 'swdn'}
     dnm=dir([pin 'EXF' fot{1} '*']);
     for d=1:length(dnm)
         fnm=[dnm(d).folder '/' dnm(d).name];
