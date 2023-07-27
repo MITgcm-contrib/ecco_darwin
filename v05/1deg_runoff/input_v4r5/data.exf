@@ -59,8 +59,10 @@
  precipstartdate2  = 003000,
  precipperiod      = 3600.0,
 #
- runofffile        = 'runoff-2d-Fekete-1deg-mon-V4-SMOOTH_S60scalving_v3.bin'
- runoffperiod      = -12,
+ runofffile        = 'jra55_do_runoff_ECCO_V4r5',
+ runoffstartdate1  = 19920101,
+ runoffstartdate2  = 120000,
+ runoffperiod      = 86400.0,
 #
  uwindstartdate1   = 19920101,
  uwindstartdate2   = 000000,
