@@ -52,6 +52,7 @@ mkdir diags/TS_surf_daily_snap
 mkdir diags/vel_surf_daily_snap
 mkdir diags/TS_AW_daily_snap
 mkdir diags/state_3D_mon_snap
+mkdir diags/state_3D_mon_mean
 mkdir diags/vel_3D_mon_snap
 mkdir diags/vel_3D_mon_mean
 mkdir diags/BGC_daily_consts
