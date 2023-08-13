@@ -5,8 +5,8 @@
 # Continuous equation parameters
  &PARM01
  tRef           = 3*23.,3*22.,21.,2*20.,19.,2*18.,17.,2*16.,15.,14.,13.,
-                  12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,8*1.,
- sRef           = 46*34.5,
+                  12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,12*1.,
+ sRef           = 50*34.5,
  no_slip_sides  = .TRUE.,
  no_slip_bottom = .TRUE.,
 #
@@ -89,21 +89,21 @@
      31.10, 38.42, 46.50, 55.00, 63.50, 71.58, 78.90, 85.15, 90.18,
      93.96, 96.58, 98.25, 99.25,100.01,101.33,104.56,111.33,122.83,
      139.09,158.94,180.83,203.55,226.50,249.50,272.50,295.50,318.50,
-     341.50,364.50,
+     341.50,364.50,387.50,410.50,433.50,456.50,
  usingSphericalPolarGrid=.TRUE.,
- xgOrigin = -4.3333335,
- ygOrigin =  43.188465,
- delX=10*0.333333,
- delYfile='delYFile',
+ xgOrigin =   -8.833333,
+ ygOrigin =  -13.289632,
+ delX     = 69*0.333333,
+ delYfile = 'delYFile',
  /
 
 # Input datasets
  &PARM05
- bathyFile       ='BATHY_10x22_LR17',
- hydrogThetaFile ='init/THETA_10x22x46.16-Jan-1992',
- hydrogSaltFile  ='init/SALT_10x22x46.16-Jan-1992',
- uVelInitFile    ='init/U_10x22x46.16-Jan-1992',
- vVelInitFile    ='init/V_10x22x46.16-Jan-1992',
- pSurfInitFile   ='init/ETAN_10x22.16-Jan-1992',
- diffKrFile      ='era_xx_it42_v2/LR17_10x22_diffkr',
+ bathyFile       ='BATHY_69x66_GulfGuinea',
+ hydrogThetaFile ='init/THETA_69x66x50.16-Jan-1992',
+ hydrogSaltFile  ='init/SALT_69x66x50.16-Jan-1992',
+ uVelInitFile    ='init/U_69x66x50.16-Jan-1992',
+ vVelInitFile    ='init/V_69x66x50.16-Jan-1992',
+ pSurfInitFile   ='init/ETAN_69x66.16-Jan-1992',
+ diffKrFile      ='era_xx_it42_v2/GulfGuinea_69x66_diffkr',
  /

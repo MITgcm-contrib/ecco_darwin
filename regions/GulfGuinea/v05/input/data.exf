@@ -20,14 +20,14 @@
  /
 
  &EXF_NML_02
-  atempfile         = 'era_xx_it42_v2/LR17_10x22_EXFatemp_6hourly',
-  aqhfile           = 'era_xx_it42_v2/LR17_10x22_EXFaqh_6hourly',
-  precipfile        = 'era_xx_it42_v2/LR17_10x22_EXFpreci_6hourly',
-  runofffile        = 'era_xx_it42_v2/LR17_10x22_Fekete_runoff',
-  uwindfile         = 'era_xx_it42_v2/LR17_10x22_EXFuwind_6hourly',
-  vwindfile         = 'era_xx_it42_v2/LR17_10x22_EXFvwind_6hourly',
-  swdownfile        = 'era_xx_it42_v2/LR17_10x22_EXFswdn_6hourly',
-  lwdownfile        = 'era_xx_it42_v2/LR17_10x22_EXFlwdn_6hourly',
+  atempfile         = 'era_xx_it42_v2/GulfGuinea_69x66_EXFatemp_6hourly',
+  aqhfile           = 'era_xx_it42_v2/GulfGuinea_69x66_EXFaqh_6hourly',
+  precipfile        = 'era_xx_it42_v2/GulfGuinea_69x66_EXFpreci_6hourly',
+  runofffile        = 'era_xx_it42_v2/GulfGuinea_69x66_Fekete_runoff',
+  uwindfile         = 'era_xx_it42_v2/GulfGuinea_69x66_EXFuwind_6hourly',
+  vwindfile         = 'era_xx_it42_v2/GulfGuinea_69x66_EXFvwind_6hourly',
+  swdownfile        = 'era_xx_it42_v2/GulfGuinea_69x66_EXFswdn_6hourly',
+  lwdownfile        = 'era_xx_it42_v2/GulfGuinea_69x66_EXFlwdn_6hourly',
 #
   atempstartdate1   = 19920101,
   atempstartdate2   = 000000,
@@ -75,6 +75,9 @@
  /
 
  &EXF_NML_OBCS
+  obcsSstartdate1   = 19920115,
+  obcsSstartdate2   = 031519,
+  obcsSperiod       = 2615438.0,
   obcsWstartdate1   = 19920115,
   obcsWstartdate2   = 031519,
   obcsWperiod       = 2615438.0,

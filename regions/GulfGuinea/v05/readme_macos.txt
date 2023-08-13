@@ -1,5 +1,5 @@
-# Instructions for building and running LR17 regional simulation
-# on macOS (based on ecco_darwin/v05/llc270/readme2.txt).
+# Instructions for building and running Gulf of Guinea regional
+# simulation on macOS (based on ecco_darwin/v05/llc270/readme2.txt).
 # See ecco_darwin/doc/MITgcm_on_Mac.txt for additional instructions.
 
 ==============
@@ -13,8 +13,8 @@
 ==============
 # 2. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/LR17/v05/code -mpi \
-   -of ../../ecco_darwin/regions/LR17/v05/code/darwin_arm64_gfortran
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/GulfGuinea/v05/code -mpi \
+   -of ../../ecco_darwin/regions/GulfGuinea/v05/code/darwin_arm64_gfortran
   make depend
   make -j
 
@@ -24,10 +24,12 @@
   ln -sf ../build/mitgcmuv .
 #    Get forcing and configuration files from
 #    https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-#    https://nasa-ext.box.com/s/zionyzanq7h4jf4rdw7aieiuao515kmk
-#    and deposit or link inside the darwin3/run directory.
+#    https://nasa-ext.box.com/s/59kwo56sz7nvwvvypq3p2kkacecq7rk6
+#    and deposit or link inside the darwin3/run directory, e.g.,
+  ln -sf ~/Links/Box/Public/KelpProject/NOAA_MBL/* .
+  ln -sf ~/Links/Box/Public/GulfGuinea/run_template/* .
 #    To save space, you can download only needed years for
 #    apCO2_* and era_xx_it42_v2
   mkdir diags diags/daily diags/monthly
-  cp ../../ecco_darwin/regions/LR17/v05/input/* .
-  mpirun -np 4 ./mitgcmuv
+  cp ../../ecco_darwin/regions/GulfGuinea/v05/input/* .
+  mpirun -np 6 ./mitgcmuv

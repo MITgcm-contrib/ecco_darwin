@@ -11,7 +11,7 @@ C Package-specific Options & Macros go here
 
 C Enable individual open boundaries
 #undef ALLOW_OBCS_NORTH
-#undef ALLOW_OBCS_SOUTH
+#define ALLOW_OBCS_SOUTH
 #undef ALLOW_OBCS_EAST
 #define ALLOW_OBCS_WEST
 

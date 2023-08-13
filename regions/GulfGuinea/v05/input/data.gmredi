@@ -25,6 +25,6 @@
   GM_Kmin_horiz         = 10.,
   GM_Scrit              = 4.D-3,
   GM_Sd                 = 1.D-3,
-  GM_background_K3dFile = 'era_xx_it42_v2/LR17_10x22_kapgm',
-  GM_isopycK3dFile      = 'era_xx_it42_v2/LR17_10x22_kapredi',
+  GM_background_K3dFile = 'era_xx_it42_v2/GulfGuinea_69x66_kapgm',
+  GM_isopycK3dFile      = 'era_xx_it42_v2/GulfGuinea_69x66_kapredi',
  /
