@@ -1,3 +1,9 @@
+# If you don't have a github account, create one here:
+# https://github.com/
+
+# If you don't have an ssh key on github, follow instructions here:
+# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+
 # To get the ECCO-Darwin repository:
  git clone git@github.com:MITgcm-contrib/ecco_darwin.git
 
