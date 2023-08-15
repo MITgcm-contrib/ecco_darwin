@@ -1,16 +1,20 @@
-% Look at some output from global cutout
-cd ~/Links/Box/Public/GulfGuinea/GlobalCutout
+% Look at some output from the global cutout
+
+% Specify location of global cutout, e.g.,
+pin='~/Links/Box/Public/GulfGuinea/GlobalCutout/';
+
+% Grid dimensions
 nx=69;
 ny=66;
 nz=50;
 
-% plot bathymetry
-XC=readbin('grid/XC_69x66',[69 66]);
-YC=readbin('grid/YC_69x66',[69 66]);
-Depth=readbin('grid/Depth_69x66',[69 66]);
+% Plot bathymetry
+XC=readbin([pin 'grid/XC_69x66'],[69 66]);
+YC=readbin([pin 'grid/YC_69x66'],[69 66]);
+Depth=readbin([pin 'grid/Depth_69x66'],[69 66]);
 Depth(find(Depth==0))=nan;
 pcolorcen(XC,YC,-Depth)
-axis([mmin(XC) mmax(XC) mmin(YC) mmax(YC)])
+axis([min(XC(:)) max(XC(:)) min(YC(:)) max(YC(:))])
 colorbar
 title('Model bathymetry (m)')
 xlabel('Longiude East (^o)')
