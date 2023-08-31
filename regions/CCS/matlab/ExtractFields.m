@@ -116,7 +116,7 @@ for fnm={'XG','YG','RAZ'}
 end
 % }}}
 
-% {{{ West edge points, no direction
+% {{{ DXC/DYC: West or South edge points, no direction
 fnx='DXC';
 fny='DYC';
 finx=[pin fnx '.data'];
@@ -143,6 +143,60 @@ writebin(foutx,fldx);
 writebin(fouty,fldy);
 % }}}
 
+% {{{ RAW/RAS: West or South edge points, no direction
+fnx='RAW';
+fny='RAS';
+finx=[pin fnx '.data'];
+finy=[pin fny '.data'];
+foutx=[fnx suf1];
+fouty=[fny suf1];
+fldx=zeros(sum(m),n);
+fldy=zeros(sum(m),n);
+for f=1:length(fc)
+    switch fc(f)
+      case {1,2}
+        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+            read_llc_fkij(finx,nx,fc(f),1,ix{fc(f)},jx{fc(f)});
+        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+            read_llc_fkij(finy,nx,fc(f),1,ix{fc(f)},jx{fc(f)});
+      case {4,5}
+        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+            read_llc_fkij(finy,nx,fc(f),1,ix{fc(f)},jx{fc(f)});
+        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
+            read_llc_fkij(finx,nx,fc(f),1,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
+    end
+end
+writebin(foutx,fldx);
+writebin(fouty,fldy);
+% }}}
+
+% {{{ hFacW/S: West or South edge points, no direction
+fnx='hFacW';
+fny='hFacS';
+finx=[pin fnx '.data'];
+finy=[pin fny '.data'];
+foutx=[fnx suf2];
+fouty=[fny suf2];
+fldx=zeros(sum(m),n,length(kx));
+fldy=zeros(sum(m),n,length(kx));
+for f=1:length(fc)
+    switch fc(f)
+      case {1,2}
+        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
+            read_llc_fkij(finx,nx,fc(f),kx,ix{fc(f)},jx{fc(f)});
+        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
+            read_llc_fkij(finy,nx,fc(f),kx,ix{fc(f)},jx{fc(f)});
+      case {4,5}
+        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
+            read_llc_fkij(finy,nx,fc(f),kx,ix{fc(f)},jx{fc(f)});
+        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
+            read_llc_fkij(finx,nx,fc(f),kx,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
+    end
+end
+writebin(foutx,fldx);
+writebin(fouty,fldy);
+% }}}
+
 % {{{ Southwest edge points, no direction
 fnx='DXG';
 fny='DYG';
@@ -150,6 +204,8 @@ finx=[pin fnx '.data'];
 finy=[pin fny '.data'];
 foutx=[fnx suf1];
 fouty=[fny suf1];
+fldx=zeros(sum(m),n);
+fldy=zeros(sum(m),n);
 for f=1:length(fc)
     switch fc(f)
       case {1,2}

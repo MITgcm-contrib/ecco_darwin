@@ -81,30 +81,102 @@ end
 % {{{ Generate lateral boundary conditions
 eval(['!mkdir ' pout 'obcs'])
 eval(['cd ' pout 'obcs'])
+
+% {{{ Tracer fields
 for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
          'DOC', 'DON', 'DOP', 'DOFe', 'POC', 'PON', 'POP', 'POFe', ...
          'POSi', 'PIC', 'ALK', 'O2', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', ...
-         'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5', 'SALT', 'U', 'V'}
+         'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5', 'SALT'}
     disp(fld{1})
     pnm=[pin fld{1} '/'];
     fnm=dir([pnm '*' fld{1} '*01T000000']);
     for t=1:length(fnm)
         fin=[pnm fnm(t).name];
         tmp=readbin(fin,[nx ny nz]);
-        fout=[region_name suf2 '_' fld{1} '_West']; % western boundary condition
-        if fld{1}(1)=='U'
-            writebin(fout,squeeze(tmp(2,:,:)),1,prec,t-1)
-        else
-            writebin(fout,squeeze(tmp(1,:,:)),1,prec,t-1)
-        end
-        fout=[region_name suf2 '_' fld{1} '_South']; % southern boundary condition
-        if fld{1}=='V'
-            writebin(fout,squeeze(tmp(:,2,:)),1,prec,t-1)
-        else
-            writebin(fout,squeeze(tmp(:,1,:)),1,prec,t-1)
-        end
-        fout=[region_name suf2 '_' fld{1} '_North']; % norththern boundary condition
+        
+        % western boundary condition
+        fout=[region_name suf2 '_' fld{1} '_West'];
+        writebin(fout,squeeze(tmp(1,:,:)),1,prec,t-1)
+        
+        % southern boundary condition
+        fout=[region_name suf2 '_' fld{1} '_South'];
+        writebin(fout,squeeze(tmp(:,1,:)),1,prec,t-1)
+        
+        % norththern boundary condition
+        fout=[region_name suf2 '_' fld{1} '_North'];
         writebin(fout,squeeze(tmp(:,end,:)),1,prec,t-1)
     end
 end
+% }}}
+
+% {{{ Horizontal velocity
+hFacS=readbin([pin '/grid/hFacS' suf2],[nx ny nz]);
+hFacW=readbin([pin '/grid/hFacW' suf2],[nx ny nz]);
+
+% {{{ U
+disp('U')
+fnm=dir([pin 'U/U*01T000000']);
+for t=1:length(fnm)
+    tmp=readbin([fnm(t).folder '/' fnm(t).name],[nx ny nz]);
+    
+    % western boundary condition
+    fout=[region_name suf2 '_U_West'];
+    hFac=squeeze(hFacW(2,:,:));
+    obc=squeeze(tmp(2,:,:));
+    in=find(hFac);
+    obc(in)=obc(in)./hFac(in);
+    writebin(fout,obc,1,prec,t-1)
+       
+    % southern boundary condition
+    fout=[region_name suf2 '_U_South'];
+    hFac=squeeze(hFacW(:,1,:));
+    obc=squeeze(tmp(:,1,:));
+    in=find(hFac);
+    obc(in)=obc(in)./hFac(in);
+    writebin(fout,obc,1,prec,t-1)
+       
+    % norththern boundary condition
+    fout=[region_name suf2 '_U_North'];
+    hFac=squeeze(hFacW(:,end,:));
+    obc=squeeze(tmp(:,end,:));
+    in=find(hFac);
+    obc(in)=obc(in)./hFac(in);
+    writebin(fout,obc,1,prec,t-1)
+end
+% }}}
+
+% {{{ V
+disp('V')
+fnm=dir([pin 'V/V*01T000000']);
+for t=1:length(fnm)
+    tmp=readbin([fnm(t).folder '/' fnm(t).name],[nx ny nz]);
+    
+    % western boundary condition
+    fout=[region_name suf2 '_V_West'];
+    hFac=squeeze(hFacS(1,:,:));
+    obc=squeeze(tmp(1,:,:));
+    in=find(hFac);
+    obc(in)=obc(in)./hFac(in);
+    writebin(fout,obc,1,prec,t-1)
+       
+    % southern boundary condition
+    fout=[region_name suf2 '_V_South'];
+    hFac=squeeze(hFacS(:,2,:));
+    obc=squeeze(tmp(:,2,:));
+    in=find(hFac);
+    obc(in)=obc(in)./hFac(in);
+    writebin(fout,obc,1,prec,t-1)
+       
+    % norththern boundary condition
+    fout=[region_name suf2 '_V_North'];
+    hFac=squeeze(hFacS(:,end,:));
+    obc=squeeze(tmp(:,end,:));
+    in=find(hFac);
+    obc(in)=obc(in)./hFac(in);
+    writebin(fout,obc,1,prec,t-1)
+end
+% }}}
+
+% }}}
+
 % }}}
