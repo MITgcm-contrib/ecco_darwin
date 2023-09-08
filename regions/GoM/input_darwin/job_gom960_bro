@@ -10,17 +10,19 @@
 ##PBS -j oe
 #PBS -m abe
 
-module purge
-module load comp-intel mpi-hpe hdf4 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-module list
-
 #PBS -N GoM
 #PBS -o output
 #PBS -e error
+#PBS -l site=needed=/home1+/nobackupp19
+
+module purge
+module load comp-intel mpi-hpe hdf4 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module list
 
 umask 027
 cd $PBS_O_WORKDIR
 limit stacksize unlimited
 #./modpickup
+setenv MPI_LAUNCH_TIMEOUT 40
 mpiexec -np 749 ./mitgcmuv
 
