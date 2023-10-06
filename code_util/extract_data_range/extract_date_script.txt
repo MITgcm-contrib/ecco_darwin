@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#example of extracting files from date range from LLC 270 simulation
+
+yr1=2007
+yr2=2008
+
+fld=SIarea
+
+t0=$( date +%s -d19920101 )
+t1=$( date +%s -d${yr1}0101 )
+t2=$( date +%s -d${yr2}0101 )
+ts1=$(( (t1-t0)/1200 +72))
+ts2=$(( (t2-t0)/1200 +72))
+
+for ((i=$ts1;i<$ts2;i+=72)); do
+        ts=$( printf "%010d" $i )
+         fn=${fld}.${ts}.data
+         ls $fn
+	 cp $fn ../../../../transfer/
+done
