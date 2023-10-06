@@ -194,11 +194,11 @@ for i=1:75
     end
     ix=find(gQact(gQact2jra)>(i-1)*100&gQact(gQact2jra)<=i*100);
     if ~isempty(ix)
-        plot(jlon(ix),jlat(ix),'b+','markersize',i+3)
+        plot(glon(gQact2jra),glat(gQact2jra),'b+','markersize',i+3)
     end
 end
 title('No Antarctica')
 text(185,-50,['jra ' int2str(sum(jra)) ' km^3/yr'],'color','r')
 text(185,-60,['gQact ' int2str(sum(gQact(gQact2jra))) ' km^3/yr'],'color','b')
 
-save GlobalNews_to_JRA55
+%save GlobalNews_to_JRA55
