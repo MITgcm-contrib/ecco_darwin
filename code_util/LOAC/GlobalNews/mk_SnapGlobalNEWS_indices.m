@@ -57,7 +57,7 @@ clear gns ix
 % Correct DIC inputs from the Amazon
 % relation from Li et al., 2017 overestimates DIC export three times than
 % literature range (da Cuha et al., 2013, Probst et al, 1994)
-gDIC(5917) = gDIC(5917)/3;
+gDIC(1) = gDIC(1)/3;
 
 ix = find(strcmp(cellstr(gbasins_end),"Land"));
 for f={'lat','lon','Qact','DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS','DIC'}
