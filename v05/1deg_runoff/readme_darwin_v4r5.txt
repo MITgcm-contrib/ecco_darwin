@@ -46,4 +46,4 @@ ln -sf /nobackup/rsavelli/LOAC/ECCO_V4r5/bgc_runoff/* .
 mkdir diags/3hourly diags/daily diags/monthly diags/budget
 mv pickup_ptracers.0000000001.data pickup_ptracers.0000000002.data
 mv pickup_ptracers.0000000001.meta pickup_ptracers.0000000002.meta
-# qsub job_ECCOV4
+# qsub job_ECCOv4r5
