@@ -64,7 +64,7 @@ for yr=1991:2023
             continue
         end
         for f={'DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS','DIC'}
-        %for f={'DIN'}
+        %for f={'DIC'}
            fout=[pout f{1} '_' int2str(yr)];
             eval(['fld=g' f{1} ';'])
             FLD=0*LAT;

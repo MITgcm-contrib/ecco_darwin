@@ -55,9 +55,10 @@ gDIC=gns(:,1); % GlobalNEWS2 load DIC (Mg/yr)
 clear gns ix
 
 % Correct DIC inputs from the Amazon
-% relation from Li et al., 2017 overestimates DIC export three times than
-% literature range (da Cuha et al., 2013, Probst et al, 1994)
-gDIC(1) = gDIC(1)/3;
+% relation from Li et al., 2017 overestimates DIC export so here average of
+% literature (da Cuha et al., 2013, Probst et al, 1994, Li et al 2017)
+% 2.54 Tmol yr-1 so 30480000 Mg yr-1
+gDIC(1) = 30480000;
 
 ix = find(strcmp(cellstr(gbasins_end),"Land"));
 for f={'lat','lon','Qact','DIN','DIP','DON','DOP','DOC','DSi','PN','PP','POC','TSS','DIC'}
