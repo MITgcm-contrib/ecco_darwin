@@ -160,10 +160,10 @@
    timePhase(19)= 0.,
    filename(19) = 'diags/budg3d_snap_set1',
 #---
-  frequency(20) = 2635200.0,
-   fields(1:6,20) = 'SHIfwFlx','SHIhtFlx','SHIICFfw','SHIICFht',
+  frequency(18) = 2635200.0,
+   fields(1:6,18) = 'SHIfwFlx','SHIhtFlx','SHIICFfw','SHIICFht',
                     'ICFfwFlx','ICFhtFlx',
-   filename(20) = 'diags/state_2d_shelfice',
+   filename(18) = 'diags/state_2d_shelfice',
 #---
  /
 #
