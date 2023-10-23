@@ -33,5 +33,4 @@ ln -s ${INPUTDIR}/input_forcing_ext/* .
 mv data_ext      data
 mv data.ctrl_ext data.ctrl
 mv data.exf_ext  data.exf
-mv data.ptracers_ext data.ptracers
 mpiexec -np 113 ./mitgcmuv
