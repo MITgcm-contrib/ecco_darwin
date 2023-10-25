@@ -110,20 +110,37 @@ end
 % }}}
 
 % {{{ Horizontal velocity
+DRF  =readbin([gdir 'DRF.data'],nz);
+RAC  =readbin([pin '/grid/RAC'   suf1],[nx ny]);
+RAS  =readbin([pin '/grid/RAS'   suf1],[nx ny]);
+RAW  =readbin([pin '/grid/RAW'   suf1],[nx ny]);
+Depth=readbin([pin '/grid/Depth' suf1],[nx ny]);
 hFacS=readbin([pin '/grid/hFacS' suf2],[nx ny nz]);
 hFacW=readbin([pin '/grid/hFacW' suf2],[nx ny nz]);
+DepthS=0*Depth; DepthW=0*Depth;
+for k=1:nz
+    DepthS=DepthS+hFacS(:,:,k)*DRF(k);
+    DepthW=DepthW+hFacW(:,:,k)*DRF(k);
+end
+fne=dir([pin 'ETAN/ETAN*01T000000']);
 
 % {{{ U
 disp('U')
 fnm=dir([pin 'U/U*01T000000']);
 for t=1:length(fnm)
+    eta=readbin([fne(t).folder '/' fne(t).name],[nx ny]);
     tmp=readbin([fnm(t).folder '/' fnm(t).name],[nx ny nz]);
     
     % western boundary condition
     fout=[region_name suf2 '_U_West'];
+    rStarFac=( ( eta(1,:).*RAC(1,:) + eta(2,:).*RAC(2,:) ) ...
+               ./ RAW(2,:) / 2 + DepthW(2,:) ) ./ DepthW(2,:);
     hFac=squeeze(hFacW(2,:,:));
+    for k=1:nz
+        hFac(:,k)=hFac(:,k).*rStarFac';
+    end
     obc=squeeze(tmp(2,:,:));
-    in=find(hFac);
+    in=find(hFac~=0&isfinite(hFac));
     obc(in)=obc(in)./hFac(in);
     writebin(fout,obc,1,prec,t-1)
        
@@ -131,7 +148,7 @@ for t=1:length(fnm)
     fout=[region_name suf2 '_U_South'];
     hFac=squeeze(hFacW(:,1,:));
     obc=squeeze(tmp(:,1,:));
-    in=find(hFac);
+    in=find(hFac~=0&isfinite(hFac));
     obc(in)=obc(in)./hFac(in);
     writebin(fout,obc,1,prec,t-1)
        
@@ -139,7 +156,7 @@ for t=1:length(fnm)
     fout=[region_name suf2 '_U_North'];
     hFac=squeeze(hFacW(:,end,:));
     obc=squeeze(tmp(:,end,:));
-    in=find(hFac);
+    in=find(hFac~=0&isfinite(hFac));
     obc(in)=obc(in)./hFac(in);
     writebin(fout,obc,1,prec,t-1)
 end
@@ -149,29 +166,40 @@ end
 disp('V')
 fnm=dir([pin 'V/V*01T000000']);
 for t=1:length(fnm)
+    eta=readbin([fne(t).folder '/' fne(t).name],[nx ny]);
     tmp=readbin([fnm(t).folder '/' fnm(t).name],[nx ny nz]);
     
     % western boundary condition
     fout=[region_name suf2 '_V_West'];
     hFac=squeeze(hFacS(1,:,:));
     obc=squeeze(tmp(1,:,:));
-    in=find(hFac);
+    in=find(hFac~=0&isfinite(hFac));
     obc(in)=obc(in)./hFac(in);
     writebin(fout,obc,1,prec,t-1)
        
     % southern boundary condition
     fout=[region_name suf2 '_V_South'];
+    rStarFac=( ( eta(:,1).*RAC(:,1) + eta(:,2).*RAC(:,2) ) ...
+               ./ RAS(:,2) / 2 + DepthS(:,2) ) ./ DepthS(:,2);
     hFac=squeeze(hFacS(:,2,:));
+    for k=1:nz
+        hFac(:,k)=hFac(:,k).*rStarFac;
+    end
     obc=squeeze(tmp(:,2,:));
-    in=find(hFac);
+    in=find(hFac~=0&isfinite(hFac));
     obc(in)=obc(in)./hFac(in);
     writebin(fout,obc,1,prec,t-1)
 
     % norththern boundary condition
     fout=[region_name suf2 '_V_North'];
+    rStarFac=( ( eta(:,end-1).*RAC(:,end-1) + eta(:,end).*RAC(:,end) ) ...
+               ./ RAS(:,end) / 2 + DepthS(:,end) ) ./ DepthS(:,end);
     hFac=squeeze(hFacS(:,end,:));
+    for k=1:nz
+        hFac(:,k)=hFac(:,k).*rStarFac;
+    end
     obc=squeeze(tmp(:,end,:));
-    in=find(hFac);
+    in=find(hFac~=0&isfinite(hFac));
     obc(in)=obc(in)./hFac(in);
     writebin(fout,obc,1,prec,t-1)
 end
