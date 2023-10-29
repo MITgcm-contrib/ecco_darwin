@@ -35,8 +35,8 @@ close all
 pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/grid/'];
 eval(['mkdir ' pout])
 eval(['cd ' pout])
-for fnm={'Depth','RAC','XC','YC','hFacC','hFacS','hFacW','AngleCS', ...
-         'AngleSN','XG','YG','RAZ','DXC','DYC','DXG','DYG'}
+for fnm={'Depth','RAC','XC','YC','hFacC','hFacS','hFacW', ...
+         'XG','YG','RAZ','DXC','DYC','DXG','DYG'}
     fin=[pin fnm{1} '.data'];
     switch fnm{1}
       case{'hFacC','hFacS','hFacW'}
