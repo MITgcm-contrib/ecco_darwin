@@ -75,13 +75,28 @@ for t=1:length(dnm)
     fld=read_llc_fkij(fnm,NX,fc,1,ix,jx);
     writebin(fout,fld);
 end
+fin={'monthly/'};
+for fot={'fugCO2', 'CO2_flux'}
+    eval(['mkdir ' pout fot{1}])
+    eval(['cd ' pout fot{1}])
+    dnm=dir([pin fin{1} fot{1} '.*.data']);
+    for t=1:length(dnm)
+        fnm=[dnm(t).folder '/' dnm(t).name];
+        l=strfind(fnm,'.000');
+        ts=str2num(fnm((l+1):(l+10)));
+        dy=ts2dte(ts,1200,1992,1,1,30);
+        fout=[fot{1} suf1 '.' dy];
+        fld=read_llc_fkij(fnm,NX,fc,1,ix,jx);
+        writebin(fout,fld);
+    end
+end
 % }}}
 % {{{ get and save scalar 3D fields
 fin={'monthly/'};
 for fot={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
          'DOC', 'DON', 'DOP', 'DOFe', 'POC', 'PON', 'POP', 'POFe', ...
          'POSi', 'PIC', 'ALK', 'O2', 'c1', 'c2', 'c3', 'c4', 'c5', ...
-         'c6', 'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5'}
+         'c6', 'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5', 'pH'}
     eval(['mkdir ' pout fot{1}])
     eval(['cd ' pout fot{1}])
     dnm=dir([pin fin{1} fot{1} '.*.data']);
