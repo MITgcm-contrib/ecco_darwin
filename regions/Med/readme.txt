@@ -1,14 +1,13 @@
-This file is available in
+https://github.com/MITgcm-contrib/ecco_darwin/tree/master/regions/Med
 
-
-============
 Mediteranean and Black Sea cutout of the global ECCO-Darwin version 5
 https://onlinelibrary.wiley.com/doi/10.1029/2019MS001888
 https://onlinelibrary.wiley.com/doi/10.1029/2021GB007162
+https://ecco-group.org/storymaps.htm?id=45
+https://ecco-group.org/storymaps.htm?id=71
+https://darwin3.readthedocs.io/en/latest/phys_pkgs/darwin.html
 
-Extracted for Louisa Giannoudi and Aleka Pavlidou, HCMR,
-on October 25, 2023, using
-https://github.com/MITgcm-contrib/ecco_darwin/tree/master/regions/Med
+Extracted for Louisa Giannoudi and Aleka Pavlidou, HCMR, on October 25, 2023
 
 Extracted region is available on pfe:~dmenemen/ecco_darwin/Med
 and on https://nasa-ext.box.com/s/7z3jsoymr39c7jov81cmzafqqfx6922j
@@ -42,11 +41,54 @@ More details about MITgcm grid are available in:
 https://github.com/MITgcm/MITgcm/blob/master/model/inc/GRID.h
 
 ============
-Available monthly-mean output is:
-Eta.*.data      sea surface height (m)
-Salt.*.data     salinity (g/kg)
-Theta.*.data    potential temperature (deg C)
-U.*.data        zonal (relative to grid) velocity, >0 from West to East (m/s)
-                specified on Southwest C-grid U point
-V.*.data        merid. (relative to grid) velocity, >0 from South to North (m/s)
-                specified on Southwest C-grid V point
+Extracted monthly-mean output for January 1992 to June 2023
+
+ETAN    sea surface height (m)
+SALT    salinity (g/kg)
+THETA   potential temperature (deg C)
+U       zonal velocity, >0 from West to East (m/s) specified on Southwest C-grid U point
+V       meridional velocity, >0 from South to North (m/s) specified on Southwest C-grid V point
+
+DIC	concentration of dissolved inorganic carbon       (mmol C   m^-3)
+NO3	concentration of nitrate                          (mmol N   m^-3)
+NO2	concentration of nitrite                          (mmol N   m^-3)
+NH4	concentration of ammonia                          (mmol N   m^-3)
+PO4	concentration of phosphate                        (mmol P   m^-3)
+FeT	concentration of total dissolved iron             (mmol Fe  m^-3)
+SiO2	concentration of inorganic silica                 (mmol Si  m^-3)
+DOC	concentration of dissolved organic carbon         (mmol C   m^-3)
+DON	concentration of dissolved organic nitrogen       (mmol N   m^-3)
+DOP	concentration of dissolved organic phosphorus     (mmol P   m^-3)
+DOFe	concentration of dissolved organic iron           (mmol Fe  m^-3)
+POC	concentration of particulate organic carbon       (mmol C   m^-3)
+PON	concentration of particulate organic nitrogen     (mmol N   m^-3)
+POP	concentration of particulate organic phosphorus   (mmol P   m^-3)
+POFe	concentration of particulate organic iron         (mmol Fe  m^-3)
+POSi	concentration of particulate organic silica       (mmol Si  m^-3)
+PIC	concentration of particulate inorganic carbon     (mmol C   m^-3)
+ALK	alkalinity                                        (meq      m^-3)
+O2	concentration of oxygen                           (mmol O2  m^-3)
+c01	concentration of carbon in plankton type 1        (mmol C   m^-3)
+c02	concentration of carbon in plankton type 2        (mmol C   m^-3)
+c03	concentration of carbon in plankton type 3        (mmol C   m^-3)
+c04	concentration of carbon in plankton type 4        (mmol C   m^-3)
+c05	concentration of carbon in plankton type 5        (mmol C   m^-3)
+c06	concentration of carbon in plankton type 6        (mmol C   m^-3)
+c07	concentration of carbon in plankton type 7        (mmol C   m^-3)
+Chl01	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
+Chl02	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
+Chl03	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
+Chl04	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
+CHl05	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
+
+============
+Model output naming convention and format
+
+All files are plain binary, real*4, IEEE big-endian,
+with dimensions 47 (with file name termination _47),
+144x72 (with file name termination _144x72), and
+144x72x47 (with file name termination _144x72x47).
+
+Monthly means are indicated with end of averaging period,
+for example, ".19920201T000000" indicates a monthly mean
+field for January 1992.
