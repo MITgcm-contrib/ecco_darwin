@@ -81,6 +81,7 @@ Chl03	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
 Chl04	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
 CHl05	concentration of Chlorophyll-a in plankton type 1 (mg Chl a m^-3)
 
+apCO2    atmospheric pCO2               (atm)
 pH       potential of hydrogen          (pH)
 fugCO2   fugacity of CO2                (atm)
 CO2_flux flux of CO2 - air-sea exchange (mmol C/m^2/s)
