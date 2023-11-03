@@ -26,7 +26,7 @@ export PATH
 # Extra package needed for parallel MPI compilation
   brew install open-mpi
 
-# Run a single-CPU verification experiment
+# Run an MPI verification experiment
   cd MITgcm/verification
   export MPI_INC_DIR=/opt/homebrew/include
   ./testreport -mpi -t lab_sea

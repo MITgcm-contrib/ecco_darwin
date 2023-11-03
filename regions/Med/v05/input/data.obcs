@@ -1,0 +1,48 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Iwest  =   72*1,
+#
+ useOBCSprescribe=.TRUE.,
+#
+ OBWsFile='obcs/Med_144x72x47_SALT_West',
+ OBWtFile='obcs/Med_144x72x47_THETA_West',
+ OBWuFile='obcs/Med_144x72x47_U_West',
+ OBWvFile='obcs/Med_144x72x47_V_West',
+ OBWptrFile(1)='obcs/Med_144x72x47_DIC_West',
+ OBWptrFile(2)='obcs/Med_144x72x47_NO3_West',
+ OBWptrFile(3)='obcs/Med_144x72x47_NO2_West',
+ OBWptrFile(4)='obcs/Med_144x72x47_NH4_West',
+ OBWptrFile(5)='obcs/Med_144x72x47_PO4_West',
+ OBWptrFile(6)='obcs/Med_144x72x47_FeT_West',
+ OBWptrFile(7)='obcs/Med_144x72x47_SiO2_West',
+ OBWptrFile(8)='obcs/Med_144x72x47_DOC_West',
+ OBWptrFile(9)='obcs/Med_144x72x47_DON_West',
+ OBWptrFile(10)='obcs/Med_144x72x47_DOP_West',
+ OBWptrFile(11)='obcs/Med_144x72x47_DOFe_West',
+ OBWptrFile(12)='obcs/Med_144x72x47_POC_West',
+ OBWptrFile(13)='obcs/Med_144x72x47_PON_West',
+ OBWptrFile(14)='obcs/Med_144x72x47_POP_West',
+ OBWptrFile(15)='obcs/Med_144x72x47_POFe_West',
+ OBWptrFile(16)='obcs/Med_144x72x47_POSi_West',
+ OBWptrFile(17)='obcs/Med_144x72x47_PIC_West',
+ OBWptrFile(18)='obcs/Med_144x72x47_ALK_West',
+ OBWptrFile(19)='obcs/Med_144x72x47_O2_West',
+ OBWptrFile(20)='obcs/Med_144x72x47_c1_West',
+ OBWptrFile(21)='obcs/Med_144x72x47_c2_West',
+ OBWptrFile(22)='obcs/Med_144x72x47_c3_West',
+ OBWptrFile(23)='obcs/Med_144x72x47_c4_West',
+ OBWptrFile(24)='obcs/Med_144x72x47_c5_West',
+ OBWptrFile(25)='obcs/Med_144x72x47_c6_West',
+ OBWptrFile(26)='obcs/Med_144x72x47_c7_West',
+ OBWptrFile(27)='obcs/Med_144x72x47_Chl1_West',
+ OBWptrFile(28)='obcs/Med_144x72x47_Chl2_West',
+ OBWptrFile(29)='obcs/Med_144x72x47_Chl3_West',
+ OBWptrFile(30)='obcs/Med_144x72x47_Chl4_West',
+ OBWptrFile(31)='obcs/Med_144x72x47_Chl5_West',
+#
+ &
+# Sponge layer parameters
+ &OBCS_PARM05
+ &
