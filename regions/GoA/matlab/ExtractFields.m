@@ -1,6 +1,6 @@
 % Gulf of Alaska region extracted for Takamitsu Ito on October 31, 2023
 % lats 42N to 62N, lons -160E to -120E
-% (example extraction on face 1)
+% (example extraction on faces 4+5)
 
 % This code is best viewed using a "folding" package with the opening
 % and closing folds marked by, respectively, "% {{{" and "% }}}".
@@ -20,18 +20,27 @@ prec='real*4';
 % {{{ extract indices for desired region
 pin='/nobackup/dmenemen/llc/llc_270/grid/';
 fnm=[pin 'Depth.data'];
-[fld fc ix jx] = ...
+[tmp fc ix jx] = ...
     quikread_llc(fnm,NX,1,prec,pin,minlat,maxlat,minlon,maxlon);
+m(1)=0;
+for f=1:length(fc)
+    m(f+1)=length(ix{fc(f)});
+end
+n=length(jx{fc(1)});
+fld=zeros(sum(m),n);
+for f=1:length(fc)
+    fld((sum(m(1:f))+1):sum(m(1:(f+1))),:)=tmp{fc(f)};
+end
 quikpcolor(fld'); caxis([0 1])
 RF=-readbin([pin 'RF.data'],51);
 kx=1:min(find(RF(2:end)>mmax(fld)));
 [nx ny]=size(fld); nz=length(kx);
-suf1=['_' int2str(nx) 'x' int2str(ny)];
-suf2=[suf1 'x' int2str(nz)];
+suf1=['_' int2str(sum(m)) 'x' int2str(n)];
+suf2=[suf1 'x' int2str(length(kx))];
+close all
 % }}}
 
 % {{{ get and save grid information
-close all
 pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/grid/'];
 eval(['mkdir ' pout])
 eval(['cd ' pout])
