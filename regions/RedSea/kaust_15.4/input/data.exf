@@ -819,8 +819,8 @@
 /
 #
  &EXF_NML_OBCS
- obcsEstartdate1   = 19930101,
-# obcsEstartdate1   = 20160101,
+# obcsEstartdate1   = 19930101,
+ obcsEstartdate1   = 20160101,
  obcsEstartdate2   = 00000,
 ## obcsEperiod       = -12,
  obcsEperiod       = 86400.0,

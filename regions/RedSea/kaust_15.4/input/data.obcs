@@ -13,10 +13,10 @@
  useOBCSsponge = .true.,
  useOBCSprescribe = .true.,
 #
- OBEuFile = '/scratch/project/k1254/MITgcm_INPUT/OBCS/RS/Glorys12v1_RS_1km_50l_UobcsE_19930101-20201230_cs_vs.bin',
- OBEvFile = '/scratch/project/k1254/MITgcm_INPUT/OBCS/RS/Glorys12v1_RS_1km_50l_VobcsE_19930101-20201230.bin',
- OBEtFile = '/scratch/project/k1254/MITgcm_INPUT/OBCS/RS/Glorys12v1_RS_1km_50l_TobcsE_19930101-20201230.bin',
- OBEsFile = '/scratch/project/k1254/MITgcm_INPUT/OBCS/RS/Glorys12v1_RS_1km_50l_SobcsE_19930101-20201230.bin',
+ OBEuFile = '~/kaust_15.4/BCs/Mercator_RS_1km_50l_UobcsE_20160101-20230430_cs_vs.bin',
+ OBEvFile = '~/kaust_15.4/BCs/Mercator_RS_1km_50l_VobcsE_20160101-20230430.bin',
+ OBEtFile = '~/kaust_15.4/BCs/Mercator_RS_1km_50l_TobcsE_20160101-20230430.bin',
+ OBEsFile = '~/kaust_15.4/BCs/Mercator_RS_1km_50l_SobcsE_20160101-20230430.bin',
 ## OBEetaFile = '../input.1km/gecco2_EobcsE_1km_48-13-c2.bin',
 #
 /
