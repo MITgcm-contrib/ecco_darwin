@@ -1,0 +1,17 @@
+# Packages
+ &PACKAGES
+ useGMRedi= .false.,
+ useEXF=.true.,
+ useECCO=.false.,
+ useKPP   = .true.,
+ useSEAICE= .false.,
+ useMNC   = .false.,
+ useDiagnostics=.true.,
+ usePTRACERS=.false.,
+ useGCHEM=.false.,
+ useSHAP_FILT=.false.,
+ useOBCS=.true.,
+# useRBCS= .false.,
+ useDOWN_SLOPE= .true.,
+# useSALT_PLUME=.false.,
+ /

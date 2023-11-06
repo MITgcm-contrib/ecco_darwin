@@ -1,0 +1,209 @@
+# ====================
+# | Model parameters |
+# ====================
+# to get a definition of the parameters
+# see /model/src/ini_parms.F, /model/src/set_defaults.F
+# see also model/src/modeldata_example.F
+
+ &PARM01
+#
+# Continuous equation parameters
+#
+#   tRef            - Reference vertical potential temperature          (deg C)
+#   sRef            - Reference vertical salinity                         (PSU)
+#   tRef and sRef are overridden if an initialization is read in later
+#   viscAh          - Horizontal eddy viscosity coefficient             (m^2/s)
+#   viscAz          - Vertical eddy viscosity coefficient               (m^2/s)
+#   diffKhT         - Horizontal temperature diffusivity                (m^2/s)
+#   diffKzT         - Vertical temperature diffusivity                  (m^2/s)
+#   diffKhS         - Horizontal salt diffusivity                       (m^2/s)
+#   diffKzS         - Vertical salt diffusivity                         (m^2/s)
+#   f0              - Reference coriolis parameter,
+#                     south edge of f on beta plane                       (1/s)
+#   beta            - df/dy                                         (s^-1.m^-1)
+#   tAlpha          - Linear EOS thermal expansion coefficient           (1/oC)
+#   sBeta           - Linear EOS haline contraction coefficient         (1/ppt)
+#   gravity         - Acceleration due to gravity                       (m/s^2)
+#   gBaro           - Accel. due to gravity used in barotropic equation (m/s^2)
+#   rigidLid        - Set to true to use rigid lid
+#   implicitFreeSurface - Set to true to use implicit free surface
+#   eosType         - Flag for linear or polynomial equation of state
+#                     eosType poly3 requires file: POLY3.COEFFS
+#   GMkbackground   - background value of GM/Redi coefficient
+#   momAdvection    - On/Off flag for momentum self transport
+#   momViscosity    - On/Off flag for momentum mixing
+#
+
+ tRef               = 6*23.,6*22.,2*21.,4*20.,2*19.,4*18.,2*17.,4*16.,
+                      2*15.,2*14.,2*13.,2*12.,2*11.,4*9.,2*8.,2*7.,2*6.,
+ sRef               = 50*38,
+ no_slip_sides=.FALSE.,
+ no_slip_bottom=.TRUE.,
+
+ 
+ viscAr = 1.E-4,
+#- This is the standard Leith Viscosity, prop to grad(curl v_h)
+ viscC4leith = 1.85,
+# -This is an additional Leith Viscosity, prop to grad(div.v_h)
+#  It traps instabilities that have no signal in grad(curl v_h)
+ viscC4leithD = 1.85,
+# This is harmonic Smagorinsky Coefficient
+# 0.2-0.9 = value from 3-d turbulence theory; Smagorinsky (1993)
+# 2.2-4   = stable oceanic values (Griffies and Hallberg, 2000)
+# 1. smag is approximately the same as 1.85 leith+leithd for this grid spacing
+ viscC4smag = 1.,
+#- This is the max Viscosity used, be it Smag or Leith, and it scales
+#  with grid size and timestep
+#viscAhGridMax = 1.,
+ viscA4GridMax = 1.,
+#- This uses the full grad(vort) and grad(div)
+ useFullLeith=.TRUE.,
+
+# Vertical diffusion 
+ diffKrT=1.E-6,
+ diffKrS=1.E-6,
+# Biharmonic diffusion of Heat/Salt laterally
+ diffK4T=0.1E7,
+ diffK4S=0.1E7,
+
+# Bryan and Lewis 1979 diffusion
+# diffKrBL79surf=0.1E-4,
+# diffKrBL79deep=1.0E-4,
+
+ implicitDiffusion=.TRUE.,
+ implicitViscosity=.TRUE.,
+ implicitFreeSurface=.TRUE.,
+
+ tempAdvScheme=30,
+ saltAdvScheme=30,
+
+ nonlinFreeSurf=0,
+ useRealFreshWaterFlux=.FALSE.,
+ convertFW2Salt=-1,
+ linFSConserveTr=.true.
+
+ exactConserv=.TRUE.,
+ staggerTimeStep=.TRUE.,
+ vectorInvariantMomentum=.TRUE.,
+ useEnergyConservingCoriolis=.true.,
+
+ bottomDragQuadratic= 0.002,
+
+ gravity=9.81,
+ rhonil=1029.,
+ rhoConstFresh=1000.,
+ eosType='JMD95Z',
+
+ useSingleCpuIO=.TRUE.,
+ allowFreezing=.false.,
+
+ hFacMin=.3,
+ hFacMinDr=30.,
+
+ readBinaryPrec=64,
+ debugLevel=1,
+
+ /
+ &PARM02
+#
+# Elliptic solver parameters
+#
+#   cg2dMaxIters       - Maximum number of 2d solver iterations
+#   cg2dTargetResidual - Solver target residual
+#
+ cg2dMaxIters=1000,
+#FY cg2dMaxIters=5000,
+ cg2dTargetResWunit=1.E-9,
+#FY cg2dTargetResWunit=1.E-11,
+# Elliptic solver parameters
+# cg2dMaxIters=1000,
+# cg2dTargetResidual=1.E-11,
+# cg3dMaxIters=40,
+# cg3dTargetResidual=1.E-9,
+
+ /
+ &PARM03
+# Time stepping parameters
+#
+#   nIter0            - Integration starting step                (s)
+#   nTimeSteps        - Integration time in steps                (s)
+#   deltaTMom         - Timestep for momemtum equations          (s)
+#   deltaTtracer      - Tracer timestep                          (s)
+#   deltaTClock       - Timestep used as model "clock"           (s)
+#   abEps             - Adams-Bashforth stabilising factor
+#   pChkPtFreq        - Frequency of permanent check pointing    (s)
+#   chkPtFreq         - Frequency of rolling check pointing      (s)
+#   dumpFreq          - Frequency at which model state is stored (s)
+#   tauThetaClimRelax - Relaxation to climatology time scale     (s)
+#   tauSaltClimRelax  - Relaxation to climatology time scale     (s)
+#   cAdjFreq 	      - Convective adjustment period (s)
+#
+ nIter0=8211840,
+ nTimeSteps=3504000,
+ deltaT =90,
+ deltaTmom = 90.,
+ deltaTtracer = 90.,
+ deltaTClock  = 90.,
+ pickupStrictlyMatch=.FALSE.,
+ cAdjFreq=0.,
+ abEps = 0.01,
+ forcing_In_AB=.FALSE.,
+ pChkptFreq=5184000,
+ chkptFreq=5184000,
+ taveFreq=86400,
+ dumpFreq=86400,
+ monitorFreq=259200.,
+# 2 months restoring timescale for temperature
+# tauThetaClimRelax= 5184000.,
+# 3 months restoring timescale for salinity
+# climsssTauRelax=7776000.,
+# tauSaltClimRelax = 2592000.,
+# periodicExternalForcing=.TRUE.,
+# externForcingPeriod=2592000.,
+# externForcingCycle=31104000.,
+# tauThetaClimRelax= 2592000.,
+# tauSaltClimRelax= 7776000.,
+# tauThetaClimRelax= 2592000.,
+# tauSaltClimRelax= 7776000.,
+
+ /
+ &PARM04
+
+# Gridding parameters
+#
+#   usingSphericalPolarGrid - On/Off flag for spherical polar coordinates
+#   usingCartesianGrid      - On/Off flag for selecting cartesian coordinates
+#   delX                    - Zonal grid spacing         (degrees)
+#   delY                    - Meridional grid spacing    (degrees)
+#   delZ                    - Vertical grid spacing      (m)
+#   phiMin                  - Southern boundary latitude (degrees)
+#
+ usingCartesianGrid     = .FALSE.,
+ usingSphericalPolarGrid= .TRUE.,
+ delR= 4.,5.,5.,5.,6.,6.,7.,8.,8.,9.,
+ 10.,11.,12.,13.,14.,15.,17.,18.,20.,21.,
+ 23.,25.,28.,30.,32.,35.,38.,42.,45.,49.,
+ 53.,58.,63.,68.,74.,81.,88.,95.,103.,112.,
+ 122.,150.,150.,150.,200.,200.,200.,250.,250.,300.,
+
+ xgOrigin=30.0071,
+ ygOrigin=10.0071,
+ delX=2000*0.01,
+ delY=2000*0.01,
+
+ /
+ &PARM05
+# Input datasets
+#
+#   bathyFile       - File containing bathymetry
+#   hydrogThetaFile - File containing initial potential temperature data
+#   hydrogSaltFile  - File containing initial potential salinity data
+#   uVelInitFile    - File containing initial zonal velocity data
+#   vVelInitFile    - File containing initial meridional velocity data
+#
+# diffKrFile = '/scratch/guod/run_JPO_tidesin/tidalmixing_param.bin',
+ bathyFile='/scratch/project/k1254/MITgcm_INPUT/redsea_bathy_new_r64_cf.bin',
+ hydrogThetaFile='/scratch/project/k1254/MITgcm_INPUT/IC/RS/FY_exp8.0_Sics_1km_cf_199301_r64.bin',
+ hydrogSaltFile='/scratch/project/k1254/MITgcm_INPUT/IC/RS/FY_exp8.0_Sics_1km_cf_199301_r64.bin',
+
+ /

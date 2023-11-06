@@ -1,0 +1,23 @@
+ &PTRACERS_PARM01
+ PTRACERS_numInUse=2,
+ PTRACERS_Iter0=3006720,
+#
+# 
+ PTRACERS_names(1)='Tracer1',
+ PTRACERS_long_names(1)='Tracer1',
+ PTRACERS_units(1)='mol/m^3',
+ PTRACERS_useGMRedi(1)=.false. ,
+ PTRACERS_useKPP(1)=.TRUE. ,
+ PTRACERS_advScheme(1)=33,
+# PTRACERS_initialFile(1)='tracer1_ini.bin',
+ PTRACERS_initialFile(1)='',
+# tracer 2 - cfc12
+ PTRACERS_names(2)='Tracer2',
+ PTRACERS_long_names(2)='Tracer2',
+ PTRACERS_units(2)='mol/m^3',
+ PTRACERS_useGMRedi(2)=.false.,
+ PTRACERS_useKPP(2)=.TRUE.,
+ PTRACERS_advScheme(2)=33,
+#PTRACERS_initialFile(2)='tracer2_ini.bin',
+ PTRACERS_initialFile(2)='',
+ /
