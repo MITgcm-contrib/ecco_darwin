@@ -1,5 +1,5 @@
-% Mediteranean Sea for Louisa Giannoudi and Aleka Gogou, HCMR
-% lats 30.2N to 47.3N, lons -6E to 42E
+% Red Sea for George Krokos, HCMR
+% lats 9.7N to 30.5N, lons 29.5E to 50.5E
 % (example extraction on face 1)
 
 % This code is best viewed using a "folding" package with the opening
@@ -8,11 +8,11 @@
 % https://github.com/jaalto/project-emacs--folding-mode/blob/master/folding.el
 
 % {{{ define desired region
-region_name='Med';
-minlat=30.2;
-maxlat=47.3;
-minlon=-6;
-maxlon=42;
+region_name='RedSea';
+minlat=9.7;
+maxlat=30.5;
+minlon=29.5;
+maxlon=50.5;
 NX=270;
 prec='real*4';
 % }}}

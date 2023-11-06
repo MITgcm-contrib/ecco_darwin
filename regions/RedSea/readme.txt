@@ -7,7 +7,7 @@ https://ecco-group.org/storymaps.htm?id=45
 https://ecco-group.org/storymaps.htm?id=71
 https://darwin3.readthedocs.io/en/latest/phys_pkgs/darwin.html
 
-Extracted for Louisa Giannoudi and Aleka Gogou, HCMR, on October 25, 2023
+Extracted for Louisa Giannoudi and Aleka Pavlidou, HCMR, on October 25, 2023
 
 Extracted region is available on pfe:~dmenemen/ecco_darwin/Med
 and on https://nasa-ext.box.com/s/7z3jsoymr39c7jov81cmzafqqfx6922j
