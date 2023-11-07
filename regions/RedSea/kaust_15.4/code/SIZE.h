@@ -50,8 +50,8 @@ C     Nr  :: No. points in Z for full process domain.
      &           OLy =   4,
      &           nSx =   1,
      &           nSy =   1,
-     &           nPx =  1649,
-     &           nPy =  1,
+     &           nPx =  46,
+     &           nPy =  36,
      &           Nx  = sNx*nSx*nPx,
      &           Ny  = sNy*nSy*nPy,
      &           Nr  =  50)

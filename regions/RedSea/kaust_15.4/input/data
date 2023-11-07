@@ -138,8 +138,8 @@
 #   tauSaltClimRelax  - Relaxation to climatology time scale     (s)
 #   cAdjFreq 	      - Convective adjustment period (s)
 #
- nIter0=8211840,
- nTimeSteps=3504000,
+ nIter0=13104000,
+ nTimeSteps=28800,
  deltaT =90,
  deltaTmom = 90.,
  deltaTtracer = 90.,
@@ -148,11 +148,11 @@
  cAdjFreq=0.,
  abEps = 0.01,
  forcing_In_AB=.FALSE.,
- pChkptFreq=5184000,
- chkptFreq=5184000,
+ pChkptFreq=1296000,
+ chkptFreq=1296000,
  taveFreq=86400,
  dumpFreq=86400,
- monitorFreq=259200.,
+ monitorFreq=864000.,
 # 2 months restoring timescale for temperature
 # tauThetaClimRelax= 5184000.,
 # 3 months restoring timescale for salinity
@@ -203,7 +203,6 @@
 #
 # diffKrFile = '/scratch/guod/run_JPO_tidesin/tidalmixing_param.bin',
  bathyFile='/scratch/project/k1254/MITgcm_INPUT/redsea_bathy_new_r64_cf.bin',
- hydrogThetaFile='/scratch/project/k1254/MITgcm_INPUT/IC/RS/FY_exp8.0_Sics_1km_cf_199301_r64.bin',
- hydrogSaltFile='/scratch/project/k1254/MITgcm_INPUT/IC/RS/FY_exp8.0_Sics_1km_cf_199301_r64.bin',
-
+ hydrogThetaFile='T.0012989760.data'
+ hydrogSaltFile='S.0012989760.data'
  /
