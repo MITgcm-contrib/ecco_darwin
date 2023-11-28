@@ -38,17 +38,16 @@ fld=zeros(sum(m),n);
 for f=1:length(fc)
     fld((sum(m(1:f))+1):sum(m(1:(f+1))),:)=tmp{fc(f)};
 end
-quikpcolor(fld');
+% quikpcolor(fld');
 [nx ny]=size(fld);
 RF=-readbin([gdir 'RF.data'],51);
 kx=1:min(find(RF(2:end)>max(abs(fld(:)))));
 nz=length(kx);
-suf1=['_' int2str(sum(m)) 'x' int2str(n)];
-suf2=[suf1 'x' int2str(length(kx))];
+suf1=['_' int2str(nx) 'x' int2str(ny)];
+suf2=[suf1 'x' int2str(nz)];
 % }}}
 
 % {{{ Make bathymetry file
-close all
 writebin([pout 'BATHY' suf1  '_' region_name],fld);
 % }}}
 
