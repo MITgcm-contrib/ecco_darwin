@@ -307,7 +307,7 @@ for t=1:length(dnm)
     writebin(fout,fld);
 end
 fin={'monthly/'};
-for fot={'apCO2', 'fugCO2', 'CO2_flux'}
+for fot={'apCO2', 'fugCO2', 'CO2_flux','SIarea','SIheff'}
     eval(['mkdir ' pout fot{1}])
     eval(['cd ' pout fot{1}])
     dnm=dir([pin fin{1} fot{1} '.*.data']);
