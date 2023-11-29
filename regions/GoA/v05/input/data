@@ -109,7 +109,7 @@
 
 # Input datasets
  &PARM05
- bathyFile       ='BATHY_114x100_Med',
+ bathyFile       ='BATHY_114x100_GoA',
  hydrogThetaFile ='init/THETA_114x100x50.16-Jan-1992',
  hydrogSaltFile  ='init/SALT_114x100x50.16-Jan-1992',
  uVelInitFile    ='init/U_114x100x50.16-Jan-1992',
