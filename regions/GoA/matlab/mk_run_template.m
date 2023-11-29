@@ -65,10 +65,11 @@ end
 % {{{ Generate initial conditions
 eval(['!mkdir ' pout 'init'])
 eval(['cd ' pout 'init'])
-fld={'ETAN'};
 sufin=[suf1 '.19920201T000000'];
 sufout=[suf1 '.16-Jan-1992'];
-eval(['!cp ' pin fld{1} '/' fld{1} sufin ' ' fld{1} sufout])
+for fld={'ETAN', 'SIarea', 'SIheff'};
+    eval(['!cp ' pin fld{1} '/' fld{1} sufin ' ' fld{1} sufout])
+end
 sufin=[suf2 '.19920201T000000'];
 sufout=[suf2 '.16-Jan-1992'];
 for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
