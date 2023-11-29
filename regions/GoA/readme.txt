@@ -10,32 +10,44 @@ https://darwin3.readthedocs.io/en/latest/phys_pkgs/darwin.html
 Extracted for Takamitsu Ito on October 31, 2023
 
 Extracted region is available on pfe:~dmenemen/ecco_darwin/GoA
-and on https://nasa-ext.box.com/s/7z3jsoymr39c7jov81cmzafqqfx6922j
+and on https://nasa-ext.box.com/s/qfgmk44ifrg7ilvfzkgt6fuiise4j64d
 
 ============
 Grid information is in ../GoA/grid
 
-RC_47           :: vertical coordinate of center of cell (m)
-DRF_47          :: Cell face separation along Z axis (m)
+RC_50           :: vertical coordinate of center of cell (m)
+DRF_50          :: Cell face separation along Z axis (m)
 
-XC_144x72       :: longitude East of center of grid cell
-XG_144x72       :: longitude East of southwest corner of grid cell
-YC_144x72       :: latitude North of center of grid cell
-YG_144x72       :: latitude North of southwest corner of grid cell
+XC_114x100       :: longitude East of center of grid cell
+XG_114x100       :: longitude East of southwest corner of grid cell
+YC_114x100       :: latitude North of center of grid cell
+YG_114x100       :: latitude North of southwest corner of grid cell
 
-DXC_144x72      :: Cell center separation in X across western cell wall (m)
-DXG_144x72      :: Cell face separation in X along southern cell wall (m)
-DYC_144x72      :: Cell center separation in Y across southern cell wall (m)
-DYG_144x72      :: Cell face separation in Y along western cell wall (m)
+DXC_114x100      :: Cell center separation in X across western cell wall (m)
+DXG_114x100      :: Cell face separation in X along southern cell wall (m)
+DXF_114x100      :: Cell face separation in X thru cell center (m)
+DXV_114x100      :: V-point separation in X across south-west corner of cell (m)
+DYC_114x100      :: Cell center separation in Y across southern cell wall (m)
+DYG_114x100      :: Cell face separation in Y along western cell wall (m)
+DYF_114x100      :: Cell face separation in Y thru cell center (m)
+DYU_114x100      :: U-point separation in Y across south-west corner of cell (m)
 
-Depth_144x72    :: Model bathymetry (m)
+Depth_114x100    :: Model bathymetry (m)
 
-RAC_144x72      :: vertical face area of tracer cell (m^2)
-RAZ_144x72      :: vertical face area of vorticity points (m^2)
+RAC_114x100      :: horizontal face area of tracer cell (m^2)
+RAZ_114x100      :: horizontal face area of vorticity points (m^2)
+RAS_114x100      :: horizontal face area of South end of cell (m^2)
+RAW_114x100      :: horizontal face area of West end of cell (m^2)
 
-hFacC_144x72x47 :: mask of tracer cell (0 is land, >0 is wet)
-hFacS_144x72x47 :: mask of v cell (0 is land, >0 is wet)
-hFacW_144x72x47 :: mask of u cell (0 is land, >0 is wet)
+hFacC_114x100x50 :: mask of tracer cell (0 is land, >0 is wet)
+hFacS_114x100x50 :: mask of v cell (0 is land, >0 is wet)
+hFacW_114x100x50 :: mask of u cell (0 is land, >0 is wet)
+
+!!! North of 57N, the grid is not fully aligned with latitude/longitude lines.
+AngleCS_114x100  :: cosine of grid orientation angle at cell center
+AngleSN_114x100  :: sine   of grid orientation angle at cell center
+                    relative to Geographic direction where
+                    alpha=(Eastward_dir,grid_uVel_dir)=(North_d,vVel_d)
 
 More details about MITgcm grid are available in:
 https://github.com/MITgcm/MITgcm/blob/master/model/inc/GRID.h
@@ -92,9 +104,9 @@ are defined in the file available_diagnostics.log
 Model output naming convention and format
 
 All files are plain binary, real*4, IEEE big-endian,
-with dimensions 47 (with file name termination _47),
-144x72 (with file name termination _144x72), and
-144x72x47 (with file name termination _144x72x47).
+with dimensions 50 (with file name termination _50),
+114x100 (with file name termination _114x100), and
+114x100x50 (with file name termination _114x100x50).
 
 Monthly means are indicated with end of averaging period,
 for example, ".19920201T000000" indicates a monthly mean
