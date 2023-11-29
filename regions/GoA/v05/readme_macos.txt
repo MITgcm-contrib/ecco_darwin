@@ -25,14 +25,14 @@
 
 # Get forcing and configuration files from
 # https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-# https://nasa-ext.box.com/s/khtbuge4wvt5yleyigcjbqvdjebh3xcn
+# https://nasa-ext.box.com/s/b95m80e9watelhk90rvwle1orr06hrg8
 # and deposit or link inside the darwin3/run directory, e.g.,
   ln -sf ~/Links/Box/Public/KelpProject/NOAA_MBL/* .
-  ln -sf ~/Links/Box/Public/GulfGuinea/run_template/* .
+  ln -sf ~/Links/Box/Public/GoA/run_template/* .
 
 # To save space, you can download only needed years for
 # apCO2_* and era_xx_it42_v2
 
   mkdir diags diags/daily diags/monthly
   cp ../../ecco_darwin/regions/GulfGuinea/v05/input/* .
-  mpirun -np 6 ./mitgcmuv
+  mpirun -np 8 ./mitgcmuv
