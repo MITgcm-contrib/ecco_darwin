@@ -87,18 +87,3 @@
  swdown_interpMethod = 0,
  lwdown_interpMethod = 0,
  /
-
- &EXF_NML_OBCS
-  obcsSstartdate1   = 19920115,
-  obcsSstartdate2   = 031519,
-  obcsSperiod       = 2615438.0,
-  obcsWstartdate1   = 19920115,
-  obcsWstartdate2   = 031519,
-  obcsWperiod       = 2615438.0,
-  siobcsSstartdate1 = 19920115,
-  siobcsSstartdate2 = 031519,
-  siobcsSperiod     = 2615438.0,
-  siobcsWstartdate1 = 19920115,
-  siobcsWstartdate2 = 031519,
-  siobcsWperiod     = 2615438.0,
-/

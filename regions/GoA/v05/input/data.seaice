@@ -60,7 +60,9 @@
   SEAICE_Oly       = 0,
   SEAICE_drag      = .002,
   SEAICE_waterDrag = .00534499514091350826,
- /
 #
+  AreaFile           = 'SIarea_114x100.16-Jan-1992',
+  HeffFile           = 'SIheff_114x100.16-Jan-1992',
+ /
  &SEAICE_PARM02
  /
