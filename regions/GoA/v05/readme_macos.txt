@@ -1,4 +1,4 @@
-# Instructions for building and running Mediterranean regional simulation
+# Instructions for building and running Gulf of Alaska (GoA) regional simulation
 # on arm64 macOS (based on ecco_darwin/v05/llc270/readme2.txt).
 # See ecco_darwin/doc/MITgcm_on_Mac.txt for additional instructions.
 
@@ -13,8 +13,8 @@
 ==============
 # 2. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/Med/v05/code -mpi \
-   -of ../../ecco_darwin/regions/Med/v05/code/darwin_arm64_gfortran
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/GoA/v05/code -mpi \
+   -of ../../ecco_darwin/regions/GoA/v05/code/darwin_arm64_gfortran
   make depend
   make -j
 
