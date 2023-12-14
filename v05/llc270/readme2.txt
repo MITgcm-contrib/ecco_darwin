@@ -37,6 +37,7 @@ ln -sf ../build2/mitgcmuv .
 ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
 ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx_it42_v2 .
 cp ../../ecco_darwin/v05/llc270/input2/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
