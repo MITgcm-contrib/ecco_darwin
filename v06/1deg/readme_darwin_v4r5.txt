@@ -40,8 +40,8 @@ cp ${MOD}/input_v4r5/* .
 rm data data.pkg data.diagnostics
 cp ${MOD}/input_darwin_v4r5/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
-ln -sf /nobackup/dcarrol2/pub/1deg/v06/V4r5/* .
 ln -sf /nobackup/ojahn/ecco_darwin/v06/llc270/data_darwin/* .
+ln -sf /nobackup/dcarrol2/pub/1deg/v06/V4r5/* .
 ln -sf /nobackup/rsavelli/1deg/*
 mv pickup_ptracers.0000000001.data pickup_ptracers.0000000002.data
 mv pickup_ptracers.0000000001.meta pickup_ptracers.0000000002.meta
