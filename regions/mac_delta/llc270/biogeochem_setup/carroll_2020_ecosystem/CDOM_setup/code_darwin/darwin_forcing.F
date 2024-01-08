@@ -795,7 +795,7 @@ C no decay at first layer
       ELSE
         CDOMdecay(i,j,k,bi,bj) = CDOMdecay(i,j,k-1,bi,bj)
      &               *EXP(-(-0.13*TANH(-1.63*pTracer(i,j,k,bi,bj,iCDOM)
-     &               -1.03)+0.13)*drF(k-1))
+     &               +1.03)+0.13)*drF(k-1))
       ENDIF
       ENDDO
       ENDDO
