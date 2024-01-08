@@ -42,7 +42,7 @@ CEOP
 #ifdef ALLOW_DARWIN
 #ifndef ALLOW_RADTRANS
 
-C!LOCAL VARIABLES: =====================================================
+C!LOCAL VARIABLES: ====================================================
 C  i,j                  :: loop indices
 C  k                    :: vertical level
       INTEGER i,j,k,jp
