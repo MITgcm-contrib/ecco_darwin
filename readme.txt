@@ -42,7 +42,8 @@ Simulations:
   /llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
   /llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
   /llc270_sediment: same as llc270 above but with RADI sediment model
-  
+  /llc270_N2O: same as llc270 but with total and thermal N2O, argon, and thermal oxygen
+
 --v06--
   /1deg: 1 degree solution based on ECCO V4r5
   /llc270: v05 llc270 w/ Darwin upgrades and new ecosystem, BGC runoff, RADI sediment model, 
