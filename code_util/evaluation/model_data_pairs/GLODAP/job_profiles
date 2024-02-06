@@ -1,0 +1,35 @@
+#!/bin/csh
+#PBS -l select=1:ncpus=20:model=ivy
+##PBS -l select=39:ncpus=20:model=ivy
+
+##PBS -l walltime=00:00:00
+##PBS -q debug
+##PBS -q devel
+
+#PBS -l walltime=384:00:00
+#PBS -q vlong
+
+##PBS -l walltime=120:00:00
+##PBS -q long
+
+#PBS -e error.txt
+#PBS -o output.txt
+
+#PBS -j oe
+#PBS -m abe
+#PBS -N model_GLODAP_profiles
+
+module purge
+module load matlab/2021a
+module load gcc/10.3
+module list
+
+##module purge
+##module load matlab/2021a
+##module load gcc/10.3
+##module list
+##mcc -a /nobackup/dcarrol2/MATLAB/ -m model_obs_compare_profiles_wrapper_NAS.m model_obs_compare_profiles_NAS.m -o script
+
+cd /nobackup/dcarrol2/evaluation/m_files/model_obs_compare/GLODAP/
+./run_script.sh $MATLAB
+
