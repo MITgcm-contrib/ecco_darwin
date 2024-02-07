@@ -86,7 +86,9 @@
 #from 01/01/2020, 0Z to 9/30/2022, 12Z
 # nTimeSteps=24084,
 #from 01/01/2020, 0Z to 3/31/2023, 12Z
- nTimeSteps=28452,
+# nTimeSteps=28452,
+#from 01/01/2020, 0Z to 11/30/2023, 12Z
+ nTimeSteps=34308,
 #4-yr from 2014 to 2017, inclusive
 #nTimeSteps=35051,
 #20y:
