@@ -33,7 +33,7 @@
 #---
   frequency(4) = 86400.,
    fields(1,4) = 'gO2surf ',
-   filename(4) = 'diags/daily/O2_flux',
+   filename(4) = 'diags/daily/surfO2_tend',
 #---
   frequency(5) = 86400.,
    fields(1,5) = 'pH      ',
@@ -285,7 +285,7 @@
 #--- 
   frequency(79) = 2635200.,
    fields(1,79) = 'gO2surf ',
-   filename(79) = 'diags/monthly/O2_flux',
+   filename(79) = 'diags/monthly/surfO2_tend',
 #--- 
   frequency(80) = 2635200.,
    fields(1,80) = 'fugfCO2 ',
