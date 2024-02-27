@@ -4,6 +4,14 @@
 #1 code_v4r5 + input_v4r5: 	including ctrl/smooth, similar to llc270
 #2 code_v4r5_v2 input_v4r5_v2:	w/o ctrl/smooth, similar to v4r4
 
+# "Release5/" folder is also available at ECCO Drive
+# To Donwload, one needs to have an Earthdata account   
+# (Or create it at https://urs.earthdata.nasa.gov/users/new)
+# For using wget, one needs an Earthdata username and WebDAV password (different from Earthdata password)
+# Find it at https://ecco.jpl.nasa.gov/drive
+# and https://ecco-group.org/docs/wget_download_multiple_files_and_directories.pdf for more detail
+wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC90/Release5
+
 #version 1
 # ========
 # 1. Get code
