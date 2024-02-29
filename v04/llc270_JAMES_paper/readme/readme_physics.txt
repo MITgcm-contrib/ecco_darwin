@@ -12,7 +12,7 @@
  mkdir build run
  cd build
  module purge
- module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+ module load comp-intel/2020.4.304 mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
  MOD="../../ecco_darwin/v04/llc270_JAMES_paper"
  ../tools/genmake2 -of ${MOD}/code/linux_amd64_ifort+mpi_ice_nas \
                    -mo ${MOD}/code

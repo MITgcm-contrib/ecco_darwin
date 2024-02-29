@@ -6,7 +6,7 @@
 # or using older intel compiler:
 #   > module load comp-intel/2016.2.181
 #- and, with MPI:
-#   > module load mpi-hpe/mpt.2.25
+#   > module load mpi-hpe
 #   > module load hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 #- and without:
 #   > module load hdf4/4.2.12 hdf5/1.8.18_serial netcdf/4.4.1.1_serial

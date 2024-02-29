@@ -16,7 +16,7 @@ cd ..
 mkdir build
 cd build
 module purge
-module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module load comp-intel/2020.4.304 mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 ../tools/genmake2 -of \
   ../../ecco_darwin/v04/llc270_devel/code/linux_amd64_ifort+mpi_ice_nas -mo \
   '../../ecco_darwin/v04/llc270_devel/code_darwin ../../ecco_darwin/v04/llc270_devel/code'

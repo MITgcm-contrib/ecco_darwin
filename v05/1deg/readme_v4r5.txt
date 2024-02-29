@@ -25,7 +25,7 @@ cd MITgcm
 mkdir build run
 cd build
 rm *
-module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module load comp-intel/2020.4.304 mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 MOD="../../ecco_darwin/v05/1deg"
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
 		  -mo ${MOD}/code_v4r5 -mpi
@@ -61,7 +61,7 @@ cd MITgcm
 mkdir build2 run2
 cd build2
 rm *
-module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module load comp-intel/2020.4.304 mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 MOD="../../ecco_darwin/v05/1deg"
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
 		  -mo ${MOD}/code_v4r5_v2 -mpi
