@@ -15,7 +15,7 @@ cd darwin3
 mkdir build_cdr run_cdr
 cd build_cdr
 rm *
-module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module load comp-intel/2020.4.304 mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 MOD="../../ecco_darwin/v05/1deg"
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
 	-mo '../../ecco_darwin/v05/1deg_CDR/code_darwin ../../ecco_darwin/v05/1deg/code_darwin ../../ecco_darwin/v05/1deg/code_v4r4' -mpi
