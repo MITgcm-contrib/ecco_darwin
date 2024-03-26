@@ -6,7 +6,7 @@
 #				but for place holder now
 
 # "Release5/" folder is also available at ECCO Drive
-# To Donwload, one needs to have an Earthdata account
+# To Download, one needs to have an Earthdata account
 # (Or create it at https://urs.earthdata.nasa.gov/users/new)
 # For using wget, one needs an Earthdata username and WebDAV password (different from Earthdata password)
 # Find it at https://ecco.jpl.nasa.gov/drive
