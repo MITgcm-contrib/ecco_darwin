@@ -38,3 +38,8 @@ export PATH
   brew install python3
   cd /opt/homebrew/bin
   sudo ln -sf python3 python
+
+# Note that latest version of python (3.12.3) does not contain the
+# imp module: https://docs.python.org/3.12/whatsnew/3.12.html#imp
+# Need to replace darwin3/tools/darwin/cogapp/cogapp.py with
+# ecco_darwin/doc/cogapp.py
