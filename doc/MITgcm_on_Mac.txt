@@ -36,6 +36,13 @@ export PATH
 # Sanity-check that $MPI_INC_DIR/mpi.h exists
 
 ########################################################
+# The following notes pertain to running the older version
+# of darwin3 (git checkout 24885b71) used for ecco_darwin/v05
+
+# Note that, almost certainly, you will need to update the
+# darwin3/tools/build_options. You can overwrite these files
+# with those from MITgcm/tools/build_options downloaded above.
+
 # Note that darwin3/tools/darwin/cog requires python
 # If python is not available, one way to install is:
   brew install python3
