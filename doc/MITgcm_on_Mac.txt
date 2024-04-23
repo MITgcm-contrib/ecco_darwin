@@ -31,6 +31,9 @@ export PATH
   export MPI_INC_DIR=/opt/homebrew/include
   ./testreport -mpi -t lab_sea
 
+# For older intel Macs the mpi include files are in
+#    export MPI_INC_DIR=/usr/local/opt/openmpi/include
+# Sanity-check that $MPI_INC_DIR/mpi.h exists
 
 ########################################################
 # Note that darwin3/tools/darwin/cog requires python
