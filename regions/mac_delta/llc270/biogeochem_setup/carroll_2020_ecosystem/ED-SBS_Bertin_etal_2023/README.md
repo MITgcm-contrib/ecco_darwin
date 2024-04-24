@@ -43,23 +43,23 @@ ln -sf ../build/mitgcmuv .
 -- Link to atmospheric forcing --
 ln -sf ../../Forcing/era_xx .
 -- Link to Freswater runnoff --
-ln -sf /../../Forcing/river_runoff/Freswater/AGRO_interan .
+ln -sf /../../Forcing/river_runoff/Freshwater/AGRO_interan .
 ln -sf /../../Forcing/river_runoff/Temperature/Tokuda_Mac270modif .
 -- Link to Biogeochemical runoff --
 ln -sf /../../Forcing/river_runoff/Nutrients/Bertin_etal_21/Interannual/L50_R50/tDOCl .
 ln -sf /../../Forcing/river_runoff/Nutrients/Bertin_etal_21/Interannual/L50_R50/tDOCr .
-ln -sf /../../Forcing/river_runoff/Nutrients/Tank_etal_12/Interannual/tAlk .
-ln -sf /../../Forcing/river_runoff/Nutrients/Tank_etal_12/Interannual/tDIC .
-ln -sf /../../Forcing/river_runoff/Nutrients/GNW2_NutCim/tDON .
-ln -sf /../../Forcing/river_runoff/Nutrients/GNW2_NutCim/tDOP .
-ln -sf /../../Forcing/river_runoff/Nutrients/GNW2_NutCim/tDSi .
+ln -sf /../../Forcing/river_runoff/Nutrients/Tank_etal_12/r44/Interannual/tAlk .
+ln -sf /../../Forcing/river_runoff/Nutrients/Tank_etal_12/r44/Interannual/tDIC .
+ln -sf /../../Forcing/river_runoff/Nutrients/GNW2_NutCim/r44/tDON .
+ln -sf /../../Forcing/river_runoff/Nutrients/GNW2_NutCim/r44/tDOP .
+ln -sf /../../Forcing/river_runoff/Nutrients/GNW2_NutCim/r44/tDSi .
 -- Link to Initial and Boundary conditions --
-ln -sf /../../Forcing/run_template/* .
+ln -sf /../../Forcing/run_template/* . (here use the folder 32_Tracers_Nr44 downloaded earlier)
 -- Copy setup files --
 cp ../../setup_files/input/* .
 ```
 ## 4. Run the code
 
 ```
-mpirun -np 8 ./mitgsmuv &
+mpirun -np 8 ./mitgcmuv &
 ```
