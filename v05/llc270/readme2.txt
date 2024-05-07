@@ -1,6 +1,8 @@
+for slim ECCO-Darwin (w/o pkg/ctrl)
+
 # iter42/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/iter42/input
 # ecco_darwin_v5/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/ecco_darwin_v5/input
-# forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
+# forcing/era_xx_it42_v2 is available at https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/era_xx_it42_v2
 
 # Instructions for building and running ECCO-Darwin v05 with Darwin 3
 
