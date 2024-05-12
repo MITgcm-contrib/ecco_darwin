@@ -4,8 +4,14 @@
 # If you don't have an ssh key on github, follow instructions here:
 # https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
 
+# A convenient (but optional) git revision tree visualizer:
+ sudo apt-get install gitk
+
 # To get the ECCO-Darwin repository:
  git clone git@github.com:MITgcm-contrib/ecco_darwin.git
+
+# All commands below must be executed somewhere within the repo, e.g.,
+ cd ecco_darwin
 
 # To update local repository:
  git pull
@@ -19,9 +25,6 @@
 # To check if you need to pull changes from somebody else:
  git remote update
  git status
-
-# A convenient git revision tree visualizer:
- sudo apt-get install gitk
 
 # See history of current branch with tags:
  git log --decorate=full
