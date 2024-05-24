@@ -1,11 +1,3 @@
 # Packages
  &PACKAGES
- useCAL         = .TRUE.,
- useDiagnostics = .TRUE.,
- useEXF         = .TRUE.,
- useGCHEM       = .TRUE.,
- useGGL90       = .TRUE.,
- useGMRedi      = .TRUE.,
- useOBCS        = .TRUE.,
- usePTRACERS    = .TRUE.,
  /
