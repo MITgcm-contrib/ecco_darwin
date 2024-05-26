@@ -66,10 +66,11 @@
  endtime=980788800.,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
- deltaT=1200.,
+ deltaT=60.,
 #
  pChkptFreq  =31536000.0,
- monitorFreq = 1200.0,
+ monitorFreq = 3600.0,
+ dumpFreq = 86400.0,
  dumpInitAndLast = .FALSE.,
  pickupStrictlyMatch=.FALSE.,
  /

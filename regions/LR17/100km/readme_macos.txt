@@ -7,6 +7,8 @@
 ==============
 # 1 Download run_template from:
 # https://nasa-ext.box.com/s/6ubnsrzuvsx38hdz7rtowpkg8ra8nikw
+# Instructions below assume that run_template, MITgcm, and
+# ecco_darwin are at same directory level
 
 ==============
 # 2. Get code
@@ -27,5 +29,6 @@
   cd ../run
   ln -sf ../build/mitgcmuv .
   ln -sf ../../run_template/bathymetry/bathy_LR17_936x875 .
+  ln -sf ../../run_template/era_xx_it42_v2 .
   cp ../../ecco_darwin/regions/LR17/100km/input/* .
   mpirun -np 4 ./mitgcmuv
