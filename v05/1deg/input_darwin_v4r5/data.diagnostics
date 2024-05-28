@@ -264,10 +264,13 @@
 #budget diagnostics   
 #---
   frequency(73) = 2635200.0,
-   fields(1:8,73) = 'ETAN    ','oceFWflx','SFLUX   ',
-        'TFLUX   ','oceSPflx','oceQsw  ',
+   fields(1:17,73) = 'ETAN    ','TFLUX   ','SFLUX   ',
+        'oceQsw  ','oceFWflx','oceSPflx',
         'fluxCO2 ','gDICsurf', 
-   filename(73) = 'diags/budget/average_2d',
+        'gDICEpr ','gALKEpr ','gNO3Epr ',
+        'gNO2Epr ','gNH4Epr ','gO2Epr '
+        'gPO4Epr ','gFeTEpr','gSiO2Epr ',
+   filename(73) = 'diags/budget/average_2d', 
 #---
   frequency(74) = 2635200.0,
    fields(1:3,74) = 'UVELMASS','VVELMASS','WVELMASS',
