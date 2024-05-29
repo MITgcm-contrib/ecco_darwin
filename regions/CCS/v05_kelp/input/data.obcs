@@ -43,6 +43,10 @@
  OBNptrFile(29)='obcs/CCS_kelp_80x100x48_Chl3_North',
  OBNptrFile(30)='obcs/CCS_kelp_80x100x48_Chl4_North',
  OBNptrFile(31)='obcs/CCS_kelp_80x100x48_Chl5_North',
+ OBNptrFile(32)='myobcs/CCS_kelp_80x100x48_MaNum_North.bin',
+ OBNptrFile(33)='myobcs/CCS_kelp_80x100x48_MaFra_North.bin',
+ OBNptrFile(34)='myobcs/CCS_kelp_80x100x48_MaC_North.bin',
+ OBNptrFile(35)='myobcs/CCS_kelp_80x100x48_MaN_North.bin',
 #
  OBSsFile='obcs/CCS_kelp_80x100x48_SALT_South',
  OBStFile='obcs/CCS_kelp_80x100x48_THETA_South',
@@ -79,6 +83,10 @@
  OBSptrFile(29)='obcs/CCS_kelp_80x100x48_Chl3_South',
  OBSptrFile(30)='obcs/CCS_kelp_80x100x48_Chl4_South',
  OBSptrFile(31)='obcs/CCS_kelp_80x100x48_Chl5_South',
+ OBSptrFile(32)='myobcs/CCS_kelp_80x100x48_MaNum_South.bin',
+ OBSptrFile(33)='myobcs/CCS_kelp_80x100x48_MaFra_South.bin',
+ OBSptrFile(34)='myobcs/CCS_kelp_80x100x48_MaC_South.bin',
+ OBSptrFile(35)='myobcs/CCS_kelp_80x100x48_MaN_South.bin',
 #
  OBWsFile='obcs/CCS_kelp_80x100x48_SALT_West',
  OBWtFile='obcs/CCS_kelp_80x100x48_THETA_West',
@@ -115,6 +123,10 @@
  OBWptrFile(29)='obcs/CCS_kelp_80x100x48_Chl3_West',
  OBWptrFile(30)='obcs/CCS_kelp_80x100x48_Chl4_West',
  OBWptrFile(31)='obcs/CCS_kelp_80x100x48_Chl5_West',
+ OBWptrFile(32)='myobcs/CCS_kelp_80x100x48_MaNum_West.bin',
+ OBWptrFile(33)='myobcs/CCS_kelp_80x100x48_MaFra_West.bin',
+ OBWptrFile(34)='myobcs/CCS_kelp_80x100x48_MaC_West.bin',
+ OBWptrFile(35)='myobcs/CCS_kelp_80x100x48_MaN_West.bin',
 #
  &
 # Sponge layer parameters
