@@ -210,6 +210,9 @@ C-  Relaxation to monthly climatologies.
 C-  Allows to read-in (2-d) tidal geopotential forcing
 #undef EXF_ALLOW_TIDES
 
+C-  Allows to read-in (2-d) wave height and period
+#define ALLOW_WAVE_FORCING
+
 C-  Allows to read-in seaice fraction from files (areaMaskFile)
 #undef EXF_SEAICE_FRACTION
 
