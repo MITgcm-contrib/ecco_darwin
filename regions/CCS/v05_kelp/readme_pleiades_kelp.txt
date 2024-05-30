@@ -24,7 +24,8 @@
 # 3. Instructions for running simulation (1992-2023 period)
   cd ../run
   cp ../build/mitgcmuv .
-  ln -sf /nobackupp18/mmanizza/Kelp/CCS/run_test/* .
+#  ln -sf /nobackupp18/mmanizza/Kelp/CCS/run_test/* .
+  ln -sf /nobackup/dmenemen/ecco_darwin/CCS_kelp/run_template/* .
   ln -s /nobackupp18/mmanizza/Kelp/CCS/run_test/init2 .
   ln -s /nobackupp18/mmanizza/Kelp/CCS/run_test/myobcs .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
