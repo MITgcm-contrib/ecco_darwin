@@ -24,10 +24,10 @@
 # 3. Instructions for running simulation (1992-2023 period)
   cd ../run
   cp ../build/mitgcmuv .
-#  ln -sf /nobackupp18/mmanizza/Kelp/CCS/run_test/* .
   ln -sf /nobackup/dmenemen/ecco_darwin/CCS_kelp/run_template/* .
-  ln -s /nobackupp18/mmanizza/Kelp/CCS/run_test/init2 .
-  ln -s /nobackupp18/mmanizza/Kelp/CCS/run_test/myobcs .
+  ln -sf /nobackup/hzhang1/pub/CCS_wave .
+  ln -sf /nobackupp18/mmanizza/Kelp/CCS/run_test/init2 .
+  ln -sf /nobackupp18/mmanizza/Kelp/CCS/run_test/myobcs .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
   mkdir diags diags/daily diags/monthly diags/monthly3
   cp ../../ecco_darwin/regions/CCS/v05_kelp/input/* .
@@ -37,3 +37,22 @@
 #    qsub job_CCS_ED_MMlq_v2 
 #    for 1-time step test run
 #MM  qsub job_CCS_ED_MMdv_v2
+
+
+=================================
+use of wave forcing in MITgcm s/r:
+=================================
+
+#include "EXF_OPTIONS.h"
+CBOP
+#include "EXF_FIELDS.h"
+CEOP
+
+CBOB
+#ifdef ALLOW_WAVE_FORCING
+c assign   WvHeight
+c assign   WvPeriod
+#endif
+CEOB
+
+

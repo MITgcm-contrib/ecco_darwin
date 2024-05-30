@@ -28,6 +28,8 @@
   vwindfile         = 'era_xx_it42_v2/CCS_kelp_80x100_EXFvwind_6hourly',
   swdownfile        = 'era_xx_it42_v2/CCS_kelp_80x100_EXFswdn_6hourly',
   lwdownfile        = 'era_xx_it42_v2/CCS_kelp_80x100_EXFlwdn_6hourly',
+  WvHeightfile      = 'CCS_wave/CCS_kelp_80x100_WvHeight_hourly',
+  WvPeriodfile      = 'CCS_wave/CCS_kelp_80x100_WvPeriod_hourly',
 #
   atempstartdate1   = 19920101,
   atempstartdate2   = 000000,
@@ -58,6 +60,14 @@
   lwdownstartdate1  = 19920101,
   lwdownstartdate2  = 030000,
   lwdownperiod      = 21600.0,
+#
+  WvHeightstartdate1  = 19920101,
+  WvHeightstartdate2  = 000000,
+  WvHeightperiod      = 3600.0,
+#
+  WvPeriodstartdate1  = 19920101,
+  WvPeriodstartdate2  = 000000,
+  WvPeriodperiod      = 3600.0,
  /
 
  &EXF_NML_03
@@ -72,6 +82,8 @@
   vwind_interpMethod  = 0,
   swdown_interpMethod = 0,
   lwdown_interpMethod = 0,
+  WvHeight_interpMethod = 0,
+  WvPeriod_interpMethod = 0,
  /
 
  &EXF_NML_OBCS
