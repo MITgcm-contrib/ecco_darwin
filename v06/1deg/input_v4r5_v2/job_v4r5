@@ -18,7 +18,6 @@ limit stacksize unlimited
 
 set INPUTDIR = /nobackup/hzhang1/pub/Release5
 ln -s ${INPUTDIR}/input_bin/* .
-ln -s ${INPUTDIR}/input_forcing/* .
 mpiexec -np 113 ./mitgcmuv
 
 #above for 1992/01/01 -- 2020/01/01
