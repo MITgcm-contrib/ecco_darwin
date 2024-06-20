@@ -5,7 +5,7 @@
 
 # ========
 # 1. Get code
-git clone https://github.com/MITgcm-contrib/llc_hires.git
+git clone https://github.com/MITgcm-contrib/ecco_darwin.git
 git clone https://github.com/MITgcm/MITgcm.git
 cd MITgcm
 git checkout checkpoint68y
