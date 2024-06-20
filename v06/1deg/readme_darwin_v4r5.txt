@@ -25,7 +25,7 @@ make depend
 make -j 16
 
 ==============
-# 3. Instructions for running simulation (1992-2017 period)
+# 3. Instructions for running simulation (1992-2024 period)
 
 cd ../run
 rm -rf *
@@ -74,7 +74,7 @@ make depend
 make -j 16
 
 ==============
-# 3. Instructions for running simulation (1992-2017 period)
+# 3. Instructions for running simulation (1992-2024 period)
 
 cd ../run
 rm -rf *
@@ -84,7 +84,8 @@ ln -sf ../build/mitgcmuv .
 INPUTDIR='/nobackup/hzhang1/pub/Release5'
 ln -s ${INPUTDIR}/input_bin/* .
 ln -s ${INPUTDIR}/input_forcing/* .
-cp ${MOD}/input_v4r5/* .
+ln -s ${INPUTDIR}/TBADJ .
+cp ${MOD}/input_v4r5_v2/* .
 
 rm data data.pkg data.diagnostics
 cp ${MOD}/input_darwin_v4r5/* .
