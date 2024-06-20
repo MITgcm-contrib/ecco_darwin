@@ -1,9 +1,9 @@
 # v06 1deg Darwin3 simulation based on ECCOV4r5 set-up
-#code base: c68g
 #two versions:
-#1 code_v4r5 + input_v4r5: 	including ctrl/smooth, similar to llc270
-#2 code_v4r5_v2 input_v4r5_v2:	w/o ctrl/smooth, similar to v4r4
-#				but for place holder now
+#1 code_v4r5 + input_v4r5: 	including ctrl/smooth
+				code base: c68g
+#2 code_v4r5_v2 input_v4r5_v2:	w/o ctrl/smooth
+				code base: c68y
 
 # ========
 # 1. Get code

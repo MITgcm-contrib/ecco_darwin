@@ -1,0 +1,192 @@
+# *********************
+# External Forcing Data
+# *********************
+#
+ &EXF_NML_01
+#
+ useAtmWind        = .FALSE.,
+#NCEP VALUES:
+# exf_albedo        = 0.15,
+# exf_scal_BulkCdn  = 1.015,
+#
+#TO COMBINE WITH ALLOW_ZENITH_ANGLE:
+ exf_albedo        = 0.1,
+ useExfZenIncoming = .TRUE., 
+ select_ZenAlbedo  = 1,
+#
+ ocean_emissivity = 0.97,
+ ice_emissivity = 0.95,
+ snow_emissivity = 0.95,
+#
+ exf_iprec         = 32,
+#exf_yftype        = 'RL',
+ useExfYearlyFields= .TRUE.,
+ useExfCheckRange  = .FALSE.,
+
+#readStressOnAgrid = .TRUE.,
+#rotateStressOnAgrid = .TRUE.,
+ /
+#
+ &EXF_NML_02
+#ustressfile       = 'TAUX_plus_xx_mean',
+#vstressfile       = 'TAUY_plus_xx_mean',
+#atempfile         = 'T2M_plus_xx_mean',
+#aqhfile           = 'QV2M_plus_xx_mean',
+#precipfile        = 'PRECTOTCORR_plus_xx_mean',
+#wspeedfile        = 'WSPD10M_adj2v4r4tot_v2',
+#swdownfile        = 'SWGDN_plus_xx_mean',
+#lwdownfile        = 'LWGAB_plus_xx_mean',
+#apressurefile     = 'SLP_llc90',
+
+#
+ ustressfile       = 'TAUX_adj2v4r4',
+ vstressfile       = 'TAUY_adj2v4r4',
+ atempfile         = 'T2M_adj2v4r4',
+ aqhfile           = 'QV2M_adj2v4r4',
+ precipfile        = 'PRECTOTCORR_adj2v4r4',
+ wspeedfile        = 'WSPD10M_adj2v4r4',
+ swdownfile        = 'SWGDN_adj2v4r4',
+ lwdownfile        = 'LWGAB_adj2v4r4',
+ apressurefile     = 'SLP',
+
+#
+ ustressstartdate1   = 19920101,
+ ustressstartdate2   = 003000,
+ ustressperiod       = 3600.0,
+#
+ vstressstartdate1   = 19920101,
+ vstressstartdate2   = 003000,
+ vstressperiod       = 3600.0,
+#
+ atempstartdate1   = 19920101,
+ atempstartdate2   = 000000,
+ atempperiod       = 3600.0,
+#
+ aqhstartdate1     = 19920101,
+ aqhstartdate2     = 000000,
+ aqhperiod         = 3600.0,
+#
+ precipstartdate1  = 19920101,
+ precipstartdate2  = 003000,
+ precipperiod      = 3600.0,
+#
+ runofffile        = 'runoff-2d-Fekete-1deg-mon-V4-SMOOTH_S60scalving_v3.bin'
+ runoffperiod      = -12,
+#
+ uwindstartdate1   = 19920101,
+ uwindstartdate2   = 000000,
+ uwindperiod       = 3600.0,
+#
+ vwindstartdate1   = 19920101,
+ vwindstartdate2   = 000000,
+ vwindperiod       = 3600.0,
+#
+ wspeedstartdate1   = 19920101,
+ wspeedstartdate2   = 000000,
+ wspeedperiod       = 3600.0,
+#
+ swdownstartdate1  = 19920101,
+ swdownstartdate2  = 003000,
+ swdownperiod      = 3600.0,
+#
+ lwdownstartdate1  = 19920101,
+ lwdownstartdate2  = 003000,
+ lwdownperiod      = 3600.0,
+#
+ apressurestartdate1   = 19920101,
+ apressurestartdate2   = 000000,
+ apressureperiod       = 3600.0,
+#
+ climsstperiod     = -12.,
+ climsssperiod     = -12.,
+ /
+#
+ &EXF_NML_03
+#NOT FOR EIG exf_offset_atemp  = 273.3971,
+#exf_offset_atemp  = 273.15,
+#NOT FOR NEW RUNOFF FIELD exf_inscal_runoff = 3.1710e-08,
+#exf_inscal_swdown = -1.0,
+#exf_inscal_lwdown = -1.0,
+#exf_inscal_ustress = -1.0,
+#exf_inscal_vstress = -1.0,
+ exf_inscal_precip = 0.001,
+# to compensate for sea level rise for nlfs/realFWF
+#precip_exfremo_intercept = 1.073E-9,
+#precip_exfremo_slope = -3.340E-18,
+ /
+#
+ &EXF_NML_04
+ runoff_interpMethod = 0,
+#ustress_interpMethod = 0,
+#vstress_interpMethod = 0,
+#atemp_interpMethod = 0,
+#aqh_interpMethod = 0,
+#precip_interpMethod = 0,
+#wspeed_interpMethod = 0,
+#swdown_interpMethod = 0,
+#lwdown_interpMethod = 0,
+#apressure_interpMethod = 0,
+#
+ ustress_lon0    = -180.,
+ ustress_lon_inc = 0.625,
+ ustress_lat0    = -90.,
+ ustress_lat_inc = 360*0.5,
+ ustress_nlon    = 576,
+ ustress_nlat    = 361,
+#
+ vstress_lon0    = -180.,
+ vstress_lon_inc = 0.625,
+ vstress_lat0    = -90.,
+ vstress_lat_inc = 360*0.5,
+ vstress_nlon    = 576,
+ vstress_nlat    = 361,
+#
+ atemp_lon0    = -180.,
+ atemp_lon_inc = 0.625,
+ atemp_lat0    = -90.,
+ atemp_lat_inc = 360*0.5,
+ atemp_nlon    = 576,
+ atemp_nlat    = 361,
+#
+ aqh_lon0    = -180.,
+ aqh_lon_inc = 0.625,
+ aqh_lat0    = -90.,
+ aqh_lat_inc = 360*0.5,
+ aqh_nlon    = 576,
+ aqh_nlat    = 361,
+#
+ precip_lon0    = -180.,
+ precip_lon_inc = 0.625,
+ precip_lat0    = -90.,
+ precip_lat_inc = 360*0.5,
+ precip_nlon    = 576,
+ precip_nlat    = 361,
+#
+ wspeed_lon0    = -180.,
+ wspeed_lon_inc = 0.625,
+ wspeed_lat0    = -90.,
+ wspeed_lat_inc = 360*0.5,
+ wspeed_nlon    = 576,
+ wspeed_nlat    = 361,
+#
+ swdown_lon0    = -180.,
+ swdown_lon_inc = 0.625,
+ swdown_lat0    = -90.,
+ swdown_lat_inc = 360*0.5,
+ swdown_nlon    = 576,
+ swdown_nlat    = 361,
+#
+ lwdown_lon0    = -180.,
+ lwdown_lon_inc = 0.625,
+ lwdown_lat0    = -90.,
+ lwdown_lat_inc = 360*0.5,
+ lwdown_nlon    = 576,
+ lwdown_nlat    = 361,
+#
+ apressure_lon0    = -180.,
+ apressure_lon_inc = 0.625,
+ apressure_lat0    = -90.,
+ apressure_lat_inc = 360*0.5,
+ apressure_nlon    = 576,
+ apressure_nlat    = 361,
+ /
