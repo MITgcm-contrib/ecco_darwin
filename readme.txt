@@ -8,14 +8,22 @@ Simulations:
 --regions--
   --CCS--
     /llc270: California Current System llc270 cut-out for kelp model development
+  --GoA--
+    /v05: Gulf of Alaska llc270 cut-out for Takamitsu Ito
   --GoM--
     /: Gulf of Mexico lon-lat
+  --GulfGuinea--
+    /v05: Gulf of Guinea llc270 cut-out for COESSING  
   --LR17--
     /llc270: La Rochelle Coastal System cut-out for sediment model development
   --mac_delta--
     /LatLon: Mackenzie Delta lon-lat  
     /llc270: Mackenzie Delta llc270 cut-out
     /llc4320: Mackenzie Delta llc4320 cut-out
+  --Med--
+    /v05: Mediteranean and Black Sea llc270 cut-out for HCMR
+  --RedSea--
+    /v05: Red Sea llc270 cut-out for KAUST
   --totten--
     /llc1080: totten lon-lat
 
