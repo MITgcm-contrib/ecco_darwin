@@ -75,28 +75,7 @@
 # Time stepping parameters
  &PARM03
  nIter0=2,
-#2 lev2 for testing:
-#nTimeSteps=8,
-#3month
-#nTimeSteps=2160,
-#18month
-#nTimeSteps=13110,
-#2yr
-#nTimeSteps=17520,
-#4-yr from 2014 to 2017, inclusive
-#nTimeSteps=35051,
-#20y:
-#nTimeSteps=175295,
-#22y:
-#nTimeSteps=192839,
-#24y:
-#nTimeSteps=210359,
-#26yr 
-#nTimeSteps=227903,
-#28yr
- nTimeSteps=245434,
-#60 years
-#nTimeSteps=525985,
+ nTimeSteps=280498,
 #
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
@@ -116,13 +95,9 @@
 #
  pChkptFreq  =31536000.0,
  chkptFreq   =31536000.0,
-# taveFreq    =31536000.0,
-# dumpFreq    =31536000.0,
  monitorFreq = 43200.0,
-# monitorFreq = 6307200.0,
  dumpInitAndLast = .TRUE.,
  adjDumpFreq = 31536000.0,
-#adjDumpFreq = 604800.0,
  adjMonitorFreq = 864000.0,
  pickupStrictlyMatch=.FALSE.,
  /
