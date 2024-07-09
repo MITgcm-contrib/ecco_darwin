@@ -3,7 +3,9 @@
 ## I. Preliminary information
 **Requirement**: Before proceding to the following intructions, you will need to complete steps in README.
 
-Following this instructions you will be able to exctract vectors from any llc global configuration along the boundaries of the required regional model using the ``diagnostic_vec`` package. This package was designed to output model diagnostics from llc global model in a subset of the model domain e.g. along a vector (or "vec"). This package is not include in the official realease of MITgcm but can be easly merged to it. More information on diagnostic_vec package at https://github.com/mhwood/diagnostics_vec.
+Following this instructions you will be able to exctract vectors from any llc global configuration along the boundaries of the required regional model using the ``diagnostic_vec`` package. This package was designed to output model diagnostics from llc global model in a subset of the model domain e.g. along a vector (or "vec"). This package is not included in the official MITgcm realease but can be easly merged to it. More information on diagnostic_vec package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood).
+
+
 
 ## II. Merging Instructions
 To perform the following steps you need to connect on a capability able to run a llc global simulation *(Below, we detail the instructions to run ECCO-Darwin model on NASA Pleiades supercomputer)*
@@ -57,21 +59,32 @@ vim data.pkg
  useDiagnostics_vec=.TRUE.,
 ```
 
-### c. Generate "masks" files to isolate the region
-```
+### c. Generate mask files to isolate the region
 
-```
+> - Please follow **Gen_mask.md** extended instructions to achieve this step.
+
+At the end of this step you will have a vector mask for every wet boundary of your regional model and a surface mask for the regional domain in a folder called ``dv``.
 
 ### d. Generate a ``data.diagnostics_vec`` parameter file
+> - copy ``data.diagnostics_vec`` file into the ``input`` directory
 ```
+cd config/input
+cp ../../ecco_darwin/regions/downscaling/utils/data.diagnostics_vec .
+```
+> - Modify the ``data.diagnostics_vec`` file according to the specificities of your domain and your requirements.
 
-```
 **Note:** You can modify data.diagnostic file with only the diagnostics you want to save. This won't affect diagnostic_vec and the fewer diagnostics saved the faster the simulation
 
 ### e. Set the compile time ``DIAGNOSTICS_VEC_SIZE.h`` file
+> - copy ``DIAGNOSTICS_VEC_SIZE.h`` file into the ``code_darwin`` directory
 ```
+cd ../code_darwin
 cp ../../darwin3/pkg/diagnostics_vec/DIAGNOSTICS_VEC_SIZE.h .
 ```
+> - Modify the ``DIAGNOSTICS_VEC_SIZE.h`` file as follows:
+    - VEC_points: correspond to ....
+    - nVEC_mask: number of lateral boundary mask used in the ``data.diagnostics_vec`` file (in the example file nVEC_mask=20)
+    - nSURF_mask: number of surface boundary mask used in the ``data.diagnostics_vec`` file (in the example file nSURF_mask=1)
 
 ### f. Compile and run the simulation
 ```
@@ -99,8 +112,11 @@ ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2023/xx*42.data .
 cp ../../config/input/* .
+cp -r ../../config/dv .
 mkdir diags
 # modify job_ECCO_darwin as needed
 qsub job_ECCO_darwin
 ```
+
+**Note:** At the end of the simulation you will get a binary file for every parameter set in ``data.diagnostics_vec`` file each containing the number of iterations chosen for the parameter.
 

@@ -8,13 +8,14 @@ This repository has been created to guide the ECCO-Darwin users in generating th
 ## Main steps
 The instruction files are organised as follows:
 1. **README.md**: You will find here the basic requirements to getting started.
-2. **STEP1.md**: you will find here the instructions to exctract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit Michael Wood: https://github.com/mhwood/diagnostics_vec) 
+2. **STEP1.md**: you will find here the instructions to exctract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit Michael Wood)
 3. **STEP2.md**: you will find here the instructions to convert the exctracted vector into the boundary/intial conditions of your regional setup using the python3 codes provided.
+4. **Gen_mask.md**: you will find here extanded instructions to generate the mask files needed for step 1.
 
 ## Getting Started
 To generate the regional configuration you will need:
-1. Capabilities to run any llc global model (Here we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA superconputer)
-2. python3 with a dedicated anaconda environment. Instructions to set the environment follow.
+1. Computational capabilities to run any llc global model (Here we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA supercomputer)
+2. python3 with a dedicated anaconda environment. Instructions to set the environment follow:
 
 > - Install anaconda following the instructions on this page: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 > - Open a terminal and Create the environment:
