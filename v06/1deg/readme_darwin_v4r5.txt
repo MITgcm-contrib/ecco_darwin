@@ -53,7 +53,6 @@ mkdir diags/monthly/IOPS diags/monthly/PAR diags/monthly/RRS
 #version 2:
 # ========
 # 1. Get code
-git clone https://github.com/MITgcm-contrib/llc_hires.git
 git clone https://github.com/darwinproject/darwin3
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 cd darwin3/pkg/darwin
@@ -83,7 +82,6 @@ ln -sf ../build/mitgcmuv .
 
 INPUTDIR='/nobackup/hzhang1/pub/Release5'
 ln -s ${INPUTDIR}/input_bin/* .
-ln -s ${INPUTDIR}/input_forcing/* .
 ln -s ${INPUTDIR}/TBADJ .
 cp ${MOD}/input_v4r5_v2/* .
 
