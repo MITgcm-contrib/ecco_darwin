@@ -3,7 +3,7 @@
 ## I. Preliminary information
 **Requirement**: Before proceding to the following intructions, you will need to complete steps in README.
 
-Following this instructions you will be able to exctract vectors from any llc global configuration along the boundaries of the required regional model using the ``diagnostic_vec`` package. This package was designed to output model diagnostics from llc global model in a subset of the model domain e.g. along a vector (or "vec"). This package is not included in the official MITgcm realease but can be easly merged to it. More information on diagnostic_vec package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood).
+Following these instructions you will be able to exctract vectors from any llc global configuration along the boundaries of the required regional model using the ``diagnostic_vec`` package. This package was designed to output model diagnostics from llc global model in a subset of the model domain e.g. along a vector (or "vec"). This package is not included in the official MITgcm realease but can be easly merged to it. More information on diagnostic_vec package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood).
 
 
 
@@ -86,7 +86,7 @@ cp ../../darwin3/pkg/diagnostics_vec/DIAGNOSTICS_VEC_SIZE.h .
     - nVEC_mask: number of lateral boundary mask used in the ``data.diagnostics_vec`` file (in the example file nVEC_mask=20)
     - nSURF_mask: number of surface boundary mask used in the ``data.diagnostics_vec`` file (in the example file nSURF_mask=1)
 
-### f. Compile and run the simulation
+## IV. Compile and run the simulation
 ```
 cd darwin3
 mkdir build run
