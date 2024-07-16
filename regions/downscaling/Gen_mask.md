@@ -68,9 +68,53 @@ To get more information about the options required for this code run ``gen_bathy
 > - -wp: Indexes (row and column) of the central cells of the downscaled domain.  **Warning**: This should be a wet cell, so select the wet cell closest to the center.
 > - -v: Verbose
 
-## III. 
+## III. Generate an netcdf grid file with the model grid fields 
+
+On this step we generate a netcdf file with the model grid fields as they will be interpreted by the model. **Note:** For this step you will need to run the ECCO-Darwin model for on time step. 
+
+### a. Set the ecco-darwin v5 configuration to generate the netcdf
+
+You will need here to start setting up the configuration you planed for your downscalled model, including the number of processors you to run the simulation on and how they will be split. 
+
+```
+cd downscalling
+cp -r ecco_darwin/regions/downscaling/gen_ncgrid .
+cd gen_ncgrid/code/
+vim SIZE.h
+##### Modify sNx to Nr parameters according to your downscalled setup #####
+cd ../namelist/
+vim data
+##### Modify parameters according to your downscalled setup (see instructions below) #####
+```
+
+In the data file change the parameters according to the downsacled model configuration you want to create. Below are the details of importante parameters to set:
+> - tRef: reference vertical profile for potential temperature (size = Nr the number of vertical levels)
+> - sRef: reference vertical profile for salinity/specific humidity (size = Nr the number of vertical levels)
+> - hFacMinDr: Minimum dimension size of a cell (same as bathy file option -cs)
+> - hFacMin: Minimum fraction size of a cell (same as bathy file option -cs)
+> - delR: Vertical grid spacing (size = Nr the number of vertical levels)
+> - bathyfile: name of the bathymetry file generated previously
+
+### b. Split mitgrid on the processors
+
+Then, we need to split the mitgrid onto the processors depending on sNx and sNy choices. The python code ``mitgrid2tiles.py`` in the ``utils`` folder will generate these files in a ``mitgrids`` folder. Below are the instructions to run the code in a terminal:
+
+```
+conda activate downscaling
+cd ecco_darwin/regions/downscaling/utils/
+python3 mitgrid2tiles.py -d /path/to/save/the/grid -n name_of_the_region\
+                         -s n_rows n_cols -p sNx sNy
+```
+**Example:**
+```
+ python3 mitgrid2tiles.py -d ecco_darwin/regions/downscaling/ -n SBS \
+                          -s 1224 744 -p 34 24
+```
+
+### c. Run the model on 1 step
 
 
+### d. Stictch the netcdf file
 
 
 

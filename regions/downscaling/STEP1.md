@@ -33,7 +33,7 @@ python3 copy_verification_files_to_MITgcm.py -m ../../darwin3/
 ## III. Set diagnostic_vec parameterization files
 Below are the instructions to run the ECCO-Darwin v5 [llc270] simulation with the ``diagnostics_vec`` package and extract a choosen region.
 
-### a. Set the darwin5 configuration to run
+### a. Set the ecco-darwin v5 configuration to run
 ```
 cd downscalling
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
@@ -82,7 +82,7 @@ cd ../code_darwin
 cp ../../darwin3/pkg/diagnostics_vec/DIAGNOSTICS_VEC_SIZE.h .
 ```
 > - Modify the ``DIAGNOSTICS_VEC_SIZE.h`` file as follows:
-    - VEC_points: correspond to ....
+    - VEC_points: correspond to the max number of points that can be stored in a diagnostics_vec mask (the shorter this list, the less time is spent on I/O).
     - nVEC_mask: number of lateral boundary mask used in the ``data.diagnostics_vec`` file (in the example file nVEC_mask=20)
     - nSURF_mask: number of surface boundary mask used in the ``data.diagnostics_vec`` file (in the example file nSURF_mask=1)
 
