@@ -32,7 +32,7 @@ C enable chlorophyll quotas for all phototrophs
 
 C enable a dynamic CDOM tracer
 #define DARWIN_ALLOW_CDOM
-#define DARWIN_CDOM_UNITS_CARBON
+#undef DARWIN_CDOM_UNITS_CARBON
 C enable air-sea carbon exchange and Alk and O2 tracers
 #define DARWIN_ALLOW_CARBON
 
