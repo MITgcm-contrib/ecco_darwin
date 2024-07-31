@@ -124,6 +124,7 @@
  freefemax = .1E-3,
  depthfesed= 7000.,
  scav_tau= 2.0,
+ ligand_tot= 1e-3,
  kdoc=  2.314814814814815E-7,   ! 1/50day
  kdop=  2.314814814814815E-7,   ! 1/50day
  kdon=  2.314814814814815E-7,   ! 1/50day
