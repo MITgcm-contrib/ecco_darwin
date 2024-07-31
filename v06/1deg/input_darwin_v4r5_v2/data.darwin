@@ -136,6 +136,12 @@
  kPOSi= 7.716049382716049E-8,   ! 1/150day
  phygrazmin= 120E-10,
  hollexp = 1.E0,
+ wC_sink=10,
+ wN_sink=10,
+ wP_sink=10,
+ wFe_sink=10,
+ wSi_sink=10,
+ wPIC_sink=15,
  SURFDICMIN  =   100.0,
  SURFALKMIN  =   100.0,
  /
