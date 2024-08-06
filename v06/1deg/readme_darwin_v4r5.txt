@@ -86,7 +86,7 @@ ln -s ${INPUTDIR}/TBADJ .
 cp ${MOD}/input_v4r5_v2/* .
 
 rm data data.pkg data.diagnostics
-cp ${MOD}/input_darwin_v4r5/* .
+cp ${MOD}/input_darwin_v4r5_2/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/ojahn/ecco_darwin/v06/llc270/data_darwin/* .
 ln -sf /nobackup/dcarrol2/pub/1deg/v06/V4r5/* .
