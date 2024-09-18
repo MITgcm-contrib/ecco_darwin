@@ -780,11 +780,35 @@ cdm #endif
        ENDDO
        ENDDO
 
+
+#ifdef ALLOW_ROTATE_UV_CONTROLS
+       CALL ROTATE_UV2EN_RL(tmpUX,tmpVY,tmpUE,tmpVN,
+     &      .FALSE.,.FALSE.,.TRUE.,1,myThid)
+
+       DO bj = myByLo(myThid),myByHi(myThid)
+         DO bi = myBxLo(myThid),myBxHi(myThid)
+          DO j = 1,sNy
+           DO i = 1,sNx
+             uwind(i,j,bi,bj)=uwind(i,j,bi,bj)+tmpUX(i,j,bi,bj)
+             vwind(i,j,bi,bj)=vwind(i,j,bi,bj)+tmpVY(i,j,bi,bj)
+           ENDDO
+          ENDDO
+         ENDDO
+       ENDDO
+#endif /* ALLOW_ROTATE_UV_CONTROLS */
+
+      ENDIF !if (ctrlUseGen) then
+#endif
+
+chzh[
+c#if (defined (ALLOW_CTRL) && defined (ALLOW_GENTIM2D_CONTROL))
+cIF ( useCTRL.AND.ctrlUseGen ) THEN
+
        DO bj = myByLo(myThid),myByHi(myThid)
        DO bi = myBxLo(myThid),myBxHi(myThid)
         DO j = 1,sNy
          DO i = 1,sNx
-          DO iarr = 1, maxCtrlTim2D
+chzh          DO iarr = 1, maxCtrlTim2D
 #ifdef ALLOW_ATM_TEMP
 #ifdef EXF_ZERO_BOUND_AQH
              aqh(i,j,bi,bj)=MAX(aqh(i,j,bi,bj), 0 _d 0)
@@ -806,30 +830,14 @@ cdm #endif
              runoff(i,j,bi,bj)=MAX(runoff(i,j,bi,bj), 0 _d 0)
 #endif
 #endif
-          ENDDO
+chzh          ENDDO
          ENDDO
         ENDDO
        ENDDO
        ENDDO
-
-#ifdef ALLOW_ROTATE_UV_CONTROLS
-       CALL ROTATE_UV2EN_RL(tmpUX,tmpVY,tmpUE,tmpVN,
-     &      .FALSE.,.FALSE.,.TRUE.,1,myThid)
-
-       DO bj = myByLo(myThid),myByHi(myThid)
-         DO bi = myBxLo(myThid),myBxHi(myThid)
-          DO j = 1,sNy
-           DO i = 1,sNx
-             uwind(i,j,bi,bj)=uwind(i,j,bi,bj)+tmpUX(i,j,bi,bj)
-             vwind(i,j,bi,bj)=vwind(i,j,bi,bj)+tmpVY(i,j,bi,bj)
-           ENDDO
-          ENDDO
-         ENDDO
-       ENDDO
-#endif /* ALLOW_ROTATE_UV_CONTROLS */
-
-      ENDIF !if (ctrlUseGen) then
-#endif
+cENDIF !if (ctrlUseGen) then
+c#endif
+chzh]
 
       RETURN
       END

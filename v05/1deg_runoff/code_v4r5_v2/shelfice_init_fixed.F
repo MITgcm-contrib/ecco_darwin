@@ -42,12 +42,16 @@ C     i, j, bi, bj :: Loop counters
       CHARACTER*16  diagUnits
       CHARACTER*(80) diagTitle
 #endif /* ALLOW_DIAGNOSTICS */
-#ifdef ALLOW_CTRL
+chzh[
+c#ifdef ALLOW_CTRL
+chzh]      
       INTEGER k
 # ifdef ALLOW_SHIFWFLX_COST_CONTRIBUTION
       _RL dummy
 # endif
-#endif
+chzh[
+c#endif
+chzh]      
 
 C local variabls used to determine shelf-ice and ice-front masks
 C     iceFrontCellThickness   :: the ratio of the horizontal length

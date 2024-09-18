@@ -88,9 +88,6 @@ C o Include/exclude balancing surface forcing relaxation code
 C o Include/exclude GM-like eddy stress in momentum code
 #undef ALLOW_EDDYPSI
 
-C o Check for negative salinity
-#define CHECK_SALINITY_FOR_NEGATIVE_VALUES
-
 C o Use "Exact Convervation" of fluid in Free-Surface formulation
 C   so that d/dt(eta) is exactly equal to - Div.Transport
 #define EXACT_CONSERV

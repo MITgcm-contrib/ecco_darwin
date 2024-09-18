@@ -30,7 +30,7 @@
   frequency(2) = 2635200.0,
    fields(1:3,2) = 'THETA   ','SALT    ',
 #stuff that is not quite state variables (and may not be quite
-#synchronous) but are added here to reduce file number
+#synchroneous) but are added here to reduce file number
                  'DRHODR  ',
 #                'KPPviscA','KPPdiffT','KPPdiffTS',
 #                'GGL90TKE','GGL90Lmx','GGL90Prl',
@@ -147,14 +147,24 @@
         'oceQsw  ','oceSPflx','SIsnPrcp','SIacSubl',
    filename(17) = 'diags/state_2d_set2',
 #---
-#  frequency(18) = 604800.0,
-#   fields(1:2,18) = 'VISCA4D ',
-#   filename(18) = 'diags/visc_3d_set1',
+  frequency(20) = 2635200.0,
+   fields(1:7,20) = 'EXFswdn', 'EXFlwdn', 'EXFatemp', 'EXFaqh','EXFpreci', 'EXFtaux','EXFtauy',
+   filename(20) = 'diags/exf_zflux_set1',
 #---
-#  frequency(19) = -604800.0,
-#   fields(1:2,19) = 'VISCA4D ',
-#   filename(19) = 'diags/visc_3d_set2',
-#   timePhase(19)= 0.,
+  frequency(22) = 2635200.0,
+   fields(1:8,22) = 'EXFhs', 'EXFhl', 'EXFlwnet', 'EXFswnet', 'EXFlwdn', 'EXFswdn', 'EXFqnet', 'EXFpress',
+   filename(22) = 'diags/exf_zflux_set2',
+#---
+  frequency(19) = -2635200.0,
+   fields(1:2,19) = 'THETA   ','SALT    ',
+   timePhase(19)= 0.,
+   filename(19) = 'diags/budg3d_snap_set1',
+#---
+  frequency(18) = 2635200.0,
+   fields(1:6,18) = 'SHIfwFlx','SHIhtFlx','SHIICFfw','SHIICFht',
+                    'ICFfwFlx','ICFhtFlx',
+   filename(18) = 'diags/state_2d_shelfice',
+#---
  /
 #
 #

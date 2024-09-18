@@ -14,6 +14,10 @@ C Use this file for selecting options within the GM/Redi package
 C     Package-specific Options & Macros go here
 
 C initialize KapGM and KapRedi from a file
+chzh[
+#define ALLOW_KAPGM_CONTROL
+#define ALLOW_KAPREDI_CONTROL
+chzh]
 #define ALLOW_KAPGM_3DFILE
 #define ALLOW_KAPREDI_3DFILE
 

@@ -71,6 +71,7 @@
  darwin_useSEAICE = .TRUE.,
  /
  &DARWIN_INTERP_PARAMS
+ iron_interpMethod = 0,
 # DOCrunoff_interpMethod = 0,
 # DONrunoff_interpMethod = 0,
 # DOPrunoff_interpMethod = 0,
@@ -82,8 +83,6 @@
 # POPrunoff_interpMethod = 0,
 # PONrunoff_interpMethod = 0,
 # DICrunoff_interpMethod = 0,
-#
- iron_interpMethod = 0,
 #
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,

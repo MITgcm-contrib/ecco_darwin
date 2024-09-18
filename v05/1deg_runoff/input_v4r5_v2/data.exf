@@ -28,16 +28,15 @@
  /
 #
  &EXF_NML_02
- ustressfile       = 'TAUX_plus_xx_mean',
- vstressfile       = 'TAUY_plus_xx_mean',
- atempfile         = 'T2M_plus_xx_mean',
- aqhfile           = 'QV2M_plus_xx_mean',
- precipfile        = 'PRECTOTCORR_plus_xx_mean',
- wspeedfile        = 'WSPD10M_adj2v4r4tot_v2',
- swdownfile        = 'SWGDN_plus_xx_mean',
- lwdownfile        = 'LWGAB_plus_xx_mean',
- apressurefile     = 'SLP_llc90',
-
+ ustressfile       = 'TBADJ/eccov4r5_ustr',
+ vstressfile       = 'TBADJ/eccov4r5_vstr',
+ atempfile         = 'TBADJ/eccov4r5_tmp2m',
+ aqhfile           = 'TBADJ/eccov4r5_spfh2m',
+ precipfile        = 'TBADJ/eccov4r5_rain',
+ wspeedfile        = 'TBADJ/eccov4r5_wspeed',
+ swdownfile        = 'TBADJ/eccov4r5_dsw',
+ lwdownfile        = 'TBADJ/eccov4r5_dlw',
+ apressurefile     = 'TBADJ/eccov4r5_pres',
 #
  ustressstartdate1   = 19920101,
  ustressstartdate2   = 003000,
@@ -117,4 +116,5 @@
  swdown_interpMethod = 0,
  lwdown_interpMethod = 0,
  apressure_interpMethod = 0,
+#
  /
