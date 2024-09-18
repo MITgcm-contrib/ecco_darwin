@@ -24,9 +24,9 @@ mkdir build run
 cd build
 rm *
 module load comp-intel/2020.4.304 mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
-MOD="../../ecco_darwin/v05/1deg"
+MOD="../../ecco_darwin/v05/1deg_runoff"
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-	-mo "${MOD}/code_darwin_v4r5_v2 ${MOD}/code_v4r5_v2" -mpi
+	-mo "${MOD}/code_darwin_v4r5_v2 ../../ecco_darwin/v05/1deg/code_v4r5_v2" -mpi
 make depend
 make -j 16
 
@@ -41,9 +41,12 @@ ln -sf ../build/mitgcmuv .
 INPUTDIR='/nobackup/hzhang1/pub/Release5'
 ln -s ${INPUTDIR}/input_bin/* .
 ln -s ${INPUTDIR}/TBADJ .
+cp ../../ecco_darwin/v05/1deg/input_v4r5_v2/* .
 cp ${MOD}/input_v4r5_v2/* .
 
+
 rm data data.pkg data.diagnostics
+cp ../../ecco_darwin/v05/1deg/input_darwin_v4r5_v2/* .
 cp ${MOD}/input_darwin_v4r5_v2/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/dcarrol2/pub/1deg/v05/V4r5/* .
