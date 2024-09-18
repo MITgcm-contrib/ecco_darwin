@@ -26,7 +26,7 @@ rm *
 module load comp-intel/2020.4.304 mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
 MOD="../../ecco_darwin/v05/1deg_runoff"
 ../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
-	-mo "${MOD}/code_darwin_v4r5_v2 ../../ecco_darwin/v05/1deg/code_v4r5_v2" -mpi
+	-mo "${MOD}/code_darwin_v4r5_v2 ../../ecco_darwin/v05/1deg/code_darwin_v4r5_v2 ../../ecco_darwin/v05/1deg/code_v4r5_v2" -mpi
 make depend
 make -j 16
 
