@@ -101,7 +101,7 @@
 ########################
  &DARWIN_CDOM_PARAMS
  fracCDOM = 0.02,
- cdomdegrd  = 7.716049382716049E-7, ! 1/15days
+ cdomdegrd  = 3.168808781402895E-9, ! 1/10years
  CDOMbleach = 1.929012345679012E-6, ! 1/6days
  PARCDOM = 60.,
  /

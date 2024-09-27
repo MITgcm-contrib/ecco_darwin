@@ -33,7 +33,7 @@
  swdownfile        = 'era_xx/EIG_dsw_plus_ECCO_v4r1_ctrl',
  lwdownfile        = 'era_xx/EIG_dlw_plus_ECCO_v4r1_ctrl',
  runofffile        = 'AGRO_interan/AGRO_runoff_mac270',
- runoftempfile     = 'Tokuda_Mac270modif/wattmp_mac270modif',
+ runoftempfile     = 'Tokuda_ED-SBS/wattmp_mac270modif',
 #
  atempstartdate1   = 19920101,
  atempstartdate2   = 000000,

@@ -127,8 +127,8 @@ C        convert W/m2 to uEin/s/m2
         DO i=iMin,iMax
 C TODO should include hFacC
 #ifdef DARWIN_ALLOW_CDOM
-         CDOMatten(i,j) = -0.12*TANH(-1.65*pTracer(i,j,k,bi,bj,iCDOM)
-     &                    +1.70)+0.10
+         CDOMatten(i,j) = -0.14*TANH(-1.18*pTracer(i,j,k,bi,bj,iCDOM)
+     &                    +1.04)+0.10
          atten(i,j) = (katten_w + katten_Chl*Chl(i,j) + 
      &                CDOMatten(i,j))*DRF(k)
 #else
