@@ -41,7 +41,17 @@ C !USES: ===============================================================
 #include "DARWIN_TRAITS.h"
 #include "DARWIN_FIELDS.h"
 #include "DARWIN_EXF_FIELDS.h"
+C#ifdef ALLOW_WAVE_FORCING 
+#include "EXF_OPTIONS.h"
+#include "EXF_FIELDS.h"
+C#endif
 #endif
+
+C#ifdef ALLOW_WAVE_FORCING 
+C#include "EXF_OPTIONS.h"
+C#include "EXF_FIELDS.h"
+C#endif
+
 
 C !INPUT PARAMETERS: ===================================================
 C  Ptrdummy             :: dummy for darwin2 compatibility
@@ -125,20 +135,27 @@ C-MM - NEW VARIABLES FOR MACROALGAE
       _RL hor_vel
       _RL day_yr
       _RL ma_areat,ma_nrest,ma_crest
+     
 
-      _RL grate_madum
+      _RL grate_madum,mort_madum
       _RL gTdum, gHdum, gQdum, gEdum
+      _RL Bmag_tmp
 
       _RL ma_area(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL ma_nres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL ma_cres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 C
       _RL grate_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! Kelp growth rate
+      _RL mort_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! mortality rate
 C terms controlling growth of Kelp      
       _RL gT_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gT - temperature
       _RL gQ_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gQ - N quota
       _RL gH_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gH - wave motion 
       _RL gE_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gE - Irradiance
+
+      _RL WVp_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! Wave Period array
+      _RL WVh_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! Wave Height array
+
 
       INTEGER curr_date(4), first_day(4),numdays(4)
 
@@ -369,25 +386,38 @@ C        print*,'day_yr=',day_yr
 C        print*,'ptr=',ptr
 
 
-C        print*,'hor_vel=',hor_vel
+C        write(*,*)'Wave Height=',WvHeight(i,j,bi,bj)
+C        write(*,*)'Wave Period=',WvPeriod(i,j,bi,bj) 
 
 C CALLING MAIN ROUTINE HERE
 
+
         CALL DARWIN_MACROALGAE(
      I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
-     I   yc(i,j,bi,bj),day_yr,
+C     I   yc(i,j,bi,bj),day_yr, WvHeight(i,j,bi,bj),
+     I WvHeight(i,j,bi,bj), 
+     I   WvPeriod(i,j,bi,bj),
      U                  gtr,
-     O    ma_areat,ma_nrest,ma_crest,
-     O    grate_madum,gTdum,gQdum,gHdum,gEdum)
+C     O    ma_areat,ma_nrest,ma_crest,
+     O    gTdum,gQdum,gHdum,gEdum,grate_madum,
+     O    mort_madum)
+
+   
+C            write(*,*)'************************'
+C            write(*,*)'gtr(iMagB) = ',gtr(iMagB) 
+C            write(*,*)'gtr(iMagC) = ',gtr(iMagC)
+C            write(*,*)'gtr(iMagN) = ',gtr(iMagN)
+C            write(*,*)'************************'
 
 C-write out outputs
 
 C           write(*,*)'BEG. DARWIN FORCING'
-C           write(*,*)'grate_ma =',grate_madum
 C           write(*,*)'gT_ma = ',gTdum
-c           write(*,*)'gH_ma =',gHdum
+C           write(*,*)'gH_ma =',gHdum
 C           write(*,*)'gQ_ma = ',gQdum
-C           write(*,*)'gE_ma =',gEdum
+c           write(*,*)'gE_ma =',gEdum
+C           write(*,*)'grate_ma =',grate_madum
+C           write(*,*)'mort_madum', mort_madum          
 C           write(*,*)'END DARWIN FORCING'
 
 
@@ -396,7 +426,21 @@ C           write(*,*)'END DARWIN FORCING'
           gQ_ma(i,j,k) = gQdum 
           gE_ma(i,j,k) = gEdum
           gH_ma(i,j,k) = gHdum
+          mort_ma(i,j,k) = mort_madum
 
+C          mort_ma(i,j,k) = 50
+
+
+         
+          WVp_ma(i,j) = WvPeriod(i,j,bi,bj) 
+          WVh_ma(i,j) = WvHeight(i,j,bi,bj) 
+
+C          write(*,*)'mort_ma_forc =', mort_ma(i,j,k)
+C          write(*,*)'WVp_ma = ',WVp_ma(i,j)
+C          write(*,*)'WVh_ma =', WVh_ma(i,j)
+
+C          write(*,*)'WvPeriod =', WvPeriod(i,j,bi,bj)
+C          write(*,*) 'WvHeight =', WvHeight(i,j,bi,bj)
 
 C           diags(i,j,k,igrateMAG) = grate_madum
 C           write(*,*)'grate_ma =', diags(i,j,k,igrateMAG)
@@ -415,6 +459,8 @@ C          write(*,*),'ma_areat = ', ma_areat
           ma_nres(i,j,k)=ma_nrest
           ma_cres(i,j,k)=ma_crest
 
+
+          
 C-MM
 
         DO l=1,darwin_nDiag
@@ -663,6 +709,18 @@ C-MM
 
       CALL DIAGNOSTICS_FILL(gH_ma(1-OLx,1-OLy,1),
      &  'gH_mag  ',0,Nr,1,bi,bj,myThid)
+
+      CALL DIAGNOSTICS_FILL(grate_ma(1-OLx,1-OLy,1),
+     &  'grate_mag  ',0,Nr,1,bi,bj,myThid)
+
+      CALL DIAGNOSTICS_FILL(mort_ma(1-OLx,1-OLy,1),
+     &  'mort_mag',0,Nr,1,bi,bj,myThid)
+
+      CALL DIAGNOSTICS_FILL(WVh_ma(1-OLx,1-OLy),
+     &  'wv_hght ',0,1,1,bi,bj,myThid)
+
+       CALL DIAGNOSTICS_FILL(WVp_ma(1-OLx,1-OLy),
+     &  'wv_prd  ',0,1,1,bi,bj,myThid)
 
 C-MM
 

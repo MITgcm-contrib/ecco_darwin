@@ -37,10 +37,11 @@ C these cannot be modified for now
       INTEGER esi
       INTEGER eChl
       INTEGER nDarwin
-      INTEGER maNum
-      INTEGER maFra
-      INTEGER maN
-      INTEGER maC
+C      INTEGER maNum
+C      INTEGER maFra
+      INTEGER iMagB
+      INTEGER iMagN
+      INTEGER iMagC
       PARAMETER (iDIC   =1)
       PARAMETER (iNO3   =iDIC+1)
       PARAMETER (iNO2   =iNO3 +1)
@@ -111,11 +112,10 @@ C these cannot be modified for now
 #else
       PARAMETER (eChl   =efe)
 #endif
-      PARAMETER(maNum=eChl+1)
-      PARAMETER(maFra=maNum+1)
-      PARAMETER(maC=maFra+1)
-      PARAMETER(maN=maC+1)
-      PARAMETER (nDarwin=maN)
+      PARAMETER(iMagB=eChl+1)
+      PARAMETER(iMagC=iMagB+1)
+      PARAMETER(iMagN=iMagC+1)
+      PARAMETER (nDarwin=iMagN)
 
 CEOP
 #endif /* ALLOW_DARWIN */
