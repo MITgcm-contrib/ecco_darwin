@@ -3,8 +3,8 @@
 
 ==============
 # 1. Get code
-  git clone git@github.com:MITgcm-contrib/ecco_darwin.git
-  git clone git@github.com:darwinproject/darwin3
+  git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
+  git clone https://github.com/darwinproject/darwin3
   cd darwin3
   git checkout 24885b71
   mkdir build run
@@ -24,9 +24,8 @@
 # 3. Instructions for running simulation (1992-2023 period)
   cd ../run
   cp ../build/mitgcmuv .
-  ln -sf /nobackup/dmenemen/ecco_darwin/CCS_kelp/run_template/* .
+  ln -sf /nobackup/dcarrol2/pub/regions/CCS/input/* .
   ln -sf /nobackup/hzhang1/pub/CCS_wave .
-  ln -sf /nobackup/dcarrol2/mCDR/CCS/input/* .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
   mkdir diags diags/daily diags/monthly diags/monthly3
   cp ../../ecco_darwin/regions/CCS/v05_kelp/input/* .
