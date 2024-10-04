@@ -26,8 +26,7 @@
   cp ../build/mitgcmuv .
   ln -sf /nobackup/dmenemen/ecco_darwin/CCS_kelp/run_template/* .
   ln -sf /nobackup/hzhang1/pub/CCS_wave .
-  ln -sf /nobackupp18/mmanizza/Kelp/CCS/run_test/init2 .
-  ln -sf /nobackupp18/mmanizza/Kelp/CCS/run_test/myobcs .
+  ln -sf /nobackup/dcarrol2/mCDR/CCS/input/* .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
   mkdir diags diags/daily diags/monthly diags/monthly3
   cp ../../ecco_darwin/regions/CCS/v05_kelp/input/* .
