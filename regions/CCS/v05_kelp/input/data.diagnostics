@@ -229,21 +229,6 @@
    fields(1,63) = 'pH      ',
    filename(63) = 'diags/monthly/pH',
 #--
-    frequency(64) = 2635200.,
-    fields(1,64) = 'PAR',
-    filename(64) = 'diags/monthly3/PAR',
-#--
-  frequency(65) = 2635200.,
-   fields(1,65) = 'THETA   ',
-   filename(65) = 'diags/monthly3/THETA',
-#--
-  frequency(66) = 2635200.,
-  fields(1,66) = 'TRAC02  ',
-  filename(66)= 'diags/monthly3/NO3',
-#--
-  frequency(67) = 2635200.,
-  fields(1,67) = 'TRAC04  ',
-  filename(67)= 'diags/monthly3/NH4',
   
 #monthly kelp diagnostics
 #---
