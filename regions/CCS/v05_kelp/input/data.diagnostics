@@ -244,44 +244,46 @@
   frequency(67) = 2635200.,
   fields(1,67) = 'TRAC04  ',
   filename(67)= 'diags/monthly3/NH4',
-##
+  
+#monthly kelp diagnostics
+#---
   frequency(68) = 2635200.,
   fields(1,68) = 'TRAC32  ',
-  filename(68)= 'diags/monthly3/MaNum',  
+  filename(68)= 'diags/monthly/MaNum',  
 #
   frequency(69) = 2635200.,
   fields(1,69) = 'TRAC33  ',
-  filename(69)= 'diags/monthly3/MaFra',
+  filename(69)= 'diags/monthly/MaFra',
 #
   frequency(70) = 2635200.,
   fields(1,70) = 'TRAC34  ',
-  filename(70)= 'diags/monthly3/MaC',
+  filename(70)= 'diags/monthly/MaC',
 # 
   frequency(71) = 2635200.,
   fields(1,71) = 'TRAC35  ',
-  filename(71)= 'diags/monthly3/MaN',
+  filename(71)= 'diags/monthly/MaN',
 #
   frequency(72) = 2635200.,
   fields(1,72) = 'mu_mag  ',
-  filename(72) = 'diags/monthly3/mu_mag',
+  filename(72) = 'diags/monthly/mu_mag',
 #
   frequency(73) = 2635200.,
   fields(1,73) = 'gT_mag  ',
-  filename(73) = 'diags/monthly3/gT_mag',
+  filename(73) = 'diags/monthly/gT_mag',
 #
   frequency(74) = 2635200.,
   fields(1,74) = 'gQ_mag   ',
-  filename(74) = 'diags/monthly3/gQ_mag',
+  filename(74) = 'diags/monthly/gQ_mag',
 #
   frequency(75) = 2635200.,
   fields(1,75) = 'gE_mag   ',
-  filename(75) = 'diags/monthly3/gE_mag',
+  filename(75) = 'diags/monthly/gE_mag',
 #
   frequency(76) = 2635200.,
   fields(1,76) = 'gH_mag   ',
-  filename(76) = 'diags/monthly3/gH_mag',
+  filename(76) = 'diags/monthly/gH_mag',
 #
-#
+
  /
 
 # Parameter for Diagnostics of per level statistics:
