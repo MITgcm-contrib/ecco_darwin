@@ -1,0 +1,894 @@
+ Total Nb of available Diagnostics: ndiagt=   863
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+     1 |SDIAG1  |  1 |       |SM      L1|user-defined    |User-Defined   Surface   Diagnostic  #1
+     2 |SDIAG2  |  1 |       |SM      L1|user-defined    |User-Defined   Surface   Diagnostic  #2
+     3 |SDIAG3  |  1 |       |SM      L1|user-defined    |User-Defined   Surface   Diagnostic  #3
+     4 |SDIAG4  |  1 |       |SM      L1|user-defined    |User-Defined   Surface   Diagnostic  #4
+     5 |SDIAG5  |  1 |       |SM      L1|user-defined    |User-Defined   Surface   Diagnostic  #5
+     6 |SDIAG6  |  1 |       |SM      L1|user-defined    |User-Defined   Surface   Diagnostic  #6
+     7 |SDIAG7  |  1 |       |SU      L1|user-defined    |User-Defined U.pt Surface Diagnostic #7
+     8 |SDIAG8  |  1 |       |SV      L1|user-defined    |User-Defined V.pt Surface Diagnostic #8
+     9 |SDIAG9  |  1 |    10 |UU      L1|user-defined    |User-Defined U.vector Surface Diag.  #9
+    10 |SDIAG10 |  1 |     9 |VV      L1|user-defined    |User-Defined V.vector Surface Diag. #10
+    11 |UDIAG1  | 50 |       |SM      MR|user-defined    |User-Defined Model-Level Diagnostic  #1
+    12 |UDIAG2  | 50 |       |SM      MR|user-defined    |User-Defined Model-Level Diagnostic  #2
+    13 |UDIAG3  | 50 |       |SMR     MR|user-defined    |User-Defined Model-Level Diagnostic  #3
+    14 |UDIAG4  | 50 |       |SMR     MR|user-defined    |User-Defined Model-Level Diagnostic  #4
+    15 |UDIAG5  | 50 |       |SU      MR|user-defined    |User-Defined U.pt Model-Level Diag.  #5
+    16 |UDIAG6  | 50 |       |SV      MR|user-defined    |User-Defined V.pt Model-Level Diag.  #6
+    17 |UDIAG7  | 50 |    18 |UUR     MR|user-defined    |User-Defined U.vector Model-Lev Diag.#7
+    18 |UDIAG8  | 50 |    17 |VVR     MR|user-defined    |User-Defined V.vector Model-Lev Diag.#8
+    19 |UDIAG9  | 50 |       |SM      ML|user-defined    |User-Defined Phys-Level  Diagnostic  #9
+    20 |UDIAG10 | 50 |       |SM      ML|user-defined    |User-Defined Phys-Level  Diagnostic #10
+    21 |SDIAGC  |  1 |    22 |SM  C   L1|user-defined    |User-Defined Counted Surface Diagnostic
+    22 |SDIAGCC |  1 |       |SM      L1|count           |User-Defined Surface Diagnostic Counter
+    23 |ETAN    |  1 |       |SM      M1|m               |Surface Height Anomaly
+    24 |ETANSQ  |  1 |       |SM P    M1|m^2             |Square of Surface Height Anomaly
+    25 |DETADT2 |  1 |       |SM      M1|m^2/s^2         |Square of Surface Height Anomaly Tendency
+    26 |THETA   | 50 |       |SMR     MR|degC            |Potential Temperature
+    27 |SALT    | 50 |       |SMR     MR|g/kg            |Salinity
+    28 |RELHUM  | 50 |       |SMR     MR|percent         |Relative Humidity
+    29 |SALTanom| 50 |       |SMR     MR|g/kg            |Salt anomaly (=SALT-35; g/kg)
+    30 |UVEL    | 50 |    31 |UUR     MR|m/s             |Zonal Component of Velocity (m/s)
+    31 |VVEL    | 50 |    30 |VVR     MR|m/s             |Meridional Component of Velocity (m/s)
+    32 |WVEL    | 50 |       |WM      LR|m/s             |Vertical Component of Velocity (r_units/s)
+    33 |THETASQ | 50 |       |SMRP    MR|degC^2          |Square of Potential Temperature
+    34 |SALTSQ  | 50 |       |SMRP    MR|(g/kg)^2        |Square of Salinity
+    35 |SALTSQan| 50 |       |SMRP    MR|(g/kg)^2        |Square of Salt anomaly (=(SALT-35)^2 (g^2/kg^2)
+    36 |UVELSQ  | 50 |    37 |UURP    MR|m^2/s^2         |Square of Zonal Comp of Velocity (m^2/s^2)
+    37 |VVELSQ  | 50 |    36 |VVRP    MR|m^2/s^2         |Square of Meridional Comp of Velocity (m^2/s^2)
+    38 |WVELSQ  | 50 |       |WM P    LR|m^2/s^2         |Square of Vertical Comp of Velocity
+    39 |UE_VEL_C| 50 |    40 |UMR     MR|m/s             |Eastward Velocity (m/s) (cell center)
+    40 |VN_VEL_C| 50 |    39 |VMR     MR|m/s             |Northward Velocity (m/s) (cell center)
+    41 |UV_VEL_C| 50 |    41 |UMR     MR|m^2/s^2         |Product of horizontal Comp of velocity (cell center)
+    42 |UV_VEL_Z| 50 |    42 |UZR     MR|m^2/s^2         |Meridional Transport of Zonal Momentum (m^2/s^2)
+    43 |WU_VEL  | 50 |       |WU      LR|m.m/s^2         |Vertical Transport of Zonal Momentum
+    44 |WV_VEL  | 50 |       |WV      LR|m.m/s^2         |Vertical Transport of Meridional Momentum
+    45 |UVELMASS| 50 |    46 |UUr     MR|m/s             |Zonal Mass-Weighted Comp of Velocity (m/s)
+    46 |VVELMASS| 50 |    45 |VVr     MR|m/s             |Meridional Mass-Weighted Comp of Velocity (m/s)
+    47 |WVELMASS| 50 |       |WM      LR|m/s             |Vertical Mass-Weighted Comp of Velocity
+    48 |PhiVEL  | 50 |    45 |SMR P   MR|m^2/s           |Horizontal Velocity Potential (m^2/s)
+    49 |PsiVEL  | 50 |    48 |SZ  P   MR|m.m^2/s         |Horizontal Velocity Stream-Function
+    50 |UTHMASS | 50 |    51 |UUr     MR|degC.m/s        |Zonal Mass-Weight Transp of Pot Temp
+    51 |VTHMASS | 50 |    50 |VVr     MR|degC.m/s        |Meridional Mass-Weight Transp of Pot Temp
+    52 |WTHMASS | 50 |       |WM      LR|degC.m/s        |Vertical Mass-Weight Transp of Pot Temp (K.m/s)
+    53 |USLTMASS| 50 |    54 |UUr     MR|g/kg.m/s        |Zonal Mass-Weight Transp of Salinity
+    54 |VSLTMASS| 50 |    53 |VVr     MR|g/kg.m/s        |Meridional Mass-Weight Transp of Salinity
+    55 |WSLTMASS| 50 |       |WM      LR|g/kg.m/s        |Vertical Mass-Weight Transp of Salinity
+    56 |UVELTH  | 50 |    57 |UUR     MR|degC.m/s        |Zonal Transport of Pot Temp
+    57 |VVELTH  | 50 |    56 |VVR     MR|degC.m/s        |Meridional Transport of Pot Temp
+    58 |WVELTH  | 50 |       |WM      LR|degC.m/s        |Vertical Transport of Pot Temp
+    59 |UVELSLT | 50 |    60 |UUR     MR|g/kg.m/s        |Zonal Transport of Salinity
+    60 |VVELSLT | 50 |    59 |VVR     MR|g/kg.m/s        |Meridional Transport of Salinity
+    61 |WVELSLT | 50 |       |WM      LR|g/kg.m/s        |Vertical Transport of Salinity
+    62 |UVELPHI | 50 |    63 |UUr     MR|m^3/s^3         |Zonal Mass-Weight Transp of Pressure Pot.(p/rho) Anomaly
+    63 |VVELPHI | 50 |    62 |VVr     MR|m^3/s^3         |Merid. Mass-Weight Transp of Pressure Pot.(p/rho) Anomaly
+    64 |RHOAnoma| 50 |       |SMR     MR|kg/m^3          |Density Anomaly (=Rho-rhoConst)
+    65 |RHOANOSQ| 50 |       |SMRP    MR|kg^2/m^6        |Square of Density Anomaly (=(Rho-rhoConst)^2)
+    66 |URHOMASS| 50 |    67 |UUr     MR|kg/m^2/s        |Zonal Transport of Density
+    67 |VRHOMASS| 50 |    66 |VVr     MR|kg/m^2/s        |Meridional Transport of Density
+    68 |WRHOMASS| 50 |       |WM      LR|kg/m^2/s        |Vertical Transport of Density
+    69 |WdRHO_P | 50 |       |WM      LR|kg/m^2/s        |Vertical velocity times delta^k(Rho)_at-const-P
+    70 |WdRHOdP | 50 |       |WM      LR|kg/m^2/s        |Vertical velocity times delta^k(Rho)_at-const-T,S
+    71 |PHIHYD  | 50 |       |SMR     MR|m^2/s^2         |Hydrostatic Pressure Pot.(p/rho) Anomaly
+    72 |PHIHYDSQ| 50 |       |SMRP    MR|m^4/s^4         |Square of Hyd. Pressure Pot.(p/rho) Anomaly
+    73 |PHIBOT  |  1 |       |SM      M1|m^2/s^2         |Bottom Pressure Pot.(p/rho) Anomaly
+    74 |PHIBOTSQ|  1 |       |SM P    M1|m^4/s^4         |Square of Bottom Pressure Pot.(p/rho) Anomaly
+    75 |PHI_SURF|  1 |       |SM      M1|m^2/s^2         |Surface Dynamical Pressure Pot.(p/rho)
+    76 |PHIHYDcR| 50 |       |SMR     MR|m^2/s^2         |Hydrostatic Pressure Pot.(p/rho) Anomaly @ const r
+    77 |MXLDEPTH|  1 |       |SM      M1|m               |Mixed-Layer Depth (>0)
+    78 |DRHODR  | 50 |       |SM      LR|kg/m^4          |Stratification: d.Sigma/dr (kg/m3/r_unit)
+    79 |CONVADJ | 50 |       |SMR     LR|fraction        |Convective Adjustment Index [0-1]
+    80 |oceTAUX |  1 |    81 |UU      U1|N/m^2           |zonal surface wind stress, >0 increases uVel
+    81 |oceTAUY |  1 |    80 |VV      U1|N/m^2           |meridional surf. wind stress, >0 increases vVel
+    82 |atmPload|  1 |       |SM      U1|Pa              |Atmospheric pressure loading anomaly (vs surf_pRef)
+    83 |sIceLoad|  1 |       |SM      U1|kg/m^2          |sea-ice loading (in Mass of ice+snow / area unit)
+    84 |oceFWflx|  1 |       |SM      U1|kg/m^2/s        |net surface Fresh-Water flux into the ocean (+=down), >0 decreases salinity
+    85 |oceSflux|  1 |       |SM      U1|g/m^2/s         |net surface Salt flux into the ocean (+=down), >0 increases salinity
+    86 |oceQnet |  1 |       |SM      U1|W/m^2           |net surface heat flux into the ocean (+=down), >0 increases theta
+    87 |oceQsw  |  1 |       |SM      U1|W/m^2           |net Short-Wave radiation (+=down), >0 increases theta
+    88 |oceFreez|  1 |       |SM      U1|W/m^2           |heating from freezing of sea-water (allowFreezing=T)
+    89 |TRELAX  |  1 |       |SM      U1|W/m^2           |surface temperature relaxation, >0 increases theta
+    90 |SRELAX  |  1 |       |SM      U1|g/m^2/s         |surface salinity relaxation, >0 increases salt
+    91 |surForcT|  1 |       |SM      U1|W/m^2           |model surface forcing for Temperature, >0 increases theta
+    92 |surForcS|  1 |       |SM      U1|g/m^2/s         |model surface forcing for Salinity, >0 increases salinity
+    93 |TFLUX   |  1 |       |SM      U1|W/m^2           |total heat flux (match heat-content variations), >0 increases theta
+    94 |SFLUX   |  1 |       |SM      U1|g/m^2/s         |total salt flux (match salt-content variations), >0 increases salt
+    95 |RCENTER | 50 |       |SM      MR|m               |Cell-Center Height
+    96 |RSURF   |  1 |       |SM      M1|m               |Surface Height
+    97 |hFactorC| 50 |       |SMr     MR|1               |Center cell-thickness fraction [-]
+    98 |hFactorW| 50 |    99 |SUr     MR|1               |Western-Edge cell-thickness fraction [-]
+    99 |hFactorS| 50 |    98 |SVr     MR|1               |Southern-Edge cell-thickness fraction [-]
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   100 |TOTUTEND| 50 |   101 |UUR     MR|m/s/day         |Tendency of Zonal Component of Velocity
+   101 |TOTVTEND| 50 |   100 |VVR     MR|m/s/day         |Tendency of Meridional Component of Velocity
+   102 |TOTTTEND| 50 |       |SMR     MR|degC/day        |Tendency of Potential Temperature
+   103 |TOTSTEND| 50 |       |SMR     MR|g/kg/day        |Tendency of Salinity
+   104 |MoistCor| 50 |       |SM      MR|W/m^2           |Heating correction due to moist thermodynamics
+   105 |gT_Forc | 50 |       |SMR     MR|degC/s          |Potential Temp. forcing tendency
+   106 |gS_Forc | 50 |       |SMR     MR|g/kg/s          |Salinity forcing tendency
+   107 |AB_gT   | 50 |       |SMR     MR|degC/s          |Potential Temp. tendency from Adams-Bashforth
+   108 |AB_gS   | 50 |       |SMR     MR|g/kg/s          |Salinity tendency from Adams-Bashforth
+   109 |gTinAB  | 50 |       |SMR     MR|degC/s          |Potential Temp. tendency going in Adams-Bashforth
+   110 |gSinAB  | 50 |       |SMR     MR|g/kg/s          |Salinity tendency going in Adams-Bashforth
+   111 |AB_gU   | 50 |   112 |UUR     MR|m/s^2           |U momentum tendency from Adams-Bashforth
+   112 |AB_gV   | 50 |   111 |VVR     MR|m/s^2           |V momentum tendency from Adams-Bashforth
+   113 |ADVr_TH | 50 |       |WM      LR|degC.m^3/s      |Vertical   Advective Flux of Pot.Temperature
+   114 |ADVx_TH | 50 |   115 |UU      MR|degC.m^3/s      |Zonal      Advective Flux of Pot.Temperature
+   115 |ADVy_TH | 50 |   114 |VV      MR|degC.m^3/s      |Meridional Advective Flux of Pot.Temperature
+   116 |DFrE_TH | 50 |       |WM      LR|degC.m^3/s      |Vertical Diffusive Flux of Pot.Temperature (Explicit part)
+   117 |DFxE_TH | 50 |   118 |UU      MR|degC.m^3/s      |Zonal      Diffusive Flux of Pot.Temperature
+   118 |DFyE_TH | 50 |   117 |VV      MR|degC.m^3/s      |Meridional Diffusive Flux of Pot.Temperature
+   119 |DFrI_TH | 50 |       |WM      LR|degC.m^3/s      |Vertical Diffusive Flux of Pot.Temperature (Implicit part)
+   120 |ADVr_SLT| 50 |       |WM      LR|g/kg.m^3/s      |Vertical   Advective Flux of Salinity
+   121 |ADVx_SLT| 50 |   122 |UU      MR|g/kg.m^3/s      |Zonal      Advective Flux of Salinity
+   122 |ADVy_SLT| 50 |   121 |VV      MR|g/kg.m^3/s      |Meridional Advective Flux of Salinity
+   123 |DFrE_SLT| 50 |       |WM      LR|g/kg.m^3/s      |Vertical Diffusive Flux of Salinity    (Explicit part)
+   124 |DFxE_SLT| 50 |   125 |UU      MR|g/kg.m^3/s      |Zonal      Diffusive Flux of Salinity
+   125 |DFyE_SLT| 50 |   124 |VV      MR|g/kg.m^3/s      |Meridional Diffusive Flux of Salinity
+   126 |DFrI_SLT| 50 |       |WM      LR|g/kg.m^3/s      |Vertical Diffusive Flux of Salinity    (Implicit part)
+   127 |SALTFILL| 50 |       |SM      MR|g/kg.m^3/s      |Filling of Negative Values of Salinity
+   128 |VISCAHZ | 50 |       |SZ      MR|m^2/s           |Harmonic Visc Coefficient (m2/s) (Zeta Pt)
+   129 |VISCA4Z | 50 |       |SZ      MR|m^4/s           |Biharmonic Visc Coefficient (m4/s) (Zeta Pt)
+   130 |VISCAHD | 50 |       |SM      MR|m^2/s           |Harmonic Viscosity Coefficient (m2/s) (Div Pt)
+   131 |VISCA4D | 50 |       |SM      MR|m^4/s           |Biharmonic Viscosity Coefficient (m4/s) (Div Pt)
+   132 |VISCAHW | 50 |       |WM      LR|m^2/s           |Harmonic Viscosity Coefficient (m2/s) (W Pt)
+   133 |VISCA4W | 50 |       |WM      LR|m^4/s           |Biharmonic Viscosity Coefficient (m4/s) (W Pt)
+   134 |VAHZMAX | 50 |       |SZ      MR|m^2/s           |CFL-MAX Harm Visc Coefficient (m2/s) (Zeta Pt)
+   135 |VA4ZMAX | 50 |       |SZ      MR|m^4/s           |CFL-MAX Biharm Visc Coefficient (m4/s) (Zeta Pt)
+   136 |VAHDMAX | 50 |       |SM      MR|m^2/s           |CFL-MAX Harm Visc Coefficient (m2/s) (Div Pt)
+   137 |VA4DMAX | 50 |       |SM      MR|m^4/s           |CFL-MAX Biharm Visc Coefficient (m4/s) (Div Pt)
+   138 |VAHZMIN | 50 |       |SZ      MR|m^2/s           |RE-MIN Harm Visc Coefficient (m2/s) (Zeta Pt)
+   139 |VA4ZMIN | 50 |       |SZ      MR|m^4/s           |RE-MIN Biharm Visc Coefficient (m4/s) (Zeta Pt)
+   140 |VAHDMIN | 50 |       |SM      MR|m^2/s           |RE-MIN Harm Visc Coefficient (m2/s) (Div Pt)
+   141 |VA4DMIN | 50 |       |SM      MR|m^4/s           |RE-MIN Biharm Visc Coefficient (m4/s) (Div Pt)
+   142 |VAHZLTH | 50 |       |SZ      MR|m^2/s           |Leith Harm Visc Coefficient (m2/s) (Zeta Pt)
+   143 |VA4ZLTH | 50 |       |SZ      MR|m^4/s           |Leith Biharm Visc Coefficient (m4/s) (Zeta Pt)
+   144 |VAHDLTH | 50 |       |SM      MR|m^2/s           |Leith Harm Visc Coefficient (m2/s) (Div Pt)
+   145 |VA4DLTH | 50 |       |SM      MR|m^4/s           |Leith Biharm Visc Coefficient (m4/s) (Div Pt)
+   146 |VAHZLTHD| 50 |       |SZ      MR|m^2/s           |LeithD Harm Visc Coefficient (m2/s) (Zeta Pt)
+   147 |VA4ZLTHD| 50 |       |SZ      MR|m^4/s           |LeithD Biharm Visc Coefficient (m4/s) (Zeta Pt)
+   148 |VAHDLTHD| 50 |       |SM      MR|m^2/s           |LeithD Harm Visc Coefficient (m2/s) (Div Pt)
+   149 |VA4DLTHD| 50 |       |SM      MR|m^4/s           |LeithD Biharm Visc Coefficient (m4/s) (Div Pt)
+   150 |VAHZSMAG| 50 |       |SZ      MR|m^2/s           |Smagorinsky Harm Visc Coefficient (m2/s) (Zeta Pt)
+   151 |VA4ZSMAG| 50 |       |SZ      MR|m^4/s           |Smagorinsky Biharm Visc Coeff. (m4/s) (Zeta Pt)
+   152 |VAHDSMAG| 50 |       |SM      MR|m^2/s           |Smagorinsky Harm Visc Coefficient (m2/s) (Div Pt)
+   153 |VA4DSMAG| 50 |       |SM      MR|m^4/s           |Smagorinsky Biharm Visc Coeff. (m4/s) (Div Pt)
+   154 |momKE   | 50 |       |SMR     MR|m^2/s^2         |Kinetic Energy (in momentum Eq.)
+   155 |momHDiv | 50 |       |SMR     MR|s^-1            |Horizontal Divergence (in momentum Eq.)
+   156 |momVort3| 50 |       |SZR     MR|s^-1            |3rd component (vertical) of Vorticity
+   157 |Strain  | 50 |       |SZR     MR|s^-1            |Horizontal Strain of Horizontal Velocities
+   158 |Tension | 50 |       |SMR     MR|s^-1            |Horizontal Tension of Horizontal Velocities
+   159 |Stretch | 50 |       |SM      MR|s^-1            |Vortex stretching from QG Leith dynamic viscosity
+   160 |USidDrag| 50 |   161 |UUR     MR|m/s^2           |U momentum tendency from Side Drag
+   161 |VSidDrag| 50 |   160 |VVR     MR|m/s^2           |V momentum tendency from Side Drag
+   162 |Um_Diss | 50 |   163 |UUR     MR|m/s^2           |U momentum tendency from Dissipation (Explicit part)
+   163 |Vm_Diss | 50 |   162 |VVR     MR|m/s^2           |V momentum tendency from Dissipation (Explicit part)
+   164 |Um_ImplD| 50 |   165 |UUR     MR|m/s^2           |U momentum tendency from Dissipation (Implicit part)
+   165 |Vm_ImplD| 50 |   164 |VVR     MR|m/s^2           |V momentum tendency from Dissipation (Implicit part)
+   166 |Um_Advec| 50 |   167 |UUR     MR|m/s^2           |U momentum tendency from Advection terms
+   167 |Vm_Advec| 50 |   166 |VVR     MR|m/s^2           |V momentum tendency from Advection terms
+   168 |Um_Cori | 50 |   169 |UUR     MR|m/s^2           |U momentum tendency from Coriolis term
+   169 |Vm_Cori | 50 |   168 |VVR     MR|m/s^2           |V momentum tendency from Coriolis term
+   170 |Um_dPhiX| 50 |   171 |UUR     MR|m/s^2           |U momentum tendency from Pressure/Potential grad
+   171 |Vm_dPhiY| 50 |   170 |VVR     MR|m/s^2           |V momentum tendency from Pressure/Potential grad
+   172 |Um_Ext  | 50 |   173 |UUR     MR|m/s^2           |U momentum tendency from external forcing
+   173 |Vm_Ext  | 50 |   172 |VVR     MR|m/s^2           |V momentum tendency from external forcing
+   174 |Um_AdvZ3| 50 |   175 |UUR     MR|m/s^2           |U momentum tendency from Vorticity Advection
+   175 |Vm_AdvZ3| 50 |   174 |VVR     MR|m/s^2           |V momentum tendency from Vorticity Advection
+   176 |Um_AdvRe| 50 |   177 |UUR     MR|m/s^2           |U momentum tendency from vertical Advection (Explicit part)
+   177 |Vm_AdvRe| 50 |   176 |VVR     MR|m/s^2           |V momentum tendency from vertical Advection (Explicit part)
+   178 |botTauX |  1 |   179 |UU      U1|N/m^2           |zonal bottom stress, >0 increases uVel
+   179 |botTauY |  1 |   178 |VV      U1|N/m^2           |meridional bottom stress, >0 increases vVel
+   180 |VISrI_Um| 50 |       |WU      LR|m^4/s^2         |Vertical   Viscous Flux of U momentum (Implicit part)
+   181 |VISrI_Vm| 50 |       |WV      LR|m^4/s^2         |Vertical   Viscous Flux of V momentum (Implicit part)
+   182 |EXFhs   |  1 |       |SM      U1|W/m^2           |Sensible heat flux into ocean, >0 increases theta
+   183 |EXFhl   |  1 |       |SM      U1|W/m^2           |Latent heat flux into ocean, >0 increases theta
+   184 |EXFlwnet|  1 |       |SM      U1|W/m^2           |Net upward longwave radiation, >0 decreases theta
+   185 |EXFswnet|  1 |       |SM      U1|W/m^2           |Net upward shortwave radiation, >0 decreases theta
+   186 |EXFlwdn |  1 |       |SM      U1|W/m^2           |Downward longwave radiation, >0 increases theta
+   187 |EXFswdn |  1 |       |SM      U1|W/m^2           |Downward shortwave radiation, >0 increases theta
+   188 |EXFqnet |  1 |       |SM      U1|W/m^2           |Net upward heat flux (turb+rad), >0 decreases theta
+   189 |EXFtaux |  1 |       |UM      U1|N/m^2           |zonal surface wind stress, >0 increases uVel
+   190 |EXFtauy |  1 |       |VM      U1|N/m^2           |meridional surface wind stress, >0 increases vVel
+   191 |EXFuwind|  1 |       |UM      U1|m/s             |zonal 10-m wind speed, >0 eastward
+   192 |EXFvwind|  1 |       |VM      U1|m/s             |meridional 10-m wind speed, >0 northward
+   193 |EXFwspee|  1 |       |SM      U1|m/s             |10-m wind speed modulus ( >= 0 )
+   194 |EXFatemp|  1 |       |SM      U1|degK            |surface (2-m) air temperature
+   195 |EXFaqh  |  1 |       |SM      U1|kg/kg           |surface (2-m) specific humidity
+   196 |EXFevap |  1 |       |SM      U1|m/s             |evaporation, > 0 increases salinity
+   197 |EXFpreci|  1 |       |SM      U1|m/s             |precipitation, > 0 decreases salinity
+   198 |EXFsnow |  1 |       |SM      U1|m/s             |snow precipitation, > 0 decreases salinity
+   199 |EXFempmr|  1 |       |SM      U1|m/s             |net upward freshwater flux, > 0 increases salinity
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   200 |EXFpress|  1 |       |SM      U1|N/m^2           |atmospheric pressure field
+   201 |EXFroff |  1 |       |SM      U1|m/s             |river runoff, > 0 decreases salinity
+   202 |EXFroft |  1 |       |SM      U1|deg C           |river runoff temperature
+   203 |EXFsalfx|  1 |       |SM      U1|g/m^2/s         |upward salt flux, > 0 decreases salinity
+   204 |GGL90TKE| 50 |       |SM      LR|m^2/s^2         |GGL90 sub-grid turbulent kinetic energy
+   205 |GGL90Lmx| 50 |       |SM      LR|m               |Mixing length scale
+   206 |GGL90Prl| 50 |       |SM      LR|1               |Prandtl number used in GGL90
+   207 |GGL90ArU| 50 |       |SM      LR|m^2/s           |GGL90 eddy viscosity at U-point
+   208 |GGL90ArV| 50 |       |SM      LR|m^2/s           |GGL90 eddy viscosity at V-point
+   209 |GGL90Kr | 50 |       |SM      LR|m^2/s           |GGL90 diffusion coefficient for temperature
+   210 |GGL90flx|  1 |       |SM      L1|m^3/s^3         |Surface flux of TKE
+   211 |GGL90tau|  1 |       |SM      L1|m^3/s^3         |Work done by the wind
+   212 |GM_VisbK|  1 |       |SM P    M1|m^2/s           |Mixing coefficient from Visbeck etal parameterization
+   213 |GM_hTrsL|  1 |       |SM P    M1|m               |Base depth (>0) of the Transition Layer
+   214 |GM_baseS|  1 |       |SM P    M1|1               |Slope at the base of the Transition Layer
+   215 |GM_rLamb|  1 |       |SM P    M1|1/m             |Slope vertical gradient at Trans. Layer Base (=recip.Lambda)
+   216 |GM_Kux  | 50 |   217 |UU P    MR|m^2/s           |K_11 element (U.point, X.dir) of GM-Redi tensor
+   217 |GM_Kvy  | 50 |   216 |VV P    MR|m^2/s           |K_22 element (V.point, Y.dir) of GM-Redi tensor
+   218 |GM_Kuz  | 50 |   219 |UU      MR|m^2/s           |K_13 element (U.point, Z.dir) of GM-Redi tensor
+   219 |GM_Kvz  | 50 |   218 |VV      MR|m^2/s           |K_23 element (V.point, Z.dir) of GM-Redi tensor
+   220 |GM_Kwx  | 50 |   221 |UM      LR|m^2/s           |K_31 element (W.point, X.dir) of GM-Redi tensor
+   221 |GM_Kwy  | 50 |   220 |VM      LR|m^2/s           |K_32 element (W.point, Y.dir) of GM-Redi tensor
+   222 |GM_Kwz  | 50 |       |WM P    LR|m^2/s           |K_33 element (W.point, Z.dir) of GM-Redi tensor
+   223 |GM_PsiX | 50 |   224 |UU      LR|m^2/s           |GM Bolus transport stream-function : U component
+   224 |GM_PsiY | 50 |   223 |VV      LR|m^2/s           |GM Bolus transport stream-function : V component
+   225 |GM_KuzTz| 50 |   226 |UU      MR|degC.m^3/s      |Redi Off-diagonal Temperature flux: X component
+   226 |GM_KvzTz| 50 |   225 |VV      MR|degC.m^3/s      |Redi Off-diagonal Temperature flux: Y component
+   227 |GM_KwzTz| 50 |       |WM      LR|degC.m^3/s      |Redi main-diagonal vertical Temperature flux
+   228 |GM_ubT  | 50 |   229 |UUr     MR|degC.m^3/s      |Zonal Mass-Weight Bolus Transp of Pot Temp
+   229 |GM_vbT  | 50 |   228 |VVr     MR|degC.m^3/s      |Meridional Mass-Weight Bolus Transp of Pot Temp
+   230 |TRAC01  | 50 |       |SMR     MR|uM C            |DIC concentration
+   231 |UTRAC01 | 50 |   232 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of DIC
+   232 |VTRAC01 | 50 |   231 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of DIC
+   233 |WTRAC01 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of DIC
+   234 |ForcTr01| 50 |       |SMR     MR|uMC/s           |DIC forcing tendency
+   235 |AB_gTr01| 50 |       |SMR     MR|uMC/s           |DIC tendency from Adams-Bashforth
+   236 |Tp_gTr01| 50 |       |SMR     MR|uMC/s           |DIC total transport tendency (before gchem_forcing_sep)
+   237 |ADVrTr01| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of DIC
+   238 |ADVxTr01| 50 |   239 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of DIC
+   239 |ADVyTr01| 50 |   238 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of DIC
+   240 |DFrETr01| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of DIC (Explicit part)
+   241 |DFxETr01| 50 |   242 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of DIC
+   242 |DFyETr01| 50 |   241 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of DIC
+   243 |DFrITr01| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of DIC (Implicit part)
+   244 |TRAC02  | 50 |       |SMR     MR|uM N            |NO3 concentration
+   245 |UTRAC02 | 50 |   246 |UUr     MR|uMN.m/s         |Zonal Mass-Weighted Transp of NO3
+   246 |VTRAC02 | 50 |   245 |VVr     MR|uMN.m/s         |Merid Mass-Weighted Transp of NO3
+   247 |WTRAC02 | 50 |       |WM      MR|uMN.m/s         |Vert  Mass-Weighted Transp of NO3
+   248 |ForcTr02| 50 |       |SMR     MR|uMN/s           |NO3 forcing tendency
+   249 |AB_gTr02| 50 |       |SMR     MR|uMN/s           |NO3 tendency from Adams-Bashforth
+   250 |Tp_gTr02| 50 |       |SMR     MR|uMN/s           |NO3 total transport tendency (before gchem_forcing_sep)
+   251 |ADVrTr02| 50 |       |WM      LR|uMN.m^3/s       |Vertical   Advective Flux of NO3
+   252 |ADVxTr02| 50 |   253 |UU      MR|uMN.m^3/s       |Zonal      Advective Flux of NO3
+   253 |ADVyTr02| 50 |   252 |VV      MR|uMN.m^3/s       |Meridional Advective Flux of NO3
+   254 |DFrETr02| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of NO3 (Explicit part)
+   255 |DFxETr02| 50 |   256 |UU      MR|uMN.m^3/s       |Zonal      Diffusive Flux of NO3
+   256 |DFyETr02| 50 |   255 |VV      MR|uMN.m^3/s       |Meridional Diffusive Flux of NO3
+   257 |DFrITr02| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of NO3 (Implicit part)
+   258 |TRAC03  | 50 |       |SMR     MR|uM N            |NO2 concentration
+   259 |UTRAC03 | 50 |   260 |UUr     MR|uMN.m/s         |Zonal Mass-Weighted Transp of NO2
+   260 |VTRAC03 | 50 |   259 |VVr     MR|uMN.m/s         |Merid Mass-Weighted Transp of NO2
+   261 |WTRAC03 | 50 |       |WM      MR|uMN.m/s         |Vert  Mass-Weighted Transp of NO2
+   262 |ForcTr03| 50 |       |SMR     MR|uMN/s           |NO2 forcing tendency
+   263 |AB_gTr03| 50 |       |SMR     MR|uMN/s           |NO2 tendency from Adams-Bashforth
+   264 |Tp_gTr03| 50 |       |SMR     MR|uMN/s           |NO2 total transport tendency (before gchem_forcing_sep)
+   265 |ADVrTr03| 50 |       |WM      LR|uMN.m^3/s       |Vertical   Advective Flux of NO2
+   266 |ADVxTr03| 50 |   267 |UU      MR|uMN.m^3/s       |Zonal      Advective Flux of NO2
+   267 |ADVyTr03| 50 |   266 |VV      MR|uMN.m^3/s       |Meridional Advective Flux of NO2
+   268 |DFrETr03| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of NO2 (Explicit part)
+   269 |DFxETr03| 50 |   270 |UU      MR|uMN.m^3/s       |Zonal      Diffusive Flux of NO2
+   270 |DFyETr03| 50 |   269 |VV      MR|uMN.m^3/s       |Meridional Diffusive Flux of NO2
+   271 |DFrITr03| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of NO2 (Implicit part)
+   272 |TRAC04  | 50 |       |SMR     MR|uM N            |NH4 concentration
+   273 |UTRAC04 | 50 |   274 |UUr     MR|uMN.m/s         |Zonal Mass-Weighted Transp of NH4
+   274 |VTRAC04 | 50 |   273 |VVr     MR|uMN.m/s         |Merid Mass-Weighted Transp of NH4
+   275 |WTRAC04 | 50 |       |WM      MR|uMN.m/s         |Vert  Mass-Weighted Transp of NH4
+   276 |ForcTr04| 50 |       |SMR     MR|uMN/s           |NH4 forcing tendency
+   277 |AB_gTr04| 50 |       |SMR     MR|uMN/s           |NH4 tendency from Adams-Bashforth
+   278 |Tp_gTr04| 50 |       |SMR     MR|uMN/s           |NH4 total transport tendency (before gchem_forcing_sep)
+   279 |ADVrTr04| 50 |       |WM      LR|uMN.m^3/s       |Vertical   Advective Flux of NH4
+   280 |ADVxTr04| 50 |   281 |UU      MR|uMN.m^3/s       |Zonal      Advective Flux of NH4
+   281 |ADVyTr04| 50 |   280 |VV      MR|uMN.m^3/s       |Meridional Advective Flux of NH4
+   282 |DFrETr04| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of NH4 (Explicit part)
+   283 |DFxETr04| 50 |   284 |UU      MR|uMN.m^3/s       |Zonal      Diffusive Flux of NH4
+   284 |DFyETr04| 50 |   283 |VV      MR|uMN.m^3/s       |Meridional Diffusive Flux of NH4
+   285 |DFrITr04| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of NH4 (Implicit part)
+   286 |TRAC05  | 50 |       |SMR     MR|uM P            |PO4 concentration
+   287 |UTRAC05 | 50 |   288 |UUr     MR|uMP.m/s         |Zonal Mass-Weighted Transp of PO4
+   288 |VTRAC05 | 50 |   287 |VVr     MR|uMP.m/s         |Merid Mass-Weighted Transp of PO4
+   289 |WTRAC05 | 50 |       |WM      MR|uMP.m/s         |Vert  Mass-Weighted Transp of PO4
+   290 |ForcTr05| 50 |       |SMR     MR|uMP/s           |PO4 forcing tendency
+   291 |AB_gTr05| 50 |       |SMR     MR|uMP/s           |PO4 tendency from Adams-Bashforth
+   292 |Tp_gTr05| 50 |       |SMR     MR|uMP/s           |PO4 total transport tendency (before gchem_forcing_sep)
+   293 |ADVrTr05| 50 |       |WM      LR|uMP.m^3/s       |Vertical   Advective Flux of PO4
+   294 |ADVxTr05| 50 |   295 |UU      MR|uMP.m^3/s       |Zonal      Advective Flux of PO4
+   295 |ADVyTr05| 50 |   294 |VV      MR|uMP.m^3/s       |Meridional Advective Flux of PO4
+   296 |DFrETr05| 50 |       |WM      LR|uMP.m^3/s       |Vertical Diffusive Flux of PO4 (Explicit part)
+   297 |DFxETr05| 50 |   298 |UU      MR|uMP.m^3/s       |Zonal      Diffusive Flux of PO4
+   298 |DFyETr05| 50 |   297 |VV      MR|uMP.m^3/s       |Meridional Diffusive Flux of PO4
+   299 |DFrITr05| 50 |       |WM      LR|uMP.m^3/s       |Vertical Diffusive Flux of PO4 (Implicit part)
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   300 |TRAC06  | 50 |       |SMR     MR|uM Fe           |FeT concentration
+   301 |UTRAC06 | 50 |   302 |UUr     MR|uMFe.m/s        |Zonal Mass-Weighted Transp of FeT
+   302 |VTRAC06 | 50 |   301 |VVr     MR|uMFe.m/s        |Merid Mass-Weighted Transp of FeT
+   303 |WTRAC06 | 50 |       |WM      MR|uMFe.m/s        |Vert  Mass-Weighted Transp of FeT
+   304 |ForcTr06| 50 |       |SMR     MR|uMFe/s          |FeT forcing tendency
+   305 |AB_gTr06| 50 |       |SMR     MR|uMFe/s          |FeT tendency from Adams-Bashforth
+   306 |Tp_gTr06| 50 |       |SMR     MR|uMFe/s          |FeT total transport tendency (before gchem_forcing_sep)
+   307 |ADVrTr06| 50 |       |WM      LR|uMFe.m^3/s      |Vertical   Advective Flux of FeT
+   308 |ADVxTr06| 50 |   309 |UU      MR|uMFe.m^3/s      |Zonal      Advective Flux of FeT
+   309 |ADVyTr06| 50 |   308 |VV      MR|uMFe.m^3/s      |Meridional Advective Flux of FeT
+   310 |DFrETr06| 50 |       |WM      LR|uMFe.m^3/s      |Vertical Diffusive Flux of FeT (Explicit part)
+   311 |DFxETr06| 50 |   312 |UU      MR|uMFe.m^3/s      |Zonal      Diffusive Flux of FeT
+   312 |DFyETr06| 50 |   311 |VV      MR|uMFe.m^3/s      |Meridional Diffusive Flux of FeT
+   313 |DFrITr06| 50 |       |WM      LR|uMFe.m^3/s      |Vertical Diffusive Flux of FeT (Implicit part)
+   314 |TRAC07  | 50 |       |SMR     MR|uM Si           |SiO2 concentration
+   315 |UTRAC07 | 50 |   316 |UUr     MR|uMSi.m/s        |Zonal Mass-Weighted Transp of SiO2
+   316 |VTRAC07 | 50 |   315 |VVr     MR|uMSi.m/s        |Merid Mass-Weighted Transp of SiO2
+   317 |WTRAC07 | 50 |       |WM      MR|uMSi.m/s        |Vert  Mass-Weighted Transp of SiO2
+   318 |ForcTr07| 50 |       |SMR     MR|uMSi/s          |SiO2 forcing tendency
+   319 |AB_gTr07| 50 |       |SMR     MR|uMSi/s          |SiO2 tendency from Adams-Bashforth
+   320 |Tp_gTr07| 50 |       |SMR     MR|uMSi/s          |SiO2 total transport tendency (before gchem_forcing_sep)
+   321 |ADVrTr07| 50 |       |WM      LR|uMSi.m^3/s      |Vertical   Advective Flux of SiO2
+   322 |ADVxTr07| 50 |   323 |UU      MR|uMSi.m^3/s      |Zonal      Advective Flux of SiO2
+   323 |ADVyTr07| 50 |   322 |VV      MR|uMSi.m^3/s      |Meridional Advective Flux of SiO2
+   324 |DFrETr07| 50 |       |WM      LR|uMSi.m^3/s      |Vertical Diffusive Flux of SiO2 (Explicit part)
+   325 |DFxETr07| 50 |   326 |UU      MR|uMSi.m^3/s      |Zonal      Diffusive Flux of SiO2
+   326 |DFyETr07| 50 |   325 |VV      MR|uMSi.m^3/s      |Meridional Diffusive Flux of SiO2
+   327 |DFrITr07| 50 |       |WM      LR|uMSi.m^3/s      |Vertical Diffusive Flux of SiO2 (Implicit part)
+   328 |TRAC08  | 50 |       |SMR     MR|uM C            |DOC concentration
+   329 |UTRAC08 | 50 |   330 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of DOC
+   330 |VTRAC08 | 50 |   329 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of DOC
+   331 |WTRAC08 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of DOC
+   332 |ForcTr08| 50 |       |SMR     MR|uMC/s           |DOC forcing tendency
+   333 |AB_gTr08| 50 |       |SMR     MR|uMC/s           |DOC tendency from Adams-Bashforth
+   334 |Tp_gTr08| 50 |       |SMR     MR|uMC/s           |DOC total transport tendency (before gchem_forcing_sep)
+   335 |ADVrTr08| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of DOC
+   336 |ADVxTr08| 50 |   337 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of DOC
+   337 |ADVyTr08| 50 |   336 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of DOC
+   338 |DFrETr08| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of DOC (Explicit part)
+   339 |DFxETr08| 50 |   340 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of DOC
+   340 |DFyETr08| 50 |   339 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of DOC
+   341 |DFrITr08| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of DOC (Implicit part)
+   342 |TRAC09  | 50 |       |SMR     MR|uM N            |DON concentration
+   343 |UTRAC09 | 50 |   344 |UUr     MR|uMN.m/s         |Zonal Mass-Weighted Transp of DON
+   344 |VTRAC09 | 50 |   343 |VVr     MR|uMN.m/s         |Merid Mass-Weighted Transp of DON
+   345 |WTRAC09 | 50 |       |WM      MR|uMN.m/s         |Vert  Mass-Weighted Transp of DON
+   346 |ForcTr09| 50 |       |SMR     MR|uMN/s           |DON forcing tendency
+   347 |AB_gTr09| 50 |       |SMR     MR|uMN/s           |DON tendency from Adams-Bashforth
+   348 |Tp_gTr09| 50 |       |SMR     MR|uMN/s           |DON total transport tendency (before gchem_forcing_sep)
+   349 |ADVrTr09| 50 |       |WM      LR|uMN.m^3/s       |Vertical   Advective Flux of DON
+   350 |ADVxTr09| 50 |   351 |UU      MR|uMN.m^3/s       |Zonal      Advective Flux of DON
+   351 |ADVyTr09| 50 |   350 |VV      MR|uMN.m^3/s       |Meridional Advective Flux of DON
+   352 |DFrETr09| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of DON (Explicit part)
+   353 |DFxETr09| 50 |   354 |UU      MR|uMN.m^3/s       |Zonal      Diffusive Flux of DON
+   354 |DFyETr09| 50 |   353 |VV      MR|uMN.m^3/s       |Meridional Diffusive Flux of DON
+   355 |DFrITr09| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of DON (Implicit part)
+   356 |TRAC10  | 50 |       |SMR     MR|uM P            |DOP concentration
+   357 |UTRAC10 | 50 |   358 |UUr     MR|uMP.m/s         |Zonal Mass-Weighted Transp of DOP
+   358 |VTRAC10 | 50 |   357 |VVr     MR|uMP.m/s         |Merid Mass-Weighted Transp of DOP
+   359 |WTRAC10 | 50 |       |WM      MR|uMP.m/s         |Vert  Mass-Weighted Transp of DOP
+   360 |ForcTr10| 50 |       |SMR     MR|uMP/s           |DOP forcing tendency
+   361 |AB_gTr10| 50 |       |SMR     MR|uMP/s           |DOP tendency from Adams-Bashforth
+   362 |Tp_gTr10| 50 |       |SMR     MR|uMP/s           |DOP total transport tendency (before gchem_forcing_sep)
+   363 |ADVrTr10| 50 |       |WM      LR|uMP.m^3/s       |Vertical   Advective Flux of DOP
+   364 |ADVxTr10| 50 |   365 |UU      MR|uMP.m^3/s       |Zonal      Advective Flux of DOP
+   365 |ADVyTr10| 50 |   364 |VV      MR|uMP.m^3/s       |Meridional Advective Flux of DOP
+   366 |DFrETr10| 50 |       |WM      LR|uMP.m^3/s       |Vertical Diffusive Flux of DOP (Explicit part)
+   367 |DFxETr10| 50 |   368 |UU      MR|uMP.m^3/s       |Zonal      Diffusive Flux of DOP
+   368 |DFyETr10| 50 |   367 |VV      MR|uMP.m^3/s       |Meridional Diffusive Flux of DOP
+   369 |DFrITr10| 50 |       |WM      LR|uMP.m^3/s       |Vertical Diffusive Flux of DOP (Implicit part)
+   370 |TRAC11  | 50 |       |SMR     MR|uM Fe           |DOFe concentration
+   371 |UTRAC11 | 50 |   372 |UUr     MR|uMFe.m/s        |Zonal Mass-Weighted Transp of DOFe
+   372 |VTRAC11 | 50 |   371 |VVr     MR|uMFe.m/s        |Merid Mass-Weighted Transp of DOFe
+   373 |WTRAC11 | 50 |       |WM      MR|uMFe.m/s        |Vert  Mass-Weighted Transp of DOFe
+   374 |ForcTr11| 50 |       |SMR     MR|uMFe/s          |DOFe forcing tendency
+   375 |AB_gTr11| 50 |       |SMR     MR|uMFe/s          |DOFe tendency from Adams-Bashforth
+   376 |Tp_gTr11| 50 |       |SMR     MR|uMFe/s          |DOFe total transport tendency (before gchem_forcing_sep)
+   377 |ADVrTr11| 50 |       |WM      LR|uMFe.m^3/s      |Vertical   Advective Flux of DOFe
+   378 |ADVxTr11| 50 |   379 |UU      MR|uMFe.m^3/s      |Zonal      Advective Flux of DOFe
+   379 |ADVyTr11| 50 |   378 |VV      MR|uMFe.m^3/s      |Meridional Advective Flux of DOFe
+   380 |DFrETr11| 50 |       |WM      LR|uMFe.m^3/s      |Vertical Diffusive Flux of DOFe (Explicit part)
+   381 |DFxETr11| 50 |   382 |UU      MR|uMFe.m^3/s      |Zonal      Diffusive Flux of DOFe
+   382 |DFyETr11| 50 |   381 |VV      MR|uMFe.m^3/s      |Meridional Diffusive Flux of DOFe
+   383 |DFrITr11| 50 |       |WM      LR|uMFe.m^3/s      |Vertical Diffusive Flux of DOFe (Implicit part)
+   384 |TRAC12  | 50 |       |SMR     MR|uM C            |POC concentration
+   385 |UTRAC12 | 50 |   386 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of POC
+   386 |VTRAC12 | 50 |   385 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of POC
+   387 |WTRAC12 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of POC
+   388 |ForcTr12| 50 |       |SMR     MR|uMC/s           |POC forcing tendency
+   389 |AB_gTr12| 50 |       |SMR     MR|uMC/s           |POC tendency from Adams-Bashforth
+   390 |Tp_gTr12| 50 |       |SMR     MR|uMC/s           |POC total transport tendency (before gchem_forcing_sep)
+   391 |ADVrTr12| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of POC
+   392 |ADVxTr12| 50 |   393 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of POC
+   393 |ADVyTr12| 50 |   392 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of POC
+   394 |DFrETr12| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of POC (Explicit part)
+   395 |DFxETr12| 50 |   396 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of POC
+   396 |DFyETr12| 50 |   395 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of POC
+   397 |DFrITr12| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of POC (Implicit part)
+   398 |TRAC13  | 50 |       |SMR     MR|uM N            |PON concentration
+   399 |UTRAC13 | 50 |   400 |UUr     MR|uMN.m/s         |Zonal Mass-Weighted Transp of PON
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   400 |VTRAC13 | 50 |   399 |VVr     MR|uMN.m/s         |Merid Mass-Weighted Transp of PON
+   401 |WTRAC13 | 50 |       |WM      MR|uMN.m/s         |Vert  Mass-Weighted Transp of PON
+   402 |ForcTr13| 50 |       |SMR     MR|uMN/s           |PON forcing tendency
+   403 |AB_gTr13| 50 |       |SMR     MR|uMN/s           |PON tendency from Adams-Bashforth
+   404 |Tp_gTr13| 50 |       |SMR     MR|uMN/s           |PON total transport tendency (before gchem_forcing_sep)
+   405 |ADVrTr13| 50 |       |WM      LR|uMN.m^3/s       |Vertical   Advective Flux of PON
+   406 |ADVxTr13| 50 |   407 |UU      MR|uMN.m^3/s       |Zonal      Advective Flux of PON
+   407 |ADVyTr13| 50 |   406 |VV      MR|uMN.m^3/s       |Meridional Advective Flux of PON
+   408 |DFrETr13| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of PON (Explicit part)
+   409 |DFxETr13| 50 |   410 |UU      MR|uMN.m^3/s       |Zonal      Diffusive Flux of PON
+   410 |DFyETr13| 50 |   409 |VV      MR|uMN.m^3/s       |Meridional Diffusive Flux of PON
+   411 |DFrITr13| 50 |       |WM      LR|uMN.m^3/s       |Vertical Diffusive Flux of PON (Implicit part)
+   412 |TRAC14  | 50 |       |SMR     MR|uM P            |POP concentration
+   413 |UTRAC14 | 50 |   414 |UUr     MR|uMP.m/s         |Zonal Mass-Weighted Transp of POP
+   414 |VTRAC14 | 50 |   413 |VVr     MR|uMP.m/s         |Merid Mass-Weighted Transp of POP
+   415 |WTRAC14 | 50 |       |WM      MR|uMP.m/s         |Vert  Mass-Weighted Transp of POP
+   416 |ForcTr14| 50 |       |SMR     MR|uMP/s           |POP forcing tendency
+   417 |AB_gTr14| 50 |       |SMR     MR|uMP/s           |POP tendency from Adams-Bashforth
+   418 |Tp_gTr14| 50 |       |SMR     MR|uMP/s           |POP total transport tendency (before gchem_forcing_sep)
+   419 |ADVrTr14| 50 |       |WM      LR|uMP.m^3/s       |Vertical   Advective Flux of POP
+   420 |ADVxTr14| 50 |   421 |UU      MR|uMP.m^3/s       |Zonal      Advective Flux of POP
+   421 |ADVyTr14| 50 |   420 |VV      MR|uMP.m^3/s       |Meridional Advective Flux of POP
+   422 |DFrETr14| 50 |       |WM      LR|uMP.m^3/s       |Vertical Diffusive Flux of POP (Explicit part)
+   423 |DFxETr14| 50 |   424 |UU      MR|uMP.m^3/s       |Zonal      Diffusive Flux of POP
+   424 |DFyETr14| 50 |   423 |VV      MR|uMP.m^3/s       |Meridional Diffusive Flux of POP
+   425 |DFrITr14| 50 |       |WM      LR|uMP.m^3/s       |Vertical Diffusive Flux of POP (Implicit part)
+   426 |TRAC15  | 50 |       |SMR     MR|uM Fe           |POFe concentration
+   427 |UTRAC15 | 50 |   428 |UUr     MR|uMFe.m/s        |Zonal Mass-Weighted Transp of POFe
+   428 |VTRAC15 | 50 |   427 |VVr     MR|uMFe.m/s        |Merid Mass-Weighted Transp of POFe
+   429 |WTRAC15 | 50 |       |WM      MR|uMFe.m/s        |Vert  Mass-Weighted Transp of POFe
+   430 |ForcTr15| 50 |       |SMR     MR|uMFe/s          |POFe forcing tendency
+   431 |AB_gTr15| 50 |       |SMR     MR|uMFe/s          |POFe tendency from Adams-Bashforth
+   432 |Tp_gTr15| 50 |       |SMR     MR|uMFe/s          |POFe total transport tendency (before gchem_forcing_sep)
+   433 |ADVrTr15| 50 |       |WM      LR|uMFe.m^3/s      |Vertical   Advective Flux of POFe
+   434 |ADVxTr15| 50 |   435 |UU      MR|uMFe.m^3/s      |Zonal      Advective Flux of POFe
+   435 |ADVyTr15| 50 |   434 |VV      MR|uMFe.m^3/s      |Meridional Advective Flux of POFe
+   436 |DFrETr15| 50 |       |WM      LR|uMFe.m^3/s      |Vertical Diffusive Flux of POFe (Explicit part)
+   437 |DFxETr15| 50 |   438 |UU      MR|uMFe.m^3/s      |Zonal      Diffusive Flux of POFe
+   438 |DFyETr15| 50 |   437 |VV      MR|uMFe.m^3/s      |Meridional Diffusive Flux of POFe
+   439 |DFrITr15| 50 |       |WM      LR|uMFe.m^3/s      |Vertical Diffusive Flux of POFe (Implicit part)
+   440 |TRAC16  | 50 |       |SMR     MR|uM Si           |POSi concentration
+   441 |UTRAC16 | 50 |   442 |UUr     MR|uMSi.m/s        |Zonal Mass-Weighted Transp of POSi
+   442 |VTRAC16 | 50 |   441 |VVr     MR|uMSi.m/s        |Merid Mass-Weighted Transp of POSi
+   443 |WTRAC16 | 50 |       |WM      MR|uMSi.m/s        |Vert  Mass-Weighted Transp of POSi
+   444 |ForcTr16| 50 |       |SMR     MR|uMSi/s          |POSi forcing tendency
+   445 |AB_gTr16| 50 |       |SMR     MR|uMSi/s          |POSi tendency from Adams-Bashforth
+   446 |Tp_gTr16| 50 |       |SMR     MR|uMSi/s          |POSi total transport tendency (before gchem_forcing_sep)
+   447 |ADVrTr16| 50 |       |WM      LR|uMSi.m^3/s      |Vertical   Advective Flux of POSi
+   448 |ADVxTr16| 50 |   449 |UU      MR|uMSi.m^3/s      |Zonal      Advective Flux of POSi
+   449 |ADVyTr16| 50 |   448 |VV      MR|uMSi.m^3/s      |Meridional Advective Flux of POSi
+   450 |DFrETr16| 50 |       |WM      LR|uMSi.m^3/s      |Vertical Diffusive Flux of POSi (Explicit part)
+   451 |DFxETr16| 50 |   452 |UU      MR|uMSi.m^3/s      |Zonal      Diffusive Flux of POSi
+   452 |DFyETr16| 50 |   451 |VV      MR|uMSi.m^3/s      |Meridional Diffusive Flux of POSi
+   453 |DFrITr16| 50 |       |WM      LR|uMSi.m^3/s      |Vertical Diffusive Flux of POSi (Implicit part)
+   454 |TRAC17  | 50 |       |SMR     MR|uM C            |PIC concentration
+   455 |UTRAC17 | 50 |   456 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of PIC
+   456 |VTRAC17 | 50 |   455 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of PIC
+   457 |WTRAC17 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of PIC
+   458 |ForcTr17| 50 |       |SMR     MR|uMC/s           |PIC forcing tendency
+   459 |AB_gTr17| 50 |       |SMR     MR|uMC/s           |PIC tendency from Adams-Bashforth
+   460 |Tp_gTr17| 50 |       |SMR     MR|uMC/s           |PIC total transport tendency (before gchem_forcing_sep)
+   461 |ADVrTr17| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of PIC
+   462 |ADVxTr17| 50 |   463 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of PIC
+   463 |ADVyTr17| 50 |   462 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of PIC
+   464 |DFrETr17| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of PIC (Explicit part)
+   465 |DFxETr17| 50 |   466 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of PIC
+   466 |DFyETr17| 50 |   465 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of PIC
+   467 |DFrITr17| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of PIC (Implicit part)
+   468 |TRAC18  | 50 |       |SMR     MR|meq/m^3         |ALK concentration
+   469 |UTRAC18 | 50 |   470 |UUr     MR|meq/m^3.m/s     |Zonal Mass-Weighted Transp of ALK
+   470 |VTRAC18 | 50 |   469 |VVr     MR|meq/m^3.m/s     |Merid Mass-Weighted Transp of ALK
+   471 |WTRAC18 | 50 |       |WM      MR|meq/m^3.m/s     |Vert  Mass-Weighted Transp of ALK
+   472 |ForcTr18| 50 |       |SMR     MR|meq/m^3/s       |ALK forcing tendency
+   473 |AB_gTr18| 50 |       |SMR     MR|meq/m^3/s       |ALK tendency from Adams-Bashforth
+   474 |Tp_gTr18| 50 |       |SMR     MR|meq/m^3/s       |ALK total transport tendency (before gchem_forcing_sep)
+   475 |ADVrTr18| 50 |       |WM      LR|meq/m^3.m^3/s   |Vertical   Advective Flux of ALK
+   476 |ADVxTr18| 50 |   477 |UU      MR|meq/m^3.m^3/s   |Zonal      Advective Flux of ALK
+   477 |ADVyTr18| 50 |   476 |VV      MR|meq/m^3.m^3/s   |Meridional Advective Flux of ALK
+   478 |DFrETr18| 50 |       |WM      LR|meq/m^3.m^3/s   |Vertical Diffusive Flux of ALK (Explicit part)
+   479 |DFxETr18| 50 |   480 |UU      MR|meq/m^3.m^3/s   |Zonal      Diffusive Flux of ALK
+   480 |DFyETr18| 50 |   479 |VV      MR|meq/m^3.m^3/s   |Meridional Diffusive Flux of ALK
+   481 |DFrITr18| 50 |       |WM      LR|meq/m^3.m^3/s   |Vertical Diffusive Flux of ALK (Implicit part)
+   482 |TRAC19  | 50 |       |SMR     MR|uM O            |O2 concentration
+   483 |UTRAC19 | 50 |   484 |UUr     MR|uMO.m/s         |Zonal Mass-Weighted Transp of O2
+   484 |VTRAC19 | 50 |   483 |VVr     MR|uMO.m/s         |Merid Mass-Weighted Transp of O2
+   485 |WTRAC19 | 50 |       |WM      MR|uMO.m/s         |Vert  Mass-Weighted Transp of O2
+   486 |ForcTr19| 50 |       |SMR     MR|uMO/s           |O2 forcing tendency
+   487 |AB_gTr19| 50 |       |SMR     MR|uMO/s           |O2 tendency from Adams-Bashforth
+   488 |Tp_gTr19| 50 |       |SMR     MR|uMO/s           |O2 total transport tendency (before gchem_forcing_sep)
+   489 |ADVrTr19| 50 |       |WM      LR|uMO.m^3/s       |Vertical   Advective Flux of O2
+   490 |ADVxTr19| 50 |   491 |UU      MR|uMO.m^3/s       |Zonal      Advective Flux of O2
+   491 |ADVyTr19| 50 |   490 |VV      MR|uMO.m^3/s       |Meridional Advective Flux of O2
+   492 |DFrETr19| 50 |       |WM      LR|uMO.m^3/s       |Vertical Diffusive Flux of O2 (Explicit part)
+   493 |DFxETr19| 50 |   494 |UU      MR|uMO.m^3/s       |Zonal      Diffusive Flux of O2
+   494 |DFyETr19| 50 |   493 |VV      MR|uMO.m^3/s       |Meridional Diffusive Flux of O2
+   495 |DFrITr19| 50 |       |WM      LR|uMO.m^3/s       |Vertical Diffusive Flux of O2 (Implicit part)
+   496 |TRAC20  | 50 |       |SMR     MR|uM C            |c01 concentration
+   497 |UTRAC20 | 50 |   498 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of c01
+   498 |VTRAC20 | 50 |   497 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of c01
+   499 |WTRAC20 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of c01
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   500 |ForcTr20| 50 |       |SMR     MR|uMC/s           |c01 forcing tendency
+   501 |AB_gTr20| 50 |       |SMR     MR|uMC/s           |c01 tendency from Adams-Bashforth
+   502 |Tp_gTr20| 50 |       |SMR     MR|uMC/s           |c01 total transport tendency (before gchem_forcing_sep)
+   503 |ADVrTr20| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of c01
+   504 |ADVxTr20| 50 |   505 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of c01
+   505 |ADVyTr20| 50 |   504 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of c01
+   506 |DFrETr20| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c01 (Explicit part)
+   507 |DFxETr20| 50 |   508 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of c01
+   508 |DFyETr20| 50 |   507 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of c01
+   509 |DFrITr20| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c01 (Implicit part)
+   510 |TRAC21  | 50 |       |SMR     MR|uM C            |c02 concentration
+   511 |UTRAC21 | 50 |   512 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of c02
+   512 |VTRAC21 | 50 |   511 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of c02
+   513 |WTRAC21 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of c02
+   514 |ForcTr21| 50 |       |SMR     MR|uMC/s           |c02 forcing tendency
+   515 |AB_gTr21| 50 |       |SMR     MR|uMC/s           |c02 tendency from Adams-Bashforth
+   516 |Tp_gTr21| 50 |       |SMR     MR|uMC/s           |c02 total transport tendency (before gchem_forcing_sep)
+   517 |ADVrTr21| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of c02
+   518 |ADVxTr21| 50 |   519 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of c02
+   519 |ADVyTr21| 50 |   518 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of c02
+   520 |DFrETr21| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c02 (Explicit part)
+   521 |DFxETr21| 50 |   522 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of c02
+   522 |DFyETr21| 50 |   521 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of c02
+   523 |DFrITr21| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c02 (Implicit part)
+   524 |TRAC22  | 50 |       |SMR     MR|uM C            |c03 concentration
+   525 |UTRAC22 | 50 |   526 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of c03
+   526 |VTRAC22 | 50 |   525 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of c03
+   527 |WTRAC22 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of c03
+   528 |ForcTr22| 50 |       |SMR     MR|uMC/s           |c03 forcing tendency
+   529 |AB_gTr22| 50 |       |SMR     MR|uMC/s           |c03 tendency from Adams-Bashforth
+   530 |Tp_gTr22| 50 |       |SMR     MR|uMC/s           |c03 total transport tendency (before gchem_forcing_sep)
+   531 |ADVrTr22| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of c03
+   532 |ADVxTr22| 50 |   533 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of c03
+   533 |ADVyTr22| 50 |   532 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of c03
+   534 |DFrETr22| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c03 (Explicit part)
+   535 |DFxETr22| 50 |   536 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of c03
+   536 |DFyETr22| 50 |   535 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of c03
+   537 |DFrITr22| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c03 (Implicit part)
+   538 |TRAC23  | 50 |       |SMR     MR|uM C            |c04 concentration
+   539 |UTRAC23 | 50 |   540 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of c04
+   540 |VTRAC23 | 50 |   539 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of c04
+   541 |WTRAC23 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of c04
+   542 |ForcTr23| 50 |       |SMR     MR|uMC/s           |c04 forcing tendency
+   543 |AB_gTr23| 50 |       |SMR     MR|uMC/s           |c04 tendency from Adams-Bashforth
+   544 |Tp_gTr23| 50 |       |SMR     MR|uMC/s           |c04 total transport tendency (before gchem_forcing_sep)
+   545 |ADVrTr23| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of c04
+   546 |ADVxTr23| 50 |   547 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of c04
+   547 |ADVyTr23| 50 |   546 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of c04
+   548 |DFrETr23| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c04 (Explicit part)
+   549 |DFxETr23| 50 |   550 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of c04
+   550 |DFyETr23| 50 |   549 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of c04
+   551 |DFrITr23| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c04 (Implicit part)
+   552 |TRAC24  | 50 |       |SMR     MR|uM C            |c05 concentration
+   553 |UTRAC24 | 50 |   554 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of c05
+   554 |VTRAC24 | 50 |   553 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of c05
+   555 |WTRAC24 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of c05
+   556 |ForcTr24| 50 |       |SMR     MR|uMC/s           |c05 forcing tendency
+   557 |AB_gTr24| 50 |       |SMR     MR|uMC/s           |c05 tendency from Adams-Bashforth
+   558 |Tp_gTr24| 50 |       |SMR     MR|uMC/s           |c05 total transport tendency (before gchem_forcing_sep)
+   559 |ADVrTr24| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of c05
+   560 |ADVxTr24| 50 |   561 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of c05
+   561 |ADVyTr24| 50 |   560 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of c05
+   562 |DFrETr24| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c05 (Explicit part)
+   563 |DFxETr24| 50 |   564 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of c05
+   564 |DFyETr24| 50 |   563 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of c05
+   565 |DFrITr24| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c05 (Implicit part)
+   566 |TRAC25  | 50 |       |SMR     MR|uM C            |c06 concentration
+   567 |UTRAC25 | 50 |   568 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of c06
+   568 |VTRAC25 | 50 |   567 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of c06
+   569 |WTRAC25 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of c06
+   570 |ForcTr25| 50 |       |SMR     MR|uMC/s           |c06 forcing tendency
+   571 |AB_gTr25| 50 |       |SMR     MR|uMC/s           |c06 tendency from Adams-Bashforth
+   572 |Tp_gTr25| 50 |       |SMR     MR|uMC/s           |c06 total transport tendency (before gchem_forcing_sep)
+   573 |ADVrTr25| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of c06
+   574 |ADVxTr25| 50 |   575 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of c06
+   575 |ADVyTr25| 50 |   574 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of c06
+   576 |DFrETr25| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c06 (Explicit part)
+   577 |DFxETr25| 50 |   578 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of c06
+   578 |DFyETr25| 50 |   577 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of c06
+   579 |DFrITr25| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c06 (Implicit part)
+   580 |TRAC26  | 50 |       |SMR     MR|uM C            |c07 concentration
+   581 |UTRAC26 | 50 |   582 |UUr     MR|uMC.m/s         |Zonal Mass-Weighted Transp of c07
+   582 |VTRAC26 | 50 |   581 |VVr     MR|uMC.m/s         |Merid Mass-Weighted Transp of c07
+   583 |WTRAC26 | 50 |       |WM      MR|uMC.m/s         |Vert  Mass-Weighted Transp of c07
+   584 |ForcTr26| 50 |       |SMR     MR|uMC/s           |c07 forcing tendency
+   585 |AB_gTr26| 50 |       |SMR     MR|uMC/s           |c07 tendency from Adams-Bashforth
+   586 |Tp_gTr26| 50 |       |SMR     MR|uMC/s           |c07 total transport tendency (before gchem_forcing_sep)
+   587 |ADVrTr26| 50 |       |WM      LR|uMC.m^3/s       |Vertical   Advective Flux of c07
+   588 |ADVxTr26| 50 |   589 |UU      MR|uMC.m^3/s       |Zonal      Advective Flux of c07
+   589 |ADVyTr26| 50 |   588 |VV      MR|uMC.m^3/s       |Meridional Advective Flux of c07
+   590 |DFrETr26| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c07 (Explicit part)
+   591 |DFxETr26| 50 |   592 |UU      MR|uMC.m^3/s       |Zonal      Diffusive Flux of c07
+   592 |DFyETr26| 50 |   591 |VV      MR|uMC.m^3/s       |Meridional Diffusive Flux of c07
+   593 |DFrITr26| 50 |       |WM      LR|uMC.m^3/s       |Vertical Diffusive Flux of c07 (Implicit part)
+   594 |TRAC27  | 50 |       |SMR     MR|mg/m^3          |Chl01 concentration
+   595 |UTRAC27 | 50 |   596 |UUr     MR|mg/m^3.m/s      |Zonal Mass-Weighted Transp of Chl01
+   596 |VTRAC27 | 50 |   595 |VVr     MR|mg/m^3.m/s      |Merid Mass-Weighted Transp of Chl01
+   597 |WTRAC27 | 50 |       |WM      MR|mg/m^3.m/s      |Vert  Mass-Weighted Transp of Chl01
+   598 |ForcTr27| 50 |       |SMR     MR|mg/m^3/s        |Chl01 forcing tendency
+   599 |AB_gTr27| 50 |       |SMR     MR|mg/m^3/s        |Chl01 tendency from Adams-Bashforth
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   600 |Tp_gTr27| 50 |       |SMR     MR|mg/m^3/s        |Chl01 total transport tendency (before gchem_forcing_sep)
+   601 |ADVrTr27| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical   Advective Flux of Chl01
+   602 |ADVxTr27| 50 |   603 |UU      MR|mg/m^3.m^3/s    |Zonal      Advective Flux of Chl01
+   603 |ADVyTr27| 50 |   602 |VV      MR|mg/m^3.m^3/s    |Meridional Advective Flux of Chl01
+   604 |DFrETr27| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl01 (Explicit part)
+   605 |DFxETr27| 50 |   606 |UU      MR|mg/m^3.m^3/s    |Zonal      Diffusive Flux of Chl01
+   606 |DFyETr27| 50 |   605 |VV      MR|mg/m^3.m^3/s    |Meridional Diffusive Flux of Chl01
+   607 |DFrITr27| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl01 (Implicit part)
+   608 |TRAC28  | 50 |       |SMR     MR|mg/m^3          |Chl02 concentration
+   609 |UTRAC28 | 50 |   610 |UUr     MR|mg/m^3.m/s      |Zonal Mass-Weighted Transp of Chl02
+   610 |VTRAC28 | 50 |   609 |VVr     MR|mg/m^3.m/s      |Merid Mass-Weighted Transp of Chl02
+   611 |WTRAC28 | 50 |       |WM      MR|mg/m^3.m/s      |Vert  Mass-Weighted Transp of Chl02
+   612 |ForcTr28| 50 |       |SMR     MR|mg/m^3/s        |Chl02 forcing tendency
+   613 |AB_gTr28| 50 |       |SMR     MR|mg/m^3/s        |Chl02 tendency from Adams-Bashforth
+   614 |Tp_gTr28| 50 |       |SMR     MR|mg/m^3/s        |Chl02 total transport tendency (before gchem_forcing_sep)
+   615 |ADVrTr28| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical   Advective Flux of Chl02
+   616 |ADVxTr28| 50 |   617 |UU      MR|mg/m^3.m^3/s    |Zonal      Advective Flux of Chl02
+   617 |ADVyTr28| 50 |   616 |VV      MR|mg/m^3.m^3/s    |Meridional Advective Flux of Chl02
+   618 |DFrETr28| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl02 (Explicit part)
+   619 |DFxETr28| 50 |   620 |UU      MR|mg/m^3.m^3/s    |Zonal      Diffusive Flux of Chl02
+   620 |DFyETr28| 50 |   619 |VV      MR|mg/m^3.m^3/s    |Meridional Diffusive Flux of Chl02
+   621 |DFrITr28| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl02 (Implicit part)
+   622 |TRAC29  | 50 |       |SMR     MR|mg/m^3          |Chl03 concentration
+   623 |UTRAC29 | 50 |   624 |UUr     MR|mg/m^3.m/s      |Zonal Mass-Weighted Transp of Chl03
+   624 |VTRAC29 | 50 |   623 |VVr     MR|mg/m^3.m/s      |Merid Mass-Weighted Transp of Chl03
+   625 |WTRAC29 | 50 |       |WM      MR|mg/m^3.m/s      |Vert  Mass-Weighted Transp of Chl03
+   626 |ForcTr29| 50 |       |SMR     MR|mg/m^3/s        |Chl03 forcing tendency
+   627 |AB_gTr29| 50 |       |SMR     MR|mg/m^3/s        |Chl03 tendency from Adams-Bashforth
+   628 |Tp_gTr29| 50 |       |SMR     MR|mg/m^3/s        |Chl03 total transport tendency (before gchem_forcing_sep)
+   629 |ADVrTr29| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical   Advective Flux of Chl03
+   630 |ADVxTr29| 50 |   631 |UU      MR|mg/m^3.m^3/s    |Zonal      Advective Flux of Chl03
+   631 |ADVyTr29| 50 |   630 |VV      MR|mg/m^3.m^3/s    |Meridional Advective Flux of Chl03
+   632 |DFrETr29| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl03 (Explicit part)
+   633 |DFxETr29| 50 |   634 |UU      MR|mg/m^3.m^3/s    |Zonal      Diffusive Flux of Chl03
+   634 |DFyETr29| 50 |   633 |VV      MR|mg/m^3.m^3/s    |Meridional Diffusive Flux of Chl03
+   635 |DFrITr29| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl03 (Implicit part)
+   636 |TRAC30  | 50 |       |SMR     MR|mg/m^3          |Chl04 concentration
+   637 |UTRAC30 | 50 |   638 |UUr     MR|mg/m^3.m/s      |Zonal Mass-Weighted Transp of Chl04
+   638 |VTRAC30 | 50 |   637 |VVr     MR|mg/m^3.m/s      |Merid Mass-Weighted Transp of Chl04
+   639 |WTRAC30 | 50 |       |WM      MR|mg/m^3.m/s      |Vert  Mass-Weighted Transp of Chl04
+   640 |ForcTr30| 50 |       |SMR     MR|mg/m^3/s        |Chl04 forcing tendency
+   641 |AB_gTr30| 50 |       |SMR     MR|mg/m^3/s        |Chl04 tendency from Adams-Bashforth
+   642 |Tp_gTr30| 50 |       |SMR     MR|mg/m^3/s        |Chl04 total transport tendency (before gchem_forcing_sep)
+   643 |ADVrTr30| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical   Advective Flux of Chl04
+   644 |ADVxTr30| 50 |   645 |UU      MR|mg/m^3.m^3/s    |Zonal      Advective Flux of Chl04
+   645 |ADVyTr30| 50 |   644 |VV      MR|mg/m^3.m^3/s    |Meridional Advective Flux of Chl04
+   646 |DFrETr30| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl04 (Explicit part)
+   647 |DFxETr30| 50 |   648 |UU      MR|mg/m^3.m^3/s    |Zonal      Diffusive Flux of Chl04
+   648 |DFyETr30| 50 |   647 |VV      MR|mg/m^3.m^3/s    |Meridional Diffusive Flux of Chl04
+   649 |DFrITr30| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl04 (Implicit part)
+   650 |TRAC31  | 50 |       |SMR     MR|mg/m^3          |Chl05 concentration
+   651 |UTRAC31 | 50 |   652 |UUr     MR|mg/m^3.m/s      |Zonal Mass-Weighted Transp of Chl05
+   652 |VTRAC31 | 50 |   651 |VVr     MR|mg/m^3.m/s      |Merid Mass-Weighted Transp of Chl05
+   653 |WTRAC31 | 50 |       |WM      MR|mg/m^3.m/s      |Vert  Mass-Weighted Transp of Chl05
+   654 |ForcTr31| 50 |       |SMR     MR|mg/m^3/s        |Chl05 forcing tendency
+   655 |AB_gTr31| 50 |       |SMR     MR|mg/m^3/s        |Chl05 tendency from Adams-Bashforth
+   656 |Tp_gTr31| 50 |       |SMR     MR|mg/m^3/s        |Chl05 total transport tendency (before gchem_forcing_sep)
+   657 |ADVrTr31| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical   Advective Flux of Chl05
+   658 |ADVxTr31| 50 |   659 |UU      MR|mg/m^3.m^3/s    |Zonal      Advective Flux of Chl05
+   659 |ADVyTr31| 50 |   658 |VV      MR|mg/m^3.m^3/s    |Meridional Advective Flux of Chl05
+   660 |DFrETr31| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl05 (Explicit part)
+   661 |DFxETr31| 50 |   662 |UU      MR|mg/m^3.m^3/s    |Zonal      Diffusive Flux of Chl05
+   662 |DFyETr31| 50 |   661 |VV      MR|mg/m^3.m^3/s    |Meridional Diffusive Flux of Chl05
+   663 |DFrITr31| 50 |       |WM      LR|mg/m^3.m^3/s    |Vertical Diffusive Flux of Chl05 (Implicit part)
+   664 |Add2EmP |  1 |       |SM      U1|kg/m^2/s        |additional EmP from salt relaxation
+   665 |PP      | 50 |       |SMRP    MR|mmol C/m^3/s    |Primary Production
+   666 |Nfix    | 50 |       |SMRP    MR|mmol N/m^3/s    |N fixation
+   667 |Denit   | 50 |       |SMRP    MR|mmol N/m^3/s    |Denitrification
+   668 |DenitN  | 50 |       |SMRP    MR|mmol N/m^3/s    |Nitrogen loss due to denitrification
+   669 |atten   | 50 |       |SMRP    MR|1               |attenuation in layer
+   670 |PARF    | 50 |       |SMRP    LR|uEin/m^2/s      |PAR at top of layer
+   671 |PAR     | 50 |       |SMRP    MR|uEin/m^2/s      |total PAR at layer center
+   672 |C_NO3   | 50 |       |SM P    MR|mmolN/m3/s      |consumption of NO3
+   673 |C_NO2   | 50 |       |SM P    MR|mmolN/m3/s      |consumption of NO2
+   674 |C_NH4   | 50 |       |SM P    MR|mmolN/m3/s      |consumption of NH4
+   675 |C_PO4   | 50 |       |SM P    MR|mmolP/m3/s      |consumption of PO4
+   676 |C_Si    | 50 |       |SM P    MR|mmolSi/m3/s     |consumption of Si
+   677 |C_Fe    | 50 |       |SM P    MR|mmolFe/m3/s     |consumption of Fe
+   678 |S_NO3   | 50 |       |SM      MR|mmolN/m3/s      |non-transport source of NO3
+   679 |S_NO2   | 50 |       |SM      MR|mmolN/m3/s      |non-transport source of NO2
+   680 |S_NH4   | 50 |       |SM      MR|mmolN/m3/s      |non-transport source of NH4
+   681 |S_PO4   | 50 |       |SM      MR|mmolP/m3/s      |non-transport source of PO4
+   682 |S_Si    | 50 |       |SM      MR|mmolSi/m3/s     |non-transport source of Si
+   683 |S_Fe    | 50 |       |SM      MR|mmolFe/m3/s     |non-transport source of Fe
+   684 |gDAR01  | 50 |       |SMR     MR|uMC/s           |DIC tendency from DARWIN
+   685 |gDAR02  | 50 |       |SMR     MR|uMN/s           |NO3 tendency from DARWIN
+   686 |gDAR03  | 50 |       |SMR     MR|uMN/s           |NO2 tendency from DARWIN
+   687 |gDAR04  | 50 |       |SMR     MR|uMN/s           |NH4 tendency from DARWIN
+   688 |gDAR05  | 50 |       |SMR     MR|uMP/s           |PO4 tendency from DARWIN
+   689 |gDAR06  | 50 |       |SMR     MR|uMFe/s          |FeT tendency from DARWIN
+   690 |gDAR07  | 50 |       |SMR     MR|uMSi/s          |SiO2 tendency from DARWIN
+   691 |gDAR08  | 50 |       |SMR     MR|uMC/s           |DOC tendency from DARWIN
+   692 |gDAR09  | 50 |       |SMR     MR|uMN/s           |DON tendency from DARWIN
+   693 |gDAR10  | 50 |       |SMR     MR|uMP/s           |DOP tendency from DARWIN
+   694 |gDAR11  | 50 |       |SMR     MR|uMFe/s          |DOFe tendency from DARWIN
+   695 |gDAR12  | 50 |       |SMR     MR|uMC/s           |POC tendency from DARWIN
+   696 |gDAR13  | 50 |       |SMR     MR|uMN/s           |PON tendency from DARWIN
+   697 |gDAR14  | 50 |       |SMR     MR|uMP/s           |POP tendency from DARWIN
+   698 |gDAR15  | 50 |       |SMR     MR|uMFe/s          |POFe tendency from DARWIN
+   699 |gDAR16  | 50 |       |SMR     MR|uMSi/s          |POSi tendency from DARWIN
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   700 |gDAR17  | 50 |       |SMR     MR|uMC/s           |PIC tendency from DARWIN
+   701 |gDAR18  | 50 |       |SMR     MR|meq/m^3/s       |ALK tendency from DARWIN
+   702 |gDAR19  | 50 |       |SMR     MR|uMO/s           |O2 tendency from DARWIN
+   703 |gDAR20  | 50 |       |SMR     MR|uMC/s           |c01 tendency from DARWIN
+   704 |gDAR21  | 50 |       |SMR     MR|uMC/s           |c02 tendency from DARWIN
+   705 |gDAR22  | 50 |       |SMR     MR|uMC/s           |c03 tendency from DARWIN
+   706 |gDAR23  | 50 |       |SMR     MR|uMC/s           |c04 tendency from DARWIN
+   707 |gDAR24  | 50 |       |SMR     MR|uMC/s           |c05 tendency from DARWIN
+   708 |gDAR25  | 50 |       |SMR     MR|uMC/s           |c06 tendency from DARWIN
+   709 |gDAR26  | 50 |       |SMR     MR|uMC/s           |c07 tendency from DARWIN
+   710 |gDAR27  | 50 |       |SMR     MR|mg/m^3/s        |Chl01 tendency from DARWIN
+   711 |gDAR28  | 50 |       |SMR     MR|mg/m^3/s        |Chl02 tendency from DARWIN
+   712 |gDAR29  | 50 |       |SMR     MR|mg/m^3/s        |Chl03 tendency from DARWIN
+   713 |gDAR30  | 50 |       |SMR     MR|mg/m^3/s        |Chl04 tendency from DARWIN
+   714 |gDAR31  | 50 |       |SMR     MR|mg/m^3/s        |Chl05 tendency from DARWIN
+   715 |sfcSolFe|  1 |       |SM P    L1|mmol Fe/m2/s    |Soluble iron input at sea surface
+   716 |sedFe   | 50 |       |SMR     MR|mmol Fe/m2/s    |Iron input from sediment
+   717 |freeFe  | 50 |       |SMR     MR|mmol Fe/m3/s    |Iron input from sediment
+   718 |pH      | 50 |       |SMR     MR|1               |pH
+   719 |pCO2    | 50 |       |SMRP    MR|atm             |Partial Pressure of CO2
+   720 |fugfCO2 |  1 |       |SM P    L1|1               |Fugacity factor of CO2 at surface
+   721 |fCO2    |  1 |       |SM P    L1|atm             |Fugacity of CO2 (atm)
+   722 |fluxCO2 |  1 |       |SM      L1|mmol C/m2/s     |Flux of CO2 - air-sea exch
+   723 |gDICsurf|  1 |       |SM      L1|mmol C/m3/s     |Tendency of DIC due to air-sea exch + oldvirt.flux
+   724 |gDICEpr |  1 |       |SM      L1|mmol C/m3/s     |Tendency of DIC due to E/P/runoff
+   725 |gALKEpr |  1 |       |SM      L1|mmol eq./m3/s   |Tendency of ALK due to E/P/runoff
+   726 |gO2Epr  |  1 |       |SM      L1|mmol eq./m3/s   |Tendency of O2 due to E/P/runoff
+   727 |gNO3Epr |  1 |       |SM      L1|mmol N/m3/s     |Tendency of DIC due to E/P/runoff
+   728 |gNO2Epr |  1 |       |SM      L1|mmol N/m3/s     |Tendency of DIC due to E/P/runoff
+   729 |gNH4Epr |  1 |       |SM      L1|mmol N/m3/s     |Tendency of DIC due to E/P/runoff
+   730 |gPO4Epr |  1 |       |SM      L1|mmol P/m3/s     |Tendency of PO4 due to E/P/runoff
+   731 |gFeTEpr |  1 |       |SM      L1|mmol C/m3/s     |Tendency of FeT due to E/P/runoff
+   732 |gSiO2Epr|  1 |       |SM      L1|mmol Si/m3/s    |Tendency of SiO2 due to E/P/runoff
+   733 |gALKsurf|  1 |       |SM      L1|mmol eq/m3/s    |Tendency of ALK due to oldvirt.flux
+   734 |gO2surf |  1 |       |SM      L1|mmol O2/m3/s    |Tendency of O2 due to air-sea exch
+   735 |cDIC    | 50 |       |SMR     MR|mmol C/m3/s     |Consumption of DIC
+   736 |cDIC_PIC| 50 |       |SMR     MR|mmol C/m3/s     |Consumption of DIC due to PIC
+   737 |respDIC | 50 |       |SMR     MR|mmol C/m3/s     |DIC due to respiration
+   738 |rDIC_DOC| 50 |       |SMR     MR|mmol C/m3/s     |DIC due to remineralization of DOC
+   739 |rDIC_POC| 50 |       |SMR     MR|mmol C/m3/s     |DIC due to remineralization of POC
+   740 |dDIC_PIC| 50 |       |SMR     MR|mmol C/m3/s     |DIC due to dissolution of PIC
+   741 |C_ALK   | 50 |       |SMR     MR|mmol eq./m3/s   |Consumption of alkalinity
+   742 |S_ALK   | 50 |       |SMR     MR|mmol eq./m3/s   |Non-transport source of alkalinity
+   743 |C_O2    | 50 |       |SMR     MR|mmol O/m3/s     |Consumption of oxygen
+   744 |S_O2    | 50 |       |SMR     MR|mmol O/m3/s     |Non-transport source of oxygen
+   745 |surfPAR |  1 |       |SM P    L1|uEin/m^2/s      |PAR forcing at surface
+   746 |surfiron|  1 |       |SM P    L1|mmol Fe/m^2/s   |iron forcing at surface
+   747 |DARice  |  1 |       |SM P    L1|m^2/m^2         |ice area fraction
+   748 |DARwind |  1 |       |SM P    L1|m/s             |wind speed used for carbon exchange
+   749 |apCO2   |  1 |       |SM P    L1|atm             |atmospheric pCO2
+   750 |apCO2sat|  1 |       |SM P    L1|atm             |atmospheric pCO2 sat
+   751 |GC_Tr01 | 50 |       |SMR     MR|uM C            |DIC concentration before GCHEM
+   752 |GC_Tr02 | 50 |       |SMR     MR|uM N            |NO3 concentration before GCHEM
+   753 |GC_Tr03 | 50 |       |SMR     MR|uM N            |NO2 concentration before GCHEM
+   754 |GC_Tr04 | 50 |       |SMR     MR|uM N            |NH4 concentration before GCHEM
+   755 |GC_Tr05 | 50 |       |SMR     MR|uM P            |PO4 concentration before GCHEM
+   756 |GC_Tr06 | 50 |       |SMR     MR|uM Fe           |FeT concentration before GCHEM
+   757 |GC_Tr07 | 50 |       |SMR     MR|uM Si           |SiO2 concentration before GCHEM
+   758 |GC_Tr08 | 50 |       |SMR     MR|uM C            |DOC concentration before GCHEM
+   759 |GC_Tr09 | 50 |       |SMR     MR|uM N            |DON concentration before GCHEM
+   760 |GC_Tr10 | 50 |       |SMR     MR|uM P            |DOP concentration before GCHEM
+   761 |GC_Tr11 | 50 |       |SMR     MR|uM Fe           |DOFe concentration before GCHEM
+   762 |GC_Tr12 | 50 |       |SMR     MR|uM C            |POC concentration before GCHEM
+   763 |GC_Tr13 | 50 |       |SMR     MR|uM N            |PON concentration before GCHEM
+   764 |GC_Tr14 | 50 |       |SMR     MR|uM P            |POP concentration before GCHEM
+   765 |GC_Tr15 | 50 |       |SMR     MR|uM Fe           |POFe concentration before GCHEM
+   766 |GC_Tr16 | 50 |       |SMR     MR|uM Si           |POSi concentration before GCHEM
+   767 |GC_Tr17 | 50 |       |SMR     MR|uM C            |PIC concentration before GCHEM
+   768 |GC_Tr18 | 50 |       |SMR     MR|meq/m^3         |ALK concentration before GCHEM
+   769 |GC_Tr19 | 50 |       |SMR     MR|uM O            |O2 concentration before GCHEM
+   770 |GC_Tr20 | 50 |       |SMR     MR|uM C            |c01 concentration before GCHEM
+   771 |GC_Tr21 | 50 |       |SMR     MR|uM C            |c02 concentration before GCHEM
+   772 |GC_Tr22 | 50 |       |SMR     MR|uM C            |c03 concentration before GCHEM
+   773 |GC_Tr23 | 50 |       |SMR     MR|uM C            |c04 concentration before GCHEM
+   774 |GC_Tr24 | 50 |       |SMR     MR|uM C            |c05 concentration before GCHEM
+   775 |GC_Tr25 | 50 |       |SMR     MR|uM C            |c06 concentration before GCHEM
+   776 |GC_Tr26 | 50 |       |SMR     MR|uM C            |c07 concentration before GCHEM
+   777 |GC_Tr27 | 50 |       |SMR     MR|mg/m^3          |Chl01 concentration before GCHEM
+   778 |GC_Tr28 | 50 |       |SMR     MR|mg/m^3          |Chl02 concentration before GCHEM
+   779 |GC_Tr29 | 50 |       |SMR     MR|mg/m^3          |Chl03 concentration before GCHEM
+   780 |GC_Tr30 | 50 |       |SMR     MR|mg/m^3          |Chl04 concentration before GCHEM
+   781 |GC_Tr31 | 50 |       |SMR     MR|mg/m^3          |Chl05 concentration before GCHEM
+   782 |SIarea  |  1 |       |SM      M1|m^2/m^2         |SEAICE fractional ice-covered area [0 to 1]
+   783 |SIareaPR|  1 |       |SM      M1|m^2/m^2         |SIarea preceeding ridging process
+   784 |SIareaPT|  1 |       |SM      M1|m^2/m^2         |SIarea preceeding thermodynamic growth/melt
+   785 |SIheff  |  1 |       |SM      M1|m               |SEAICE effective ice thickness
+   786 |SIheffPT|  1 |       |SM      M1|m               |SIheff preceeeding thermodynamic growth/melt
+   787 |SIhsnow |  1 |       |SM      M1|m               |SEAICE effective snow thickness
+   788 |SIhsnoPT|  1 |       |SM      M1|m               |SIhsnow preceeeding thermodynamic growth/melt
+   789 |SIhsalt |  1 |       |SM      M1|g/m^2           |SEAICE effective salinity
+   790 |SIenpa  |  1 |       |SM      M1|W/m^2           |SEAICE power input by surface wind stresses
+   791 |SIenpw  |  1 |       |SM      M1|W/m^2           |SEAICE work done by ocean drag
+   792 |SIenph  |  1 |       |SM      M1|W/m^2           |SEAICE power due to change in inertia
+   793 |SIenpg  |  1 |       |SM      M1|W/m^2           |SEAICE work generated by gravity
+   794 |SIenpi  |  1 |       |SM      M1|W/m^2           |SEAICE work done by internal stress
+   795 |SIenpot |  1 |       |SM      M1|W/m^2           |SEAICE work done to change potential energy
+   796 |SIpRfric|  1 |       |SM      M1|W/m^2           |SEAICE dissipation in ridging by internal stresses
+   797 |SIpSfric|  1 |       |SM      M1|W/m^2           |SEAICE dissipation in shearing by internal stresses
+   798 |SItices |  1 |   782 |SM  C   M1|K               |Surface Temperature over Sea-Ice (area weighted)
+   799 |SIuice  |  1 |   800 |UU      M1|m/s             |SEAICE zonal ice velocity, >0 from West to East
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
+   800 |SIvice  |  1 |   799 |VV      M1|m/s             |SEAICE merid. ice velocity, >0 from South to North
+   801 |SItaux  |  1 |   802 |UU      U1|N/m^2           |SEAICE zonal surface wind stress, >0 increases uIce
+   802 |SItauy  |  1 |   801 |VV      U1|N/m^2           |SEAICE merid surface wind stress, >0 increases vIce
+   803 |SIatmTx |  1 |   804 |UU      U1|N/m^2           |Zonal surface wind stress over Ocean+SeaIce
+   804 |SIatmTy |  1 |   803 |VV      U1|N/m^2           |Merid surface wind stress over Ocean+SeaIce
+   805 |SIqnet  |  1 |       |SM      U1|W/m^2           |Ocean surface heatflux, turb+rad, >0 decreases theta
+   806 |SIqsw   |  1 |       |SM      U1|W/m^2           |Ocean surface shortwave radiat., >0 decreases theta
+   807 |SIatmQnt|  1 |       |SM      U1|W/m^2           |Net atmospheric heat flux, >0 decreases theta
+   808 |SItflux |  1 |       |SM      U1|W/m^2           |Same as TFLUX but incl seaice (>0 incr T decr H)
+   809 |SIaaflux|  1 |       |SM      U1|W/m^2           |conservative ocn<->seaice adv. heat flux adjust.
+   810 |SIhl    |  1 |       |SM      U1|W/m^2           |Latent heat flux into ocean, >0 increases theta
+   811 |SIqneto |  1 |       |SM      U1|W/m^2           |Open Ocean Part of SIqnet, turb+rad, >0 decr theta
+   812 |SIqneti |  1 |       |SM      U1|W/m^2           |Ice Covered Part of SIqnet, turb+rad, >0 decr theta
+   813 |SIempmr |  1 |       |SM      U1|kg/m^2/s        |Ocean surface freshwater flux, > 0 increases salt
+   814 |SIatmFW |  1 |       |SM      U1|kg/m^2/s        |Net freshwater flux from atmosphere & land (+=down)
+   815 |SIsnPrcp|  1 |       |SM      U1|kg/m^2/s        |Snow precip. (+=dw) over Sea-Ice (area weighted)
+   816 |SIfwSubl|  1 |       |SM      U1|kg/m^2/s        |Potential sublimation freshwater flux, >0 decr. ice
+   817 |SIacSubl|  1 |       |SM      U1|kg/m^2/s        |Actual sublimation freshwater flux, >0 decr. ice
+   818 |SIrsSubl|  1 |       |SM      U1|kg/m^2/s        |Residual subl. freshwater flux, >0 taken from ocn
+   819 |SIactLHF|  1 |       |SM      U1|W/m^2           |Actual latent heat flux over ice
+   820 |SImaxLHF|  1 |       |SM      U1|W/m^2           |Maximum latent heat flux over ice
+   821 |SIaQbOCN|  1 |       |SM      M1|m/s             |Potential HEFF rate of change by ocean ice flux
+   822 |SIaQbATC|  1 |       |SM      M1|m/s             |Potential HEFF rate of change by atm flux over ice
+   823 |SIaQbATO|  1 |       |SM      M1|m/s             |Potential HEFF rate of change by open ocn atm flux
+   824 |SIdHbOCN|  1 |       |SM      M1|m/s             |HEFF rate of change by ocean ice flux
+   825 |SIdSbATC|  1 |       |SM      M1|m/s             |HSNOW rate of change by atm flux over sea ice
+   826 |SIdSbOCN|  1 |       |SM      M1|m/s             |HSNOW rate of change by ocean ice flux
+   827 |SIdHbATC|  1 |       |SM      M1|m/s             |HEFF rate of change by atm flux over sea ice
+   828 |SIdHbATO|  1 |       |SM      M1|m/s             |HEFF rate of change by open ocn atm flux
+   829 |SIdHbFLO|  1 |       |SM      M1|m/s             |HEFF rate of change by flooding snow
+   830 |SIdAbATO|  1 |       |SM      M1|m^2/m^2/s       |Potential AREA rate of change by open ocn atm flux
+   831 |SIdAbATC|  1 |       |SM      M1|m^2/m^2/s       |Potential AREA rate of change by atm flux over ice
+   832 |SIdAbOCN|  1 |       |SM      M1|m^2/m^2/s       |Potential AREA rate of change by ocean ice flux
+   833 |SIdA    |  1 |       |SM      M1|m^2/m^2/s       |AREA rate of change (net)
+   834 |ADVxHEFF|  1 |   835 |UU      M1|m.m^2/s         |Zonal      Advective Flux of eff ice thickn
+   835 |ADVyHEFF|  1 |   834 |VV      M1|m.m^2/s         |Meridional Advective Flux of eff ice thickn
+   836 |DFxEHEFF|  1 |   837 |UU      M1|m.m^2/s         |Zonal      Diffusive Flux of eff ice thickn
+   837 |DFyEHEFF|  1 |   836 |VV      M1|m.m^2/s         |Meridional Diffusive Flux of eff ice thickn
+   838 |ADVxAREA|  1 |   839 |UU      M1|m^2/m^2.m^2/s   |Zonal      Advective Flux of fract area
+   839 |ADVyAREA|  1 |   838 |VV      M1|m^2/m^2.m^2/s   |Meridional Advective Flux of fract area
+   840 |DFxEAREA|  1 |   841 |UU      M1|m^2/m^2.m^2/s   |Zonal      Diffusive Flux of fract area
+   841 |DFyEAREA|  1 |   840 |VV      M1|m^2/m^2.m^2/s   |Meridional Diffusive Flux of fract area
+   842 |ADVxSNOW|  1 |   843 |UU      M1|m.m^2/s         |Zonal      Advective Flux of eff snow thickn
+   843 |ADVySNOW|  1 |   842 |VV      M1|m.m^2/s         |Meridional Advective Flux of eff snow thickn
+   844 |DFxESNOW|  1 |   845 |UU      M1|m.m^2/s         |Zonal      Diffusive Flux of eff snow thickn
+   845 |DFyESNOW|  1 |   844 |VV      M1|m.m^2/s         |Meridional Diffusive Flux of eff snow thickn
+   846 |ADVxSSLT|  1 |   847 |UU      M1|g/kg.m^2/s      |Zonal      Advective Flux of seaice salinity
+   847 |ADVySSLT|  1 |   846 |VV      M1|g/kg.m^2/s      |Meridional Advective Flux of seaice salinity
+   848 |DFxESSLT|  1 |   849 |UU      M1|g/kg.m^2/s      |Zonal      Diffusive Flux of seaice salinity
+   849 |DFyESSLT|  1 |   848 |VV      M1|g/kg.m^2/s      |Meridional Diffusive Flux of seaice salinity
+   850 |SIuheff |  1 |   851 |UU      M1|m^2/s           |Zonal      Transport of eff ice thickn (centered)
+   851 |SIvheff |  1 |   850 |VV      M1|m^2/s           |Meridional Transport of eff ice thickn (centered)
+   852 |SIpress |  1 |       |SM      M1|N/m             |SEAICE strength (with upper and lower limit)
+   853 |SIzeta  |  1 |       |SM      M1|kg/s            |SEAICE nonlinear bulk viscosity
+   854 |SIeta   |  1 |       |SM      M1|kg/s            |SEAICE nonlinear shear viscosity
+   855 |SIsig1  |  1 |       |SM      M1|no units        |SEAICE normalized principle stress, component one
+   856 |SIsig2  |  1 |       |SM      M1|no units        |SEAICE normalized principle stress, component two
+   857 |SIshear |  1 |       |SM      M1|1/s             |SEAICE shear deformation rate
+   858 |SIdelta |  1 |       |SM      M1|1/s             |SEAICE Delta deformation rate
+   859 |SItensil|  1 |       |SM      M1|N/m             |SEAICE maximal tensile strength
+   860 |PLUMEKB | 50 |       |SM      MR|                |fractional plume: [0-1] (unitless)
+   861 |oceSPtnd| 50 |       |SM      MR|g/m^2/s         |salt tendency due to salt plume flux >0 increases salinity
+   862 |oceSPflx|  1 |       |SM      U1|g/m^2/s         |net surface Salt flux rejected into the ocean during freezing, (+=down),
+   863 |oceSPDep|  1 |       |SM      U1|m               |Salt plume depth based on density criterion (>0)
+------------------------------------------------------------------------------------
+  Num  |<-Name->|Levs|  mate |<- code ->|<--  Units   -->|<- Tile (max=80c)         
+------------------------------------------------------------------------------------
