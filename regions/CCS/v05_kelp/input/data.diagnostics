@@ -232,6 +232,22 @@
   
 #monthly kelp diagnostics
 #---
+  frequency(64) = 2635200.,
+  fields(1,64) = 'TRAC32  ',
+  filename(64)= 'diags/monthly/MaNum',
+#
+  frequency(65) = 2635200.,
+  fields(1,65) = 'TRAC33  ',
+  filename(65)= 'diags/monthly/MaFra',
+#
+  frequency(66) = 2635200.,
+  fields(1,66) = 'TRAC34  ',
+  filename(66)= 'diags/monthly/MaC',
+#
+  frequency(67) = 2635200.,
+  fields(1,67) = 'TRAC35  ',
+  filename(67)= 'diags/monthly/MaN',
+#
   frequency(68) = 2635200.,
   fields(1,68) = 'TRAC32  ',
   filename(68)= 'diags/monthly/MaNum',  
