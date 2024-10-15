@@ -28,14 +28,14 @@
 
 
 	    do i=1,1825
-        open(150, file = '../Forcing/PAR_5m_2008_2012_Th.txt',
+        open(150, file = 'Forcing/PAR_5m_2008_2012_Th.txt',
      & form='formatted')
         read(150,'(e12.5)'),PARdata
         close(150)
       end do
 
 	    do i=1,1825
-        open(150, file = '../Forcing/SST_2008_2012_Th.txt',
+        open(150, file = 'Forcing/SST_2008_2012_Th.txt',
      & form='formatted')
         read(150,'(e12.5)'),SSTdata
         close(150)
