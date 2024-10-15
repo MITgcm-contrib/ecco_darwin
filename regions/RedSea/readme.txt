@@ -1,41 +1,41 @@
-https://github.com/MITgcm-contrib/ecco_darwin/tree/master/regions/Med
+https://github.com/MITgcm-contrib/ecco_darwin/tree/master/regions/RedSea
 
-Mediteranean and Black Sea cutout of the global ECCO-Darwin version 5
+Red Sea cutout of the global ECCO-Darwin version 5
 https://onlinelibrary.wiley.com/doi/10.1029/2019MS001888
 https://onlinelibrary.wiley.com/doi/10.1029/2021GB007162
 https://ecco-group.org/storymaps.htm?id=45
 https://ecco-group.org/storymaps.htm?id=71
 https://darwin3.readthedocs.io/en/latest/phys_pkgs/darwin.html
 
-Extracted for Louisa Giannoudi and Aleka Pavlidou, HCMR, on October 25, 2023
+Extracted for George Krokos, HCMR, on October 25, 2023
 
-Extracted region is available on pfe:~dmenemen/ecco_darwin/Med
-and on https://nasa-ext.box.com/s/7z3jsoymr39c7jov81cmzafqqfx6922j
+Extracted region is available on pfe:~dmenemen/ecco_darwin/RedSea
+and on https://nasa-ext.box.com/s/8aluqq7dfmrty2vmvpa2mjk2rsm58351
 
 ============
 Grid information is in ../Med/grid
 
-RC_47           :: vertical coordinate of center of cell (m)
-DRF_47          :: Cell face separation along Z axis (m)
+RC_41          :: vertical coordinate of center of cell (m)
+DRF_41         :: Cell face separation along Z axis (m)
 
-XC_144x72       :: longitude East of center of grid cell
-XG_144x72       :: longitude East of southwest corner of grid cell
-YC_144x72       :: latitude North of center of grid cell
-YG_144x72       :: latitude North of southwest corner of grid cell
+XC_64x72       :: longitude East of center of grid cell
+XG_64x72       :: longitude East of southwest corner of grid cell
+YC_64x72       :: latitude North of center of grid cell
+YG_64x72       :: latitude North of southwest corner of grid cell
 
-DXC_144x72      :: Cell center separation in X across western cell wall (m)
-DXG_144x72      :: Cell face separation in X along southern cell wall (m)
-DYC_144x72      :: Cell center separation in Y across southern cell wall (m)
-DYG_144x72      :: Cell face separation in Y along western cell wall (m)
+DXC_64x72      :: Cell center separation in X across western cell wall (m)
+DXG_64x72      :: Cell face separation in X along southern cell wall (m)
+DYC_64x72      :: Cell center separation in Y across southern cell wall (m)
+DYG_64x72      :: Cell face separation in Y along western cell wall (m)
 
-Depth_144x72    :: Model bathymetry (m)
+Depth_64x72    :: Model bathymetry (m)
 
-RAC_144x72      :: vertical face area of tracer cell (m^2)
-RAZ_144x72      :: vertical face area of vorticity points (m^2)
+RAC_64x72      :: vertical face area of tracer cell (m^2)
+RAZ_64x72      :: vertical face area of vorticity points (m^2)
 
-hFacC_144x72x47 :: mask of tracer cell (0 is land, >0 is wet)
-hFacS_144x72x47 :: mask of v cell (0 is land, >0 is wet)
-hFacW_144x72x47 :: mask of u cell (0 is land, >0 is wet)
+hFacC_64x72x41 :: mask of tracer cell (0 is land, >0 is wet)
+hFacS_64x72x41 :: mask of v cell (0 is land, >0 is wet)
+hFacW_64x72x41 :: mask of u cell (0 is land, >0 is wet)
 
 More details about MITgcm grid are available in:
 https://github.com/MITgcm/MITgcm/blob/master/model/inc/GRID.h
@@ -92,9 +92,9 @@ are defined in the file available_diagnostics.log
 Model output naming convention and format
 
 All files are plain binary, real*4, IEEE big-endian,
-with dimensions 47 (with file name termination _47),
-144x72 (with file name termination _144x72), and
-144x72x47 (with file name termination _144x72x47).
+with dimensions 41 (with file name termination _41),
+64x72 (with file name termination _64x72), and
+64x72x41 (with file name termination _64x72x41).
 
 Monthly means are indicated with end of averaging period,
 for example, ".19920201T000000" indicates a monthly mean
