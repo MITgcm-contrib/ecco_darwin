@@ -12,21 +12,20 @@
          ts=int(tt*(1./dt))  ! total steps
          init_day=int(init_day_r/dt)
      
+!### Diagnostic output files ########################
 	  OPEN(100,file='Host.dat')
   	  OPEN(200,file='Symbiont.dat')
   	  OPEN(300,file='Symbiosis.dat')
   	  OPEN(400, file='Forcing.dat')
 
-
-	  H=0.0031
-	  S=0.00013
-          SA=10.75
+!### Initial values of prognostic model variables ###
+	  H=0.0031    ! Host biomass (molC)
+	  S=0.00013   ! Symbiot biomass (molC)
+          SA=10.75    ! Colony surface area (cm^2)
          
 	
-!#### External Forcning ############################
-	
-
-
+!#### External Forcing ############################
+	  
 	    do i=1,1825
         open(150, file = 'Forcing/PAR_5m_2008_2012_Th.txt',
      & form='formatted')
@@ -59,13 +58,12 @@
 
 !		end if
 
-         L=PARdata(trr)
-	   DIN=1e-7
-	   X=2e-7
+         L=PARdata(trr)  ! light at time step
+	   DIN=1e-7      ! dissolved inorganic nitrogen
+	   X=2e-7        ! zooplankton
 	
 !#######  Temperature Effect #######    
 
-      T=SSTdata(trr)
       T=SSTdata(trr)
       T=T+273.15
       aT=exp((TSa/Ti)-(TSa/T))
@@ -98,8 +96,7 @@
 	  rNH=sigma_NH*nNH*JHT0_T
 	  rNS=sigma_NS*nNS*JST0_T
 	     	  
-	  if (n .eq.1) then 
-	
+	  if (n .eq.1) then   ! first time step	
 	 	  
 	  JL= L*a
 	  JHT=JHT0_T
@@ -192,23 +189,13 @@
 	   Sf=S+dS*dt
 	   Hf=H+dH*dt
 
-
-  	   if (dH .gt.0) then     
-           dV=kV*dH;
-           else
-           dV=0;
-           endif
-
-
   	   if (dH .gt.0) then     
            dSA=kSA*dH;
            else
            dSA=0;
            endif
 
-	   Vf=V+dV*dt
 	   SAf=SA+dSA*dt
-
 
 	   S_g=S*12.01
 	   S_cells=S_g/Ccell
@@ -216,7 +203,7 @@
 
 	   SGR=(log(Hf)-log(H))*100/dt
 
-        write(100,1000)n,H,Jx,Jn,JHG,JHT,dH,dt,Vol,SA,SGR
+        write(100,1000)n,H,Jx,Jn,JHG,JHT,dH,dt,SA,SGR
 1000    format(i7,10(2x,e12.5)) 
 
         write(200,2000)n,S,JL,JCO2,JeL,JNPQ,JCP,CROS,JST,JSG,dS,
@@ -229,11 +216,8 @@
  		write(400,4000)n,X,DIN,L,T,kHT,kST
 4000    format(i7,6(2x,e12.5))  
 
-
-
 	  S=Sf
 	  H=Hf
-	  V=Vf
 	  SA=SAf
 
       enddo

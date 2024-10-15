@@ -1,0 +1,48 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Ieast  =   72*-1,
+#
+ useOBCSprescribe=.TRUE.,
+#
+ OBEsFile='obcs/RedSea_64x72x41_SALT_East',
+ OBEtFile='obcs/RedSea_64x72x41_THETA_East',
+ OBEuFile='obcs/RedSea_64x72x41_U_East',
+ OBEvFile='obcs/RedSea_64x72x41_V_East',
+ OBEptrFile(1)='obcs/RedSea_64x72x41_DIC_East',
+ OBEptrFile(2)='obcs/RedSea_64x72x41_NO3_East',
+ OBEptrFile(3)='obcs/RedSea_64x72x41_NO2_East',
+ OBEptrFile(4)='obcs/RedSea_64x72x41_NH4_East',
+ OBEptrFile(5)='obcs/RedSea_64x72x41_PO4_East',
+ OBEptrFile(6)='obcs/RedSea_64x72x41_FeT_East',
+ OBEptrFile(7)='obcs/RedSea_64x72x41_SiO2_East',
+ OBEptrFile(8)='obcs/RedSea_64x72x41_DOC_East',
+ OBEptrFile(9)='obcs/RedSea_64x72x41_DON_East',
+ OBEptrFile(10)='obcs/RedSea_64x72x41_DOP_East',
+ OBEptrFile(11)='obcs/RedSea_64x72x41_DOFe_East',
+ OBEptrFile(12)='obcs/RedSea_64x72x41_POC_East',
+ OBEptrFile(13)='obcs/RedSea_64x72x41_PON_East',
+ OBEptrFile(14)='obcs/RedSea_64x72x41_POP_East',
+ OBEptrFile(15)='obcs/RedSea_64x72x41_POFe_East',
+ OBEptrFile(16)='obcs/RedSea_64x72x41_POSi_East',
+ OBEptrFile(17)='obcs/RedSea_64x72x41_PIC_East',
+ OBEptrFile(18)='obcs/RedSea_64x72x41_ALK_East',
+ OBEptrFile(19)='obcs/RedSea_64x72x41_O2_East',
+ OBEptrFile(20)='obcs/RedSea_64x72x41_c1_East',
+ OBEptrFile(21)='obcs/RedSea_64x72x41_c2_East',
+ OBEptrFile(22)='obcs/RedSea_64x72x41_c3_East',
+ OBEptrFile(23)='obcs/RedSea_64x72x41_c4_East',
+ OBEptrFile(24)='obcs/RedSea_64x72x41_c5_East',
+ OBEptrFile(25)='obcs/RedSea_64x72x41_c6_East',
+ OBEptrFile(26)='obcs/RedSea_64x72x41_c7_East',
+ OBEptrFile(27)='obcs/RedSea_64x72x41_Chl1_East',
+ OBEptrFile(28)='obcs/RedSea_64x72x41_Chl2_East',
+ OBEptrFile(29)='obcs/RedSea_64x72x41_Chl3_East',
+ OBEptrFile(30)='obcs/RedSea_64x72x41_Chl4_East',
+ OBEptrFile(31)='obcs/RedSea_64x72x41_Chl5_East',
+#
+ &
+# Sponge layer parameters
+ &OBCS_PARM05
+ &
