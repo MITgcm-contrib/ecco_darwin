@@ -33,9 +33,9 @@
 # To save space, you can download only needed years for
 # apCO2_* and era_xx_it42_v2
 
-# You will need a python executable to be available, for example,
-  cd /usr/bin
-  sudo ln -sf python3 python
+# You will need a python executable to be available,
+# for example, you may need to add following link:
+#  sudo ln -sf /usr/bin/python3 /usr/bin/python
 
   mkdir diags diags/daily diags/monthly
   cp ../../ecco_darwin/regions/RedSea/v05/input/* .
