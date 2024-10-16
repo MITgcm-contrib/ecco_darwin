@@ -26,7 +26,7 @@
 # Get forcing and configuration files from
 # https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
 # https://nasa-ext.box.com/s/mw2y1zu5z2ib81wqx5ywhb7bjs3lm4b9
-# and deposit or link the contents inside the darwin3/run directory, e.g.,
+# and deposit or link their contents inside the darwin3/run directory, e.g.,
   ln -sf ~/NOAA_MBL/* .
   ln -sf ~/RedSea/run_template/* .
 

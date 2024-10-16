@@ -13,8 +13,8 @@
 ==============
 # 2. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05/code -mpi \
-   -of ../../ecco_darwin/regions/RedSea/v05/code/darwin_arm64_gfortran
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05_coral/code -mpi \
+   -of ../../ecco_darwin/regions/RedSea/v05_coral/code/darwin_arm64_gfortran
   make depend
   make -j
 
@@ -26,7 +26,7 @@
 # Get forcing and configuration files from
 # https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
 # https://nasa-ext.box.com/s/mw2y1zu5z2ib81wqx5ywhb7bjs3lm4b9
-# and deposit or link inside the darwin3/run directory, e.g.,
+# and deposit or link their contents inside the darwin3/run directory, e.g.,
   ln -sf ~/NOAA_MBL/* .
   ln -sf ~/RedSea/run_template/* .
 
@@ -34,5 +34,5 @@
 # apCO2_* and era_xx_it42_v2
 
   mkdir diags diags/daily diags/monthly
-  cp ../../ecco_darwin/regions/RedSea/v05/input/* .
+  cp ../../ecco_darwin/regions/RedSea/v05_coral/input/* .
   mpirun -np 8 ./mitgcmuv
