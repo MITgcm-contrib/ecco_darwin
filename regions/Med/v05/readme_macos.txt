@@ -23,12 +23,13 @@
   cd ../run
   ln -sf ../build/mitgcmuv .
 
-# Get forcing and configuration files from
-# https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-# https://nasa-ext.box.com/s/khtbuge4wvt5yleyigcjbqvdjebh3xcn
-# and deposit or link inside the darwin3/run directory, e.g.,
-  ln -sf ~/Links/Box/Public/KelpProject/NOAA_MBL/* .
-  ln -sf ~/Links/Box/Public/GulfGuinea/run_template/* .
+# Get forcing and configuration files from:
+# --> https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
+# --> https://nasa-ext.box.com/s/khtbuge4wvt5yleyigcjbqvdjebh3xcn
+# and deposit or link the contents of these directories
+# inside the darwin3/run directory, for example,
+  ln -sf <path_to_download_location>/NOAA_MBL/* .
+  ln -sf <path_to_download_location>/Med/run_template/* .
 
 # To save space, you can download only needed years for
 # apCO2_* and era_xx_it42_v2

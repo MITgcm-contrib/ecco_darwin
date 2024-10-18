@@ -23,12 +23,18 @@
 # 3. Instructions for running simulation (1992-2023 period)
   cd ../run
   ln -sf ../build/mitgcmuv .
-#    Get forcing and configuration files from
-#    https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-#    https://nasa-ext.box.com/s/o9y9ecwkdw2dg96lwwxjfqql3pwpv9zv
-#    and deposit or link inside the darwin3/run directory.
-#    To save space, you can download only needed years for
-#    apCO2_* and era_xx_it42_v2
+
+# Get forcing and configuration files from:
+# --> https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
+# --> https://nasa-ext.box.com/s/o9y9ecwkdw2dg96lwwxjfqql3pwpv9zv
+# and deposit or link the contents of these directories
+# inside the darwin3/run directory, for example,
+  ln -sf <path_to_download_location>/NOAA_MBL/* .
+  ln -sf <path_to_download_location>/CCS/run_template/* .
+
+# To save space, you can download only needed years for
+# apCO2_* and era_xx_it42_v2
+
   mkdir diags diags/daily diags/monthly
   cp ../../ecco_darwin/regions/CCS/v05/input/* .
   mpirun -np 8 ./mitgcmuv

@@ -23,19 +23,16 @@
   cd ../run
   ln -sf ../build/mitgcmuv .
 
-# Get forcing and configuration files from
-# https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-# https://nasa-ext.box.com/s/mw2y1zu5z2ib81wqx5ywhb7bjs3lm4b9
-# and deposit or link the contents inside the darwin3/run directory, e.g.,
-  ln -sf ~/NOAA_MBL/* .
-  ln -sf ~/RedSea/run_template/* .
+# Get forcing and configuration files from:
+# --> https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
+# --> https://nasa-ext.box.com/s/mw2y1zu5z2ib81wqx5ywhb7bjs3lm4b9
+# and deposit or link the contents of these directories
+# inside the darwin3/run directory, for example,
+  ln -sf <path_to_download_location>/NOAA_MBL/* .
+  ln -sf <path_to_download_location>/RedSea/run_template/* .
 
 # To save space, you can download only needed years for
 # apCO2_* and era_xx_it42_v2
-
-# You will need a python executable to be available,
-# for example, you may need to add following link:
-#  sudo ln -sf /usr/bin/python3 /usr/bin/python
 
   mkdir diags diags/daily diags/monthly
   cp ../../ecco_darwin/regions/RedSea/v05/input/* .
