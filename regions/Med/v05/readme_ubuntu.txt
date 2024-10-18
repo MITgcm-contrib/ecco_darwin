@@ -36,4 +36,10 @@
 
   mkdir diags diags/daily diags/monthly
   cp ../../ecco_darwin/regions/Med/v05/input/* .
+  
+# For PC with 8 cores:
   mpirun -np 8 ./mitgcmuv
+
+# For Intel i7 with 4 cores and 2 threads per core:
+  mpirun -use-hwthread-cpus -np 8 ./mitgcmuv
+
