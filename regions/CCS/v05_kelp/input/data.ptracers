@@ -1,12 +1,12 @@
  &PTRACERS_PARM01
- PTRACERS_numInUse= 35,
+ PTRACERS_numInUse= 34,
 #
- PTRACERS_advScheme(:)= 35*33,
- PTRACERS_diffKh(:)= 35*0.E3,
- PTRACERS_diffKr(:)= 35*1.E-5,
- PTRACERS_useGMRedi(:)= 35*.TRUE.,
+ PTRACERS_advScheme(:)= 34*33,
+ PTRACERS_diffKh(:)= 34*0.E3,
+ PTRACERS_diffKr(:)= 34*1.E-5,
+ PTRACERS_useGMRedi(:)= 34*.TRUE.,
 #
- PTRACERS_EvPrRn(:)= 35*0.E3,
+ PTRACERS_EvPrRn(:)= 34*0.E3,
 #
  PTRACERS_names( 1)= 'DIC',
  PTRACERS_names( 2)= 'NO3',
@@ -39,10 +39,9 @@
  PTRACERS_names(29)= 'Chl02',
  PTRACERS_names(30)= 'Chl04',
  PTRACERS_names(31)= 'Chl05',
- PTRACERS_names(32)= 'MaNum',
- PTRACERS_names(33)= 'MaFra',
- PTRACERS_names(34)= 'MaC',
- PTRACERS_names(35)= 'MaN',
+ PTRACERS_names(32)= 'Bmag',
+ PTRACERS_names(33)= 'Cmag',
+ PTRACERS_names(34)= 'Nmag',
 #
 # uM is shorthand for mmol m^-3
 #
@@ -77,10 +76,9 @@
  PTRACERS_units(29)= 'mg/m^3'
  PTRACERS_units(30)= 'mg/m^3'
  PTRACERS_units(31)= 'mg/m^3'
- PTRACERS_units(32)= '#/km^3' 
- PTRACERS_units(33)= 'dm^2/km^3'
- PTRACERS_units(34)= 'uM C'
- PTRACERS_units(35)= 'uM N'
+ PTRACERS_units(32)= 'gBiomass/m2' 
+ PTRACERS_units(33)= 'uM C'
+ PTRACERS_units(34)= 'uM N'
 #
  PTRACERS_initialFile( 1)= 'init/DIC_80x100x48.16-Jan-1992',
  PTRACERS_initialFile( 2)= 'init/NO3_80x100x48.16-Jan-1992',
@@ -113,8 +111,7 @@
  PTRACERS_initialFile(29)= 'init/Chl3_80x100x48.16-Jan-1992',
  PTRACERS_initialFile(30)= 'init/Chl4_80x100x48.16-Jan-1992',
  PTRACERS_initialFile(31)= 'init/Chl5_80x100x48.16-Jan-1992',
- PTRACERS_initialFile(32)= 'init/ini_CCS_80x100x48_MaNum.bin',
- PTRACERS_initialFile(33)= 'init/ini_CCS_80x100x48_MaFra.bin',
- PTRACERS_initialFile(34)= 'init/ini_CCS_80x100x48_MaC.bin',
- PTRACERS_initialFile(35)= 'init/ini_CCS_80x100x48_MaN.bin',
+ PTRACERS_initialFile(32)= 'init2/ini_CCS_80x100x48_Bmag.bin',
+ PTRACERS_initialFile(33)= 'init2/ini_CCS_80x100x48_Cmag.bin',
+ PTRACERS_initialFile(34)= 'init2/ini_CCS_80x100x48_Nmag.bin',
  &
