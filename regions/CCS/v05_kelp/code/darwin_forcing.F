@@ -130,13 +130,12 @@ C  k                    :: vertical level
 	  _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 
-C-MM - NEW VARIABLES FOR MACROALGAE
+C macroalgae model variables
 
       _RL hor_vel
       _RL day_yr
-      _RL ma_areat,ma_nrest,ma_crest
-     
-
+      _RL ma_areat, ma_nrest, ma_crest
+  
       _RL grate_madum,mort_madum
       _RL gTdum, gHdum, gQdum, gEdum
       _RL Bmag_tmp
@@ -144,22 +143,19 @@ C-MM - NEW VARIABLES FOR MACROALGAE
       _RL ma_area(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL ma_nres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL ma_cres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-C
-      _RL grate_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! Kelp growth rate
+
+      _RL grate_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! kelp growth rate
       _RL mort_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! mortality rate
+      
 C terms controlling growth of Kelp      
-      _RL gT_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gT - temperature
-      _RL gQ_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gQ - N quota
-      _RL gH_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gH - wave motion 
-      _RL gE_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gE - Irradiance
+      _RL gT_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gT, temperature
+      _RL gQ_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gQ, nitrogen quota
+      _RL gH_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gH, wave motion 
+      _RL gE_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gE, irradiance
+      _RL WVp_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! wave period
+      _RL WVh_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! wave height
 
-      _RL WVp_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! Wave Period array
-      _RL WVh_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! Wave Height array
-
-
-      INTEGER curr_date(4), first_day(4),numdays(4)
-
-C-MM
+      INTEGER curr_date(4), first_day(4), numdays(4)
 	  
       DO k=1,Nr
        dTsub(k) = PTRACERS_dTLev(k)/nsubtime
@@ -370,98 +366,38 @@ C === plankton =========================================================
      I                 subTime, myIter, myThid )
 
 
-C-MM
-C Adding macroalgae code here from Kay Susely
+C macroalgae code
 
-C first computing horizontal velocity
+C compute horizontal velocity
 
         hor_vel=sqrt(
-     &  ( 0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)) )**2+
-     &  ( 0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)) )**2)        
-
-
-C        print*,'parl =',parl
-C        print*,'yc =',yc(i,j,bi,bj)
-C        print*,'day_yr=',day_yr
-C        print*,'ptr=',ptr
-
-
-C        write(*,*)'Wave Height=',WvHeight(i,j,bi,bj)
-C        write(*,*)'Wave Period=',WvPeriod(i,j,bi,bj) 
-
-C CALLING MAIN ROUTINE HERE
-
+     &  (0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)))**2 +
+     &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)        
 
         CALL DARWIN_MACROALGAE(
      I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
-C     I   yc(i,j,bi,bj),day_yr, WvHeight(i,j,bi,bj),
-     I WvHeight(i,j,bi,bj), 
+     I   WvHeight(i,j,bi,bj), 
      I   WvPeriod(i,j,bi,bj),
-     U                  gtr,
-C     O    ma_areat,ma_nrest,ma_crest,
-     O    gTdum,gQdum,gHdum,gEdum,grate_madum,
-     O    mort_madum)
+     U   gtr,
+     O   gTdum, gQdum, gHdum, gEdum, grate_madum,
+     O   mort_madum)
 
-   
-C            write(*,*)'************************'
-C            write(*,*)'gtr(iMagB) = ',gtr(iMagB) 
-C            write(*,*)'gtr(iMagC) = ',gtr(iMagC)
-C            write(*,*)'gtr(iMagN) = ',gtr(iMagN)
-C            write(*,*)'************************'
-
-C-write out outputs
-
-C           write(*,*)'BEG. DARWIN FORCING'
-C           write(*,*)'gT_ma = ',gTdum
-C           write(*,*)'gH_ma =',gHdum
-C           write(*,*)'gQ_ma = ',gQdum
-c           write(*,*)'gE_ma =',gEdum
-C           write(*,*)'grate_ma =',grate_madum
-C           write(*,*)'mort_madum', mort_madum          
-C           write(*,*)'END DARWIN FORCING'
-
-
-          grate_ma(i,j,k) = grate_madum
-          gT_ma(i,j,k) = gTdum
-          gQ_ma(i,j,k) = gQdum 
-          gE_ma(i,j,k) = gEdum
-          gH_ma(i,j,k) = gHdum
-          mort_ma(i,j,k) = mort_madum
-
-C          mort_ma(i,j,k) = 50
-
-
+        grate_ma(i,j,k) = grate_madum
+        gT_ma(i,j,k) = gTdum
+        gQ_ma(i,j,k) = gQdum 
+        gE_ma(i,j,k) = gEdum
+        gH_ma(i,j,k) = gHdum
+        mort_ma(i,j,k) = mort_madum
          
-          WVp_ma(i,j) = WvPeriod(i,j,bi,bj) 
-          WVh_ma(i,j) = WvHeight(i,j,bi,bj) 
+        WVp_ma(i,j) = WvPeriod(i,j,bi,bj) 
+        WVh_ma(i,j) = WvHeight(i,j,bi,bj) 
 
-C          write(*,*)'mort_ma_forc =', mort_ma(i,j,k)
-C          write(*,*)'WVp_ma = ',WVp_ma(i,j)
-C          write(*,*)'WVh_ma =', WVh_ma(i,j)
+        diags(i,j,k,igHMAG) = gHdum
 
-C          write(*,*)'WvPeriod =', WvPeriod(i,j,bi,bj)
-C          write(*,*) 'WvHeight =', WvHeight(i,j,bi,bj)
-
-C           diags(i,j,k,igrateMAG) = grate_madum
-C           write(*,*)'grate_ma =', diags(i,j,k,igrateMAG)
-C           diags(i,j,k,igTMAG) = gTdum
-C           diags(i,j,k,igQMAG) = gQdum 
-C           diags(i,j,k,igEMAG) = gEdum
-C           diags(i,j,k,igEMAG) = 200
-
-           diags(i,j,k,igHMAG) = gHdum
-C           diags(i,j,k,igHMAG) = 100
-
-
-C          write(*,*),'ma_areat = ', ma_areat
-
-          ma_area(i,j,k)=ma_areat
-          ma_nres(i,j,k)=ma_nrest
-          ma_cres(i,j,k)=ma_crest
-
-
-          
-C-MM
+        ma_area(i,j,k) = ma_areat
+        ma_nres(i,j,k) = ma_nrest
+        ma_cres(i,j,k) = ma_crest
+C end macroalgae code
 
         DO l=1,darwin_nDiag
          diags(i, j, k, l) = diagsl(l)
@@ -592,30 +528,6 @@ C === diagnostics ======================================================
      &     * diags(i,j,k,iConsALK)
           cO2(i,j,k) = hFacC(i,j,k,bi,bj)
      &     * diags(i,j,k,iConsO2)     
-C-MM          
-C           grate_ma(i,j,k) = hFacC(i,j,k,bi,bj)
-C     &     * diags(i,j,k,igrateMAG)
-C           gT_ma(i,j,k) = hFacC(i,j,k,bi,bj)
-C     &     * diags(i,j,k,igTMAG)
-C           gQ_ma(i,j,k) = hFacC(i,j,k,bi,bj)
-C     &     * diags(i,j,k,igQMAG)
-C           gE_ma(i,j,k) = hFacC(i,j,k,bi,bj)
-C     &     * diags(i,j,k,igEMAG)
-C           gH_ma(i,j,k) = hFacC(i,j,k,bi,bj)
-C     &     * diags(i,j,k,igHMAG)
-C-MM    
-C           write(*,*)'############'
-C           write(*,*)'igEMAG = ', igEMAG
-C           write(*,*)'diags_gE = ',diags(i,j,k,igEMAG) 
-C           write(*,*)'hFacC = ',hFacC(i,j,k,bi,bj)
-C           write(*,*)'gE_ma = ',gE_ma(i,j,k)
-C           write(*,*)'############'
-C           write(*,*)'igHMAG = ', igHMAG
-C           write(*,*)'gH_ma =',gHdum
-C           write(*,*)'diags_gH = ',diags(i,j,k,igHMAG)
-C           write(*,*)'hFacC = ',hFacC(i,j,k,bi,bj)
-C           write(*,*)'gH_ma = ',gH_ma(i,j,k)
-C-MM
 
          ENDDO
         ENDDO
@@ -694,10 +606,8 @@ C      diags(iCons*) for convenience
      &  'S_Fe    ',0,Nr,1,bi,bj,myThid)
       CALL DIAGNOSTICS_FILL(sO2(1-OLx,1-OLy,1),
      &  'S_O2    ',0,Nr,1,bi,bj,myThid)
-C-MM
-      CALL DIAGNOSTICS_FILL(grate_ma(1-OLx,1-OLy,1),
-     &  'mu_mag  ',0,Nr,1,bi,bj,myThid)
-
+     
+C macroalgae diagnostics
       CALL DIAGNOSTICS_FILL(gT_ma(1-OLx,1-OLy,1),
      &  'gT_mag  ',0,Nr,1,bi,bj,myThid)
 
@@ -713,6 +623,9 @@ C-MM
       CALL DIAGNOSTICS_FILL(grate_ma(1-OLx,1-OLy,1),
      &  'grate_mag  ',0,Nr,1,bi,bj,myThid)
 
+      CALL DIAGNOSTICS_FILL(grate_ma(1-OLx,1-OLy,1),
+     &  'mu_mag  ',0,Nr,1,bi,bj,myThid)
+
       CALL DIAGNOSTICS_FILL(mort_ma(1-OLx,1-OLy,1),
      &  'mort_mag',0,Nr,1,bi,bj,myThid)
 
@@ -721,9 +634,6 @@ C-MM
 
        CALL DIAGNOSTICS_FILL(WVp_ma(1-OLx,1-OLy),
      &  'wv_prd  ',0,1,1,bi,bj,myThid)
-
-C-MM
-
 
       DO iTr=1,nDarwin
        DO k=1,Nr
