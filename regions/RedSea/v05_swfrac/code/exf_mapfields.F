@@ -335,6 +335,15 @@ C-    subtract "surf_pRef" to fill in atmos. pressure anomaly "pLoad"
           ENDDO
 #endif /* EXF_ALLOW_TIDES */
 
+#ifdef EXF_ALLOW_WATERTYP
+          DO j = jmin,jmax
+            DO i = imin,imax
+               waterTyp2d(i,j,bi,bj)=exf_outscal_waterTyp*
+     &                               waterTyp(i,j,bi,bj)
+            ENDDO
+          ENDDO
+#endif /* EXF_ALLOW_WATERTYP */
+
 #ifdef ALLOW_SALTFLX
           DO j = jmin,jmax
             DO i = imin,imax
@@ -377,6 +386,9 @@ C     Qsw used in SHORTWAVE_HEATING code & for diagnostics (<- EXCH not needed)
 #endif
 #ifdef EXF_ALLOW_TIDES
       _EXCH_XY_RS( phiTide2d, myThid )
+#endif
+#ifdef EXF_ALLOW_WATERTYP
+      _EXCH_XY_RS( waterTyp2d, myThid )
 #endif
 #ifdef EXF_SEAICE_FRACTION
       _EXCH_XY_RS( exf_iceFraction, myThid )

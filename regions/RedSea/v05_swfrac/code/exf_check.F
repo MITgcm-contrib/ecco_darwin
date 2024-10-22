@@ -314,7 +314,16 @@ c     ENDIF
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
       ENDIF
-#endif /* ndef EXF_SEAICE_FRACTION */
+#endif /* ndef EXF_ALLOW_TIDES */
+
+#ifndef EXF_ALLOW_WATERTYP
+      IF ( waterTypFile.NE.' ' ) THEN
+        WRITE(msgBuf,'(3A)') 'EXF_CHECK: Cannot read-in field ',
+     &    '"waterTyp" with #undef EXF_ALLOW_TIDES'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+#endif /* ndef EXF_ALLOW_WATERTYP */
 
 #ifndef EXF_SEAICE_FRACTION
       IF ( areamaskfile.NE.' ' ) THEN
@@ -473,6 +482,9 @@ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
       CALL EXF_CHECK_INTERP( 'tidePot', tidePotFile,
      &         tidePot_interpMethod, tidePot_nlat,
      &         tidePot_nlon, tidePot_lon_inc, errCount, myThid )
+      CALL EXF_CHECK_INTERP( 'waterTyp', waterTypFile,
+     &         waterTyp_interpMethod, waterTyp_nlat,
+     &         waterTyp_nlon, waterTyp_lon_inc, errCount, myThid )
       CALL EXF_CHECK_INTERP( 'areamask', areamaskfile,
      &         areamask_interpMethod, areamask_nlat,
      &         areamask_nlon, areamask_lon_inc, errCount, myThid )

@@ -126,6 +126,10 @@ C
 C     tidePot   :: Tidal geopotential forcing in m^2/s^2
 C                  Typical range: -10 < tidePot < +10
 C                  Input field
+C
+C     waterTyp  :: Jerlov water type
+C                  Typical range: integer 1 to 5
+C                  Input field
 
 C     NOTES:
 C     ======
@@ -296,6 +300,13 @@ C     zen_fsol_daily     :: incoming solar radiation (daily mean)
       _RL tidePot   (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL tidePot0  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL tidePot1  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+#endif
+
+#ifdef EXF_ALLOW_WATERTYP
+      COMMON /exf_waterTyp_r/ waterTyp, waterTyp0, waterTyp1
+      _RL waterTyp  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL waterTyp0 (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL waterTyp1 (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 #endif
 
 #ifdef EXF_SEAICE_FRACTION

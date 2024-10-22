@@ -339,6 +339,16 @@ C     {fld}const      :: uniform default field value
       _RL     tidePot_exfremo_slope
       CHARACTER*1 tidePotMask
 
+      INTEGER waterTypStartdate1
+      INTEGER waterTypStartdate2
+      _RL     waterTypStartTime
+      _RL     waterTypPeriod
+      _RL     waterTypRepCycle
+      _RL     waterTypConst
+      _RL     waterTyp_exfremo_intercept
+      _RL     waterTyp_exfremo_slope
+      CHARACTER*1 waterTypMask
+
       INTEGER areamaskstartdate1
       INTEGER areamaskstartdate2
       _RL     areamaskStartTime
@@ -466,6 +476,7 @@ C-    File names.
       CHARACTER*(128) lwdownfile
       CHARACTER*(128) apressurefile
       CHARACTER*(128) tidePotFile
+      CHARACTER*(128) waterTypFile
       CHARACTER*(128) areamaskfile
       CHARACTER*(128) climsstfile
       CHARACTER*(128) climsssfile
@@ -506,6 +517,7 @@ C-    File names.
      &       lwdownstartdate1,  lwdownstartdate2,
      &       apressurestartdate1, apressurestartdate2,
      &       tidePotStartdate1, tidePotStartdate2,
+     &       waterTypStartdate1,  waterTypStartdate2,
      &       areamaskstartdate1,  areamaskstartdate2,
      &       obcsNstartdate1,   obcsNstartdate2,
      &       obcsSstartdate1,   obcsSstartdate2,
@@ -564,6 +576,8 @@ C-    File names.
      &       apressureperiod,   apressureStartTime,
      &       tidePotConst,      tidePotRepCycle,
      &       tidePotPeriod,     tidePotStartTime,
+     &       waterTypConst,     waterTypRepCycle,
+     &       waterTypPeriod,    waterTypStartTime,
      &       areamaskconst,     areamaskRepCycle,
      &       areamaskperiod,    areamaskStartTime,
      &       obcsNrepCycle,     obcsNperiod,     obcsNstartTime,
@@ -599,6 +613,7 @@ C-    File names.
      &       lwdown_exfremo_intercept,
      &       apressure_exfremo_intercept,
      &       tidePot_exfremo_intercept,
+     &       waterTyp_exfremo_intercept,
      &       areamask_exfremo_intercept,
      &       hflux_exfremo_slope,
      &       atemp_exfremo_slope,
@@ -623,6 +638,7 @@ C-    File names.
      &       lwdown_exfremo_slope,
      &       apressure_exfremo_slope,
      &       tidePot_exfremo_slope,
+     &       waterTyp_exfremo_slope,
      &       areamask_exfremo_slope
 
       COMMON /EXF_PARAM_C/
@@ -649,6 +665,7 @@ C-    File names.
      &       lwdownfile,    lwdownmask,
      &       apressurefile, apressuremask,
      &       tidePotFile,   tidePotMask,
+     &       waterTypFile,  waterTypMask,
      &       areamaskfile,  areamaskmask
 
       COMMON /EXF_CLIM_I/
@@ -723,6 +740,7 @@ c     _RL     exf_inscal_sss
       _RL     exf_inscal_swdown
       _RL     exf_inscal_lwdown
       _RL     exf_inscal_tidePot
+      _RL     exf_inscal_waterTyp
       _RL     exf_inscal_areamask
       _RL     exf_inscal_climsst
       _RL     exf_inscal_climsss
@@ -738,6 +756,7 @@ c     _RL     exf_inscal_sss
       _RL     exf_outscal_sss
       _RL     exf_outscal_apressure
       _RL     exf_outscal_tidePot
+      _RL     exf_outscal_waterTyp
       _RL     exf_outscal_areamask
 
       COMMON /EXF_PARAM_SCAL/
@@ -766,6 +785,7 @@ c    &                      exf_inscal_sss,
      &                      exf_inscal_swdown,
      &                      exf_inscal_lwdown,
      &                      exf_inscal_tidePot,
+     &                      exf_inscal_waterTyp,
      &                      exf_inscal_areamask,
      &                      exf_outscal_hflux,
      &                      exf_outscal_sflux,
@@ -776,6 +796,7 @@ c    &                      exf_inscal_sss,
      &                      exf_outscal_sss,
      &                      exf_outscal_apressure,
      &                      exf_outscal_tidePot,
+     &                      exf_outscal_waterTyp,
      &                      exf_outscal_areamask
 
 C- note: pkg/exf Interpolation parameters (#ifdef USE_EXF_INTERPOLATION )

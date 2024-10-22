@@ -76,6 +76,7 @@ C     ' ' = no masking; 'c' = centered mask; 'w' = western mask; 's' = southern
       lwdownmask   = 'c'
       apressuremask= 'c'
       tidePotmask  = 'c'
+      waterTypmask  = 'c'
       areamaskmask = 'c'
       climsstmask  = 'c'
       climsssmask  = 'c'
@@ -107,6 +108,7 @@ c      lwfluxmask   = ' '
 c      lwdownmask   = ' '
        apressuremask= ' '
 c      tidePotmask  = ' '
+       waterTypmask  = ' '
 c      areamaskmask = ' '
 c      climsstmask  = ' '
 c      climsssmask  = ' '
@@ -380,6 +382,20 @@ C     from the beginning of the year.
      I                    myThid )
       ENDIF
 #endif /* EXF_ALLOW_TIDES */
+
+#ifdef EXF_ALLOW_WATERTYP
+      IF ( waterTypFile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode)
+     &    CALL DEBUG_CALL('GETFFIELD_START waterTyp',myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I                    'exf', 'waterTyp', waterTypPeriod,
+     I                    waterTypStartdate1, waterTypStartdate2,
+     U                    waterTypStartTime, errCount,
+     I                    myThid )
+      ENDIF
+#endif /* EXF_ALLOW_WATERTYP */
 
 #ifdef EXF_SEAICE_FRACTION
       IF ( areamaskfile .NE. ' ' ) THEN

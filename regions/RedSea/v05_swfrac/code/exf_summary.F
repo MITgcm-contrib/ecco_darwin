@@ -697,6 +697,21 @@ C--   Tidal geopotential
       ENDIF
 #endif /* EXF_ALLOW_TIDES */
 
+#ifdef EXF_ALLOW_WATERTYP
+C--   Water type
+      IF ( waterTypFile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'Water type',
+     I      waterTypFile, waterTypRepCycle, waterTypPeriod,
+     I      waterTypStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'waterTyp', waterTyp_lon0,
+     &  waterTyp_lon_inc, waterTyp_lat0, waterTyp_lat_inc,
+     &  waterTyp_nlon, waterTyp_nlat, waterTyp_interpMethod, myThid )
+#endif
+       prtBlkLn = .TRUE.
+      ENDIF
+#endif /* EXF_ALLOW_WATERTYP */
+
 #ifdef EXF_SEAICE_FRACTION
 C--   Fractional ice-covered area
       IF ( areamaskfile.NE.' ' ) THEN

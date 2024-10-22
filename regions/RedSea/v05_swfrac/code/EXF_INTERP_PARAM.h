@@ -108,6 +108,9 @@ C----
       _RL tidePot_lon0,tidePot_lon_inc
       _RL tidePot_lat0,tidePot_lat_inc(MAX_LAT_INC)
       INTEGER tidePot_nlon,tidePot_nlat,tidePot_interpMethod
+      _RL waterTyp_lon0,waterTyp_lon_inc
+      _RL waterTyp_lat0,waterTyp_lat_inc(MAX_LAT_INC)
+      INTEGER waterTyp_nlon,waterTyp_nlat,waterTyp_interpMethod
       _RL areamask_lon0,areamask_lon_inc
       _RL areamask_lat0,areamask_lat_inc(MAX_LAT_INC)
       INTEGER areamask_nlon,areamask_nlat,areamask_interpMethod
@@ -166,6 +169,8 @@ C----
      & apressure_lat0, apressure_lat_inc,
      & tidePot_lon0, tidePot_lon_inc,
      & tidePot_lat0, tidePot_lat_inc,
+     & waterTyp_lon0, waterTyp_lon_inc,
+     & waterTyp_lat0, waterTyp_lat_inc,
      & areamask_lon0, areamask_lon_inc,
      & areamask_lat0, areamask_lat_inc
 
@@ -193,6 +198,7 @@ C----
      & lwdown_nlon, lwdown_nlat, lwdown_interpMethod,
      & apressure_nlon, apressure_nlat, apressure_interpMethod,
      & tidePot_nlon, tidePot_nlat, tidePot_interpMethod,
+     & waterTyp_nlon, waterTyp_nlat, waterTyp_interpMethod,
      & areamask_nlon, areamask_nlat, areamask_interpMethod
 
       _RL climsst_lon0, climsst_lon_inc

@@ -338,6 +338,19 @@ C      will be over-written at first time-step when calling EXF_SET_UV.
      I     myThid )
 #endif /* EXF_ALLOW_TIDES */
 
+#ifdef EXF_ALLOW_WATERTYP
+      CALL EXF_INIT_FLD(
+     I     'waterTyp', waterTypFile, waterTypMask,
+     I     waterTypPeriod, exf_inscal_waterTyp, waterTypconst,
+     O     waterTyp, waterTyp0, waterTyp1,
+#ifdef USE_EXF_INTERPOLATION
+     I     waterTyp_lon0, waterTyp_lon_inc,
+     I     waterTyp_lat0, waterTyp_lat_inc,
+     I     waterTyp_nlon, waterTyp_nlat, xC, yC, waterTyp_interpMethod,
+#endif
+     I     myThid )
+#endif /* EXF_ALLOW_WATERTYP */
+
 #ifdef EXF_SEAICE_FRACTION
       CALL EXF_INIT_FLD(
      I     'areamask', areamaskfile, areamaskmask,
