@@ -1,8 +1,8 @@
 # Instructions for building and running Red Sea regional simulation with 4 proccesors
 # on Ubuntu 22.04.02 Jammy (based on ecco_darwin/v05/llc270/readme2.txt).
 # See ecco_darwin/doc/MITgcm_on_Ubuntu.txt for additional instructions.
-# To run with 4 proccesors (instead of 8) the SIZE.h file in the build directory has been replaced by SIZE.h_4 (can be found in the code directory)
-
+# To run with 4 proccesors (instead of 8) the SIZE.h file in the build
+# directory has been replaced by SIZE.h_4 (can be found in the code directory)
 
 ==============
 # 1. Get code
@@ -15,6 +15,7 @@
 ==============
 # 2. Build executable
   cd build
+  cp ../../ecco_darwin/regions/RedSea/v05/code/SIZE.h_4 SIZE.h
   export MPI_INC_DIR=/usr/lib/x86_64-linux-gnu/openmpi/include
   ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05/code -mpi
   make depend
