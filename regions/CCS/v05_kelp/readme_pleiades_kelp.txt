@@ -27,7 +27,7 @@
   ln -sf /nobackup/dcarrol2/pub/regions/CCS/input/* .
   ln -sf /nobackup/hzhang1/pub/CCS_wave .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
-  mkdir diags diags/daily diags/monthly diags/monthly3
+  mkdir diags diags/daily diags/monthly diags/monthly_kelp
   cp ../../ecco_darwin/regions/CCS/v05_kelp/input/* .
   mpirun -np 20 ./mitgcmuv
 #MM    or modify a job_ECCO_darwin as needed and then:
