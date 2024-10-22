@@ -88,7 +88,7 @@
 #---
   frequency(16) = 2635200.,
    fields(1,16) = 'THETA   ',
-   filename(16) = 'diags/monthly/THETA',   
+   filename(16) = 'diags/monthly_kelp/THETA',   
 #---
   frequency(17) = 2635200.,
    fields(1,17) = 'SALTanom',
@@ -158,7 +158,7 @@
    fields(1,53) = 'TRAC31  ',
    
    filename(23)= 'diags/monthly/DIC',  
-   filename(24)= 'diags/monthly/NO3',
+   filename(24)= 'diags/monthly_kelp/NO3',
    filename(25)= 'diags/monthly/NO2',
    filename(26)= 'diags/monthly/NH4',
    filename(27)= 'diags/monthly/PO4',
@@ -191,7 +191,7 @@
 #---  
   frequency(54)  = 2635200.,
    fields(1,54)  = 'PAR    ',
-   filename(54)  = 'diags/monthly/PAR',
+   filename(54)  = 'diags/monthly_kelp/PAR',
 #--- 
   frequency(55)  = 2635200.,
    fields(1,55)  = 'PP     ',
@@ -229,54 +229,52 @@
    fields(1,63) = 'pH      ',
    filename(63) = 'diags/monthly/pH',
 #--
-  
 #monthly kelp diagnostics
 #---
   frequency(64) = 2635200.,
   fields(1,64) = 'TRAC32  ',
-  filename(64)= 'diags/monthly/Bmag',
+  filename(64)= 'diags/monthly_kelp/Bmag',
 #
   frequency(65) = 2635200.,
   fields(1,65) = 'TRAC33  ',
-  filename(65)= 'diags/monthly/Cmag',
+  filename(65)= 'diags/monthly_kelp/Cmag',
 #
   frequency(66) = 2635200.,
   fields(1,66) = 'TRAC34  ',
-  filename(66)= 'diags/monthly/Nmag',
+  filename(66)= 'diags/monthly_kelp/Nmag',
 # Kelp growth
   frequency(67) = 2635200.,
   fields(1,67) = 'mu_mag  ',
-  filename(67) = 'diags/monthly/mu_mag',
+  filename(67) = 'diags/monthly_kelp/mu_mag',
 # gT (temp factor)
   frequency(68) = 2635200.,
   fields(1,68) = 'gT_mag  ',
-  filename(68) = 'diags/monthly/gT_mag',
+  filename(68) = 'diags/monthly_kelp/gT_mag',
 # gQ (Nuts) factor
   frequency(69) = 2635200.,
   fields(1,69) = 'gQ_mag   ',
-  filename(69) = 'diags/monthly/gQ_mag',
+  filename(69) = 'diags/monthly_kelp/gQ_mag',
 # gE factor
   frequency(70) = 2635200.,
   fields(1,70) = 'gE_mag   ',
-  filename(70) = 'diags/monthly/gE_mag',
+  filename(70) = 'diags/monthly_kelp/gE_mag',
 # gH Factor
   frequency(71) = 2635200.,
   fields(1,71) = 'gH_mag   ',
-  filename(71) = 'diags/monthly/gH_mag',
+  filename(71) = 'diags/monthly_kelp/gH_mag',
 # Kelp Mortality
   frequency(72) = 2635200.,
   fields(1,72) = 'mort_mag  ',
-  filename(72) = 'diags/monthly/mort_mag',
+  filename(72) = 'diags/monthly_kelp/mort_mag',
 # Wave Period
   frequency(73) = 2635200.,
   fields(1,73) = 'wv_prd  ',
-  filename(73) = 'diags/monthly/wv_prd',
+  filename(73) = 'diags/monthly_kelp/wv_prd',
 # Wave Height
   frequency(74) = 2635200.,
   fields(1,74) = 'wv_hght ',
-  filename(74) = 'diags/monthly/wv_hght',
+  filename(74) = 'diags/monthly_kelp/wv_hght',
 #
-
  /
 
 # Parameter for Diagnostics of per level statistics:
