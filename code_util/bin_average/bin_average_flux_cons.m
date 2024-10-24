@@ -1,12 +1,10 @@
 clear
-close all
+close all;
 
-addpath(genpath('/nobackup/dcarrol2/MATLAB'));
+gridDir = '/Users/carrolld/Documents/research/carbon/simulations/grid/LLC_270/';
 
-gridDir = '/nobackup/dcarrol2/grid/LLC_270/'
-codeDir = '/nobackup/dcarrol2/bin_average/m_files/';
-dataDir =  '/nobackup/dcarrol2/bin_average/mat/';
-saveDir =  '/nobackup/dcarrol2/bin_average/mat/';
+codeDir = '/Users/carrolld/Documents/research/carbon/m_files/bin_average/flux_conserving/from_dustin/offline/1x1_deg/';
+saveDir = '/Users/carrolld/Documents/research/carbon/mat/bin_average/flux_conserving/';
 
 corners = load([codeDir 'cell_corners.mat']);
 
@@ -22,8 +20,8 @@ input.XG = readbin([gridDir 'XG.data'],[nx ny]);
 input.XG2 = input.XG;
 input.XG2(find(input.XG<0)) = input.XG(find(input.XG<0)) + 360;
 input.YG = readbin([gridDir 'YG.data'],[nx ny]);
-input.dXG = readbin([gridDir 'dXG.data'],[nx ny]);
-input.dYG = readbin([gridDir 'dYG.data'],[nx ny]);
+input.dXG = readbin([gridDir 'DXG.data'],[nx ny]);
+input.dYG = readbin([gridDir 'DYG.data'],[nx ny]);
 input.RAC = readbin([gridDir 'RAC.data'],[nx ny]);
 input.hFacC = readbin([gridDir 'hFacC.data'],[nx ny]);
 input.AngleCS = readbin([gridDir 'AngleCS.data'],[nx ny]);
@@ -63,8 +61,10 @@ outYG = output.YG;
 
 %%
 
+tic
+
 for i = 1:1:length(output.YG(:))
-    
+ 
     if(output.YG(i) >= 0)
         
         latTrue = 70;
@@ -136,8 +136,8 @@ for i = 1:1:length(output.YG(:))
         %if near pole, use finer spacing for triangle grid geometry
         if(outYG(i) <= -88 || outYG(i) >= 88)
             
-            idx = 50;
-            idy = 50;
+            idx = 25;
+            idy = 25;
             
         else
             
@@ -153,6 +153,10 @@ for i = 1:1:length(output.YG(:))
         [bx by] = polarstereo_fwd([outYG(i) outYG(i) outYG(i)+1 outYG(i)+1 outYG(i)], ...
             [outXG(i) outXG(i)+1 outXG(i)+1 outXG(i) outXG(i)], ...
             radius,eccentricity,latTrue);
+        
+        %hold on
+        %scatter(bx,by,100,'r','filled');
+        %line(bx,by);
         
         %create fine grid
         [x y] = meshgrid([min(bx)-20.*idx:idx:max(bx)+20.*idx],[min(by)-20.*idy:idy:max(by)+20.*idy]);
@@ -171,6 +175,9 @@ for i = 1:1:length(output.YG(:))
                 [cXGsw(ix(j)) cXGse(ix(j)) cXGne(ix(j)) cXGnw(ix(j)) cXGsw(ix(j))], ...
                 radius,eccentricity,latTrue);
             
+            %line(cx,cy,'Color','k');
+            %drawnow
+            
             %find number of fine grid cells bounded by input grid cell
             in2 = find(inpolygon(subX,subY,cx,cy) == 1);
             
@@ -181,6 +188,8 @@ for i = 1:1:length(output.YG(:))
             
             %fractional area of output grid cell
             intArea(j) = length(in2) / length(subX(:));
+            
+            %scatter(subX(in2),subY(in2),100,'b','filled');
             
             clear in2 in3
             
@@ -197,7 +206,7 @@ for i = 1:1:length(output.YG(:))
     
     if(isnan(intArea) | (nansum(intArea) == 0))
         
-        error('no input grid cells found!');
+        %error('no input grid cells found!');
         
     end
     
@@ -211,9 +220,11 @@ for i = 1:1:length(output.YG(:))
     
 end
 
+toc
+
 %%
 
-save([saveDir 'bin_average.mat'],'input','output','bin_average_cons','-v7.3');
+save([saveDir 'bin_average_LLC_270_to_1x1_deg_test.mat'],'input','output','bin_average_cons','-v7.3');
 
 %%
 %test bin-averaging code
@@ -223,8 +234,8 @@ set(hFig1,'units','normalized','outerposition',[0 0 1 1]);
 set(gcf,'color',[1 1 1]);
 
 clf
-quikplot_llc(input.hFacC)
-colorbar('horiz')
+quikplot_llc(input.hFacC);
+colorbar('horiz');
 caxis([0 1]);
 
 mask = reshape(bin_average_cons*input.hFacC(:),[360 180]);
@@ -234,7 +245,7 @@ set(hFig2,'units','normalized','outerposition',[0 0 1 1]);
 set(gcf,'color',[1 1 1]);
 
 mypcolor(mask')
-colorbar('horiz')
+colorbar('horiz');
 caxis([0 1]);
 
 %%
