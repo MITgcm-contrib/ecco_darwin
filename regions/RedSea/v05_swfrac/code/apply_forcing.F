@@ -445,7 +445,7 @@ C     kSurface  :: index of surface level
 #ifdef SHORTWAVE_HEATING
       _RL minusone
       PARAMETER (minusOne=-1.)
-      _RL swfracb(2)
+      _RL swfracb(0:sNx+1,0:sNy+1,2)
       INTEGER kp1
 #endif
 #endif /* USE_OLD_EXTERNAL_FORCING */
@@ -670,22 +670,30 @@ C     Ocean: Add temperature surface forcing (e.g., heat-flux) in surface level
 #ifdef SHORTWAVE_HEATING
 C Penetrating SW radiation
 c     IF ( usePenetratingSW ) THEN
-       swfracb(1)=abs(rF(k))
-       swfracb(2)=abs(rF(k+1))
-       CALL SWFRAC(
+       DO j=0,sNy+1
+        DO i=0,sNx+1
+         swfracb(i,j,1)=abs(rF(k))
+         swfracb(i,j,2)=abs(rF(k+1))
+        ENDDO
+       ENDDO
+       CALL SWFRAC2D(
      I             2, minusOne,
      U             swfracb,
-     I             myTime, 1, myThid )
+     I             bi, bj, myTime, 1, myThid )
        kp1 = k+1
        IF (k.EQ.Nr) THEN
         kp1 = k
-        swfracb(2)=0. _d 0
+        DO j=0,sNy+1
+         DO i=0,sNx+1
+          swfracb(i,j,2)=0. _d 0
+         ENDDO
+        ENDDO
        ENDIF
        DO j=0,sNy+1
         DO i=0,sNx+1
          gT_arr(i,j) = gT_arr(i,j)
-     &   -Qsw(i,j,bi,bj)*(swfracb(1)*maskC(i,j,k,bi,bj)
-     &                   -swfracb(2)*maskC(i,j,kp1, bi,bj))
+     &   -Qsw(i,j,bi,bj)*(swfracb(i,j,1)*maskC(i,j,k,bi,bj)
+     &                   -swfracb(i,j,2)*maskC(i,j,kp1, bi,bj))
      &    *recip_Cp*mass2rUnit
      &    *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
         ENDDO

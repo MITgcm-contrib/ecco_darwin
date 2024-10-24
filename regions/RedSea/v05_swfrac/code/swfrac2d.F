@@ -2,15 +2,15 @@
 #include "CPP_OPTIONS.h"
 
 CBOP
-C     !ROUTINE: SWFRAC
+C     !ROUTINE: SWFRAC2D
 C     !INTERFACE:
-      SUBROUTINE SWFRAC(
+      SUBROUTINE SWFRAC2D(
      I                  imax, fact,
      U                  swdk,
-     I                  myTime, myIter, myThid )
+     I                  bi, bj, myTime, myIter, myThid )
 C     !DESCRIPTION: \bv
 C     *==========================================================*
-C     | SUBROUTINE SWFRAC
+C     | SUBROUTINE SWFRAC2D
 C     | o Compute solar short-wave flux penetration.
 C     *==========================================================*
 C     | Compute fraction of solar short-wave flux penetrating to
@@ -31,17 +31,22 @@ C     \ev
 
 C     !USES:
       IMPLICIT NONE
+C     == Global data ==
+#include "SIZE.h"
+#include "FFIELDS.h"
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     === Routine arguments ===
 C     input arguments
 C     imax    :: number of vertical grid points
 C     fact    :: scale  factor to apply to depth array
+C     bi,bj     :: Current tile indices
 C     myTime  :: Current time in simulation
 C     myIter  :: Current iteration number in simulation
 C     myThid  :: My Thread Id. number
       INTEGER imax
       _RL     fact
+      INTEGER bi, bj
       _RL     myTime
       INTEGER myIter
       INTEGER myThid
@@ -49,7 +54,7 @@ C     input/output arguments
 C     swdk    :: on input: vertical depth for desired sw fraction
 C               (fact*swdk) is negative distance (m) from surface
 C     swdk    :: on output: short wave (radiation) fractional decay
-      _RL     swdk(imax)
+      _RL     swdk(0:sNx+1,0:sNy+1,imax)
 
 C     !LOCAL VARIABLES:
 C     === Local variables ===
@@ -58,7 +63,7 @@ C     max number of different water types
       PARAMETER(nwtype=5)
       _RL facz
       _RL rfac(nwtype),a1(nwtype),a2(nwtype)
-      INTEGER i
+      INTEGER i, j, m
 #ifdef ALLOW_CAL
 c     _RL     fac
 c     LOGICAL first, changed
@@ -94,15 +99,21 @@ CML)
       jwtype=2
 #endif /* ALLOW_CAL */
 
-      DO i = 1,imax
-        facz = fact*swdk(i)
-        IF ( facz .LT. -200. _d 0 ) THEN
-          swdk(i) = 0. _d 0
-        ELSE
-          swdk(i) =       rfac(jwtype)  * exp( facz/a1(jwtype) )
-     &       + (1. _d 0 - rfac(jwtype)) * exp( facz/a2(jwtype) )
-        ENDIF
-      ENDDO
+       DO j=0,sNy+1
+        DO i=0,sNx+1
+         DO m = 1,imax
+           facz = fact*swdk(i,j,m)
+           IF ( facz .LT. -200. _d 0 ) THEN
+             swdk(i,j,m) = 0. _d 0
+           ELSE
+             swdk(i,j,m) = rfac(waterTyp2d(i,j,bi,bj))
+     &          * exp( facz/a1(waterTyp2d(i,j,bi,bj)) )
+     &          + (1. _d 0 - rfac(waterTyp2d(i,j,bi,bj)))
+     &          * exp( facz/a2(waterTyp2d(i,j,bi,bj)) )
+           ENDIF
+         ENDDO
+        ENDDO
+       ENDDO
 
       RETURN
       END

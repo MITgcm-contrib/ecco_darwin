@@ -50,7 +50,7 @@ C-    2-D forcing fields
           saltFlux        (i,j,bi,bj) = 0. _d 0
           SST             (i,j,bi,bj) = 0. _d 0
           SSS             (i,j,bi,bj) = 0. _d 0
-          waterTyp2d      (i,j,bi,bj) = 0. _d 0
+          waterTyp2d      (i,j,bi,bj) = 2. _d 0
           phiTide2d       (i,j,bi,bj) = 0. _d 0
           pLoad           (i,j,bi,bj) = 0. _d 0
           sIceLoad        (i,j,bi,bj) = 0. _d 0
