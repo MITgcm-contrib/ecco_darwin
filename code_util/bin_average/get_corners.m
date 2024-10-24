@@ -66,7 +66,9 @@ for i = 1:length(XGsw(:))
     corners.YGse(i) = tile{t}.YG(I+1,J);
     corners.YGnw(i) = tile{t}.YG(I,J+1);
     corners.YGne(i) = tile{t}.YG(I+1,J+1);
-    
+    corners.XGsw(i) = tile{t}.XG(I,J);
+    corners.YGsw(i) = tile{t}.YG(I,J);
+
 end
 
 %%
