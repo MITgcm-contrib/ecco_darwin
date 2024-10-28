@@ -52,6 +52,98 @@ c     CHARACTER*(MAX_LEN_MBUF) msgBuf
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 
+
+      DO j = 1, nplank
+            
+
+       WRITE(diagName,'(A,I2.2)')'GROW_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton growth rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'GRAZ_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton grazing rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'MORT_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton mortality rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'RESP_P',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton respiration rate',j
+       diagUnits = 'mmol C/m^3/s    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'GRWPL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton P grwth limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'GRWNL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton N grwth limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'GRWSiL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton Si grwth limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+       WRITE(diagName,'(A,I2.2)')'GRWFeL',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton Fe grwt limitation',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+       WRITE(diagName,'(A,I2.2)')'GRW_NT',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton nutrient grwt factor',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+       WRITE(diagName,'(A,I2.2)')'GRW_L',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton light grwt factor',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+       WRITE(diagName,'(A,I2.2)')'GRW_T',j+ic-1
+       WRITE(diagTitle,'(A,I4)')'Plankton temperature grwt factor',j
+       diagUnits = '[0/1]    '
+       diagCode  = 'SMRP    MR      '
+       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+
+      ENDDO
+
+
       WRITE(diagName,'(A)')'plankC'
       WRITE(diagTitle,'(A)')'Total plankton carbon biomass'
       diagUnits = 'mmol C/m^3      '
@@ -453,69 +545,6 @@ C-      use units & names from data.ptracers :
         diagCode  = 'SMRP    MR      '
         CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I             diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'Mort',j
-        WRITE(diagTitle,'(A,I4)')'Mortality loss plankton ',j
-        diagUnits = 'mmol C/m^3/s    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'Resp',j
-        WRITE(diagTitle,'(A,I4)')'Respiration loss plankton ',j
-        diagUnits = 'mmol C/m^3/s    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'limN',j
-        WRITE(diagTitle,'(A,I4)')'N growth limitation plankton ',j
-        diagUnits = '[0/1]    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'limP',j
-        WRITE(diagTitle,'(A,I4)')'P growth limitation plankton ',j
-        diagUnits = '[0/1]    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'limF',j
-        WRITE(diagTitle,'(A,I4)')'Fe growth limitation plankton ',j
-        diagUnits = '[0/1]    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'limS',j
-        WRITE(diagTitle,'(A,I4)')'Si growth limitation plankton ',j
-        diagUnits = '[0/1]    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'fnut',j
-        WRITE(diagTitle,'(A,I4)')'Nutrient growth factor plankton ',j
-        diagUnits = '[0/1]    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'fIph',j
-        WRITE(diagTitle,'(A,I4)')'Light growth factor plankton ',j
-        diagUnits = '[0/1]    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-        WRITE(diagName,'(A,I4.4)')'fTph',j
-        WRITE(diagTitle,'(A,I4)')'Temperature growth factor plankton ',j
-        diagUnits = '[0/1]    '
-        diagCode  = 'SMRP    MR      '
-        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I            diagName, diagCode, diagUnits, diagTitle, 0, myThid )
       ENDDO
 #endif
 

@@ -149,7 +149,7 @@ C add iron source from hydrothermal vents
 C diagnostics
 
 C include code for per-type diagnostics
-#define  DARWIN_DIAG_PERTYPE
+#undef  DARWIN_DIAG_PERTYPE
 
 
 C debugging

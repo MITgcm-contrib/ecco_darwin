@@ -129,7 +129,23 @@ C     Dependent variables for sediment flux for validation
       _RL uptakeTempFunc
       _RL omegaCl
       _RL tmp, tmpFac
+      _RL growth_pl(nDarwin), grazing_pl(nDarwin)
+      _RL mortality_pl(nDarwin), respir_pl(nDarwin)      
+      _RL grow_nut(nDarwin),grow_light(nDarwin),grow_temp(nDarwin)
+      _RL grow_P_lim(nDarwin),grow_N_lim(nDarwin)
+      _RL grow_Si_lim(nDarwin),grow_Fe_lim(nDarwin)
       _RL sedFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL growth_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL grazing_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL mortality_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL respir_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_nut_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_light_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_temp_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_P_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_N_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_Si_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
+      _RL growth_Fe_lim_plank(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nDarwin)
 #ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
       _RL ventFe(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 #endif
@@ -177,6 +193,19 @@ C === reset tendencies =================================================
       DO j=jMin,jMax
       DO i=iMin,iMax
         gPtr(i,j,k,iTr) = 0.0 _d 0
+        growth_plank(i,j,k,iTr)= 0.0 _d 0
+        grazing_plank(i,j,k,iTr)= 0.0 _d 0
+        mortality_plank(i,j,k,iTr)= 0.0 _d 0        
+        respir_plank(i,j,k,iTr)= 0.0 _d 0
+        
+        growth_nut_plank(i,j,k,iTr)=0.0 _d 0
+        growth_light_plank(i,j,k,iTr)=0.0 _d 0
+        growth_temp_plank(i,j,k,iTr)=0.0 _d 0
+        
+        growth_P_lim_plank(i,j,k,iTr)=0.0 _d 0
+        growth_N_lim_plank(i,j,k,iTr)=0.0 _d 0
+        growth_Si_lim_plank(i,j,k,iTr)=0.0 _d 0
+        growth_Fe_lim_plank(i,j,k,iTr)=0.0 _d 0
       ENDDO
       ENDDO
       ENDDO
@@ -635,6 +664,11 @@ C-      default (face fit into global-IO-array)
      I                 mortTempFunc, mort2TempFunc,
      I                 uptakeTempFunc,
      I                 omegaCl,
+     O                 growth_pl,grazing_pl,
+     O                 mortality_pl,respir_pl,
+     O                 grow_nut,grow_light,grow_temp,
+     O                 grow_P_lim,grow_N_lim,
+     O                 grow_Si_lim,grow_Fe_lim,
      I                 k_debug,
      I                 subTime, myIter, myThid )
         DO l=1,darwin_nDiag
@@ -667,6 +701,20 @@ C-      default (face fit into global-IO-array)
 #endif
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
+C budget terms for plankton         
+         growth_plank(i, j, k, iTr)=growth_pl(iTr)
+         grazing_plank(i, j, k, iTr)=grazing_pl(iTr)
+         mortality_plank(i, j, k, iTr)=mortality_pl(iTr)
+         respir_plank(i, j, k, iTr)=respir_pl(iTr)
+C nutrient vs light & T limitation to growth        
+         growth_nut_plank(i,j,k,iTr)=grow_nut(iTr)
+         growth_light_plank(i,j,k,iTr)=grow_light(iTr)
+         growth_temp_plank(i,j,k,iTr)=grow_temp(iTr)
+C nutrient limitations        
+         growth_P_lim_plank(i,j,k,iTr)=grow_P_lim(iTr)
+         growth_N_lim_plank(i,j,k,iTr)=grow_N_lim(iTr)
+         growth_Si_lim_plank(i,j,k,iTr)=grow_Si_lim(iTr)
+         growth_Fe_lim_plank(i,j,k,iTr)=grow_Fe_lim(iTr)
         ENDDO
        endif
        enddo
@@ -999,35 +1047,67 @@ C      diags(iCons*) for convenience
         WRITE(diagname, '(A,I4.4)') 'GrGC', iTr
         CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iGrGC+iTr-1),
      &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'Mort', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iMort+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'Resp', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iResp+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'fnut', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,ifnut+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'fIph', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,ifIph+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'fTph', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,ifTph+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'limN', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,ilimN+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'limP', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,ilimP+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'limF', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,ilimF+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
-        WRITE(diagname, '(A,I4.4)') 'limS', iTr
-        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,ilimS+iTr-1),
-     &        diagname,0,Nr,2,bi,bj,myThid)
        ENDDO
 #endif
+
+
+       DO iTr=1,nplank
+        WRITE(diagname, '(A,I2.2)') 'GROW_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+
+        WRITE(diagname, '(A,I2.2)') 'GRAZ_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(grazing_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+        WRITE(diagname, '(A,I2.2)') 'MORT_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(mortality_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+             WRITE(diagname, '(A,I2.2)') 'RESP_P', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(respir_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+     
+c nutrient, light & temperature factors
+        WRITE(diagname, '(A,I2.2)') 'GRW_NT', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_nut_plank(1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+        WRITE(diagname, '(A,I2.2)') 'GRW_L', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_light_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+
+        WRITE(diagname, '(A,I2.2)') 'GRW_T', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_temp_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+c nutrient limitations     
+        WRITE(diagname, '(A,I2.2)') 'GRWPL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_P_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+     
+        WRITE(diagname, '(A,I2.2)') 'GRWNL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_N_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+        WRITE(diagname, '(A,I2.2)') 'GRWSiL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_Si_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)
+     
+     
+        WRITE(diagname, '(A,I2.2)') 'GRWFeL', iTr+ic-1
+        CALL DIAGNOSTICS_FILL(growth_Fe_lim_plank
+     &   (1-OLx,1-OLy,1,ic+iTr-1),
+     &        diagname,0,Nr,2,bi,bj,myThid)   
+       ENDDO
+
 #ifdef DARWIN_ALLOW_CSTORE
 #ifdef DARWIN_ALLOW_CSTORE_DIAGS
        DO iTr=1,nPhoto

@@ -61,14 +61,12 @@
    filename(11) = 'diags/daily/MLD',
 #---
   frequency(12) = 86400.,
-   levels(1:20,12) = 1.,
-   fields(1:20,12) = 'TRAC22  ','TRAC23  ',
-                     'fnut0001','fIph0001','fTph0001',
-                     'limN0001','limP0001','limS0001',
-                     'PC0001  ','Mort0001','Resp0001',
-                     'fnut0002','fIph0002','fTph0002',
-                     'limN0002','limP0002','limS0002',
-                     'PC0002  ','Mort0002','Resp0002',
+   levels(1:14,12) = 1.,
+   fields(1:14,12) = 'TRAC22','TRAC23',
+                    'GRW_NT22','GRW_L22','GRW_T22',
+                    'GRWNL22','GRWPL22','GRWSiL22',
+                    'GRW_NT23','GRW_L23','GRW_T23',
+                    'GRWNL23','GRWPL23','GRWSiL23',
    filename(12) = 'diags/daily/limits',
 #---
  &
