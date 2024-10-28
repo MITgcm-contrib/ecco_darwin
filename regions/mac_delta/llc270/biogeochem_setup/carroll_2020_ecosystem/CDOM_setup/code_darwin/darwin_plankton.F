@@ -10,9 +10,6 @@ C !INTERFACE: ==========================================================
      I     PAR, photoTempFunc, hetTempFunc, grazTempFunc, reminTempFunc,
      I     mortTempFunc, mort2TempFunc, uptakeTempFunc,
      I     omegaCl,
-     O     uptake_pl,grazing_pl,mortality_pl,respir_pl,
-     O     grow_nut,grow_light,grow_temp,
-     O     grow_P_lim,grow_N_lim,grow_Si_lim,grow_Fe_lim,
      I     k_debug,myTime,myIter,myThid)
 
 C !DESCRIPTION:
@@ -58,19 +55,6 @@ C !OUTPUT PARAMETERS: ==================================================
 C  chlout :: computed acclimated chlorophyll if not dynamic
       _RL chlout(nPhoto)
       _RL diags(darwin_nDiag)
-C outputs for computing phytoplankton budgets      
-      _RL uptake_pl(nDarwin)
-      _RL grazing_pl(nDarwin)
-      _RL mortality_pl(nDarwin)
-      _RL respir_pl(nDarwin)
-C outputs for computing growth rates & nutrient limitations      
-      _RL grow_nut(nDarwin)
-      _RL grow_light(nDarwin)
-      _RL grow_temp(nDarwin)
-      _RL grow_P_lim(nDarwin)
-      _RL grow_N_lim(nDarwin)
-      _RL grow_Si_lim(nDarwin)
-      _RL grow_Fe_lim(nDarwin)
 CEOP
 
 #ifdef ALLOW_DARWIN
@@ -427,27 +411,6 @@ c ratio if not variable.
       ENDDO
 #endif
 
-
-      DO j = 1,nDarwin
-        uptake_pl(j)=0.0
-        grazing_pl(j)=0.0
-        mortality_pl(j)=0.0
-        respir_pl(j)=0.0
-        
-        grow_nut(j)=0.0
-        grow_light(j)=0.0
-        grow_temp(j)=0.0
-
-        
-        grow_P_lim(j)=0.0
-        grow_N_lim(j)=0.0
-        grow_Si_lim(j)=0.0 
-        grow_Fe_lim(j)=0.0
-        
-
-      ENDDO
-     
-
 C==== Initialize accumulators ==========================================
       consumDIC  = 0.0
       consumDIC_PIC = 0.0
@@ -714,11 +677,9 @@ C a la quota
 
 C       carbon-specific growth rate
         IF (PCm .GT. 0.0 .AND. PARtot .GT. PARmin) THEN
-          limitI = (1-EXP(-alpha_I_growth*chl2c/PCm))
-          PC = PCm*limitI
+          limitI = 1 _d 0 - EXP(-alpha_I_growth*chl2c/PCm)
         ELSE
-          PC = 0.0 _d 0
-          limitI = 0.0 _d 0
+          limitI = 0 _d 0
         ENDIF
 
         IF (inhibGeider(j) .GT. 0.0) THEN
@@ -727,10 +688,11 @@ C         "total" PAR:
           Ek = PCm/(chl2c*alpha_mean(j))
           IF (tmp .GT. Ek) THEN
             EkoverE = Ek / tmp
-            PC = PC*EkoverE*inhibGeider(j)
             limitI = limitI*EkoverE*inhibGeider(j)
           ENDIF
         ENDIF
+
+        PC = PCm*limitI
 
 #else /* not DARWIN_ALLOW_GEIDER */
 
@@ -740,8 +702,8 @@ C         only 1 waveband without DARWIN_ALLOW_GEIDER
      &             EXP(-PARtot*kinhPAR(j)) * normI(j)
           PC = PCmax(j)*limitnut*limitI*photoTempFunc(j)*limitpCO2
         ELSE
+          limitI = 0 _d 0
           PC = 0.0 _d 0
-          limitI = 0.0 _d 0
         ENDIF
         synthChl = 0.0
 
@@ -758,6 +720,9 @@ C Zooplankton respiration is handled in the mortality/exudation loop.
         respir_c = respRate(j)*Xe*reminTempFunc
         respir = respir + respir_c
         uptakeDIC = photoSyn - respir_c
+#ifdef DARWIN_DIAG_PERTYPE
+        diags(iResp+j-1) = respir_c
+#endif
 
 C==== Growth ===========================================================
 C Growth is growth rate of functional internal carbon
@@ -856,6 +821,15 @@ C==== Nutrient consumption =============================================
 #ifdef DARWIN_DIAG_PERTYPE
         diags(iPPplank+j-1) = diags(iPPplank+j-1) + uptakeDIC
         diags(iPCplank+j-1) = diags(iPCplank+j-1) + PC
+C  which nutrient is limiting growth?
+        IF (limitnut==limitn) diags(ilimN+j-1) = 1 _d 0
+        IF (limitnut==limitp) diags(ilimP+j-1) = 1 _d 0
+        IF (limitnut==limitfe) diags(ilimF+j-1) = 1 _d 0
+        IF (limitnut==limitsi) diags(ilimS+j-1) = 1 _d 0
+C factors that go into growth equation
+        diags(ifIph+j-1) = limitI
+        diags(ifTph+j-1) = photoTempFunc(j)
+        diags(ifnut+j-1) = limitnut
 #endif
         IF (diazo(j) .GT. 0.0 _d 0) THEN
          diags(iNfix)=diags(iNfix)+uptakeN-uptakeNH4-uptakeNO2-uptakeNO3
@@ -880,33 +854,6 @@ C==== Nutrient consumption =============================================
 #endif
 
 C==== Apply phototrophy tendencies =====================================
-
-        gTr(ic+j-1)=gTr(ic+j-1)  + uptakeDIC
-
-C uptake_pl for plankton        
-        uptake_pl(ic+j-1)= uptake_pl(ic+j-1) + uptakeDIC
-
-C  which nutrient is limiting growth?
-        IF (limitnut .EQ. limitn) THEN
-          grow_N_lim(ic+j-1)=1.
-        ENDIF
-
-        IF (limitnut .EQ. limitp) THEN
-          grow_P_lim(ic+j-1)=1.
-        ENDIF
-
-        IF (limitnut .EQ. limitsi) THEN
-          grow_Si_lim(ic+j-1)=1.
-        ENDIF
-
-        IF (limitnut .EQ. limitfe) THEN
-          grow_Fe_lim(ic+j-1)=1.
-        ENDIF
-
-C factors that go into growth equation
-       grow_light(ic+j-1)=limitI
-       grow_temp(ic+j-1)=photoTempFunc(j)
-       grow_nut(ic+j-1)=limitnut
 
 #ifdef DARWIN_ALLOW_CSTORE
         gTr(ich+j-1)=gTr(ich+j-1)  + storeC
@@ -1050,9 +997,6 @@ C         DOC respired to DIC
 #endif
 
         gTr(ic+j-1) = gTr(ic+j-1) + growth
-
-C uptake_pl for bacteria        
-        uptake_pl(ic+j-1)=uptake_pl(ic+j-1)+growth
 
 C bacteria have fixed elemental ratios for now
 #ifdef DARWIN_ALLOW_NQUOTA
@@ -1539,7 +1483,6 @@ C==== Apply grazing tendencies =========================================
       DO jp = 1, nplank
       IF (isPrey(jp).NE.0) THEN
        gTr(ic+jp-1)= gTr(ic+jp-1) - preygraz(jp)
-       grazing_pl(ic+jp-1)= grazing_pl(ic+jp-1)-preygraz(jp)
 #ifdef DARWIN_ALLOW_NQUOTA
        gTr(in+jp-1)=gTr(in+jp-1) - preygraz(jp)*Qn(jp)
 #endif
@@ -1572,7 +1515,6 @@ C==== Apply grazing tendencies =========================================
       DO jz = 1, nplank
       IF (isPred(jz).NE.0) THEN
        gTr(ic+jz-1)=gTr(ic+jz-1) + predgrazc(jz)
-       grazing_pl(ic+jz-1)= grazing_pl(ic+jz-1)+predgrazc(jz)
 #ifdef DARWIN_ALLOW_NQUOTA
        gTr(in+jz-1)=gTr(in+jz-1) + predgrazn(jz)
 #endif
@@ -1658,9 +1600,10 @@ C to DIC as if it had never been synthesized.
         IF (isPhoto(jp) .EQ. 0) THEN
          respir_c = respRate(jp)*Xe*reminTempFunc
          gTr(ic+jp-1) = gTr(ic+jp-1) - respir_c
-         mortality_pl(ic+jp-1)= -mort_c(jp)
+#ifdef DARWIN_DIAG_PERTYPE
+         diags(iResp+jp-1) = respir_c
+#endif
          respir = respir + respir_c*(1 _d 0 + R_PICPOC(jp))
-         respir_pl(ic+jp-1)= -respir_c
 #ifndef DARWIN_ALLOW_NQUOTA
          respirN = respirN + respir_c*R_NC(jp)
 #endif
@@ -1688,6 +1631,10 @@ C to DIC as if it had never been synthesized.
 #ifdef DARWIN_ALLOW_FEQUOTA
         gTr(ife+jp-1)=gTr(ife+jp-1) - mort_c(jp)*Qfe(jp)
 #endif
+#ifdef DARWIN_DIAG_PERTYPE
+        diags(iMort+jp-1) = mort_c(jp)
+#endif
+
 
 #ifdef DARWIN_ALLOW_EXUDE
         exude_DOC =
