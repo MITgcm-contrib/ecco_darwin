@@ -1,0 +1,224 @@
+#######################
+ &DARWIN_FORCING_PARAMS
+ ironfile = 'iron_dust_46x68_Mac',
+ ironperiod = -12,
+ darwin_inscal_iron= 1000.,
+
+ pCO2File = 'apCO2',
+ pCO2startdate1 = 19920101,
+ pCO2startdate2 = 030000,
+ pCO2period     = 86400.0,
+#
+ DOCrunofffile = 'tDOCl/tDOCl_runoff_mac270',
+ DOCrunoffstartdate1 = 19920101,
+ DOCrunoffstartdate2 = 120000,
+ DOCrunoffperiod     = 86400.0,
+#
+ RDOCrunofffile = 'tDOCr/tDOCr_runoff_mac270',
+ RDOCrunoffstartdate1 = 19920101,
+ RDOCrunoffstartdate2 = 120000,
+ RDOCrunoffperiod     = 86400.0,
+#
+ DICrunofffile = 'tDIC/tDIC_runoff_mac270',
+ DICrunoffstartdate1 = 19920101,
+ DICrunoffstartdate2 = 120000,
+ DICrunoffperiod     = 86400.0,
+#
+ ALKrunofffile = 'tAlk/tALK_runoff_mac270',
+ ALKrunoffstartdate1 = 19920101,
+ ALKrunoffstartdate2 = 120000,
+ ALKrunoffperiod     = 86400.0,
+#
+ DONrunofffile = 'tDON/tDON_runoff_mac270',
+ DONrunoffstartdate1 = 19920101,
+ DONrunoffstartdate2 = 120000,
+ DONrunoffperiod     = 86400.0,
+#
+ DOPrunofffile = 'tDOP/tDOP_runoff_mac270',
+ DOPrunoffstartdate1 = 19920101,
+ DOPrunoffstartdate2 = 120000,
+ DOPrunoffperiod     = 86400.0,
+#
+ DSirunofffile = 'tDSi/tDSi_runoff_mac270',
+ DSirunoffstartdate1 = 19920101,
+ DSirunoffstartdate2 = 120000,
+ DSirunoffperiod     = 86400.0,
+#
+ darwin_useEXFwind = .TRUE.,
+ darwin_useQsw = .TRUE.,
+ darwin_useSEAICE = .TRUE.,
+ /
+ &DARWIN_INTERP_PARAMS
+ iron_interpMethod = 0,
+ DOCrunoff_interpMethod = 0,
+ RDOCrunoff_interpMethod = 0,
+ DICrunoff_interpMethod = 0,
+ ALKrunoff_interpMethod = 0,
+ DONrunoff_interpMethod = 0,
+ DOPrunoff_interpMethod = 0,
+ DSirunoff_interpMethod = 0,
+#
+
+ pCO2_lon0    = 0.0D0,
+ pCO2_lon_inc = 360.0D0,
+ pCO2_lat0    = -89.4628220D0,
+ pCO2_lat_inc = 0.6958694,0.6999817,0.7009048,0.7012634,0.7014313,
+                245*0.7017418,
+                0.7014313,0.7012634,0.7009048,0.6999817,0.6958694
+ pCO2_nlon    = 2,
+ pCO2_nlat    = 256,
+ /
+
+########################
+ &DARWIN_PARAMS
+#CSD These were in you file -- not sure how you want to deal with these?
+ darwin_pickupSuff= ' ',
+ darwin_chlInitBalanced= .FALSE.,
+ darwin_chlIter0= 1,
+#CSD see above -- these are treated differently in your previous setup =
+# not sure it makes much different
+ darwin_chlInitBalanced= T,
+ diaz_ini_fac= 0.1,
+ idebug=271,
+ jdebug=63,
+ darwin_seed= 56,
+ tempCoeffArr= 1.0,
+ PARmin= 0.1,
+ alpfe= 1.0,
+ freefemax = .1E-3,
+ depthfesed= 7000.,
+ scav_rat= 0.2,
+ scav_inter=9.14351851851E-7,
+ scav_r_poppoc=0.786161635,
+ krdoc=  3.1688087814028950E-9,  ! 1/10year
+ kdoc=  0.0316880878140289E-9,  ! 1/1000year
+ kdop=  0.0316880878140289E-9,  ! 1/1000year
+ kdon=  0.0316880878140289E-9,  ! 1/1000year
+ kdofe= 0.0316880878140289E-9,  ! 1/1000year
+ kPOC=  3.8580246913580247E-7,  ! 1/30day
+ kPOP=  3.8580246913580247E-7,  ! 1/30day
+ kPON=  3.8580246913580247E-7,  ! 1/30day
+ kPOFe= 3.8580246913580247E-7,  ! 1/30day
+ kPOSi= 1.5432E-07,             ! 1/75day
+ phygrazmin= 120E-10,
+ hollexp = 1.E0,
+#CSD added these from your version
+ SURFDICMIN  =   100.0,
+ SURFALKMIN  =   100.0,
+ /
+########################
+ &DARWIN_CDOM_PARAMS
+  fracCDOM = 0.02,
+  cdomdegrd= 3.8580e-08,
+  CDOMbleach = 1.9329e-06,
+  PARCDOM = 60.,
+ /
+ &DARWIN_RADTRANS_PARAMS
+ darwin_waterabsorbFile='Optics/optics_water_Aug2014_bandave25.txt',
+ darwin_phytoabsorbFile='Optics/optics_phyto_10_bandave25_newsize5_diffsyn_zoo_bact3_AHbacteria_ecol.txt',
+ darwin_particleabsorbFile='Optics/optics_detritus_8_sameas4_bandave25.txt',
+ darwin_Sdom=0.0145000,
+ darwin_aCDOM_fac = 0.30,
+ darwin_part_size_P = 1e-15,
+ darwin_rCDOM = 1.2e-2,
+ darwin_RPOC = 2.0,
+
+ darwin_allomSpectra= T,
+ darwin_absorpSlope= -0.075,
+ darwin_bbbSlope=    -1.458,
+ darwin_scatSwitchSizeLog= 2.860959e-01, 2.923177e-01, 2.983251e-01, 3.140574e-01, 3.261153e-01,
+                           3.440134e-01, 3.577670e-01, 3.618763e-01, 3.695100e-01, 3.718916e-01,
+                           3.706202e-01, 3.640583e-01, 3.682107e-01,
+ darwin_scatSlopeSmall= 4.185404e+00, 4.208007e+00, 4.261307e+00, 4.302451e+00, 4.341968e+00,
+                        4.373109e+00, 4.392320e+00, 4.416705e+00, 4.434653e+00, 4.454953e+00,
+                        4.479809e+00, 4.507577e+00, 4.544071e+00,
+ darwin_scatSlopeLarge= 1.723153e+00, 1.718186e+00, 1.699666e+00, 1.687533e+00, 1.710736e+00,
+                        1.732242e+00, 1.763117e+00, 1.811451e+00, 1.834619e+00, 1.863836e+00,
+                        1.897289e+00, 1.861866e+00, 1.907367e+00,
+ /
+########################
+ &DARWIN_RANDOM_PARAMS
+ /
+########################
+ &DARWIN_TRAIT_PARAMS
+ grp_names= 'PicoEuk', 'Hapto', 'LL Diat', 'HL Diat', 'Dino', 'Zoo','Bact'
+#
+#                        s  C  D1 D2 l  Z  b
+ grp_nplank(:)=          1, 1, 1, 1, 1, 2, 1,
+ grp_photo(:)=           1, 1, 1, 1, 1, 0, 0,
+ grp_pred(:)=            0, 0, 0, 0, 1, 1, 0,
+ grp_prey(:)=            1, 1, 1, 1, 1, 1, 1,
+ grp_hasSi(:)=           0, 0, 1, 1, 0, 0, 0,
+ grp_hasPIC(:)=          0, 0, 0, 0, 0, 0, 0,
+ grp_DIAZO(:)=           0, 0, 0, 0, 0, 0, 0,
+ grp_useNH4(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_useNO2(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_useNO3(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_combNO(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_bacttype(:)=        0, 0, 0, 0, 0, 0, 2,
+ grp_aerobic(:)=         0, 0, 0, 0, 0, 0, 1,
+ grp_denit(:)=           0, 0, 0, 0, 0, 0, 0,
+ grp_tempMort(:)=        0, 0, 0, 0, 0, 0, 0,
+ grp_tempMort2(:)=       0, 0, 0, 0, 0, 0, 0,
+ grp_aptype(:)=          1, 6, 5, 5, 9, 11, 12,
+#
+ a_Xmin(:)= 5*1.25e-2, 1e-3, 1e-3,
+#
+
+
+ a_phytoTempAe= 5*0.0095,
+ a_hetTempAe=5*0.0631,
+ a_grazTempAe=5*0.1100,
+
+ a_mQyield(:)= 6E-5, 2*4E-5, 6E-5, 4E-5, 2*0.0,
+ a_chl2cmax(:)=  2*.2, .3, .3, .2, 0., 0.,
+ a_acclimtimescl(:)= 7*5.7870370370370370E-6,
+ logvolbase= -1.4130,
+ logvolinc= .513,
+ logvol0ind(:)= 5, 7, 9, 9, 9, 11, 1,
+ a_biosink(:)= 5*6.951416635391563E-7, 0., 6.951416635391563E-7,
+ b_biosink(:)= 5*.2833333333333333, 0., 0.2833333333333333,
+#a_PCmax(1)= 1.2066,
+#a_PCmax(2)= 1.9454,
+#a_PCmax(3)= 2.5383,
+#a_PCmax(4)= 2.5383,
+#a_PCmax(5)= 1.3355,
+#a_PCmax(6)= 0,
+#a_PCmax(7)= 1.1603,
+ a_PCmax(1)= 0.7016,
+ a_PCmax(2)= 1.5149,
+ a_PCmax(3)= 1.7672,
+ a_PCmax(4)= 1.4138,
+ a_PCmax(5)= 0.8810,
+ a_PCmax(6)= 0,
+ a_PCmax(7)= 0.5700,
+
+
+
+ a_PCmax_denom(:)= 7*86400.,
+ b_PCmax(:)= 0.28, -0.10, -0.10, -0.10,-0.10, 0., 0.28,
+#
+ a_Qpmin = 5*0.005, 0.008, 0.008
+ a_Qpmax = 5*0.02,  0.01,  0.01
+#
+ darwin_effective_ksat= T,
+ darwin_select_kn_allom= 2,
+#
+#grp_ExportFracPreyPred(1:7,6)= 7*.8,
+ a_R_ChlC(6)= 0.,
+ a_grazemax(6)= 3.4722000000000000E-05,  ! prowe values
+ b_grazemax(6)= -0.16,
+#
+ a_mort(:)= 5*8e-07, 2*2e-7,
+ a_mort2(:)= 7*6.e-8,
+ a_phytoTempExp2= 7*.0003,
+ a_R_PC(:)= 6*0.008333333333333333, 0.010600000000,
+ a_R_FeC(:)= 7*0.008333333333333333E-3,
+ a_R_NC(:)= 7*0.13333333333333333,
+ a_R_SiC(:)= 2*0., 2*0.26666666666666666, 3*0.,
+ a_R_PICPOC(:)= 7*0.,
+ a_kgrazesat(:)= 7*3.5,
+ b_kgrazesat(:)= 7*0,
+#
+ grp_ass_eff(:,:)=49*0.32,
+ /
