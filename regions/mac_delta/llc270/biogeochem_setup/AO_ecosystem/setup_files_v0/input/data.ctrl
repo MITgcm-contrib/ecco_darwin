@@ -1,0 +1,100 @@
+# *********************
+# ECCO control variables
+# *********************
+ &ctrl_nml
+ doSinglePrecTapelev=.TRUE.,
+# ctrlSmoothCorrel2D=.TRUE.,
+# ctrlSmoothCorrel3D=.TRUE.,
+#to start from given xx*00.46x68_Mac_Delta files
+  doinitxx = .TRUE.,
+  doMainUnpack = .FALSE.,
+  doMainPack = .FALSE.,
+#to start from given ecco_ctrl... files
+# doinitxx = .FALSE.,
+ &
+#
+# *********************
+# names for ctrl_pack/unpack
+# *********************
+ &ctrl_packnames
+ &
+#
+# *********************
+# names for CTRL_GENARR2D,3D CTRL_GENTIM2D
+# *********************
+ &CTRL_NML_GENARR
+ xx_gentim2d_weight(1) = 'wprecip_46x68_Mac',
+ xx_gentim2d_file(1)='xx_precip',
+ xx_gentim2d_startdate1(1)=19920101,
+ xx_gentim2d_startdate2(1)=60000,
+ xx_gentim2d_period(1)=1209600.0,
+ xx_gentim2d_preproc(1,1)='WC01',
+ mult_gentim2d(1) = 0.,
+#
+ xx_gentim2d_weight(2) = 'wlwdown_46x68_Mac',
+ xx_gentim2d_file(2)='xx_lwdown',
+ xx_gentim2d_startdate1(2)=19920101,
+ xx_gentim2d_startdate2(2)=60000,
+ xx_gentim2d_period(2)=1209600.0,
+ xx_gentim2d_preproc(1,2)='WC01',
+ mult_gentim2d(2) = 0.,
+#
+ xx_gentim2d_weight(3) = 'wswdown_46x68_Mac',
+ xx_gentim2d_file(3)='xx_swdown',
+ xx_gentim2d_startdate1(3)=19920101,
+ xx_gentim2d_startdate2(3)=60000,
+ xx_gentim2d_period(3)=1209600.0,
+ xx_gentim2d_preproc(1,3)='WC01',
+ mult_gentim2d(3) = 0.,
+#
+ xx_gentim2d_weight(4) = 'waqh_46x68_Mac',
+ xx_gentim2d_file(4)='xx_aqh',
+ xx_gentim2d_startdate1(4)=19920101,
+ xx_gentim2d_startdate2(4)=60000,
+ xx_gentim2d_period(4)=1209600.0,
+ xx_gentim2d_preproc(1,4)='WC01',
+ mult_gentim2d(4) = 0.,
+#
+ xx_gentim2d_weight(5) = 'watemp_46x68_Mac',
+ xx_gentim2d_file(5)='xx_atemp',
+ xx_gentim2d_startdate1(5)=19920101,
+ xx_gentim2d_startdate2(5)=60000,
+ xx_gentim2d_period(5)=1209600.0,
+ xx_gentim2d_preproc(1,5)='WC01',
+ mult_gentim2d(5) = 0.,
+#
+ xx_gentim2d_weight(6) = 'wuwind_46x68_Mac',
+ xx_gentim2d_file(6)='xx_uwind',
+ xx_gentim2d_startdate1(6)=19920101,
+ xx_gentim2d_startdate2(6)=60000,
+ xx_gentim2d_period(6)=1209600.0,
+ xx_gentim2d_preproc(1,6)='WC01',
+ mult_gentim2d(6) = 0.,
+#
+ xx_gentim2d_weight(7) = 'wvwind_46x68_Mac',
+ xx_gentim2d_file(7)='xx_vwind',
+ xx_gentim2d_startdate1(7)=19920101,
+ xx_gentim2d_startdate2(7)=60000,
+ xx_gentim2d_period(7)=1209600.0,
+ xx_gentim2d_preproc(1,7)='WC01',
+ mult_gentim2d(7) = 0.,
+#
+ xx_genarr3d_weight(1) = 'wkapgmFld_46x68_Mac',
+ xx_genarr3d_file(1)='xx_kapgm',
+ xx_genarr3d_preproc(1,1)='WC01',
+ xx_genarr3d_bounds(1:5,1)=1.E2,2.E2,0.9E4,1.E4,0.,
+ mult_genarr3d(1) = 0.,
+#
+ xx_genarr3d_weight(2) = 'wkaprediFld_46x68_Mac',
+ xx_genarr3d_file(2)='xx_kapredi',
+ xx_genarr3d_preproc(1,2)='WC01',
+ xx_genarr3d_bounds(1:5,2)=1.E2,2.E2,0.9E4,1.E4,0.,
+ mult_genarr3d(2) = 0.,
+#
+ xx_genarr3d_weight(3) = 'wdiffkrFld_46x68_Mac',
+ xx_genarr3d_file(3)='xx_diffkr',
+ xx_genarr3d_preproc(1,3)='WC01',
+ xx_genarr3d_bounds(1:5,3)=1.E-6,2.E-6,4.E-4,5.E-4,0.,
+ mult_genarr3d(3) = 0.,
+#
+ &
