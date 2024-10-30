@@ -38,6 +38,7 @@
 #    "...Linux optional component is not enabled...". 
 #    There's a website that you can follow to resolve the issues:
 #    https://aka.ms/wslinstall
+#    If you are running the latest version of Windows 11, choose Ubuntu and #    not a specific version Ubuntu e.g. Ubuntu 24.04.X:      
 
 # i) On the windows search bar (bottom left on your screen;
 #    for most system), search for "Windows PowerShell" and
