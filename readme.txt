@@ -1,13 +1,23 @@
 ECCO-Darwin Github Repository
 git clone git@github.com:MITgcm-contrib/ecco_darwin.git
 
+--code_util--
+   /useful scripts
+   
+--dic--
+   /ECCO-DIC set-up
+   
+--doc-- contains some documentation files
+
 Simulations:
 
---doc-- contains some documentation files, including tag-index
-
 --regions--
+  --bering_strait--
+    /v05: Bering Strait llc270 cut-out
   --CCS--
     /llc270: California Current System llc270 cut-out for kelp model development
+  --downscaling--
+    /util for downscaling  
   --GoA--
     /v05: Gulf of Alaska llc270 cut-out for Takamitsu Ito
   --GoM--
@@ -15,7 +25,7 @@ Simulations:
   --GulfGuinea--
     /v05: Gulf of Guinea llc270 cut-out for COESSING  
   --LR17--
-    /llc270: La Rochelle Coastal System cut-out for sediment model development
+    /llc270: La Rochelle coastal Ssstem cut-out for sediment model development
   --mac_delta--
     /LatLon: Mackenzie Delta lon-lat  
     /llc270: Mackenzie Delta llc270 cut-out
@@ -26,7 +36,7 @@ Simulations:
     /v05: Red Sea llc270 cut-out for KAUST
     /v05_coral: Red Sea llc270 cut-out including model for coral reefs
   --totten--
-    /llc1080: totten lon-lat
+    /llc1080: east Antarctica totten lon-lat
 
 --v02--
   /cs510_brix: optimized solution described in Brix et al. (2015)
@@ -49,17 +59,15 @@ Simulations:
   /3deg_CDR_MacroA: Kay's macroalgae (kelp) code development set-up
   /llc270: Carroll et al. 2022 (GBC) solution w/ Darwin 3
   /llc270_jra55do: same as above but with JRA55-do daily, point-source runoff
+  /llc270_jra55do_mangroves: same as above but with mangrove carbon export
   /llc270_jra55do_nutrients: same as above but with DOC, DON, and DOP surface forcing
-  /llc270_sediment: same as llc270 above but with RADI sediment model
   /llc270_N2O: same as llc270 but with total and thermal N2O, argon, and thermal oxygen
-
+  /llc270_sediment: same as llc270 above but with RADI sediment model
+ 
 --v06--
   /1deg: 1 degree solution based on ECCO V4r5
   /llc270: v05 llc270 w/ Darwin upgrades and new ecosystem, BGC runoff, RADI sediment model, 
    pH fix and updated solver, hydrothermal vent iron forcing, and radiative transfer package
-
---code_util--
-  /LOAC/GlobalNews: biogeochimical exports from rivers (DIN, DON, DIP, DOP, DOC, PN, PP, POC, DSi) based on Mayorga et al., 2010
 
 **Notes**
 v02 to v04 use Darwin 1, v05 onward uses Darwin 3
@@ -72,15 +80,3 @@ When updating ECCO-Darwin code/setup, or anything that may impact ECCO-Darwin:
 
 2.) Test updated ECCO-Darwin from scratch by checking out fresh MITgcm code, 
 and following the instructions line-by-line in the readme.txt file(s). 
-
-3.) Once test is successful, if needed, add a full description of changes to MITgcm_contrib/ecco_darwin/doc/tag-index. 
-Include the date and list all specific changes.
-
-Example: 
-
-05/03/19
-- To make initialization and pickups more robust:
-  - remove pickupSuff from data
-  - remove PTRACERS_Iter0 and PTRACERS_initialFile from data.ptracers
-  - delete pickup_dic.0000000001.data so that it does not get used for
-    initialization because of above changes
