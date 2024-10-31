@@ -6,7 +6,7 @@
 #SBATCH --partition=batch           # Error log
 #SBATCH --nodes=2                   # Number of nodes
 #SBATCH --ntasks-per-node=4         # Number of MPI tasks per node (adjust as needed)
-#SBATCH --partition=compute         # Partition name
+##SBATCH --partition=compute         # Partition name
 
 # Run the MPI job
 cd ~/darwin3/run
