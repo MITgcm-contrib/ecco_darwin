@@ -25,7 +25,7 @@ Simulations:
   --GulfGuinea--
     /v05: Gulf of Guinea llc270 cut-out for COESSING  
   --LR17--
-    /llc270: La Rochelle Coastal System cut-out for sediment model development
+    /llc270: La Rochelle coastal Ssstem cut-out for sediment model development
   --mac_delta--
     /LatLon: Mackenzie Delta lon-lat  
     /llc270: Mackenzie Delta llc270 cut-out
@@ -36,7 +36,7 @@ Simulations:
     /v05: Red Sea llc270 cut-out for KAUST
     /v05_coral: Red Sea llc270 cut-out including model for coral reefs
   --totten--
-    /llc1080: totten lon-lat
+    /llc1080: east Antarctica totten lon-lat
 
 --v02--
   /cs510_brix: optimized solution described in Brix et al. (2015)
@@ -80,7 +80,3 @@ When updating ECCO-Darwin code/setup, or anything that may impact ECCO-Darwin:
 
 2.) Test updated ECCO-Darwin from scratch by checking out fresh MITgcm code, 
 and following the instructions line-by-line in the readme.txt file(s). 
-
-3.) Once test is successful, if needed, add a full description of changes to MITgcm_contrib/ecco_darwin/doc/tag-index. 
-Include the date and list all specific changes.
-
