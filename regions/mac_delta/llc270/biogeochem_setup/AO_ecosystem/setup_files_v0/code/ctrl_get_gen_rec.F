@@ -31,7 +31,8 @@ c     == global variables ==
 
 #include "EEPARAMS.h"
 #include "SIZE.h"
-#include "ctrl.h"
+#include "CTRL_SIZE.h"
+#include "CTRL.h"
 #ifdef ALLOW_CAL
 # include "cal.h"
 #endif

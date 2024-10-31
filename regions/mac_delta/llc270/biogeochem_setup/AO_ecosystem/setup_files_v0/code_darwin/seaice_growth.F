@@ -1590,10 +1590,10 @@ C           Penetrative shortwave flux beyond first layer
 C           that is therefore not available to ice growth/melt
 C           Coupled with CDOM SW radiation attenutation
 #ifdef DARWIN_ALLOW_CDOM
-            tmpscal2=SWFracB * a_QSWbyATM_open(i,j) *
+            tmpscal2=SEAICE_SWFrac * a_QSWbyATM_open(i,j) *
      &               CDOMdecay(i,j,2,bi,bj)
 #else
-            tmpscal2=SWFracB * a_QSWbyATM_open(i,j)
+            tmpscal2=SEAICE_SWFrac * a_QSWbyATM_open(i,j)
 #endif /* DARWIN_ALLOW_CDOM */
 C           impose -HEFF as the maxmum melting if SEAICE_doOpenWaterMelt
 C           or 0. otherwise (no melting if not SEAICE_doOpenWaterMelt)

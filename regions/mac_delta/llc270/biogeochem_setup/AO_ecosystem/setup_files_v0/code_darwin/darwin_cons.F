@@ -824,7 +824,7 @@ C minic conditionals in PTRACERS_FORCING_SURF
 #else /* EXACT_CONSERV */
         IF (.TRUE.) THEN
 #endif /* EXACT_CONSERV */
-        dvol = -EmPmR(i,j,bi,bj)*mass2rUnit*area*PTRACERS_dtLev(ks)
+        dvol = PmEpR(i,j,bi,bj)*mass2rUnit*area*PTRACERS_dtLev(ks)
         tilePER(bi,bj) = tilePER(bi,bj) + dvol
 C       if convertFW2Salt=-1., current values are replaced by
 C       ptracers_EvPrRn, so Ptracer enters with a minus sign.
