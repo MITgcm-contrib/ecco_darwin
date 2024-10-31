@@ -36,7 +36,7 @@
 # Then export this path to variable MPI_INC_DIR
  export MPI_INC_DIR=/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/openmpi
 
-# Run a single-CPU verification experiment
+# Run an mpi verification experiment
  cd MITgcm/verification
  ./testreport -mpi -t lab_sea
 
