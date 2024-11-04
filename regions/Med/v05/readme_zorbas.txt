@@ -53,3 +53,13 @@
 ==============
 # 7. Run simulation with sbatch
   sbatch run_on_zorbas.sh
+
+# a few more sbatch commands:
+  squeue  # to look at running jobs
+  sinfo   # for information on available queues
+  scancel # for canceling a running job
+
+# notes and things to try
+- 8 cpus (2 nodes * 4 cpus, 36x36 tiles): ~20 minutes per month
+
+- 108 cpus (3 nodes * 36 cpus, 12x8 tiles): ~6 minutes per month 
