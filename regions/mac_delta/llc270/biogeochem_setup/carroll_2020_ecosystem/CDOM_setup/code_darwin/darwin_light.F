@@ -101,7 +101,8 @@ C        convert W/m2 to uEin/s/m2
        DO jp=1,nPhoto
         DO j=jMin,jMax
          DO i=iMin,iMax
-          Chl(i,j) = Chl(i,j) + MAX(0.0, Ptracer(i,j,k,bi,bj,iChl+jp-1))
+          Chl(i,j) = Chl(i,j) + MAX(0 _d 0,
+     &                              Ptracer(i,j,k,bi,bj,iChl+jp-1))
          ENDDO
         ENDDO
        ENDDO
@@ -116,7 +117,7 @@ C        convert W/m2 to uEin/s/m2
        DO jp=1,nPhoto
         DO j=jMin,jMax
          DO i=iMin,iMax
-          Chl(i,j) = Chl(i,j) + MAX(0.0,
+          Chl(i,j) = Chl(i,j) + MAX(0 _d 0,
      &                 Ptracer(i,j,k,bi,bj,ic+jp-1)*R_ChlC(jp))
          ENDDO
         ENDDO

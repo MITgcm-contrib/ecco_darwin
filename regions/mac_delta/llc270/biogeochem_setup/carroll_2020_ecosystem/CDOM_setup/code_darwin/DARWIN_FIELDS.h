@@ -56,17 +56,17 @@ C
 
       COMMON /DARWIN_CONS_2D/
      &      ironSedFlx,
-#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+# ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
      &      ironVentFlx,
-#endif
+# endif
      &      carbSfcFlx,
      &      carbVirFlx,
      &      oxySfcFlx,
      &      alkVirFlx
       _RL ironSedFlx(sNx,sNy,nSx,nSy)
-#ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
+# ifdef DARWIN_ALLOW_HYDROTHERMAL_VENTS
       _RL ironVentFlx(sNx,sNy,nSx,nSy)
-#endif
+# endif
       _RL carbSfcFlx(sNx,sNy,nSx,nSy)
       _RL carbVirFlx(sNx,sNy,nSx,nSy)
       _RL oxySfcFlx(sNx,sNy,nSx,nSy)
@@ -86,8 +86,37 @@ C
       _RL botSnkSi(sNx,sNy,nSx,nSy)
 # endif
 
-# ifdef EXACT_CONSERV
+#ifdef DARWIN_ALLOW_CARBON
+#ifdef DARWIN_ALLOW_RADI
+C     Sediment fluxes
+      COMMON /DARWIN_CONS_RADI/
+     &      radiFLuxC, radiFLuxA, radiFLuxO
+      _RL radiFluxC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL radiFluxA(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL radiFluxO(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+#endif
+#endif
+
+      COMMON /DARWIN_CONS_IMPFS/
+     &      totFS,
+     &      totFSC,
+     &      totFSN,
+     &      totFSP,
+     &      totFSFe,
+     &      totFSSi,
+     &      totFSA,
+     &      totFSO
+      _RL totFS
+      _RL totFSC
+      _RL totFSN
+      _RL totFSP
+      _RL totFSFe
+      _RL totFSSi
+      _RL totFSA
+      _RL totFSO
+
       COMMON /DARWIN_CONS_EPR/
+     &      totPER,
      &      totEPRC,
      &      totEPRN,
      &      totEPRP,
@@ -95,6 +124,7 @@ C
      &      totEPRSi,
      &      totEPRA,
      &      totEPRO
+      _RL totPER
       _RL totEPRC
       _RL totEPRN
       _RL totEPRP
@@ -102,7 +132,6 @@ C
       _RL totEPRSi
       _RL totEPRA
       _RL totEPRO
-# endif
 #endif /* DARWIN_ALLOW_CONS */
 
 C Carbon Variables

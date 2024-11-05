@@ -256,14 +256,6 @@ C     errCount  :: error counter
      I                         myThid )
       ENDIF
 
-      IF ( errCount.GE.1 ) THEN
-       WRITE(msgBuf,'(A,I3,A)')
-     &     'DARWIN_EXF_INIT_FIXED: detected', errCount,' fatal error(s)'
-       CALL PRINT_ERROR( msgBuf, myThid )
-       CALL ALL_PROC_DIE( 0 )
-       STOP 'ABNORMAL END: S/R DARWIN_EXF_INIT_FIXED'
-      ENDIF
-
       IF ( ALKrunofffile .NE. ' ' ) THEN
 # ifdef ALLOW_DEBUG
        IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START ALKrunoff',

@@ -15,6 +15,7 @@ C !USES: ===============================================================
 #include "PARAMS.h"
 #include "GRID.h"
 #include "SURFACE.h"
+#include "DYNVARS.h"
 #include "PTRACERS_SIZE.h"
 #include "PTRACERS_PARAMS.h"
 #include "PTRACERS_FIELDS.h"
@@ -34,6 +35,10 @@ C !INPUT PARAMETERS: ===================================================
 CEOP
 
 #ifdef DARWIN_ALLOW_CONS
+
+C !FUNCTIONS: ==========================================================
+      LOGICAL  DIAGNOSTICS_IS_ON
+      EXTERNAL DIAGNOSTICS_IS_ON
 
 C !LOCAL VARIABLES: ====================================================
       _RL tilevol(nSx,nSy)
@@ -68,13 +73,17 @@ C !LOCAL VARIABLES: ====================================================
       _RL tilerunoffA(nSx,nSy)
 #endif
 #endif
-#ifdef EXACT_CONSERV
+      _RL tileFSC(nSx,nSy)
+      _RL tileFSN(nSx,nSy)
+      _RL tileFSP(nSx,nSy)
+      _RL tileFSFe(nSx,nSy)
+      _RL tileFSSi(nSx,nSy)
+      _RL tilePER(nSx,nSy)
       _RL tileEPRC(nSx,nSy)
       _RL tileEPRN(nSx,nSy)
       _RL tileEPRP(nSx,nSy)
       _RL tileEPRFe(nSx,nSy)
       _RL tileEPRSi(nSx,nSy)
-#endif
 #ifdef DARWIN_ALLOW_CARBON
       _RL tiletotA(nSx,nSy)
       _RL tileAlkSrc(nSx,nSy)
@@ -83,10 +92,13 @@ C !LOCAL VARIABLES: ====================================================
       _RL tileO2cons(nSx,nSy)
       _RL tilesfcflxO(nSx,nSy)
       _RL tilevirflxA(nSx,nSy)
-#ifdef EXACT_CONSERV
+      _RL tilesedflxC(nSx,nSy)
+      _RL tilesedflxA(nSx,nSy)
+      _RL tilesedflxO(nSx,nSy)
+      _RL tileFSA(nSx,nSy)
+      _RL tileFSO(nSx,nSy)
       _RL tileEPRA(nSx,nSy)
       _RL tileEPRO(nSx,nSy)
-#endif
 #endif
       _RL tmptotC
       _RL tmptotN
@@ -102,6 +114,9 @@ C !LOCAL VARIABLES: ====================================================
       _RL tmpventflxFe
       _RL tmpsfcflxC
       _RL tmpvirflxC
+      _RL tmpsedflxC
+      _RL tmpsedflxA
+      _RL tmpsedflxO
       _RL tmpBotSnkC
       _RL tmpBotSnkN
       _RL tmpBotSnkP
@@ -113,6 +128,11 @@ C !LOCAL VARIABLES: ====================================================
       _RL tmprunoffFe
       _RL tmprunoffSi
       _RL tmprunoffA
+      _RL tmpFSC
+      _RL tmpFSN
+      _RL tmpFSP
+      _RL tmpFSFe
+      _RL tmpFSSi
       _RL tmpEPRC
       _RL tmpEPRN
       _RL tmpEPRP
@@ -126,11 +146,13 @@ C !LOCAL VARIABLES: ====================================================
       _RL tmpO2cons
       _RL tmpsfcflxO
       _RL tmpvirflxA
+      _RL tmpFSA
+      _RL tmpFSO
       _RL tmpEPRA
       _RL tmpEPRO
 #endif
       _RL vol, voltot, dvol
-      _RL area
+      _RL area, areadt, fac
 
       INTEGER i,j,k,bi,bj,ks
       INTEGER np, iTr
@@ -151,6 +173,9 @@ C !LOCAL VARIABLES: ====================================================
       tmpventflxFe = 0 _d 0
       tmpsfcflxC = 0 _d 0
       tmpvirflxC = 0 _d 0
+      tmpsedflxC = 0 _d 0
+      tmpsedflxA = 0 _d 0
+      tmpsedflxO = 0 _d 0
       tmpBotSnkC = 0 _d 0
       tmpBotSnkN = 0 _d 0
       tmpBotSnkP = 0 _d 0
@@ -162,6 +187,11 @@ C !LOCAL VARIABLES: ====================================================
       tmprunoffFe = 0 _d 0
       tmprunoffSi = 0 _d 0
       tmprunoffA = 0 _d 0
+      tmpFSC = 0 _d 0
+      tmpFSN = 0 _d 0
+      tmpFSP = 0 _d 0
+      tmpFSFe = 0 _d 0
+      tmpFSSi = 0 _d 0
       tmpEPRC = 0 _d 0
       tmpEPRN = 0 _d 0
       tmpEPRP = 0 _d 0
@@ -175,13 +205,15 @@ C !LOCAL VARIABLES: ====================================================
       tmpO2cons = 0 _d 0
       tmpsfcflxO = 0 _d 0
       tmpvirflxA = 0 _d 0
+      tmpFSA = 0 _d 0
+      tmpFSO = 0 _d 0
       tmpEPRA = 0 _d 0
       tmpEPRO = 0 _d 0
 #endif
 
       DO bj=myByLo(myThid),myByHi(myThid)
       DO bi=myBxLo(myThid),myBxHi(myThid)
-
+ 
        tilevol(bi,bj) = 0. _d 0
        tiletotC(bi,bj) = 0. _d 0
        tiletotN(bi,bj) = 0. _d 0
@@ -214,13 +246,17 @@ C !LOCAL VARIABLES: ====================================================
        tilerunoffA(bi,bj) = 0. _d 0
 #endif
 #endif
-#ifdef EXACT_CONSERV
+       tileFSC(bi,bj) = 0. _d 0
+       tileFSN(bi,bj) = 0. _d 0
+       tileFSP(bi,bj) = 0. _d 0
+       tileFSFe(bi,bj) = 0. _d 0
+       tileFSSi(bi,bj) = 0. _d 0
+       tilePER(bi,bj) = 0. _d 0
        tileEPRC(bi,bj) = 0. _d 0
        tileEPRN(bi,bj) = 0. _d 0
        tileEPRP(bi,bj) = 0. _d 0
        tileEPRFe(bi,bj) = 0. _d 0
        tileEPRSi(bi,bj) = 0. _d 0
-#endif
 #ifdef DARWIN_ALLOW_CARBON
        tiletotA(bi,bj) = 0. _d 0
        tileAlkSrc(bi,bj) = 0. _d 0
@@ -229,20 +265,25 @@ C !LOCAL VARIABLES: ====================================================
        tileO2cons(bi,bj) = 0. _d 0
        tilesfcflxO(bi,bj) = 0. _d 0
        tilevirflxA(bi,bj) = 0. _d 0
-#ifdef EXACT_CONSERV
+       tilesedflxC(bi,bj) = 0. _d 0
+       tilesedflxA(bi,bj) = 0. _d 0
+       tilesedflxO(bi,bj) = 0. _d 0
+       tileFSA(bi,bj) = 0. _d 0
+       tileFSO(bi,bj) = 0. _d 0
        tileEPRA(bi,bj) = 0. _d 0
        tileEPRO(bi,bj) = 0. _d 0
-#endif
 #endif
 
        DO k=1,Nr
        DO j=1,sNy
        DO i=1,sNx
-c-----------------------------------------------------------------------
+C ======================================================================
+C Compute totals for each chemical element
+
         vol=rA(i,j,bi,bj)*drF(k)*hFacC(i,j,k,bi,bj)
         tilevol(bi,bj)=tilevol(bi,bj)+vol
 
-c carbon budget
+C Carbon budget
         tiletotC(bi,bj)=tiletotC(bi,bj)+Ptracer(i,j,k,bi,bj,iDIC)*vol
         tiletotC(bi,bj)=tiletotC(bi,bj)+Ptracer(i,j,k,bi,bj,iDOC)*vol
         tiletotC(bi,bj)=tiletotC(bi,bj)+Ptracer(i,j,k,bi,bj,iPOC)*vol
@@ -355,7 +396,7 @@ c Silica budget
      &                                    *R_SiC(np)*vol
 #endif
         ENDDO
-c-----------------------------------------------------------------------
+
 #ifdef DARWIN_ALLOW_CARBON
 c alkalinity budget
         tiletotA(bi,bj)=tiletotA(bi,bj)+Ptracer(i,j,k,bi,bj,iALK)*vol
@@ -372,8 +413,9 @@ c corrections
         ENDIF
 #endif
 
-c-----------------------------------------------------------------------
-c accumulate cons corrections only once per time step
+C ======================================================================
+C 3-d conservation corrections
+C       accumulate cons corrections only once per time step
         IF (stage .EQ. 0) THEN
          tiletotNfix(bi,bj)=tiletotNfix(bi,bj)+DARWIN_Nfix(i,j,k,bi,bj)
      &                                        *vol
@@ -385,13 +427,15 @@ c accumulate cons corrections only once per time step
      &                       +DARWIN_minFeLoss(i,j,k,bi,bj)*vol
         ENDIF
 
+C      enddo i,j,k
        ENDDO
        ENDDO
        ENDDO
 
+C ======================================================================
+C 2-d conservation corrections
        DO j=1,sNy
        DO i=1,sNx
-c-----------------------------------------------------------------------
         area=rA(i,j,bi,bj)*maskInC(i,j,bi,bj)
         IF (stage .EQ. 0) THEN
         tilesedflxFe(bi,bj)=tilesedflxFe(bi,bj)+ironSedFlx(i,j,bi,bj)
@@ -406,6 +450,11 @@ c-----------------------------------------------------------------------
 #ifdef ALLOW_OLD_VIRTUALFLUX
         tilevirflxC(bi,bj)=tilevirflxC(bi,bj)+carbVirFlx(i,j,bi,bj)*area
         tilevirflxA(bi,bj)=tilevirflxA(bi,bj)+alkVirFlx(i,j,bi,bj)*area
+#endif
+#ifdef DARWIN_ALLOW_RADI
+        tilesedflxC(bi,bj)=tilesedflxC(bi,bj)+radiFluxC(i,j,bi,bj)*area
+        tilesedflxA(bi,bj)=tilesedflxA(bi,bj)+radiFluxA(i,j,bi,bj)*area
+        tilesedflxO(bi,bj)=tilesedflxO(bi,bj)+radiFLuxO(i,j,bi,bj)*area
 #endif
 #endif
 #ifdef DARWIN_BOTTOM_SINK
@@ -459,14 +508,149 @@ c-----------------------------------------------------------------------
 #endif
         ENDIF
 
-C compute surface flux from EmPmR with local ptracer concentration
+C ======================================================================
+C compute change in local ptracer concentration due to neglected volume
+C change with linear implicit free surface.  Compute before
+C thermodynamics; will store totals in common block and apply after
+C thermodynamics.
+        IF (stage.EQ.0 .AND. implicitFreeSurface .AND.
+     &      nonlinFreeSurf.EQ.0 .AND. .NOT.DARWIN_linFSConserve) THEN
+         dvol = -wVel(i,j,ks,bi,bj)*area*PTRACERS_dtLev(ks)
+C Carbon imp.FS corrections
+         tileFSC(bi,bj)=tileFSC(bi,bj)+Ptracer(i,j,ks,bi,bj,iDIC)*dvol
+         tileFSC(bi,bj)=tileFSC(bi,bj)+Ptracer(i,j,ks,bi,bj,iDOC)*dvol
+         tileFSC(bi,bj)=tileFSC(bi,bj)+Ptracer(i,j,ks,bi,bj,iPOC)*dvol
+         tileFSC(bi,bj)=tileFSC(bi,bj)+Ptracer(i,j,ks,bi,bj,iPIC)*dvol
+         DO np=1,nplank
+          iTr=ic+np-1
+          tileFSC(bi,bj)=tileFSC(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)
+     &                                 *(1+R_PICPOC(np))*dvol
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tileFSC(bi,bj)=tileFSC(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                *dvol
+# else
+         tileFSC(bi,bj)=tileFSC(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                *R_CP_CDOM*dvol
+# endif
+#endif
+
+C Nitrogen imp.FS corrections
+         tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iNO3)*dvol
+         tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iNH4)*dvol
+         tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iNO2)*dvol
+         tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iDON)*dvol
+         tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iPON)*dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_NQUOTA
+          iTr=in+np-1
+          tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)*dvol
+#else
+          iTr=ic+np-1
+          tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)
+     &                                 *R_NC(np)*dvol
+#endif
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                *R_NC_CDOM*dvol
+# else
+         tileFSN(bi,bj)=tileFSN(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                *R_NP_CDOM*dvol
+# endif
+#endif
+
+C Phosphorus imp.FS corrections
+         tileFSP(bi,bj)=tileFSP(bi,bj)+Ptracer(i,j,ks,bi,bj,iPO4)*dvol
+         tileFSP(bi,bj)=tileFSP(bi,bj)+Ptracer(i,j,ks,bi,bj,iDOP)*dvol
+         tileFSP(bi,bj)=tileFSP(bi,bj)+Ptracer(i,j,ks,bi,bj,iPOP)*dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_PQUOTA
+          iTr=ip+np-1
+          tileFSP(bi,bj)=tileFSP(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)*dvol
+#else
+          iTr=ic+np-1
+          tileFSP(bi,bj)=tileFSP(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)
+     &                                 *R_PC(np)*dvol
+#endif
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tileFSP(bi,bj)=tileFSP(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                *R_PC_CDOM*dvol
+# else
+         tileFSP(bi,bj)=tileFSP(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                *dvol
+# endif
+#endif
+
+C Iron imp.FS corrections
+         tileFSFe(bi,bj)=tileFSFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iFeT)
+     &                                  *dvol
+         tileFSFe(bi,bj)=tileFSFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iDOFe)
+     &                                  *dvol
+         tileFSFe(bi,bj)=tileFSFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iPOFe)
+     &                                  *dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_FEQUOTA
+          iTr=ife+np-1
+          tileFSFe(bi,bj)=tileFSFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)
+     &                                   *dvol
+#else
+          iTr=ic+np-1
+          tileFSFe(bi,bj)=tileFSFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)
+     &                                   *R_FeC(np)*dvol
+#endif
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tileFSFe(bi,bj)=tileFSFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                  *R_FeC_CDOM*dvol
+# else
+         tileFSFe(bi,bj)=tileFSFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                  *R_FeP_CDOM*dvol
+# endif
+#endif
+
+C Silica imp.FS corrections
+         tileFSSi(bi,bj)=tileFSSi(bi,bj)+Ptracer(i,j,ks,bi,bj,iSiO2)
+     &                                  *dvol
+         tileFSSi(bi,bj)=tileFSSi(bi,bj)+Ptracer(i,j,ks,bi,bj,iPOSi)
+     &                                  *dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_SIQUOTA
+          iTr=isi+np-1
+          tileFSSi(bi,bj)=tileFSSi(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)
+     &                                   *dvol
+#else
+          iTr=ic+np-1
+          tileFSSi(bi,bj)=tileFSSi(bi,bj)+Ptracer(i,j,ks,bi,bj,iTr)
+     &                                     *R_SiC(np)*dvol
+#endif
+         ENDDO
+
+C Alkalinity and oxygen imp.FS corrections
+#ifdef DARWIN_ALLOW_CARBON
+         tileFSA(bi,bj)=tileFSA(bi,bj)+Ptracer(i,j,ks,bi,bj,iALK)*dvol
+         tileFSO(bi,bj)=tileFSO(bi,bj)+Ptracer(i,j,ks,bi,bj,iO2)*dvol
+#endif
+
+C       endif stage 0, implicitFreeSurface, etc
+        ENDIF
+
+C ======================================================================
+C Compute surface flux from EmPmR with local ptracer concentration
 C before thermodynamics; will store totals in common block and apply
-C after thermodynamics
+C after thermodynamics.
+C Case 1: Non-linear free surface with real fresh-water flux
 #ifdef EXACT_CONSERV
-        IF (nonlinFreeSurf.GT.0 .AND. stage.EQ.0) THEN
-C volume change due to precip, evap and runoff
+        IF (stage.EQ.0 .AND. (nonlinFreeSurf.GT.0 .OR. usingPCoords)
+     &      .AND. useRealFreshWaterFlux) THEN
          dvol = PmEpR(i,j,bi,bj)*mass2rUnit*area*PTRACERS_dtLev(ks)
-c carbon NLFS fluxes
+         tilePER(bi,bj) = tilePER(bi,bj) + dvol
+C Carbon E-P-R fluxes
          IF (PTRACERS_EvPrRn(iDIC).EQ.UNSET_RL)
      &   tileEPRC(bi,bj)=tileEPRC(bi,bj)+Ptracer(i,j,ks,bi,bj,iDIC)*dvol
          IF (PTRACERS_EvPrRn(iDOC).EQ.UNSET_RL)
@@ -482,17 +666,18 @@ c carbon NLFS fluxes
      &                                    *(1+R_PICPOC(np))*dvol
          ENDDO
 #ifdef DARWIN_ALLOW_CDOM
-         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL)
+         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL) THEN
 # ifdef DARWIN_CDOM_UNITS_CARBON
-     &    tileEPRC(bi,bj)=tileEPRC(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRC(bi,bj)=tileEPRC(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                   *dvol
 # else
-     &    tileEPRC(bi,bj)=tileEPRC(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRC(bi,bj)=tileEPRC(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                   *R_CP_CDOM*dvol
 # endif
+         ENDIF
 #endif
 
-c Nitrogen NLFS fluxes
+C Nitrogen E-P-R fluxes
          IF (PTRACERS_EvPrRn(iNO3).EQ.UNSET_RL)
      &   tileEPRN(bi,bj)=tileEPRN(bi,bj)+Ptracer(i,j,ks,bi,bj,iNO3)*dvol
          IF (PTRACERS_EvPrRn(iNH4).EQ.UNSET_RL)
@@ -516,17 +701,18 @@ c Nitrogen NLFS fluxes
 #endif
          ENDDO
 #ifdef DARWIN_ALLOW_CDOM
-         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL)
+         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL) THEN
 # ifdef DARWIN_CDOM_UNITS_CARBON
-     &    tileEPRN(bi,bj)=tileEPRN(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRN(bi,bj)=tileEPRN(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                   *R_NC_CDOM*dvol
 # else
-     &    tileEPRN(bi,bj)=tileEPRN(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRN(bi,bj)=tileEPRN(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                   *R_NP_CDOM*dvol
 # endif
+         ENDIF
 #endif
 
-c Phosphorus NLFS fluxes
+C Phosphorus E-P-R fluxes
          IF (PTRACERS_EvPrRn(iPO4).EQ.UNSET_RL)
      &   tileEPRP(bi,bj)=tileEPRP(bi,bj)+Ptracer(i,j,ks,bi,bj,iPO4)*dvol
          IF (PTRACERS_EvPrRn(iDOP).EQ.UNSET_RL)
@@ -546,17 +732,18 @@ c Phosphorus NLFS fluxes
 #endif
          ENDDO
 #ifdef DARWIN_ALLOW_CDOM
-         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL)
+         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL) THEN
 # ifdef DARWIN_CDOM_UNITS_CARBON
-     &    tileEPRP(bi,bj)=tileEPRP(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRP(bi,bj)=tileEPRP(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                   *R_PC_CDOM*dvol
 # else
-     &    tileEPRP(bi,bj)=tileEPRP(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRP(bi,bj)=tileEPRP(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                   *dvol
 # endif
+         ENDIF
 #endif
 
-c Iron NLFS fluxes
+C Iron E-P-R fluxes
          IF (PTRACERS_EvPrRn(iFeT).EQ.UNSET_RL)
      &    tileEPRFe(bi,bj)=tileEPRFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iFeT)
      &                                     *dvol
@@ -580,17 +767,18 @@ c Iron NLFS fluxes
 #endif
          ENDDO
 #ifdef DARWIN_ALLOW_CDOM
-         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL)
+         IF (PTRACERS_EvPrRn(iCDOM).EQ.UNSET_RL) THEN
 # ifdef DARWIN_CDOM_UNITS_CARBON
-     &    tileEPRFe(bi,bj)=tileEPRFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRFe(bi,bj)=tileEPRFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                     *R_FeC_CDOM*dvol
 # else
-     &    tileEPRFe(bi,bj)=tileEPRFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
+          tileEPRFe(bi,bj)=tileEPRFe(bi,bj)+Ptracer(i,j,ks,bi,bj,iCDOM)
      &                                     *R_FeP_CDOM*dvol
 # endif
+         ENDIF
 #endif
 
-c Silica NLFS fluxes
+C Silica E-P-R fluxes
          IF (PTRACERS_EvPrRn(iSiO2).EQ.UNSET_RL)
      &    tileEPRSi(bi,bj)=tileEPRSi(bi,bj)+Ptracer(i,j,ks,bi,bj,iSiO2)
      &                                     *dvol
@@ -610,18 +798,210 @@ c Silica NLFS fluxes
      &                                      *R_SiC(np)*dvol
 #endif
          ENDDO
+
+C Alkalinity and oxygen E-P-R fluxes
 #ifdef DARWIN_ALLOW_CARBON
          IF (PTRACERS_EvPrRn(iALK).EQ.UNSET_RL)
      &   tileEPRA(bi,bj)=tileEPRA(bi,bj)+Ptracer(i,j,ks,bi,bj,iALK)*dvol
          IF (PTRACERS_EvPrRn(iO2).EQ.UNSET_RL)
      &   tileEPRO(bi,bj)=tileEPRO(bi,bj)+Ptracer(i,j,ks,bi,bj,iO2)*dvol
 #endif
+
+C       endif stage 0, etc
         ENDIF
 #endif /* EXACT_CONSERV */
+
+C ======================================================================
+C Compute surface flux from EmPmR with local ptracer concentration
+C before thermodynamics; will store totals in common block and apply
+C after thermodynamics.
+C Case 2: linear implicit free surface or no real fresh-water flux
+        IF (stage.EQ.0) THEN
+C minic conditionals in PTRACERS_FORCING_SURF
+#ifdef EXACT_CONSERV
+        IF ( .NOT.((nonlinFreeSurf.GT.0 .OR. usingPCoords)
+     &             .AND. useRealFreshWaterFlux) ) THEN
+#else /* EXACT_CONSERV */
+        IF (.TRUE.) THEN
+#endif /* EXACT_CONSERV */
+        dvol = PmEpR(i,j,bi,bj)*mass2rUnit*area*PTRACERS_dtLev(ks)
+        tilePER(bi,bj) = tilePER(bi,bj) + dvol
+C       if convertFW2Salt=-1., current values are replaced by
+C       ptracers_EvPrRn, so Ptracer enters with a minus sign.
+        IF (convertFW2Salt .EQ. -1.) THEN
+C Carbon E-P-R fluxes
+         IF (PTRACERS_EvPrRn(iDIC).NE.UNSET_RL)
+     &   tileEPRC(bi,bj)=tileEPRC(bi,bj)-Ptracer(i,j,ks,bi,bj,iDIC)*dvol
+         IF (PTRACERS_EvPrRn(iDOC).NE.UNSET_RL)
+     &   tileEPRC(bi,bj)=tileEPRC(bi,bj)-Ptracer(i,j,ks,bi,bj,iDOC)*dvol
+         IF (PTRACERS_EvPrRn(iPOC).NE.UNSET_RL)
+     &   tileEPRC(bi,bj)=tileEPRC(bi,bj)-Ptracer(i,j,ks,bi,bj,iPOC)*dvol
+         IF (PTRACERS_EvPrRn(iPIC).NE.UNSET_RL)
+     &   tileEPRC(bi,bj)=tileEPRC(bi,bj)-Ptracer(i,j,ks,bi,bj,iPIC)*dvol
+         DO np=1,nplank
+          iTr=ic+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &     tileEPRC(bi,bj)=tileEPRC(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)
+     &                                    *(1+R_PICPOC(np))*dvol
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+         IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+          tileEPRC(bi,bj)=tileEPRC(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                   *dvol
+# else
+          tileEPRC(bi,bj)=tileEPRC(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                   *R_CP_CDOM*dvol
+# endif
+         ENDIF
+#endif
+
+C Nitrogen E-P-R fluxes
+         IF (PTRACERS_EvPrRn(iNO3).NE.UNSET_RL)
+     &   tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iNO3)*dvol
+         IF (PTRACERS_EvPrRn(iNH4).NE.UNSET_RL)
+     &   tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iNH4)*dvol
+         IF (PTRACERS_EvPrRn(iNO2).NE.UNSET_RL)
+     &   tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iNO2)*dvol
+         IF (PTRACERS_EvPrRn(iDON).NE.UNSET_RL)
+     &   tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iDON)*dvol
+         IF (PTRACERS_EvPrRn(iPON).NE.UNSET_RL)
+     &   tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iPON)*dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_NQUOTA
+          iTr=in+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &    tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)*dvol
+#else
+          iTr=ic+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &     tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)
+     &                                    *R_NC(np)*dvol
+#endif
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+         IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+          tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                   *R_NC_CDOM*dvol
+# else
+          tileEPRN(bi,bj)=tileEPRN(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                   *R_NP_CDOM*dvol
+# endif
+         ENDIF
+#endif
+
+C Phosphorus E-P-R fluxes
+         IF (PTRACERS_EvPrRn(iPO4).NE.UNSET_RL)
+     &   tileEPRP(bi,bj)=tileEPRP(bi,bj)-Ptracer(i,j,ks,bi,bj,iPO4)*dvol
+         IF (PTRACERS_EvPrRn(iDOP).NE.UNSET_RL)
+     &   tileEPRP(bi,bj)=tileEPRP(bi,bj)-Ptracer(i,j,ks,bi,bj,iDOP)*dvol
+         IF (PTRACERS_EvPrRn(iPOP).NE.UNSET_RL)
+     &   tileEPRP(bi,bj)=tileEPRP(bi,bj)-Ptracer(i,j,ks,bi,bj,iPOP)*dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_PQUOTA
+          iTr=ip+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &    tileEPRP(bi,bj)=tileEPRP(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)*dvol
+#else
+          iTr=ic+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &     tileEPRP(bi,bj)=tileEPRP(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)
+     &                                    *R_PC(np)*dvol
+#endif
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+         IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+          tileEPRP(bi,bj)=tileEPRP(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                   *R_PC_CDOM*dvol
+# else
+          tileEPRP(bi,bj)=tileEPRP(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                   *dvol
+# endif
+         ENDIF
+#endif
+
+C Iron E-P-R fluxes
+         IF (PTRACERS_EvPrRn(iFeT).NE.UNSET_RL)
+     &   tileEPRFe(bi,bj)=tileEPRFe(bi,bj)-Ptracer(i,j,ks,bi,bj,iFeT)
+     &                                    *dvol
+         IF (PTRACERS_EvPrRn(iDOFe).NE.UNSET_RL)
+     &   tileEPRFe(bi,bj)=tileEPRFe(bi,bj)-Ptracer(i,j,ks,bi,bj,iDOFe)
+     &                                    *dvol
+         IF (PTRACERS_EvPrRn(iPOFe).NE.UNSET_RL)
+     &   tileEPRFe(bi,bj)=tileEPRFe(bi,bj)-Ptracer(i,j,ks,bi,bj,iPOFe)
+     &                                    *dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_FEQUOTA
+          iTr=ife+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &     tileEPRFe(bi,bj)=tileEPRFe(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)
+     &                                      *dvol
+#else
+          iTr=ic+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &     tileEPRFe(bi,bj)=tileEPRFe(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)
+     &                                      *R_FeC(np)*dvol
+#endif
+         ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+         IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+          tileEPRFe(bi,bj)=tileEPRFe(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                     *R_FeC_CDOM*dvol
+# else
+          tileEPRFe(bi,bj)=tileEPRFe(bi,bj)-Ptracer(i,j,ks,bi,bj,iCDOM)
+     &                                     *R_FeP_CDOM*dvol
+# endif
+         ENDIF
+#endif
+
+C Silica E-P-R fluxes
+         IF (PTRACERS_EvPrRn(iSiO2).NE.UNSET_RL)
+     &    tileEPRSi(bi,bj)=tileEPRSi(bi,bj)-Ptracer(i,j,ks,bi,bj,iSiO2)
+     &                                     *dvol
+         IF (PTRACERS_EvPrRn(iPOSi).NE.UNSET_RL)
+     &    tileEPRSi(bi,bj)=tileEPRSi(bi,bj)-Ptracer(i,j,ks,bi,bj,iPOSi)
+     &                                     *dvol
+         DO np=1,nplank
+#ifdef DARWIN_ALLOW_SIQUOTA
+          iTr=isi+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &     tileEPRSi(bi,bj)=tileEPRSi(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)
+     &                                      *dvol
+#else
+          iTr=ic+np-1
+          IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &     tileEPRSi(bi,bj)=tileEPRSi(bi,bj)-Ptracer(i,j,ks,bi,bj,iTr)
+     &                                      *R_SiC(np)*dvol
+#endif
+         ENDDO
+
+C Alkalinity and oxygen E-P-R fluxes
+#ifdef DARWIN_ALLOW_CARBON
+         IF (PTRACERS_EvPrRn(iALK).NE.UNSET_RL)
+     &   tileEPRA(bi,bj)=tileEPRA(bi,bj)-Ptracer(i,j,ks,bi,bj,iALK)*dvol
+         IF (PTRACERS_EvPrRn(iO2).NE.UNSET_RL)
+     &   tileEPRO(bi,bj)=tileEPRO(bi,bj)-Ptracer(i,j,ks,bi,bj,iO2)*dvol
+#endif
+C       endif convertFW2Salt
+        ENDIF
+C       endif NLFS, etc
+        ENDIF
+C       endif stage 0 and implicitFreeSurface
+        ENDIF
+
+C      enddo i,j
        ENDDO
        ENDDO
+
+C     enddo bi,bj
       ENDDO
       ENDDO
+
+C ======================================================================
+C Combine per-tile sums
 
       CALL GLOBAL_SUM_TILE_RL(tilevol,voltot,myThid)
       CALL GLOBAL_SUM_TILE_RL(tiletotC,tmptotC,myThid)
@@ -648,6 +1028,9 @@ c Silica NLFS fluxes
        CALL GLOBAL_SUM_TILE_RL(tileO2cons,tmpO2cons,myThid)
        CALL GLOBAL_SUM_TILE_RL(tilesfcflxO,tmpsfcflxO,myThid)
        CALL GLOBAL_SUM_TILE_RL(tilevirflxA,tmpvirflxA,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tilesedflxC,tmpsedflxC,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tilesedflxA,tmpsedflxA,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tilesedflxO,tmpsedflxO,myThid)
 #endif
 #ifdef DARWIN_BOTTOM_SINK
        CALL GLOBAL_SUM_TILE_RL(tileBotSnkC,tmpBotSnkC,myThid)
@@ -656,17 +1039,23 @@ c Silica NLFS fluxes
        CALL GLOBAL_SUM_TILE_RL(tileBotSnkFe,tmpBotSnkFe,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileBotSnkSi,tmpBotSnkSi,myThid)
 #endif
-#ifdef EXACT_CONSERV
 C store totals in common block to retrieve at stage 1
+       CALL GLOBAL_SUM_TILE_RL(tileFSC,totFSC,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tileFSN,totFSN,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tileFSP,totFSP,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tileFSFe,totFSFe,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tileFSSi,totFSSi,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tilePER,totPER,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileEPRC,totEPRC,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileEPRN,totEPRN,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileEPRP,totEPRP,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileEPRFe,totEPRFe,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileEPRSi,totEPRSi,myThid)
-# ifdef DARWIN_ALLOW_CARBON
+#ifdef DARWIN_ALLOW_CARBON
+       CALL GLOBAL_SUM_TILE_RL(tileFSA,totFSA,myThid)
+       CALL GLOBAL_SUM_TILE_RL(tileFSO,totFSO,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileEPRA,totEPRA,myThid)
        CALL GLOBAL_SUM_TILE_RL(tileEPRO,totEPRO,myThid)
-# endif
 #endif
       ELSEIF (stage .EQ. 2) THEN
        CALL GLOBAL_SUM_TILE_RL(tilesfcflxFe,tmpsfcflxFe,myThid)
@@ -682,78 +1071,376 @@ C store totals in common block to retrieve at stage 1
 #endif
       ENDIF
 
-#ifdef EXACT_CONSERV
-C retrieve totals from stage 0
+C ======================================================================
+C Retrieve totals from stage 0 for lin.FS and E-P-R
       IF ( stage .EQ. 1 ) THEN
-        tmpEPRC = totEPRC
-        tmpEPRN = totEPRN
-        tmpEPRP = totEPRP
-        tmpEPRFe = totEPRFe
-        tmpEPRSi = totEPRSi
+
+       tmpFSC = totFSC
+       tmpFSN = totFSN
+       tmpFSP = totFSP
+       tmpFSFe = totFSFe
+       tmpFSSi = totFSSi
 # ifdef DARWIN_ALLOW_CARBON
-        tmpEPRA = totEPRA
-        tmpEPRO = totEPRO
+       tmpFSA = totFSA
+       tmpFSO = totFSO
 # endif
-      ENDIF
+
+       tmpEPRC = totEPRC
+       tmpEPRN = totEPRN
+       tmpEPRP = totEPRP
+       tmpEPRFe = totEPRFe
+       tmpEPRSi = totEPRSi
+# ifdef DARWIN_ALLOW_CARBON
+       tmpEPRA = totEPRA
+       tmpEPRO = totEPRO
+# endif
+
+C ----------------------------------------------------------------------
+C convertFW2Salt!=-1 uses PTRACERS_ref instead of Ptracer, subtract here
+
+       IF (convertFW2Salt .NE. -1) THEN
+C Carbon E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iDIC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC - PTRACERS_ref(ks,iDIC)*totPER
+        IF (PTRACERS_EvPrRn(iDOC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC - PTRACERS_ref(ks,iDOC)*totPER
+        IF (PTRACERS_EvPrRn(iPOC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC - PTRACERS_ref(ks,iPOC)*totPER
+        IF (PTRACERS_EvPrRn(iPIC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC - PTRACERS_ref(ks,iPIC)*totPER
+        DO np=1,nplank
+         iTr=ic+np-1
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &    tmpEPRC = tmpEPRC+PTRACERS_EvPrRn(iTr)*(1+R_PICPOC(np))*totPER
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRC = tmpEPRC + PTRACERS_ref(ks,iCDOM)*totPER
+# else
+         tmpEPRC = tmpEPRC + PTRACERS_ref(ks,iCDOM)*R_CP_CDOM*totPER
+# endif
+        ENDIF
 #endif
+
+C Nitrogen E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iNO3).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iNO3)*totPER
+        IF (PTRACERS_EvPrRn(iNH4).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iNH4)*totPER
+        IF (PTRACERS_EvPrRn(iNO2).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iNO2)*totPER
+        IF (PTRACERS_EvPrRn(iDON).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iDON)*totPER
+        IF (PTRACERS_EvPrRn(iPON).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iPON)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_NQUOTA
+          iTr=in+np-1
+          tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iTr)*R_NC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iCDOM)*totPER
+# else
+         tmpEPRN = tmpEPRN - PTRACERS_ref(ks,iCDOM)*R_NP_CDOM*totPER
+# endif
+        ENDIF
+#endif
+
+C Phosphorus E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iPO4).NE.UNSET_RL)
+     &   tmpEPRP = tmpEPRP - PTRACERS_ref(ks,iPO4)*totPER
+        IF (PTRACERS_EvPrRn(iDOP).NE.UNSET_RL)
+     &   tmpEPRP = tmpEPRP - PTRACERS_ref(ks,iDOP)*totPER
+        IF (PTRACERS_EvPrRn(iPOP).NE.UNSET_RL)
+     &   tmpEPRP = tmpEPRP - PTRACERS_ref(ks,iPOP)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_PQUOTA
+          iTr=ip+np-1
+          tmpEPRP = tmpEPRP - PTRACERS_ref(ks,iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRP = tmpEPRP - PTRACERS_ref(ks,iTr)*R_PC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRP = tmpEPRP - PTRACERS_ref(ks,iCDOM)*R_PC_CDOM*totPER
+# else
+         tmpEPRP = tmpEPRP - PTRACERS_ref(ks,iCDOM)*totPER
+# endif
+        ENDIF
+#endif
+
+C Iron E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iFeT).NE.UNSET_RL)
+     &   tmpEPRFe = tmpEPRFe - PTRACERS_ref(ks,iFeT)*totPER
+        IF (PTRACERS_EvPrRn(iDOFe).NE.UNSET_RL)
+     &   tmpEPRFe = tmpEPRFe - PTRACERS_ref(ks,iDOFe)*totPER
+        IF (PTRACERS_EvPrRn(iPOFe).NE.UNSET_RL)
+     &   tmpEPRFe = tmpEPRFe - PTRACERS_ref(ks,iPOFe)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_FEQUOTA
+          iTr=ife+np-1
+          tmpEPRFe = tmpEPRFe - PTRACERS_ref(ks,iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRFe = tmpEPRFe - PTRACERS_ref(ks,iTr)*R_FeC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRFe = tmpEPRFe - PTRACERS_ref(ks,iCDOM)*R_FeC_CDOM*totPER
+# else
+         tmpEPRFe = tmpEPRFe - PTRACERS_ref(ks,iCDOM)*R_FeP_CDOM*totPER
+# endif
+        ENDIF
+#endif
+
+C Silica E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iSiO2).NE.UNSET_RL)
+     &   tmpEPRSi = tmpEPRSi - PTRACERS_ref(ks,iSiO2)*totPER
+        IF (PTRACERS_EvPrRn(iPOSi).NE.UNSET_RL)
+     &   tmpEPRSi = tmpEPRSi - PTRACERS_ref(ks,iPOSi)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_SIQUOTA
+          iTr=isi+np-1
+          tmpEPRSi = tmpEPRSi - PTRACERS_ref(ks,iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRSi = tmpEPRSi - PTRACERS_ref(ks,iTr)*R_SiC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+
+C Alkalinity and oxygen E-P-R fluxes
+#ifdef DARWIN_ALLOW_CARBON
+        IF (PTRACERS_EvPrRn(iALK).NE.UNSET_RL)
+     &   tmpEPRA = tmpEPRA - PTRACERS_ref(ks,iALK)*totPER
+        IF (PTRACERS_EvPrRn(iO2).NE.UNSET_RL)
+     &   tmpEPRO = tmpEPRO - PTRACERS_ref(ks,iO2)*totPER
+#endif
+       ENDIF
+
+C ----------------------------------------------------------------------
+C Add EvPrRn for all cases
+
+C Carbon E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iDIC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC + PTRACERS_EvPrRn(iDIC)*totPER
+        IF (PTRACERS_EvPrRn(iDOC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC + PTRACERS_EvPrRn(iDOC)*totPER
+        IF (PTRACERS_EvPrRn(iPOC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC + PTRACERS_EvPrRn(iPOC)*totPER
+        IF (PTRACERS_EvPrRn(iPIC).NE.UNSET_RL)
+     &   tmpEPRC = tmpEPRC + PTRACERS_EvPrRn(iPIC)*totPER
+        DO np=1,nplank
+         iTr=ic+np-1
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL)
+     &    tmpEPRC = tmpEPRC+PTRACERS_EvPrRn(iTr)*(1+R_PICPOC(np))*totPER
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRC = tmpEPRC + PTRACERS_EvPrRn(iCDOM)*totPER
+# else
+         tmpEPRC = tmpEPRC + PTRACERS_EvPrRn(iCDOM)*R_CP_CDOM*totPER
+# endif
+        ENDIF
+#endif
+
+C Nitrogen E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iNO3).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iNO3)*totPER
+        IF (PTRACERS_EvPrRn(iNH4).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iNH4)*totPER
+        IF (PTRACERS_EvPrRn(iNO2).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iNO2)*totPER
+        IF (PTRACERS_EvPrRn(iDON).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iDON)*totPER
+        IF (PTRACERS_EvPrRn(iPON).NE.UNSET_RL)
+     &   tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iPON)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_NQUOTA
+          iTr=in+np-1
+          tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iTr)*R_NC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iCDOM)*totPER
+# else
+         tmpEPRN = tmpEPRN + PTRACERS_EvPrRn(iCDOM)*R_NP_CDOM*totPER
+# endif
+        ENDIF
+#endif
+
+C Phosphorus E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iPO4).NE.UNSET_RL)
+     &   tmpEPRP = tmpEPRP + PTRACERS_EvPrRn(iPO4)*totPER
+        IF (PTRACERS_EvPrRn(iDOP).NE.UNSET_RL)
+     &   tmpEPRP = tmpEPRP + PTRACERS_EvPrRn(iDOP)*totPER
+        IF (PTRACERS_EvPrRn(iPOP).NE.UNSET_RL)
+     &   tmpEPRP = tmpEPRP + PTRACERS_EvPrRn(iPOP)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_PQUOTA
+          iTr=ip+np-1
+          tmpEPRP = tmpEPRP + PTRACERS_EvPrRn(iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRP = tmpEPRP + PTRACERS_EvPrRn(iTr)*R_PC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRP = tmpEPRP + PTRACERS_EvPrRn(iCDOM)*R_PC_CDOM*totPER
+# else
+         tmpEPRP = tmpEPRP + PTRACERS_EvPrRn(iCDOM)*totPER
+# endif
+        ENDIF
+#endif
+
+C Iron E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iFeT).NE.UNSET_RL)
+     &   tmpEPRFe = tmpEPRFe + PTRACERS_EvPrRn(iFeT)*totPER
+        IF (PTRACERS_EvPrRn(iDOFe).NE.UNSET_RL)
+     &   tmpEPRFe = tmpEPRFe + PTRACERS_EvPrRn(iDOFe)*totPER
+        IF (PTRACERS_EvPrRn(iPOFe).NE.UNSET_RL)
+     &   tmpEPRFe = tmpEPRFe + PTRACERS_EvPrRn(iPOFe)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_FEQUOTA
+          iTr=ife+np-1
+          tmpEPRFe = tmpEPRFe + PTRACERS_EvPrRn(iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRFe = tmpEPRFe + PTRACERS_EvPrRn(iTr)*R_FeC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+#ifdef DARWIN_ALLOW_CDOM
+        IF (PTRACERS_EvPrRn(iCDOM).NE.UNSET_RL) THEN
+# ifdef DARWIN_CDOM_UNITS_CARBON
+         tmpEPRFe = tmpEPRFe + PTRACERS_EvPrRn(iCDOM)*R_FeC_CDOM*totPER
+# else
+         tmpEPRFe = tmpEPRFe + PTRACERS_EvPrRn(iCDOM)*R_FeP_CDOM*totPER
+# endif
+        ENDIF
+#endif
+
+C Silica E-P-R fluxes
+        IF (PTRACERS_EvPrRn(iSiO2).NE.UNSET_RL)
+     &   tmpEPRSi = tmpEPRSi + PTRACERS_EvPrRn(iSiO2)*totPER
+        IF (PTRACERS_EvPrRn(iPOSi).NE.UNSET_RL)
+     &   tmpEPRSi = tmpEPRSi + PTRACERS_EvPrRn(iPOSi)*totPER
+        DO np=1,nplank
+         IF (PTRACERS_EvPrRn(iTr).NE.UNSET_RL) THEN
+#ifdef DARWIN_ALLOW_SIQUOTA
+          iTr=isi+np-1
+          tmpEPRSi = tmpEPRSi + PTRACERS_EvPrRn(iTr)*totPER
+#else
+          iTr=ic+np-1
+          tmpEPRSi = tmpEPRSi + PTRACERS_EvPrRn(iTr)*R_SiC(np)*totPER
+#endif
+         ENDIF
+        ENDDO
+
+C Alkalinity and oxygen E-P-R fluxes
+#ifdef DARWIN_ALLOW_CARBON
+        IF (PTRACERS_EvPrRn(iALK).NE.UNSET_RL)
+     &   tmpEPRA = tmpEPRA + PTRACERS_EvPrRn(iALK)*totPER
+        IF (PTRACERS_EvPrRn(iO2).NE.UNSET_RL)
+     &   tmpEPRO = tmpEPRO + PTRACERS_EvPrRn(iO2)*totPER
+#endif
+
+C     endif stage 1
+      ENDIF
+
+C ======================================================================
+C write totals
 
       IF ( myProcId.EQ.0 .AND. myThid.EQ.1 ) THEN
 C do not write ecosystem non-conservation terms before they are applied
         IF ((myIter.EQ.nIter0 .OR.
      &       (staggerTimeStep.AND.myIter.EQ.nIter0+1)) .AND.
      &      stage.EQ.0) THEN
-         WRITE(DAR_cons_C_unit,'(A1,A11,A6,A20,6A24)')'#','iter',
-     &      'stage','tot','mean','sfcflx','virtflx','botsnk','EvPrRn',
+         WRITE(DAR_cons_C_unit,'(A1,A11,A6,A20,8A24)')'#','iter',
+     &      'stage','tot','mean','sfcflx','virtflx','botsnk','impFS',
+     &      'EPR','runoff','sed'
+         WRITE(DAR_cons_N_unit,'(A1,A11,A6,A20,7A24)')'#','iter',
+     &      'stage','tot','mean','Nfix','Ndenit','botsnk','impFS','EPR',
      &      'runoff'
-         WRITE(DAR_cons_N_unit,'(A1,A11,A6,A20,6A24)')'#','iter',
-     &      'stage','tot','mean','Nfix','Ndenit','botsnk','EvPrRn',
-     &      'runoff'
-         WRITE(DAR_cons_P_unit,'(A1,A11,A6,A20,4A24)')'#','iter',
-     &      'stage','tot','mean','botsnk','EvPrRn','runoff'
-         WRITE(DAR_cons_Fe_unit,'(A1,A11,A6,A20,9A24)')'#','iter',
+         WRITE(DAR_cons_P_unit,'(A1,A11,A6,A20,5A24)')'#','iter',
+     &      'stage','tot','mean','botsnk','impFS','EPR','runoff'
+         WRITE(DAR_cons_Fe_unit,'(A1,A11,A6,A20,10A24)')'#','iter',
      &      'stage','tot','mean','minFeLoss','scav','sfcflx','sedflx',
-     &      'ventflx',
-     &      'botsnk','EvPrRn','runoff'
-         WRITE(DAR_cons_Si_unit,'(A1,A11,A6,A20,4A24)')'#','iter',
-     &      'stage','tot','mean','botsnk','EvPrRn',
-     &      'runoff'
+     &      'ventflx','botsnk','impFS','EPR','runoff'
+         WRITE(DAR_cons_Si_unit,'(A1,A11,A6,A20,5A24)')'#','iter',
+     &      'stage','tot','mean','botsnk','impFS','EPR','runoff'
 
 #ifdef DARWIN_ALLOW_CARBON
-         WRITE(DAR_cons_A_unit,'(A1,A11,A6,A20,5A24)')'#','iter',
-     &      'stage','tot','mean','sfcflx','AlkSrc','EvPrRn','runoff'
-         WRITE(DAR_cons_O_unit,'(A1,A11,A6,A20,5A24)')'#','iter',
-     &      'stage','tot','mean','sfcflx','O2prod','O2cons','EvPrRn'
+         WRITE(DAR_cons_A_unit,'(A1,A11,A6,A20,7A24)')'#','iter',
+     &      'stage','tot','mean','sfcflx','AlkSrc','impFS','EPR',
+     &      'runoff'
+     &     ,'sed'
+         WRITE(DAR_cons_O_unit,'(A1,A11,A6,A20,7A24)')'#','iter',
+     &     'stage','tot','mean','sfcflx','O2prod','O2cons','impFS','EPR'
+     &     ,'sed'
 #endif
         ENDIF
-        WRITE(DAR_cons_C_unit,'(I12,I2,7E24.16)') myIter, stage,
+
+        WRITE(DAR_cons_C_unit,'(I12,I2,9E24.16)') myIter, stage,
      &     tmptotC, tmptotC/voltot, tmpsfcflxC, tmpvirflxC, -tmpBotSnkC,
-     &     tmpEPRC, tmprunoffC
-        WRITE(DAR_cons_N_unit,'(I12,I2,7E24.16)') myIter, stage,
+     &     tmpFSC, tmpEPRC, tmprunoffC, tmpsedflxC
+        WRITE(DAR_cons_N_unit,'(I12,I2,8E24.16)') myIter, stage,
      &     tmptotN, tmptotN/voltot, tmptotNfix, -tmptotNdenit,
-     &     -tmpBotSnkN, tmpEPRN, tmprunoffN
-        WRITE(DAR_cons_P_unit,'(I12,I2,5E24.16)') myIter, stage,
-     &     tmptotP, tmptotP/voltot, -tmpBotSnkP, tmpEPRP, tmprunoffP
-        WRITE(DAR_cons_Fe_unit,'(I12,I2,10E24.16)') myIter, stage,
+     &     -tmpBotSnkN, tmpFSN, tmpEPRN, tmprunoffN
+        WRITE(DAR_cons_P_unit,'(I12,I2,6E24.16)') myIter, stage,
+     &     tmptotP, tmptotP/voltot, -tmpBotSnkP, tmpFSP,tmpEPRP,
+     &     tmprunoffP
+        WRITE(DAR_cons_Fe_unit,'(I12,I2,11E24.16)') myIter, stage,
      &     tmptotFe, tmptotFe/voltot, -tmpminFeLoss, -tmptotscavFe,
      &     tmpsfcflxFe, tmpsedflxFe, tmpventflxFe, -tmpBotSnkFe,
-     &     tmpEPRFe, tmprunoffFe
-        WRITE(DAR_cons_Si_unit,'(I12,I2,5E24.16)') myIter, stage,
-     &     tmptotSi, tmptotSi/voltot, -tmpBotSnkSi, tmpEPRSi,
+     &     tmpFSFe, tmpEPRFe, tmprunoffFe
+        WRITE(DAR_cons_Si_unit,'(I12,I2,6E24.16)') myIter, stage,
+     &     tmptotSi, tmptotSi/voltot, -tmpBotSnkSi, tmpFSSi, tmpEPRSi,
      &     tmprunoffSi
 #ifdef DARWIN_ALLOW_CARBON
-        WRITE(DAR_cons_A_unit,'(I12,I2,6E24.16)') myIter, stage,
-     &     tmptotA, tmptotA/voltot, tmpvirflxA, tmpAlkSrc, tmpEPRA,
-     &     tmprunoffA
-        WRITE(DAR_cons_O_unit,'(I12,I2,6E24.16)') myIter, stage,
+        WRITE(DAR_cons_A_unit,'(I12,I2,8E24.16)') myIter, stage,
+     &     tmptotA, tmptotA/voltot, tmpvirflxA, tmpAlkSrc, tmpFSA,
+     &     tmpEPRA, tmprunoffA, tmpsedflxA
+        WRITE(DAR_cons_O_unit,'(I12,I2,8E24.16)') myIter, stage,
      &     tmptotO, tmptotO/voltot, tmpsfcflxO, tmpO2prod, -tmpO2cons,
-     &     tmpEPRO
+     &     tmpFSO, tmpEPRO, tmpsedflxO
 #endif
       ENDIF
-
-C--   Everyone else must wait
-      _BARRIER
 
 #endif /* DARWIN_ALLOW_CONS */
 
       RETURN
       END
+

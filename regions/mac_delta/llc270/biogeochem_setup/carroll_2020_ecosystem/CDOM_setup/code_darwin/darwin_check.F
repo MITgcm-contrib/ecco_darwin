@@ -1214,80 +1214,6 @@ C--   DOCrunoff
       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
      &                     SQUEEZE_RIGHT , myThid )
 
-C--   rDOCrunoff
-      IF ( rDOCrunofffile.NE.' ' ) THEN
-       CALL EXF_FLD_SUMMARY( 'rDOCrunoff forcing',
-     I      rDOCrunofffile, rDOCrunoffRepCycle, rDOCrunoffperiod,
-     I      rDOCrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
-#ifdef USE_EXF_INTERPOLATION
-       CALL EXF_PRINT_INTERP( 'rDOCrunoff',
-     &  rDOCrunoff_lon0, rDOCrunoff_lon_inc, rDOCrunoff_lat0, rDOCrunoff_lat
-     &_inc,
-     &  rDOCrunoff_nlon, rDOCrunoff_nlat, rDOCrunoff_interpMethod, myThid )
-#endif
-       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
-     &                     SQUEEZE_RIGHT , myThid )
-       CALL WRITE_0D_RL(rDOCrunoff_exfremo_intercept,INDEX_NONE,
-     &   'rDOCrunoff_exfremo_intercept =',
-     &   ' /* intercept for rDOCrunoff forcing mean removal */')
-       CALL WRITE_0D_RL(rDOCrunoff_exfremo_slope,INDEX_NONE,
-     &   'rDOCrunoff_exfremo_slope =',
-     &   ' /* slope for rDOCrunoff forcing trend removal */')
-       CALL WRITE_0D_RL(darwin_inscal_rDOCrunoff,INDEX_NONE,
-     &   'darwin_inscal_rDOCrunoff =',
-     &   ' /* scaling factor for rDOCrunoff fields */')
-      ELSE
-       CALL WRITE_0D_RL(rDOCrunoffconst,INDEX_NONE,
-     &   'rDOCrunoffconst =',
-     &   ' /* constant rDOCrunoff forcing */')
-      ENDIF
-
-      IF ( rDOCrunofffile.NE.' ' .OR. rDOCrunoffconst.NE.0 _d 0 ) THEN
-       CALL WRITE_0D_C(rDOCrunoffmask,-1,INDEX_NONE,
-     &   'rDOCrunoffmask =',
-     &   ' /* mask for rDOCrunoff forcing */')
-      ENDIF
-
-      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
-     &                     SQUEEZE_RIGHT , myThid )
-
-C--   CDOMrunoff
-      IF ( CDOMrunofffile.NE.' ' ) THEN
-       CALL EXF_FLD_SUMMARY( 'CDOMrunoff forcing',
-     I      CDOMrunofffile, CDOMrunoffRepCycle, CDOMrunoffperiod,
-     I      CDOMrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
-#ifdef USE_EXF_INTERPOLATION
-       CALL EXF_PRINT_INTERP( 'CDOMrunoff',
-     &  CDOMrunoff_lon0, CDOMrunoff_lon_inc, CDOMrunoff_lat0, CDOMrunoff_lat
-     &_inc,
-     &  CDOMrunoff_nlon, CDOMrunoff_nlat, CDOMrunoff_interpMethod, myThid )
-#endif
-       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
-     &                     SQUEEZE_RIGHT , myThid )
-       CALL WRITE_0D_RL(CDOMrunoff_exfremo_intercept,INDEX_NONE,
-     &   'CDOMrunoff_exfremo_intercept =',
-     &   ' /* intercept for CDOMrunoff forcing mean removal */')
-       CALL WRITE_0D_RL(CDOMrunoff_exfremo_slope,INDEX_NONE,
-     &   'CDOMrunoff_exfremo_slope =',
-     &   ' /* slope for CDOMrunoff forcing trend removal */')
-       CALL WRITE_0D_RL(darwin_inscal_CDOMrunoff,INDEX_NONE,
-     &   'darwin_inscal_CDOMrunoff =',
-     &   ' /* scaling factor for CDOMrunoff fields */')
-      ELSE
-       CALL WRITE_0D_RL(CDOMrunoffconst,INDEX_NONE,
-     &   'CDOMrunoffconst =',
-     &   ' /* constant CDOMrunoff forcing */')
-      ENDIF
-
-      IF ( CDOMrunofffile.NE.' ' .OR. CDOMrunoffconst.NE.0 _d 0 ) THEN
-       CALL WRITE_0D_C(CDOMrunoffmask,-1,INDEX_NONE,
-     &   'CDOMrunoffmask =',
-     &   ' /* mask for CDOMrunoff forcing */')
-      ENDIF
-
-      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
-     &                     SQUEEZE_RIGHT , myThid )
-
 C--   DONrunoff
       IF ( DONrunofffile.NE.' ' ) THEN
        CALL EXF_FLD_SUMMARY( 'DONrunoff forcing',
@@ -1621,43 +1547,6 @@ C--   DICrunoff
       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
      &                     SQUEEZE_RIGHT , myThid )
 
-C--   ALKrunoff
-      IF ( ALKrunofffile.NE.' ' ) THEN
-       CALL EXF_FLD_SUMMARY( 'ALKrunoff forcing',
-     I      ALKrunofffile, ALKrunoffRepCycle, ALKrunoffperiod,
-     I      ALKrunoffStartTime, useExfYearlyFields, addBlkLn, myThid )
-#ifdef USE_EXF_INTERPOLATION
-       CALL EXF_PRINT_INTERP( 'ALKrunoff',
-     &  ALKrunoff_lon0, ALKrunoff_lon_inc, ALKrunoff_lat0, ALKrunoff_lat
-     &_inc,
-     &  ALKrunoff_nlon, ALKrunoff_nlat, ALKrunoff_interpMethod, myThid )
-#endif
-       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
-     &                     SQUEEZE_RIGHT , myThid )
-       CALL WRITE_0D_RL(ALKrunoff_exfremo_intercept,INDEX_NONE,
-     &   'ALKrunoff_exfremo_intercept =',
-     &   ' /* intercept for ALKrunoff forcing mean removal */')
-       CALL WRITE_0D_RL(ALKrunoff_exfremo_slope,INDEX_NONE,
-     &   'ALKrunoff_exfremo_slope =',
-     &   ' /* slope for ALKrunoff forcing trend removal */')
-       CALL WRITE_0D_RL(darwin_inscal_ALKrunoff,INDEX_NONE,
-     &   'darwin_inscal_ALKrunoff =',
-     &   ' /* scaling factor for ALKrunoff fields */')
-      ELSE
-       CALL WRITE_0D_RL(ALKrunoffconst,INDEX_NONE,
-     &   'ALKrunoffconst =',
-     &   ' /* constant ALKrunoff forcing */')
-      ENDIF
-
-      IF ( ALKrunofffile.NE.' ' .OR. ALKrunoffconst.NE.0 _d 0 ) THEN
-       CALL WRITE_0D_C(ALKrunoffmask,-1,INDEX_NONE,
-     &   'ALKrunoffmask =',
-     &   ' /* mask for ALKrunoff forcing */')
-      ENDIF
-
-      CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
-     &                     SQUEEZE_RIGHT , myThid )
-
 C--   Other forcing parameters
       CALL WRITE_0D_RL(R_ALK_DIC_runoff,INDEX_NONE,
      &'R_ALK_DIC_runoff =',
@@ -1838,13 +1727,13 @@ C--   Print parameters from DARWIN_PARAMS.h
      &' /* solubility of Fe dust */')
       CALL WRITE_0D_RL(ligand_tot,INDEX_NONE,
      &'ligand_tot =',
-     &' /* total ligand concentration (mol/m3) */')
+     &' /* total ligand concentration (mmol/m3) */')
       CALL WRITE_0D_RL(ligand_stab,INDEX_NONE,
      &'ligand_stab =',
-     &' /* ligand stability rate ratio (m3/mol) */')
+     &' /* ligand stability rate ratio (m3/mmol) */')
       CALL WRITE_0D_RL(freefemax,INDEX_NONE,
      &'freefemax =',
-     &' /* max concentration of free iron (mol/m3) */')
+     &' /* max concentration of free iron (mmol/m3) */')
 #ifdef DARWIN_PART_SCAV_POP
       CALL WRITE_0D_RL(scav_rat,INDEX_NONE,
      &'scav_rat =',
@@ -1871,12 +1760,15 @@ C--   Print parameters from DARWIN_PARAMS.h
       CALL WRITE_0D_RL(scav_POC_wgt,INDEX_NONE,
      &'scav_POC_wgt =',
      &' /* weight of POC in POM for scavenging (g / mmol C) */')
-      CALL WRITE_0D_RL(scav_POSi_wgt,INDEX_NONE,
-     &'scav_POSi_wgt =',
-     &' /* weight of POSi in POM for scavenging (g / mmol Si) */')
+      CALL WRITE_0D_RL(scav_PSi_wgt,INDEX_NONE,
+     &'scav_PSi_wgt =',
+     &' /* weight of PSi in POM for scavenging (g / mmol Si) */')
       CALL WRITE_0D_RL(scav_PIC_wgt,INDEX_NONE,
      &'scav_PIC_wgt =',
      &' /* weight of PIC in POM for scavenging (g / mmol C) */')
+      CALL WRITE_0D_RL(scav_degrPOM,INDEX_NONE,
+     &'scav_degrPOM =',
+     &' /* concentration of non-labile POM for scavenging (g/m3) */')
 #else
       CALL WRITE_0D_RL(scav,INDEX_NONE,
      &'scav =',
@@ -2103,8 +1995,8 @@ C--   Print parameters from DARWIN_PARAMS.h
       CALL WRITE_0D_RL(aphy_chl_ave,INDEX_NONE,
      &'aphy_chl_ave =',
      &' /* Chl-specific absorption coefficient (m2/mg Chl) */')
-      CALL WRITE_0D_RL(chl2nmax,INDEX_NONE,
-     &'chl2nmax =',
+      CALL WRITE_0D_RL(Chl2Nmax,INDEX_NONE,
+     &'Chl2Nmax =',
      &' /* max Chl:N ratio for Chl synthesis following Moore 2002 (mg Ch
      &l / mmol N) */')
       CALL WRITE_0D_RL(synthcost,INDEX_NONE,
