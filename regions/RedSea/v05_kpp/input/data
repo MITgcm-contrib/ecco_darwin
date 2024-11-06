@@ -19,8 +19,6 @@
  diffKhS=1.E1,
 #
  bottomDragQuadratic = 0.001,
-#when using ggl90
- ivdc_kappa=10.,
  implicitDiffusion=.TRUE.,
  implicitViscosity=.TRUE.,
  viscC4Leith=1.5,
