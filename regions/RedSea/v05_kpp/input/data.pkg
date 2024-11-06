@@ -4,7 +4,7 @@
  useDiagnostics = .TRUE.,
  useEXF         = .TRUE.,
  useGCHEM       = .TRUE.,
- useGGL90       = .TRUE.,
+ useKPP         = .TRUE.,
  useGMRedi      = .TRUE.,
  useOBCS        = .TRUE.,
  usePTRACERS    = .TRUE.,
