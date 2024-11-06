@@ -13,7 +13,7 @@
 ==============
 # 2. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05/code -mpi \
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05_kpp/code -mpi \
    -of ../../ecco_darwin/regions/RedSea/v05/code/darwin_arm64_gfortran
   make depend
   make -j
@@ -35,5 +35,5 @@
 # apCO2_* and era_xx_it42_v2
 
   mkdir diags diags/daily diags/monthly
-  cp ../../ecco_darwin/regions/RedSea/v05/input/* .
+  cp ../../ecco_darwin/regions/RedSea/v05_kpp/input/* .
   mpirun -np 8 ./mitgcmuv
