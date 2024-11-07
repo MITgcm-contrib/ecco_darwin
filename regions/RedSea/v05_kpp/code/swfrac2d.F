@@ -54,7 +54,7 @@ C     input/output arguments
 C     swdk    :: on input: vertical depth for desired sw fraction
 C               (fact*swdk) is negative distance (m) from surface
 C     swdk    :: on output: short wave (radiation) fractional decay
-      _RL     swdk(0:sNx+1,0:sNy+1,imax)
+      _RL     swdk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,imax)
 
 C     !LOCAL VARIABLES:
 C     === Local variables ===
