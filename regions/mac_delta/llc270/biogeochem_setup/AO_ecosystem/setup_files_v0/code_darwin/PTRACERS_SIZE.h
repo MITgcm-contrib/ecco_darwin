@@ -13,7 +13,7 @@ C  and is set here (default 1)
 C
 C     Number of tracers
       INTEGER PTRACERS_num
-      PARAMETER(PTRACERS_num = 33 )
+      PARAMETER(PTRACERS_num = 34 )
 
 #ifdef ALLOW_AUTODIFF_TAMC
       INTEGER    maxpass

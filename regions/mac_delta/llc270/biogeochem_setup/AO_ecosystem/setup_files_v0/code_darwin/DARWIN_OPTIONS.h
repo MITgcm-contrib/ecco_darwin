@@ -176,13 +176,13 @@ C base particle scavenging on POP as in darwin2
 C random trait generation
 
 C assign traits based on random numbers as in darwin2
-#define  DARWIN_RANDOM_TRAITS
+#undef  DARWIN_RANDOM_TRAITS
 
 C set traits for darwin2 2-species setup (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_TWO_SPECIES_SETUP
 
 C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
-#define  DARWIN_NINE_SPECIES_SETUP
+#undef  DARWIN_NINE_SPECIES_SETUP
 
 C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ

@@ -77,14 +77,16 @@
  &DARWIN_PARAMS
 # do not read darwin pickup
  darwin_pickupSuff= ' ',
- darwin_chlInitBalanced= .FALSE.,
- darwin_chlIter0= 420768,
+ darwin_chlInitBalanced= .TRUE.,
+ darwin_chlIter0= 1, 
+ diaz_ini_fac= 0.1,
  darwin_seed= 56,
  selectPHsolver=1,
+ PARmin= 0.1,
  alpfe= 0.92831,
- freefemax = .1E-4,
+ freefemax = .1E-3,
  depthfesed= 7000.,
- scav_rat= 6.02502315E-7,
+ scav_rat= 0.2,
  kdoc=  3.168808781402895E-7,   ! 1/90days
  krdoc= 3.168808781402895E-9,   ! 1/10years
  kdop=  2.314814814814815E-7,   ! 1/50day
@@ -95,6 +97,8 @@
  kPON=  4.629629629629630E-7,   ! 1/25day
  kPOFe= 4.629629629629630E-7,   ! 1/25day
  kPOSi= 7.716049382716049E-8,   ! 1/150day
+ phygrazmin= 120E-10,
+ hollexp = 1.E0,
  SURFDICMIN  =   100.0,
  SURFALKMIN  =   100.0,
  /
@@ -107,11 +111,79 @@
  /
 ########################
  &DARWIN_RANDOM_PARAMS
- smallgrow=0.66098,
- biggrow=0.43148,
- diatomgraz=0.83003,
- val_R_PICPOC=0.04245,
  /
 ########################
  &DARWIN_TRAIT_PARAMS
+ grp_names= 'PicoEuk', 'Hapto', 'LL Diat', 'HL Diat', 'Dino', 'Zoo','Bact'
+#
+#                        s  C  D1 D2 l  Z    b
+ grp_nplank(:)=          1, 1, 1, 1, 1, 2, 1,
+ grp_photo(:)=           1, 1, 1, 1, 1, 0, 0,
+ grp_pred(:)=            0, 0, 0, 0, 1, 1, 0,
+ grp_prey(:)=            1, 1, 1, 1, 1, 1, 1,
+ grp_hasSi(:)=           0, 0, 1, 1, 0, 0, 0,
+ grp_hasPIC(:)=          0, 0, 0, 0, 0, 0, 0,
+ grp_DIAZO(:)=           0, 0, 0, 0, 0, 0, 0,
+ grp_useNH4(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_useNO2(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_useNO3(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_combNO(:)=          1, 1, 1, 1, 1, 0, 0,
+ grp_bacttype(:)=        0, 0, 0, 0, 0, 0, 2,
+ grp_aerobic(:)=         0, 0, 0, 0, 0, 0, 1,
+ grp_denit(:)=           0, 0, 0, 0, 0, 0, 0,
+ grp_tempMort(:)=        0, 0, 0, 0, 0, 0, 0,
+ grp_tempMort2(:)=       0, 0, 0, 0, 0, 0, 0,
+ grp_aptype(:)=          1, 6, 5, 5, 9, 11, 12,
+#
+ a_Xmin(:)= 5*1.25e-2, 1e-3, 1e-3,
+
+
+ a_phytoTempAe= 5*0.0095,
+ a_hetTempAe=5*0.0631,
+ a_grazTempAe=5*0.1100,
+
+ a_mQyield(:)= 6E-5, 2*4E-5, 6E-5, 4E-5, 2*0.0,
+ a_chl2cmax(:)=  2*.2, .3, .3, .2, 0., 0.,
+ a_acclimtimescl(:)= 7*5.7870370370370370E-6,
+ logvolbase= -1.4130,
+ logvolinc= .513,
+ logvol0ind(:)= 5, 7, 9, 9, 9, 11, 1,
+ a_biosink(:)= 5*6.951416635391563E-7, 0., 6.951416635391563E-7,
+ b_biosink(:)= 5*.2833333333333333, 0., 0.2833333333333333,
+ a_PCmax(1)= 0.7016,
+ a_PCmax(2)= 1.5149,
+ a_PCmax(3)= 1.7672,
+ a_PCmax(4)= 1.4138,
+ a_PCmax(5)= 0.8810,
+ a_PCmax(6)= 0,
+ a_PCmax(7)= 0.5700,
+
+
+
+ a_PCmax_denom(:)= 7*86400.,
+ b_PCmax(:)= 0.28, -0.10, -0.10, -0.10,-0.10, 0., 0.28,
+#
+ a_Qpmin = 5*0.005, 0.008, 0.008
+ a_Qpmax = 5*0.02,  0.01,  0.01
+#
+ darwin_effective_ksat= T,
+ darwin_select_kn_allom= 2,
+#
+#grp_ExportFracPreyPred(1:7,6)= 7*.8,
+ a_R_ChlC(6)= 0.,
+ a_grazemax(6)= 3.4722000000000000E-05,  ! prowe values
+ b_grazemax(6)= -0.16,
+#
+ a_mort(:)= 5*8e-07, 2*2e-7,
+ a_mort2(:)= 7*6.e-8,
+ a_phytoTempExp2= 7*.0003,
+ a_R_PC(:)= 6*0.008333333333333333, 0.010600000000,
+ a_R_FeC(:)= 7*0.008333333333333333E-3,
+ a_R_NC(:)= 7*0.13333333333333333,
+ a_R_SiC(:)= 2*0., 2*0.26666666666666666, 3*0.,
+ a_R_PICPOC(:)= 7*0.,
+ a_kgrazesat(:)= 7*3.5,
+ b_kgrazesat(:)= 7*0,
+#
+ grp_ass_eff(:,:)=49*0.32,
  /

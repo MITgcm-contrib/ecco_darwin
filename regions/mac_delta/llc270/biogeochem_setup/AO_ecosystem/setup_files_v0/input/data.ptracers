@@ -1,11 +1,11 @@
  &PTRACERS_PARM01
- PTRACERS_numInUse= 33,
- PTRACERS_Iter0= 420768,
+ PTRACERS_numInUse= 34,
+ PTRACERS_Iter0= 1,
 #
- PTRACERS_advScheme(:)= 33*33,
- PTRACERS_diffKh(:)= 33*0.E3,
- PTRACERS_diffKr(:)= 33*1.E-5,
- PTRACERS_useGMRedi(:)= 33*.TRUE.,
+ PTRACERS_advScheme(:)= 34*33,
+ PTRACERS_diffKh(:)= 34*0.E3,
+ PTRACERS_diffKr(:)= 34*1.E-5,
+ PTRACERS_useGMRedi(:)= 34*.TRUE.,
 #
  PTRACERS_EvPrRn( 1)= 0.,
  PTRACERS_EvPrRn( 7)= 0.,
@@ -44,11 +44,12 @@
  PTRACERS_names(26)= 'c05',
  PTRACERS_names(27)= 'c06',
  PTRACERS_names(28)= 'c07',
- PTRACERS_names(29)= 'Chl01',
- PTRACERS_names(30)= 'Chl02',
- PTRACERS_names(31)= 'Chl03',
- PTRACERS_names(32)= 'Chl04',
- PTRACERS_names(33)= 'Chl05',
+ PTRACERS_names(29)= 'c08',
+ PTRACERS_names(30)= 'Chl01',
+ PTRACERS_names(31)= 'Chl02',
+ PTRACERS_names(32)= 'Chl03',
+ PTRACERS_names(33)= 'Chl04',
+ PTRACERS_names(34)= 'Chl05',
 #
  PTRACERS_units( 1)= 'uM C'
  PTRACERS_units( 2)= 'uM N'
@@ -78,9 +79,10 @@
  PTRACERS_units(26)= 'uM C'
  PTRACERS_units(27)= 'uM C'
  PTRACERS_units(28)= 'uM C'
- PTRACERS_units(29)= 'mg/m^3'
+ PTRACERS_units(29)= 'uM C'
  PTRACERS_units(30)= 'mg/m^3'
  PTRACERS_units(31)= 'mg/m^3'
  PTRACERS_units(32)= 'mg/m^3'
  PTRACERS_units(33)= 'mg/m^3'
+ PTRACERS_units(34)= 'mg/m^3'
  &
