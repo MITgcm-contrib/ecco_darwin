@@ -342,7 +342,7 @@ CEOP
 #ifdef SHORTWAVE_HEATING
       _RL minusone
       PARAMETER (minusOne=-1.)
-      _RL swfracb(0:sNx+1,0:sNy+1,2)
+      _RL swfracb(1-OLx:sNx+OLx,1-OLy:sNy+OLy,2)
       INTEGER kp1
 #endif
 

@@ -445,7 +445,7 @@ C     kSurface  :: index of surface level
 #ifdef SHORTWAVE_HEATING
       _RL minusone
       PARAMETER (minusOne=-1.)
-      _RL swfracb(0:sNx+1,0:sNy+1,2)
+      _RL swfracb(1-OLx:sNx+OLx,1-OLy:sNy+OLy,2)
       INTEGER kp1
 #endif
 #endif /* USE_OLD_EXTERNAL_FORCING */
@@ -679,7 +679,7 @@ c     IF ( usePenetratingSW ) THEN
        CALL SWFRAC2D(
      I             2, minusOne,
      U             swfracb,
-     I             bi, bj, myTime, 1, myThid )
+     I             bi, bj, myTime, myIter, myThid )
        kp1 = k+1
        IF (k.EQ.Nr) THEN
         kp1 = k

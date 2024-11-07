@@ -621,10 +621,10 @@ C     the bottom of the mixing layer.
             worka(i,j) = KPPhbl(i,j,bi,bj)
          ENDDO
       ENDDO
-      CALL SWFRAC(
-     I     (sNx+2*OLx)*(sNy+2*OLy), minusone,
+       CALL SWFRAC2D(
+     I     1, minusOne,
      U     worka,
-     I     myTime, myIter, myThid )
+     I     bi, bj, myTime, 1, myThid )
       DO j=1-OLy,sNy+OLy
          DO i=1-OLx,sNx+OLx
             KPPfrac(i,j,bi,bj) = worka(i,j)
