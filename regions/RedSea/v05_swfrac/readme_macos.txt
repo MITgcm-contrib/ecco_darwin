@@ -18,7 +18,7 @@
 # 2. Build executable
   cd build
   ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05_swfrac/code -mpi \
-   -of ../../ecco_darwin/regions/RedSea/v05_swfrac/code/darwin_arm64_gfortran
+   -of ../../ecco_darwin/regions/RedSea/v05/code/darwin_arm64_gfortran
   make depend
   make -j
 

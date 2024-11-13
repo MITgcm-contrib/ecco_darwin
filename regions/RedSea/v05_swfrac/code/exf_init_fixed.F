@@ -76,7 +76,7 @@ C     ' ' = no masking; 'c' = centered mask; 'w' = western mask; 's' = southern
       lwdownmask   = 'c'
       apressuremask= 'c'
       tidePotmask  = 'c'
-      waterTypmask  = 'c'
+      waterTypmask = 'c'
       areamaskmask = 'c'
       climsstmask  = 'c'
       climsssmask  = 'c'
@@ -108,7 +108,7 @@ c      lwfluxmask   = ' '
 c      lwdownmask   = ' '
        apressuremask= ' '
 c      tidePotmask  = ' '
-       waterTypmask  = ' '
+       waterTypmask = ' '
 c      areamaskmask = ' '
 c      climsstmask  = ' '
 c      climsssmask  = ' '
@@ -383,7 +383,7 @@ C     from the beginning of the year.
       ENDIF
 #endif /* EXF_ALLOW_TIDES */
 
-#ifdef EXF_ALLOW_WATERTYP
+#ifdef ALLOW_WATERTYP
       IF ( waterTypFile .NE. ' ' ) THEN
 # ifdef ALLOW_DEBUG
        IF (debugMode)
@@ -395,7 +395,7 @@ C     from the beginning of the year.
      U                    waterTypStartTime, errCount,
      I                    myThid )
       ENDIF
-#endif /* EXF_ALLOW_WATERTYP */
+#endif /* ALLOW_WATERTYP */
 
 #ifdef EXF_SEAICE_FRACTION
       IF ( areamaskfile .NE. ' ' ) THEN

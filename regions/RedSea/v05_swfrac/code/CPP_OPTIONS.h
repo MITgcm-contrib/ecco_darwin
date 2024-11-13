@@ -21,6 +21,9 @@ C o Shortwave heating as extra term in external_forcing.F
 C Note: this should be a run-time option
 #define SHORTWAVE_HEATING
 
+C o If defined, 2-D Jerlov water type can be read-in from files
+#define ALLOW_WATERTYP
+
 C o Include/exclude Geothermal Heat Flux at the bottom of the ocean
 #undef ALLOW_GEOTHERMAL_FLUX
 

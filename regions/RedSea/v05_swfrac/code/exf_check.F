@@ -316,14 +316,14 @@ c     ENDIF
       ENDIF
 #endif /* ndef EXF_ALLOW_TIDES */
 
-#ifndef EXF_ALLOW_WATERTYP
+#ifndef ALLOW_WATERTYP
       IF ( waterTypFile.NE.' ' ) THEN
         WRITE(msgBuf,'(3A)') 'EXF_CHECK: Cannot read-in field ',
-     &    '"waterTyp" with #undef EXF_ALLOW_TIDES'
+     &    '"waterTyp" with #undef EXF_ALLOW_WATERTYP'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
       ENDIF
-#endif /* ndef EXF_ALLOW_WATERTYP */
+#endif /* ndef ALLOW_WATERTYP */
 
 #ifndef EXF_SEAICE_FRACTION
       IF ( areamaskfile.NE.' ' ) THEN

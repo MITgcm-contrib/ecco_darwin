@@ -410,8 +410,8 @@ C-    Tidal geopotential
      I     myTime, myIter, myThid )
 #endif /* EXF_ALLOW_TIDES */
 
-#ifdef EXF_ALLOW_WATERTYP
-C-    Tidal geopotential
+#ifdef ALLOW_WATERTYP
+C-    Jerlov water type
       CALL EXF_SET_FLD(
      I     'waterTyp', waterTypFile, waterTypMask,
      I     waterTypStartTime, waterTypPeriod, waterTypRepCycle,
@@ -424,7 +424,7 @@ C-    Tidal geopotential
      I     waterTyp_nlon, waterTyp_nlat, xC, yC, waterTyp_interpMethod,
 #endif
      I     myTime, myIter, myThid )
-#endif /* EXF_ALLOW_WATERTYP */
+#endif /* ALLOW_WATERTYP */
 
 #ifdef EXF_SEAICE_FRACTION
 C-    fractional ice-covered area mask

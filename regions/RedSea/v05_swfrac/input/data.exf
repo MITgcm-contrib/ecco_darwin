@@ -28,6 +28,7 @@
   vwindfile         = 'era_xx_it42_v2/RedSea_64x72_EXFvwind_6hourly',
   swdownfile        = 'era_xx_it42_v2/RedSea_64x72_EXFswdn_6hourly',
   lwdownfile        = 'era_xx_it42_v2/RedSea_64x72_EXFlwdn_6hourly',
+  waterTypFile      = 'Jerlov_Kdclim12',
 #
   atempstartdate1   = 19920101,
   atempstartdate2   = 000000,
@@ -58,6 +59,8 @@
   lwdownstartdate1  = 19920101,
   lwdownstartdate2  = 030000,
   lwdownperiod      = 21600.0,
+#
+  waterTypPeriod    = -12,
  /
 
  &EXF_NML_03
@@ -72,6 +75,7 @@
   vwind_interpMethod  = 0,
   swdown_interpMethod = 0,
   lwdown_interpMethod = 0,
+  waterTyp_interpMethod = 0,
  /
 
  &EXF_NML_OBCS

@@ -697,7 +697,7 @@ C--   Tidal geopotential
       ENDIF
 #endif /* EXF_ALLOW_TIDES */
 
-#ifdef EXF_ALLOW_WATERTYP
+#ifdef ALLOW_WATERTYP
 C--   Water type
       IF ( waterTypFile.NE.' ' ) THEN
        CALL EXF_FLD_SUMMARY( 'Water type',
@@ -710,7 +710,7 @@ C--   Water type
 #endif
        prtBlkLn = .TRUE.
       ENDIF
-#endif /* EXF_ALLOW_WATERTYP */
+#endif /* ALLOW_WATERTYP */
 
 #ifdef EXF_SEAICE_FRACTION
 C--   Fractional ice-covered area
