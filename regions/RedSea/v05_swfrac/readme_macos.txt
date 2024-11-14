@@ -4,7 +4,8 @@
 
 # This version replaces the single-column swfrac with swfrac2d to add
 # capability to read space-time varying Jerlov water type.
-# At present, swfrac2d is not consistent with pkg/kpp, layers, and seaice
+# At present, swfrac2d is not consistent with pkg/layers and pkg/seaice
+# See ../v05_kpp for a version that is compatible with pkg/kpp
 
 ==============
 # 1. Get code
