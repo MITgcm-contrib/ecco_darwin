@@ -51,7 +51,7 @@ C     input/output arguments
 C     swdk    :: on input: vertical depth for desired sw fraction
 C               (fact*swdk) is negative distance (m) from surface
 C     swdk    :: on output: short wave (radiation) fractional decay
-      _RL     swdk(0:sNx+1,0:sNy+1,imax)
+      _RL     swdk(1-OLx:sNx+OLx,1-OLy:sNy+OLy,imax)
 
 C     !LOCAL VARIABLES:
 C     === Local variables ===
@@ -70,8 +70,8 @@ C     jwtype :     1          2          3          4          5
       DATA a1   / 0.35 _d 0, 0.6  _d 0, 1.0  _d 0, 1.5  _d 0, 1.4  _d 0/
       DATA a2   / 23.0 _d 0, 20.0 _d 0, 17.0 _d 0, 14.0 _d 0, 7.9  _d 0/
 
-      DO j=0,sNy+1
-       DO i=0,sNx+1
+      DO j=1-OLy,sNy+OLy
+       DO i=1-OLx,sNx+OLx
         DO m = 1,imax
           facz = fact*swdk(i,j,m)
           IF ( facz .LT. -200. _d 0 ) THEN

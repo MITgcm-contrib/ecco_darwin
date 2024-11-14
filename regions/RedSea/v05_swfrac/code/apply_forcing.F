@@ -446,7 +446,7 @@ C     kSurface  :: index of surface level
       _RL minusone
       PARAMETER (minusOne=-1.)
 #  ifdef ALLOW_WATERTYP
-      _RL swfracb(0:sNx+1,0:sNy+1,2)
+      _RL swfracb(1-OLx:sNx+OLx,1-OLy:sNy+OLy,2)
 #  else /* ndef ALLOW_WATERTYP */
       _RL swfracb(2)
 #  endif /* ALLOW_WATERTYP */
@@ -675,8 +675,8 @@ C     Ocean: Add temperature surface forcing (e.g., heat-flux) in surface level
 C Penetrating SW radiation
 c     IF ( usePenetratingSW ) THEN
 # ifdef ALLOW_WATERTYP
-       DO j=0,sNy+1
-        DO i=0,sNx+1
+       DO j=1-OLy,sNy+OLy
+        DO i=1-OLx,sNx+OLx
          swfracb(i,j,1)=abs(rF(k))
          swfracb(i,j,2)=abs(rF(k+1))
         ENDDO
@@ -684,7 +684,7 @@ c     IF ( usePenetratingSW ) THEN
        CALL SWFRAC2D(
      I             2, minusOne,
      U             swfracb,
-     I             bi, bj, myTime, 1, myThid )
+     I             bi, bj, myTime, myIter, myThid )
 # else /* ndef ALLOW_WATERTYP */
        swfracb(1)=abs(rF(k))
        swfracb(2)=abs(rF(k+1))

@@ -302,7 +302,7 @@ C     zen_fsol_daily     :: incoming solar radiation (daily mean)
       _RL tidePot1  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 #endif
 
-#ifdef EXF_ALLOW_WATERTYP
+#ifdef ALLOW_WATERTYP
       COMMON /exf_waterTyp_r/ waterTyp, waterTyp0, waterTyp1
       _RL waterTyp  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL waterTyp0 (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)

@@ -319,7 +319,7 @@ c     ENDIF
 #ifndef ALLOW_WATERTYP
       IF ( waterTypFile.NE.' ' ) THEN
         WRITE(msgBuf,'(3A)') 'EXF_CHECK: Cannot read-in field ',
-     &    '"waterTyp" with #undef EXF_ALLOW_WATERTYP'
+     &    '"waterTyp" with #undef ALLOW_WATERTYP'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
       ENDIF

@@ -442,13 +442,17 @@ C     kSurface  :: index of surface level
       _RL     tmpVar(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL tmpFac, delPI
       _RL recip_Cp
-#ifdef SHORTWAVE_HEATING
+# ifdef SHORTWAVE_HEATING
       _RL minusone
       PARAMETER (minusOne=-1.)
+#  ifdef ALLOW_WATERTYP
       _RL swfracb(1-OLx:sNx+OLx,1-OLy:sNy+OLy,2)
+#  else /* ndef ALLOW_WATERTYP */
+      _RL swfracb(2)
+#  endif /* ALLOW_WATERTYP */
       INTEGER kp1
-#endif
-#endif /* USE_OLD_EXTERNAL_FORCING */
+# endif /* SHORTWAVE_HEATING */
+#endif /* ndef USE_OLD_EXTERNAL_FORCING */
 CEOP
 
 #ifdef USE_OLD_EXTERNAL_FORCING
@@ -670,8 +674,9 @@ C     Ocean: Add temperature surface forcing (e.g., heat-flux) in surface level
 #ifdef SHORTWAVE_HEATING
 C Penetrating SW radiation
 c     IF ( usePenetratingSW ) THEN
-       DO j=0,sNy+1
-        DO i=0,sNx+1
+# ifdef ALLOW_WATERTYP
+       DO j=1-OLy,sNy+OLy
+        DO i=1-OLx,sNx+OLx
          swfracb(i,j,1)=abs(rF(k))
          swfracb(i,j,2)=abs(rF(k+1))
         ENDDO
@@ -680,20 +685,37 @@ c     IF ( usePenetratingSW ) THEN
      I             2, minusOne,
      U             swfracb,
      I             bi, bj, myTime, myIter, myThid )
+# else /* ndef ALLOW_WATERTYP */
+       swfracb(1)=abs(rF(k))
+       swfracb(2)=abs(rF(k+1))
+       CALL SWFRAC(
+     I             2, minusOne,
+     U             swfracb,
+     I             myTime, 1, myThid )
+# endif /* ALLOW_WATERTYP */
        kp1 = k+1
        IF (k.EQ.Nr) THEN
         kp1 = k
+# ifdef ALLOW_WATERTYP
         DO j=0,sNy+1
          DO i=0,sNx+1
           swfracb(i,j,2)=0. _d 0
          ENDDO
         ENDDO
+#else /* ndef ALLOW_WATERTYP */
+        swfracb(2)=0. _d 0
+#endif /* ALLOW_WATERTYP */
        ENDIF
        DO j=0,sNy+1
         DO i=0,sNx+1
          gT_arr(i,j) = gT_arr(i,j)
+# ifdef ALLOW_WATERTYP
      &   -Qsw(i,j,bi,bj)*(swfracb(i,j,1)*maskC(i,j,k,bi,bj)
      &                   -swfracb(i,j,2)*maskC(i,j,kp1, bi,bj))
+#else /* ndef ALLOW_WATERTYP */
+     &   -Qsw(i,j,bi,bj)*(swfracb(1)*maskC(i,j,k,bi,bj)
+     &                   -swfracb(2)*maskC(i,j,kp1, bi,bj))
+#endif /* ALLOW_WATERTYP */
      &    *recip_Cp*mass2rUnit
      &    *recip_drF(k)*_recip_hFacC(i,j,k,bi,bj)
         ENDDO

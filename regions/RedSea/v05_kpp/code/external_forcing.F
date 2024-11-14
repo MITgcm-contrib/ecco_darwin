@@ -342,9 +342,13 @@ CEOP
 #ifdef SHORTWAVE_HEATING
       _RL minusone
       PARAMETER (minusOne=-1.)
+# ifdef ALLOW_WATERTYP
       _RL swfracb(1-OLx:sNx+OLx,1-OLy:sNy+OLy,2)
+# else /* ndef ALLOW_WATERTYP */
+      _RL swfracb(2)
+# endif /* ALLOW_WATERTYP */
       INTEGER kp1
-#endif
+#endif /* SHORTWAVE_HEATING */
 
       IF ( fluidIsAir ) THEN
        kSurface = 0
@@ -527,8 +531,9 @@ C     Ocean: Add temperature surface forcing (e.g., heat-flux) in surface level
 #ifdef SHORTWAVE_HEATING
 C Penetrating SW radiation
 c     IF ( usePenetratingSW ) THEN
-       DO j=0,sNy+1
-        DO i=0,sNx+1
+# ifdef ALLOW_WATERTYP
+       DO j=1-OLy,sNy+OLy
+        DO i=1-OLx,sNx+OLx
          swfracb(i,j,1)=abs(rF(kLev))
          swfracb(i,j,2)=abs(rF(kLev+1))
         ENDDO
@@ -537,26 +542,43 @@ c     IF ( usePenetratingSW ) THEN
      I             2, minusOne,
      U             swfracb,
      I             bi, bj, myTime, 1, myThid )
+# else /* ndef ALLOW_WATERTYP */
+       swfracb(1)=abs(rF(kLev))
+       swfracb(2)=abs(rF(kLev+1))
+       CALL SWFRAC(
+     I             2, minusOne,
+     U             swfracb,
+     I             myTime, 1, myThid )
+# endif /* ALLOW_WATERTYP */
        kp1 = kLev+1
        IF (kLev.EQ.Nr) THEN
         kp1 = kLev
+# ifdef ALLOW_WATERTYP
         DO j=1,sNy
          DO i=1,sNx
           swfracb(i,j,2)=0. _d 0
          ENDDO
         ENDDO
+# else /* ndef ALLOW_WATERTYP */
+        swfracb(2)=0. _d 0
+# endif /* ALLOW_WATERTYP */
        ENDIF
        DO j=1,sNy
         DO i=1,sNx
          gT(i,j,kLev,bi,bj) = gT(i,j,kLev,bi,bj)
+# ifdef ALLOW_WATERTYP
      &   -Qsw(i,j,bi,bj)*(swfracb(i,j,1)*maskC(i,j,kLev,bi,bj)
      &                   -swfracb(i,j,2)*maskC(i,j,kp1, bi,bj))
+# else /* ndef ALLOW_WATERTYP */
+     &   -Qsw(i,j,bi,bj)*(swfracb(1)*maskC(i,j,kLev,bi,bj)
+     &                   -swfracb(2)*maskC(i,j,kp1, bi,bj))
+# endif /* ALLOW_WATERTYP */
      &    *recip_Cp*mass2rUnit
      &    *recip_drF(kLev)*_recip_hFacC(i,j,kLev,bi,bj)
         ENDDO
        ENDDO
 c     ENDIF
-#endif
+#endif /* SHORTWAVE_HEATING */
 
 #ifdef ALLOW_FRAZIL
       IF ( useFRAZIL )

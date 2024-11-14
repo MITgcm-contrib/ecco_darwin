@@ -94,9 +94,6 @@ C
 C   >>> EXF_ALLOW_TIDES <<<
 C       If defined, 2-D tidal geopotential can be read-in from files
 C
-C   >>> EXF_ALLOW_WATERTYP <<<
-C       If defined, 2-D Jerlov water type can be read-in from files
-C
 C   >>> EXF_SEAICE_FRACTION <<<
 C       If defined, seaice fraction can be read-in from files (areaMaskFile)
 C
@@ -212,9 +209,6 @@ C-  Relaxation to monthly climatologies.
 
 C-  Allows to read-in (2-d) tidal geopotential forcing
 #undef EXF_ALLOW_TIDES
-
-C-  Allows to read-in (2-d) water type foring
-#define EXF_ALLOW_WATERTYP
 
 C-  Allows to read-in seaice fraction from files (areaMaskFile)
 #undef EXF_SEAICE_FRACTION

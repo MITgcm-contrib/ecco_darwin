@@ -460,10 +460,17 @@ c     compute bfsfc = sw fraction at hbf * zgrid
 #ifdef ALLOW_AUTODIFF_TAMC
 CADJ store worka = comlev1_kpp_k, key = kkppkey, kind=isbyte
 #endif
-       CALL SWFRAC2D(
-     I             1, hbf,
-     U             worka,
-     I             bi, bj, myTime, myIter, myThid )
+#ifdef ALLOW_WATERTYP
+         CALL SWFRAC2D(
+     I       1, hbf,
+     U       worka,
+     I       bi, bj, myTime, myIter, myThid )
+#else /* ndef ALLOW_WATERTYP */
+         call SWFRAC(
+     I       imt, hbf,
+     U       worka,
+     I       myTime, myIter, myThid )
+#endif /* ALLOW_WATERTYP */
 #ifdef ALLOW_AUTODIFF_TAMC
 CADJ store worka = comlev1_kpp_k, key = kkppkey, kind=isbyte
 #endif
@@ -630,10 +637,17 @@ CADJ store worka = comlev1_kpp
 CADJ &   , key=ikppkey, kind=isbyte,
 CADJ &     shape = (/ (sNx+2*OLx)*(sNy+2*OLy) /)
 #endif
-       CALL SWFRAC2D(
-     I             1, minusone,
-     U             worka,
-     I             bi, bj, myTime, myIter, myThid )
+#ifdef ALLOW_WATERTYP
+      CALL SWFRAC2D(
+     I       1, minusone,
+     U       worka,
+     I       bi, bj, myTime, myIter, myThid )
+#else /* ndef ALLOW_WATERTYP */
+      call SWFRAC(
+     I       imt, minusone,
+     U       worka,
+     I       myTime, myIter, myThid )
+#endif /* ALLOW_WATERTYP */
 #ifdef ALLOW_AUTODIFF_TAMC
 CADJ store worka = comlev1_kpp
 CADJ &   , key=ikppkey, kind=isbyte,
@@ -753,10 +767,17 @@ CADJ store worka = comlev1_kpp
 CADJ &   , key=ikppkey, kind=isbyte,
 CADJ &     shape = (/ (sNx+2*OLx)*(sNy+2*OLy) /)
 #endif
-       CALL SWFRAC2D(
-     I             1, minusone,
-     U             worka,
-     I             bi, bj, myTime, myIter, myThid )
+#ifdef ALLOW_WATERTYP
+      CALL SWFRAC2D(
+     I     1, minusone,
+     U     worka,
+     I     bi, bj, myTime, myIter, myThid )
+#else /* ndef ALLOW_WATERTYP */
+      call SWFRAC(
+     I     imt, minusone,
+     U     worka,
+     I     myTime, myIter, myThid )
+#endif /* ALLOW_WATERTYP */
 #ifdef ALLOW_AUTODIFF_TAMC
 CADJ store worka = comlev1_kpp
 CADJ &   , key=ikppkey, kind=isbyte,
