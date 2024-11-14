@@ -86,7 +86,7 @@
  alpfe= 0.92831,
  freefemax = .1E-3,
  depthfesed= 7000.,
- scav_rat= 0.2,
+ scav_rat= 2.314814814814815E-6,
  kdoc=  3.168808781402895E-7,   ! 1/90days
  krdoc= 3.168808781402895E-9,   ! 1/10years
  kdop=  2.314814814814815E-7,   ! 1/50day
