@@ -6,6 +6,16 @@
 # capability to read space-time varying Jerlov water type.
 # At present, swfrac2d is not consistent with pkg/layers and pkg/seaice
 
+# To use space-time-varying Jerlov water type:
+# "#define ALLOW_WATERTYP" in CPP_OPTIONS.h and specify waterTypFile
+# and other waterTyp* file description parameters in data.exf
+
+# Running code with "#undef ALLOW_WATERTYP" in CPP_OPTIONS.h
+# is identical to: (1) running v05,
+# to (2) running with "waterTypFile = ' '," in data.exf, 
+# and to (3) running with "waterTypFile = 'Jerlov_2',
+# that is, they all default to Jerlov water type IA (jwtype=2).
+
 ==============
 # 1. Get code
   git clone git@github.com:MITgcm-contrib/ecco_darwin.git
@@ -18,7 +28,7 @@
 # 2. Build executable
   cd build
   export MPI_INC_DIR=/usr/lib/x86_64-linux-gnu/openmpi/include
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05/code -mpi
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05_kpp/code -mpi
   make depend
   make -j
 
