@@ -1,6 +1,7 @@
 # v05 1deg Darwin3 simulation based on ECCOV4r5 set-up with RADIv2 metamodel
 # default set to set of equations for global (sed_depth_threshold = 0 in data.darwin)
 # change sed_depth_threshold to desired depth for deep/coastal sets of equations
+# for runs with RADI undef, please use data.diagnostics_noRADI and data.darwin_noRADI
 #code base: c68g
 # Version similar to v4r4 w/o ctrl/smooth, similar to v4r4
 
