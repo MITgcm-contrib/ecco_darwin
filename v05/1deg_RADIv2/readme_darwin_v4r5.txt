@@ -2,6 +2,7 @@
 # default set to set of equations for global (sed_depth_threshold = 0 in data.darwin)
 # change sed_depth_threshold to desired depth for deep/coastal sets of equations
 # for runs with RADI undef, please use data.diagnostics_noRADI and data.darwin_noRADI
+# by default comes with data.diagnostics and data.darwin with RADI
 #code base: c68g
 # Version similar to v4r4 w/o ctrl/smooth, similar to v4r4
 
