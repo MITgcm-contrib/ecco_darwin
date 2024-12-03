@@ -98,8 +98,9 @@ C  k                    :: vertical level
       _RL scv,scav_pom
       _RL flx, POCl
 #ifdef DARWIN_ALLOW_CARBON
-#ifdef DARWIN_ALLOW_RADI
 C     Sediment fluxes
+      _RL OmegaC0(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+#ifdef DARWIN_ALLOW_RADI
       _RL DICFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL ALKFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL O2Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -111,7 +112,6 @@ C     (for now only implemented in the O2 flux)
       _RL TcorrDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL TcorrALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 C     Dependent variables for sediment flux for validation
-      _RL OmegaC0(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL fluxPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL fluxPOC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL absT
