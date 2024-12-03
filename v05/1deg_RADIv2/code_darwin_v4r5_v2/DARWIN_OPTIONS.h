@@ -157,6 +157,9 @@ C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
 C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
+C nutrient runoff                                             
+#define DARWIN_NUTRIENT_RUNOFF
+
 C enable RADI metamodel v2                                             
 #define DARWIN_ALLOW_RADI 
 
