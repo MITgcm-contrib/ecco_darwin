@@ -685,6 +685,18 @@ C === pre-sinking diags ================================================
 
 C === Sediment fluxes ==========================================================
 #ifdef DARWIN_ALLOW_CARBON
+C save omegaC above seafloor
+      DO j=jMin,jMax
+      DO i=iMin,iMax
+C      grid cell just above sea floor
+       k = kLowC(i,j,bi,bj)
+       IF (k .GT. 0) THEN
+        OmegaC0(i,j) = omegaC(i,j,k,bi,bj)
+       ELSE
+        OmegaC0(i,j) = 0. _d 0
+       ENDIF
+      ENDDO
+      ENDDO
 #ifdef DARWIN_ALLOW_RADI
       DO j=jMin,jMax
       DO i=iMin,iMax
@@ -696,7 +708,6 @@ C       Dependent variables
         fluxPIC(i,j) = wPIC_sink*MAX(0.0,Ptracer(i,j,k,bi,bj,iPIC))
         fluxPOC(i,j) = wC_sink*MAX(0.0,Ptracer(i,j,k,bi,bj,iPOC))
         absT = ABS(Theta(i,j,k,bi,bj))
-        OmegaC0(i,j) = omegaC(i,j,k,bi,bj)
 
         IF (sed_depth_threshold .EQ. 0) THEN
          sed_a1 = sed_globala1
@@ -797,7 +808,6 @@ C       Accumulate for conservation check
         POCFsediment(i,j) = 0. _d 0
         fluxPIC(i,j) = 0. _d 0
         fluxPOC(i,j) = 0. _d 0
-        OmegaC0(i,j) = 0. _d 0
         radiFluxC(i,j,bi,bj) = 0. _d 0
         radiFluxA(i,j,bi,bj) = 0. _d 0
         radiFluxO(i,j,bi,bj) = 0. _d 0
@@ -1108,6 +1118,7 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(gDIC,   'gDICsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(OmegaC0,     'OmegCbot',0,1,2,bi,bj,myThid)
 #ifdef DARWIN_ALLOW_RADI
        CALL DIAGNOSTICS_FILL(DICFsediment,'DICFsed ',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(ALKFsediment,'ALKFsed ',0,1,2,bi,bj,myThid)
@@ -1119,7 +1130,6 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(TcorrO2,     'TcorrO2 ',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(TcorrDIC,    'TcorrDIC',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(TcorrALK,    'TcorrALK',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(OmegaC0,     'OmegCbot',0,1,2,bi,bj,myThid)
 #endif
 #endif
 
