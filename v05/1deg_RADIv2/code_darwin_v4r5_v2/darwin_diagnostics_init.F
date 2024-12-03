@@ -873,29 +873,6 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      WRITE(diagName,'(A)')'TcorrO2 '
-      WRITE(diagTitle,'(A)')
-     &      'Temperature correction factor for diffusive O2 flux'
-      diagUnits = '1               '
-      diagCode  = 'SM P    M1      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I     diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'TcorrALK'
-      WRITE(diagTitle,'(A)')
-     &      'Temperature correction factor for diffusive ALK flux'
-      diagUnits = '1               '
-      diagCode  = 'SM P    M1      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I     diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'TcorrDIC'
-      WRITE(diagTitle,'(A)')
-     &      'Temperature correction factor for diffusive DIC flux'
-      diagUnits = '1               '
-      diagCode  = 'SM P    M1      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 # endif /* DARWIN_ALLOW_RADI */
 #endif /* DARWIN_ALLOW_CARBON */
 

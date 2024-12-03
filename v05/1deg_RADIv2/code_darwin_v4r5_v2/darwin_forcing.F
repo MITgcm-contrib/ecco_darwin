@@ -106,11 +106,6 @@ C     Sediment fluxes
       _RL O2Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL POCFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL CALFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-C     Test variable for a diffusive temperature correction factor
-C     (for now only implemented in the O2 flux)
-      _RL TcorrO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL TcorrDIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL TcorrALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 C     Dependent variables for sediment flux for validation
       _RL fluxPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL fluxPOC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -798,9 +793,6 @@ C       Accumulate for conservation check
 #endif
        ELSE
 
-        TcorrO2(i,j) = 0. _d 0
-        TcorrDIC(i,j) = 0. _d 0
-        TcorrALK(i,j) = 0. _d 0
         DICFsediment(i,j) = 0. _d 0
         ALKFsediment(i,j) = 0. _d 0
         O2Fsediment(i,j) = 0. _d 0
@@ -1127,9 +1119,6 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(CALFsediment,'CALFbur ',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(fluxPIC,     'sedFlPIC',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(fluxPOC,     'sedFlPOC',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(TcorrO2,     'TcorrO2 ',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(TcorrDIC,    'TcorrDIC',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(TcorrALK,    'TcorrALK',0,1,2,bi,bj,myThid)
 #endif
 #endif
 
