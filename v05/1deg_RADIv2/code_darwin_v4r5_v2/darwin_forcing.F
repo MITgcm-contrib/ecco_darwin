@@ -738,21 +738,21 @@ C       Dependent variables
           sed_d3 = sed_deepd3
           sed_e3 = sed_deepe3
          ELSE
-          sed_a1 = sed_deepa1
-          sed_b1 = sed_deepb1
-          sed_c1 = sed_deepc1
-          sed_d1 = sed_deepd1
-          sed_e1 = sed_deepe1
-          sed_a2 = sed_deepa2
-          sed_b2 = sed_deepb2
-          sed_c2 = sed_deepc2
-          sed_d2 = sed_deepd2
-          sed_e2 = sed_deepe2
-          sed_a3 = sed_deepa3
-          sed_b3 = sed_deepb3
-          sed_c3 = sed_deepc3
-          sed_d3 = sed_deepd3
-          sed_e3 = sed_deepe3
+          sed_a1 = sed_coasta1
+          sed_b1 = sed_coastb1
+          sed_c1 = sed_coastc1
+          sed_d1 = sed_coastd1
+          sed_e1 = sed_coaste1
+          sed_a2 = sed_coasta2
+          sed_b2 = sed_coastb2
+          sed_c2 = sed_coastc2
+          sed_d2 = sed_coastd2
+          sed_e2 = sed_coaste2
+          sed_a3 = sed_coasta3
+          sed_b3 = sed_coastb3
+          sed_c3 = sed_coastc3
+          sed_d3 = sed_coastd3
+          sed_e3 = sed_coaste3
          ENDIF
         ENDIF
 
