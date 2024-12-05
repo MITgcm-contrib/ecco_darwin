@@ -28,3 +28,8 @@
 
 # See history of current branch with tags:
  git log --decorate=full
+
+# In order to push commits to the main branch, you will be asked your username and password
+# if password is not recognized, you need a personal access token to set up on GitHub
+# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic
+# once your personal access token created, use it as your password when using "git push" command
