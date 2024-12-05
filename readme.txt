@@ -55,6 +55,7 @@ Simulations:
 --v05--
   /1deg: 1 degree solution based on ECCO V4r4/V4r5
   /1deg_CDR: 1 degree solution based on ECCO V4r4/V4r5 for mCDR simulations
+  /1deg_RADIv2: 1 degree solution based on ECCO V4r4/V4r5 including RADIv2 sediment metamodel 
   /3deg: 3 degree verification experiment w/ Darwin 3 and budget scripts
   /3deg_CDR_MacroA: Kay's macroalgae (kelp) code development set-up
   /llc270: Carroll et al. 2022 (GBC) solution w/ Darwin 3
