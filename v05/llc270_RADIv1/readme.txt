@@ -2,12 +2,18 @@
 # ecco_darwin_v5/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/ecco_darwin_v5/input
 # forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
 
-# Instructions for building and running ECCO-Darwin v05 with Darwin 3
+# Instructions for building and running ECCO-Darwin v05 with Darwin 3 and the RADIv1 metamodel.
+The RADIv1 metamodel was later added to the official Darwin3 pkg.
 
 #This solution is documented in:
 #Carroll, D., Menemenlis, D., Dutkiewicz, S., Lauderdale, J. M., Adkins, J. F., Bowman, K. W., et al. (2022). 
 #Attribution of space-time variability in global-ocean dissolved inorganic carbon. Global Biogeochemical Cycles, 
 #36, e2021GB007162. https://doi.org/10.1029/2021GB007162
+
+#RADIv1 is documented in:
+#Sulpis, O., Humphreys, M. P., Wilhelmus, M. M., Carroll, D., Berelson, W. M., Menemenlis, D., 
+#Middelburg, J. J., and Adkins, J. F. (2022). RADIv1: a non-steady-state early diagenetic model for ocean sediments in Julia and MATLAB/GNU Octave, 
+#Geoscientific Model Development, 15, 2105–2131. https://doi.org/10.5194/gmd-15-2105-2022, 2022.
 
 ==============
 # 1. Get code
@@ -25,7 +31,7 @@ cd build
 module purge
 module load comp-intel mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
 ../tools/genmake2 -of ../../ecco_darwin/v05/llc270/code/linux_amd64_ifort+mpi_ice_nas \
-  -mo '../../ecco_darwin/v05/llc270_sediment/code_darwin ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code' -mpi
+  -mo '../../ecco_darwin/v05/llc270_RADIv1/code_darwin ../../ecco_darwin/v05/llc270/code_darwin ../../ecco_darwin/v05/llc270/code' -mpi
 make depend
 make -j 16
 
@@ -40,7 +46,7 @@ ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
 cp ../../ecco_darwin/v05/llc270/input/* .
-cp ../../ecco_darwin/v05/llc270_sediment/input/* .
+cp ../../ecco_darwin/v05/llc270_RADIv1/input/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_ECCO_darwin as needed
 qsub job_ECCO_darwin
@@ -58,8 +64,8 @@ ln -sf /nobackup/dcarrol2/pub/LLC_270/v05_1985_on/pickup_ptracers_1985_on.data \
         pickup_ptracers.0000000001.data
 ln -sf /nobackup/hzhang1/forcing/exf_1999 .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19850101/pickup* .
-cp ../../ecco_darwin/v05/llc270_sediment/input/* .
-cp ../../ecco_darwin/v05/llc270_sediment/input_1999/* .
+cp ../../ecco_darwin/v05/llc270_RADIv1/input/* .
+cp ../../ecco_darwin/v05/llc270_RADIv1/input_1999/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
 # modify job_ECCO_darwin as needed
 qsub job_ECCO_darwin
