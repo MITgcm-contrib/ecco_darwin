@@ -9,7 +9,9 @@ gcmfaces: https://github.com/MITgcm/gcmfaces
 
 Example bathymetry/ice base products used are:
 GEBCO: https://www.gebco.net/
-Shaffer et al. (2016): https://doi.pangaea.de/10.1594/PANGAEA.856844?format=html#download
+Schaffer et al. (2016): https://doi.pangaea.de/10.1594/PANGAEA.856844?format=html#download
+Schaffer et al. (2019): https://doi.pangaea.de/10.1594/PANGAEA.905295
+
 BedMachine Greenland: https://sites.ps.uci.edu/morlighem/dataproducts/bedmachine-greenland/
 BedMachine Antarctica: https://sites.ps.uci.edu/morlighem/dataproducts/bedmachine-antarctica/
 

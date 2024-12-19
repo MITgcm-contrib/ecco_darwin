@@ -134,8 +134,8 @@ for i = 1:numFacets
             
             numDryCells = length(find(bathyPoly == 0));
             
-            %if GEBCO search region contains >= 90% land, set model grid cell to land.
-            %otherwise, exclude GEBCO land cells and compute median.
+            %if search region contains >= 90% land, set model grid cell to land
+            %otherwise, exclude land cells and compute median
             
             if (numDryCells >= (numTotalCells .* 0.9))
                 

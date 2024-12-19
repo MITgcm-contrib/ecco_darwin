@@ -133,8 +133,8 @@ for i = 1:numFacets
             numDryCells1 = length(find(bathyPoly == 0));
             numDryCells2 = length(find(maskPoly == 0));
             
-            %if bedmachine search region contains >= 90% land, set model grid cell to land.
-            %otherwise, exclude bedmachine land cells and compute median.
+            %if search region contains >= 90% land, set model grid cell to land
+            %otherwise, exclude land cells and compute median
             
             if (numDryCells1 >= (numTotalCells1 * 0.9))
                 

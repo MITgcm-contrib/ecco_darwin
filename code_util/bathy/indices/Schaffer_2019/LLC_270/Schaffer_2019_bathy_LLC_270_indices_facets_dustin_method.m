@@ -7,8 +7,8 @@ plotPoly = 0;
 maskDryCells = 0;
 
 dataDir1 = '/Users/carrolld/Documents/research/bathy/mat/cell_corners/LLC_270/';
-dataDir2 = '/Users/carrolld/Documents/research/bathy/raw_data/Schaffer_2016/';
-saveDir = '/Users/carrolld/Documents/research/bathy/mat/indices/Schaffer_2016/LLC_270/';
+dataDir2 = '/Users/carrolld/Documents/research/bathy/raw_data/Schaffer_2019/';
+saveDir = '/Users/carrolld/Documents/research/bathy/mat/indices/Schaffer_2019/LLC_270/';
 
 %%
 
@@ -21,7 +21,7 @@ dy = 1;
 
 %%
 
-fileName = 'RTopo-2.0.1_30sec_bedrock_topography.nc';
+fileName = 'RTopo-2.0.4_30sec_bedrock_topography.nc';
 
 Schaffer_2016.lon = ncread([dataDir2 fileName],'lon');
 Schaffer_2016.lat = ncread([dataDir2 fileName],'lat');
@@ -211,7 +211,7 @@ for i = 1:numFacets
         
     end
     
-    save([saveDir 'Schaffer_2016_bathy_LLC_270_indices_facet_' num2str(i) '_' suffix  '.mat'],'bathy','-v7.3');
+    save([saveDir 'Schaffer_2019_bathy_LLC_270_indices_facet_' num2str(i) '_' suffix  '.mat'],'bathy','-v7.3');
     
     clear bathy
     
