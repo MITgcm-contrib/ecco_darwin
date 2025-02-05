@@ -1,0 +1,52 @@
+###############################################################################
+#
+# Configuration file depicting the setup contents
+#
+# Authors: Bertin Clément
+# email: clement.maxime.bertin@jpl.nasa.gov
+#
+###############################################################################
+
+################ Introduction ################
+The following set up is extracted from (Southeastern Beaufort Sea regional model) ED-SBS version and update the ecosystem to an Arctic Ocean adapted ecosystem. (It also includes a radiative transfer model not yet) 
+
+################ Tracers involved ################
+Note: In version 4, the following 33 tracers are available:
+
+1. DIC     13. POC     25. c4
+2. NO3     14. PON     26. c5
+3. NO2     15. POP     27. c6 
+4. NH4     16. POFe    28. c7  
+5. PO4     17. POSi    29. Chl1 
+6. FeT     18. PIC     30. Chl2
+7. SiO2    19. ALK     31. Chl3 
+8. DOC     20. O2      32. Chl4
+9. rDOC    21. CDOM    33. Chl5   
+10. DON    22. c1      
+11. DOP    23. c2       
+12. DOFe   24. c3
+
+################ Ecosystem (5 Phyto / 2 Zoo)  ################
+The Ecosystem simulated contains:
+  > 5 phytoplankton types:
+      - Pico-eukaryote (c1): Analog of Micromonas spp - low-light adapted
+			     Nominal size: 3um ESD, quantum yield = 6e-5 mmol C mg Chl^-1 s^-1.
+      - Haptophyte (c2): Which could be Phaeocystis
+			 Nominal size: 4.5um ESD, quantum yield = 4e-5.
+			 |--> SET TO 0 IN THIS SETUP AS NOT REPRESENTATIVE OF SBS
+      - High-light adapted diatoms (c3): Analog of centric diatom – potentially Thalassioira or Chaetoceras spp
+        				 Nominal size: 10um ESD, quantum yield = 4e-5
+      - Low-light adapted diatom (c4): Analog of pennate diatom – potentially Fragilariopsis spp
+     				       Nominal size: 10um ESD, quantum yield = 6e-5; growth rate 0.8 * diatom(3) 
+				       as cost for LL adaption, and inhibition value = 1.2.
+      - Dinoflagellate (c5): Which will be mixotrophic, feeding on pico-euk (and bacteria if c8)
+        		     Nominal size: 10um ESD, quantum yield=4e-5.
+
+  > 2 Zooplankton types:
+      - Small zooplankton (c6): Will feed on pico-euk (and bacteria if c8)
+        			Nominal size 45um ESD
+      - Large zooplankton (c7): Will feed on diatoms, haptophyte and dinoflagellate
+        			Nominal size 100um
+-----------------------------------------------------------------------------------------------------------------
+  > REMOVED |--> 1 Bacteria (c8): 
+	- Free-living heterotrophic bacteria (c8): Nominal size 0.6um ESD.
