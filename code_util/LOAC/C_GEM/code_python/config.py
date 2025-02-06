@@ -66,6 +66,10 @@ TS = 12  # Save every TS timesteps
 DELXI = 2000  # Delta x [m]
 TOL = 1e-10  # Convergence criterion
 M = int(EL / DELXI) + 1  # Max even grid points
+if M % 2 == 0:
+    pass
+else:
+    M = M - 1
 M1 = M - 1  # Max odd grid points
 M2 = M - 2  # Last even grid point
 M3 = M - 3  # Last odd grid point
