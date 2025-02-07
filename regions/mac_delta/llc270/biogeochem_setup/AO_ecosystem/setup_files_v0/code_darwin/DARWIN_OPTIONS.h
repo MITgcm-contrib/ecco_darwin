@@ -122,7 +122,7 @@ C turn off all temperature dependence
 #undef  DARWIN_NOTEMP
 
 C select temperature version: 1, 2 or 3
-#define DARWIN_TEMP_VERSION 2
+#define DARWIN_TEMP_VERSION 4
 
 C restrict phytoplankton growth to a temperature range
 #undef  DARWIN_TEMP_RANGE
