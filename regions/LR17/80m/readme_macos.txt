@@ -20,7 +20,7 @@
 ==============
 # 2. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/LR17/100km/code -mpi
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/LR17/80m/code -mpi
   make depend
   make -j
 
@@ -30,5 +30,5 @@
   ln -sf ../build/mitgcmuv .
   ln -sf ../../run_template/bathymetry/bathy_LR17_936x875 .
   ln -sf ../../run_template/era_xx_it42_v2 .
-  cp ../../ecco_darwin/regions/LR17/100km/input/* .
+  cp ../../ecco_darwin/regions/LR17/80m/input/* .
   mpirun -np 4 ./mitgcmuv
