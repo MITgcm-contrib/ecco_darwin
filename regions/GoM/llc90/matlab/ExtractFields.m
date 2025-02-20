@@ -1,6 +1,6 @@
-% Gulf of Alaska region extracted for Takamitsu Ito on October 31, 2023
-% lats 42N to 62N, lons -160E to -120E
-% (example extraction on faces 4+5)
+% Gulf of Mexico region extracted for Jessica Zaiss on November 15, 2024
+% lats 60S to 40S, lons 30E to 100E
+% (example extraction on face 5, i.e., rotated UV fields)
 
 % This code is best viewed using a "folding" package with the opening
 % and closing folds marked by, respectively, "% {{{" and "% }}}".
@@ -8,30 +8,33 @@
 % https://github.com/jaalto/project-emacs--folding-mode/blob/master/folding.el
 
 % {{{ define desired region
-region_name='GoA';
-minlat=41.3;
-maxlat=60.5;
-minlon=-160.3;
-maxlon=-122.5;
-NX=270;
+region_name='GoM';
+minlon=-99;
+maxlon=-79;
+minlat=18;
+maxlat=31;
+NX=90;
 prec='real*4';
 % }}}
 
 % {{{ extract indices for desired region
-pin='/nobackup/dmenemen/llc/llc_270/grid/';
+pin='/nobackup/dcarrol2/grid/ECCO_V4r5/';
 fnm=[pin 'Depth.data'];
-[tmp fc ix jx] = ...
+[fld fc ix jx] = ...
     quikread_llc(fnm,NX,1,prec,pin,minlat,maxlat,minlon,maxlon);
-m(1)=0;
-for f=1:length(fc)
-    m(f+1)=length(ix{fc(f)});
-end
-n=length(jx{fc(1)});
-fld=zeros(sum(m),n);
-for f=1:length(fc)
-    fld((sum(m(1:f))+1):sum(m(1:(f+1))),:)=tmp{fc(f)};
-end
-quikpcolor(fld'); caxis([0 1])
+fnm=[pin 'XC.data'];
+[xc fc ix jx] = ...
+    quikread_llc(fnm,NX,1,prec,pin,minlat,maxlat,minlon,maxlon);
+fnm=[pin 'YC.data'];
+[yc fc ix jx] = ...
+    quikread_llc(fnm,NX,1,prec,pin,minlat,maxlat,minlon,maxlon);
+fld(find(~fld))=nan;
+clf
+pcolorcen(360+xc',yc',fld');
+plotland('k-',12)
+colorbar('h')
+title('depth (m)')
+
 RF=-readbin([pin 'RF.data'],51);
 kx=1:min(find(RF(2:end)>mmax(fld)));
 [nx ny]=size(fld); nz=length(kx);
@@ -44,58 +47,20 @@ close all
 pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/grid/'];
 eval(['mkdir ' pout])
 eval(['cd ' pout])
-
 % {{{ grid cell center
 for fnm={'Depth','RAC','XC','YC','hFacC'}
     fin=[pin fnm{1} '.data'];
     switch fnm{1}
       case{'hFacC'}
+        fld=read_llc_fkij(fin,NX,fc,kx,ix,jx);
         fout=[fnm{1} suf2];
-        fld=zeros(nx,ny,nz);
-        for f=1:length(fc)
-            fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-                read_llc_fkij(fin,NX,fc(f),kx,ix{fc(f)},jx{fc(f)});
-        end
       otherwise
+        fld=read_llc_fkij(fin,NX,fc,1,ix,jx);
         fout=[fnm{1} suf1];
-        fld=zeros(nx,ny);
-        for f=1:length(fc)
-            fld((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                read_llc_fkij(fin,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        end
     end
     writebin(fout,fld);
 end
 % }}}
-
-% {{{ AngleCS and AngleSN at grid cell centers
-% need to be rotated because U/V vectors are rotated
-fnx='AngleCS';
-fny='AngleSN';
-finx=[pin fnx '.data'];
-finy=[pin fny '.data'];
-foutx=[fnx suf1];
-fouty=[fny suf1];
-fldx=zeros(nx,ny);
-fldy=zeros(nx,ny);
-for f=1:length(fc)
-    switch fc(f)
-      case {1,2}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-      case {4,5}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            -read_llc_fkij(finy,nx,fc(f),1,ix{fc(f)},jx{fc(f)}); % <<<<<<<<
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,nx,fc(f),1,ix{fc(f)},jx{fc(f)});
-    end
-end
-writebin(foutx,fldx);
-writebin(fouty,fldy);
-% }}}
-
 % {{{ Southwest corner (vorticity) points, no direction
 fld=zeros(nx,ny);
 for fnm={'XG','YG','RAZ'}
@@ -104,44 +69,14 @@ for fnm={'XG','YG','RAZ'}
     for f=1:length(fc)
         switch fc(f)
           case {1,2}
-            fld((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                read_llc_fkij(fin,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
+            fld=read_llc_fkij(fin,NX,fc,1,ix,jx);
           case {4,5}
-            fld((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                read_llc_fkij(fin,NX,fc(f),1,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
+            fld=read_llc_fkij(fin,NX,fc,1,ix,jx-1); % <<<<<<<<
         end
     end
     writebin(fout,fld);
 end
 % }}}
-
-% {{{ DXF/DYF: Grid cell center, no direction
-fnx='DXF';
-fny='DYF';
-finx=[pin fnx '.data'];
-finy=[pin fny '.data'];
-foutx=[fnx suf1];
-fouty=[fny suf1];
-fldx=zeros(nx,ny);
-fldy=zeros(nx,ny);
-for f=1:length(fc)
-    switch fc(f)
-      case {1,2}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-      case {4,5}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-    end
-end
-writebin(foutx,fldx);
-writebin(fouty,fldy);
-% }}}
-
 % {{{ DXC/DYC: West or South edge points, no direction
 fnx='DXC';
 fny='DYC';
@@ -154,46 +89,16 @@ fldy=zeros(nx,ny);
 for f=1:length(fc)
     switch fc(f)
       case {1,2}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
+        fldx=read_llc_fkij(finx,NX,fc,1,ix,jx);
+        fldy=read_llc_fkij(finy,NX,fc,1,ix,jx);
       case {4,5}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
+        fldx=read_llc_fkij(finy,NX,fc,1,ix,jx);
+        fldy=read_llc_fkij(finx,NX,fc,1,ix,jx); % <<<<<<<<
     end
 end
 writebin(foutx,fldx);
 writebin(fouty,fldy);
 % }}}
-
-% {{{ DXV/DYU: Southwest corner (vorticity) points, no direction
-fnx='DXV';
-fny='DYU';
-finx=[pin fnx '.data'];
-finy=[pin fny '.data'];
-foutx=[fnx suf1];
-fouty=[fny suf1];
-for f=1:length(fc)
-    switch fc(f)
-      case {1,2}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-      case {4,5}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
-    end
-end
-writebin(foutx,fldx);
-writebin(fouty,fldy);
-% }}}
-
 % {{{ DXG/DYG: Southwest edge points, no direction
 fnx='DXG';
 fny='DYG';
@@ -204,21 +109,16 @@ fouty=[fny suf1];
 for f=1:length(fc)
     switch fc(f)
       case {1,2}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
+        fldx=read_llc_fkij(finx,NX,fc,1,ix,jx);
+        fldy=read_llc_fkij(finy,NX,fc,1,ix,jx);
       case {4,5}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
+        fldx=read_llc_fkij(finy,NX,fc,1,ix,jx-1); % <<<<<<<<
+        fldy=read_llc_fkij(finx,NX,fc,1,ix,jx);
     end
 end
 writebin(foutx,fldx);
 writebin(fouty,fldy);
 % }}}
-
 % {{{ RAW/RAS: West or South edge points, no direction
 fnx='RAW';
 fny='RAS';
@@ -231,21 +131,16 @@ fldy=zeros(ny,ny);
 for f=1:length(fc)
     switch fc(f)
       case {1,2}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
+        fldx=read_llc_fkij(finx,NX,fc,1,ix,jx);
+        fldy=read_llc_fkij(finy,NX,fc,1,ix,jx);
       case {4,5}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finy,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(finx,NX,fc(f),1,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
+        fldx=read_llc_fkij(finy,NX,fc,1,ix,jx);
+        fldy=read_llc_fkij(finx,NX,fc,1,ix,jx-1); % <<<<<<<<
     end
 end
 writebin(foutx,fldx);
 writebin(fouty,fldy);
 % }}}
-
 % {{{ hFacW/S: West or South edge points, no direction
 fnx='hFacW';
 fny='hFacS';
@@ -258,21 +153,16 @@ fldy=zeros(ny,ny,nz);
 for f=1:length(fc)
     switch fc(f)
       case {1,2}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-            read_llc_fkij(finx,NX,fc(f),kx,ix{fc(f)},jx{fc(f)});
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-            read_llc_fkij(finy,NX,fc(f),kx,ix{fc(f)},jx{fc(f)});
+        fldx=read_llc_fkij(finx,NX,fc,kx,ix,jx);
+        fldy=read_llc_fkij(finy,NX,fc,kx,ix,jx);
       case {4,5}
-        fldx((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-            read_llc_fkij(finy,NX,fc(f),kx,ix{fc(f)},jx{fc(f)}-1); % <<<<<<<<
-        fldy((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-            read_llc_fkij(finx,NX,fc(f),kx,ix{fc(f)},jx{fc(f)});
+        fldx=read_llc_fkij(finy,NX,fc,kx,ix,jx-1); % <<<<<<<<
+        fldy=read_llc_fkij(finx,NX,fc,kx,ix,jx);
     end
 end
 writebin(foutx,fldx);
 writebin(fouty,fldy);
 % }}}
-
 % {{{ vertical
 for fnm={'RC','DRF'}
     fin=[pin fnm{1} '.data'];
@@ -281,33 +171,29 @@ for fnm={'RC','DRF'}
     writebin(fout,fld);
 end
 % }}}
-
 % }}}
 
 % {{{ get and save regional fields
-pin='/nobackup/dcarrol2/v05_latest/darwin3/run/diags/';
+% 1-deg monthly-mean diagnostics from BaseRun10 (our v06 baseline)
+pin='/nobackupnfs1/hzhang1/testing_darwin68y/darwin3/BaseRun10/diags/';
 pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/'];
 % {{{ get and save scalar 2D fields
-fin={'budget/average_2d.'};
+fin={'diags_state/state_2d_set1.'};
 fot={'ETAN'};
 eval(['mkdir ' pout fot{1}])
 eval(['cd ' pout fot{1}])
 dnm=dir([pin fin{1} '*.data']);
-fld=zeros(ny,ny);
 for t=1:length(dnm)
     fnm=[dnm(t).folder '/' dnm(t).name];
     l=strfind(fnm,'.000');
     ts=str2num(fnm((l+1):(l+10)));
     dy=ts2dte(ts,1200,1992,1,1,30);
     fout=[fot{1} suf1 '.' dy];
-    for f=1:length(fc)
-        fld((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-            read_llc_fkij(fnm,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-    end
+    fld=read_llc_fkij(fnm,NX,fc,1,ix,jx);
     writebin(fout,fld);
 end
 fin={'monthly/'};
-for fot={'apCO2', 'fugCO2', 'CO2_flux','SIarea','SIheff'}
+for fot={'apCO2', 'fugfCO2', 'CO2_flux','SIarea','SIheff'}
     eval(['mkdir ' pout fot{1}])
     eval(['cd ' pout fot{1}])
     dnm=dir([pin fin{1} fot{1} '.*.data']);
@@ -317,10 +203,7 @@ for fot={'apCO2', 'fugCO2', 'CO2_flux','SIarea','SIheff'}
         ts=str2num(fnm((l+1):(l+10)));
         dy=ts2dte(ts,1200,1992,1,1,30);
         fout=[fot{1} suf1 '.' dy];
-        for f=1:length(fc)
-            fld((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                read_llc_fkij(fnm,NX,fc(f),1,ix{fc(f)},jx{fc(f)});
-        end
+        fld=read_llc_fkij(fnm,NX,fc,1,ix,jx);
         writebin(fout,fld);
     end
 end
@@ -341,10 +224,7 @@ for fot={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
         ts=str2num(fnm((l+1):(l+10)));
         dy=ts2dte(ts,1200,1992,1,1,30);
         fout=[fot{1} suf2 '.' dy];
-        for f=1:length(fc)
-            fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-                read_llc_fkij(fnm,NX,fc(f),kx,ix{fc(f)},jx{fc(f)});
-        end
+        fld=read_llc_fkij(fnm,NX,fc,kx,ix,jx);
         writebin(fout,fld);
     end
 end
@@ -357,25 +237,20 @@ for t=1:length(dnm)
     ts=str2num(fnm((l+1):(l+10)));
     dy=ts2dte(ts,1200,1992,1,1,30);
     fout=['SALT' suf2 '.' dy];
-    for f=1:length(fc)
-        fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-            read_llc_fkij(fnm,NX,fc(f),kx,ix{fc(f)},jx{fc(f)});
-    end
+    fld=read_llc_fkij(fnm,NX,fc,kx,ix,jx);
     writebin(fout,fld+35);
 end
 % }}}
 % {{{ get and save vector 3D fields
 % Note that zonal velocity is U in faces 1/2 and V in faces 4/5
 % and meridional velocity is V in faces 1/2 and -U in faces 4/5.
-fin={'budget/average_velmass_3d.'};
+fin='diags_state/trsp_3d_set1.';
 eval(['mkdir ' pout 'U'])
 eval(['mkdir ' pout 'V'])
 eval(['cd ' pout])
-dnm=dir([pin fin{1} '*.data']);
-kxu=kx;    % kx indices for UVELMASS (1st variable in average_velmass_3d)
-kxv=kx+50; % kx indices for VVELMASS (2nd variable in average_velmass_3d)
-fldu=zeros(nx,ny,nz);
-fldv=zeros(nx,ny,nz);
+dnm=dir([pin fin '*.data']);
+kxu=kx;    % kx indices for UVELMASS (1st variable in trsp_3d_set1)
+kxv=kx+50; % kx indices for VVELMASS (2nd variable in trsp_3d_set1)
 for t=1:length(dnm)
     fnm=[dnm(t).folder '/' dnm(t).name];
     l=strfind(fnm,'.000');
@@ -383,20 +258,8 @@ for t=1:length(dnm)
     dy=ts2dte(ts,1200,1992,1,1,30);
     foutu=['U/U' suf2 '.' dy];
     foutv=['V/V' suf2 '.' dy];
-    for f=1:length(fc)
-        switch fc(f)
-          case {1,2}
-            fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-                read_llc_fkij(fnm,NX,fc(f),kxu,ix{fc(f)},jx{fc(f)});
-            fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-                read_llc_fkij(fnm,NX,fc(f),kxv,ix{fc(f)},jx{fc(f)});
-          case {4,5}
-            fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-                read_llc_fkij(fnm,NX,fc(f),kxv,ix{fc(f)},jx{fc(f)});
-            fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = - ...
-                read_llc_fkij(fnm,NX,fc(f),kxu,ix{fc(f)},jx{fc(f)}-1);
-        end
-    end
+    fldu=read_llc_fkij(fnm,NX,fc,kxv,ix,jx);
+    fldv=read_llc_fkij(fnm,NX,fc,kxu,ix,jx-1);
     writebin(foutu,fldu);
     writebin(foutv,fldv);
 end
