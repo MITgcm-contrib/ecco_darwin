@@ -139,6 +139,8 @@ C     sed_b4              :: coefficient for sediment model
 C     sed_c4              :: coefficient for sediment model
 C     sed_d4              :: coefficient for sediment model
 C     sed_e4              :: coefficient for sediment model
+C     sed_f4              :: coefficient for sediment model
+C     sed_g4              :: coefficient for sediment model
 C     sed_a5              :: coefficient for sediment model
 C     sed_b5              :: coefficient for sediment model
 C     sed_c5              :: coefficient for sediment model
@@ -171,6 +173,8 @@ C     sed_e6              :: coefficient for sediment model
      &    sed_globalc4,
      &    sed_globald4,
      &    sed_globale4,
+     &    sed_globalf4,
+     &    sed_globalg4,
      &    sed_globala5,
      &    sed_globalb5,
      &    sed_globalc5,
@@ -201,6 +205,8 @@ C     sed_e6              :: coefficient for sediment model
       _RL sed_globalc4
       _RL sed_globald4
       _RL sed_globale4
+      _RL sed_globalf4
+      _RL sed_globalg4
       _RL sed_globala5
       _RL sed_globalb5
       _RL sed_globalc5

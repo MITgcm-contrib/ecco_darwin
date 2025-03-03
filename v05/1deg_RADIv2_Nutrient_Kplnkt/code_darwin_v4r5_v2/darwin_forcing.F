@@ -119,7 +119,7 @@ C     Dependent variables for sediment flux for validation
       _RL sed_a1, sed_b1, sed_c1, sed_d1, sed_e1
       _RL sed_a2, sed_b2, sed_c2, sed_d2, sed_e2
       _RL sed_a3, sed_b3, sed_c3, sed_d3, sed_e3
-      _RL sed_a4, sed_b4, sed_c4, sed_d4, sed_e4
+      _RL sed_a4, sed_b4, sed_c4, sed_d4, sed_e4, sed_f4, sed_g4
       _RL sed_a5, sed_b5, sed_c5, sed_d5, sed_e5
       _RL sed_a6, sed_b6, sed_c6, sed_d6, sed_e6
 #endif
@@ -715,9 +715,14 @@ C       Dependent variables
         fluxPON(i,j) = wN_sink*MAX(0.0,Ptracer(i,j,k,bi,bj,iPON))
         absT = ABS(Theta(i,j,k,bi,bj))
 
+C       Reset fluxes to zero before accumulation
+        flxplnkC(i,j) = 0.0
+        flxplnkP(i,j) = 0.0
+        flxplnkN(i,j) = 0.0     
+
         DO l = 1, nplank
-           flxplnkC(i,j) = biosink(l)*MAX(0.0, 
-     &                     Ptracer(i,j,k,bi,bj,ic+l-1))
+           flxplnkC(i,j) = flxplnkC(i,j) + (biosink(l)*MAX(0.0, 
+     &                     Ptracer(i,j,k,bi,bj,ic+l-1)))
            flxplnkP(i,j) = flxplnkC(i,j) * R_PC(l)
            flxplnkN(i,j) = flxplnkC(i,j) * R_NC(l)
          ENDDO
@@ -742,11 +747,13 @@ C       Dependent variables
         sed_c4 = sed_globalc4
         sed_d4 = sed_globald4
         sed_e4 = sed_globale4
+        sed_f4 = sed_globalf4
+        sed_g4 = sed_globalg4
         sed_a5 = sed_globala5
         sed_b5 = sed_globalb5
         sed_c5 = sed_globalc5
         sed_d5 = sed_globald5
-        sed_e6 = sed_globale5
+        sed_e5 = sed_globale5
         sed_a6 = sed_globala6
         sed_b6 = sed_globalb6
         sed_c6 = sed_globalc6
@@ -772,11 +779,13 @@ C       Dependent variables
      &                      sed_e3*fluxPIC(i,j)  
 
         NO3Fsediment(i,j) = sed_a4 + 
-     &                      sed_b4*absT +
-     &                      sed_c4*omegaC0(i,j) +
-     &                      sed_d4*(fluxPON(i,j)+flxplnkN(i,j)) +
-     &                      sed_e4*fluxPIC(i,j)  
-        
+     &                      sed_b4*(fluxPON(i,j)+flxplnkN(i,j)) +
+     &                      sed_c4*DICFsediment(i,j) +
+     &                      sed_d4*O2Fsediment(i,j) +
+     &                      sed_e4*(absT*DICFsediment(i,j)) +
+     &                      sed_f4*(absT*O2Fsediment(i,j)) +
+     &                      sed_g4*(DICFsediment(i,j)*O2Fsediment(i,j))
+
         PO4Fsediment(i,j) = sed_a5 + 
      &                      sed_b5*absT +
      &                      sed_c5*omegaC0(i,j) +
