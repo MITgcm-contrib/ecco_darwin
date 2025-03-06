@@ -140,7 +140,6 @@ nTimeSteps=227902,
 # Input datasets
  &PARM05
  diffKrFile='eccov4_r4_diffkr.data',
- adTapeDir='tapes',
 #bathyFile      ='bathy_eccollc_90x50.bin',
  bathyFile      ='bathy_eccollc_90x50_min2pts.bin',
  hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',

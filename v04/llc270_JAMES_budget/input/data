@@ -125,7 +125,6 @@
 
 # Input datasets
  &PARM05
- adTapeDir='tapes',
 #bathyFile      ='bathy_eccollc_90x50.bin',
  bathyFile      ='bathy270_filled_noCaspian_r4',
  hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',

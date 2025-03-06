@@ -112,6 +112,5 @@
 
 # Input datasets
  &PARM05
- adTapeDir='tapes',
  bathyFile      ='bathy_46x68_Mac',
  /

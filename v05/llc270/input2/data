@@ -127,7 +127,6 @@
 # Input datasets
  &PARM05
  diffKrFile='era_xx_it42_v2/llc270_it42_diffkr.data',
- adTapeDir='tapes',
 #bathyFile      ='bathy_eccollc_90x50.bin',
  bathyFile      ='bathy270_filled_noCaspian_r4',
  hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',

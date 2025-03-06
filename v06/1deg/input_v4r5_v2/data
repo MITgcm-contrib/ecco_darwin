@@ -117,7 +117,6 @@
 # Input datasets
  &PARM05
  diffKrFile='eccov4_r5_diffkr.data',
- adTapeDir='tapes',
  bathyFile      ='BATHY_ICE_SHELF_CAVITY_PLUS_ICE_FRONT_LLC_0090.bin',
  hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',
  hydrogSaltFile ='S_OWPv1_M_eccollc_90x50.bin',
