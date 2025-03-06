@@ -1,5 +1,7 @@
 % Gulf of Mexico region extracted for Jessica Zaiss on November 15, 2024
 % lats 60S to 40S, lons 30E to 100E
+% Based on ecco_darwin/v06/1deg/readme_v4r5_v2.txt
+% and ecco_darwin/v06/1deg/readme_darwin_v4r5.txt
 % (example extraction on face 5, i.e., rotated UV fields)
 
 % This code is best viewed using a "folding" package with the opening
@@ -14,6 +16,7 @@ maxlon=-79;
 minlat=18;
 maxlat=31;
 NX=90;
+DeltaT=3600;
 prec='real*4';
 % }}}
 
@@ -187,13 +190,13 @@ for t=1:length(dnm)
     fnm=[dnm(t).folder '/' dnm(t).name];
     l=strfind(fnm,'.000');
     ts=str2num(fnm((l+1):(l+10)));
-    dy=ts2dte(ts,1200,1992,1,1,30);
+    dy=ts2dte(ts,DeltaT,1992,1,1,30);
     fout=[fot{1} suf1 '.' dy];
     fld=read_llc_fkij(fnm,NX,fc,1,ix,jx);
     writebin(fout,fld);
 end
 fin={'monthly/'};
-for fot={'apCO2', 'fugfCO2', 'CO2_flux','SIarea','SIheff'}
+for fot={'apCO2', 'fugfCO2', 'CO2_flux'}
     eval(['mkdir ' pout fot{1}])
     eval(['cd ' pout fot{1}])
     dnm=dir([pin fin{1} fot{1} '.*.data']);
@@ -201,7 +204,7 @@ for fot={'apCO2', 'fugfCO2', 'CO2_flux','SIarea','SIheff'}
         fnm=[dnm(t).folder '/' dnm(t).name];
         l=strfind(fnm,'.000');
         ts=str2num(fnm((l+1):(l+10)));
-        dy=ts2dte(ts,1200,1992,1,1,30);
+        dy=ts2dte(ts,DeltaT,1992,1,1,30);
         fout=[fot{1} suf1 '.' dy];
         fld=read_llc_fkij(fnm,NX,fc,1,ix,jx);
         writebin(fout,fld);
@@ -222,7 +225,7 @@ for fot={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
         fnm=[dnm(t).folder '/' dnm(t).name];
         l=strfind(fnm,'.000');
         ts=str2num(fnm((l+1):(l+10)));
-        dy=ts2dte(ts,1200,1992,1,1,30);
+        dy=ts2dte(ts,DeltaT,1992,1,1,30);
         fout=[fot{1} suf2 '.' dy];
         fld=read_llc_fkij(fnm,NX,fc,kx,ix,jx);
         writebin(fout,fld);
@@ -235,7 +238,7 @@ for t=1:length(dnm)
     fnm=[dnm(t).folder '/' dnm(t).name];
     l=strfind(fnm,'.000');
     ts=str2num(fnm((l+1):(l+10)));
-    dy=ts2dte(ts,1200,1992,1,1,30);
+    dy=ts2dte(ts,DeltaT,1992,1,1,30);
     fout=['SALT' suf2 '.' dy];
     fld=read_llc_fkij(fnm,NX,fc,kx,ix,jx);
     writebin(fout,fld+35);
@@ -255,7 +258,7 @@ for t=1:length(dnm)
     fnm=[dnm(t).folder '/' dnm(t).name];
     l=strfind(fnm,'.000');
     ts=str2num(fnm((l+1):(l+10)));
-    dy=ts2dte(ts,1200,1992,1,1,30);
+    dy=ts2dte(ts,DeltaT,1992,1,1,30);
     foutu=['U/U' suf2 '.' dy];
     foutv=['V/V' suf2 '.' dy];
     fldu=read_llc_fkij(fnm,NX,fc,kxv,ix,jx);
@@ -279,10 +282,7 @@ for fot={'aqh', 'atemp', 'lwdn', 'preci', 'swdn'}
         fout=[pout region_name suf1 '_' dnm(d).name];
         nt=dnm(d).bytes/NX/NX/13/4;
         for t=1:nt
-            for f=1:length(fc)
-                fld((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                    read_llc_fkij(fnm,NX,fc(f),t,ix{fc(f)},jx{fc(f)});
-            end
+            fld=read_llc_fkij(fnm,NX,fc,t,ix,jx);
             writebin(fout,fld,1,'real*4',t-1);
         end
     end
@@ -293,10 +293,7 @@ fld=zeros(nx,ny,nz);
 for fot={'diffkr','kapgm','kapredi'}
     fnm=[pin 'llc270_it42_' fot{1} '.data'];
     fout=[pout region_name suf1 '_' fot{1}];
-    for f=1:length(fc)
-        fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-            read_llc_fkij(fnm,NX,fc(f),kx,ix{fc(f)},jx{fc(f)});
-    end
+    fld=read_llc_fkij(fnm,NX,fc,kx,ix,jx);
     writebin(fout,fld);
 end
 % }}}
@@ -305,21 +302,14 @@ fld=zeros(nx,ny,12);
 fnm=['/nobackup/hzhang1/forcing/era-interim/' ...
      'runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin'];
 fout=[pout region_name suf1 '_Fekete_runoff'];
-for f=1:length(fc)
-    fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-        read_llc_fkij(fnm,NX,fc(f),1:12,ix{fc(f)},jx{fc(f)});
-end
+fld=read_llc_fkij(fnm,NX,fc,1:12,ix,jx);
 writebin(fout,fld);
 % }}}
 % {{{ get and save iron dust
-fld=zeros(nx,ny,12);
-fnm=['/nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/' ...
-     'darwin_forcing/llc270_Mahowald_2009_soluble_iron_dust.bin'];
+fnm=['/nobackup/dcarrol2/forcing/iron_dust/LLC_270/' ...
+     'llc270_Mahowald_2009_soluble_iron_dust.bin'];
 fout=[pout region_name suf1 '_iron_dust'];
-for f=1:length(fc)
-    fld((sum(m(1:f))+1):sum(m(1:(f+1))),:,:) = ...
-        read_llc_fkij(fnm,NX,fc(f),1:12,ix{fc(f)},jx{fc(f)});
-end
+fld=read_llc_fkij(fnm,NX,fc,1:12,ix,jx);
 writebin(fout,fld);
 % }}}
 % {{{ get and save vector surface forcing
@@ -338,22 +328,16 @@ for d=1:length(dnmu)
     foutv=[pout region_name suf1 '_' dnmv(d).name];
     nt=dnmu(d).bytes/NX/NX/13/4;
     for t=1:nt
-        for f=1:length(fc)
-            switch fc(f)
-              case {1,2}
-                fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                    read_llc_fkij(fnmu,NX,fc(f),t,ix{fc(f)},jx{fc(f)});
-                fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                    read_llc_fkij(fnmv,NX,fc(f),t,ix{fc(f)},jx{fc(f)});
-              case {4,5}
-                fldu((sum(m(1:f))+1):sum(m(1:(f+1))),:) = ...
-                    read_llc_fkij(fnmv,NX,fc(f),t,ix{fc(f)},jx{fc(f)});
-                fldv((sum(m(1:f))+1):sum(m(1:(f+1))),:) = - ...
-                    read_llc_fkij(fnmu,NX,fc(f),t,ix{fc(f)},jx{fc(f)});
-            end
-            writebin(foutu,fldu,1,'real*4',t-1);
-            writebin(foutv,fldv,1,'real*4',t-1);
+        switch fc(f)
+          case {1,2}
+            fldu=read_llc_fkij(fnmu,NX,fc,t,ix,jx);
+            fldv=read_llc_fkij(fnmv,NX,fc,t,ix,jx);
+          case {4,5}
+            fldu=read_llc_fkij(fnmv,NX,fc,t,ix,jx);
+            fldv=read_llc_fkij(fnmu,NX,fc,t,ix,jx);
         end
+        writebin(foutu,fldu,1,'real*4',t-1);
+        writebin(foutv,fldv,1,'real*4',t-1);
     end
 end
 % }}}
