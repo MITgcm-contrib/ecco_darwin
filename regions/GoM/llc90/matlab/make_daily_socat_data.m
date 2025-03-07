@@ -5,7 +5,7 @@
 addpath('C:\Users\jessicaz\Documents\MATLAB\lib')
 
 
-load C:\Users\jessicaz\Documents\research\socat\gomscat.mat
+
 
 %{ 
 % for kk=1:length(yr)
