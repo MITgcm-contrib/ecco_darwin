@@ -31,14 +31,28 @@ for rr=1:length(R)
         mdata=readbin([dataDir Files.name],[nx ny]);
     
         mod_fco2=cat(3,mod_fco2,mdata);
+        figure(),histogram(mod_fco2(:))
 
     end
 end
 
-
+%socat is in micro-atmospheres
+%llc90 is in atmospheres
 figure()
 scatter(gom_fco2(:),mod_fco2(:))
+xlabel('SOCAT Data [\muatm]')
+ylabel('LLC90 [atm]')
+title('fCO_2 data-model comparison')
 
+
+figure()
+pcolorcen(mdata);
+colorbar()
+title(['LLC90 fCO_2 ' num2str(tmpMon) '/' num2str(year)])
+
+figure()
+pcolorcen(gom_fco2(:,:,end))
+colorbar()
 
 
 
