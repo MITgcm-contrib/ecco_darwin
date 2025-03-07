@@ -46,13 +46,10 @@ title('fCO_2 data-model comparison')
 
 
 figure()
-pcolorcen(mdata);
+pcolorcen(mdata');
 colorbar()
 title(['LLC90 fCO_2 ' num2str(tmpMon) '/' num2str(year)])
 
-figure()
-pcolorcen(gom_fco2(:,:,end))
-colorbar()
 
 
 
