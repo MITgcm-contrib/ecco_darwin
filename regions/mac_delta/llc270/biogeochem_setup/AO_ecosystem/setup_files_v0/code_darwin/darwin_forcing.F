@@ -309,29 +309,25 @@ C === nutrient runoff ==================================================
 
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iNO3),
-     I                          DINrunoff(1-OLx,1-OLy,bi,bj),
-     I                          R_NO3_DIN_runoff,
+     I                          NO3runoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iNO2),
-     I                          DINrunoff(1-OLx,1-OLy,bi,bj),
-     I                          R_NO2_DIN_runoff,
+     I                          NO2runoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iNH4),
-     I                          DINrunoff(1-OLx,1-OLy,bi,bj),
-     I                          R_NH4_DIN_runoff,
+     I                          NH4runoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iPO4),
-     I                          IPrunoff(1-OLx,1-OLy,bi,bj),
-     I                          R_DIP_IP_runoff,
+     I                          PO4runoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 
@@ -373,8 +369,8 @@ C === nutrient runoff ==================================================
 
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iFeT),
-     I                          IPrunoff(1-OLx,1-OLy,bi,bj),
-     I                          R_DIP_IP_runoff*R_DFe_DIP_runoff,
+     I                          PO4runoff(1-OLx,1-OLy,bi,bj),
+     I                          R_DFe_DIP_runoff,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 

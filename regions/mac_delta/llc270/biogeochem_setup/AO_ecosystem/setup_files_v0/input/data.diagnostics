@@ -40,6 +40,14 @@
 		               'TRAC08','TRAC09','TRAC21',
    filename(5) = 'diags/monthly/nuts',
 #---
+  frequency(6) = 2635200.,
+   fields(1:2,6) = 'TRAC27','TRAC28',
+   filename(6) = 'diags/monthly/zoo',
+#---
+  frequency(7) = 2635200.,
+   fields(1:2,7) = 'PAR','PARF',
+   filename(7) = 'diags/monthly/light',
+#---
  &
 
  /

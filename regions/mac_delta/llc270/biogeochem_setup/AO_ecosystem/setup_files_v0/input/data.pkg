@@ -12,4 +12,5 @@
  useOBCS  = .TRUE.,
  usePTRACERS   = .TRUE.,
  useGCHEM      = .TRUE.,
+ useRADTRANS   = .TRUE.,
  /

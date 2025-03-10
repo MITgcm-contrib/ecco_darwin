@@ -200,29 +200,53 @@ C
      &    DOPrunoffmask,
      &    darwin_inscal_DOPrunoff,
 C
-     &    DINrunofffile,
-     &    DINrunoffperiod,
-     &    DINrunoffRepCycle,
-     &    DINrunoffStartTime,
-     &    DINrunoffstartdate1,
-     &    DINrunoffstartdate2,
-     &    DINrunoffconst,
-     &    DINrunoff_exfremo_intercept,
-     &    DINrunoff_exfremo_slope,
-     &    DINrunoffmask,
-     &    darwin_inscal_DINrunoff,
+     &    NO3runofffile,
+     &    NO3runoffperiod,
+     &    NO3runoffRepCycle,
+     &    NO3runoffStartTime,
+     &    NO3runoffstartdate1,
+     &    NO3runoffstartdate2,
+     &    NO3runoffconst,
+     &    NO3runoff_exfremo_intercept,
+     &    NO3runoff_exfremo_slope,
+     &    NO3runoffmask,
+     &    darwin_inscal_NO3runoff,
 C
-     &    IPrunofffile,
-     &    IPrunoffperiod,
-     &    IPrunoffRepCycle,
-     &    IPrunoffStartTime,
-     &    IPrunoffstartdate1,
-     &    IPrunoffstartdate2,
-     &    IPrunoffconst,
-     &    IPrunoff_exfremo_intercept,
-     &    IPrunoff_exfremo_slope,
-     &    IPrunoffmask,
-     &    darwin_inscal_IPrunoff,
+     &    NO2runofffile,
+     &    NO2runoffperiod,
+     &    NO2runoffRepCycle,
+     &    NO2runoffStartTime,
+     &    NO2runoffstartdate1,
+     &    NO2runoffstartdate2,
+     &    NO2runoffconst,
+     &    NO2runoff_exfremo_intercept,
+     &    NO2runoff_exfremo_slope,
+     &    NO2runoffmask,
+     &    darwin_inscal_NO2runoff,
+C
+     &    NH4runofffile,
+     &    NH4runoffperiod,
+     &    NH4runoffRepCycle,
+     &    NH4runoffStartTime,
+     &    NH4runoffstartdate1,
+     &    NH4runoffstartdate2,
+     &    NH4runoffconst,
+     &    NH4runoff_exfremo_intercept,
+     &    NH4runoff_exfremo_slope,
+     &    NH4runoffmask,
+     &    darwin_inscal_NH4runoff,
+C
+     &    PO4runofffile,
+     &    PO4runoffperiod,
+     &    PO4runoffRepCycle,
+     &    PO4runoffStartTime,
+     &    PO4runoffstartdate1,
+     &    PO4runoffstartdate2,
+     &    PO4runoffconst,
+     &    PO4runoff_exfremo_intercept,
+     &    PO4runoff_exfremo_slope,
+     &    PO4runoffmask,
+     &    darwin_inscal_PO4runoff,
 C
      &    DSirunofffile,
      &    DSirunoffperiod,
@@ -387,21 +411,37 @@ C
      &    DOPrunoff_interpMethod,
      &    DOPrunoff_lat_inc,
 C
-     &    DINrunoff_lon0,
-     &    DINrunoff_lat0,
-     &    DINrunoff_nlon,
-     &    DINrunoff_nlat,
-     &    DINrunoff_lon_inc,
-     &    DINrunoff_interpMethod,
-     &    DINrunoff_lat_inc,
+     &    NO3runoff_lon0,
+     &    NO3runoff_lat0,
+     &    NO3runoff_nlon,
+     &    NO3runoff_nlat,
+     &    NO3runoff_lon_inc,
+     &    NO3runoff_interpMethod,
+     &    NO3runoff_lat_inc,
 C
-     &    IPrunoff_lon0,
-     &    IPrunoff_lat0,
-     &    IPrunoff_nlon,
-     &    IPrunoff_nlat,
-     &    IPrunoff_lon_inc,
-     &    IPrunoff_interpMethod,
-     &    IPrunoff_lat_inc,
+     &    NO2runoff_lon0,
+     &    NO2runoff_lat0,
+     &    NO2runoff_nlon,
+     &    NO2runoff_nlat,
+     &    NO2runoff_lon_inc,
+     &    NO2runoff_interpMethod,
+     &    NO2runoff_lat_inc,
+C
+     &    NH4runoff_lon0,
+     &    NH4runoff_lat0,
+     &    NH4runoff_nlon,
+     &    NH4runoff_nlat,
+     &    NH4runoff_lon_inc,
+     &    NH4runoff_interpMethod,
+     &    NH4runoff_lat_inc,
+C
+     &    PO4runoff_lon0,
+     &    PO4runoff_lat0,
+     &    PO4runoff_nlon,
+     &    PO4runoff_nlat,
+     &    PO4runoff_lon_inc,
+     &    PO4runoff_interpMethod,
+     &    PO4runoff_lat_inc,
 C
      &    DSirunoff_lon0,
      &    DSirunoff_lat0,
@@ -608,31 +648,57 @@ C Open and read the data.darwin file
 
       darwin_inscal_DOPrunoff    =  1. _d 0
 
-      DINrunofffile = ' '
-      DINrunoffperiod             = 0.0 _d 0
-      DINrunoffRepCycle           = repeatPeriod
-      DINrunoffStartTime          = UNSET_RL
-      DINrunoffstartdate1         = 0
-      DINrunoffstartdate2         = 0
-      DINrunoffconst              = 0 _d 0
-      DINrunoff_exfremo_intercept = 0.0 _d 0
-      DINrunoff_exfremo_slope     = 0.0 _d 0
-      DINrunoffmask = 'c'
+      NO3runofffile = ' '
+      NO3runoffperiod             = 0.0 _d 0
+      NO3runoffRepCycle           = repeatPeriod
+      NO3runoffStartTime          = UNSET_RL
+      NO3runoffstartdate1         = 0
+      NO3runoffstartdate2         = 0
+      NO3runoffconst              = 0 _d 0
+      NO3runoff_exfremo_intercept = 0.0 _d 0
+      NO3runoff_exfremo_slope     = 0.0 _d 0
+      NO3runoffmask = 'c'
 
-      darwin_inscal_DINrunoff    =  1. _d 0
+      darwin_inscal_NO3runoff    =  1. _d 0
 
-      IPrunofffile = ' '
-      IPrunoffperiod             = 0.0 _d 0
-      IPrunoffRepCycle           = repeatPeriod
-      IPrunoffStartTime          = UNSET_RL
-      IPrunoffstartdate1         = 0
-      IPrunoffstartdate2         = 0
-      IPrunoffconst              = 0 _d 0
-      IPrunoff_exfremo_intercept = 0.0 _d 0
-      IPrunoff_exfremo_slope     = 0.0 _d 0
-      IPrunoffmask = 'c'
+      NO2runofffile = ' '
+      NO2runoffperiod             = 0.0 _d 0
+      NO2runoffRepCycle           = repeatPeriod
+      NO2runoffStartTime          = UNSET_RL
+      NO2runoffstartdate1         = 0
+      NO2runoffstartdate2         = 0
+      NO2runoffconst              = 0 _d 0
+      NO2runoff_exfremo_intercept = 0.0 _d 0
+      NO2runoff_exfremo_slope     = 0.0 _d 0
+      NO2runoffmask = 'c'
 
-      darwin_inscal_IPrunoff    =  1. _d 0
+      darwin_inscal_NO2runoff    =  1. _d 0
+
+      NH4runofffile = ' '
+      NH4runoffperiod             = 0.0 _d 0
+      NH4runoffRepCycle           = repeatPeriod
+      NH4runoffStartTime          = UNSET_RL
+      NH4runoffstartdate1         = 0
+      NH4runoffstartdate2         = 0
+      NH4runoffconst              = 0 _d 0
+      NH4runoff_exfremo_intercept = 0.0 _d 0
+      NH4runoff_exfremo_slope     = 0.0 _d 0
+      NH4runoffmask = 'c'
+
+      darwin_inscal_NH4runoff    =  1. _d 0
+
+      PO4runofffile = ' '
+      PO4runoffperiod             = 0.0 _d 0
+      PO4runoffRepCycle           = repeatPeriod
+      PO4runoffStartTime          = UNSET_RL
+      PO4runoffstartdate1         = 0
+      PO4runoffstartdate2         = 0
+      PO4runoffconst              = 0 _d 0
+      PO4runoff_exfremo_intercept = 0.0 _d 0
+      PO4runoff_exfremo_slope     = 0.0 _d 0
+      PO4runoffmask = 'c'
+
+      darwin_inscal_PO4runoff    =  1. _d 0
 
       DSirunofffile = ' '
       DSirunoffperiod             = 0.0 _d 0
@@ -791,19 +857,33 @@ C Open and read the data.darwin file
       DOPrunoff_lon_inc = inp_dLon
       DOPrunoff_interpMethod  = 1
 
-      DINrunoff_lon0 = inp_lon0
-      DINrunoff_lat0 = inp_lat0
-      DINrunoff_nlon = inp_gNx
-      DINrunoff_nlat = inp_gNy
-      DINrunoff_lon_inc = inp_dLon
-      DINrunoff_interpMethod  = 1
+      NO3runoff_lon0 = inp_lon0
+      NO3runoff_lat0 = inp_lat0
+      NO3runoff_nlon = inp_gNx
+      NO3runoff_nlat = inp_gNy
+      NO3runoff_lon_inc = inp_dLon
+      NO3runoff_interpMethod  = 1
 
-      IPrunoff_lon0 = inp_lon0
-      IPrunoff_lat0 = inp_lat0
-      IPrunoff_nlon = inp_gNx
-      IPrunoff_nlat = inp_gNy
-      IPrunoff_lon_inc = inp_dLon
-      IPrunoff_interpMethod  = 1
+      NO2runoff_lon0 = inp_lon0
+      NO2runoff_lat0 = inp_lat0
+      NO2runoff_nlon = inp_gNx
+      NO2runoff_nlat = inp_gNy
+      NO2runoff_lon_inc = inp_dLon
+      NO2runoff_interpMethod  = 1
+
+      NH4runoff_lon0 = inp_lon0
+      NH4runoff_lat0 = inp_lat0
+      NH4runoff_nlon = inp_gNx
+      NH4runoff_nlat = inp_gNy
+      NH4runoff_lon_inc = inp_dLon
+      NH4runoff_interpMethod  = 1
+
+      PO4runoff_lon0 = inp_lon0
+      PO4runoff_lat0 = inp_lat0
+      PO4runoff_nlon = inp_gNx
+      PO4runoff_nlat = inp_gNy
+      PO4runoff_lon_inc = inp_dLon
+      PO4runoff_interpMethod  = 1
 
       DSirunoff_lon0 = inp_lon0
       DSirunoff_lat0 = inp_lat0
@@ -859,8 +939,10 @@ C Open and read the data.darwin file
         CDOMrunoff_lat_inc(j) = inp_dLat(j)
         DONrunoff_lat_inc(j) = inp_dLat(j)
         DOPrunoff_lat_inc(j) = inp_dLat(j)
-        DINrunoff_lat_inc(j) = inp_dLat(j)
-        IPrunoff_lat_inc(j) = inp_dLat(j)
+        NO3runoff_lat_inc(j) = inp_dLat(j)
+        NO2runoff_lat_inc(j) = inp_dLat(j)
+        NH4runoff_lat_inc(j) = inp_dLat(j)
+        PO4runoff_lat_inc(j) = inp_dLat(j)
         DSirunoff_lat_inc(j) = inp_dLat(j)
         POCrunoff_lat_inc(j) = inp_dLat(j)
         POPrunoff_lat_inc(j) = inp_dLat(j)
@@ -1071,17 +1153,31 @@ C     warn if darwin and radtrans ice forcing are different
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF
-       IF ( DINrunoffRepCycle.NE.0. ) THEN
+       IF ( NO3runoffRepCycle.NE.0. ) THEN
         WRITE(msgBuf,'(3A)') 'DARWIN_EXF_READPARMS: The use of ',
      &   'useExfYearlyFields AND ',
-     &   'DINrunoffRepCycle is not implemented'
+     &   'NO3runoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF
-       IF ( IPrunoffRepCycle.NE.0. ) THEN
+       IF ( NO2runoffRepCycle.NE.0. ) THEN
         WRITE(msgBuf,'(3A)') 'DARWIN_EXF_READPARMS: The use of ',
      &   'useExfYearlyFields AND ',
-     &   'IPrunoffRepCycle is not implemented'
+     &   'NO2runoffRepCycle is not implemented'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+       ENDIF
+       IF ( NH4runoffRepCycle.NE.0. ) THEN
+        WRITE(msgBuf,'(3A)') 'DARWIN_EXF_READPARMS: The use of ',
+     &   'useExfYearlyFields AND ',
+     &   'NH4runoffRepCycle is not implemented'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+       ENDIF
+       IF ( PO4runoffRepCycle.NE.0. ) THEN
+        WRITE(msgBuf,'(3A)') 'DARWIN_EXF_READPARMS: The use of ',
+     &   'useExfYearlyFields AND ',
+     &   'PO4runoffRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF

@@ -172,27 +172,51 @@ C     errCount  :: error counter
      I                         myThid )
       ENDIF
 
-      IF ( DINrunofffile .NE. ' ' ) THEN
+      IF ( NO3runofffile .NE. ' ' ) THEN
 # ifdef ALLOW_DEBUG
-       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START DINrunoff',
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START NO3runoff',
      &  myThid)
 # endif
        CALL EXF_GETFFIELD_START( useExfYearlyFields,
-     I                         'darwin', 'DINrunoff', DINrunoffperiod,
-     I                         DINrunoffstartdate1, DINrunoffstartdate2,
-     U                         DINrunoffStartTime, errCount,
+     I                         'darwin', 'NO3runoff', NO3runoffperiod,
+     I                         NO3runoffstartdate1, NO3runoffstartdate2,
+     U                         NO3runoffStartTime, errCount,
      I                         myThid )
       ENDIF
 
-      IF ( IPrunofffile .NE. ' ' ) THEN
+      IF ( NO2runofffile .NE. ' ' ) THEN
 # ifdef ALLOW_DEBUG
-       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START IPrunoff',
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START NO2runoff',
      &  myThid)
 # endif
        CALL EXF_GETFFIELD_START( useExfYearlyFields,
-     I                         'darwin', 'IPrunoff', IPrunoffperiod,
-     I                         IPrunoffstartdate1, IPrunoffstartdate2,
-     U                         IPrunoffStartTime, errCount,
+     I                         'darwin', 'NO2runoff', NO2runoffperiod,
+     I                         NO2runoffstartdate1, NO2runoffstartdate2,
+     U                         NO2runoffStartTime, errCount,
+     I                         myThid )
+      ENDIF
+
+      IF ( NH4runofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START NH4runoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I                         'darwin', 'NH4runoff', NH4runoffperiod,
+     I                         NH4runoffstartdate1, NH4runoffstartdate2,
+     U                         NH4runoffStartTime, errCount,
+     I                         myThid )
+      ENDIF
+
+      IF ( PO4runofffile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START PO4runoff',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I                         'darwin', 'PO4runoff', PO4runoffperiod,
+     I                         PO4runoffstartdate1, PO4runoffstartdate2,
+     U                         PO4runoffStartTime, errCount,
      I                         myThid )
       ENDIF
 

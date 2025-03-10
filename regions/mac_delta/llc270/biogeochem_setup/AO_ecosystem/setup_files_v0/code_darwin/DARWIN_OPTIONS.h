@@ -95,7 +95,7 @@ C use rho instead of acclimated Chl:C for chlorophyll synthesis
 #undef  DARWIN_GEIDER_RHO_SYNTH
 
 C initialize chl as in darwin2 (with radtrans package)
-#define  DARWIN_CHL_INIT_LEGACY
+#undef  DARWIN_CHL_INIT_LEGACY
 
 C scattering coefficients are per Chlorophyll (with radtrans package)
 #undef  DARWIN_SCATTER_CHL

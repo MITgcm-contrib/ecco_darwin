@@ -22,7 +22,7 @@ C nlam     :: number of wavebands (set in radtrans package if compiled)
       integer nPhoto
       parameter(nplank=7)
       parameter(nGroup=6)
-      parameter(nopt=1)
+      parameter(nopt=12)
       parameter(nPhoto=5)
 
 #ifndef ALLOW_RADTRANS

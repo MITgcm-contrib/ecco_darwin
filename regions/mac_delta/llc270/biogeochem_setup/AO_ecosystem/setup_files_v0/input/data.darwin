@@ -39,10 +39,25 @@
  DONrunoffstartdate2 = 120000,
  DONrunoffperiod     = 86400.0,
 #
+ NO3runofffile = 'tNO3/tNO3_runoff_mac270',
+ NO3runoffstartdate1 = 19920101,
+ NO3runoffstartdate2 = 120000,
+ NO3runoffperiod     = 86400.0,
+#
+ NH4runofffile = 'tNH4/tNH4_runoff_mac270',
+ NH4runoffstartdate1 = 19920101,
+ NH4runoffstartdate2 = 120000,
+ NH4runoffperiod     = 86400.0,
+#
  DOPrunofffile = 'tDOP/tDOP_runoff_mac270',
  DOPrunoffstartdate1 = 19920101,
  DOPrunoffstartdate2 = 120000,
  DOPrunoffperiod     = 86400.0,
+#
+ PO4runofffile = 'tPO4/tPO4_runoff_mac270',
+ PO4runoffstartdate1 = 19920101,
+ PO4runoffstartdate2 = 120000,
+ PO4runoffperiod     = 86400.0,
 #
  DSirunofffile = 'tDSi/tDSi_runoff_mac270',
  DSirunoffstartdate1 = 19920101,
@@ -61,7 +76,10 @@
  DICrunoff_interpMethod = 0,
  ALKrunoff_interpMethod = 0,
  DONrunoff_interpMethod = 0,
+ NO3runoff_interpMethod = 0,
+ NH4runoff_interpMethod = 0,
  DOPrunoff_interpMethod = 0,
+ PO4runoff_interpMethod = 0,
  DSirunoff_interpMethod = 0,
 #
  pCO2_lon0    = 0.0D0,
@@ -105,16 +123,39 @@
 ########################
  &DARWIN_CDOM_PARAMS
  fracCDOM = 0.02,
+ CDOMcoeff=0.20,
  cdomdegrd  = 3.168808781402895E-9, ! 1/10years
  CDOMbleach = 1.929012345679012E-6, ! 1/6days
  PARCDOM = 60.,
+ /
+ ########################
+ &DARWIN_RADTRANS_PARAMS
+ darwin_waterabsorbFile='optics/optics_water.txt',
+ darwin_phytoabsorbFile='optics/optics_plankton.txt',
+ darwin_particleabsorbFile='optics/optics_detritus.txt',
+ darwin_Sdom=0.019,
+ darwin_part_size_P = 1e-15,
+ darwin_RPOC = 2.0,
+
+ darwin_allomSpectra= T,
+ darwin_absorpSlope= -0.075,
+ darwin_bbbSlope=    -1.458,
+ darwin_scatSwitchSizeLog= 2.860959e-01, 2.923177e-01, 2.983251e-01, 3.140574e-01, 3.261153e-01,
+                           3.440134e-01, 3.577670e-01, 3.618763e-01, 3.695100e-01, 3.718916e-01,
+                           3.706202e-01, 3.640583e-01, 3.682107e-01,
+ darwin_scatSlopeSmall= 4.185404e+00, 4.208007e+00, 4.261307e+00, 4.302451e+00, 4.341968e+00,
+                        4.373109e+00, 4.392320e+00, 4.416705e+00, 4.434653e+00, 4.454953e+00,
+                        4.479809e+00, 4.507577e+00, 4.544071e+00,
+ darwin_scatSlopeLarge= 1.723153e+00, 1.718186e+00, 1.699666e+00, 1.687533e+00, 1.710736e+00,
+                        1.732242e+00, 1.763117e+00, 1.811451e+00, 1.834619e+00, 1.863836e+00,
+                        1.897289e+00, 1.861866e+00, 1.907367e+00,
  /
 ########################
  &DARWIN_RANDOM_PARAMS
  /
 ########################
  &DARWIN_TRAIT_PARAMS
- grp_names= 'PicoEuk', 'Hapto', 'LL Diat', 'HL Diat', 'Dino', 'Zoo'
+ grp_names= 'PicoEuk', 'Hapto', 'HL Diat', 'LL Diat', 'Dino', 'Zoo'
 #
 #                        s  C  D1 D2 l  Z 
  grp_nplank(:)=          1, 1, 1, 1, 1, 2,
