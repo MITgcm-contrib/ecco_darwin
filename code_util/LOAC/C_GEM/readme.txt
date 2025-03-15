@@ -14,7 +14,7 @@ Volta et al., 2014 www.geosci-model-dev.net/7/1271/2014/
 Cite following papers for FCO2 version:
 Volta et al., 2014 - www.geosci-model-dev.net/7/1271/2014/
 Volta et al., 2016 - www.hydrol-earth-syst-sci.net/20/991/2016/
-Regnier et al., 2022 - https://doi.org/10.1016/S0307-904X(02)00047-1
+Regnier et al., 2002 - https://doi.org/10.1016/S0307-904X(02)00047-1
 Follows et al., 2006 - https://doi.org/10.1016/j.ocemod.2005.05.004
 Regnier et al., 2013 - https://link.springer.com/article/10.1007/s10498-013-9218-3
 Laruelle et al., 2017 - www.biogeosciences.net/14/2441/2017/
