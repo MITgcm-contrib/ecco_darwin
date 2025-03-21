@@ -26,7 +26,7 @@ eval(['mkdir ' pout])
 
 % {{{ extract indices for desired region
 gdir='/nobackup/dcarrol2/grid/ECCO_V4r5/';
-fnm=[gdir 'BATHY_ICE_SHELF_CAVITY_PLUS_ICE_FRONT_LLC_0090.bin'];
+fnm=[gdir 'Depth.data'];
 [fld fc ix jx] = ...
     quikread_llc(fnm,NX,1,prec,gdir,minlat,maxlat,minlon,maxlon);
 clf
@@ -40,6 +40,9 @@ suf2=[suf1 'x' int2str(nz)];
 
 % {{{ Make bathymetry file
 close all
+fnm=[gdir 'BATHY_ICE_SHELF_CAVITY_PLUS_ICE_FRONT_LLC_0090.bin'];
+[fld fc ix jx] = ...
+    quikread_llc(fnm,NX,1,prec,gdir,minlat,maxlat,minlon,maxlon);
 writebin([pout 'BATHY' suf1  '_' region_name],fld);
 % }}}
 
@@ -56,10 +59,10 @@ writebin([pout 'delYFile'],delY);
 eval(['!mkdir ' pout 'init'])
 eval(['cd ' pout 'init'])
 fld={'ETAN'};
-sufin=[suf1 '.19920201T000000'];
+sufin=[suf1 '.19920131T120000'];
 sufout=[suf1 '.16-Jan-1992'];
 eval(['!cp ' pin fld{1} '/' fld{1} sufin ' ' fld{1} sufout])
-sufin=[suf2 '.19920201T000000'];
+sufin=[suf2 '.19920131T120000'];
 sufout=[suf2 '.16-Jan-1992'];
 for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
          'DOC', 'DON', 'DOP', 'DOFe', 'POC', 'PON', 'POP', 'POFe', ...
@@ -78,7 +81,7 @@ for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
          'c7', 'Chl1', 'Chl2', 'Chl3', 'Chl4', 'Chl5', 'SALT', 'U', 'V'}
     disp(fld{1})
     pnm=[pin fld{1} '/'];
-    fnm=dir([pnm '*' fld{1} '*01T000000']);
+    fnm=dir([pnm '*' fld{1} '*T120000']);
     for t=1:length(fnm)
         fin=[pnm fnm(t).name];
         tmp=readbin(fin,[nx ny nz]);

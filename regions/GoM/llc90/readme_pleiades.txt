@@ -1,16 +1,17 @@
-# Instructions for building and running LR17 regional simulation
-# on pleiades (based on ecco_darwin/v05/llc270/readme2.txt).
+# Instructions for building and running Gulf of Mexico (GoM)
+# regional simulation on pleiades based on "version 2" of
+# ecco_darwin/v06/1deg/readme_darwin_v4r5.txt
 
 ==============
 # 1. Get code
   git clone git@github.com:MITgcm-contrib/ecco_darwin.git
   git clone git@github.com:darwinproject/darwin3
   cd darwin3
-  git checkout 24885b71
-  mkdir build run
+  git checkout darwin_ckpt68y
 
 ==============
 # 2. Build executable
+  mkdir build run
   cd build
   module purge
   module load comp-intel mpi-hpe python3

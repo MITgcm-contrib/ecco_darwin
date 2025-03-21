@@ -196,7 +196,7 @@ for t=1:length(dnm)
     writebin(fout,fld);
 end
 fin={'monthly/'};
-for fot={'apCO2', 'fugfCO2', 'CO2_flux'}
+for fot={'apCO2', 'fugfCO2', 'CO2_flux','fCO2','mldDepth'}
     eval(['mkdir ' pout fot{1}])
     eval(['cd ' pout fot{1}])
     dnm=dir([pin fin{1} fot{1} '.*.data']);
@@ -268,18 +268,17 @@ for t=1:length(dnm)
 end
 % }}}
 
-pin='/nobackup/hzhang1/forcing/era_xx_it42_v2/';
+pin='/nobackup/hzhang1/pub/Release5/TBADJ/';
 pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/run_template/'];
 eval(['mkdir ' pout])
-pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/run_template/era_xx_it42_v2/'];
-eval(['mkdir ' pout])
+eval(['mkdir ' pout 'TBADJ/'])
 % {{{ get and save scalar surface forcing
 fld=zeros(nx,ny);
-for fot={'aqh', 'atemp', 'lwdn', 'preci', 'swdn'}
-    dnm=dir([pin 'EXF' fot{1} '*']);
+for fot={'ustr','vstr','tmp2m','spfh2m','rain','wspeed','dsw','dlw','pres'}
+    dnm=dir([pin 'eccov4r5_' fot{1} '*']);
     for d=1:length(dnm)
         fnm=[dnm(d).folder '/' dnm(d).name];
-        fout=[pout region_name suf1 '_' dnm(d).name];
+        fout=[pout 'TBADJ/' region_name suf1 '_' dnm(d).name];
         nt=dnm(d).bytes/NX/NX/13/4;
         for t=1:nt
             fld=read_llc_fkij(fnm,NX,fc,t,ix,jx);
@@ -288,58 +287,34 @@ for fot={'aqh', 'atemp', 'lwdn', 'preci', 'swdn'}
     end
 end
 % }}}
+pin='/nobackup/hzhang1/pub/Release5/input_bin/';
 % {{{ get and save mixing coefficients
 fld=zeros(nx,ny,nz);
 for fot={'diffkr','kapgm','kapredi'}
-    fnm=[pin 'llc270_it42_' fot{1} '.data'];
+    fnm=[pin 'eccov4_r5_' fot{1} '.data'];
     fout=[pout region_name suf1 '_' fot{1}];
     fld=read_llc_fkij(fnm,NX,fc,kx,ix,jx);
     writebin(fout,fld);
 end
+fnm=[pin 'fenty_biharmonic_visc_v11.bin'];
+fout=[pout region_name suf1 '_biharmonic_visc'];
+fld=read_llc_fkij(fnm,NX,fc,kx,ix,jx);
+writebin(fout,fld);
 % }}}
 % {{{ get and save river discharge
 fld=zeros(nx,ny,12);
-fnm=['/nobackup/hzhang1/forcing/era-interim/' ...
-     'runoff-2d-Fekete-1deg-mon-V4-SMOOTH.bin'];
+fnm=[pin 'runoff-2d-Fekete-1deg-mon-V4-SMOOTH_S60scalving_v3.bin'];
 fout=[pout region_name suf1 '_Fekete_runoff'];
 fld=read_llc_fkij(fnm,NX,fc,1:12,ix,jx);
 writebin(fout,fld);
 % }}}
 % {{{ get and save iron dust
+fnm=[pin 'runoff-2d-Fekete-1deg-mon-V4-SMOOTH_S60scalving_v3.bin'];
 fnm=['/nobackup/dcarrol2/forcing/iron_dust/LLC_270/' ...
      'llc270_Mahowald_2009_soluble_iron_dust.bin'];
 fout=[pout region_name suf1 '_iron_dust'];
 fld=read_llc_fkij(fnm,NX,fc,1:12,ix,jx);
 writebin(fout,fld);
-% }}}
-% {{{ get and save vector surface forcing
-% Note that zonal velocity is U in faces 1/2 and V in faces 4/5
-% and meridional velocity is V in faces 1/2 and -U in faces 4/5;
-% but no index shift is needed for V in faces 4/5 because
-% EXFuwind and EXfvwind are provided at tracer points.
-fldu=zeros(nx,ny);
-fldv=zeros(nx,ny);
-dnmu=dir([pin 'EXFuwind*']);
-dnmv=dir([pin 'EXFvwind*']);
-for d=1:length(dnmu)
-    fnmu=[dnmu(d).folder '/' dnmu(d).name];
-    fnmv=[dnmv(d).folder '/' dnmv(d).name];
-    foutu=[pout region_name suf1 '_' dnmu(d).name];
-    foutv=[pout region_name suf1 '_' dnmv(d).name];
-    nt=dnmu(d).bytes/NX/NX/13/4;
-    for t=1:nt
-        switch fc(f)
-          case {1,2}
-            fldu=read_llc_fkij(fnmu,NX,fc,t,ix,jx);
-            fldv=read_llc_fkij(fnmv,NX,fc,t,ix,jx);
-          case {4,5}
-            fldu=read_llc_fkij(fnmv,NX,fc,t,ix,jx);
-            fldv=read_llc_fkij(fnmu,NX,fc,t,ix,jx);
-        end
-        writebin(foutu,fldu,1,'real*4',t-1);
-        writebin(foutv,fldv,1,'real*4',t-1);
-    end
-end
 % }}}
 
 % }}}
