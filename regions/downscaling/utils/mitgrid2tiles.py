@@ -14,11 +14,11 @@ def split_mitgrid(config_dir, model_name, size_dom, size_proc):
     entire_grid = np.fromfile(mitgrid_file, dtype='>f8')
     entire_grid = np.reshape(entire_grid, (16, n_cols + 1, n_rows + 1))
 
-    #Create a mitgrids folder
-    if 'mitgrids' not in os.listdir(config_dir):
-        os.mkdir(os.path.join(config_dir,'mitgrids'))
+    #Create a tiles folder
+    if 'tiles' not in os.listdir(config_dir):
+        os.mkdir(os.path.join(config_dir,'tiles'))
         
-    #Generate the mitgrids tiled
+    #Generate the tiles tiled
     nr = int(n_rows/rows)
     nc = int(n_cols/cols)
     counter = 1
@@ -26,7 +26,7 @@ def split_mitgrid(config_dir, model_name, size_dom, size_proc):
         for ci in range(nc):
             tile_subset = entire_grid[:,cols*ci:cols*(ci+1)+1
                                        ,rows*ri:rows*(ri+1)+1]
-            output_file = os.path.join(config_dir,'mitgrids','input_for_grid_tile'+'{:03d}'.format(counter)+'.mitgrid')
+            output_file = os.path.join(config_dir,'tiles','tile'+'{:03d}'.format(counter)+'.mitgrid')
             tile_subset.ravel('C').astype('>f8').tofile(output_file)
             counter+=1
 

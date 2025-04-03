@@ -1,21 +1,61 @@
-# Generating ECCO-Darwin regional cut out configuration
+# How to generate an ECCO-Darwin regional cut out
 
 Authors: Clément Bertin, Michael Wood, Dustin Carroll
 
 ## General information
-This repository has been created to guide the ECCO-Darwin users in generating their own regional configuration of the global ECCO-Darwin simulation. By following the instructions you will be able to extract the information needed at the boundaries of your regional cut out from any llc global simulation and generate the boundary conditions with latitude/longitude coordinates.
+This repository has been created to guide the ECCO-Darwin users in generating their own regional configuration of the global ECCO-Darwin simulation. By following the instructions you will be able to extract the information needed at the boundaries of your regional cut out from ECCO-Darwin v5 global simulation and generate the boundary conditions with latitude/longitude coordinates.
 
 ## Main steps
 The instruction files are organised as follows:
-1. **README.md**: You will find here the basic requirements to getting started.
-2. **STEP1.md**: you will find here the instructions to exctract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit Michael Wood)
-3. **STEP2.md**: you will find here the instructions to convert the exctracted vector into the boundary/intial conditions of your regional setup using the python3 codes provided.
-4. **Gen_mask.md**: you will find here extanded instructions to generate the mask files needed for step 1.
+1. **README.md**: Requirements to getting started.
+2. **STEP1.md**: Instructions to generate regional model input files.
+3. **STEP2.md**: Instructions to exctract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit: Michael Wood)
+4. **STEP3.md**: Instructions to convert the exctracted vectors into the boundary/intial conditions of your regional setup using the python3 codes provided.
 
 ## Getting Started
 To generate the regional configuration you will need:
-1. Computational capabilities to run any llc global model (Here we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA supercomputer)
-2. python3 with a dedicated anaconda environment. Instructions to set the environment follow:
+
+1. Supercomputing capabilities to run ECCO-Darwin v5 global model (*Along this guide we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA supercomputer*)
+2. python3 with a dedicated anaconda environment (*This environment can be set up on the supercomputer or a local machine*). 
+
+### 1. Get ECCO-Darwin v5 setup & merge ``diagnostic_vec`` with MITgcm
+
+Below, we detail the instructions to run ECCO-Darwin model on NASA Pleiades supercomputer:
+
+> - clone darwin checkpointv67x github
+```
+mkdir downscalling 
+cd downscalling
+git clone https://github.com/darwinproject/darwin3
+cd darwin3
+git checkout 24885b71
+```
+> - clone diagnostic_vec github
+```
+cd ..
+git clone https://github.com/mhwood/diagnostics_vec.git
+```
+> - Merge diagnostic_vec package to darwin3
+```
+cd diagnostics_vec/utils/
+python3 copy_doc_files_to_MITgcm.py -m ../../darwin3/
+python3 copy_pkg_files_to_MITgcm.py -m ../../darwin3/
+python3 copy_verification_files_to_MITgcm.py -m ../../darwin3/
+```
+
+> - Get ECCO-Darwin v5 setup
+```
+cd ../.. (back to downscaling folder)
+git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
+mkdir config
+cp -r ecco_darwin/v05/llc270/code config/.
+cp -r ecco_darwin/v05/llc270/code_darwin config/.
+cp -r ecco_darwin/v05/llc270/input config/.
+```
+
+### 2. Create the python3 anaconda environment
+
+You can either create this environment on your supercomputer capability or on a local machine.
 
 > - Install anaconda following the instructions on this page: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 > - Open a terminal and Create the environment:
@@ -25,7 +65,7 @@ conda activate downscaling
 ```
 > - Install the following packages
 ```
-conda install numpy matplotlib scipy pyproj netcdf4
+conda install numpy matplotlib scipy pyproj netcdf4 xarray
 conda install -c conda-forge xesmf 
 ```
 > - Install [simplegrid](https://github.com/nasa/simplegrid) package, which is not available by `pip` or `conda install`. Instead, it must be cloned and then installed locally: 
