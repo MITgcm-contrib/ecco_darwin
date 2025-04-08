@@ -37,7 +37,8 @@
  &DIAG_VEC_INPUT_VARS
 #
  nml_startTime = 0,
- nml_endTime = 3153600000., #Here set to 100 years
+ nml_endTime = 3153600000., 
+#Here set to 100 years
 # 
 ################################################################################
 #
@@ -48,26 +49,26 @@
 #
 ################################################################################
 # 
- nml_vecFiles(1)   = 'dv/East_mask',
- nml_vecFiles(2)   = 'dv/East_mask',
- nml_vecFiles(3)   = 'dv/East_mask',
- nml_vecFiles(4)   = 'dv/East_mask',
- nml_vecFiles(5)   = 'dv/East_mask',
- nml_vecFiles(6)   = 'dv/North_mask',
- nml_vecFiles(7)   = 'dv/North_mask',
- nml_vecFiles(8)   = 'dv/North_mask',
- nml_vecFiles(9)   = 'dv/North_mask',
- nml_vecFiles(10)  = 'dv/North_mask',
- nml_vecFiles(11)  = 'dv/West_mask',
- nml_vecFiles(12)  = 'dv/West_mask',
- nml_vecFiles(13)  = 'dv/West_mask',
- nml_vecFiles(14)  = 'dv/West_mask',
- nml_vecFiles(15)  = 'dv/West_mask',
- nml_vecFiles(16)  = 'dv/South_mask',
- nml_vecFiles(17)  = 'dv/South_mask',
- nml_vecFiles(18)  = 'dv/South_mask',
- nml_vecFiles(19)  = 'dv/South_mask',
- nml_vecFiles(20)  = 'dv/South_mask',
+ nml_vecFiles(1)   = 'dv/East_mask.bin',
+ nml_vecFiles(2)   = 'dv/East_mask.bin',
+ nml_vecFiles(3)   = 'dv/East_mask.bin',
+ nml_vecFiles(4)   = 'dv/East_mask.bin',
+ nml_vecFiles(5)   = 'dv/East_mask.bin',
+ nml_vecFiles(6)   = 'dv/North_mask.bin',
+ nml_vecFiles(7)   = 'dv/North_mask.bin',
+ nml_vecFiles(8)   = 'dv/North_mask.bin',
+ nml_vecFiles(9)   = 'dv/North_mask.bin',
+ nml_vecFiles(10)  = 'dv/North_mask.bin',
+ nml_vecFiles(11)  = 'dv/West_mask.bin',
+ nml_vecFiles(12)  = 'dv/West_mask.bin',
+ nml_vecFiles(13)  = 'dv/West_mask.bin',
+ nml_vecFiles(14)  = 'dv/West_mask.bin',
+ nml_vecFiles(15)  = 'dv/West_mask.bin',
+ nml_vecFiles(16)  = 'dv/South_mask.bin',
+ nml_vecFiles(17)  = 'dv/South_mask.bin',
+ nml_vecFiles(18)  = 'dv/South_mask.bin',
+ nml_vecFiles(19)  = 'dv/South_mask.bin',
+ nml_vecFiles(20)  = 'dv/South_mask.bin',
 #
 #######################################################
 # Here later BC's have 365 iterations per file (1 year)
@@ -84,99 +85,76 @@
 ############################################
 # East
  nml_fields2D(1,1) = 'ETAN    ',
- nml_fields2D(1:2,2) = 'UICE    ','VICE    ',
- nml_fields2D(1,3) = 'AREA    ',
- nml_fields2D(1,4) = 'HSNOW   ',
- nml_fields2D(1,5) = 'HEFF   ',
+ nml_fields2D(1:2,2) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,3) = 'SIarea  ',
+ nml_fields2D(1,4) = 'SIhsnow ',
+ nml_fields2D(1,5) = 'SIheff  ',
 # North
  nml_fields2D(1,6) = 'ETAN    ',
- nml_fields2D(1:2,7) = 'UICE    ','VICE    ',
- nml_fields2D(1,8) = 'AREA    ',
- nml_fields2D(1,9) = 'HSNOW   ',
- nml_fields2D(1,10) = 'HEFF   ',
+ nml_fields2D(1:2,7) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,8) = 'SIarea  ',
+ nml_fields2D(1,9) = 'SIhsnow ',
+ nml_fields2D(1,10) = 'SIheff  ',
 # West
  nml_fields2D(1,11) = 'ETAN    ',
- nml_fields2D(1:2,12) = 'UICE    ','VICE    ',
- nml_fields2D(1,13) = 'AREA    ',
- nml_fields2D(1,14) = 'HSNOW   ',
- nml_fields2D(1,15) = 'HEFF   ',
+ nml_fields2D(1:2,12) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,13) = 'SIarea  ',
+ nml_fields2D(1,14) = 'SIhsnow ',
+ nml_fields2D(1,15) = 'SIheff  ',
 # South
  nml_fields2D(1,16) = 'ETAN    ',
- nml_fields2D(1:2,17) = 'UICE    ','VICE    ',
- nml_fields2D(1,18) = 'AREA    ',
- nml_fields2D(1,19) = 'HSNOW   ',
- nml_fields2D(1,20) = 'HEFF   ',
+ nml_fields2D(1:2,17) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,18) = 'SIarea  ',
+ nml_fields2D(1,19) = 'SIhsnow ',
+ nml_fields2D(1,20) = 'SIheff  ',
 #
 ############################################################
 # Saving 3D physics and Bio Tracers BC's for every boundary
 ############################################################
 # East
- nml_fields3D(1:8,1)  = 'PTRACE01','PTRACE02','PTRACE03','PTRACE04','PTRACE05','PTRACE06','PTRACE07','PTRACE08',
+ nml_fields3D(1:8,1)  = 'TRAC01','TRAC02','TRAC03','TRAC04','TRAC05','TRAC06','TRAC07','TRAC08',
  nml_levels3D(1:8,1)  =   50, 50, 50, 50, 50, 50, 50, 50, 
- nml_fields3D(1:8,2)  = 'PTRACE09','PTRACE10','PTRACE11','PTRACE12','PTRACE13','PTRACE14','PTRACE15','PTRACE16',
+ nml_fields3D(1:8,2)  = 'TRAC09','TRAC10','TRAC11','TRAC12','TRAC13','TRAC14','TRAC15','TRAC16',
  nml_levels3D(1:8,2)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:8,3)  = 'PTRACE17','PTRACE18','PTRACE19','PTRACE20','PTRACE21','PTRACE22','PTRACE23','PTRACE24',
+ nml_fields3D(1:8,3)  = 'TRAC17','TRAC18','TRAC19','TRAC20','TRAC21','TRAC22','TRAC23','TRAC24',
  nml_levels3D(1:8,3)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:7,4)  = 'PTRACE25','PTRACE26','PTRACE27','PTRACE28','PTRACE29','PTRACE30','PTRACE31',
+ nml_fields3D(1:7,4)  = 'TRAC25','TRAC26','TRAC27','TRAC28','TRAC29','TRAC30','TRAC31',
  nml_levels3D(1:7,4)  =   50, 50, 50, 50, 50, 50, 50,
  nml_fields3D(1:4,5)  = 'THETA   ','SALT   ','VVEL   ','UVEL    ',
  nml_levels3D(1:4,5)  =   50, 50, 50, 50,
 # North
- nml_fields3D(1:8,6)  = 'PTRACE01','PTRACE02','PTRACE03','PTRACE04','PTRACE05','PTRACE06','PTRACE07','PTRACE08',
+ nml_fields3D(1:8,6)  = 'TRAC01','TRAC02','TRAC03','TRAC04','TRAC05','TRAC06','TRAC07','TRAC08',
  nml_levels3D(1:8,6)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:8,7)  = 'PTRACE09','PTRACE10','PTRACE11','PTRACE12','PTRACE13','PTRACE14','PTRACE15','PTRACE16',
+ nml_fields3D(1:8,7)  = 'TRAC09','TRAC10','TRAC11','TRAC12','TRAC13','TRAC14','TRAC15','TRAC16',
  nml_levels3D(1:8,7)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:8,8)  = 'PTRACE17','PTRACE18','PTRACE19','PTRACE20','PTRACE21','PTRACE22','PTRACE23','PTRACE24',
+ nml_fields3D(1:8,8)  = 'TRAC17','TRAC18','TRAC19','TRAC20','TRAC21','TRAC22','TRAC23','TRAC24',
  nml_levels3D(1:8,8)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:7,9)  = 'PTRACE25','PTRACE26','PTRACE27','PTRACE28','PTRACE29','PTRACE30','PTRACE31',
+ nml_fields3D(1:7,9)  = 'TRAC25','TRAC26','TRAC27','TRAC28','TRAC29','TRAC30','TRAC31',
  nml_levels3D(1:7,9)  =   50, 50, 50, 50, 50, 50, 50,
  nml_fields3D(1:4,10) = 'THETA   ','SALT   ','VVEL   ','UVEL    ',
  nml_levels3D(1:4,10) =   50, 50, 50, 50,
 # West
- nml_fields3D(1:8,11)  = 'PTRACE01','PTRACE02','PTRACE03','PTRACE04','PTRACE05','PTRACE06','PTRACE07','PTRACE08',
+ nml_fields3D(1:8,11)  = 'TRAC01','TRAC02','TRAC03','TRAC04','TRAC05','TRAC06','TRAC07','TRAC08',
  nml_levels3D(1:8,11)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:8,12)  = 'PTRACE09','PTRACE10','PTRACE11','PTRACE12','PTRACE13','PTRACE14','PTRACE15','PTRACE16',
+ nml_fields3D(1:8,12)  = 'TRAC09','TRAC10','TRAC11','TRAC12','TRAC13','TRAC14','TRAC15','TRAC16',
  nml_levels3D(1:8,12)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:8,13)  = 'PTRACE17','PTRACE18','PTRACE19','PTRACE20','PTRACE21','PTRACE22','PTRACE23','PTRACE24',
+ nml_fields3D(1:8,13)  = 'TRAC17','TRAC18','TRAC19','TRAC20','TRAC21','TRAC22','TRAC23','TRAC24',
  nml_levels3D(1:8,13)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:7,14)  = 'PTRACE25','PTRACE26','PTRACE27','PTRACE28','PTRACE29','PTRACE30','PTRACE31',
+ nml_fields3D(1:7,14)  = 'TRAC25','TRAC26','TRAC27','TRAC28','TRAC29','TRAC30','TRAC31',
  nml_levels3D(1:7,14)  =   50, 50, 50, 50, 50, 50, 50,
  nml_fields3D(1:4,15)  = 'THETA   ','SALT   ','VVEL   ','UVEL    ',
  nml_levels3D(1:4,15)  =   50, 50, 50, 50,
 # South
- nml_fields3D(1:8,16)  = 'PTRACE01','PTRACE02','PTRACE03','PTRACE04','PTRACE05','PTRACE06','PTRACE07','PTRACE08',
+ nml_fields3D(1:8,16)  = 'TRAC01','TRAC02','TRAC03','TRAC04','TRAC05','TRAC06','TRAC07','TRAC08',
  nml_levels3D(1:8,16)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:8,17)  = 'PTRACE09','PTRACE10','PTRACE11','PTRACE12','PTRACE13','PTRACE14','PTRACE15','PTRACE16',
+ nml_fields3D(1:8,17)  = 'TRAC09','TRAC10','TRAC11','TRAC12','TRAC13','TRAC14','TRAC15','TRAC16',
  nml_levels3D(1:8,17)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:8,18)  = 'PTRACE17','PTRACE18','PTRACE19','PTRACE20','PTRACE21','PTRACE22','PTRACE23','PTRACE24',
+ nml_fields3D(1:8,18)  = 'TRAC17','TRAC18','TRAC19','TRAC20','TRAC21','TRAC22','TRAC23','TRAC24',
  nml_levels3D(1:8,18)  =   50, 50, 50, 50, 50, 50, 50, 50,
- nml_fields3D(1:7,19)  = 'PTRACE25','PTRACE26','PTRACE27','PTRACE28','PTRACE29','PTRACE30','PTRACE31',
+ nml_fields3D(1:7,19)  = 'TRAC25','TRAC26','TRAC27','TRAC28','TRAC29','TRAC30','TRAC31',
  nml_levels3D(1:7,19)  =   50, 50, 50, 50, 50, 50, 50,
  nml_fields3D(1:4,20)  = 'THETA   ','SALT   ','VVEL   ','UVEL    ',
  nml_levels3D(1:4,20)  =   50, 50, 50, 50,
-# 
-################################################################################
-#
-# SURFACE BOUNDARY CONDITIONS
-#
-################################################################################
-#
- nml_sfFiles(1) = 'dv/Surf_mask',
-#
-############################################################
-# Here surface BC's have 1464 iterations per file (6-hourly)
-############################################################
- nml_sf_iters_per_file(1) = 1460,
-#
-################################################################
-# Here surface BC's have an averaging period of 6 hour (6*60*60)
-################################################################
- nml_sf_avg_periods(1) = 21600.,
-#
-##############################
-# Saving surface forcing BC's
-##############################
- nml_fieldsSF(1:10,1) = 'ATMOSCO2','IRONDUST','UWIND   ','VWIND  ','PRECIP ','SWDOWN  ','LWDOWN  ','ATEMP   ','AQH     ','RUNOFF ',
 #
  nml_filePrec = 32,
  &

@@ -8,9 +8,9 @@ This repository has been created to guide the ECCO-Darwin users in generating th
 ## Main steps
 The instruction files are organised as follows:
 1. **README.md**: Requirements to getting started.
-2. **STEP1.md**: Instructions to generate regional model input files.
+2. **STEP1.md**: Instructions to generate regional model grid files.
 3. **STEP2.md**: Instructions to exctract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit: Michael Wood)
-4. **STEP3.md**: Instructions to convert the exctracted vectors into the boundary/intial conditions of your regional setup using the python3 codes provided.
+4. **STEP3.md**: Instructions to generate regional model setup
 
 ## Getting Started
 To generate the regional configuration you will need:
@@ -31,6 +31,8 @@ cd darwin3
 git checkout 24885b71
 ```
 > - clone diagnostic_vec github
+
+**Note**: This package is not included in the official MITgcm realease but can be easly merged to it. More information on ``diagnostic_vec`` package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood). 
 ```
 cd ..
 git clone https://github.com/mhwood/diagnostics_vec.git
