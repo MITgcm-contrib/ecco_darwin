@@ -3,13 +3,14 @@
 Authors: Clément Bertin, Michael Wood, Dustin Carroll
 
 ## General information
-This repository has been created to guide the ECCO-Darwin users in generating their own regional configuration of the global ECCO-Darwin simulation. By following the instructions you will be able to extract the information needed at the boundaries of your regional cut out from ECCO-Darwin v5 global simulation and generate the boundary conditions with latitude/longitude coordinates.
+This repository has been created to guide ECCO-Darwin users in generating their own regional configuration of the global ECCO-Darwin simulation. 
+By following the instructions you will be able to extract the information needed at the boundaries of your regional cut out from ECCO-Darwin v5 global simulation and generate the boundary conditions with latitude/longitude coordinates.
 
 ## Main steps
-The instruction files are organised as follows:
-1. **README.md**: Requirements to getting started.
+The instruction files are organized as follows:
+1. **README.md**: Requirements for getting started.
 2. **STEP1.md**: Instructions to generate regional model grid files.
-3. **STEP2.md**: Instructions to exctract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit: Michael Wood)
+3. **STEP2.md**: Instructions to extract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit: Michael Wood)
 4. **STEP3.md**: Instructions to generate regional model setup
 
 ## Getting Started
@@ -20,7 +21,7 @@ To generate the regional configuration you will need:
 
 ### 1. Get ECCO-Darwin v5 setup & merge ``diagnostic_vec`` with MITgcm
 
-Below, we detail the instructions to run ECCO-Darwin model on NASA Pleiades supercomputer:
+Below, we detail the instructions to run ECCO-Darwin on the NASA Pleiades supercomputer:
 
 > - clone darwin checkpointv67x github
 ```
@@ -57,7 +58,7 @@ cp -r ecco_darwin/v05/llc270/input config/.
 
 ### 2. Create the python3 anaconda environment
 
-You can either create this environment on your supercomputer capability or on a local machine.
+You can either create this environment on your supercomputer or a local machine.
 
 > - Install anaconda following the instructions on this page: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 > - Open a terminal and Create the environment:

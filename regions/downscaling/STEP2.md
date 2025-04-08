@@ -32,7 +32,7 @@ cp ../../ecco_darwin/regions/downscaling/utils/data.diagnostics_vec .
 ```
 > - Modify the ``data.diagnostics_vec`` file according to the specificities of your domain and your requirements.
 
-**Note:** You can modify ``data.diagnostic`` file with only the diagnostics you want to save. This won't affect ``diagnostic_vec`` and the fewer diagnostics saved the faster the simulation.
+**Note:** You can modify ``data.diagnostic`` file with only the diagnostics you want to save. This won't affect ``diagnostic_vec`` and the fewer diagnostics saved the faster the simulation can be integrated.
 
 ### c. Set the compile time ``DIAGNOSTICS_VEC_SIZE.h`` file
 > - copy ``DIAGNOSTICS_VEC_SIZE.h`` file into the ``code_darwin`` directory
