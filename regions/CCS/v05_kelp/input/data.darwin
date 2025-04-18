@@ -47,12 +47,12 @@
  SURFALKMIN  =   100.0,
  /
  &DARWIN_MACROALGAE_PARAMS
-# mp_spp_Vmax = 12.8*24,
+ mp_spp_Vmax = 307.2,
  mp_spp_Ks_NO3 = 10130.,
  mp_spp_kcap = 2000.,
  mp_spp_Gmax_cap = 0.2,
-# mp_spp_PARs = 212.4/4.57,
-# mp_spp_PARc = 20.45/4.57,
+ mp_spp_PARs = 46.477,
+ mp_spp_PARc = 4.4748,
  mp_spp_Q0 = 32.0,
  mp_spp_Qmin = 10.18,
  mp_spp_Qmax = 54.0,

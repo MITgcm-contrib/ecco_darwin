@@ -15,8 +15,8 @@
   module purge
   module load comp-intel mpi-hpe python3
   module load hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/CCS/v05_kelp/code -mpi \
-   -of ../../ecco_darwin/regions/CCS/v05_kelp/code/linux_amd64_ifort+mpi_ice_nas
+  ../tools/genmake2 -of ../../ecco_darwin/regions/CCS/v05_kelp/code/linux_amd64_ifort+mpi_ice_nas \
+  	-mo "../../ecco_darwin/regions/CCS/v05_kelp/code ../../ecco_darwin/regions/CCS/v05/code" -mpi
   make depend
   make -j
 
@@ -28,6 +28,7 @@
   ln -sf /nobackup/hzhang1/pub/CCS_wave .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
   mkdir diags diags/daily diags/monthly diags/monthly_kelp
+  cp ../../ecco_darwin/regions/CCS/v05/input/* .
   cp ../../ecco_darwin/regions/CCS/v05_kelp/input/* .
   mpirun -np 20 ./mitgcmuv
 #MM    or modify a job_ECCO_darwin as needed and then:
