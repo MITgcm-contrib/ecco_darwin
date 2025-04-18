@@ -366,10 +366,9 @@ C === plankton =========================================================
      I                 subTime, myIter, myThid )
 
 
+#ifdef DARWIN_ALLOW_MACROALGAE
 C macroalgae code
-
 C compute horizontal velocity
-
         hor_vel=sqrt(
      &  (0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)))**2 +
      &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)        
@@ -398,6 +397,7 @@ C compute horizontal velocity
         ma_nres(i,j,k) = ma_nrest
         ma_cres(i,j,k) = ma_crest
 C end macroalgae code
+#endif
 
         DO l=1,darwin_nDiag
          diags(i, j, k, l) = diagsl(l)
@@ -606,7 +606,8 @@ C      diags(iCons*) for convenience
      &  'S_Fe    ',0,Nr,1,bi,bj,myThid)
       CALL DIAGNOSTICS_FILL(sO2(1-OLx,1-OLy,1),
      &  'S_O2    ',0,Nr,1,bi,bj,myThid)
-     
+
+#ifdef DARWIN_ALLOW_MACROALGAE     
 C macroalgae diagnostics
       CALL DIAGNOSTICS_FILL(gT_ma(1-OLx,1-OLy,1),
      &  'gT_mag  ',0,Nr,1,bi,bj,myThid)
@@ -634,6 +635,7 @@ C macroalgae diagnostics
 
        CALL DIAGNOSTICS_FILL(WVp_ma(1-OLx,1-OLy),
      &  'wv_prd  ',0,1,1,bi,bj,myThid)
+#endif
 
       DO iTr=1,nDarwin
        DO k=1,Nr

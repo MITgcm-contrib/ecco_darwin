@@ -59,6 +59,7 @@ C-MM
       PARAMETER(iConsALK=18)
       PARAMETER(iConsO2=19)
       PARAMETER(iPPplank=20)
+C#ifdef DARWIN_ALLOW_MACROALGAE
 C
 C-MM 
 C Adding new indices for Kelp diagnostics
@@ -67,6 +68,7 @@ C      PARAMETER(igTMAG=22)
 C      PARAMETER(igQMAG=23)
 C      PARAMETER(igEMAG=24)
 C      PARAMETER(igHMAG=25)
+C#endif
 
 #ifdef DARWIN_DIAG_PERTYPE
       PARAMETER(iGRplank=iPPplank+nplank)

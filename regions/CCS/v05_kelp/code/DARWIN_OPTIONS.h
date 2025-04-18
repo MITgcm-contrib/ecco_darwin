@@ -36,6 +36,8 @@ C enable a dynamic CDOM tracer
 C enable air-sea carbon exchange and Alk and O2 tracers
 #define DARWIN_ALLOW_CARBON
 
+C enable macroalgae model (MACMODS)
+#define DARWIN_ALLOW_MACROALGAE
 
 C optional bits
 

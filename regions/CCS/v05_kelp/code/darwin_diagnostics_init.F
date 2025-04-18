@@ -558,14 +558,15 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+#endif /* DARWIN_ALLOW_CARBON */
 
+#ifdef DARWIN_ALLOW_MACROALGAE
       WRITE(diagName,'(A)')'mu_mag'
       WRITE(diagTitle,'(A)')'growth rate macroalgae'
       diagUnits = '1/day    '
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
 
       WRITE(diagName,'(A)')'gT_mag'
       WRITE(diagTitle,'(A)')'T fact macroalgae'
@@ -617,10 +618,8 @@ C      diagCode  = 'SM     L1      '
 C      diagCode  = 'SM     L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-
-
-#endif /* DARWIN_ALLOW_CARBON */
+     
+#endif /* DARWIN_ALLOW_MACROALGAE */
 
 #ifdef ALLOW_EXF
       WRITE(diagName,'(A)')'surfPAR'
