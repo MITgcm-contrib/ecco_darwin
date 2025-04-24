@@ -528,14 +528,14 @@ C     Calendar data.
       WvHeightstartdate1    = 0
       WvHeightstartdate2    = 0
       WvHeightperiod        = 0.0 _d 0
-      WvHeightconst         = surf_pRef
+      WvHeightconst         = 0.0 _d 0
       WvHeight_exfremo_intercept = 0.0 _d 0
       WvHeight_exfremo_slope = 0.0 _d 0
 
       WvPeriodstartdate1    = 0
       WvPeriodstartdate2    = 0
       WvPeriodperiod        = 0.0 _d 0
-      WvPeriodconst         = surf_pRef
+      WvPeriodconst         = 0.0 _d 0
       WvPeriod_exfremo_intercept = 0.0 _d 0
       WvPeriod_exfremo_slope = 0.0 _d 0
 

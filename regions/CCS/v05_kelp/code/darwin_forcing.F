@@ -152,8 +152,6 @@ C terms controlling growth of Kelp
       _RL gQ_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gQ, nitrogen quota
       _RL gH_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gH, wave motion 
       _RL gE_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gE, irradiance
-      _RL WVp_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! wave period
-      _RL WVh_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy)     ! wave height
 
       INTEGER curr_date(4), first_day(4), numdays(4)
 	  
@@ -389,9 +387,6 @@ C compute horizontal velocity
         gE_ma(i,j,k) = gEdum
         gH_ma(i,j,k) = gHdum
         mort_ma(i,j,k) = mort_madum
-         
-        WVp_ma(i,j) = WvPeriod(i,j,bi,bj) 
-        WVh_ma(i,j) = WvHeight(i,j,bi,bj) 
 
         diags(i,j,k,igHMAG) = gHdum
 
@@ -624,19 +619,11 @@ C macroalgae diagnostics
      &  'gH_mag  ',0,Nr,1,bi,bj,myThid)
 
       CALL DIAGNOSTICS_FILL(grate_ma(1-OLx,1-OLy,1),
-     &  'grate_mag  ',0,Nr,1,bi,bj,myThid)
-
-      CALL DIAGNOSTICS_FILL(grate_ma(1-OLx,1-OLy,1),
      &  'mu_mag  ',0,Nr,1,bi,bj,myThid)
 
       CALL DIAGNOSTICS_FILL(mort_ma(1-OLx,1-OLy,1),
      &  'mort_mag',0,Nr,1,bi,bj,myThid)
-
-      CALL DIAGNOSTICS_FILL(WVh_ma(1-OLx,1-OLy),
-     &  'wv_hght ',0,1,1,bi,bj,myThid)
-
-       CALL DIAGNOSTICS_FILL(WVp_ma(1-OLx,1-OLy),
-     &  'wv_prd  ',0,1,1,bi,bj,myThid)
+     
 #endif
 
       DO iTr=1,nDarwin

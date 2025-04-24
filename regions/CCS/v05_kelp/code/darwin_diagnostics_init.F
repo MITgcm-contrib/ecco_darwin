@@ -563,7 +563,7 @@ C-      use units & names from data.ptracers :
 #ifdef DARWIN_ALLOW_MACROALGAE
       WRITE(diagName,'(A)')'mu_mag'
       WRITE(diagTitle,'(A)')'growth rate macroalgae'
-      diagUnits = '1/day    '
+      diagUnits = '1/s    '
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
@@ -598,24 +598,8 @@ C-      use units & names from data.ptracers :
 
       WRITE(diagName,'(A)')'mort_mag'
       WRITE(diagTitle,'(A)')'mortality macrolagae'
-      diagUnits = '1/day    '
+      diagUnits = '1/s    '
       diagCode  = 'SMR     MR      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'wv_hght'
-      WRITE(diagTitle,'(A)')'Wave Height'
-      diagUnits = 'meter    '
-      diagCode  = 'SMR     MR      '
-C      diagCode  = 'SM     L1      '
-      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-
-      WRITE(diagName,'(A)')'wv_prd'
-      WRITE(diagTitle,'(A)')'Wave Period'
-      diagUnits = 'seconds    '
-      diagCode  = 'SMR     MR      '
-C      diagCode  = 'SM     L1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
      

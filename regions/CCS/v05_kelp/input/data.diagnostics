@@ -268,11 +268,11 @@
   filename(72) = 'diags/monthly_kelp/mort_mag',
 # Wave Period
   frequency(73) = 2635200.,
-  fields(1,73) = 'wv_prd  ',
+  fields(1,73) = 'EXFwvpd  ',
   filename(73) = 'diags/monthly_kelp/wv_prd',
 # Wave Height
   frequency(74) = 2635200.,
-  fields(1,74) = 'wv_hght ',
+  fields(1,74) = 'EXFwvht ',
   filename(74) = 'diags/monthly_kelp/wv_hght',
 #
  /

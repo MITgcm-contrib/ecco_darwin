@@ -106,7 +106,7 @@ C     muMAG, macroalgal growth
 C     Additional parameters
       _RL mp_growth_lim_type ! Growth limitation Type
       _RL break_Duarte_Ferr  ! Duarte frond breakage Type
-      _RL break_Rodrig       ! Rodriguez frond breakage Type
+      _RL break_Rodrig       ! Rodrigues frond breakage Type
       _RL mp_break_type      ! Frond breakage Type
       _RL mp_N_uptake_type   ! Type of nutrient uptake
       _RL c0                 ! 0
@@ -172,17 +172,17 @@ C     Unit conversions, minima
       magu_m = max(1.0,magu)                                    ! [m/s]
       Tw_s = max(0.01,Tw)                                       ! [s]       mean wave period
 C     some parameters and variables
-      n_length = 1 
+      n_length = 25 
       visc = 1E-6                                               ! [m2/s]    kinematic viscosity 
       Dm = (18*3.65*1E-11 + 9.72*1E-10)                         ! [m2/s]    molecular diffusivity of nitrate at 18degC 
 
       DBL = 10 * (visc / (sqrt(mp_spp_CD) * abs(magu_m)))       ! [m]       thickness of diffusive boundary layer 
+      vval = 0.0
 C     1. Oscillatory flow
-      DO n = 1,n_length              
-        vval = (1-exp((-Dm * n**2 * pi**2 *Tw_s)/(2.0*DBL**2))) 
+      DO n = 1,n_length
+        vval = vval + (1-exp((-Dm * n**2 * pi**2 *Tw_s)/(2.0*DBL**2))) 
      & /(n**2 * pi**2)                                          ! [no unit]
       ENDDO
-C      oscillatory = ((4.0*DBL)/Tw_s) * sum(vval)		! original line
       oscillatory = ((4.0*DBL)/Tw_s) * vval                     ! [m/s]
 C     2. Uni-directional Flow
       flow = Dm / DBL                                           ! [m/s]
@@ -277,7 +277,7 @@ C     This expression follows Xiao et al (2019 and ignores wave mortality when
 C     thinking about the death rate
       A = mp_spp_kcap_rate/mp_spp_Gmax_cap                          ! [no unit]
       gH = min(c1,A*(Bmag/mp_spp_kcap)**(-0.75))                    ! [0-1]
-
+      
 C     Growth rate
 C     below is confusing programatically - gH should not include Gmax - but this is what was used in gMACMODS < 2022-10
 C     if gH > params[mp_spp_Gmax_cap]:
@@ -301,10 +301,10 @@ C     between Hs and frond loss rate in Macrocystis [d-1] (continuous)
 C     Duarte and Ferreira (1993) find a linear relationship between wave
 C     power and mortality in red seaweed        
       mwh  = Hw                                                        ! Assign wave height [m]
-      wp_tmp = Tw                                                      ! Assign wave period [s]
+      wp_tmp = Tw                                                  ! Assign wave period [s]
       IF (mp_break_type.EQ.break_Duarte_Ferr ) THEN
          WP = (rho_sw * (9.8**2)) /(64.0*pi) * (mwh**2) *wp_tmp / 1E3  ! [kW]   
-         Mwave=(2.3*1E-4) * WP + (2.2*1E-3) * mp_wave_mort_factor      ! [0-1]
+         Mwave=((2.3*1E-4) * WP + (2.2*1E-3)) * mp_wave_mort_factor      ! [0-1]
       ELSEIF (mp_break_type.EQ.break_Rodrig) THEN
 C     Death rate scales with Hw (Hw, surface wave height)
          Mwave=(mp_spp_death * Hw) * mp_wave_mort_factor               ! [0-1]
