@@ -25,6 +25,8 @@
   cd ../run
   cp ../build/mitgcmuv .
   ln -sf /nobackup/dcarrol2/pub/regions/CCS/input/* .
+# new initial and boundary conditions for kelp distribution can be found at:
+https://drive.google.com/drive/folders/1qqOTgUZeFcmjGXKsYJcVNTJxQft3zZPN?usp=sharing
   ln -sf /nobackup/hzhang1/pub/CCS_wave .
   ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
   mkdir diags diags/daily diags/monthly diags/monthly_kelp

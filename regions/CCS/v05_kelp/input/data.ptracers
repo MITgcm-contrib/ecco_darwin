@@ -111,7 +111,7 @@
  PTRACERS_initialFile(29)= 'init/Chl3_80x100x48.16-Jan-1992',
  PTRACERS_initialFile(30)= 'init/Chl4_80x100x48.16-Jan-1992',
  PTRACERS_initialFile(31)= 'init/Chl5_80x100x48.16-Jan-1992',
- PTRACERS_initialFile(32)= 'init/ini_CCS_80x100x48_Bmag.bin',
- PTRACERS_initialFile(33)= 'init/ini_CCS_80x100x48_Cmag.bin',
- PTRACERS_initialFile(34)= 'init/ini_CCS_80x100x48_Qmag.bin',
+ PTRACERS_initialFile(32)= 'init2/ini_CCS_80x100x48_Bmag.bin',
+ PTRACERS_initialFile(33)= 'init2/ini_CCS_80x100x48_Cmag.bin',
+ PTRACERS_initialFile(34)= 'init2/ini_CCS_80x100x48_Qmag.bin',
  &
