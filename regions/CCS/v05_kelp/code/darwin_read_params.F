@@ -171,11 +171,8 @@ C physiological parameters
      &    mp_spp_Gmax_cap,     
      &    mp_spp_PARs,      
      &    mp_spp_PARc,     
-     &    mp_spp_Q0,           
      &    mp_spp_Qmin,          
      &    mp_spp_Qmax,          
-     &    mp_spp_BtoSA,          
-     &    mp_spp_line_sep,      
      &    mp_spp_kcap_rate,    
      &    mp_spp_Topt1,         
      &    mp_spp_K1,            
@@ -185,10 +182,8 @@ C physiological parameters
      &    mp_spp_dry_sa,        
      &    mp_spp_dry_wet,     
      &    mp_spp_E,           
-     &    mp_spp_seed,         
      &    mp_spp_death,
-C time parameters macroalgae model    
-     &    tstep_mag
+     &    mp_wave_mort_factor
 #endif
 
 #ifdef DARWIN_ALLOW_CDOM
@@ -464,18 +459,15 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 #ifdef DARWIN_ALLOW_MACROALGAE
 C physiology for macrolagae model
-       mp_spp_Vmax = 12.8 _d 0 * 24. _d 0
-       mp_spp_Ks_NO3 = 10130. _d 0
+       mp_spp_Vmax = 2.06 _d -4
+       mp_spp_Ks_NO3 = 10.13 _d 0
        mp_spp_kcap = 2000. _d 0
-       mp_spp_Gmax_cap = 0.2 _d 0
-       mp_spp_PARs = 212.4 _d 0 / 4.57 _d 0
-       mp_spp_PARc = 20.45 _d 0 / 4.57 _d 0
-       mp_spp_Q0 = 32.0 _d 0
+       mp_spp_Gmax_cap = 2.31 _d -6
+       mp_spp_PARs = 213.7942 _d 0
+       mp_spp_PARc = 20.5841 _d 0
        mp_spp_Qmin = 10.18 _d 0
        mp_spp_Qmax = 54.0 _d 0
-       mp_spp_BtoSA = 1.0 _d 0
-       mp_spp_line_sep = 1.0 _d 0
-       mp_spp_kcap_rate = 0.05 _d 0
+       mp_spp_kcap_rate = 5.78 _d -7
        mp_spp_Topt1 = 13.0 _d 0
        mp_spp_K1 = 0.04 _d 0
        mp_spp_Topt2 = 18.0 _d 0
@@ -483,11 +475,9 @@ C physiology for macrolagae model
        mp_spp_CD = 0.5 _d 0
        mp_spp_dry_sa = 58.0 _d 0
        mp_spp_dry_wet = 0.094 _d 0
-       mp_spp_E = 0.01 _d 0
-       mp_spp_seed = 50.0 _d 0
-       mp_spp_death = 0.01 _d 0
-C time parameters macroalgae model
-       tstep_mag = 1200 _d 0
+       mp_spp_E = 1.15 _d -7
+       mp_spp_death = 1.15 _d -7
+       mp_wave_mort_factor = 1.0 _d 0
        
        READ(UNIT=iUnit, NML=DARWIN_MACROALGAE_PARAMS)
 #endif

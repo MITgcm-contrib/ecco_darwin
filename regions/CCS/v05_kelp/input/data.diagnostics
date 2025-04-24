@@ -241,7 +241,7 @@
 #
   frequency(66) = 2635200.,
   fields(1,66) = 'TRAC34  ',
-  filename(66)= 'diags/monthly_kelp/Nmag',
+  filename(66)= 'diags/monthly_kelp/Qmag',
 # Kelp growth
   frequency(67) = 2635200.,
   fields(1,67) = 'mu_mag  ',

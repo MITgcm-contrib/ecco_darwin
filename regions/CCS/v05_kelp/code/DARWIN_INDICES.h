@@ -40,8 +40,8 @@ C these cannot be modified for now
 C      INTEGER maNum
 C      INTEGER maFra
       INTEGER iMagB
-      INTEGER iMagN
       INTEGER iMagC
+      INTEGER iMagQ              
       PARAMETER (iDIC   =1)
       PARAMETER (iNO3   =iDIC+1)
       PARAMETER (iNO2   =iNO3 +1)
@@ -112,10 +112,12 @@ C      INTEGER maFra
 #else
       PARAMETER (eChl   =efe)
 #endif
+#ifdef DARWIN_ALLOW_MACROALGAE
       PARAMETER(iMagB=eChl+1)
       PARAMETER(iMagC=iMagB+1)
-      PARAMETER(iMagN=iMagC+1)
-      PARAMETER (nDarwin=iMagN)
+      PARAMETER(iMagQ=iMagC+1)
+      PARAMETER (nDarwin=iMagQ)
+#endif
 
 CEOP
 #endif /* ALLOW_DARWIN */

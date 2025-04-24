@@ -510,29 +510,25 @@ C     CDOMcoeff  :: [m2 / mmol P]       P-specific absorption coefficient of CDO
               
 #ifdef DARWIN_ALLOW_MACROALGAE
 C--   COMMON /DARWIN_MACROALGAE_PARAMS_r/
-C     mp_spp_Vmax      :: [umol N/g-DW/d]  expecting umol N/m2/d, conversion below
-C     mp_spp_Ks_NO3    :: [umol N/m3]  
-C     mp_spp_kcap      :: [g(dry)/m]
-C     mp_spp_Gmax_cap  :: [1/day]
-C     mp_spp_PARs      :: [W/m2]
-C     mp_spp_PARc      :: [W/m2]
-C     mp_spp_Q0        :: [mg N/g(dry]     initial Q 
-C     mp_spp_Qmin      :: [mg N/g(dry)]
-C     mp_spp_Qmax      :: [mg N/g(dry)]
-C     mp_spp_BtoSA     :: []               not used right now
-C     mp_spp_line_sep  :: [m]
-C     mp_spp_kcap_rate :: [1/day]
-C     mp_spp_Topt1     :: [deg C]
-C     mp_spp_K1        :: []               temp func slope 1
-C     mp_spp_Topt2     :: [deg C]
-C     mp_spp_K2        :: []               temp func slope 2
-C     mp_spp_CD        :: []               drag coefficient
-C     mp_spp_dry_sa    :: [g(dry)/m2]
-C     mp_spp_dry_wet   :: [g(dry)/g(wet)]  Not changed from the macrocystis values
-C     mp_spp_E         :: [d-1]            No info specific for Eucheuma
-C     mp_spp_seed      :: [g(dry)/m]       initial biomass
-C     mp_spp_death     :: [1/day]          death rate
-C     tstep_mag        :: [s]              timestep
+C     mp_spp_Vmax         :: [mmol N/m2/s]    Maximum uptake rate of nitrate
+C     mp_spp_Ks_NO3       :: [mmol N/m3]      Half saturation constant of nitrate
+C     mp_spp_kcap         :: [g(dry)/m]       Biomass density at which seaweed grows by kcap_rate
+C     mp_spp_Gmax_cap     :: [1/s]            Maximum growth rate
+C     mp_spp_PARs         :: [microE/m2/s]    Light-limited saturating irradiance
+C     mp_spp_PARc         :: [microE/m2/s]    Light-limited compensating irradiance
+C     mp_spp_Qmin         :: [mg N/g(dry)]    Minimum internal nitrogen
+C     mp_spp_Qmax         :: [mg N/g(dry)]    Maximum internal nitrogen
+C     mp_spp_kcap_rate    :: [1/s]            Growth rate at biomass density mp_spp_kcap
+C     mp_spp_Topt1        :: [deg C]          Temperature-limited constant
+C     mp_spp_K1           :: []               Temperature function slope 1
+C     mp_spp_Topt2        :: [deg C]          Temperature-limited constant
+C     mp_spp_K2           :: []               Temperature function slope 2
+C     mp_spp_CD           :: []               Drag Coefficient
+C     mp_spp_dry_sa       :: [g(dry)/m2]      Ratio of biomass to surface area
+C     mp_spp_dry_wet      :: [g(dry)/g(wet)]  Dry weight of biomass from wet biomass
+C     mp_spp_E            :: [1/s]            Exudation rate
+C     mp_spp_death        :: [1/s]            Mortality rate
+C     mp_wave_mort_factor :: []               Scaling factor for the wave mortality relationship
       COMMON /DARWIN_MACROALGAE_PARAMS_r/
      &    mp_spp_Vmax,       
      &    mp_spp_Ks_NO3,       
@@ -540,11 +536,8 @@ C     tstep_mag        :: [s]              timestep
      &    mp_spp_Gmax_cap,     
      &    mp_spp_PARs,      
      &    mp_spp_PARc,     
-     &    mp_spp_Q0,           
      &    mp_spp_Qmin,          
      &    mp_spp_Qmax,          
-     &    mp_spp_BtoSA,          
-     &    mp_spp_line_sep,      
      &    mp_spp_kcap_rate,    
      &    mp_spp_Topt1,         
      &    mp_spp_K1,            
@@ -554,20 +547,16 @@ C     tstep_mag        :: [s]              timestep
      &    mp_spp_dry_sa,        
      &    mp_spp_dry_wet,     
      &    mp_spp_E,           
-     &    mp_spp_seed,         
      &    mp_spp_death,
-     &    tstep_mag
+     &    mp_wave_mort_factor
       _RL mp_spp_Vmax       
       _RL mp_spp_Ks_NO3       
       _RL mp_spp_kcap         
       _RL mp_spp_Gmax_cap     
       _RL mp_spp_PARs      
       _RL mp_spp_PARc     
-      _RL mp_spp_Q0           
       _RL mp_spp_Qmin          
       _RL mp_spp_Qmax          
-      _RL mp_spp_BtoSA          
-      _RL mp_spp_line_sep      
       _RL mp_spp_kcap_rate    
       _RL mp_spp_Topt1         
       _RL mp_spp_K1            
@@ -577,9 +566,8 @@ C     tstep_mag        :: [s]              timestep
       _RL mp_spp_dry_sa        
       _RL mp_spp_dry_wet     
       _RL mp_spp_E           
-      _RL mp_spp_seed         
       _RL mp_spp_death
-      _RL tstep_mag    
+      _RL mp_wave_mort_factor    
 #endif
 
 C--   COMMON /DARWIN_DEPENDENT_PARAMS_i/

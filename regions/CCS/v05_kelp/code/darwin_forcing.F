@@ -367,6 +367,8 @@ C === plankton =========================================================
 
 
 #ifdef DARWIN_ALLOW_MACROALGAE
+C === macrolagae =========================================================
+      CALL TIMER_START('DARWIN_MACROALGAE [DARWIN_FORCING]',myThid)
 C macroalgae code
 C compute horizontal velocity
         hor_vel=sqrt(
@@ -376,7 +378,7 @@ C compute horizontal velocity
         CALL DARWIN_MACROALGAE(
      I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
      I   WvHeight(i,j,bi,bj), 
-     I   WvPeriod(i,j,bi,bj),
+     I   WvPeriod(i,j,bi,bj),deltaTclock,
      U   gtr,
      O   gTdum, gQdum, gHdum, gEdum, grate_madum,
      O   mort_madum)

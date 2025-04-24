@@ -41,7 +41,7 @@
  PTRACERS_names(31)= 'Chl05',
  PTRACERS_names(32)= 'Bmag',
  PTRACERS_names(33)= 'Cmag',
- PTRACERS_names(34)= 'Nmag',
+ PTRACERS_names(34)= 'Qmag',
 #
 # uM is shorthand for mmol m^-3
 #
@@ -76,9 +76,9 @@
  PTRACERS_units(29)= 'mg/m^3'
  PTRACERS_units(30)= 'mg/m^3'
  PTRACERS_units(31)= 'mg/m^3'
- PTRACERS_units(32)= 'gBiomass/m2' 
- PTRACERS_units(33)= 'uM C'
- PTRACERS_units(34)= 'uM N'
+ PTRACERS_units(32)= 'gDryWeight/m2' 
+ PTRACERS_units(33)= 'gC/m2'
+ PTRACERS_units(34)= 'mgN/gDryWeight'
 #
  PTRACERS_initialFile( 1)= 'init/DIC_80x100x48.16-Jan-1992',
  PTRACERS_initialFile( 2)= 'init/NO3_80x100x48.16-Jan-1992',
@@ -113,5 +113,5 @@
  PTRACERS_initialFile(31)= 'init/Chl5_80x100x48.16-Jan-1992',
  PTRACERS_initialFile(32)= 'init/ini_CCS_80x100x48_Bmag.bin',
  PTRACERS_initialFile(33)= 'init/ini_CCS_80x100x48_Cmag.bin',
- PTRACERS_initialFile(34)= 'init/ini_CCS_80x100x48_Nmag.bin',
+ PTRACERS_initialFile(34)= 'init/ini_CCS_80x100x48_Qmag.bin',
  &
