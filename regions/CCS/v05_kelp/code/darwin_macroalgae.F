@@ -4,11 +4,9 @@ CBOP
 C     ROUTINE: DARWIN_MACROALGAE
 C     INTERFACE: ==========================================================
       SUBROUTINE DARWIN_MACROALGAE(
-C    I     t,hor_vel,parl,ptr,lat,dayyr,
      I     t,hor_vel,parl,ptr,
      I     Hw,Tw,deltaT,
      U     gtr,
-C    O     Aalg,Nres,Cres,
      O     gT,gQ,gH,gE,muMAG,
      O     mortMAG)
 C   
