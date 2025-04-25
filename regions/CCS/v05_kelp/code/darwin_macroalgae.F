@@ -251,24 +251,24 @@ C     gQ = (Q(i,j) - Qmin) / (Qmax-Qmin)                            ! Freider et
 C     Temperature-dependent growth          
       IF (t_mag .GE. mp_spp_Topt1) THEN          
          IF (t_mag .LE. mp_spp_Topt2) THEN
-            gT = 1.0                                          ! [0-1]
+            gT = 1.0                                           ! [0-1]
          ELSE  
-            gT = exp(-mp_spp_K2*(t_mag-mp_spp_Topt2)**2)      ! [0-1]
+            gT = exp(-mp_spp_K2*(t_mag-mp_spp_Topt2)**2)       ! [0-1]
          ENDIF          
       ELSE              
-         gT = exp(-mp_spp_K1*(t_mag-mp_spp_Topt1)**2)         ! [0-1]      
+         gT = exp(-mp_spp_K1*(t_mag-mp_spp_Topt1)**2)          ! [0-1]      
       ENDIF 
-      gT = max(0.0,gT)                                  ! [0-1]
-      gT = min(1.0,gT)                                  ! [0-1]
+      gT = max(0.0,gT)                                         ! [0-1]
+      gT = min(1.0,gT)                                         ! [0-1]
     
 C     Light limitation (check light unit) + add chla attenuation
       IF (parl .LT. mp_spp_PARc) THEN              
-          gE = c0                                                   ! [0-1]
+          gE = c0                                              ! [0-1]
       ELSEIF (parl .GT. mp_spp_PARs) THEN              
-          gE = c1                                                   ! [0-1]
+          gE = c1                                              ! [0-1]
       ELSE              
           gE = ((parl-mp_spp_PARc)/(mp_spp_PARs-mp_spp_PARc))*
-     & exp(-((parl-mp_spp_PARc)/(mp_spp_PARs-mp_spp_PARc))+c1)   ! [0-1]  
+     & exp(-((parl-mp_spp_PARc)/(mp_spp_PARs-mp_spp_PARc))+c1) ! [0-1]  
       ENDIF
 
 C     Carrying capacity
@@ -299,21 +299,22 @@ C     d_wave = frond loss due to waves; dependent on Hs, significant
 C     wave height [m]; Rodrigues et al. 2013 demonstrates linear relationship
 C     between Hs and frond loss rate in Macrocystis [d-1] (continuous)
 C     Duarte and Ferreira (1993) find a linear relationship between wave
-C     power and mortality in red seaweed        
-      mwh  = Hw                                                        ! Assign wave height [m]
-      wp_tmp = Tw                                                  ! Assign wave period [s]
+C     power and mortality in red seaweed
+C     Duarte and Ferreira compute daily wave mortality [per d] as a function of wave power 
+      mwh  = Hw                                                            ! Assign wave height [m]
+      wp_tmp = Tw                                                          ! Assign wave period [s]
       IF (mp_break_type.EQ.break_Duarte_Ferr ) THEN
-         WP = (rho_sw * (9.8**2)) /(64.0*pi) * (mwh**2) *wp_tmp / 1E3  ! [kW]   
-         Mwave=((2.3*1E-4) * WP + (2.2*1E-3)) * mp_wave_mort_factor      ! [0-1]
+         WP = (((rho_sw * (9.8**2)) /(64.0*pi)) * (mwh**2) * wp_tmp) / 1E3 ! [kW]   
+         Mwave=((2.3*1E-4) * WP + (2.2*1E-3)) * mp_wave_mort_factor        ! [per d]
       ELSEIF (mp_break_type.EQ.break_Rodrig) THEN
 C     Death rate scales with Hw (Hw, surface wave height)
-         Mwave=(mp_spp_death * Hw) * mp_wave_mort_factor               ! [0-1]
+         Mwave=(mp_spp_death*spd * Hw) * mp_wave_mort_factor               ! [per d]
       ENDIF
 C     M_wave + general Mortality rate; [per s]       
-      mortMAG = mp_spp_death + Mwave                                   ! [per s]   
+      mortMAG = mp_spp_death + Mwave/spd                                   ! [per s]   
         
 C     ---------------------------------------------------------- 
-C     limit growth to nflux (add nflux forcing CESM N vertical flux)
+C     limit growth to nflux (add vertical flux of nitrogen)
 C      ----------------------------------------------------------
 C     Comparing the nitrogen taken up to the amount of nitrogen fluxed in per m2
       dNs = UptakeN * deltaT * Bmag		  ! [mg-N/m2]      
