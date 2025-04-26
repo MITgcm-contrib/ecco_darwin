@@ -10,5 +10,6 @@
  useDiagnostics=.TRUE.,
  usePtracers=.TRUE.,
  useGCHEM = .TRUE.,
- useRADTRANS   = .TRUE.,
+ useRADTRANS = .TRUE.,
+ useOASIM = .TRUE.,
  /

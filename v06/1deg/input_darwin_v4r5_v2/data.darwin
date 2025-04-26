@@ -136,7 +136,7 @@
  scav_tau= 1.0,
  ligand_tot= 1e-3,
  scav_POC_wgt=0.06,
- scav_POSi_wgt = 0.,
+ scav_PSi_wgt = 0.,
  scav_PIC_wgt = 0.,
  kdoc=  2.314814814814815E-7,   ! 1/50day
  kdop=  2.314814814814815E-7,   ! 1/50day
@@ -157,6 +157,7 @@
  wPIC_sink=0.00017361111111111111,
  SURFDICMIN  =   100.0,
  SURFALKMIN  =   100.0,
+ darwin_disscSelect = 2,
  /
 ########################
  &DARWIN_CDOM_PARAMS
