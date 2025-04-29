@@ -165,10 +165,10 @@
   cdomdegrd= 3.8580e-08,
   CDOMbleach = 1.9329e-06,
   PARCDOM = 60.,
-  R_NP_CDOM  = 16.,
-  R_FeP_CDOM = 1.e-3,
-  R_CP_CDOM  = 120.,
-  CDOMcoeff = 21.,
+#  R_NP_CDOM  = 16.,
+#  R_FeP_CDOM = 1.e-3,
+#  R_CP_CDOM  = 120.,
+   CDOMcoeff = 0.1750000,
  /
  &DARWIN_RADTRANS_PARAMS
  darwin_waterabsorbFile='OPTICS_COEFF2/optics_water.txt',
@@ -240,7 +240,6 @@
  a_PCmax(4)= 0.5954,
  a_PCmax(5)= 2.4967,
  a_PCmax(6)= 1.3363,
-
 
  a_PCmax_denom(:)= 6*86400.,
  b_PCmax(:)=  0.28, 0.28, -0.10, -0.10, -0.10,-0.10, 0.,
