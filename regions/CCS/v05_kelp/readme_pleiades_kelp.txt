@@ -1,5 +1,7 @@
 # Instructions for building and running CCS regional simulation
-# on pleiades (based on ecco_darwin/v05/llc270/readme2.txt).
+# on Pleiades (based on ecco_darwin/v05/llc270/readme2.txt) with
+# online MacroAlgae Cultivation MODeling System (MACMODS)-based 
+# kelp model and wave-driven mortality
 
 ==============
 # 1. Get code
@@ -41,7 +43,7 @@ https://drive.google.com/drive/folders/1qqOTgUZeFcmjGXKsYJcVNTJxQft3zZPN?usp=sha
 
 
 =================================
-use of wave forcing in MITgcm s/r:
+use of wave forcing for kelp mortality in MITgcm s/r:
 =================================
 
 #include "EXF_OPTIONS.h"
