@@ -475,7 +475,7 @@ C physiology for macrolagae model
        mp_spp_CD = 0.5 _d 0
        mp_spp_dry_sa = 58.0 _d 0
        mp_spp_dry_wet = 0.094 _d 0
-       mp_spp_E = 1.15 _d -7
+       mp_spp_E = 2.31 _d -8
        mp_spp_death = 1.15 _d -7
        mp_wave_mort_factor = 1.0 _d 0
        

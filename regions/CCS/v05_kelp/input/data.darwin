@@ -63,7 +63,7 @@
  mp_spp_CD = 0.5,
  mp_spp_dry_sa = 58.0,
  mp_spp_dry_wet = 0.094,
- mp_spp_E = 1.15E-7,
+ mp_spp_E = 2.31e-08,
  mp_spp_death = 1.15E-7,
  mp_wave_mort_factor = 1.0,
  /

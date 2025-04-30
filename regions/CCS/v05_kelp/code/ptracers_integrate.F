@@ -265,7 +265,7 @@ CADJ &      = comlev1_bibj_ptracers, key=iptrkey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wFld,
+     I                        PTRACERS_dTLev, uFld_t, vFld_t, wFld_t,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      U                        _Ptracers_som(:,:,:,:,:,:,iTracer),
      O                        gTracer,
@@ -282,7 +282,7 @@ CADJ &      = comlev1_bibj_ptracers, key=iptrkey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wFld,
+     I                        PTRACERS_dTLev, uFld_t, vFld_t, wFld_t,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      O                        gTracer,
      I                        bi, bj, myTime, myIter, myThid )
@@ -310,7 +310,7 @@ CADJ STORE gpTrNm1(:,:,k,bi,bj,iTracer) = comlev1_bibj_k_ptracers,
 CADJ &     key = kkey, byte = isbyte, kind = isbyte
 #endif /* ALLOW_AUTODIFF_TAMC */
           CALL CALC_ADV_FLOW(
-     I                uFld, vFld, wFld,
+     I                uFld_t, vFld_t, wFld_t,
      U                rTrans,
      O                uTrans, vTrans, rTransKp,
      O                maskUp, xA, yA,
@@ -338,8 +338,8 @@ C-    Calculate active tracer tendencies (gTracer) due to internal processes
 C      (advection, [explicit] diffusion, parameterizations,...)
           CALL GAD_CALC_RHS(
      I             bi,bj, iMin,iMax,jMin,jMax, k,kM1, kUp,kDown,
-     I             xA, yA, maskUp, uFld(1-OLx,1-OLy,k),
-     I             vFld(1-OLx,1-OLy,k), wFld(1-OLx,1-OLy,k),
+     I             xA, yA, maskUp, uFld_t(1-OLx,1-OLy,k),
+     I             vFld_t(1-OLx,1-OLy,k), wFld_t(1-OLx,1-OLy,k),
      I             uTrans, vTrans, rTrans, rTransKp,
      I             PTRACERS_diffKh(iTracer),
      I             PTRACERS_diffK4(iTracer),

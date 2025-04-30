@@ -132,7 +132,7 @@ C  k                    :: vertical level
 
 C macroalgae model variables
 
-      _RL hor_vel
+      _RL hor_vel,NO3wflux
       _RL day_yr
       _RL ma_areat, ma_nrest, ma_crest
   
@@ -371,11 +371,12 @@ C macroalgae code
 C compute horizontal velocity
         hor_vel=sqrt(
      &  (0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)))**2 +
-     &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)        
+     &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)    
+        NO3wflux = wvel(i,j,k,bi,bj)*pTracer(i,j,k,bi,bj,iNO3)
 
         CALL DARWIN_MACROALGAE(
      I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
-     I   WvHeight(i,j,bi,bj), 
+     I   NO3wflux,WvHeight(i,j,bi,bj), 
      I   WvPeriod(i,j,bi,bj),deltaTclock,
      U   gtr,
      O   gTdum, gQdum, gHdum, gEdum, grate_madum,
