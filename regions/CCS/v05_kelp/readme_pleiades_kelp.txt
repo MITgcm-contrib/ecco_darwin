@@ -1,7 +1,14 @@
 # Instructions for building and running CCS regional simulation
 # on Pleiades (based on ecco_darwin/v05/llc270/readme2.txt) with
-# online MacroAlgae Cultivation MODeling System (MACMODS)-based 
-# kelp model and wave-driven mortality
+# online Global MacroAlgae Cultivation MODeling System (G-MACMODS)-based 
+# kelp model
+
+# Arzeno-Soltero, I.B., Saenz, B.T., Frieder, C.A. et al. 
+# Large global variations in the carbon dioxide removal potential of seaweed farming due to biophysical constraints. 
+# Commun Earth Environ 4, 185 (2023). https://doi.org/10.1038/s43247-023-00833-2
+
+# G-MACMODS GitHub Repo
+# https://github.com/macmods/G-MACMODS
 
 ==============
 # 1. Get code
