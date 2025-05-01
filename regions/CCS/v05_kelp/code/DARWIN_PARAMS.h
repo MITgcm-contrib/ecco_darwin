@@ -512,7 +512,7 @@ C     CDOMcoeff  :: [m2 / mmol P]       P-specific absorption coefficient of CDO
 C--   COMMON /DARWIN_MACROALGAE_PARAMS_r/
 C     mp_spp_Vmax         :: [mmol N/m2/s]    Maximum uptake rate of nitrate
 C     mp_spp_Ks_NO3       :: [mmol N/m3]      Half saturation constant of nitrate
-C     mp_spp_kcap         :: [g(dry)/m]       Biomass density at which seaweed grows by kcap_rate
+C     mp_spp_kcap         :: [g(dry)/m2]      Biomass density at which seaweed grows by kcap_rate
 C     mp_spp_Gmax_cap     :: [1/s]            Maximum growth rate
 C     mp_spp_PARs         :: [microE/m2/s]    Light-limited saturating irradiance
 C     mp_spp_PARc         :: [microE/m2/s]    Light-limited compensating irradiance
@@ -529,6 +529,7 @@ C     mp_spp_dry_wet      :: [g(dry)/g(wet)]  Dry weight of biomass from wet bio
 C     mp_spp_E            :: [1/s]            Exudation rate
 C     mp_spp_death        :: [1/s]            Mortality rate
 C     mp_wave_mort_factor :: []               Scaling factor for the wave mortality relationship
+C     mp_spp_katten       :: [m2/mg N]        Light attenuation due to macroalgae       
       COMMON /DARWIN_MACROALGAE_PARAMS_r/
      &    mp_spp_Vmax,       
      &    mp_spp_Ks_NO3,       
@@ -548,7 +549,8 @@ C     mp_wave_mort_factor :: []               Scaling factor for the wave mortal
      &    mp_spp_dry_wet,     
      &    mp_spp_E,           
      &    mp_spp_death,
-     &    mp_wave_mort_factor
+     &    mp_wave_mort_factor,
+     &    mp_spp_katten
       _RL mp_spp_Vmax       
       _RL mp_spp_Ks_NO3       
       _RL mp_spp_kcap         
@@ -567,7 +569,8 @@ C     mp_wave_mort_factor :: []               Scaling factor for the wave mortal
       _RL mp_spp_dry_wet     
       _RL mp_spp_E           
       _RL mp_spp_death
-      _RL mp_wave_mort_factor    
+      _RL mp_wave_mort_factor  
+      _RL mp_spp_katten  
 #endif
 
 C--   COMMON /DARWIN_DEPENDENT_PARAMS_i/

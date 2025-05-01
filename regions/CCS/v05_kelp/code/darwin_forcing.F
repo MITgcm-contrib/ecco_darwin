@@ -132,14 +132,16 @@ C  k                    :: vertical level
 
 C macroalgae model variables
 
-      _RL hor_vel,NO3wflux
+      _RL hor_vel
       _RL day_yr
       _RL ma_areat, ma_nrest, ma_crest
   
       _RL grate_madum,mort_madum
       _RL gTdum, gHdum, gQdum, gEdum
       _RL Bmag_tmp
-
+      _RL mp_spp_kcap_m3
+      _RL UptakeNout
+      
       _RL ma_area(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL ma_nres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL ma_cres(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -152,6 +154,7 @@ C terms controlling growth of Kelp
       _RL gQ_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gQ, nitrogen quota
       _RL gH_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gH, wave motion 
       _RL gE_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gE, irradiance
+      _RL UptakeNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 
       INTEGER curr_date(4), first_day(4), numdays(4)
 	  
@@ -371,16 +374,18 @@ C macroalgae code
 C compute horizontal velocity
         hor_vel=sqrt(
      &  (0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)))**2 +
-     &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)    
-        NO3wflux = wvel(i,j,k,bi,bj)*pTracer(i,j,k,bi,bj,iNO3)
-
+     &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)  
+C Convert carrying capacity from gDW/m2 to gDW/m3 according to grid cell thickness   
+        mp_spp_kcap_m3 = mp_spp_kcap/(drF(k)*hFacC(i,j,k,bi,bj))            
+       
         CALL DARWIN_MACROALGAE(
      I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
-     I   NO3wflux,WvHeight(i,j,bi,bj), 
+     I   WvHeight(i,j,bi,bj), 
      I   WvPeriod(i,j,bi,bj),deltaTclock,
+     I   mp_spp_kcap_m3,
      U   gtr,
      O   gTdum, gQdum, gHdum, gEdum, grate_madum,
-     O   mort_madum)
+     O   mort_madum,UptakeNout)
 
         grate_ma(i,j,k) = grate_madum
         gT_ma(i,j,k) = gTdum
@@ -388,13 +393,14 @@ C compute horizontal velocity
         gE_ma(i,j,k) = gEdum
         gH_ma(i,j,k) = gHdum
         mort_ma(i,j,k) = mort_madum
-
+        UptakeNO3(i,j,k) = UptakeNout
         diags(i,j,k,igHMAG) = gHdum
 
         ma_area(i,j,k) = ma_areat
         ma_nres(i,j,k) = ma_nrest
         ma_cres(i,j,k) = ma_crest
 C end macroalgae code
+      CALL TIMER_STOP('DARWIN_MACROALGAE [DARWIN_FORCING]',myThid)
 #endif
 
         DO l=1,darwin_nDiag
@@ -420,6 +426,7 @@ C end macroalgae code
         DO iTr=1,nDarwin
          gPtr(i, j, k, iTr) = gtr(iTr)
         ENDDO
+        
       endif
       enddo
       enddo
@@ -625,6 +632,8 @@ C macroalgae diagnostics
       CALL DIAGNOSTICS_FILL(mort_ma(1-OLx,1-OLy,1),
      &  'mort_mag',0,Nr,1,bi,bj,myThid)
      
+      CALL DIAGNOSTICS_FILL(UptakeNO3(1-OLx,1-OLy,1),
+     &  'UptkNO3 ',0,Nr,1,bi,bj,myThid)   
 #endif
 
       DO iTr=1,nDarwin

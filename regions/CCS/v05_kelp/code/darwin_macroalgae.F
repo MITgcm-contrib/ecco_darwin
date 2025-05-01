@@ -5,11 +5,12 @@ C     ROUTINE: DARWIN_MACROALGAE
 C     INTERFACE: ==========================================================
       SUBROUTINE DARWIN_MACROALGAE(
      I     t,hor_vel,parl,ptr,
-     I     NO3wflux,Hw,
+     I     Hw,
      I     Tw,deltaT,
+     I     mp_spp_kcap_m3,
      U     gtr,
      O     gT,gQ,gH,gE,muMAG,
-     O     mortMAG)
+     O     mortMAG,UptakeNout)
 C   
 C    ==========================================================
 
@@ -19,8 +20,8 @@ C     parl: photosynthetic radiation [mu Ein s-1 m-2]
 C     ptr(ndarwin): tracer concentrations  
 C     gtr(ndarwin): tracer tendencies (inout)
 C     macroalgage relevant tracers in ptr
-C     ptr(B) .... Kelp biomass [gDryWeight/m2]
-C     ptr(C) .... Kelp biomass in carbon [gC/m2]
+C     ptr(B) .... Kelp biomass [gDryWeight/m3]
+C     ptr(C) .... Kelp biomass in carbon [gC/m3]
 C     ptr(Q) .... Kelp nitrogen quota [mgN/gDryWeight]
 C     gtr = tendency dptr/dt due to physical processes [ptr s-1]
 C     DW: dry weight
@@ -38,7 +39,6 @@ C     Inputs/outputs
       _RL ptr(nDarwin)            ! Darwin tracers
       _RL gTr(nDarwin)            ! Darwin tendencies
       _RL t,hor_vel,parl          ! Darwin water temperature, horizontal velocity and PAR
-      _RL NO3wflux                ! Vertical flux of NO3 [mmol-N/m2/s]
       _RL deltaT                  ! Darwin time step duration
 C     Additional variables needed for physiological calculation in MACMODS
       _RL vQ                      ! Quota-limited uptake
@@ -57,6 +57,7 @@ C     Variables related to ocean flow and wave motion affecting nutrient uptake
       _RL n                       ! Iterative number for oscillatory flow over vertical levels of the kelp forest
       _RL vNuTw_NO3               ! NO3 uptake factor
       _RL Uptake_NO3              ! Uptake of NO3
+      _RL UptakeNout              ! Uptake of N for Darwin tendency
       _RL UptakeN                 ! Uptake of nitrogen
       _RL Dm                      ! Molecular diffusivity of nitrate at 18degC
       _RL oscillatory             ! Oscillatory flow
@@ -71,9 +72,7 @@ C     Tendency terms
       _RL dBmagdt                 ! B tendency
       _RL dCmagdt                 ! C tendency
       _RL dQmagdt                 ! Q tendency
-      _RL dQgrowthdt              ! Q growth related term
-      _RL deltaQ_min, deltaQ_max  ! Capping terms for Q tendency
-      _RL deltaB_min              ! Capping term for B tendency       
+      _RL dQgrowthdt              ! Q growth related term     
 C     Key variables to store forcing functions from ECCO-Darwin
 C     mag = macroalgae
       _RL t_mag                   ! water temperature in degC
@@ -93,6 +92,7 @@ C     Additional parameters
       _RL mp_break_type      ! Frond breakage Type
       _RL mp_N_uptake_type   ! Type of nutrient uptake
       _RL mp_N_flux_limit    ! Limit N03 uptake by vertica flux of NO3
+      _RL mp_spp_kcap_m3     ! Carrying capcity converted to m3
       _RL c0                 ! 0
       _RL c1                 ! 1
       _RL c4                 ! 4
@@ -116,20 +116,15 @@ C     Assign value for frond breakage type
       mp_break_type = break_Duarte_Ferr
 C     Assign forcings
       NO3_mag=max(c0, ptr(iNO3)) ! mmol/m3
-      t_mag=t                    ! deg C
-C     Now fake value of chl from plakton for test 
-      chl_plk=0.1	         ! mg/m3     
+      t_mag=t                    ! deg C   
 C     growth Limitation model
 C     if = 0 ==>  multiply all the limitaton factors
 C     if > 0 ==>  independent light and nutrient limitation growth model
       mp_growth_lim_type=0
 C     Setting the kind of nutrient uptake
       mp_N_uptake_type=1
-C     Limit N03 uptake by vertical flux of NO3 (adapted for offline runs 
-C     when NO3 uptake by kelp does not impact NO3 concentration).
-      mp_N_flux_limit=0
 C     Assign state variables to local variables     
-      Bmag = ptr(iMagB)          ! [gDW/m2] 
+      Bmag = ptr(iMagB)          ! [gDW/m3] 
       Qmag = ptr(iMagQ)          ! [mg-N/gDW]
 
 C     ---------------------------------------------------------- 
@@ -210,7 +205,8 @@ C     converted from mmol N/m2/s -> mg N/g(dry)/s by 14.0067
       Uptake_NO3 = mp_spp_Vmax * vNuTw_NO3 * vQ                       ! [mmol/m2/s]     
       Uptake_NO3 = Uptake_NO3 * mw_n                                  ! [mg/m2/s]          
       UptakeN = Uptake_NO3                                            ! [mg/m2/s]     
-      UptakeN = UptakeN / mp_spp_dry_sa                               ! [mg/gDW/s]     
+      UptakeN = max(c0,UptakeN / mp_spp_dry_sa)                       ! [mg/gDW/s]     
+      UptakeNout = UptakeN * Bmag / mw_n                              ! [mmol-N/m3/s] - uptake of N to apply to Darwin tendency
       
 C     ---------------------------------------------------------- 
 C     Growth
@@ -248,7 +244,7 @@ C     Temperature-dependent growth
       gT = max(0.0,gT)                                         ! [0-1]
       gT = min(1.0,gT)                                         ! [0-1]
     
-C     Light limitation (check light unit) + add chla attenuation
+C     Light limitation
       IF (parl .LT. mp_spp_PARc) THEN              
           gE = c0                                              ! [0-1]
       ELSEIF (parl .GT. mp_spp_PARs) THEN              
@@ -263,7 +259,7 @@ C     gH -> density-limited growth (ranges from the max growth rate to the death
 C     This expression follows Xiao et al (2019 and ignores wave mortality when
 C     thinking about the death rate
       A = mp_spp_kcap_rate/mp_spp_Gmax_cap                          ! [no unit]
-      gH = min(c1,A*(Bmag/mp_spp_kcap)**(-0.75))                    ! [0-1]
+      gH = min(c1,A*(Bmag/mp_spp_kcap_m3)**(-0.75))                 ! [0-1]
       
 C     Growth rate
 C     below is confusing programatically - gH should not include Gmax - but this is what was used in gMACMODS < 2022-10
@@ -298,22 +294,7 @@ C     Death rate scales with Hw (Hw, surface wave height)
          Mwave=(mp_spp_death*spd * Hw) * mp_wave_mort_factor               ! [per d]
       ENDIF
 C     M_wave + general Mortality rate; [per s]       
-      mortMAG = mp_spp_death + Mwave/spd                                   ! [per s]   
-        
-C     ---------------------------------------------------------- 
-C     limit growth to vertical flux of nitrogen
-C      ----------------------------------------------------------
-C     Comparing the nitrogen taken up to the amount of nitrogen fluxed in per m2
-      dNs = UptakeN * Bmag		  ! [mg-N/m2]    [mg/gDW/s]*[gDW/m2] -> [mg-N/m2/s]
-      IF (mp_N_flux_limit.GT.c0) THEN
-          N_new = NO3wflux * mw_n                 ! [mmol-N/m2/s] -> [mg-N/m2/s]
-          IF (dNs.GT.N_new .AND. N_new.GT.c0) THEN
-              dNs = N_new
-          ELSEIF (N_new.LT.c0) THEN
-              dNs = c0
-          ENDIF
-      ENDIF     
-      UptakeN = max(c0,dNs/Bmag)		  ! [mg-N/gDW/s] - redefining uptake
+      mortMAG = mp_spp_death + Mwave/spd                                   ! [per s]           
       
 C     Compute exudation
       dE = mp_spp_E * (Qmag-mp_spp_Qmin) * deltaT ! [mg-N/gDW]
@@ -325,24 +306,19 @@ C     dilution total N d_Q
       dQgrowthdt = Qmag * (1.0/(1.0 + muMAG * deltaT) - 1.0)   ! [mg-N/gDW]
       dQmagdt = (UptakeN * deltaT + dQgrowthdt - dE)           ! [mg-N/gDW]
       dBmagdt = Bmag * muMAG * deltaT - 
-     & Bmag * mortMAG * deltaT                                 ! [gDW/m2] 
-      
-C     cap dQmagdt and dBmagdt so it does not go below Qmin or zero
-C      deltaQ_min = mp_spp_Qmin - Qmag                          ! [mg-N/gDW]
-C      deltaQ_max = mp_spp_Qmax - Qmag                          ! [mg-N/gDW]
-C      IF(dQmagdt.GT.0.0)THEN
-C        dQmagdt = min(dQmagdt/deltaT,deltaQ_max)               ! [mg-N/gDW/s]
-C      ELSEIF(dQmagdt.LT.0)THEN
-C        dQmagdt = max(dQmagdt/deltaT,deltaQ_min)               ! [mg-N/gDW/s]
-C      ENDIF
-C      deltaB_min = c0 - Bmag                                   ! [gDW/m2] 
-C      IF(dBmagdt.LT.0)THEN
-C        dBmagdt = max(dBmagdt/deltaT,deltaB_min)               ! [gDW/m2/s] 
-C      ENDIF
-      
-      gtr(iMagB) = dBmagdt/deltaT                              ! [gDW/m2/s]
-      gtr(iMagC) = (dBmagdt/deltaT * (30./100.))               ! [gC/m2/s]
-      gtr(iMagQ) = dQmagdt/deltaT                              ! [mg-N/gDW/s]
+     & Bmag * mortMAG * deltaT                                 ! [gDW/m3] 
+      IF (Bmag.GT.c0) THEN
+        gtr(iMagB) = dBmagdt/deltaT                            ! [gDW/m3/s]
+        gtr(iMagC) = (dBmagdt/deltaT * (30./100.))               ! [gC/m3/s]
+        gtr(iMagQ) = dQmagdt/deltaT                              ! [mg-N/gDW/s]
+        gtr(iNO3) = gtr(iNO3) - UptakeNout                       ! [mmol-N/m3/s]        
+      ELSE
+        gtr(iMagB) = c0
+        gtr(iMagC) = c0
+        gtr(iMagQ) = c0
+      ENDIF      
+
+                      
 
 C     Extreme carbon limitations 
 C     If expected C<Cmin then increase C, 

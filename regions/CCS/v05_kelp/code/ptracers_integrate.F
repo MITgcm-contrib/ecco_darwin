@@ -463,20 +463,20 @@ CADJ &     key=iptrkey, byte=isbyte
 #endif /* ALLOW_AUTODIFF_TAMC */
 
 #ifdef INCLUDE_IMPLVERTADV_CODE
-        IF ( PTRACERS_ImplVertAdv(iTracer) .OR. implicitDiffusion ) THEN
+        IF ( PTRACERS_ImplVertAdv(iTracer) .OR. implicitdiff_t ) THEN
 C      to recover older (prior to 2016-10-05) results:
 c       IF ( PTRACERS_ImplVertAdv(iTracer) ) THEN
           CALL GAD_IMPLICIT_R(
      I         PTRACERS_ImplVertAdv(iTracer),
      I         PTRACERS_advScheme(iTracer), GAD_TR,
-     I         PTRACERS_dTLev, kappaRk, recip_hFac, wFld,
+     I         PTRACERS_dTLev, kappaRk, recip_hFac, wFld_t,
      I         pTracer(1-OLx,1-OLy,1,bi,bj,iTracer),
      U         gTracer,
      I         bi, bj, myTime, myIter, myThid )
 
-        ELSEIF ( implicitDiffusion ) THEN
+        ELSEIF ( implicitdiff_t ) THEN
 #else /* INCLUDE_IMPLVERTADV_CODE */
-        IF ( implicitDiffusion ) THEN
+        IF ( implicitdiff_t ) THEN
 #endif /* INCLUDE_IMPLVERTADV_CODE */
           CALL IMPLDIFF(
      I         bi, bj, iMin, iMax, jMin, jMax,
@@ -505,14 +505,14 @@ c       IF ( PTRACERS_ImplVertAdv(iTracer) ) THEN
         ENDIF
 #endif /* ALLOW_DIAGNOSTICS */
 
-        IF ( PTRACERS_AdamsBash_Tr(iTracer) ) THEN
+        IF ( PTRACERS_AdamsBash_Tr(iTracer)  .OR. implicitdiff_t ) THEN
 C--   Save current tracer field (for AB on tracer) and then update tracer
           CALL CYCLE_AB_TRACER(
      I               bi, bj, gTracer,
      U               pTracer(1-OLx,1-OLy,1,bi,bj,iTracer),
      O               gpTrNm1(1-OLx,1-OLy,1,bi,bj,iTracer),
      I               myTime, myIter, myThid )
-        ELSE
+        ELSEIF (implicitdiff_t ) THEN
 C--   Update tracer fields:  pTr(n) = pTr**
           CALL CYCLE_TRACER(
      I               bi, bj,

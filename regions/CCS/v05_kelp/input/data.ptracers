@@ -5,8 +5,8 @@
  PTRACERS_diffKh(:)= 34*0.E3,
  PTRACERS_diffKr(:)= 34*1.E-5,
  PTRACERS_useGMRedi(:)= 34*.TRUE.,
- PTRACERS_zeroHAdv(32:34) = 3*.FALSE.,
- PTRACERS_zeroVAdv(32:34) = 3*.FALSE.,
+ PTRACERS_zeroHAdv(32:34) = 3*.TRUE.,
+ PTRACERS_zeroVAdv(32:34) = 3*.TRUE.,
 #
  PTRACERS_EvPrRn(:)= 34*0.E3,
 #

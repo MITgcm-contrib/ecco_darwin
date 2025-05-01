@@ -183,7 +183,8 @@ C physiological parameters
      &    mp_spp_dry_wet,     
      &    mp_spp_E,           
      &    mp_spp_death,
-     &    mp_wave_mort_factor
+     &    mp_wave_mort_factor,
+     &    mp_spp_katten
 #endif
 
 #ifdef DARWIN_ALLOW_CDOM
@@ -478,6 +479,7 @@ C physiology for macrolagae model
        mp_spp_E = 2.31 _d -8
        mp_spp_death = 1.15 _d -7
        mp_wave_mort_factor = 1.0 _d 0
+       mp_spp_katten = 1.0 _d -4
        
        READ(UNIT=iUnit, NML=DARWIN_MACROALGAE_PARAMS)
 #endif

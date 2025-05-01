@@ -603,6 +603,13 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
      
+      WRITE(diagName,'(A)')'UptkNO3 '
+      WRITE(diagTitle,'(A)')'Uptake of NO3 by macroalgae'
+      diagUnits = 'mmol/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )     
+     
 #endif /* DARWIN_ALLOW_MACROALGAE */
 
 #ifdef ALLOW_EXF
