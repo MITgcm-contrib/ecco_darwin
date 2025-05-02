@@ -185,21 +185,22 @@ for timeStep = 1:numFiles
     %two-dimensional time-averaged fields
     %
     ETAN = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',1));
-    oceFWflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',2));
     SFLUX = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',3));
-    oceSPflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',4));
-    DICTFLX = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',5)) .* mmol_to_mol; %mol m^-3 s^-1
-    fluxCO2 = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',6)) .* mmol_to_mol; %mol m^-2 s^-1
+
+    oceFWflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',5));
+    oceSPflx = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',6));
+    fluxCO2 = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',7)) .* mmol_to_mol; %mol m^-2 s^-1
+    DICTFLX = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',8)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %two-dimensional surface forcing
-    DIC_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',7)) .* mmol_to_mol; %mol m^-3 s^-1
-    ALK_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',8)) .* mmol_to_mol; %mol m^-3 s^-1
-    NO3_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',9)) .* mmol_to_mol; %mol m^-3 s^-1
-    NO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',10)) .* mmol_to_mol; %mol m^-3 s^-1
-    NH4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
-    PO4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',12)) .* mmol_to_mol; %mol m^-3 s^-1
-    Fe_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',13)) .* mmol_to_mol; %mol m^-3 s^-1
-    SiO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',14)) .* mmol_to_mol; %mol m^-3 s^-1
+    DIC_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',11)) .* mmol_to_mol; %mol m^-3 s^-1
+    ALK_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',12)) .* mmol_to_mol; %mol m^-3 s^-1
+    NO3_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',13)) .* mmol_to_mol; %mol m^-3 s^-1
+    NO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',14)) .* mmol_to_mol; %mol m^-3 s^-1
+    NH4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',15)) .* mmol_to_mol; %mol m^-3 s^-1
+    PO4_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',17)) .* mmol_to_mol; %mol m^-3 s^-1
+    Fe_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',18)) .* mmol_to_mol; %mol m^-3 s^-1
+    SiO2_Epr = convert2gcmfaces(rdmds([diagDir filename1],ttAverage,'rec',19)) .* mmol_to_mol; %mol m^-3 s^-1
     
     %three-dimensional time-averaged fields
     %
