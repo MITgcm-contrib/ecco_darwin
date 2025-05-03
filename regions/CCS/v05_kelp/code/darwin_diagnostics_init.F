@@ -596,8 +596,8 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
-      WRITE(diagName,'(A)')'mort_mag'
-      WRITE(diagTitle,'(A)')'mortality macrolagae'
+      WRITE(diagName,'(A)')'mrtrte_m'
+      WRITE(diagTitle,'(A)')'mortality rate macrolagae'
       diagUnits = '1/s    '
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
@@ -608,7 +608,35 @@ C-      use units & names from data.ptracers :
       diagUnits = 'mmol/m3/s    '
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )     
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )   
+     
+      WRITE(diagName,'(A)')'attenchl'
+      WRITE(diagTitle,'(A)')'chl attenuation in layer'
+      diagUnits = '1               '
+      diagCode  = 'SMRP    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )  
+    
+      WRITE(diagName,'(A)')'attenklp'
+      WRITE(diagTitle,'(A)')'kelp attenuation in layer'
+      diagUnits = '1               '
+      diagCode  = 'SMRP    MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid ) 
+     
+      WRITE(diagName,'(A)')'exud_mag'
+      WRITE(diagTitle,'(A)')'Exudation by macroalgae'
+      diagUnits = 'mmolN/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid ) 
+     
+      WRITE(diagName,'(A)')'mort_mag'
+      WRITE(diagTitle,'(A)')'mortality by macroalgae'
+      diagUnits = 'mmolC/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )   
      
 #endif /* DARWIN_ALLOW_MACROALGAE */
 

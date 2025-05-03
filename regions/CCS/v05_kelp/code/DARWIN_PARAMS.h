@@ -529,7 +529,8 @@ C     mp_spp_dry_wet      :: [g(dry)/g(wet)]  Dry weight of biomass from wet bio
 C     mp_spp_E            :: [1/s]            Exudation rate
 C     mp_spp_death        :: [1/s]            Mortality rate
 C     mp_wave_mort_factor :: []               Scaling factor for the wave mortality relationship
-C     mp_spp_katten       :: [m2/mg N]        Light attenuation due to macroalgae       
+C     mp_spp_katten       :: [m2/mg N]        Light attenuation due to macroalgae
+C     mp_spp_carbon       :: [gC/gDW]         Carbon content in dry weight
       COMMON /DARWIN_MACROALGAE_PARAMS_r/
      &    mp_spp_Vmax,       
      &    mp_spp_Ks_NO3,       
@@ -550,7 +551,8 @@ C     mp_spp_katten       :: [m2/mg N]        Light attenuation due to macroalga
      &    mp_spp_E,           
      &    mp_spp_death,
      &    mp_wave_mort_factor,
-     &    mp_spp_katten
+     &    mp_spp_katten,
+     &    mp_spp_carbon
       _RL mp_spp_Vmax       
       _RL mp_spp_Ks_NO3       
       _RL mp_spp_kcap         
@@ -570,7 +572,8 @@ C     mp_spp_katten       :: [m2/mg N]        Light attenuation due to macroalga
       _RL mp_spp_E           
       _RL mp_spp_death
       _RL mp_wave_mort_factor  
-      _RL mp_spp_katten  
+      _RL mp_spp_katten
+      _RL mp_spp_carbon  
 #endif
 
 C--   COMMON /DARWIN_DEPENDENT_PARAMS_i/

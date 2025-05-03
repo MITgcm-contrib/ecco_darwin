@@ -7,10 +7,11 @@ C     INTERFACE: ==========================================================
      I     t,hor_vel,parl,ptr,
      I     Hw,
      I     Tw,deltaT,
-     I     mp_spp_kcap_m3,
+     I     drF,hFacC,
      U     gtr,
      O     gT,gQ,gH,gE,muMAG,
-     O     mortMAG,UptakeNout)
+     O     mortMAG,UptakeNout,
+     O     mortout,dEout)
 C   
 C    ==========================================================
 
@@ -40,6 +41,7 @@ C     Inputs/outputs
       _RL gTr(nDarwin)            ! Darwin tendencies
       _RL t,hor_vel,parl          ! Darwin water temperature, horizontal velocity and PAR
       _RL deltaT                  ! Darwin time step duration
+      _RL drF,hFacC
 C     Additional variables needed for physiological calculation in MACMODS
       _RL vQ                      ! Quota-limited uptake
 C     Variables related to ocean flow and wave motion affecting nutrient uptake
@@ -58,13 +60,18 @@ C     Variables related to ocean flow and wave motion affecting nutrient uptake
       _RL vNuTw_NO3               ! NO3 uptake factor
       _RL Uptake_NO3              ! Uptake of NO3
       _RL UptakeNout              ! Uptake of N for Darwin tendency
+      _RL dEout                   ! Exudation for Darwin tendency
+      _RL mortout                 ! Mortality for Darwin tendency
+      _RL growthout               ! Growth for Darwin tendency
+      _RL ratioCN                 ! Ratio C:N
       _RL UptakeN                 ! Uptake of nitrogen
       _RL Dm                      ! Molecular diffusivity of nitrate at 18degC
       _RL oscillatory             ! Oscillatory flow
       _RL flow                    ! Uni-directional flow
       _RL beta                    ! Oscillatory and Uni-directional flow
       _RL Bmag                    ! local biomass of Kelp 
-      _RL Qmag                    ! local nitrogen cell quota    
+      _RL Qmag                    ! local nitrogen cell quota
+      _RL Cmag                    ! local biomass of Kelp in C
       _RL lambda                  ! Nutrient uptake related term
 C     Additional MACMODS variables
       _RL dE                      ! Exudation rate
@@ -93,12 +100,14 @@ C     Additional parameters
       _RL mp_N_uptake_type   ! Type of nutrient uptake
       _RL mp_N_flux_limit    ! Limit N03 uptake by vertica flux of NO3
       _RL mp_spp_kcap_m3     ! Carrying capcity converted to m3
+      _RL mp_spp_Vmax_m3     ! Maximum uptake rate of nitrate converted to m3
       _RL c0                 ! 0
       _RL c1                 ! 1
       _RL c4                 ! 4
       _RL pi                 ! PI
-      _RL mw_n	             ! Molecular weight N
+      _RL mw_n, mw_c         ! Molecular weight N and C
       _RL spd                ! Number of seconds in a day
+      _RL R_ON               ! O:N ratio for respiration and consumption
 C     Physical constants used in MACMODS 
       _RL rho_sw             ! density of salt water (g/cm^3)
 C     Additional MACMODS parameters with assigned values 
@@ -109,7 +118,9 @@ C     Additional MACMODS parameters with assigned values
       parameter(c4=4.0)
       parameter(pi=3.14159265358979323846)
       parameter(mw_n=14.00672)
+      parameter(mw_c=12.01070)
       parameter(spd=86400.0)
+      parameter(R_ON= 16.0/170.0)
 C     Additional physical constants for MACMODS
       parameter(rho_sw=1.026)             ! density of salt water (g/cm^3)
 C     Assign value for frond breakage type      
@@ -126,7 +137,7 @@ C     Setting the kind of nutrient uptake
 C     Assign state variables to local variables     
       Bmag = ptr(iMagB)          ! [gDW/m3] 
       Qmag = ptr(iMagQ)          ! [mg-N/gDW]
-
+      Cmag = ptr(iMagC)          ! [gC/m3] 
 C     ---------------------------------------------------------- 
 C     MACROALGAE MODEL         
 C     ---------------------------------------------------------- 
@@ -201,17 +212,16 @@ C     mass-transfer-limited uptake (oscillatory + uni-directional flow)
 
 C     Uptake Rate [mg N/gDW/s]
 C     Nutrient Uptake Rate = Max Uptake * v[Ci,u,Tw] * vQ
-C     converted from mmol N/m2/s -> mg N/g(dry)/s by 14.0067
-      Uptake_NO3 = mp_spp_Vmax * vNuTw_NO3 * vQ                       ! [mmol/m2/s]     
-      Uptake_NO3 = Uptake_NO3 * mw_n                                  ! [mg/m2/s]          
-      UptakeN = Uptake_NO3                                            ! [mg/m2/s]     
-      UptakeN = max(c0,UptakeN / mp_spp_dry_sa)                       ! [mg/gDW/s]     
-      UptakeNout = UptakeN * Bmag / mw_n                              ! [mmol-N/m3/s] - uptake of N to apply to Darwin tendency
+      mp_spp_Vmax_m3 = mp_spp_Vmax / (drF*hFacC)                      ! [mmolN/m3/s]
+      Uptake_NO3 = mp_spp_Vmax_m3 * vNuTw_NO3 * vQ                    ! [mmolN/m3/s]
+      UptakeNout = Uptake_NO3                                         ! [mmolN/m3/s]
+      Uptake_NO3 = Uptake_NO3 * mw_n                                  ! [mg/m3/s]          
+      UptakeN = max(c0,Uptake_NO3 / Bmag)                             ! [mg/gDW/s]     
       
 C     ---------------------------------------------------------- 
 C     Growth
 C     ----------------------------------------------------------
-C     Growth, nitrogen movement from Ns to Nf = umax*gQ*gT*gE*gH; [per s]
+C     Growth, nitrogen movement from Q to B
 C     Output:
 C     Growth, [s-1]
 C     gQ, quota-limited growth
@@ -258,6 +268,8 @@ C     Carrying capacity
 C     gH -> density-limited growth (ranges from the max growth rate to the death rate, excluding wave mortality)
 C     This expression follows Xiao et al (2019 and ignores wave mortality when
 C     thinking about the death rate
+C     Convert carrying capacity from gDW/m2 to gDW/m3 according to grid cell thickness   
+      mp_spp_kcap_m3 = mp_spp_kcap/(drF*hFacC) 
       A = mp_spp_kcap_rate/mp_spp_Gmax_cap                          ! [no unit]
       gH = min(c1,A*(Bmag/mp_spp_kcap_m3)**(-0.75))                 ! [0-1]
       
@@ -297,7 +309,7 @@ C     M_wave + general Mortality rate; [per s]
       mortMAG = mp_spp_death + Mwave/spd                                   ! [per s]           
       
 C     Compute exudation
-      dE = mp_spp_E * (Qmag-mp_spp_Qmin) * deltaT ! [mg-N/gDW]
+      dE = mp_spp_E * (Qmag-mp_spp_Qmin) * deltaT                          ! [mg-N/gDW]
      
 C     ---------------------------------------------------------- 
 C     Output terms
@@ -307,15 +319,36 @@ C     dilution total N d_Q
       dQmagdt = (UptakeN * deltaT + dQgrowthdt - dE)           ! [mg-N/gDW]
       dBmagdt = Bmag * muMAG * deltaT - 
      & Bmag * mortMAG * deltaT                                 ! [gDW/m3] 
+      ratioCN = (Cmag*1E3)/(Bmag*Qmag)                         ! [(mgC/m3)/(mgN/m3)]
       IF (Bmag.GT.c0) THEN
         gtr(iMagB) = dBmagdt/deltaT                            ! [gDW/m3/s]
-        gtr(iMagC) = (dBmagdt/deltaT * (30./100.))               ! [gC/m3/s]
-        gtr(iMagQ) = dQmagdt/deltaT                              ! [mg-N/gDW/s]
-        gtr(iNO3) = gtr(iNO3) - UptakeNout                       ! [mmol-N/m3/s]        
+        gtr(iMagC) = (dBmagdt/deltaT) * mp_spp_carbon          ! [gC/m3/s]
+        gtr(iMagQ) = dQmagdt/deltaT                            ! [mg-N/gDW/s]
+C       Remove NO3 used by macroalgae to NO3 tracer        
+        gtr(iNO3) = gtr(iNO3) - UptakeNout                       ! [mmol-N/m3/s] 
+C       Add macroalgae exudation to DOC and DON      
+        dEout = (dE/deltaT) * Bmag / mw_n                        ! [mmol-N/m3/s]
+        gtr(iDOC) = gtr(iDOC) + (dEout * ratioCN)                ! [mmol-C/m3/s]
+        gtr(iDON) = gtr(iDON) + dEout                            ! [mmol-N/m3/s]
+C       Add macroalgae mortality to POC and PON 
+        mortout = Cmag * mortMAG * 1E3 / mw_c                    ! [mmolC/m3/s] 
+        gtr(iPOC) = gtr(iPOC) + mortout                          ! [mmolC/m3/s]   
+        gtr(iPON) = gtr(iPON) + (mortout/ratioCN)                ! [mmolN/m3/s]   
+C       Production of alkalinity by NO3 uptake by macroalgae
+        gtr(iALK) = gtr(iALK) + UptakeNout                       ! [meq/m3/s] 
+C       Consumption of DIC by macroalgae growth
+        growthout = Cmag * muMAG * 1E3 / mw_c                    ! [mmol-C/m3/s] 
+        gtr(iDIC) = gtr(iDIC) - growthout                        ! [mmol-C/m3/s] 
+C       Production oxygen by macroalgae growth
+        gtr(iO2) = gtr(iO2) + (R_ON * UptakeNout)                ! [mmol-O2/m3/s]
       ELSE
         gtr(iMagB) = c0
         gtr(iMagC) = c0
         gtr(iMagQ) = c0
+        UptakeNout = c0
+        dEout = c0
+        mortout = c0
+        growthout = c0
       ENDIF      
 
                       
@@ -325,8 +358,6 @@ C     If expected C<Cmin then increase C,
 C     so that C=Cmin & compute the loss of C and N from structural mass)
 C     IMPLEMENT THIS
 
-C     source terms for ocean nutrients [their units/s ]
-C     IMPLEMENT THIS
              
       RETURN
       END SUBROUTINE

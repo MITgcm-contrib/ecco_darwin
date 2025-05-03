@@ -50,6 +50,12 @@ C  k                    :: vertical level
       _RL Chl(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL PARF(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL atten(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+#ifdef DARWIN_ALLOW_MACROALGAE
+      _RL atten_water(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL atten_chl(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL atten_kelp(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL mag(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+#endif
 
 C ======================================================================
       IF (DARWIN_haveSurfPAR) THEN
@@ -128,9 +134,13 @@ C TODO should include hFacC
          atten(i,j) = (katten_w + katten_Chl*Chl(i,j))*DRF(k)
 C Self-shading by macroalgae
 #ifdef DARWIN_ALLOW_MACROALGAE
+         mag(i,j) = Ptracer(i,j,k,bi,bj,iMagB)*
+     & Ptracer(i,j,k,bi,bj,iMagQ)     
          atten(i,j) = (katten_w + katten_Chl*Chl(i,j) +
-     & mp_spp_katten*(Ptracer(i,j,k,bi,bj,iMagB)*
-     & Ptracer(i,j,k,bi,bj,iMagQ))*DRF(k)
+     & mp_spp_katten*mag(i,j))*DRF(k)     
+         atten_chl(i,j) = katten_Chl*Chl(i,j)*DRF(k)         
+         atten_kelp(i,j) = mp_spp_katten*mag(i,j)*DRF(k)         
+         atten_water(i,j) = katten_w*DRF(k)
 #endif
 #ifdef DARWIN_AVPAR
          PAR(i,j,k) = PARF(i,j)*(1.0 - EXP(-atten(i,j)))/atten(i,j)
@@ -145,6 +155,10 @@ C Self-shading by macroalgae
        IF (useDiagnostics .AND. myIter .GE.0) THEN
         CALL DIAGNOSTICS_FILL(PARF,'PARF    ',k,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(atten,'atten   ',k,1,2,bi,bj,myThid)
+#ifdef DARWIN_ALLOW_MACROALGAE
+        CALL DIAGNOSTICS_FILL(atten_chl,'attenchl',k,1,2,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(atten_kelp,'attenklp',k,1,2,bi,bj,myThid)
+#endif
        ENDIF
 #endif
        DO j=jMin,jMax

@@ -67,6 +67,7 @@
  mp_spp_death = 1.15E-7,
  mp_wave_mort_factor = 1.0,
  mp_spp_katten = 1.0E-4,
+ mp_spp_carbon = 0.3,
  /
  &DARWIN_RANDOM_PARAMS
  smallgrow=0.66098,
