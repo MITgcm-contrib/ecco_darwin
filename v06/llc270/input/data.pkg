@@ -12,4 +12,5 @@
  usePTRACERS   = .TRUE.,
  useGCHEM      = .TRUE.,
  useRADTRANS   = .TRUE.,
+ useOASIM      = .TRUE.,
  /

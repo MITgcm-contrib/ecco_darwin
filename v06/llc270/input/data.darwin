@@ -16,17 +16,20 @@
  DOCrunoffstartdate1 = 19920101,
  DOCrunoffstartdate2 = 120000,
  DOCrunoffperiod     = 86400.0,
+ darwin_inscal_DOCrunoff = 1,
 #
  DONrunofffile = 'DON_LLC_270',
  DONrunoffstartdate1 = 19920101,
  DONrunoffstartdate2 = 120000,
  DONrunoffperiod     = 86400.0,
+ darwin_inscal_DONrunoff = 1,
 #
  DOPrunofffile = 'DOP_LLC_270',
  DOPrunoffstartdate1 = 19920101,
  DOPrunoffstartdate2 = 120000,
  DOPrunoffperiod     = 86400.0,
  R_DOFe_DOP_runoff   = 3E-4,
+ darwin_inscal_DOPrunoff = 1,
 #
  DINrunofffile = 'DIN_LLC_270',
  DINrunoffstartdate1 = 19920101,
@@ -35,6 +38,7 @@
  R_NO3_DIN_runoff    = 0.6531,
  R_NO2_DIN_runoff    = 0.0158,
  R_NH4_DIN_runoff    = 0.3311,
+ darwin_inscal_DINrunoff = 1,
 #
  IPrunofffile = 'DIP_LLC_270',
  IPrunoffstartdate1 = 19920101,
@@ -42,33 +46,39 @@
  IPrunoffperiod     = 86400.0,
  R_DFe_DIP_runoff   = 3E-4,
  R_DIP_IP_runoff    = 0.25,
+ darwin_inscal_IPrunoff = 1,
 #
  DSirunofffile = 'DSi_LLC_270',
  DSirunoffstartdate1 = 19920101,
  DSirunoffstartdate2 = 120000,
  DSirunoffperiod     = 86400.0,
+ darwin_inscal_DSirunoff = 1,
 #
  POCrunofffile = 'POC_LLC_270',
  POCrunoffstartdate1 = 19920101,
  POCrunoffstartdate2 = 120000,
  POCrunoffperiod     = 86400.0,
+ darwin_inscal_POCrunoff = 1,
 #
  POPrunofffile = 'PP_LLC_270',
  POPrunoffstartdate1 = 19920101,
  POPrunoffstartdate2 = 120000,
  POPrunoffperiod     = 86400.0,
  R_POFe_POP_runoff   = 3E-4,
+ darwin_inscal_POPrunoff = 1,
 #
  PONrunofffile = 'PN_LLC_270',
  PONrunoffstartdate1 = 19920101,
  PONrunoffstartdate2 = 120000,
  PONrunoffperiod     = 86400.0,
+ darwin_inscal_PONrunoff = 1,
 #
  DICrunofffile = 'DIC_LLC_270',
  DICrunoffstartdate1 = 19920101,
  DICrunoffstartdate2 = 120000,
  DICrunoffperiod     = 86400.0,
  R_ALK_DIC_runoff    = 0.9886,
+ darwin_inscal_DICrunoff = 1,
 #
  darwin_useEXFwind = .TRUE.,
  darwin_useQsw = .TRUE.,
@@ -111,8 +121,10 @@
  pCO2_nlat    = 256,
  /
  &DARWIN_PARAMS
- selectPHsolver=1,
- selectK1K2const=5,
+ darwin_chlIter0=2
+ darwin_pickupSuff= ' ',
+# selectPHsolver=1,
+# selectK1K2const=5,
  darwin_chlInitBalanced= T,
  diaz_ini_fac= 0.1,
  darwin_seed= 56,
@@ -121,19 +133,31 @@
  alpfe= 1.0,
  freefemax = .1E-3,
  depthfesed= 7000.,
- kdoc=  3.8580246913580247E-7,  ! 1/30day
- kdop=  3.8580246913580247E-7,  ! 1/30day
- kdon=  3.8580246913580247E-7,  ! 1/30day
- kdofe= 3.8580246913580247E-7,  ! 1/30day
- kPOC=  3.8580246913580247E-7,  ! 1/30day
+ scav_tau= 1.0,
+ ligand_tot= 1e-3,
+ scav_POC_wgt=0.06,
+ scav_PSi_wgt = 0.,
+ scav_PIC_wgt = 0.,
+ kdoc=  2.314814814814815E-7,   ! 1/50day
+ kdop=  2.314814814814815E-7,   ! 1/50day
+ kdon=  2.314814814814815E-7,   ! 1/50day
+ kdofe= 2.314814814814815E-7,   ! 1/50day
+ kPOC=  2.314814814814815E-7,   ! 1/50day
  kPOP=  3.8580246913580247E-7,  ! 1/30day
  kPON=  3.8580246913580247E-7,  ! 1/30day
  kPOFe= 3.8580246913580247E-7,  ! 1/30day
- kPOSi= 1.5432e-07,             ! 1/75day
+ kPOSi= 7.716049382716049E-8,   ! 1/150day
  phygrazmin= 120E-10,
  hollexp = 1.E0,
+ wC_sink=0.00011574074074074075,
+ wN_sink=0.00011574074074074075,
+ wP_sink=0.00011574074074074075,
+ wFe_sink=0.00011574074074074075,
+ wSi_sink=0.00011574074074074075,
+ wPIC_sink=0.00017361111111111111,
  SURFDICMIN  =   100.0,
  SURFALKMIN  =   100.0,
+ darwin_disscSelect = 2,
  /
 ########################
  &DARWIN_CDOM_PARAMS
@@ -141,10 +165,10 @@
   cdomdegrd= 3.8580e-08,
   CDOMbleach = 1.9329e-06,
   PARCDOM = 60.,
-  R_NP_CDOM  = 16.,
-  R_FeP_CDOM = 1.e-3,
-  R_CP_CDOM  = 120.,
-  CDOMcoeff = 21.,
+#  R_NP_CDOM  = 16.,
+#  R_FeP_CDOM = 1.e-3,
+#  R_CP_CDOM  = 120.,
+   CDOMcoeff = 0.1750000,
  /
  &DARWIN_RADTRANS_PARAMS
  darwin_waterabsorbFile='OPTICS_COEFF2/optics_water.txt',
@@ -200,7 +224,7 @@
 
  a_Xmin(:)= 6*120E-20,
 
- a_phytoTempAe=0.0756, 0.0637, 0.0351, 0.0756, 0.0445, 0.0513,
+ a_phytoTempAe=0.0758, 0.0635, 0.0353, 0.0575, 0.0438, 0.0512,
 
  a_mQyield(:)= 6*4E-5,
  a_chl2cmax(:)=  4*.2, .3, .2,
@@ -210,13 +234,12 @@
  logvol0ind(:)= 2, 3, 4, 4, 4,5, 5,
  a_biosink(:)= 6*6.951416635391563E-7, 0.,  ! .05*dm**.85
  b_biosink(:)= 6*.2833333333333333, 0.,
- a_PCmax(1)= 1.1063,
- a_PCmax(2)= 1.2066,
- a_PCmax(3)= 1.9454,
- a_PCmax(4)= 0.8083,
- a_PCmax(5)= 2.5383,
- a_PCmax(6)= 1.3355,
-
+ a_PCmax(1)= 1.1098,
+ a_PCmax(2)= 1.2104,
+ a_PCmax(3)= 1.9558,
+ a_PCmax(4)= 0.5954,
+ a_PCmax(5)= 2.4967,
+ a_PCmax(6)= 1.3363,
 
  a_PCmax_denom(:)= 6*86400.,
  b_PCmax(:)=  0.28, 0.28, -0.10, -0.10, -0.10,-0.10, 0.,
