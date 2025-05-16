@@ -128,13 +128,13 @@ C turn on debugging output
 #undef DARWIN_DEBUG
 
 C compute and print global element totals
-#undef DARWIN_ALLOW_CONS
+#define DARWIN_ALLOW_CONS
 
 C value for unused traits
 #define DARWIN_UNUSED 0
 
 C fill diagnostics for most tendency terms
-#undef DARWIN_DIAG_TENDENCIES
+#define DARWIN_DIAG_TENDENCIES
 
 
 C deprecated
@@ -157,7 +157,7 @@ C set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
 C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
-#define DARWIN_ALLOW_RADI
+#define DARWIN_ALLOW_RADIv2
 
 #define DARWIN_NUTRIENT_RUNOFF
 
@@ -166,6 +166,8 @@ C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #define DARWIN_TOTALPHSCALE
 
 #define DARWIN_ALLOW_HYDROTHERMAL_VENTS
+
+#define DARWIN_CDOM_UNITS_CARBON
 
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */
