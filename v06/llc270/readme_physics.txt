@@ -15,7 +15,7 @@ cd build
 
 module purge
 module load comp-intel mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
-../tools/genmake2 -of ../../ecco_darwin/v06/llc270/code/linux_amd64_ifort+mpi_ice_nas \
+../tools/genmake2 -of ../../ecco_darwin/v06/llc270/code_physics/linux_amd64_ifort+mpi_ice_nas \
   -mo ../../ecco_darwin/v06/llc270/code_physics
 make depend
 make -j 16
