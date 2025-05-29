@@ -603,7 +603,7 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
      
-      WRITE(diagName,'(A)')'UptkNO3 '
+      WRITE(diagName,'(A)')'UptkN   '
       WRITE(diagTitle,'(A)')'Uptake of NO3 by macroalgae'
       diagUnits = 'mmol/m3/s    '
       diagCode  = 'SMR     MR      '
@@ -637,6 +637,27 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SMR     MR      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )   
+     
+      WRITE(diagName,'(A)')'grth_mag'
+      WRITE(diagTitle,'(A)')'growth by macroalgae'
+      diagUnits = 'mmolC/m3/s    '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )  
+     
+      WRITE(diagName,'(A)')'lgth_mag'
+      WRITE(diagTitle,'(A)')'macroalgae local length'
+      diagUnits = 'm             '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     
+      WRITE(diagName,'(A)')'tot_lgth'
+      WRITE(diagTitle,'(A)')'macroalgae total length'
+      diagUnits = 'm             '
+      diagCode  = 'SM      L1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
      
 #endif /* DARWIN_ALLOW_MACROALGAE */
 

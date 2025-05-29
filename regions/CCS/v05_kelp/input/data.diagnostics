@@ -266,15 +266,50 @@
   frequency(72) = 2635200.,
   fields(1,72) = 'mort_mag  ',
   filename(72) = 'diags/monthly_kelp/mort_mag',
-# Wave Period
+# Kelp uptake of N 
   frequency(73) = 2635200.,
-  fields(1,73) = 'EXFwvpd  ',
-  filename(73) = 'diags/monthly_kelp/wv_prd',
-# Wave Height
+  fields(1,73) = 'UptkN   ',
+  filename(73) = 'diags/monthly_kelp/uptakeNO3',
+# Wave Period
   frequency(74) = 2635200.,
-  fields(1,74) = 'EXFwvht ',
-  filename(74) = 'diags/monthly_kelp/wv_hght',
-#
+  fields(1,74) = 'EXFwvpd  ',
+  filename(74) = 'diags/monthly_kelp/wv_prd',
+# Wave Height
+  frequency(75) = 2635200.,
+  fields(1,75) = 'EXFwvht ',
+  filename(75) = 'diags/monthly_kelp/wv_hght',
+# Attenuation by chl
+  frequency(76) = 2635200.,
+  fields(1,76) = 'attenchl',
+  filename(76) = 'diags/monthly_kelp/attenchl',
+# Attenuation by kelp
+  frequency(77) = 2635200.,
+  fields(1,77) = 'attenklp',
+  filename(77) = 'diags/monthly_kelp/attenklp',
+# total attenuation
+  frequency(78) = 2635200.,
+  fields(1,78) = 'atten   ',
+  filename(78) = 'diags/monthly_kelp/atten',
+# exudation by macroalgae
+  frequency(79) = 2635200.,
+  fields(1,79) = 'exud_mag',
+  filename(79) = 'diags/monthly_kelp/exudation',
+# mortality  by macroalgae
+  frequency(80) = 2635200.,
+  fields(1,80) = 'mort_mag',
+  filename(80) = 'diags/monthly_kelp/mortality',
+# kelp length
+  frequency(81) = 2635200.,
+  fields(1,81) = 'lgth_mag',
+  filename(81) = 'diags/monthly_kelp/length',
+# kelp growth
+  frequency(82) = 2635200.,
+  fields(1,82) = 'grth_mag',
+  filename(82) = 'diags/monthly_kelp/growth',
+# kelp total length
+  frequency(83) = 2635200.,
+  fields(1,83) = 'tot_lgth',
+  filename(83) = 'diags/monthly_kelp/totlength',
  /
 
 # Parameter for Diagnostics of per level statistics:

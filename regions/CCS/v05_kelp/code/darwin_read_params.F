@@ -165,27 +165,33 @@ C     &    yono2,
 #ifdef DARWIN_ALLOW_MACROALGAE
       NAMELIST/DARWIN_MACROALGAE_PARAMS/
 C physiological parameters
-     &    mp_spp_Vmax,       
-     &    mp_spp_Ks_NO3,       
-     &    mp_spp_kcap,         
+     &    mp_spp_Vmax_NO3,       
+     &    mp_spp_Ks_NO3,  
+     &    mp_spp_Vmax_NH4,       
+     &    mp_spp_Ks_NH4,   
+     &    mp_spp_Vmax_Urea,       
+     &    mp_spp_Ks_Urea,        
      &    mp_spp_Gmax_cap,     
      &    mp_spp_PARs,      
      &    mp_spp_PARc,     
      &    mp_spp_Qmin,          
      &    mp_spp_Qmax,          
-     &    mp_spp_kcap_rate,    
      &    mp_spp_Topt1,         
      &    mp_spp_K1,            
      &    mp_spp_Topt2,         
      &    mp_spp_K2,             
      &    mp_spp_CD,             
-     &    mp_spp_dry_sa,        
-     &    mp_spp_dry_wet,     
      &    mp_spp_E,           
      &    mp_spp_death,
      &    mp_wave_mort_factor,
      &    mp_spp_katten,
-     &    mp_spp_carbon
+     &    mp_spp_carbon,
+     &    mp_spp_vertical,
+     &    mp_spp_length_subsurface,  
+     &    mp_spp_length_canopy,      
+     &    mp_spp_length_watercolumn, 
+     &    mp_spp_maxlength,
+     &    mp_spp_allN 
 #endif
 
 #ifdef DARWIN_ALLOW_CDOM
@@ -461,27 +467,33 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 #ifdef DARWIN_ALLOW_MACROALGAE
 C physiology for macrolagae model
-       mp_spp_Vmax = 2.06 _d -4
-       mp_spp_Ks_NO3 = 10.13 _d 0
-       mp_spp_kcap = 2000. _d 0
+       mp_spp_Vmax_NO3 = 2.09 _d -4
+       mp_spp_Ks_NO3 = 10.20 _d 0
+       mp_spp_Vmax_NH4 = 2.05 _d -4
+       mp_spp_Ks_NH4 = 5.31 _d 0
+       mp_spp_Vmax_Urea = 3.33 _d -6
+       mp_spp_Ks_Urea = 7.75 _d 0
        mp_spp_Gmax_cap = 2.31 _d -6
        mp_spp_PARs = 213.7942 _d 0
        mp_spp_PARc = 20.5841 _d 0
        mp_spp_Qmin = 10.18 _d 0
        mp_spp_Qmax = 54.0 _d 0
-       mp_spp_kcap_rate = 5.78 _d -7
        mp_spp_Topt1 = 13.0 _d 0
        mp_spp_K1 = 0.04 _d 0
        mp_spp_Topt2 = 18.0 _d 0
        mp_spp_K2 = 0.05 _d 0
        mp_spp_CD = 0.5 _d 0
-       mp_spp_dry_sa = 58.0 _d 0
-       mp_spp_dry_wet = 0.094 _d 0
        mp_spp_E = 2.31 _d -8
        mp_spp_death = 1.15 _d -7
        mp_wave_mort_factor = 1.0 _d 0
        mp_spp_katten = 1.0 _d -4
        mp_spp_carbon = 0.3 _d 0
+       mp_spp_vertical = .FALSE.
+       mp_spp_length_subsurface = 109.98 _d 0
+       mp_spp_length_canopy = 243.46 _d 0
+       mp_spp_length_watercolumn = 98.7 _d 0
+       mp_spp_maxlength = 30.0 _d 0
+       mp_spp_allN = .TRUE.
        
        READ(UNIT=iUnit, NML=DARWIN_MACROALGAE_PARAMS)
 #endif

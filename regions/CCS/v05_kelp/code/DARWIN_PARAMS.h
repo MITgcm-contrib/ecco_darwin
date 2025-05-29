@@ -510,70 +510,90 @@ C     CDOMcoeff  :: [m2 / mmol P]       P-specific absorption coefficient of CDO
               
 #ifdef DARWIN_ALLOW_MACROALGAE
 C--   COMMON /DARWIN_MACROALGAE_PARAMS_r/
-C     mp_spp_Vmax         :: [mmol N/m2/s]    Maximum uptake rate of nitrate
-C     mp_spp_Ks_NO3       :: [mmol N/m3]      Half saturation constant of nitrate
-C     mp_spp_kcap         :: [g(dry)/m2]      Biomass density at which seaweed grows by kcap_rate
-C     mp_spp_Gmax_cap     :: [1/s]            Maximum growth rate
-C     mp_spp_PARs         :: [microE/m2/s]    Light-limited saturating irradiance
-C     mp_spp_PARc         :: [microE/m2/s]    Light-limited compensating irradiance
-C     mp_spp_Qmin         :: [mg N/g(dry)]    Minimum internal nitrogen
-C     mp_spp_Qmax         :: [mg N/g(dry)]    Maximum internal nitrogen
-C     mp_spp_kcap_rate    :: [1/s]            Growth rate at biomass density mp_spp_kcap
-C     mp_spp_Topt1        :: [deg C]          Temperature-limited constant
-C     mp_spp_K1           :: []               Temperature function slope 1
-C     mp_spp_Topt2        :: [deg C]          Temperature-limited constant
-C     mp_spp_K2           :: []               Temperature function slope 2
-C     mp_spp_CD           :: []               Drag Coefficient
-C     mp_spp_dry_sa       :: [g(dry)/m2]      Ratio of biomass to surface area
-C     mp_spp_dry_wet      :: [g(dry)/g(wet)]  Dry weight of biomass from wet biomass
-C     mp_spp_E            :: [1/s]            Exudation rate
-C     mp_spp_death        :: [1/s]            Mortality rate
-C     mp_wave_mort_factor :: []               Scaling factor for the wave mortality relationship
-C     mp_spp_katten       :: [m2/mg N]        Light attenuation due to macroalgae
-C     mp_spp_carbon       :: [gC/gDW]         Carbon content in dry weight
+C     mp_spp_Vmax_NO3           :: [mmol N/m2/s]    Maximum uptake rate of nitrate
+C     mp_spp_Ks_NO3             :: [mmol N/m3]      Half saturation constant of nitrate
+C     mp_spp_Vmax_NH4           :: [mmol N/m2/s]    Maximum uptake rate of ammonium
+C     mp_spp_Ks_NH4             :: [mmol N/m3]      Half saturation constant of ammonium
+C     mp_spp_Vmax_Urea          :: [mmol N/m2/s]    Maximum uptake rate of urea
+C     mp_spp_Ks_Urea            :: [mmol N/m3]      Half saturation constant of urea                           
+C     mp_spp_Gmax_cap           :: [1/s]            Maximum growth rate
+C     mp_spp_PARs               :: [microE/m2/s]    Light-limited saturating irradiance
+C     mp_spp_PARc               :: [microE/m2/s]    Light-limited compensating irradiance
+C     mp_spp_Qmin               :: [mg N/g(dry)]    Minimum internal nitrogen
+C     mp_spp_Qmax               :: [mg N/g(dry)]    Maximum internal nitrogen
+C     mp_spp_Topt1              :: [deg C]          Temperature-limited constant
+C     mp_spp_K1                 :: []               Temperature function slope 1
+C     mp_spp_Topt2              :: [deg C]          Temperature-limited constant
+C     mp_spp_K2                 :: []               Temperature function slope 2
+C     mp_spp_CD                 :: []               Drag Coefficient
+C     mp_spp_E                  :: [1/s]            Exudation rate
+C     mp_spp_death              :: [1/s]            Mortality rate
+C     mp_wave_mort_factor       :: []               Scaling factor for the wave mortality relationship
+C     mp_spp_katten             :: [m2/mg N]        Light attenuation due to macroalgae
+C     mp_spp_carbon             :: [gC/gDW]         Carbon content in dry weight
+C     mp_spp_length_subsurface  :: [mg N/m]    Nitrogen content per length
+C     mp_spp_length_canopy      :: [mg N/m]    Nitrogen content per length
+C     mp_spp_length_watercolumn :: [mg N/m]    Nitrogen content per length
+C     mp_spp_maxlength          :: [m]    Nitrogen content per length   
       COMMON /DARWIN_MACROALGAE_PARAMS_r/
-     &    mp_spp_Vmax,       
-     &    mp_spp_Ks_NO3,       
-     &    mp_spp_kcap,         
+     &    mp_spp_Vmax_NO3,       
+     &    mp_spp_Ks_NO3, 
+     &    mp_spp_Vmax_NH4,       
+     &    mp_spp_Ks_NH4, 
+     &    mp_spp_Vmax_Urea,       
+     &    mp_spp_Ks_Urea,       
      &    mp_spp_Gmax_cap,     
      &    mp_spp_PARs,      
      &    mp_spp_PARc,     
      &    mp_spp_Qmin,          
      &    mp_spp_Qmax,          
-     &    mp_spp_kcap_rate,    
      &    mp_spp_Topt1,         
      &    mp_spp_K1,            
      &    mp_spp_Topt2,         
      &    mp_spp_K2,             
-     &    mp_spp_CD,             
-     &    mp_spp_dry_sa,        
-     &    mp_spp_dry_wet,     
+     &    mp_spp_CD,              
      &    mp_spp_E,           
      &    mp_spp_death,
      &    mp_wave_mort_factor,
      &    mp_spp_katten,
-     &    mp_spp_carbon
-      _RL mp_spp_Vmax       
-      _RL mp_spp_Ks_NO3       
-      _RL mp_spp_kcap         
+     &    mp_spp_carbon,
+     &    mp_spp_length_subsurface,  
+     &    mp_spp_length_canopy,      
+     &    mp_spp_length_watercolumn, 
+     &    mp_spp_maxlength
+      _RL mp_spp_Vmax_NO3       
+      _RL mp_spp_Ks_NO3 
+      _RL mp_spp_Vmax_NH4       
+      _RL mp_spp_Ks_NH4
+      _RL mp_spp_Vmax_Urea       
+      _RL mp_spp_Ks_Urea              
       _RL mp_spp_Gmax_cap     
       _RL mp_spp_PARs      
       _RL mp_spp_PARc     
       _RL mp_spp_Qmin          
       _RL mp_spp_Qmax          
-      _RL mp_spp_kcap_rate    
       _RL mp_spp_Topt1         
       _RL mp_spp_K1            
       _RL mp_spp_Topt2         
       _RL mp_spp_K2             
       _RL mp_spp_CD             
-      _RL mp_spp_dry_sa        
-      _RL mp_spp_dry_wet     
       _RL mp_spp_E           
       _RL mp_spp_death
       _RL mp_wave_mort_factor  
       _RL mp_spp_katten
-      _RL mp_spp_carbon  
+      _RL mp_spp_carbon
+      _RL mp_spp_length_subsurface  
+      _RL mp_spp_length_canopy    
+      _RL mp_spp_length_watercolumn 
+      _RL mp_spp_maxlength 
+C--   COMMON /DARWIN_MACROALGAE_PARAMS_l/
+C     mp_spp_vertical     :: []               Activate vertical growth of macroalgae over depth 
+C     mp_spp_allN         :: []               Use of nitrogen species for uptake         
+      COMMON /DARWIN_MACROALGAE_PARAMS_l/
+     &    mp_spp_vertical,
+     &    mp_spp_allN 
+      LOGICAL mp_spp_vertical
+      LOGICAL mp_spp_allN        
 #endif
 
 C--   COMMON /DARWIN_DEPENDENT_PARAMS_i/

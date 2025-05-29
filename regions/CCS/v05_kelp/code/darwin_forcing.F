@@ -127,31 +127,37 @@ C  k                    :: vertical level
       _RL disscDIC_PIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL cALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sALK(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-	  _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL cO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL sO2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 
 C macroalgae model variables
-
       _RL hor_vel
-      _RL day_yr
-      _RL ma_areat, ma_nrest, ma_crest
-  
+      _RL day_yr  
       _RL grate_madum,mort_madum
       _RL gTdum, gHdum, gQdum, gEdum
-      _RL Bmag_tmp
-      _RL UptakeNout, dEout, mortout
-      
+      _RL UptakeNout, dEout, mortout, growthout
+      _RL excess_growth
+      _RL excess_mort
+      _RL total_length
+      _RL length
+      _RL prev_qmag
+      _RL prev_length
+      _RL biomass_up
+      _RL biomass_down
+      INTEGER k_bottom      
       _RL grate_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! kelp growth rate
-      _RL mortrate_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! mortality rate
-      
+      _RL mortrate_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)  ! mortality rate      
 C terms controlling growth of Kelp      
       _RL gT_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gT, temperature
       _RL gQ_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gQ, nitrogen quota
       _RL gH_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gH, wave motion 
       _RL gE_ma(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)   ! gE, irradiance
-      _RL UptakeNO3(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL UptakeN(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL exudation_mag(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL mortality_mag(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL growth_mag(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL maglength(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL totlength(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
       INTEGER curr_date(4), first_day(4), numdays(4)
 	  
@@ -185,6 +191,19 @@ C === reset tendencies =================================================
       ENDDO
       ENDDO
       ENDDO
+
+#ifdef DARWIN_ALLOW_MACROALGAE   
+C initialize total macroalgae length  
+C mag_tot_length(i,j,bi,bj) is iterative through k so do not include 
+C total length until the end of k loop  
+      DO j=jMin,jMax
+      DO i=iMin,iMax
+      total_length = mag_tot_length(i,j,bi,bj)       
+      mag_tot_length(i,j,bi,bj) = 0.0 _d 0 
+      ENDDO
+      ENDDO
+#endif
+      
 C === light ============================================================
 C     Initialize Chl from balanced-growth Chl:C if requested
 C     and check Chl:C bounds.
@@ -367,34 +386,125 @@ C === plankton =========================================================
 #ifdef DARWIN_ALLOW_MACROALGAE
 C === macrolagae =========================================================
       CALL TIMER_START('DARWIN_MACROALGAE [DARWIN_FORCING]',myThid)
-C macroalgae code
-C compute horizontal velocity
+C macroalgae code                     
+        k_bottom = kLowC(i,j,bi,bj)
+C       #################Remove after tests ################################## 
+        k_bottom = 3 
+C        ######################################################################
+C compute horizontal velocity  
         hor_vel=sqrt(
      &  (0.5*(uvel(i,j,k,bi,bj)+uvel(i+1,j,k,bi,bj)))**2 +
-     &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)             
-       
+     &  (0.5*(vvel(i,j,k,bi,bj)+vvel(i,j+1,k,bi,bj)))**2)  
+C Vertical transfer of growth and mortality from previous timestep     
+        excess_growth = growth_transfer(i,j,k,bi,bj)
+        excess_mort = mort_transfer(i,j,k,bi,bj)
+C Reset transfer vector        
+        growth_transfer(i,j,k,bi,bj) = 0.0 _d 0
+        mort_transfer(i,j,k,bi,bj) = 0.0 _d 0
+C Set quota to value of quota from the bellow grid cell if transfer
+        IF(Qmag_transfer(i,j,k,bi,bj).GT.0.0)THEN
+         Ptracer(i, j, k, bi, bj, iMagQ) = Qmag_transfer(i,j,k,bi,bj)       
+         ptr(iMagQ) = Qmag_transfer(i,j,k,bi,bj)
+         Qmag_transfer(i,j,k,bi,bj) = 0.0 _d 0
+        ENDIF
+C Check if there is biomass in the grid cell above        
+        biomass_up = 0.0
+        IF(k.GT.1)THEN
+          biomass_up = Ptracer(i, j, k-1, bi, bj, iMagB)
+        ENDIF
+C Save biomass from the lowest grid cell        
+        biomass_down = Ptracer(i, j, k_bottom, bi, bj, iMagB)
+C Compute frond length (if length above max grid cell thickness then keep it at grid cell thickness)
+C Save length from previous time step        
+        prev_length = mag_length(i,j,k,bi,bj)
+        IF(k.EQ.k_bottom)THEN  
+C ----- Subsurface ------
+          IF(mag_length(i,j,k-1,bi,bj).GT.0.0)THEN
+            mag_length(i,j,k,bi,bj) = drF(k)*hFacC(i,j,k,bi,bj)
+          ELSE
+            mag_length(i,j,k,bi,bj) = min(
+     &       (ptr(iMagB)*
+     &       ptr(iMagQ))*
+     &       (1.0/mp_spp_length_subsurface),
+     &       drF(k)*hFacC(i,j,k,bi,bj))
+          ENDIF       
+        ELSEIF(k.GT.1.AND.k.LT.k_bottom)THEN
+C ----- Water column ------
+          IF(mag_length(i,j,k-1,bi,bj).GT.0.0)THEN
+            mag_length(i,j,k,bi,bj) = drF(k)*hFacC(i,j,k,bi,bj)
+          ELSE
+            mag_length(i,j,k,bi,bj) = min(
+     &       (ptr(iMagB)*
+     &       ptr(iMagQ))*
+     &       (1.0/mp_spp_length_watercolumn),
+     &       drF(k)*hFacC(i,j,k,bi,bj))
+          ENDIF           
+        ELSEIF(k.EQ.1)THEN
+C ----- Canopy ------
+C Allows for the frond to grow longer than the thickness of the grid cell 
+C for mimicking horizontal growth of canopy at the surface
+          mag_length(i,j,k,bi,bj) = (ptr(iMagB)*ptr(iMagQ))*
+     &     (1.0/mp_spp_length_canopy)
+        ELSE
+         mag_length(i,j,k,bi,bj) = 0.0 _d 0        
+        ENDIF
+C Compute total length (here is cumulative so it reaches total frond length only at kmax/kbottom)           
+        mag_tot_length(i,j,bi,bj) = mag_tot_length(i,j,bi,bj) +
+     &   mag_length(i,j,k,bi,bj)  
+C Reset quota to zero if biomass is exhausted 
+        IF(prev_length.GT.0.0.AND.mag_length(i,j,k,bi,bj).EQ.0.0)THEN
+          Ptracer(i, j, k, bi, bj, iMagQ) = 0.0       
+          ptr(iMagQ) = 0.0
+        ENDIF
+                                      
         CALL DARWIN_MACROALGAE(
-     I   theta(i,j,k,bi,bj),hor_vel,parl,ptr,
-     I   WvHeight(i,j,bi,bj), 
-     I   WvPeriod(i,j,bi,bj),deltaTclock,
-     I   drF(k),hFacC(i,j,k,bi,bj),
+     I   k,k_bottom,deltaTclock,
+     I   drF(k),hFacC(i,j,k,bi,bj),  
+     I   theta(i,j,k,bi,bj),hor_vel,parl,
+     I   WvHeight(i,j,bi,bj),WvPeriod(i,j,bi,bj),
+     I   ptr,
+     I   mag_tot_length(i,j,bi,bj),
+     I   mag_length(i,j,k,bi,bj),
+     I   total_length,
+     I   biomass_up,biomass_down,
      U   gtr,
-     O   gTdum, gQdum, gHdum, gEdum, grate_madum,
+     U   excess_growth,excess_mort,
+     O   prev_qmag,
+     O   gTdum, gQdum, gEdum, grate_madum,
      O   mort_madum,UptakeNout,
-     O   mortout, dEout)
+     O   mortout, dEout, growthout)
+                  
+C Transfer vertical and horizontal growth of macroalgae if carrying capacity reached [gDW/m3/s]       
+        IF (mp_spp_vertical) THEN                                    
+C Vertical transfer for next timestep
+          IF (k.GT.1) THEN   
+            growth_transfer(i,j,k-1,bi,bj) =  
+     &       growth_transfer(i,j,k-1,bi,bj) + excess_growth
+            mort_transfer(i,j,k-1,bi,bj) =  
+     &       mort_transfer(i,j,k-1,bi,bj) + excess_mort           
+           IF(prev_qmag.GT.0.0)THEN
+             Qmag_transfer(i,j,k-1,bi,bj) = prev_qmag
+           ELSE
+             Qmag_transfer(i,j,k-1,bi,bj) = 0.0
+           ENDIF                 
+          ENDIF          
+        ENDIF   
+          
 C       growth and mortality rates [s-1] and limitation terms [0-1]
         grate_ma(i,j,k) = grate_madum
         gT_ma(i,j,k) = gTdum
         gQ_ma(i,j,k) = gQdum 
         gE_ma(i,j,k) = gEdum
-        gH_ma(i,j,k) = gHdum
         mortrate_ma(i,j,k) = mort_madum
+        maglength(i,j,k) = mag_length(i,j,k,bi,bj)
 C       loss/gain terms from macroalgae
 C       uptakeNO3 and exudation in [mmolN/m3/s]
 C       mortality in [mmolC/m3/s]
-        UptakeNO3(i,j,k) = UptakeNout
+        UptakeN(i,j,k) = UptakeNout
         exudation_mag(i,j,k) = dEout 
         mortality_mag(i,j,k) = mortout
+        growth_mag(i,j,k) = growthout
+        
 C end macroalgae code
       CALL TIMER_STOP('DARWIN_MACROALGAE [DARWIN_FORCING]',myThid)
 #endif
@@ -442,7 +552,7 @@ C === apply tendencies to tracers ======================================
       DO j=jMin,jMax
       DO i=iMin,iMax
         pTracer(i,j,k,bi,bj,iTr)=pTracer(i,j,k,bi,bj,iTr)
-     &                      +dTsub(k)*gPtr(i,j,k,iTr)*maskInC(i,j,bi,bj)
+     &                      +dTsub(k)*gPtr(i,j,k,iTr)*maskInC(i,j,bi,bj)  
       ENDDO
       ENDDO
       ENDDO
@@ -629,14 +739,24 @@ C macroalgae diagnostics
       CALL DIAGNOSTICS_FILL(mortrate_ma(1-OLx,1-OLy,1),
      &  'mrtrte_m',0,Nr,1,bi,bj,myThid)
      
-      CALL DIAGNOSTICS_FILL(UptakeNO3(1-OLx,1-OLy,1),
-     &  'UptkNO3 ',0,Nr,1,bi,bj,myThid)   
+      CALL DIAGNOSTICS_FILL(UptakeN(1-OLx,1-OLy,1),
+     &  'UptkN   ',0,Nr,1,bi,bj,myThid)   
      
       CALL DIAGNOSTICS_FILL(exudation_mag(1-OLx,1-OLy,1),
      &  'exud_mag',0,Nr,1,bi,bj,myThid)  
      
       CALL DIAGNOSTICS_FILL(mortality_mag(1-OLx,1-OLy,1),
      &  'mort_mag',0,Nr,1,bi,bj,myThid)  
+     
+      CALL DIAGNOSTICS_FILL(growth_mag(1-OLx,1-OLy,1),
+     &  'grth_mag',0,Nr,1,bi,bj,myThid)  
+     
+      CALL DIAGNOSTICS_FILL(maglength(1-OLx,1-OLy,1),
+     &  'lgth_mag',0,Nr,1,bi,bj,myThid) 
+     
+      CALL DIAGNOSTICS_FILL(mag_tot_length,
+     &  'tot_lgth',0,1,2,bi,bj,myThid)
+     
 #endif
 
       DO iTr=1,nDarwin

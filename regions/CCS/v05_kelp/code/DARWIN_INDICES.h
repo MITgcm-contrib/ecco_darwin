@@ -36,12 +36,7 @@ C these cannot be modified for now
       INTEGER efe
       INTEGER esi
       INTEGER eChl
-      INTEGER nDarwin
-C      INTEGER maNum
-C      INTEGER maFra
-      INTEGER iMagB
-      INTEGER iMagC
-      INTEGER iMagQ              
+      INTEGER nDarwin       
       PARAMETER (iDIC   =1)
       PARAMETER (iNO3   =iDIC+1)
       PARAMETER (iNO2   =iNO3 +1)
@@ -113,10 +108,15 @@ C      INTEGER maFra
       PARAMETER (eChl   =efe)
 #endif
 #ifdef DARWIN_ALLOW_MACROALGAE
+      INTEGER iMagB
+      INTEGER iMagC
+      INTEGER iMagQ                                          
       PARAMETER(iMagB=eChl+1)
       PARAMETER(iMagC=iMagB+1)
       PARAMETER(iMagQ=iMagC+1)
-      PARAMETER (nDarwin=iMagQ)
+      PARAMETER (nDarwin=iMagQ)        
+#else
+      PARAMETER (nDarwin=eChl)
 #endif
 
 CEOP

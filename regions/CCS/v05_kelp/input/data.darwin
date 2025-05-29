@@ -47,27 +47,33 @@
  SURFALKMIN  =   100.0,
  /
  &DARWIN_MACROALGAE_PARAMS
- mp_spp_Vmax = 2.06E-4,
- mp_spp_Ks_NO3 = 10.13,
- mp_spp_kcap = 2000.,
- mp_spp_Gmax_cap = 2.31E-6,
- mp_spp_PARs = 213.7942,
- mp_spp_PARc = 20.5841,
- mp_spp_Qmin = 10.18,
- mp_spp_Qmax = 54.0,
- mp_spp_kcap_rate = 5.78E-7,
- mp_spp_Topt1 = 13.0,
- mp_spp_K1 = 0.04,
- mp_spp_Topt2 = 18.0,
- mp_spp_K2 = 0.05,
- mp_spp_CD = 0.5,
- mp_spp_dry_sa = 58.0,
- mp_spp_dry_wet = 0.094,
- mp_spp_E = 2.31e-08,
- mp_spp_death = 1.15E-7,
- mp_wave_mort_factor = 1.0,
- mp_spp_katten = 1.0E-4,
- mp_spp_carbon = 0.3,
+ mp_spp_Vmax_NO3 = 2.09 _d -4
+ mp_spp_Ks_NO3 = 10.20 _d 0
+ mp_spp_Vmax_NH4 = 2.05 _d -4
+ mp_spp_Ks_NH4 = 5.31 _d 0
+ mp_spp_Vmax_Urea = 3.33 _d -6
+ mp_spp_Ks_Urea = 7.75 _d 0
+ mp_spp_Gmax_cap = 2.31 _d -6
+ mp_spp_PARs = 213.7942 _d 0
+ mp_spp_PARc = 20.5841 _d 0
+ mp_spp_Qmin = 10.18 _d 0
+ mp_spp_Qmax = 54.0 _d 0
+ mp_spp_Topt1 = 13.0 _d 0
+ mp_spp_K1 = 0.04 _d 0
+ mp_spp_Topt2 = 18.0 _d 0
+ mp_spp_K2 = 0.05 _d 0
+ mp_spp_CD = 0.5 _d 0
+ mp_spp_E = 2.31 _d -8
+ mp_spp_death = 1.15 _d -7
+ mp_wave_mort_factor = 1.0 _d 0
+ mp_spp_katten = 1.0 _d -4
+ mp_spp_carbon = 0.3 _d 0
+ mp_spp_vertical = .FALSE.
+ mp_spp_length_subsurface = 109.98 _d 0
+ mp_spp_length_canopy = 243.46 _d 0
+ mp_spp_length_watercolumn = 98.7 _d 0
+ mp_spp_maxlength = 30.0 _d 0
+ mp_spp_allN = .TRUE.
  /
  &DARWIN_RANDOM_PARAMS
  smallgrow=0.66098,
