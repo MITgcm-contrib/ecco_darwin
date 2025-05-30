@@ -25,12 +25,13 @@ C
      & growth_transfer,
      & mort_transfer,
      & Qmag_transfer,
-     & mag_length,mag_tot_length
+     & mag_length,mag_tot_length,mag_cum_length
       _RL growth_transfer(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy) 
       _RL mort_transfer(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)         
       _RL Qmag_transfer(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy) 
       _RL mag_length(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
       _RL mag_tot_length(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL mag_cum_length(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)        
 #endif
 
 #ifdef DARWIN_ALLOW_CONS

@@ -138,10 +138,9 @@ C macroalgae model variables
       _RL UptakeNout, dEout, mortout, growthout
       _RL excess_growth
       _RL excess_mort
-      _RL total_length
-      _RL length
       _RL prev_qmag
       _RL prev_length
+      _RL length_below
       _RL biomass_up
       _RL biomass_down
       INTEGER k_bottom      
@@ -157,7 +156,6 @@ C terms controlling growth of Kelp
       _RL mortality_mag(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL growth_mag(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL maglength(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL totlength(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
       INTEGER curr_date(4), first_day(4), numdays(4)
 	  
@@ -198,8 +196,8 @@ C mag_tot_length(i,j,bi,bj) is iterative through k so do not include
 C total length until the end of k loop  
       DO j=jMin,jMax
       DO i=iMin,iMax
-      total_length = mag_tot_length(i,j,bi,bj)       
-      mag_tot_length(i,j,bi,bj) = 0.0 _d 0 
+      mag_tot_length(i,j,bi,bj) = mag_cum_length(i,j,bi,bj)       
+      mag_cum_length(i,j,bi,bj) = 0.0 _d 0 
       ENDDO
       ENDDO
 #endif
@@ -443,13 +441,19 @@ C ----- Water column ------
 C ----- Canopy ------
 C Allows for the frond to grow longer than the thickness of the grid cell 
 C for mimicking horizontal growth of canopy at the surface
-          mag_length(i,j,k,bi,bj) = (ptr(iMagB)*ptr(iMagQ))*
-     &     (1.0/mp_spp_length_canopy)
+C but cannot exceed max length   
+           length_below = mag_tot_length(i,j,bi,bj) - 
+     &       mag_length(i,j,k,bi,bj)                 
+           mag_length(i,j,k,bi,bj) = min(
+     &       (ptr(iMagB)*
+     &       ptr(iMagQ))*
+     &       (1.0/mp_spp_length_canopy),
+     &       max(0.0,(mp_spp_maxlength - length_below)))            
         ELSE
          mag_length(i,j,k,bi,bj) = 0.0 _d 0        
         ENDIF
 C Compute total length (here is cumulative so it reaches total frond length only at kmax/kbottom)           
-        mag_tot_length(i,j,bi,bj) = mag_tot_length(i,j,bi,bj) +
+        mag_cum_length(i,j,bi,bj) = mag_cum_length(i,j,bi,bj) +
      &   mag_length(i,j,k,bi,bj)  
 C Reset quota to zero if biomass is exhausted 
         IF(prev_length.GT.0.0.AND.mag_length(i,j,k,bi,bj).EQ.0.0)THEN
@@ -463,9 +467,9 @@ C Reset quota to zero if biomass is exhausted
      I   theta(i,j,k,bi,bj),hor_vel,parl,
      I   WvHeight(i,j,bi,bj),WvPeriod(i,j,bi,bj),
      I   ptr,
-     I   mag_tot_length(i,j,bi,bj),
+     I   mag_cum_length(i,j,bi,bj),
      I   mag_length(i,j,k,bi,bj),
-     I   total_length,
+     I   mag_tot_length(i,j,bi,bj),
      I   biomass_up,biomass_down,
      U   gtr,
      U   excess_growth,excess_mort,
@@ -496,9 +500,8 @@ C       growth and mortality rates [s-1] and limitation terms [0-1]
         gQ_ma(i,j,k) = gQdum 
         gE_ma(i,j,k) = gEdum
         mortrate_ma(i,j,k) = mort_madum
-        maglength(i,j,k) = mag_length(i,j,k,bi,bj)
 C       loss/gain terms from macroalgae
-C       uptakeNO3 and exudation in [mmolN/m3/s]
+C       uptakeN and exudation in [mmolN/m3/s]
 C       mortality in [mmolC/m3/s]
         UptakeN(i,j,k) = UptakeNout
         exudation_mag(i,j,k) = dEout 
@@ -751,7 +754,7 @@ C macroalgae diagnostics
       CALL DIAGNOSTICS_FILL(growth_mag(1-OLx,1-OLy,1),
      &  'grth_mag',0,Nr,1,bi,bj,myThid)  
      
-      CALL DIAGNOSTICS_FILL(maglength(1-OLx,1-OLy,1),
+      CALL DIAGNOSTICS_FILL(mag_length,
      &  'lgth_mag',0,Nr,1,bi,bj,myThid) 
      
       CALL DIAGNOSTICS_FILL(mag_tot_length,

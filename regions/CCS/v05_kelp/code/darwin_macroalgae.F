@@ -18,7 +18,7 @@ C     INTERFACE: ==========================================================
      O     prev_qmag,
      O     gT,gQ,gE,muMAG,
      O     mortMAG,UptakeNout,
-     O     mortout,dEout,growthout)
+     O     mortout,dEout,growthout)     
 C   
 C    ==========================================================
 
@@ -459,12 +459,12 @@ C       Accounts for all the transfer of growth and mortality from lower grid ce
         ENDIF              
       ELSE
 C     If vertical transfer is not activated
-         growth = ptr(iMagB)  * muMAG * deltaT
-         mort = ptr(iMagB)  * mortMAG * deltaT
-         excess_growth = c0 
-         excess_mort = c0
-         prev_qmag = c0 
-         dBmagdt = growth - mort
+         growth = ptr(iMagB)  * muMAG * deltaT                            ! [gDW/m3]  
+         mort = ptr(iMagB)  * mortMAG * deltaT                            ! [gDW/m3]  
+         excess_growth = c0                                               ! No transfer
+         excess_mort = c0                                                 ! No transfer
+         prev_qmag = c0                                                   ! No transfer
+         dBmagdt = growth - mort                                          ! No transfer
          dQgrowthdt = ptr(iMagQ)  * (1.0/(1.0 + muMAG * deltaT) - 1.0)    ! [mg-N/gDW]
          dQmagdt = (UptakeN * deltaT + dQgrowthdt - dE)                   ! [mg-N/gDW]   
       ENDIF
