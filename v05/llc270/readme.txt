@@ -38,9 +38,7 @@ make -j 16
 
 cd ../run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2023/xx*42.data .
@@ -54,9 +52,7 @@ qsub job_ECCO_darwin
 
 cd ../run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx_it42_v2 .
 cp ../../ecco_darwin/v05/llc270/input/* .

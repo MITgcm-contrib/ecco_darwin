@@ -25,7 +25,7 @@ make -j 16
 
 cd ../run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx_it42_v2 .
 cp ../../ecco_darwin/v06/llc270/input_physics/* .
 mkdir diags diags/3hourly diags/daily diags/monthly diags/budget

@@ -28,9 +28,7 @@ mkdir run_1985 run_1985_clim95 run_1985_linearCO2 run_1985_clim95_linearCO2 run_
 
 cd run_1985
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/1984_NOAA_MBL/apCO2* .
 ln -sf /nobackup/dcarrol2/pub/LLC_270/v05_1985_on/pickup_ptracers_1985_on.data \
 	pickup_ptracers.0000000001.data
@@ -46,9 +44,7 @@ qsub job_ECCO_darwin
 
 cd run_1985_clim95
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/1984_NOAA_MBL/apCO2* .
 ln -sf /nobackup/dcarrol2/pub/LLC_270/v05_1985_on/pickup_ptracers_1985_on.data \
 	pickup_ptracers.0000000001.data
@@ -64,9 +60,7 @@ qsub job_ECCO_darwin
 
 cd run_1985_linearCO2
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/hzhang1/pub/linear_apCO2_forcing/apCO2* .
 ln -sf /nobackup/dcarrol2/pub/LLC_270/v05_1985_on/pickup_ptracers_1985_on.data \
 	pickup_ptracers.0000000001.data
@@ -82,9 +76,7 @@ qsub job_ECCO_darwin
 
 cd run_1985_clim95_linearCO2
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/hzhang1/pub/linear_apCO2_forcing/apCO2* .
 ln -sf /nobackup/dcarrol2/pub/LLC_270/v05_1985_on/pickup_ptracers_1985_on.data \
 	pickup_ptracers.0000000001.data
@@ -100,9 +92,7 @@ qsub job_ECCO_darwin
 
 cd run_1985_clim99
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/1984_NOAA_MBL/apCO2* .
 ln -sf /nobackup/dcarrol2/pub/LLC_270/v05_1985_on/pickup_ptracers_1985_on.data \
 	pickup_ptracers.0000000001.data
@@ -118,9 +108,7 @@ qsub job_ECCO_darwin
 
 cd run_1985_clim99_linearCO2
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/hzhang1/pub/linear_apCO2_forcing/apCO2* .
 ln -sf /nobackup/dcarrol2/pub/LLC_270/v05_1985_on/pickup_ptracers_1985_on.data \
 	pickup_ptracers.0000000001.data
