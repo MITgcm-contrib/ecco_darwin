@@ -40,9 +40,7 @@ make -j 16
 
 cd ../run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/forcing/jra55_do/LOACv1.4.0_HJ .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2021/xx*42.data .
