@@ -1,5 +1,6 @@
-# Instructions for building and running LR17 regional simulation
-# on macOS (based on ecco_darwin/v05/llc270/readme2.txt).
+# Instructions for building and running GOM regional simulation
+# ECCO-Darwin v06
+# on macOS (based on https://github.com/MITgcm-contrib/ecco_darwin/tree/master/v06/1deg).
 # See ecco_darwin/doc/MITgcm_on_Mac.txt for additional instructions.
 
 ==============
@@ -13,8 +14,8 @@
 ==============
 # 2. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/LR17/v05/code -mpi \
-   -of ../../ecco_darwin/regions/LR17/v05/code/darwin_arm64_gfortran
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/GoM/llc90/code -mpi \
+   -of ../../ecco_darwin/regions/GoM/llc90/code/darwin_arm64_gfortran
   make depend
   make -j
 
@@ -25,11 +26,11 @@
 
 # Get forcing and configuration files from:
 # --> https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-# --> https://nasa-ext.box.com/s/zionyzanq7h4jf4rdw7aieiuao515kmk
+# --> https://nasa-ext.box.com/s/l7y193atfj5d4hxlwr8o1s3tvnbzecdp
 # and deposit or link the contents of these directories
 # inside the darwin3/run directory, for example,
   ln -sf <path_to_download_location>/NOAA_MBL/* .
-  ln -sf <path_to_download_location>/LR17/run_template/* .
+  ln -sf <path_to_download_location>/GoM/llc90/run_template/* .
 
 # To save space, you can download only needed years for
 # apCO2_* and era_xx_it42_v2
