@@ -1,0 +1,66 @@
+# *********************
+# ECCO controlvariables
+# *********************
+ &ctrl_nml
+#
+ doSinglePrecTapelev=.TRUE.,
+ ctrlSmoothCorrel2D=.TRUE.,
+ ctrlSmoothCorrel3D=.TRUE.,
+  ctrlUseGen=.TRUE.,
+#to start from given xx*00.data files
+  doinitxx = .FALSE.,
+  doMainUnpack = .FALSE.,
+#to start from given ecco_ctrl... files
+# doinitxx = .FALSE.,
+#
+#doPackDiag = .TRUE.,
+ forcingPrecond=1.,
+/
+
+#
+# *********************
+# names for ctrl_pack/unpack
+# *********************
+ &ctrl_packnames
+ /
+#
+# *********************
+# names for CTRL_GENARR, CTRL_GENTIM
+# *********************
+ &CTRL_NML_GENARR
+ xx_gentim2d_weight(1) = 'r2.watemp_var_tot_nomasking.data',
+ xx_gentim2d_file(1)='xx_atemp',
+ xx_gentim2d_period(1)=1209600.0,
+ mult_gentim2d(1) = 0.003,
+#
+ xx_gentim2d_weight(2) = 'r2.wprecip_var_nonseason_20150807_nomasking.data',
+ xx_gentim2d_file(2)='xx_precip',
+ xx_gentim2d_period(2)=1209600.0,
+ mult_gentim2d(2) = 0.003,
+#
+ xx_gentim2d_weight(3) = 'r2.wswdown_var_tot_nomasking.data',
+ xx_gentim2d_file(3)='xx_swdown',
+ xx_gentim2d_period(3)=1209600.0,
+ mult_gentim2d(3) = 0.003,
+#
+#
+ xx_gentim2d_weight(4) = 'r2.wlwdown_var_tot_nomasking.data',
+ xx_gentim2d_file(4)='xx_lwdown',
+ xx_gentim2d_period(4)=1209600.0,
+ mult_gentim2d(4) = 0.003,
+#
+ xx_gentim2d_weight(5) = 'r2.waqh_var_tot_nomasking.data',
+ xx_gentim2d_file(5)='xx_aqh',
+ xx_gentim2d_period(5)=1209600.0,
+ mult_gentim2d(5) = 0.003,
+#
+ xx_gentim2d_weight(6) = 'r2.wtauu_var_tot_nomasking.data',
+ xx_gentim2d_file(6)='xx_tauu',
+ xx_gentim2d_period(6)=1209600.0,
+ mult_gentim2d(6) = 0.003,
+#
+ xx_gentim2d_weight(7) = 'r2.wtauv_var_tot_nomasking.data',
+ xx_gentim2d_file(7)='xx_tauv',
+ xx_gentim2d_period(7)=1209600.0,
+ mult_gentim2d(7) = 0.003,
+ /

@@ -3,7 +3,6 @@
 # nTx - No. threads per process in X
 # nTy - No. threads per process in Y
  &EEPARMS
- useCubedSphereExchange=.TRUE.,
  nTx=1,
  nTy=1,
  /
