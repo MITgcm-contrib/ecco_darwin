@@ -10,6 +10,10 @@ RS = 1.0  # Storage width ratio
 rho_w = 1000.0  # Density of pure water [kg/m^3]
 G = 9.81  # Gravity acceleration [m/s^2]
 distance = 5  # Grid points in saline zone
+# The parameter distance delineates the number of 
+# grid point in the saline area. It is
+# used as a fixed threshold to determine what 
+# forcings to use: upstream or downstream.
 
 # HYDRODYNAMIC AND SEDIMENT PARAMETERS
 Chezy_lb = 60  # Chezy coefficient (downstream) [m^-1/2 s^-1]
