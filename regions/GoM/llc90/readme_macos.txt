@@ -1,21 +1,38 @@
-# Instructions for building and running GOM regional simulation
-# ECCO-Darwin v06
-# on macOS (based on https://github.com/MITgcm-contrib/ecco_darwin/tree/master/v06/1deg).
-# See ecco_darwin/doc/MITgcm_on_Mac.txt for additional instructions.
+# Install gfortran
+brew install gcc
+# Extra package needed for parallel MPI compilation
+brew install open-mpi
+# If python is not available, one way to install is:
+brew install python3
+cd /opt/homebrew/bin
+sudo ln -sf python3 python
+# Make sure that /usr/local/bin is in $PATH, e.g.,
+PATH=/usr/local/sbin:$PATH
+export PATH
 
 ==============
 # 1. Get code
-  git clone git@github.com:MITgcm-contrib/ecco_darwin.git
-  git clone git@github.com:darwinproject/darwin3
-  cd darwin3
-  git checkout 24885b71
-  mkdir build run
+git clone --branch backport_ckpt68g https://github.com/jahn/darwin3
+git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
+git clone --depth 1 https://github.com/MITgcm/MITgcm.git
+cd darwin3
+git checkout 24885b71
+mkdir build run
+
+# Note that, almost certainly, you will need to update the
+# darwin3/tools/build_options. You can overwrite these files
+# with those from MITgcm/tools/build_options downloaded above.
+
+# Note that latest version of python (3.12.3) does not contain the
+# imp module: https://docs.python.org/3.12/whatsnew/3.12.html#imp
+# Need to replace darwin3/tools/darwin/cogapp/cogapp.py with
+# ecco_darwin/doc/cogapp.py
 
 ==============
 # 2. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/GoM/llc90/code -mpi \
-   -of ../../ecco_darwin/regions/GoM/llc90/code/darwin_arm64_gfortran
+  ../tools/genmake2 -of ../../ecco_darwin/regions/GoM/llc90/code_v4r5/darwin_arm64_gfortran \
+	-mo "../../ecco_darwin/regions/GoM/llc90/code_darwin_v4r5 ../../ecco_darwin/regions/GoM/llc90/code_v4r5" -mpi        
   make depend
   make -j
 
@@ -32,9 +49,7 @@
   ln -sf <path_to_download_location>/NOAA_MBL/* .
   ln -sf <path_to_download_location>/GoM/llc90/run_template/* .
 
-# To save space, you can download only needed years for
-# apCO2_* and era_xx_it42_v2
-
   mkdir diags diags/daily diags/monthly
-  cp ../../ecco_darwin/regions/LR17/v05/input/* .
-  mpirun -np 4 ./mitgcmuv
+  cp ../../ecco_darwin/regions/GoM/llc90/input_v4r5/* .
+  cp -r ../../ecco_darwin/regions/GoM/llc90/input_darwin_v4r5/* .
+  mpirun -np 4 ./mitgcmuv 

@@ -116,3 +116,12 @@
  lwdown_interpMethod = 0,
  apressure_interpMethod = 0,
  /
+ 
+ &EXF_NML_OBCS
+  obcsSstartdate1   = 19920115,
+  obcsSstartdate2   = 031519,
+  obcsSperiod       = 2615438.0,
+  obcsEstartdate1   = 19920115,
+  obcsEstartdate2   = 031519,
+  obcsEperiod       = 2615438.0,
+ /
