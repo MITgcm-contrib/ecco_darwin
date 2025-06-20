@@ -25,6 +25,9 @@ To set-up model, follow Volta et al., 2014:
 config.py
 - Specification of estuarine geometry (protocol step 1) and physical parameters, such as 
 pure water density and gravity acceleration
+  The parameter distance delineates the number of grid point in the saline area. It is
+  used as a fixed threshold to determine what forcings to use: upstream or 
+  downstream.
 - Specification of hydrodynamic and sediment parameters (protocol steps 2.1 and 4.1)
 - Specification of biogeochemical parameters (protocol step 5.2)
 - Specification of external forcing (protocol step 5.4)
