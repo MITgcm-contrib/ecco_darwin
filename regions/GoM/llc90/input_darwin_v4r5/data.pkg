@@ -9,8 +9,8 @@
  useSALT_PlUME=.TRUE.,
  useDiagnostics=.TRUE.,
  useCTRL=.FALSE.,
- useSMOOTH=.TRUE.,
+ useSMOOTH=.FALSE.,
  usePtracers=.TRUE.,
  useGCHEM = .TRUE.,
- useRADTRANS   = .TRUE.,
+ useRADTRANS   = .FALSE.,
  /

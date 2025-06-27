@@ -34,10 +34,10 @@
 # balanceEmPmR=.TRUE.,
 # balanceQnet=.TRUE.,
  allowFreezing=.FALSE.,
-### hFacInf=0.2,
-### hFacSup=2.0,
- hFacMin=.2,
- hFacMinDr=5.,
+ hFacMinDr=50.,
+ hFacMin=0.3,
+ hFacInf=0.1,
+ hFacSup=5.,
  select_rStar=2,
  nonlinFreeSurf=4,
  gravity=9.81,
@@ -102,7 +102,7 @@
  usingSphericalPolarGrid=.TRUE.,
  xgOrigin = -99.,
  ygOrigin =  18.,
- dxSpacing = 1.,
+ delX = 20*1.,
  delYfile='delYFile',
  /
 

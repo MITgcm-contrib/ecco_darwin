@@ -118,10 +118,10 @@
  /
  
  &EXF_NML_OBCS
-  obcsSstartdate1   = 19920115,
-  obcsSstartdate2   = 031519,
+  obcsSstartdate1   = 19920101,
+  obcsSstartdate2   = 000000,
   obcsSperiod       = 2615438.0,
-  obcsEstartdate1   = 19920115,
-  obcsEstartdate2   = 031519,
+  obcsEstartdate1   = 19920101,
+  obcsEstartdate2   = 000000,
   obcsEperiod       = 2615438.0,
  /
