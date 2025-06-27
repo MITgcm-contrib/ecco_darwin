@@ -8,7 +8,7 @@
  useGGL90=.TRUE.,
  useSALT_PlUME=.TRUE.,
  useDiagnostics=.TRUE.,
- useCTRL=.TRUE.,
+ useCTRL=.FALSE.,
  useSMOOTH=.TRUE.,
  usePtracers=.TRUE.,
  useGCHEM = .TRUE.,
