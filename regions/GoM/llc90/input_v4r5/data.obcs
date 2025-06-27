@@ -2,8 +2,8 @@
 # Open boundaries
 # ***************
  &OBCS_PARM01
- OB_Jsouth =   20*1,
- OB_Ieast  =   15*1,
+ OB_Jsouth =   20*-1,
+ OB_Ieast  =   15*-1,
 #
  useOBCSprescribe=.TRUE.,
 #
