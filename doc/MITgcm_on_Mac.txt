@@ -5,10 +5,6 @@
 # Install gfortran
   brew install gcc
 
-# Make sure that /usr/local/bin is in $PATH, e.g.,
-PATH=/usr/local/sbin:$PATH
-export PATH
-
 # Get MITgcm code
   git clone --depth 1 https://github.com/MITgcm/MITgcm.git
 

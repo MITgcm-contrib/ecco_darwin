@@ -1,43 +1,54 @@
-# Install gfortran
-brew install gcc
-# Extra package needed for parallel MPI compilation
-brew install open-mpi
-# If python is not available, one way to install is:
-brew install python3
-cd /opt/homebrew/bin
-sudo ln -sf python3 python
-# Make sure that /usr/local/bin is in $PATH, e.g.,
-PATH=/usr/local/sbin:$PATH
-export PATH
+# Instructions for building and running Gulf of Mexico (GoM)
+# regional simulation on macOS arm64 based on "version 2"
+# of ecco_darwin/v06/1deg/readme_darwin_v4r5.txt
 
 ==============
-# 1. Get code
-git clone --branch backport_ckpt68g https://github.com/jahn/darwin3
-git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
-git clone --depth 1 https://github.com/MITgcm/MITgcm.git
-cd darwin3
-git checkout 24885b71
-mkdir build run
+# 1. Install gfortran, mpi, and python
 
-# Note that, almost certainly, you will need to update the
-# darwin3/tools/build_options. You can overwrite these files
-# with those from MITgcm/tools/build_options downloaded above.
+# One way to do this is via the brew package manager
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install gfortran
+  brew install gcc
+
+# Install open-mpi
+  brew install open-mpi
+
+# Install python
+  brew install python3
+  cd /opt/homebrew/bin
+  sudo ln -sf python3 python
+
+==============
+# 2. Get code
+  git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
+  git clone https://github.com/darwinproject/darwin3
+
+# Note that darwin3 includes a full copy of MITgcm;
+# MITgcm is downloaded to access the latest tools/build_options
+  git clone --depth 1 https://github.com/MITgcm/MITgcm.git
+
+# Use backport_ckpt68y for consistency with "version 2" of
+# ecco_darwin/v06/1deg/readme_darwin_v4r5.txt
+  cd darwin3
+  git checkout backport_ckpt68y
+  mkdir build run
 
 # Note that latest version of python (3.12.3) does not contain the
 # imp module: https://docs.python.org/3.12/whatsnew/3.12.html#imp
-# Need to replace darwin3/tools/darwin/cogapp/cogapp.py with
-# ecco_darwin/doc/cogapp.py
+# Need to update cogapp.py
+  cp ../ecco_darwin/doc/cogapp.py tools/darwin/cogapp
 
 ==============
-# 2. Build executable
+# 3. Build executable
   cd build
-  ../tools/genmake2 -of ../../ecco_darwin/regions/GoM/llc90/code_v4r5/darwin_arm64_gfortran \
+  ../tools/genmake2 -of ../../MITgcm/tools/build_options/darwin_arm64_gfortran \
 	-mo "../../ecco_darwin/regions/GoM/llc90/code_darwin_v4r5 ../../ecco_darwin/regions/GoM/llc90/code_v4r5" -mpi        
   make depend
   make -j
 
 ==============
-# 3. Instructions for running simulation (1992-2023 period)
+# 4. Instructions for running simulation (1992-2023 period)
   cd ../run
   ln -sf ../build/mitgcmuv .
 
