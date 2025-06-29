@@ -9,4 +9,5 @@
  useGCHEM = .TRUE.,
  useRADTRANS = .TRUE.,
  useOASIM = .TRUE.,
+ useOBCS = .TRUE.,
  /

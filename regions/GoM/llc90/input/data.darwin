@@ -1,5 +1,5 @@
  &DARWIN_FORCING_PARAMS
- ironFile = 'CESM-MIMI_1980-2015_CAM4-6MEAN_MonthlyDep_Hamiltonetal2020_clim.R4_144x96x12.bin',
+ ironFile = 'GoM_20x15_iron_dust',
  ironPeriod = -12,
  darwin_inscal_iron = 17906.70606142,
 #

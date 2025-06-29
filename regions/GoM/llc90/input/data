@@ -5,8 +5,8 @@
 # Continuous equation parameters
  &PARM01
  tRef               = 3*23.,3*22.,21.,2*20.,19.,2*18.,17.,2*16.,15.,14.,13.,
-                      12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,12*1.,
- sRef               = 50*34.5,
+                      12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,9*1.,
+ sRef               = 47*34.5,
  no_slip_sides  = .TRUE.,
  no_slip_bottom = .TRUE.,
 #
@@ -74,31 +74,8 @@
 
 # Time stepping parameters
  &PARM03
- nIter0=2,
- pickupSuff='0000000002',
-#2 lev2 for testing:
-#nTimeSteps=8,
-#3month
-#nTimeSteps=2160,
-#18month
-#nTimeSteps=13110,
-#2yr
-#nTimeSteps=17520,
-#4-yr from 2014 to 2017, inclusive
-#nTimeSteps=35051,
-#20y:
-#nTimeSteps=175295,
-#22y:
-#nTimeSteps=192839,
-#24y:
-#nTimeSteps=210359,
-#26yr 
-#nTimeSteps=227902,
-#32yr
- nTimeSteps=280498,
-#60 years
-#nTimeSteps=525985,
-#
+ nIter0=0,
+ endtime=980788800.,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
 #when using the cd scheme:
@@ -122,32 +99,35 @@
  monitorFreq = 43200.0,
 # monitorFreq = 6307200.0,
  dumpInitAndLast = .TRUE.,
- adjDumpFreq = 31536000.0,
-#adjDumpFreq = 604800.0,
- adjMonitorFreq = 864000.0,
  pickupStrictlyMatch=.FALSE.,
  /
 
 # Gridding parameters
  &PARM04
- usingCurvilinearGrid=.TRUE.,
  delR = 
      10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.01,
      10.03, 10.11, 10.32, 10.80, 11.76, 13.42, 16.04, 19.82, 24.85,
      31.10, 38.42, 46.50, 55.00, 63.50, 71.58, 78.90, 85.15, 90.18,
      93.96, 96.58, 98.25, 99.25,100.01,101.33,104.56,111.33,122.83,
      139.09,158.94,180.83,203.55,226.50,249.50,272.50,295.50,318.50,
-     341.50,364.50,387.50,410.50,433.50,456.50,
+     341.50,364.50,387.50,
+ usingSphericalPolarGrid=.TRUE.,
+ xgOrigin = -99.,
+ ygOrigin =  18.,
+ delX = 20*1.,
+ delYfile='delYFile',
  /
 
 # Input datasets
  &PARM05
- diffKrFile='eccov4_r5_diffkr.data',
- bathyFile      ='BATHY_ICE_SHELF_CAVITY_PLUS_ICE_FRONT_LLC_0090.bin',
- hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',
- hydrogSaltFile ='S_OWPv1_M_eccollc_90x50.bin',
- viscA4Dfile    ='fenty_biharmonic_visc_v11.bin',
- viscA4Zfile    ='fenty_biharmonic_visc_v11.bin',
- geothermalFile='geothermalFlux.bin',
-#
+ diffKrFile     ='GoM_20x15_diffkr',
+ bathyFile      ='BATHY_20x15_GoM',
+ hydrogThetaFile='init/THETA_20x15x47.16-Jan-1992',
+ hydrogSaltFile ='init/SALT_20x15x47.16-Jan-1992',
+ uVelInitFile   ='init/U_20x15x47.16-Jan-1992',
+ vVelInitFile   ='init/V_20x15x47.16-Jan-1992',
+ pSurfInitFile  ='init/ETAN_20x15.16-Jan-1992',
+ viscA4Dfile    ='GoM_20x15_biharmonic_visc',
+# viscA4Zfile     ='fenty_biharmonic_visc_v11.bin',
+# geothermalFile  ='geothermalFlux.bin',
  /
