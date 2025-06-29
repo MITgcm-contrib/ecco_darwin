@@ -1,7 +1,3 @@
-C $Header: /u/gcmpack/MITgcm_contrib/ecco_utils/ecco_v4_release3_devel/code/DIAGNOSTICS_SIZE.h,v 1.1 2017/05/04 17:46:37 ou.wang Exp $
-C $Name:  $
-
-
 C     Diagnostics Array Dimension
 C     ---------------------------
 C     ndiagMax   :: maximum total number of available diagnostics
@@ -20,11 +16,11 @@ C  and "diagSt_size" (statistics-diags) since values here are deliberately small
       INTEGER    numDiags
       INTEGER    nRegions, sizRegMsk, nStats
       INTEGER    diagSt_size
-      PARAMETER( ndiagMax = 700 )
-      PARAMETER( numlists = 300, numperlist = 30, numLevels=5*Nr )
-      PARAMETER( numDiags = 4000 )
-      PARAMETER( nRegions = 20 , sizRegMsk = 1 , nStats = 4 )
-      PARAMETER( diagSt_size = 50*Nr )
+      PARAMETER( ndiagMax = 5000 )
+      PARAMETER( numlists = 500, numperlist = 500, numLevels=Nr )
+      PARAMETER( numDiags = 1000*Nr )
+      PARAMETER( nRegions = 0 , sizRegMsk = 1 , nStats = 4 )
+      PARAMETER( diagSt_size = 10*Nr )
 
 
 CEH3 ;;; Local Variables: ***

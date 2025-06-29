@@ -167,6 +167,8 @@ C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 
 #define DARWIN_ALLOW_HYDROTHERMAL_VENTS
 
+#define DARWIN_CDOM_UNITS_CARBON
+
 #endif /* ALLOW_DARWIN */
 #endif /* DARWIN_OPTIONS_H */
 
