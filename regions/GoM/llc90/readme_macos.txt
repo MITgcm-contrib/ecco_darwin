@@ -25,7 +25,7 @@
   git clone https://github.com/darwinproject/darwin3
 
 # Note that darwin3 includes a full copy of MITgcm;
-# MITgcm is downloaded to access the latest tools/build_options
+# MITgcm head branch is downloaded to access latest tools/build_options
   git clone --depth 1 https://github.com/MITgcm/MITgcm.git
 
 # Use backport_ckpt68y for consistency with "version 2" of
@@ -34,16 +34,11 @@
   git checkout backport_ckpt68y
   mkdir build run
 
-# Note that latest version of python (3.12.3) does not contain the
-# imp module: https://docs.python.org/3.12/whatsnew/3.12.html#imp
-# Need to update cogapp.py
-  cp ../ecco_darwin/doc/cogapp.py tools/darwin/cogapp
-
 ==============
 # 3. Build executable
   cd build
-  ../tools/genmake2 -of ../../MITgcm/tools/build_options/darwin_arm64_gfortran \
-	-mo "../../ecco_darwin/regions/GoM/llc90/code_darwin_v4r5 ../../ecco_darwin/regions/GoM/llc90/code_v4r5" -mpi        
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/GoM/llc90/code \
+     -of ../../MITgcm/tools/build_options/darwin_arm64_gfortran	-mpi
   make depend
   make -j
 
