@@ -308,13 +308,18 @@ fout=[pout region_name suf1 '_Fekete_runoff'];
 fld=read_llc_fkij(fnm,NX,fc,1:12,ix,jx);
 writebin(fout,fld);
 % }}}
-% {{{ get and save iron dust
-fnm=[pin 'runoff-2d-Fekete-1deg-mon-V4-SMOOTH_S60scalving_v3.bin'];
-fnm=['/nobackup/dcarrol2/forcing/iron_dust/LLC_270/' ...
-     'llc270_Mahowald_2009_soluble_iron_dust.bin'];
-fout=[pout region_name suf1 '_iron_dust'];
-fld=read_llc_fkij(fnm,NX,fc,1:12,ix,jx);
-writebin(fout,fld);
+% {{{ get and save biogeochemical river discharge
+pin='/nobackup/rsavelli/LOAC/ECCO_V4r5/bgc_runoff/';
+for yr=1991:2023
+    for nm={'DOC','DON','DOP','DIN','DIP','DSi','POC','PP','PN','DIC'}
+        fnm=[pin nm '_ECCO_V4r5ECCO_V4r5_' int2str(yr)];
+        fout=[pout region_name suf1 '_' nm '_' int2str(yr)];
+        fdir=dir(fnm);
+        nlevs=fdir.bytes/4/length(ix)/length(jx);
+        fld=read_llc_fkij(fnm,NX,fc,1:nlevs,ix,jx);
+        writebin(fout,fld);
+    end
+end
 % }}}
 
 % }}}
