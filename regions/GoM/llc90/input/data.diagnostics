@@ -54,14 +54,6 @@
   frequency(9) = 86400.,
    fields(1,9) = 'EXFwspee',
    filename(9) = 'diags/daily/wspeed',
-#---   
-  frequency(10) = 86400.,
-   fields(1,10) = 'SIarea  ',
-   filename(10) = 'diags/daily/SIarea',
-#---
-  frequency(11) = 86400.,
-   fields(1,11) = 'SIheff  ',
-   filename(11) = 'diags/daily/SIheff',
 #--- 
   frequency(12) = 86400.,
    fields(1,12) = 'THETA   ',
@@ -158,14 +150,6 @@
   frequency(30) = 2635200.,
    fields(1,30) = 'EXFwspee',
    filename(30) = 'diags/monthly/wspeed',
-#--- 
-  frequency(31) = 2635200.,
-   fields(1,31) = 'SIarea  ',
-   filename(31) = 'diags/monthly/SIarea',
-#--- 
-  frequency(32) = 2635200.,
-   fields(1,32) = 'SIheff  ',
-   filename(32) = 'diags/monthly/SIheff',
 #---    
   frequency(33) = 2635200.,
    fields(1,33) = 'UE_VEL_C',
