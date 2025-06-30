@@ -315,7 +315,7 @@ for yr=1991:2023
         fnm=[pin nm '_ECCO_V4r5ECCO_V4r5_' int2str(yr)];
         fout=[pout region_name suf1 '_' nm '_' int2str(yr)];
         fdir=dir(fnm);
-        nlevs=fdir.bytes/4/length(ix)/length(jx);
+        nlevs=fdir.bytes/4/nx/ny;
         fld=read_llc_fkij(fnm,NX,fc,1:nlevs,ix,jx);
         writebin(fout,fld);
     end
