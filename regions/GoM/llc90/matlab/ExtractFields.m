@@ -310,12 +310,13 @@ writebin(fout,fld);
 % }}}
 % {{{ get and save biogeochemical river discharge
 pin='/nobackup/rsavelli/LOAC/ECCO_V4r5/bgc_runoff/';
+nm={'DOC';'DON';'DOP';'DIN';'DIP';'DSi';'POC';'PP';'PN';'DIC'};
 for yr=1991:2023
-    for nm={'DOC','DON','DOP','DIN','DIP','DSi','POC','PP','PN','DIC'}
-        fnm=[pin nm '_ECCO_V4r5ECCO_V4r5_' int2str(yr)];
-        fout=[pout region_name suf1 '_' nm '_' int2str(yr)];
+    for i = 1:length(nm)
+        fnm=[pin nm{i} '_ECCO_V4r5_' int2str(yr)];
+        fout=[pout 'BGC_runoff/' region_name suf1 '_' nm{i} '_' int2str(yr)];
         fdir=dir(fnm);
-        nlevs=fdir.bytes/4/nx/ny;
+        nlevs=fdir.bytes/4/NX/NX/13;
         fld=read_llc_fkij(fnm,NX,fc,1:nlevs,ix,jx);
         writebin(fout,fld);
     end
