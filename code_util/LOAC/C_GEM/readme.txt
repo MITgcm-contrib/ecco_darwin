@@ -127,7 +127,7 @@ if FCO2 version, additional outputs:
 - DIC.dat: dissolved inorganic carbon concentration
 - ALK.dat: alkalinity
 - pH.dat: pH
-- FCO2.dat: air-water CO2 exchange rates
+- FCO2.dat: air-water CO2 exchange rates (negative raw output means CO2 outgassing to the atmosphere)
 
 The first column of the output file corresponds to the time expressed in second and other
 columns correspond to the selected data along the estuarine length from the mouth of the 
