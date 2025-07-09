@@ -71,7 +71,7 @@ MAXT = (365*3) * 24 * 60 * 60  # Max time [s]
 WARMUP = (365*2) * 24 * 60 * 60  # Warmup period [s]
 DELTI = 150  # Delta t [s]
 TS = 12  # Save every TS timesteps
-DELXI = 2000  # Delta x [m]
+DELXI = 1000  # Delta x [m]
 TOL = 1e-10  # Convergence criterion
 M = int(EL / DELXI) + 1  # Max even grid points
 if M % 2 == 0:
