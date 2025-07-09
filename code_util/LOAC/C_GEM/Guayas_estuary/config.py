@@ -9,7 +9,7 @@ B_ub = 600.0  # Width at upstream boundary [m] x riverlines database (74 km from
 RS = 1.0  # Storage width ratio
 rho_w = 1000.0  # Density of pure water [kg/m^3]
 G = 9.81  # Gravity acceleration [m/s^2]
-distance = 22  # Grid points in saline zone (45 km from BElliard et al between 60 and 30 km in dry and rainy season)
+distance = 45  # Grid points in saline zone (45 km from BElliard et al between 60 and 30 km in dry and rainy season)
 # The parameter distance delineates the number of 
 # grid point in the saline area. It is
 # used as a fixed threshold to determine what 
