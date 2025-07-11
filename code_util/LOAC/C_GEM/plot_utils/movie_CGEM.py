@@ -39,6 +39,7 @@ def plot_colourline(x,y,c,line_width,minval,maxval):
 def make_CGEManim(filepath, # path to C-GEM outputs
                   shapepath, # path to river estuary shapefile.
                              # It must be equidistant N points with N matching model grid.
+                             # Point must be labelled with id field increasing from upstream to downstream.
                              # Example, estuary 74000m-long with DELXI = 1000m is a 74-point grid.
                              # Shapefile must contain width of the river.
                              # (source: SWORD database https://www.swordexplorer.com)
