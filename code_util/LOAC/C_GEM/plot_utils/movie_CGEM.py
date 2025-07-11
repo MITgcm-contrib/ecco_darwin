@@ -49,7 +49,9 @@ def make_CGEManim(filepath, # path to C-GEM outputs
                   variable_name, # Variable from C-GEM (ex Salinity...) for colorbar label
                   units, # Variable units (ex PSU) for colorbar label
                   minval, # Variable minimal bound for colorbar range (ex 0 for Salinity)
+                          # Leave to None for adjustment to min value of output
                   maxval, # Variable maximal bound for colorbar range (ex 34 for Salinity)
+                          # Leave to None for adjustment to max value of output
                   parallels_grid, # Define grid for parallels (degree)
                   meridians_grid, # Define grid for meridians (degree)
                   frame_count, # Number of frame to print
@@ -76,8 +78,10 @@ def make_CGEManim(filepath, # path to C-GEM outputs
         xs = np.array(shapefile.x)[order]
         ys = np.array(shapefile.y)[order]
         riverwidth = normalize(np.array(shapefile.width)[order].reshape(1, -1), norm="l2")
-        #for i in range(0,len(shapefile)-1):
-            #m1.plot(*m1((xs[i],xs[i+1]), (ys[i],ys[i+1])), color=colors[0,i], linewidth=riverwidth[0,i]*50)
+        if (minval == None):
+            minval = np.min(df)
+        if (maxval == None):
+            maxval = np.max(df)
         im = plot_colourline(*m1(xs, ys), np.flip(df.values[pp,:]), riverwidth[0,:]*scale_riverwidth, minval, maxval)
         cbar = m1.colorbar(im)
         cbar.set_label(variable_name + ' ' + units,font='Arial',
@@ -118,10 +122,10 @@ make_CGEManim(filepath = '/Users/rsavelli/Documents/C_GEM/S.dat',
               scale_riverwidth = 50,
               variable_name = 'Salinity',
               units = '(PSU)',
-              minval = 0,
-              maxval = 34,
+              minval = None,
+              maxval = None,
               parallels_grid = np.arange(-3,-2,.3),
               meridians_grid = np.arange(-82.,-79.,.3),
-              frame_count = 5,
-              output_path = './test/movie_frame',
+              frame_count = 500,
+              output_path = './Guayas/movie_frame',
               movie_name = 'Salinity.mp4')
