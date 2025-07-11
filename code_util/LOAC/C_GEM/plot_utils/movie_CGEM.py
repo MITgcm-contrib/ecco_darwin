@@ -8,7 +8,7 @@ from sklearn.preprocessing import normalize
 import subprocess
 import shlex
 
-# also require ffmpeg installed on your machine
+# also requires ffmpeg installed on your machine
 
 # open C-GEM outputs
 def open_CGEM(filepath):
