@@ -74,7 +74,7 @@ def make_CGEManim(filepath, # path to C-GEM outputs
         else:
             raise Exception("ERROR: frame_count must be an integer")
     for pp in range(0,duration):
-        fig, ax0 = plt.subplots(figsize=(5, 4.5))
+        fig, ax0 = plt.subplots(figsize=(6.5, 4.5))
         m1 = Basemap(width=width,height=height,projection='lcc',
                   lat_0=lat0, lon_0=lon0,resolution='f')
         m1.fillcontinents()
