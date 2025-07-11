@@ -52,8 +52,10 @@ def make_CGEManim(filepath, # path to C-GEM outputs
                   units, # Variable units (ex PSU) for colorbar label
                   minval, # Variable minimal bound for colorbar range (ex 0 for Salinity)
                           # Leave to None for adjustment to min value of output
+                          # !! Output will be scaled to this range
                   maxval, # Variable maximal bound for colorbar range (ex 34 for Salinity)
                           # Leave to None for adjustment to max value of output
+                          # !! Output will be scaled to this range
                   parallels_grid, # Define grid for parallels (degree)
                   meridians_grid, # Define grid for meridians (degree)
                   frame_count, # Number of frame to print
