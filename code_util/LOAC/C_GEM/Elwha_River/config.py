@@ -1,4 +1,6 @@
 import math
+from datetime import datetime
+
 
 # GEOMETRICAL AND PHYSICAL PARAMETERS
 EL = 72000  # Estuarine length [m]
@@ -9,7 +11,7 @@ B_ub = 3.2  # Width at upstream boundary [m]
 RS = 1.0  # Storage width ratio
 rho_w = 1000.0  # Density of pure water [kg/m^3]
 G = 9.81  # Gravity acceleration [m/s^2]
-distance = 5  # Grid points in saline zone
+distance = 5  # Grid points in saline zone  (for experimentation set up to be half the distance of river in km (36 km))
 
 # HYDRODYNAMIC AND SEDIMENT PARAMETERS
 Chezy_lb = 60  # Chezy coefficient (downstream) [m^-1/2 s^-1]
@@ -54,7 +56,8 @@ pfun = 0.0830  # Tidal frequency [cycle/hr]
 Uw_sal = 4.39  # Wind speed in saline estuary [m/s]
 Uw_tid = 2.195  # Wind speed in tidal river [m/s]
 water_temp = 10  # Water temperature [C]
-pCO2 = 380 * 1e-6  # CO2 partial pressure in the atmosphere [atm]  ################## (change to time series) (test first with sine
+#pCO2 = 380 * 1e-6  # CO2 partial pressure in the atmosphere [atm]  ################## (change to time series) (test first with sine
+use_real_pCO2 = True # toggle wheather to use the real world pCO2 time series or dummy sine wave function 
 
 # OTHER PARAMETERS
 Euler = 0.5772156649  # Euler's constant
@@ -63,7 +66,8 @@ pH_ite = 50  # number of iterations to converge to pH following Follows et al., 
 mass_mol_B = 10.8110  # molar mass of Boron g/mol
 
 # NUMERICAL INTEGRATION
-MAXT = (365*3) * 24 * 60 * 60  # Max time [s]
+SIM_START_DATETIME = datetime(2011, 1, 1)  # start date of the pCO2 for sine wavesimulation
+MAXT = (365*3) * 24 * 60 * 60  # Max time [s]  (roughly 94 million sec)
 WARMUP = (365*2) * 24 * 60 * 60  # Warmup period [s]
 DELTI = 150  # Delta t [s]
 TS = 12  # Save every TS timesteps
