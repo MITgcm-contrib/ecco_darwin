@@ -5,12 +5,16 @@ Biogeochemical reaction network module (translated from biogeo.c)
 import math
 from variables import v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg, denit, nit,\
     O2_ex, NEM, FCO2, Hplus
+
+# add in ", pCO2" if needed
 from config import (
     KD1, KD2, Pbmax, alpha, kexcr, kgrowth, kmaint, kmort, redsi, redn,
-    redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2_ox, KO2_nit, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS, pCO2
+    redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2_ox, KO2_nit, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS, SIM_START_DATETIME, use_real_pCO2
 )
 from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, K0_CO2, K1_CO2, K2_CO2, pH, KB
 from file_module import Rates
+from forcings_module import get_dummy_pCO2, get_real_pCO2, get_discharge
+
 
 def biogeo(t):
     """Biogeochemical reaction network simulation."""
@@ -78,7 +82,13 @@ def biogeo(t):
         co2s = v['DIC']['c'][i] / (1.0 + (K1_CO2(t, i) / Hplus[i]) + (K1_CO2(t, i) * K2_CO2(t, i) / (Hplus[i] * Hplus[i])))  # mol/kg or mmol m-3
         # CO2 fluxes
         vpCO2 = 0.915 * vp[i]  # convert O2 piston velocity to CO2 piston velocity (Regnier et al., 2002) [m/s]
-        RCO2 = - vpCO2 * (co2s - K0_CO2(t, i) * pCO2)  # rate of exchange mmol C m^−2 s^−1
+        
+        if use_real_pCO2:
+            atm_pco2 = get_real_pCO2(t, SIM_START_DATETIME) # gets real world time series of pCO2 at 34 N lat starting 1/1/2011 [atm]
+        else: 
+            atm_pco2 = get_dummy_pCO2(t, SIM_START_DATETIME) # simulate a time series of pCO2 (testing with sine wave) [atm]
+
+        RCO2 = - vpCO2 * (co2s - K0_CO2(t, i) * atm_pco2)  # rate of exchange mmol C m^−2 s^−1
         FCO2[i] = RCO2 / DEPTH[i]  # CO2 flux mmol C m^−3 s^−1
 
         # Update biogeochemical state variables [mmol m^-3]
