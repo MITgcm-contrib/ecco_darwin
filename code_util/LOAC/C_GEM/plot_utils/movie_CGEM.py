@@ -27,6 +27,7 @@ def open_CGEM(filepath):
             df.drop(columns=df.columns[0], axis=1, inplace=True)
         elif (filepath[len(filepath) - 5:len(filepath)] == 'U.dat'):
             df.drop(columns=df.columns[0], axis=1, inplace=True)
+        df.columns = np.arange(0, np.size(df,1), 1)
         print(df)
     except FileNotFoundError:
         print(f"File '{filepath}' not found.")
