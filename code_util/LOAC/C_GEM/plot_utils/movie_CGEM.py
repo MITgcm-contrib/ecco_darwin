@@ -21,6 +21,12 @@ def open_CGEM(filepath):
         # To delete first and last columns
         df.drop(columns=df.columns[0], axis=1, inplace=True)
         df.drop(columns=df.columns[-1], axis=1, inplace=True)
+        if(filepath[len(filepath)-9:len(filepath)]=='depth.dat'):
+            df.drop(columns=df.columns[0], axis=1, inplace=True)
+        elif(filepath[len(filepath)-9:len(filepath)]=='width.dat'):
+            df.drop(columns=df.columns[0], axis=1, inplace=True)
+        elif (filepath[len(filepath) - 5:len(filepath)] == 'U.dat'):
+            df.drop(columns=df.columns[0], axis=1, inplace=True)
         print(df)
     except FileNotFoundError:
         print(f"File '{filepath}' not found.")
