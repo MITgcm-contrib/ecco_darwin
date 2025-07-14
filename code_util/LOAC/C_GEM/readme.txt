@@ -107,6 +107,7 @@ C-GEM output data are printed in *.dat type files. Output files, produced by def
 C-GEM, with specification of the corresponding modeled data are:
 - depth.dat: water depth data
 - width.dat: estuarine width data
+_ U.dat: horizontal velocity (-: flow towards the ocean; +: flow towards river source)
 - S.dat: salinity data
 - SPM.dat: suspended particulate matter concentrations
 - DIA.dat: diatoms concentrations
