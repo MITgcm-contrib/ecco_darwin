@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from datetime import timedelta
-from config import WARMUP
+from config import WARMUP, USE_WARMUP_DISCHARGE
 ###################################################################################### pCO2
 
 def get_dummy_pCO2(t_seconds, sim_start_dt):
@@ -65,6 +65,7 @@ def get_real_pCO2(t_seconds, sim_start_dt):
 
 ###################################################################################### pCO2
 
+###################################################################################### discharge
 
 # Load real-world discharge time series once
 discharge_df = None
@@ -79,11 +80,12 @@ except Exception as e:
 def get_discharge(t_seconds, sim_start_dt):
     """
     Return constant discharge during warmup, dynamic discharge after.
+    If USE_WARMUP is False, always use dynamic discharge (CSV or fallback).
     """
-    if t_seconds <= WARMUP:
+    if USE_WARMUP_DISCHARGE and t_seconds <= WARMUP:
         return 47.7  # constant during warmup (positive)
     else:
-        # Use dynamic discharge after warmup
+        # Use dynamic discharge after warmup or always if USE_WARMUP is False
         if discharge_df is None or discharge_df.empty:
             return 47.7  # fallback (positive)
 
@@ -103,4 +105,46 @@ def get_discharge(t_seconds, sim_start_dt):
             return 47.7
 
         return abs(val)  # ensure positive
+    
+###################################################################################### discharge
 
+###################################################################################### wind speed
+
+# Load wind speed CSV 
+try:
+    wind_df = pd.read_csv("POWER_Point_Daily_CLEANED.csv", parse_dates=['datetime'])
+    wind_df.set_index('datetime', inplace=True)
+except Exception as e:
+    print(f"[WARN] Failed to load wind speed data: {e}")
+    wind_df = None
+
+def get_wind_speed(t_seconds, sim_start_dt):
+    """
+    Return wind speed (WS2M) for the current simulation time.
+    Looks up the most recent value at or before the current datetime.
+    Falls back to a default if data is missing.
+    """
+    DEFAULT_WIND = 4.0  # fallback value (adjust as needed)
+    if wind_df is None or wind_df.empty:
+        return DEFAULT_WIND
+
+    current_dt = sim_start_dt + timedelta(seconds=t_seconds)
+
+    # If before/after data range, use first/last value
+    if current_dt < wind_df.index[0]:
+        return wind_df["WS2M"].iloc[0]
+    elif current_dt > wind_df.index[-1]:
+        return wind_df["WS2M"].iloc[-1]
+
+    # find the most recent value at or before current_dt
+    subset = wind_df.loc[:current_dt]
+    if subset.empty:
+        return DEFAULT_WIND
+
+    val = subset["WS2M"].iloc[-1]
+    if pd.isna(val):
+        return DEFAULT_WIND
+
+    return val
+
+###################################################################################### wind speed
