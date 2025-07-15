@@ -168,9 +168,9 @@ def make_arrows_airwaterflx(airwater_flx,max_scale,variable_name):
         y_head = 0.8
         y = y_head
     elif (flx > 0):
-        x_tail = 0.8
-        x_head = 0.6
-        y = 0.4
+        y_tail = 0.8
+        y_head = 0.6
+        y = 0.55
     dx = x_head - x_tail
     dy = y_head - y_tail
     width = np.max([abs(flx), 0.002])
@@ -215,5 +215,5 @@ make_arrows_flx(up_DIC,dw_DIC,300,1,'DIC','Carbon budget (flux in Tg C yr$^{-1}$
 make_arrows_flx(up_ALK,dw_ALK,300,2,'ALK',None)
 make_arrows_flx(up_TOC,dw_TOC,300,3,'TOC',None)
 make_arrows_airwaterflx(FCO2_int,300,'Air-water CO$_2$ flux')
-plt.savefig('Carbon_budget.png', dpi=180)
+#plt.savefig('Carbon_budget.png', dpi=180)
 
