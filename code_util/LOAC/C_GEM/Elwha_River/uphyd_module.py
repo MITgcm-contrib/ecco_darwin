@@ -2,17 +2,21 @@
 Update hydrodynamics module (translated from uphyd.c)
 """
 
-from config import M, M1, M2, M3, Qr
+from config import M, M1, M2, M3, Qr, SIM_START_DATETIME
 from variables import B, H, TH, D, ZZ, DEPTH, U, TU, Dold
 from fun_module import Tide
+from forcings_module import get_discharge
 
 def new_bc(t):
     """Set new boundary conditions."""
+    dynamic_Qr = -get_discharge(t, SIM_START_DATETIME)
+    #print(f"[DEBUG] new_bc: t={t}, dynamic_Qr={dynamic_Qr}")
+
     H[1] = B[1] * Tide(t)
     TH[1] = H[1]
     D[1] = H[1] + ZZ[1]
     DEPTH[1] = D[1] / B[1]
-    U[M] = Qr / D[M]
+    U[M] = dynamic_Qr / D[M]
     TU[M] = U[M]
     #print("DEPTH id after new_bc():", id(DEPTH), "first 5 values:", DEPTH[:5])
 
