@@ -3,8 +3,9 @@ Tridiagonal matrix solver module (translated from tridag.c)
 """
 
 import math
-from config import M, M1, M2, M3, DELTI, DELXI, G, RS, Qr
+from config import M, M1, M2, M3, DELTI, DELXI, G, RS, SIM_START_DATETIME
 from variables import D, Z, C, U, B, H, TH, TU, Chezy, DEPTH
+from forcings_module import get_discharge
 
 def coeff_a(t):
     """Calculate coefficients for tridiagonal matrix."""
@@ -41,7 +42,7 @@ def coeff_a(t):
         C[i][4] = 0.0
 
     Z[2] = 1.0 / (2.0 * DELXI) * (H[1] / B[1]) + 1.0 / (G * DELTI) * U[2]
-    Z[M1] = RS * TH[M1] / DELTI - Qr / (2.0 * DELXI)
+    Z[M1] = RS * TH[M1] / DELTI - ((-get_discharge(t, SIM_START_DATETIME)) / (2.0 * DELXI))
     C[2][1] = 0.0
     # Also check for boundary cases
     if DEPTH[2] == 0:
