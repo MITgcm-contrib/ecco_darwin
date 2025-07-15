@@ -3,11 +3,12 @@ Utility functions module (translated from fun.c)
 """
 
 import math
-from config import PI, AMPL, pfun, Uw_sal, Uw_tid, water_temp, WARMUP, distance, M, pH_ite, G, mass_mol_B
+from config import PI, AMPL, pfun, Uw_sal, Uw_tid, water_temp, WARMUP, distance, M, pH_ite, G, mass_mol_B, SIM_START_DATETIME
 from variables import v, U, DEPTH, kflow, kwind, vp, Hplus
 from density import dens
 from numba import njit
 import random
+from forcings_module import get_wind_speed
 
 def D_O2(t):
     """Molecular diffusion coefficient for O2 [m^2/s]."""
@@ -24,12 +25,14 @@ def Sc(t, i):
 
 def piston_velocity(t):
     """Calculate piston velocity for O2 exchange across air-water interface."""
+    wind_speed = get_wind_speed(t, SIM_START_DATETIME)
+    print(f"[DEBUG] piston_velocity: t={t}, wind_speed={wind_speed}")
     for i in range(M + 1):
         kflow[i] = math.sqrt(abs(U[i]) * D_O2(t) / DEPTH[i])
         if i <= distance:
-            kwind[i] = (1.0 / 3.6e5) * 0.31 * (Uw_sal**2) * (Sc(t, i) / 660)**-0.5
+            kwind[i] = (1.0 / 3.6e5) * 0.31 * (wind_speed**2) * (Sc(t, i) / 660)**-0.5
         else:
-            kwind[i] = (1.0 / 3.6e5) * 0.31 * (Uw_tid**2) * (Sc(t, i) / 660)**-0.5
+            kwind[i] = (1.0 / 3.6e5) * 0.31 * ((wind_speed / 2)**2) * (Sc(t, i) / 660)**-0.5
         vp[i] = kflow[i] + kwind[i]
 
 def Tide(t):
