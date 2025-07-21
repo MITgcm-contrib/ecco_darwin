@@ -1,11 +1,22 @@
 # forcing_module.py
 import numpy as np
 import pandas as pd
-from datetime import timedelta
-from config import WARMUP, USE_WARMUP_DISCHARGE
-###################################################################################### pCO2
+from datetime import timedelta, datetime
+import csv
+import matplotlib.pyplot as plt
+from config import Qr, Uw_sal, pCO2, WARMUP, DELTI, DEBUG_PLOT_FOR_INTERP_ARRAYS, series_info, water_temp
 
-def get_dummy_pCO2(t_seconds, sim_start_dt):
+
+# Global variable to hold the interpolated discharge array
+interpolated_discharge = None
+interpolated_wind_speed = None
+interpolated_pCO2 = None
+interpolated_water_temp = None
+
+
+###################################################################################### pCO2
+'''
+def get_dummy_pCO2(t_seconds, sim_start_dt_dt):
     """
     Returns a synthetic, time-varying pCO2 [atm] using a sinusoidal pattern.
     
@@ -13,7 +24,7 @@ def get_dummy_pCO2(t_seconds, sim_start_dt):
     
         t_seconds : float
             Simulation time in seconds since t = 0
-        sim_start_dt : datetime
+        sim_start_dt_dt : datetime
             Start datetime of the simulation
 
     Returns:
@@ -28,9 +39,9 @@ def get_dummy_pCO2(t_seconds, sim_start_dt):
     atm = ppm / 1_000_000  # convert to atm
 
     return atm
+'''
 
-
-
+'''
 # Load real-world pCO2 time series once
 csv_path = "usgs_elwha_pCO2_timeseries_2011_2016.csv"
 try:
@@ -41,110 +52,147 @@ try:
 except Exception as e:
     print(f"Warning: Failed to load real pCO2 data: {e}")
     pCO2_df = None
+'''
 
 
-
-def get_real_pCO2(t_seconds, sim_start_dt):
-    """
-    Return interpolated atmospheric pCO2 [atm] from real data.
-    Falls back to dummy value if data unavailable.
-    """
-    if pCO2_df is None or pCO2_df.empty:
-        return get_dummy_pCO2(t_seconds, sim_start_dt)
-
-    current_dt = sim_start_dt + timedelta(seconds=t_seconds)
-
-    if current_dt < pCO2_df.index[0]:
-        ppm = pCO2_df["CO2_Value"].iloc[0]
-    elif current_dt > pCO2_df.index[-1]:
-        ppm = pCO2_df["CO2_Value"].iloc[-1]
-    else:
-        ppm = pCO2_df.loc[:current_dt, "CO2_Value"].iloc[-1]
-
-    return ppm / 1_000_000
+def get_real_pCO2(t, sim_start_dt=None):
+    global interpolated_pCO2
+    if t <= WARMUP:
+        return pCO2  # use constant from config (already in atm)
+    index = int((t - WARMUP) // DELTI) # model start time at sim_start_date
+    if index < 0:
+        index = 0
+    elif index >= len(interpolated_pCO2):
+        index = len(interpolated_pCO2) - 1
+    return interpolated_pCO2[index] / 1_000_000  # convert ppm to atm if needed
 
 ###################################################################################### pCO2
 
 ###################################################################################### discharge
 
-# Load real-world discharge time series once
-discharge_df = None
-try:
-    discharge_df = pd.read_csv("Elwha_Cleaned_Discharge.csv")
-    discharge_df["datetime"] = pd.to_datetime(discharge_df["datetime"])
-    discharge_df.set_index("datetime", inplace=True)
-    discharge_df.sort_index(inplace=True)
-except Exception as e:
-    print(f"[WARN] Failed to load discharge data: {e}")
-
-def get_discharge(t_seconds, sim_start_dt):
-    """
-    Return constant discharge during warmup, dynamic discharge after.
-    If USE_WARMUP is False, always use dynamic discharge (CSV or fallback).
-    """
-    if USE_WARMUP_DISCHARGE and t_seconds <= WARMUP:
-        return 47.7  # constant during warmup (positive)
-    else:
-        # Use dynamic discharge after warmup or always if USE_WARMUP is False
-        if discharge_df is None or discharge_df.empty:
-            return 47.7  # fallback (positive)
-
-        current_dt = sim_start_dt + timedelta(seconds=t_seconds)
-        
-        if current_dt < discharge_df.index[0]:
-            return abs(discharge_df["discharge_cms"].iloc[0])  # ensure positive
-        elif current_dt > discharge_df.index[-1]:
-            return abs(discharge_df["discharge_cms"].iloc[-1])  # ensure positive
-
-        subset = discharge_df.loc[:current_dt]
-        if subset.empty:
-            return 47.7
-
-        val = subset["discharge_cms"].iloc[-1]
-        if pd.isna(val):
-            return 47.7
-
-        return abs(val)  # ensure positive
+def get_discharge(t, sim_start_dt=None):
+    global interpolated_discharge
+    if t <= WARMUP:
+        return abs(Qr)  # use constant from config and ensure positive
+    index = int((t - WARMUP) // DELTI) # model start time at sim_start_date
+    if index < 0:
+        index = 0
+    elif index >= len(interpolated_discharge):
+        index = len(interpolated_discharge) - 1
+    return interpolated_discharge[index]
     
-###################################################################################### discharge
 
 ###################################################################################### wind speed
 
-# Load wind speed CSV 
-try:
-    wind_df = pd.read_csv("POWER_Point_Daily_CLEANED.csv", parse_dates=['datetime'])
-    wind_df.set_index('datetime', inplace=True)
-except Exception as e:
-    print(f"[WARN] Failed to load wind speed data: {e}")
-    wind_df = None
+def get_wind_speed(t, sim_start_dt=None):
+    global interpolated_wind_speed
+    if t <= WARMUP:
+        return Uw_sal  # use constant from config
+    index = int((t - WARMUP) // DELTI) # model start time at sim_start_date
+    if index < 0:
+        index = 0
+    elif index >= len(interpolated_wind_speed):
+        index = len(interpolated_wind_speed) - 1
+    return interpolated_wind_speed[index]
 
-def get_wind_speed(t_seconds, sim_start_dt):
-    """
-    Return wind speed (WS2M) for the current simulation time.
-    Looks up the most recent value at or before the current datetime.
-    Falls back to a default if data is missing.
-    """
-    DEFAULT_WIND = 4.0  # fallback value (adjust as needed)
-    if wind_df is None or wind_df.empty:
-        return DEFAULT_WIND
 
-    current_dt = sim_start_dt + timedelta(seconds=t_seconds)
+###################################################################################### water temprature
 
-    # If before/after data range, use first/last value
-    if current_dt < wind_df.index[0]:
-        return wind_df["WS2M"].iloc[0]
-    elif current_dt > wind_df.index[-1]:
-        return wind_df["WS2M"].iloc[-1]
 
-    # find the most recent value at or before current_dt
-    subset = wind_df.loc[:current_dt]
-    if subset.empty:
-        return DEFAULT_WIND
+def get_water_temp(t, sim_start_dt=None):
+    global interpolated_water_temp
+    if t <= WARMUP:
+        return water_temp  # use constant from config
+    index = int((t - WARMUP) // DELTI) # model start time at sim_start_date
+    if index < 0:
+        index = 0
+    elif index >= len(interpolated_water_temp):
+        index = len(interpolated_water_temp) - 1
+    return interpolated_water_temp[index]
 
-    val = subset["WS2M"].iloc[-1]
-    if pd.isna(val):
-        return DEFAULT_WIND
 
-    return val
+################################################# Loading and linear interpolation #####################################################
+def load_and_interpolate_timeseries(series_info, sim_start_dt, delti, maxt):
+    model_times = np.arange(0, maxt+1, delti)
+    results = {}
 
-###################################################################################### wind speed
+    for varname, (csv_path, date_cols, value_col) in series_info.items():
+        data_times = []
+        data_values = []
+        with open(csv_path, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                try:
+                    if isinstance(date_cols, str):
+                        date = row[date_cols]
+                        try:
+                            dt = datetime.fromisoformat(date)
+                        except ValueError:
+                            dt = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+                    else:
+                        year = int(row[date_cols[0]])
+                        month = int(row[date_cols[1]])
+                        day = int(row[date_cols[2]])
+                        dt = datetime(year, month, day)
+                    seconds_since_start = int((dt - sim_start_dt).total_seconds())
+                    value = float(row[value_col])
+                    if value == -999:
+                        continue
+                    data_times.append(seconds_since_start)
+                    data_values.append(value)
+                except Exception as e:
+                    print(f"Skipping row in {csv_path} due to error: {e}")
+        if not data_times:
+            raise ValueError(f"No valid data found for {varname} in {csv_path}")
+        data_times = np.array(data_times)
+        data_values = np.array(data_values)
+        interp_values = np.interp(model_times, data_times, data_values)
+        results[varname] = interp_values
+
+    return results
+
+def initialize_forcings(sim_start, delti, maxt):
+    global interpolated_discharge, interpolated_wind_speed, interpolated_pCO2, interpolated_water_temp
+    results = load_and_interpolate_timeseries(series_info, sim_start, delti, maxt)
+    interpolated_discharge = results['discharge']
+    interpolated_wind_speed = results['wind_speed']
+    interpolated_pCO2 = results['pCO2']
+    interpolated_water_temp = results['water_temp']
+
+
+    
+    if DEBUG_PLOT_FOR_INTERP_ARRAYS:
+        # print lines for array verification 
+        YELLOW = "\033[93m"
+        RESET = "\033[0m"
+        # print lines for array verification 
+        print(f"\n{YELLOW}Discharge array: len = {len(interpolated_discharge)}, min = {np.min(interpolated_discharge)}, max = {np.max(interpolated_discharge)}{RESET}")
+        print(f"{YELLOW}Wind speed array: len = {len(interpolated_wind_speed)}, min = {np.min(interpolated_wind_speed)}, max = {np.max(interpolated_wind_speed)}{RESET}")
+        print(f"{YELLOW}pCO2 array: len = {len(interpolated_pCO2)}, min = {np.min(interpolated_pCO2)}, max = {np.max(interpolated_pCO2)}{RESET}")
+        print(f"{YELLOW}water_temp array: len = {len(interpolated_water_temp)}, min = {np.min(interpolated_water_temp)}, max = {np.max(interpolated_water_temp)}{RESET}\n")
+
+
+        
+        # plots to varify arrays
+
+        fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
+
+        axs[0].plot(interpolated_discharge)
+        axs[0].set_title('Discharge')
+        axs[0].set_ylabel('Discharge (m^3/s)')
+
+        axs[1].plot(interpolated_wind_speed)
+        axs[1].set_title('Wind Speed')
+        axs[1].set_ylabel('Wind Speed (m/s)')
+
+        axs[2].plot(interpolated_pCO2)
+        axs[2].set_title('pCO2')
+        axs[2].set_ylabel('pCO2 (atm)')
+
+        axs[3].plot(interpolated_water_temp)
+        axs[3].set_title('water_temp')
+        axs[3].set_ylabel('temp (C)')
+
+        plt.xlabel("Model Timestep")
+        plt.tight_layout()
+        plt.show()
