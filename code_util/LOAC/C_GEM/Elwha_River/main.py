@@ -67,7 +67,7 @@ if __name__ == "__main__":
     ]
 
     if not check_output_writability(output_files):
-        exit("Aborting: one or more files are locked or not writable.")
+        exit("\033[31mAborting: one or more files are locked or not writable.\033[0m")
 
 
     main()
