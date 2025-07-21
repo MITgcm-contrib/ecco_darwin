@@ -6,13 +6,15 @@ import math
 from config import M, PI, EL, DELXI, G, Chezy_lb, Chezy_ub, DEPTH_lb, DEPTH_ub, B_ub, B_lb, distance
 from variables import v, D, Dold, DEPTH, E, Y, U, TU, B, ZZ, Z, fl, dispersion, GPP, NPP, NPP_NO3, NPP_NH4, phy_death, aer_deg, denit, nit, O2_ex, Chezy, C, FCO2, Hplus
 import numpy as np
-from forcings_module import get_discharge
-from config import SIM_START_DATETIME, Qr
+from forcings_module import get_discharge, initialize_forcings
+from config import SIM_START_DATETIME, Qr, DELTI, MAXT
 
 
 def init():
     """Initialize model arrays and set up boundary conditions."""
     include_constantDEPTH = 0
+
+    initialize_forcings(SIM_START_DATETIME, DELTI, MAXT)
 
     # Convergence length [m]
     LC = 1.0 / -(1.0 / float(EL) * math.log(float(B_ub) / float(B_lb)))
