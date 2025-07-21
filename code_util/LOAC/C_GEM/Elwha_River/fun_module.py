@@ -8,7 +8,7 @@ from variables import v, U, DEPTH, kflow, kwind, vp, Hplus
 from density import dens
 from numba import njit
 import random
-from forcings_module import get_wind_speed
+from forcings_module import get_wind_speed, get_water_temp
 
 def D_O2(t):
     """Molecular diffusion coefficient for O2 [m^2/s]."""
@@ -26,7 +26,7 @@ def Sc(t, i):
 def piston_velocity(t):
     """Calculate piston velocity for O2 exchange across air-water interface."""
     wind_speed = get_wind_speed(t, SIM_START_DATETIME)
-    print(f"[DEBUG] piston_velocity: t={t}, wind_speed={wind_speed}")
+    #print(f"[DEBUG] piston_velocity: t={t}, wind_speed={wind_speed}")
     for i in range(M + 1):
         kflow[i] = math.sqrt(abs(U[i]) * D_O2(t) / DEPTH[i])
         if i <= distance:
@@ -43,7 +43,8 @@ def Tide(t):
 
 def Tabs(t):
     """Calculate absolute temperature [K]."""
-    abstemp = 273.15 + water_temp
+    w_temp = get_water_temp(t, SIM_START_DATETIME)
+    abstemp = 273.15 + w_temp
     return abstemp
 
 def I0(t):
@@ -99,7 +100,7 @@ def K1_CO2(t, i):
 ! in mol/kg-SW on the SWS pH-scale (Miller 1995) from solvesaphe (Munhoven, 2013)"""
     # terms used more than once for:
     # temperature
-    t = water_temp
+    t = get_water_temp(t, SIM_START_DATETIME)
     tk = Tabs(t)
     tk100 = tk / 100
     invtk = 1.0 / tk
@@ -132,7 +133,7 @@ def K2_CO2(t, i):
 ! in mol/kg-SW on the SWS pH-scale (Miller 1995) from Darwin"""
     # terms used more than once for:
     # temperature
-    t = water_temp
+    t = get_water_temp(t, SIM_START_DATETIME)
     tk = Tabs(t)
     tk100 = tk / 100
     invtk = 1.0 / tk
@@ -164,7 +165,7 @@ def KB(t, i):
     Millero, 1995"""
     # terms used more than once for:
     # temperature
-    t = water_temp
+    t = get_water_temp(t, SIM_START_DATETIME)
     tk = Tabs(t)
     invtk = 1.0 / tk
     dlogtk = math.log(tk)
