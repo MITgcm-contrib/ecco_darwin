@@ -56,9 +56,17 @@ pfun = 0.0830  # Tidal frequency [cycle/hr]
 Uw_sal = 4.39  # Wind speed in saline estuary [m/s]
 Uw_tid = 2.195  # Wind speed in tidal river [m/s]
 water_temp = 10  # Water temperature [C]
-#pCO2 = 380 * 1e-6  # CO2 partial pressure in the atmosphere [atm]  ################## (change to time series) (test first with sine
-use_real_pCO2 = True # toggle wheather to use the real world pCO2 time series or dummy sine wave function 
-USE_WARMUP_DISCHARGE = False  # toggle warmup feature in get_discharge
+pCO2 = 380 * 1e-6  # CO2 partial pressure in the atmosphere [atm]  ################## (change to time series) (test first with sine
+#use_real_pCO2 = True # toggle wheather to use the real world pCO2 time series or dummy sine wave function 
+#USE_WARMUP_DISCHARGE = False  # toggle warmup feature in get_discharge
+DEBUG_PLOT_FOR_INTERP_ARRAYS = True
+series_info = {
+    'wind_speed': ('POWER_Point_Daily_CLEANED.csv', 'datetime', 'WS2M'),
+    'discharge': ('Elwha_Cleaned_Discharge.csv', 'datetime', 'discharge_cms'), ###### dictionary to hold time series' to be interpolated
+    'pCO2': ('usgs_elwha_pCO2_timeseries_2011_2016.csv', ('Year', 'Month', 'Day'), 'CO2_Value'), ##### include files in working directory 
+    'water_temp': ('Cleaned_Water_Temperature_Data.csv', 'Datetime', 'Temperature_C')
+    # Add more as needed in this format
+}
 
 # OTHER PARAMETERS
 Euler = 0.5772156649  # Euler's constant
@@ -67,9 +75,9 @@ pH_ite = 50  # number of iterations to converge to pH following Follows et al., 
 mass_mol_B = 10.8110  # molar mass of Boron g/mol
 
 # NUMERICAL INTEGRATION
-SIM_START_DATETIME = datetime(2011, 9, 1)  # start date of the pCO2 for sine wavesimulation
-MAXT = (365*3) * 24 * 60 * 60  # Max time [s]  (roughly 94 million sec)
-WARMUP = (365*2) * 24 * 60 * 60  # Warmup period [s]
+SIM_START_DATETIME = datetime(2011, 9, 15)  # start date fo the model's time series post WARMUP
+MAXT = (365*7) * 24 * 60 * 60  # Max time [s]  (roughly 217 million sec or 7 years) (len(WARMUP) + len(time series'))
+WARMUP = (365*2) * 24 * 60 * 60  # Warmup period [s] (roughly 62 million sec or 2 years)
 DELTI = 150  # Delta t [s]
 TS = 12  # Save every TS timesteps
 DELXI = 1000  # Delta x [m]
