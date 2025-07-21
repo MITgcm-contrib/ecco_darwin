@@ -20,16 +20,16 @@ def check_output_writability(file_list):
 
         try:
             with open(full_path, "a"):
-                print(f"Writable: {full_path}")
+                print(f"\033[92mWritable:\033[0m {full_path}")
         except (PermissionError, IOError) as e:
             print(f"ERROR: Cannot write to '{full_path}': {e}")
             failed.append(full_path)
 
     if failed:
-        print("\nThe following files are not writable. Please close them or check permissions:")
+        print("\n\033[31m The following files are not writable. Please close them or check permissions:\033[0m")
         for f in failed:
             print(f"  - {f}")
         return False
 
-    print("\nAll output files are writable.")
+    print("\n\033[92mAll output files are writable.\033[0m")
     return True
