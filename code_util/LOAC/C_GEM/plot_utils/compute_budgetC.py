@@ -54,24 +54,23 @@ def compute_flux(U,depth,width,concentration,start,end):
                      width[start:end][[dw_idx]]) *
               sec_in_yr * mol2g_C * mg2Tg) / saving_ts
     return float(up_flx), float(dw_flx)
-def integrate_CO2(depth,width,FCO2,start,end,DELXI):
-    # integrate CO2 fluxes over the entire estuary [Tg C yr-1]
-    # negative output means CO2 outgassing to the atmosphere
+def integrate_C(depth,width,FC,start,end,DELXI):
+    # integrate C fluxes/rates over the entire estuary [Tg C yr-1]
     # depth: depth in m
     # width = channel width in m
-    # FCO2: CO2 flux in [mmol C m^−3 s^−1]
+    # FC: C flux/rates in [mmol C m^−3 s^−1]
     # start: idx of beginning of period of interest
     # end: idx of end of period of interest
     # DELXI: length of estuarine section in m
     sec_in_yr = 60 * 60 * 24 * 365
     mol2g_C = 12.01070
     mg2Tg = 1E-15
-    saving_ts = FCO2.index[1]-FCO2.index[0]
-    int_CO2 = np.sum(np.sum(FCO2.loc[start:end]*
+    saving_ts = FC.index[1]-FC.index[0]
+    int_C = np.sum(np.sum(FC.loc[start:end]*
                      depth[start:end] *
                      width[start:end] *
                      DELXI) * sec_in_yr * mol2g_C * mg2Tg / saving_ts)
-    return int_CO2
+    return int_C
 def make_arrows_flx(up_flx,dw_flx,max_scale,order,variable_name,title):
     # up_flx, dw_flx: upstream and downstream fluxes
     # max_scale: scale factor for arrow width
@@ -84,7 +83,7 @@ def make_arrows_flx(up_flx,dw_flx,max_scale,order,variable_name,title):
                 fontsize=12, ha='center', va='center')
     axs.annotate('Upstream', (0.1, 0.8), color="C1", weight='bold',
                  fontsize=12, ha='center', va='center')
-    axs.annotate('Downstream', (0.95, 0.8), color="C2", weight='bold',
+    axs.annotate('Downstream', (0.95, 0.8), color="b", weight='bold',
                  fontsize=12, ha='center', va='center')
     up = up_flx/max_scale
     dw = dw_flx/max_scale
@@ -139,7 +138,7 @@ def make_arrows_flx(up_flx,dw_flx,max_scale,order,variable_name,title):
     dy = y_head - y_tail
     width = np.max([abs(dw), 0.002])
     arrow = mpatches.FancyArrow(x_tail, y_tail, dx, dy,
-                                width=width, length_includes_head=True, color="C2"
+                                width=width, length_includes_head=True, color="b"
                                 )
     axs.add_patch(arrow)
     axs.annotate(variable_name, (0.85, y_tail+dy+width*3), color='k', weight='bold',
@@ -182,7 +181,13 @@ def make_arrows_airwaterflx(airwater_flx,max_scale,variable_name):
                  fontsize=12)
     axs.annotate(str(round(abs(flx),3)), (0.45, y), color='k', weight='bold',
                  fontsize=12,annotation_clip=False)
-
+def make_rates(remin,npp):
+    # remin: remineralization of organic carbon
+    # npp: net primary production
+    axs.annotate('NPP ='+str(round(npp,2)), (0.5, 0.4), color='g', weight='bold',
+                fontsize=12, ha='center', va='center')
+    axs.annotate('Remineralization =' + str(round(remin, 2)), (0.5, 0.2), color='gray', weight='bold',
+                 fontsize=12, ha='center', va='center')
 #load depth
 depth = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/depth.dat")
 #load width
@@ -195,25 +200,36 @@ CO2flx = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/FCO2.dat")
 idx_lastyear = CO2flx.index[0]
 idx_final = CO2flx.index[len(CO2flx)-1]
 DELXI = 1000
-FCO2_int = integrate_CO2(depth,width,CO2flx,idx_lastyear,idx_final,DELXI)
+FCO2_int = integrate_C(depth,width,CO2flx,idx_lastyear,idx_final,DELXI) # negative output means CO2 outgassing to the atmosphere
 
 #load DIC concentration [mmol m^-3]
 DIC = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/DIC.dat")
 #compute flux [Tg yr-1]
 up_DIC, dw_DIC = compute_flux(U,depth,width,DIC,idx_lastyear,idx_final)
+
 #load TOC concentration [mmol m^-3]
 TOC = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/TOC.dat")
 #compute flux [Tg yr-1]
 up_TOC, dw_TOC = compute_flux(U,depth,width,TOC,idx_lastyear,idx_final)
+
 #load ALK concentration [mmol m^-3]
 ALK = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/ALK.dat")
 #compute flux [Tg yr-1]
 up_ALK, dw_ALK = compute_flux(U,depth,width,ALK,idx_lastyear,idx_final)
+
+#load remineralization of organic carbon [mmol m^-3 s-1]
+K = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/aer_deg.dat")
+K_int = integrate_C(depth,width,K,idx_lastyear,idx_final,DELXI)
+
+#load net primary production [mmol m^-3 s-1]
+NPP = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/NPP.dat")
+NPP_int = integrate_C(depth,width,NPP,idx_lastyear,idx_final,DELXI)
 
 fig, axs = plt.subplots(nrows=1)
 make_arrows_flx(up_DIC,dw_DIC,300,1,'DIC','Carbon budget (flux in Tg C yr$^{-1}$)')
 make_arrows_flx(up_ALK,dw_ALK,300,2,'ALK',None)
 make_arrows_flx(up_TOC,dw_TOC,300,3,'TOC',None)
 make_arrows_airwaterflx(FCO2_int,300,'Air-water CO$_2$ flux')
-#plt.savefig('Carbon_budget.png', dpi=180)
+make_rates(K_int,NPP_int)
+plt.savefig('Carbon_budget.png', dpi=180)
 
