@@ -1,5 +1,6 @@
 """
 Utility functions module (translated from fun.c)
+t is always time vector in the following functions. Use water_temp or Tabs(t) for temperature
 """
 
 import math
@@ -76,7 +77,7 @@ def O2sat(t, i):
 
 def p_bar(t, i):
     # water density approx [kg/m**3] based on T, S, D/P in the middle of the water column
-    density = dens(v['S']['c'][i], Tabs(i) - 273.15, DEPTH[i] / 2)  # (assuming depth=p_bar)
+    density = dens(v['S']['c'][i], Tabs(t) - 273.15, DEPTH[i] / 2)  # (assuming depth=p_bar)
     p = DEPTH[i] / 2 * density * G  # N/m^2 (10e-4 dbar)
     p = p * 0.1  # bar
     return p
@@ -96,7 +97,6 @@ def K1_CO2(t, i):
 ! in mol/kg-SW on the SWS pH-scale (Miller 1995) from solvesaphe (Munhoven, 2013)"""
     # terms used more than once for:
     # temperature
-    t = water_temp
     tk = Tabs(t)
     tk100 = tk / 100
     invtk = 1.0 / tk
@@ -107,7 +107,7 @@ def K1_CO2(t, i):
     # at constant pressure (zero)
     K1_p0 = 10**(-1 * (3670.7 * invtk - 62.008 + 9.7944 * dlogtk - 0.0118 * s + 0.000116 * s2))
     # Pressure correction
-    K1 = K1_p0 * math.exp((24.2 - 0.085 * t) * p_bar(t, i) / (83.143 * tk))
+    K1 = K1_p0 * math.exp((24.2 - 0.085 * water_temp) * p_bar(water_temp, i) / (83.143 * tk))
     # # at constant pressure (zero)
     # K1_p0 = 2.18867 - 2275.0360 / Tabs(t) - 1.468591 * math.log(Tabs(t)) +\
     #         (-0.138681 - 9.33291 / Tabs(t)) * math.sqrt(v['S']['c'][i]) +\
@@ -129,7 +129,6 @@ def K2_CO2(t, i):
 ! in mol/kg-SW on the SWS pH-scale (Miller 1995) from Darwin"""
     # terms used more than once for:
     # temperature
-    t = water_temp
     tk = Tabs(t)
     tk100 = tk / 100
     invtk = 1.0 / tk
@@ -139,7 +138,7 @@ def K2_CO2(t, i):
     # at constant pressure (zero)
     K2_p0 = 10**(-1 * (1394.7 * invtk + 4.777 - 0.0184 * s + 0.000118 * s2))
     # Pressure correction
-    K2 = K2_p0 * math.exp((16.4 - 0.040 * t) * p_bar(t, i) / (83.143 * tk))
+    K2 = K2_p0 * math.exp((16.4 - 0.040 * t) * p_bar(water_temp, i) / (83.143 * tk))
     # at constant pressure (zero)
     # K2_p0 = -0.84226 - 3741.1288 / Tabs(t) - 1.437139 * math.log(Tabs(t)) +\
     #         (-0.128417 - 24.41239 / Tabs(t)) * math.sqrt(v['S']['c'][i]) +\
@@ -161,7 +160,6 @@ def KB(t, i):
     Millero, 1995"""
     # terms used more than once for:
     # temperature
-    t = water_temp
     tk = Tabs(t)
     invtk = 1.0 / tk
     dlogtk = math.log(tk)
