@@ -107,7 +107,7 @@ def K1_CO2(t, i):
     # at constant pressure (zero)
     K1_p0 = 10**(-1 * (3670.7 * invtk - 62.008 + 9.7944 * dlogtk - 0.0118 * s + 0.000116 * s2))
     # Pressure correction
-    K1 = K1_p0 * math.exp((24.2 - 0.085 * water_temp) * p_bar(water_temp, i) / (83.143 * tk))
+    K1 = K1_p0 * math.exp((24.2 - 0.085 * water_temp) * p_bar(t, i) / (83.143 * tk))
     # # at constant pressure (zero)
     # K1_p0 = 2.18867 - 2275.0360 / Tabs(t) - 1.468591 * math.log(Tabs(t)) +\
     #         (-0.138681 - 9.33291 / Tabs(t)) * math.sqrt(v['S']['c'][i]) +\
@@ -138,7 +138,7 @@ def K2_CO2(t, i):
     # at constant pressure (zero)
     K2_p0 = 10**(-1 * (1394.7 * invtk + 4.777 - 0.0184 * s + 0.000118 * s2))
     # Pressure correction
-    K2 = K2_p0 * math.exp((16.4 - 0.040 * t) * p_bar(water_temp, i) / (83.143 * tk))
+    K2 = K2_p0 * math.exp((16.4 - 0.040 * t) * p_bar(t, i) / (83.143 * tk))
     # at constant pressure (zero)
     # K2_p0 = -0.84226 - 3741.1288 / Tabs(t) - 1.437139 * math.log(Tabs(t)) +\
     #         (-0.128417 - 24.41239 / Tabs(t)) * math.sqrt(v['S']['c'][i]) +\
