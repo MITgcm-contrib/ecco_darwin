@@ -23,8 +23,8 @@ tau_ero_lb = 0.4  # Erosion shear stress (downstream) [N/m^2]
 tau_dep_lb = 0.4  # Deposition shear stress (downstream) [N/m^2]
 tau_ero_ub = 1.0  # Erosion shear stress (upstream) [N/m^2]
 tau_dep_ub = 1.0  # Deposition shear stress (upstream) [N/m^2]
-Mero_lb = 3.5e-6  # Erosion coefficient (downstream) [mg/m^2 s]
-Mero_ub = 6.0e-8  # Erosion coefficient (upstream) [mg/m^2 s]
+Mero_lb = 3.5e-6  # Erosion coefficient (downstream) [kg/m^2 s]
+Mero_ub = 6.0e-8  # Erosion coefficient (upstream) [kg/m^2 s]
 
 # BIOGEOCHEMICAL PARAMETERS
 Pbmax = 1.157e-4  # Max photosynthetic rate [s^-1]
