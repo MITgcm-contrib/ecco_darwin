@@ -28,7 +28,7 @@ def open_CGEM(filepath):
         print(f"An error occurred: {e}")
     return df
 def compute_flux(U,depth,width,concentration,start,end):
-    # compute upstream and downstream fluxes in Tg yr-1
+    # compute upstream and downstream fluxes in Gg yr-1
     # negative: towards the ocean
     # positive: towards the river source
     # U : horizontal velocity in m/s
@@ -39,7 +39,7 @@ def compute_flux(U,depth,width,concentration,start,end):
     # end: idx of end of period of interest
     sec_in_yr = 60 * 60 * 24 * 365
     mol2g_C = 12.01070
-    mg2Tg = 1E-15
+    mg2Gg = 1E-12
     up_idx = np.size(concentration, 1) - 1
     dw_idx = 0
     saving_ts = concentration.index[1]-concentration.index[0]
@@ -47,15 +47,15 @@ def compute_flux(U,depth,width,concentration,start,end):
                      concentration.loc[start:end][[up_idx]] *
                      depth[start:end][[up_idx]] *
                      width[start:end][[up_idx]]) *
-              sec_in_yr * mol2g_C * mg2Tg) / saving_ts
+              sec_in_yr * mol2g_C * mg2Gg) / len(concentration.loc[start:end])
     dw_flx = (np.sum(U[start:end][[dw_idx]] *
                      concentration.loc[start:end][[dw_idx]] *
                      depth[start:end][[dw_idx]] *
                      width[start:end][[dw_idx]]) *
-              sec_in_yr * mol2g_C * mg2Tg) / saving_ts
+              sec_in_yr * mol2g_C * mg2Gg) / len(concentration.loc[start:end])
     return float(up_flx), float(dw_flx)
 def integrate_C(depth,width,FC,start,end,DELXI):
-    # integrate C fluxes/rates over the entire estuary [Tg C yr-1]
+    # integrate C fluxes/rates over the entire estuary [Gg C yr-1]
     # depth: depth in m
     # width = channel width in m
     # FC: C flux/rates in [mmol C m^−3 s^−1]
@@ -64,12 +64,12 @@ def integrate_C(depth,width,FC,start,end,DELXI):
     # DELXI: length of estuarine section in m
     sec_in_yr = 60 * 60 * 24 * 365
     mol2g_C = 12.01070
-    mg2Tg = 1E-15
+    mg2Gg = 1E-12
     saving_ts = FC.index[1]-FC.index[0]
     int_C = np.sum(np.sum(FC.loc[start:end]*
                      depth[start:end] *
                      width[start:end] *
-                     DELXI) * sec_in_yr * mol2g_C * mg2Tg / saving_ts)
+                     DELXI) * sec_in_yr * mol2g_C * mg2Gg / len(FC.loc[start:end]))
     return int_C
 def make_arrows_flx(up_flx,dw_flx,max_scale,order,variable_name,title):
     # up_flx, dw_flx: upstream and downstream fluxes
@@ -179,7 +179,7 @@ def make_arrows_airwaterflx(airwater_flx,max_scale,variable_name):
     axs.add_patch(arrow)
     axs.annotate(variable_name, (0.35, 0.7), color='k', weight='bold',
                  fontsize=12)
-    axs.annotate(str(round(abs(flx),3)), (0.45, y), color='k', weight='bold',
+    axs.annotate(str(round(abs(airwater_flx),3)), (0.45, y), color='k', weight='bold',
                  fontsize=12,annotation_clip=False)
 def make_rates(remin,npp):
     # remin: remineralization of organic carbon
@@ -226,10 +226,10 @@ NPP = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/NPP.dat")
 NPP_int = integrate_C(depth,width,NPP,idx_lastyear,idx_final,DELXI)
 
 fig, axs = plt.subplots(nrows=1)
-make_arrows_flx(up_DIC,dw_DIC,300,1,'DIC','Carbon budget (flux in Tg C yr$^{-1}$)')
-make_arrows_flx(up_ALK,dw_ALK,300,2,'ALK',None)
-make_arrows_flx(up_TOC,dw_TOC,300,3,'TOC',None)
-make_arrows_airwaterflx(FCO2_int,300,'Air-water CO$_2$ flux')
+make_arrows_flx(up_DIC,dw_DIC,20000,1,'DIC','Carbon budget (flux in Gg C yr$^{-1}$)')
+make_arrows_flx(up_ALK,dw_ALK,20000,2,'ALK',None)
+make_arrows_flx(up_TOC,dw_TOC,10000,3,'TOC',None)
+make_arrows_airwaterflx(FCO2_int,20000,'Air-water CO$_2$ flux')
 make_rates(K_int,NPP_int)
 plt.savefig('Carbon_budget.png', dpi=180)
 
