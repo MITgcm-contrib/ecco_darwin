@@ -13,6 +13,7 @@ rho_w = 1000.0  # Density of pure water [kg/m^3]
 G = 9.81  # Gravity acceleration [m/s^2]
 distance = 5  # Grid points in saline zone  (for experimentation set up to be half the distance of river in km (36 km))
 
+
 # HYDRODYNAMIC AND SEDIMENT PARAMETERS
 Chezy_lb = 60  # Chezy coefficient (downstream) [m^-1/2 s^-1]
 Chezy_ub = 40  # Chezy coefficient (upstream) [m^-1/2 s^-1]
@@ -23,6 +24,7 @@ tau_ero_ub = 1.0  # Erosion shear stress (upstream) [N/m^2]
 tau_dep_ub = 1.0  # Deposition shear stress (upstream) [N/m^2]
 Mero_lb = 3.5e-6  # Erosion coefficient (downstream) [mg/m^2 s]
 Mero_ub = 6.0e-8  # Erosion coefficient (upstream) [mg/m^2 s]
+
 
 # BIOGEOCHEMICAL PARAMETERS
 Pbmax = 2.58e-5  # Max photosynthetic rate [s^-1]
@@ -49,6 +51,7 @@ kox = 6.08e-4  # Aerobic degradation rate [muM C s^-1]
 kdenit = 5.05e-4  # Denitrification rate [muM C s^-1]
 knit = 2.73e-5  # Nitrification rate [muM C s^-1]
 
+
 # EXTERNAL FORCINGS
 Qr = -47.7  # River discharge [m^3/s]  ################# (negative == downstream) (input value as negated)
 AMPL = 3.5  # Tidal amplitude at mouth [m]
@@ -58,15 +61,15 @@ Uw_tid = 2.195  # Wind speed in tidal river [m/s]
 water_temp = 10  # Water temperature [C]
 pCO2 = 380 * 1e-6  # CO2 partial pressure in the atmosphere [atm]  ################## (change to time series) (test first with sine
 #use_real_pCO2 = True # toggle wheather to use the real world pCO2 time series or dummy sine wave function 
-#USE_WARMUP_DISCHARGE = False  # toggle warmup feature in get_discharge
-DEBUG_PLOT_FOR_INTERP_ARRAYS = True
 series_info = {
     'wind_speed': ('POWER_Point_Daily_CLEANED.csv', 'datetime', 'WS2M'),
     'discharge': ('Elwha_Cleaned_Discharge.csv', 'datetime', 'discharge_cms'), ###### dictionary to hold time series' to be interpolated
     'pCO2': ('usgs_elwha_pCO2_timeseries_2011_2016.csv', ('Year', 'Month', 'Day'), 'CO2_Value'), ##### include files in working directory 
-    'water_temp': ('Cleaned_Water_Temperature_Data.csv', 'Datetime', 'Temperature_C')
-    # Add more as needed in this format
+    'water_temp': ('Cleaned_Water_Temperature_Data.csv', 'Datetime', 'Temperature_C'),
+    'sediment': ('Elwha_Cleaned_SSC_Timeseries.csv', 'Day', 'Daily SSC (mg/L)')   
+      # Add more as needed in this format
 }
+
 
 # OTHER PARAMETERS
 Euler = 0.5772156649  # Euler's constant
@@ -74,10 +77,29 @@ PI = math.pi  # Pi value
 pH_ite = 50  # number of iterations to converge to pH following Follows et al., 2006
 mass_mol_B = 10.8110  # molar mass of Boron g/mol
 
+
+# DEVELOPER MODE SETTINGS
+DEVELOPER_MODE = False  # set to False for full production runs
+DEBUG_PLOT_FOR_INTERP_ARRAYS = True  # toggle to plot of interpolated arrays for debugging
+# USE_WARMUP_DISCHARGE = False  # toggle warmup feature in get_discharge
+
+
 # NUMERICAL INTEGRATION
 SIM_START_DATETIME = datetime(2011, 9, 15)  # start date fo the model's time series post WARMUP
-MAXT = (365*7) * 24 * 60 * 60  # Max time [s]  (roughly 217 million sec or 7 years) (len(WARMUP) + len(time series'))
-WARMUP = (365*2) * 24 * 60 * 60  # Warmup period [s] (roughly 62 million sec or 2 years)
+# Time settings based on mode
+if DEVELOPER_MODE:
+    # test mode: 1 year warmup + 1 year simulation = 2 years total
+    WARMUP_YEARS = 1
+    SIMULATION_YEARS = 1
+    print("\033[33mDEVELOPER MODE: Using 1-year warmup + 1-year simulation\033[0m")
+else:
+    # production mode: 2 year warmup + 5 year simulation = 7 years total  (2 year warmup then 2011-2016)
+    WARMUP_YEARS = 2
+    SIMULATION_YEARS = 5
+    print("\033[32mPRODUCTION MODE: Using 2-year warmup + 5-year simulation\033[0m")
+
+MAXT = (365 * (WARMUP_YEARS + SIMULATION_YEARS)) * 24 * 60 * 60  # Max time [s]  (roughly 217 million sec or 7 years) (len(WARMUP) + len(time series'))
+WARMUP = (365 * WARMUP_YEARS) * 24 * 60 * 60  # Warmup period [s] (roughly 62 million sec or 2 years)
 DELTI = 150  # Delta t [s]
 TS = 12  # Save every TS timesteps
 DELXI = 1000  # Delta x [m]
