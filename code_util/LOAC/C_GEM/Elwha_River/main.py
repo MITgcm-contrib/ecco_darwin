@@ -36,6 +36,7 @@ def main():
         if t > WARMUP:
             biogeo(t)
             sed(t)
+    print("[STATUS]:\033[92mModel run completed successfully.\033[0m")
 
 if __name__ == "__main__":
 
@@ -58,6 +59,13 @@ if __name__ == "__main__":
     "nit.dat",       # nitrification rates
     "O2_ex.dat",     # air-water O₂ exchange rates
     "NEM.dat",       # Net Ecosystem Metabolism rates
+
+    #erosion and deposition
+    "erosion.dat",   # erosion rates
+    "deposition.dat",# deposition rates
+
+    # velocity
+    "U.dat",  # velocity data
 
     # FCO2 version outputs:
     "DIC.dat",       # dissolved inorganic carbon concentration
