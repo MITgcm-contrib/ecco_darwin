@@ -12,6 +12,8 @@ interpolated_discharge = None
 interpolated_wind_speed = None
 interpolated_pCO2 = None
 interpolated_water_temp = None
+interpolated_sediment = None
+
 
 
 ###################################################################################### pCO2
@@ -66,7 +68,6 @@ def get_real_pCO2(t, sim_start_dt=None):
         index = len(interpolated_pCO2) - 1
     return interpolated_pCO2[index] / 1_000_000  # convert ppm to atm if needed
 
-###################################################################################### pCO2
 
 ###################################################################################### discharge
 
@@ -110,6 +111,23 @@ def get_water_temp(t, sim_start_dt=None):
         index = len(interpolated_water_temp) - 1
     return interpolated_water_temp[index]
 
+###################################################################################### suspended sediment
+
+def get_sediment(t, sim_start_dt=None):
+    global interpolated_sediment
+    if t <= WARMUP:
+        return 0.01  # use constant from init_module
+    index = int((t - WARMUP) // DELTI)
+    if index < 0:
+        index = 0
+    elif index >= len(interpolated_sediment):
+        index = len(interpolated_sediment) - 1
+    return interpolated_sediment[index] / 1000.0  # Convert mg/L to g/L
+    #sediment_value = interpolated_sediment[index] / 1000.0  # Convert mg/L to g/L
+    # Cap at reasonable maximum (1 g/L = 1000 mg/L)
+    #return min(sediment_value, 1.0)
+
+
 
 ################################################# Loading and linear interpolation #####################################################
 def load_and_interpolate_timeseries(series_info, sim_start_dt, delti, maxt):
@@ -152,12 +170,13 @@ def load_and_interpolate_timeseries(series_info, sim_start_dt, delti, maxt):
     return results
 
 def initialize_forcings(sim_start, delti, maxt):
-    global interpolated_discharge, interpolated_wind_speed, interpolated_pCO2, interpolated_water_temp
+    global interpolated_discharge, interpolated_wind_speed, interpolated_pCO2, interpolated_water_temp, interpolated_sediment
     results = load_and_interpolate_timeseries(series_info, sim_start, delti, maxt)
     interpolated_discharge = results['discharge']
     interpolated_wind_speed = results['wind_speed']
     interpolated_pCO2 = results['pCO2']
     interpolated_water_temp = results['water_temp']
+    interpolated_sediment = results['sediment']
 
 
     
@@ -169,13 +188,14 @@ def initialize_forcings(sim_start, delti, maxt):
         print(f"\n{YELLOW}Discharge array: len = {len(interpolated_discharge)}, min = {np.min(interpolated_discharge)}, max = {np.max(interpolated_discharge)}{RESET}")
         print(f"{YELLOW}Wind speed array: len = {len(interpolated_wind_speed)}, min = {np.min(interpolated_wind_speed)}, max = {np.max(interpolated_wind_speed)}{RESET}")
         print(f"{YELLOW}pCO2 array: len = {len(interpolated_pCO2)}, min = {np.min(interpolated_pCO2)}, max = {np.max(interpolated_pCO2)}{RESET}")
-        print(f"{YELLOW}water_temp array: len = {len(interpolated_water_temp)}, min = {np.min(interpolated_water_temp)}, max = {np.max(interpolated_water_temp)}{RESET}\n")
+        print(f"{YELLOW}water_temp array: len = {len(interpolated_water_temp)}, min = {np.min(interpolated_water_temp)}, max = {np.max(interpolated_water_temp)}{RESET}")
+        print(f"{YELLOW}sediment array: len = {len(interpolated_sediment)}, min = {np.min(interpolated_sediment)}, max = {np.max(interpolated_sediment)}{RESET}\n")
 
 
         
         # plots to varify arrays
 
-        fig, axs = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
+        fig, axs = plt.subplots(5, 1, figsize=(12, 10), sharex=True)
 
         axs[0].plot(interpolated_discharge)
         axs[0].set_title('Discharge')
@@ -192,6 +212,10 @@ def initialize_forcings(sim_start, delti, maxt):
         axs[3].plot(interpolated_water_temp)
         axs[3].set_title('water_temp')
         axs[3].set_ylabel('temp (C)')
+
+        axs[4].plot(interpolated_sediment)
+        axs[4].set_title('Suspended Sediment')
+        axs[4].set_ylabel('SSC (mg/L)')
 
         plt.xlabel("Model Timestep")
         plt.tight_layout()
