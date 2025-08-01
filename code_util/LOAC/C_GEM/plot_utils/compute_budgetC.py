@@ -204,17 +204,17 @@ FCO2_int = integrate_C(depth,width,CO2flx,idx_lastyear,idx_final,DELXI) # negati
 
 #load DIC concentration [mmol m^-3]
 DIC = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/DIC.dat")
-#compute flux [Tg yr-1]
+#compute flux [Gg yr-1]
 up_DIC, dw_DIC = compute_flux(U,depth,width,DIC,idx_lastyear,idx_final)
 
 #load TOC concentration [mmol m^-3]
 TOC = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/TOC.dat")
-#compute flux [Tg yr-1]
+#compute flux [Gg yr-1]
 up_TOC, dw_TOC = compute_flux(U,depth,width,TOC,idx_lastyear,idx_final)
 
 #load ALK concentration [mmol m^-3]
 ALK = open_CGEM("/Users/rsavelli/Documents/CMS_LOAC/Guayas/outputs/ALK.dat")
-#compute flux [Tg yr-1]
+#compute flux [Gg yr-1]
 up_ALK, dw_ALK = compute_flux(U,depth,width,ALK,idx_lastyear,idx_final)
 
 #load remineralization of organic carbon [mmol m^-3 s-1]
