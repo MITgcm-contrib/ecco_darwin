@@ -41,14 +41,14 @@ def sed(t):
             tau_dep[i] = tau_dep_ub if i >= distance else tau_dep_lb
 
         # Update SPM concentration [g/l]
-        #v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
+        v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
         #v['SPM']['c'][i] = get_sediment(t) + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
-        if t <= WARMUP:
-            # pure physical model during warmup - let system equilibrate
-            v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
-        else:
-            # hybrid model after warmup - time series + physical processes
-            v['SPM']['c'][i] = get_sediment(t) + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
+        #if t <= WARMUP:
+       #     # pure physical model during warmup - let system equilibrate
+       #     v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
+       # else:
+       #     # hybrid model after warmup - time series + physical processes
+       #     v['SPM']['c'][i] = get_sediment(t) + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
 
     # Write erosion/deposition process rates [mg m^-2 s^-1]
     if (float(t) / float(TS * DELTI)) % 1 == 0:
