@@ -11,6 +11,7 @@ def new_bc(t):
     """Set new boundary conditions."""
     dynamic_Qr = -get_discharge(t, SIM_START_DATETIME)
     #print(f"[DEBUG] new_bc: t={t}, dynamic_Qr={dynamic_Qr}")
+    #print(f"DEBUG: t={t/86400:.1f}d, discharge={get_discharge(t):.1f}, dynamic_Qr={dynamic_Qr:.1f}, D[M]={D[M]:.1f}, U[M]={dynamic_Qr/D[M]:.6f}")
 
     H[1] = B[1] * Tide(t)
     TH[1] = H[1]
