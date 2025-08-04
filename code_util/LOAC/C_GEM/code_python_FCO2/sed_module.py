@@ -12,7 +12,7 @@ from file_module import Rates
 def sed(t):
     """Calculate sediment erosion and deposition rates."""
     for i in range(1, M + 1):
-        # Erosion and deposition rates for SPM [mg m^-2 s^-1]
+        # Erosion and deposition rates for SPM [kg m^-2 s^-1]
         tau_b[i] = rho_w * G * U[i]**2 / Chezy[i]**2
         Mero[i] = Mero_ub if i >= distance else Mero_lb
 
@@ -42,7 +42,7 @@ def sed(t):
         # Update SPM concentration [g/l]
         v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
         
-    # Write erosion/deposition process rates [mg m^-2 s^-1]
+    # Write erosion/deposition process rates [kg m^-2 s^-1]
     if (float(t) / float(TS * DELTI)) % 1 == 0:
         Rates(erosion, "erosion.dat", t)
         Rates(deposition, "deposition.dat", t)
