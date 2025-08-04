@@ -14,11 +14,12 @@ def openbound(co, s):
     else:
         co[1] = co[1] - (co[3] - co[1]) * U[2] * (float(DELTI) / float(DELXI))
 
-    if U[M1] >= 0.0:
-        co[M] = co[M] - (co[M] - co[M2]) * U[M1] * (float(DELTI) / float(DELXI))
-    else:
-        co[M] = co[M] - (v[s]["cub"] - co[M]) * U[M1] * (float(DELTI) / float(DELXI))
-    co[M1] = co[M]
+    if s != "SPM":
+        if U[M1] >= 0.0:
+            co[M] = co[M] - (co[M] - co[M2]) * U[M1] * (float(DELTI) / float(DELXI))
+        else:
+            co[M] = co[M] - (v[s]["cub"] - co[M]) * U[M1] * (float(DELTI) / float(DELXI))
+        co[M1] = co[M]
 
 def tvd(co, s, t):
     """Total Variation Diminishing (TVD) advection scheme."""
