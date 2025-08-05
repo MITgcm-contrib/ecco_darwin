@@ -31,9 +31,9 @@ def main():
         print(f"t: {float(t) / (24.0 * 60.0 * 60.0):.2f} days")
 
         # apply sediment forcing at upstream boundary before hyd andtransport
-        if t > WARMUP:
+        #if t > WARMUP:
             # apply sediment time series only at upstream boundary 
-            v['SPM']['c'][M] = get_sediment(t)
+        #    v['SPM']['c'][M] = get_sediment(t)
 
         # Run hydrodynamics and transport processes
         hyd(t)
