@@ -9,6 +9,16 @@ import numpy as np
 from forcings_module import get_discharge, initialize_forcings
 from config import SIM_START_DATETIME, Qr, DELTI, MAXT
 
+def get_min_sediment_value():
+    """Get the minimum sediment value from the time series."""
+    from forcings_module import interpolated_sediment
+    import numpy as np
+    
+    if interpolated_sediment is not None:
+        return np.min(interpolated_sediment) / 1000.0  # Convert mg/L to g/L to match get_sediment()
+    else:
+        return 0.01  # Fallback value
+
 
 def init():
     """Initialize model arrays and set up boundary conditions."""
@@ -78,7 +88,7 @@ def init():
     initialize_substance("PO4", "PO4.dat", 30.0, 2.0)
     initialize_substance("O2", "O2.dat", 280.0, 280.0)
     initialize_substance("TOC", "TOC.dat", 0.0, 545.0)
-    initialize_substance("SPM", "SPM.dat", 0.0, 0.01)
+    initialize_substance("SPM", "SPM.dat", 0.0, get_min_sediment_value())
     initialize_substance("DIC", "DIC.dat", 2000, 1837)
     initialize_substance("ALK", "ALK.dat", 2223, 1749)
     initialize_substance("pH", "pH.dat", 8.2, 7.67)
