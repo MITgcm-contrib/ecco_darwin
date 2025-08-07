@@ -16,13 +16,17 @@ def transport(t):
         if v[name]["env"] == 1:
             co = v[name]["c"]
             # Apply open boundary conditions
-            openbound(co, name, v, U, DELXI, DELTI)
+            openbound(co, v[name]["clb"], v[name]["cub"], U, DELXI, DELTI)
             # Advection step
             co = tvd_advection_twin(co, U, DELXI, DELTI)
+            if not np.all(np.isfinite(co)):
+                print(name)
+                print("co contains NaN or inf!")
+                print("Min/max co:", np.nanmin(co), np.nanmax(co))
             # Dispersion step
             co = crank_nicholson_dispersion(co, D, dispersion, DELXI, DELTI)
             # Update concentration
-            v[name]["c"][:] = co
+            v[name]["c"] = co
             # Accumulate average concentrations
             v[name]["avg"] += v[name]["c"]
 

@@ -34,7 +34,7 @@ def main():
         # Run biogeochemical and sediment processes after warmup
         if t > WARMUP:
             biogeo(t)
-            sed(t)
+            #sed(t)
 
 if __name__ == "__main__":
     main()

@@ -1,9 +1,6 @@
-"""
-Biogeochemical reaction network module (translated from biogeo.c)
-"""
-
+import numpy as np
 import math
-from variables import v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg, denit, nit, O2_ex, NEM
+from variables import v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg, denit, nit, O2_ex, NEM, kflow,kwind,vp
 from config import (
     KD1, KD2, Pbmax, alpha, kexcr, kgrowth, kmaint, kmort, redsi, redn,
     redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS
@@ -11,76 +8,128 @@ from config import (
 from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity
 from file_module import Rates
 
+def gamma_approx(p):
+    """Accurate approximation of the incomplete gamma integral for primary production."""
+
+    res = np.zeros_like(p)
+    small = p <= 1.0
+    large = ~small
+
+    # Safe log
+    with np.errstate(divide="ignore", invalid="ignore"):
+
+        # --- For small p: Taylor expansion around 0
+        ps = p[small]
+        res[small] = -(
+            np.log(ps + 1e-300) + Euler - ps
+            + ps**2 / 4.0
+            - ps**3 / 18.0
+            + ps**4 / 96.0
+            - ps**5 / 600.0
+        )
+
+        # --- For large p: Continued fraction approximation
+        pl = p[large]
+        denom = (
+            pl + 1.0
+            - (1.0 / (
+                pl + 3.0
+                - (4.0 / (
+                    pl + 5.0
+                    - (9.0 / (
+                        pl + 7.0
+                        - (16.0 / (pl + 9.0))
+                    ))
+                ))
+            ))
+        )
+        res[large] = np.exp(-pl) / denom
+
+    return res
+
 def biogeo(t):
     """Biogeochemical reaction network simulation."""
-    piston_velocity(t)
+    piston_velocity(t,v['S']['c'],kflow,kwind,vp)
 
-    for i in range(1, M + 1):
-        # Underwater light field and nutrient dependence
-        KD = KD1 + KD2 * (1000.0 * v['SPM']['c'][i] + 100.0)
-        Ebottom = I0(t) * math.exp(-KD * DEPTH[i])
-        psurf = I0(t) * alpha / Pbmax
-        pbot = Ebottom * alpha / Pbmax
+    i_arr = np.arange(1, M + 1)
 
-        if I0(t) > 0 or Ebottom >= 1.e-300:
-            # Gamma approximation for surface
-            if psurf <= 1.0:
-                appGAMMAsurf = -(
-                    math.log(psurf) + Euler - psurf
-                    + psurf**2 / 4.0 - psurf**3 / 18.0
-                    + psurf**4 / 96.0 - psurf**5 / 600.0
-                )
-            else:
-                appGAMMAsurf = math.exp(-psurf) * (
-                    1.0 / (psurf + 1.0 - (1.0 / (psurf + 3.0 - (4.0 / (psurf + 5.0 - (9.0 / (psurf + 7.0 - (16.0 / (psurf + 9.0)))))))))
-                )
+    # Light field
+    I0_val = I0(t)
+    Fhet_val = Fhet(t)
+    Fnit_val = Fnit(t)
 
-            # Gamma approximation for bottom
-            if pbot <= 1.0:
-                appGAMMAbot = -(
-                    math.log(pbot) + Euler + pbot
-                    - pbot**2 / 4.0 + pbot**3 / 18.0
-                    - pbot**4 / 96.0 + pbot**5 / 600.0
-                )
-            else:
-                appGAMMAbot = math.exp(-pbot) * (
-                    1.0 / (pbot + 1.0 - (1.0 / (pbot + 3.0 - (4.0 / (pbot + 5.0 - (9.0 / (pbot + 7.0 - (16.0 / (pbot + 9.0)))))))))
-                )
-            integral = (appGAMMAsurf - appGAMMAbot + math.log(I0(t) / Ebottom)) / KD
-        else:
-            integral = 0.0
+    KD = KD1 + KD2 * (1000.0 * v['SPM']['c'][1:M+1] + 100.0)
+    Ebottom = I0_val * np.exp(-KD * DEPTH[1:M+1])
+    psurf = I0_val * alpha / Pbmax
+    pbot = Ebottom * alpha / Pbmax
 
-        nlim = (
-            0.0 if v['dSi']['c'][i] <= 0.0
-            else v['dSi']['c'][i] / (v['dSi']['c'][i] + KdSi)
-            * (v['NO3']['c'][i] + v['NH4']['c'][i]) / (v['NH4']['c'][i] + v['NO3']['c'][i] + KN)
-            * (v['PO4']['c'][i] / (v['PO4']['c'][i] + KPO4))
-        )
-        fNH4 = 0.0 if v['NH4']['c'][i] <= 0.0 else v['NH4']['c'][i] / (10.0 + v['NH4']['c'][i])
+    appGAMMAsurf = gamma_approx(np.full_like(pbot, psurf))
+    appGAMMAbot = gamma_approx(pbot)
+    with np.errstate(divide='ignore'):
+        integral = (appGAMMAsurf - appGAMMAbot + np.log(I0_val / Ebottom)) / KD
+    integral = np.where(Ebottom >= 1e-300, integral, 0.0)
 
-        # Biogeochemical reaction rates [mmol m^-3 s^-1]
-        GPP[i] = Pbmax * v['DIA']['c'][i] * nlim * integral
-        NPP_NO3[i] = (1.0 - fNH4) * ((GPP[i] / DEPTH[i]) * (1.0 - kexcr) * (1.0 - kgrowth) - kmaint * v['DIA']['c'][i])
-        NPP_NH4[i] = fNH4 * ((GPP[i] / DEPTH[i]) * (1.0 - kexcr) * (1.0 - kgrowth) - kmaint * v['DIA']['c'][i])
-        NPP[i] = NPP_NO3[i] + NPP_NH4[i]
-        phy_death[i] = kmort * v['DIA']['c'][i]
-        Si_consumption[i] = max(0.0, redsi * NPP[i])
-        aer_deg[i] = kox * Fhet(t) * v['TOC']['c'][i] / (v['TOC']['c'][i] + KTOC) * v['O2']['c'][i] / (v['O2']['c'][i] + KO2)
-        denit[i] = kdenit * Fhet(t) * v['TOC']['c'][i] / (v['TOC']['c'][i] + KTOC) * KinO2 / (v['O2']['c'][i] + KinO2) * v['NO3']['c'][i] / (v['NO3']['c'][i] + KNO3)
-        nit[i] = knit * Fnit(t) * v['O2']['c'][i] / (v['O2']['c'][i] + KO2) * v['NH4']['c'][i] / (v['NH4']['c'][i] + KNH4)
-        O2_ex[i] = (vp[i] / DEPTH[i]) * (O2sat(t, i) - v['O2']['c'][i])
-        NEM[i] = NPP[i] - aer_deg[i] - denit[i]
+    # Nutrient limitation
+    dSi = v['dSi']['c'][1:M+1]
+    NO3 = v['NO3']['c'][1:M+1]
+    NH4 = v['NH4']['c'][1:M+1]
+    PO4 = v['PO4']['c'][1:M+1]
 
-        # Update biogeochemical state variables [mmol m^-3]
-        v['DIA']['c'][i] = v['DIA']['c'][i] + (NPP[i] - phy_death[i]) * DELTI
-        v['dSi']['c'][i] = v['dSi']['c'][i] - Si_consumption[i] * DELTI
-        v['NO3']['c'][i] = v['NO3']['c'][i] + (-94.4 / 106.0 * denit[i] + nit[i] - redn * NPP_NO3[i]) * DELTI
-        v['NH4']['c'][i] = v['NH4']['c'][i] + (redn * (aer_deg[i] - NPP_NH4[i]) - nit[i]) * DELTI
-        v['PO4']['c'][i] = v['PO4']['c'][i] + redp * (aer_deg[i] + denit[i] - NPP[i]) * DELTI
-        v['O2']['c'][i] = v['O2']['c'][i] + (-aer_deg[i] + NPP_NH4[i] + (138.0 / 106.0) * NPP_NO3[i] - 2.0 * nit[i] + O2_ex[i]) * DELTI
-        v['TOC']['c'][i] = v['TOC']['c'][i] + (-aer_deg[i] - denit[i] + phy_death[i]) * DELTI
+    nlim = np.where(
+        dSi <= 0,
+        0.0,
+        (dSi / (dSi + KdSi)) *
+        ((NO3 + NH4) / (NO3 + NH4 + KN)) *
+        (PO4 / (PO4 + KPO4))
+    )
 
-# Write biogeochemical process rates [mmol m^-3 s-1]
+    fNH4 = np.where(NH4 <= 0.0, 0.0, NH4 / (10.0 + NH4))
+
+    DIA = v['DIA']['c'][1:M+1]
+    depth = DEPTH[1:M+1]
+
+    # GPP & NPP
+    GPP[1:M+1] = Pbmax * DIA * nlim * integral
+    prod = (GPP[1:M+1] / depth) * (1.0 - kexcr) * (1.0 - kgrowth) - kmaint * DIA
+    NPP_NO3[1:M+1] = (1.0 - fNH4) * prod
+    NPP_NH4[1:M+1] = fNH4 * prod
+    NPP[1:M+1] = NPP_NO3[1:M+1] + NPP_NH4[1:M+1]
+
+    # Mortality & silicon use
+    phy_death[1:M+1] = kmort * DIA
+    Si_consumption[1:M+1] = np.maximum(0.0, redsi * NPP[1:M+1])
+
+    TOC = v['TOC']['c'][1:M+1]
+    O2 = v['O2']['c'][1:M+1]
+
+    # Degradation
+    aer_deg[1:M+1] = (
+        kox * Fhet_val * TOC / (TOC + KTOC) *
+        O2 / (O2 + KO2)
+    )
+    denit[1:M+1] = (
+        kdenit * Fhet_val * TOC / (TOC + KTOC) *
+        KinO2 / (O2 + KinO2) * NO3 / (NO3 + KNO3)
+    )
+    nit[1:M+1] = (
+        knit * Fnit_val * O2 / (O2 + KO2) * NH4 / (NH4 + KNH4)
+    )
+
+    O2_eq = O2sat(t, v['S']['c'][1:M+1])
+    O2_ex[1:M+1] = (vp[1:M+1] / depth) * (O2_eq - O2)
+
+    NEM[1:M+1] = NPP[1:M+1] - aer_deg[1:M+1] - denit[1:M+1]
+
+    # Update state variables
+    v['DIA']['c'][1:M+1] += (NPP[1:M+1] - phy_death[1:M+1]) * DELTI
+    v['dSi']['c'][1:M+1] -= Si_consumption[1:M+1] * DELTI
+    v['NO3']['c'][1:M+1] += (-94.4 / 106.0 * denit[1:M+1] + nit[1:M+1] - redn * NPP_NO3[1:M+1]) * DELTI
+    v['NH4']['c'][1:M+1] += (redn * (aer_deg[1:M+1] - NPP_NH4[1:M+1]) - nit[1:M+1]) * DELTI
+    v['PO4']['c'][1:M+1] += redp * (aer_deg[1:M+1] + denit[1:M+1] - NPP[1:M+1]) * DELTI
+    v['O2']['c'][1:M+1] += (-aer_deg[1:M+1] + NPP_NH4[1:M+1] + (138.0 / 106.0) * NPP_NO3[1:M+1] - 2.0 * nit[1:M+1] + O2_ex[1:M+1]) * DELTI
+    v['TOC']['c'][1:M+1] += (-aer_deg[1:M+1] - denit[1:M+1] + phy_death[1:M+1]) * DELTI
+
+    # Optional output
     if (float(t) / float(TS * DELTI)) % 1 == 0:
         Rates(NPP, "NPP.dat", t)
         Rates(aer_deg, "aer_deg.dat", t)
