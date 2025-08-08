@@ -2,31 +2,34 @@
 Hydrodynamics module (translated from hyd.c)
 """
 
-from config import M, DELTI, TS
-from variables import D, Dold2
+from config import M, DELTI, TS, M1, M2, ITE
+from variables import D, Dold2, TH, TU, E, Y
 from uphyd_module import new_bc, new_uh, update
-from tridag_module import tridag
+from tridag_module import tridag, conv, adaptive_tols
 from file_module import hydwrite
 
 def hyd(t):
-    """Main hydrodynamics routine."""
-    # Store previous depths
-    for i in range(1, M + 1):
-        Dold2[i] = D[i]
-
-    # Set new boundary conditions
+    Dold2[1:M+1] = D[1:M+1]
     new_bc(t)
-    rsum = 0.0
-    i = 0
 
-    # Directly solve the tridiagonal matrix system
-    tridag()
-    update()
+    for it in range(ITE):  # safety cap
+        tridag()
+        tol_th, tol_tu = adaptive_tols()  # uses TU, not U
 
-    # Update U and H values
+        r_th = conv(3, M1, TH, E)   # returns residual and copies TH->E
+        r_tu = conv(2, M2, TU, Y)   # returns residual and copies TU->Y
+
+        update()                    # keep before convergence check (legacy behavior)
+
+        if (r_th < tol_th) and (r_tu < tol_tu):
+            break
+
+    else:
+        # didn’t converge: optional fallback (halve dt, extra damped pass, log warning)
+        raise RuntimeError("hyd: could not converge")
+        pass
+
     new_uh()
 
-    # Write hydrodynamic data to files at specified intervals
-    if (float(t) / float(TS * DELTI)) % 1 == 0:
+    if t % (TS * DELTI) == 0:
         hydwrite(t)
-

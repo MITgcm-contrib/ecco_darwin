@@ -68,13 +68,13 @@ v = {
     name: {
         "name": name,
         "env": 0,
-        "c": np.zeros(M + 1, dtype=float),
+        "c": np.zeros(M + 1, dtype=np.float64),
         "clb": 0.0,
         "cub": 0.0,
-        "avg": np.zeros(M + 1, dtype=float),
-        "concflux": np.zeros(M + 1, dtype=float),
-        "advflux": np.zeros(M + 1, dtype=float),
-        "disflux": np.zeros(M + 1, dtype=float),
+        "avg": np.zeros(M + 1, dtype=np.float64),
+        "concflux": np.zeros(M + 1, dtype=np.float64),
+        "advflux": np.zeros(M + 1, dtype=np.float64),
+        "disflux": np.zeros(M + 1, dtype=np.float64),
     }
     for name in names
 }

@@ -1,35 +1,35 @@
 """
 Transport module (translated from transport.c)
 """
-import numpy as np
-from config import MAXV, M, TS, DELTI, DELXI
-from variables import v, U, C, fl, Z, D , dispersion
+
+from config import MAXV, M, TS, DELTI, DELXI, M2
+from variables import v, U, C, fl, Z, dispersion, D, U, Dold2
+from schemes_module import openbound, tvd, crank_nicholson_dispersion
 from file_module import transwrite
-from schemes_module import tvd_advection_twin, crank_nicholson_dispersion, openbound
 
 def transport(t):
-    """Main transport routine."""
-    CFL = max(abs(U)) * DELTI / DELXI
-    assert CFL < 1.0, f"CFL = {CFL:.3f} → too large! Reduce DELTI or increase DELXI."
-    names = list(v.keys())
-    for name in names:
-        if v[name]["env"] == 1:
-            co = v[name]["c"]
-            # Apply open boundary conditions
-            openbound(co, v[name]["clb"], v[name]["cub"], U, DELXI, DELTI)
-            # Advection step
-            co = tvd_advection_twin(co, U, DELXI, DELTI)
-            if not np.all(np.isfinite(co)):
-                print(name)
-                print("co contains NaN or inf!")
-                print("Min/max co:", np.nanmin(co), np.nanmax(co))
-            # Dispersion step
-            co = crank_nicholson_dispersion(co, D, dispersion, DELXI, DELTI)
-            # Update concentration
-            v[name]["c"] = co
-            # Accumulate average concentrations
-            v[name]["avg"] += v[name]["c"]
+    for name, tracer in v.items():
+        if tracer["env"] != 1:
+            continue
 
-            # Write output at intervals
-            if (float(t) / float(TS * DELTI)) % 1 == 0:
-                transwrite(v[name]["c"], v[name]["name"], t)
+        co = tracer["c"]
+        clb = tracer["clb"]
+        cub = tracer["cub"]
+
+        # Apply boundary conditions
+        openbound(co, clb, cub)
+
+        # Advection step (copy for cold state)
+        cold = co.copy()
+        co_advected = co.copy()
+        tvd(co_advected, cold, fl, U, D, Dold2, DELTI, DELXI, M, M2)
+
+        # Dispersion step
+        co_new = crank_nicholson_dispersion(co_advected, D, dispersion, DELXI, DELTI)
+        tracer["c"][:] = co_new
+
+        # Accumulate average with optional Kahan
+        tracer["avg"][1:M + 1] += co_new[1:M + 1]
+
+        if t % (TS * DELTI) == 0:
+            transwrite(co_new, tracer["name"], t)

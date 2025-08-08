@@ -9,6 +9,8 @@ from transport_module import transport
 from biogeo_module import biogeo
 from sed_module import sed
 from config import MAXT, DELTI, WARMUP
+import numpy as np
+np.set_printoptions(precision=16)
 
 def main():
     """Main model routine."""
@@ -34,7 +36,7 @@ def main():
         # Run biogeochemical and sediment processes after warmup
         if t > WARMUP:
             biogeo(t)
-            #sed(t)
+            sed(t)
 
 if __name__ == "__main__":
     main()

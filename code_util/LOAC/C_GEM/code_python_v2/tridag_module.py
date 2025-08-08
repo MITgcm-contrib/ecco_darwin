@@ -3,9 +3,11 @@ Tridiagonal matrix solver module (translated from tridag.c)
 """
 import math
 import numpy as np
-from config import M, M1, M2, M3, DELTI, DELXI, G, RS, Qr
+from config import M, M1, M2, M3, DELTI, DELXI, G, RS, Qr, TH_ABS_FLOOR, TU_ABS_FLOOR, TH_REL, TU_REL, LOOSE_CAP
 from variables import D, Z, C, U, B, H, TH, TU, Chezy, DEPTH
 from scipy.linalg import solve_banded
+from scipy.linalg.lapack import get_lapack_funcs
+from numba import njit
 
 def build_tridiag_system():
     """
@@ -42,7 +44,9 @@ def build_tridiag_system():
                 + (U[i + 2] - U[i - 2]) / (4.0 * G * DELXI)
             )
             upper[idx] = 1.0 / (2.0 * DELXI * B_right)
-
+    # after the loop that fills lower/diag/upper
+    lower[0] = 0.0  # matches C[2][1] = 0
+    upper[-1] = 0.0  # matches C[M1][3] = 0
     # Boundary overrides
     diag[0] = (
         1.0 / (G * DELTI)
@@ -64,6 +68,40 @@ def build_tridiag_system():
 
     return ab, rhs, i_start
 
+def conv(s, e, x, y):
+    """
+    Max |x - y| over s..e step 2; then copy x->y on those indices.
+    Returns the residual (float).
+    """
+    sl = slice(s, e + 1, 2)
+    r = np.max(np.abs(x[sl] - y[sl]))
+    np.copyto(y[sl], x[sl], casting='no')
+    return float(r)
+
+def adaptive_tols():
+    # Magnitudes to scale relative tolerances
+    th_mag = np.max(np.abs(TH[3:M1+1:2])) or 1.0   # avoid 0
+    tu_mag = np.max(np.abs(TU[2:M2+1:2])) or 1.0
+
+    tol_th = max(TH_ABS_FLOOR, TH_REL * th_mag)
+    tol_tu = max(TU_ABS_FLOOR, TU_REL * tu_mag)
+
+    # Roughness indicator: CFL close to 1 or very shallow cells
+    # CFL ≈ |u| * dt / dx = |U| * DELTI / (1/DELXI) = |U| * DELTI * DELXI
+    cfl = (np.max(np.abs(U[2:M2+1])) * DELTI * (1.0/ (1.0/DELXI)))  # = |U|*dt/dx
+    # Simpler: cfl = np.max(np.abs(U[2:M2+1])) * DELTI * DELXI
+    cfl = np.max(np.abs(U[2:M2+1])) * DELTI * DELXI
+
+    shallow = np.any(DEPTH[2:M2+1] < 1e-3)  # or a domain-specific threshold
+
+    if cfl > 0.7 or shallow:
+        # allow a bit looser stopping to avoid thrashing;
+        # still cap so we don't reintroduce transport drift
+        tol_th = min(max(tol_th, 1e-9), LOOSE_CAP)
+        tol_tu = min(max(tol_tu, 1e-9), LOOSE_CAP)
+
+    return tol_th, tol_tu
+
 def tridag():
     """Solve tridiagonal system and assign results to TU and TH."""
     ab, rhs, i_start = build_tridiag_system()
@@ -74,3 +112,4 @@ def tridag():
             TU[i] = var[idx]
         else:
             TH[i] = var[idx]
+
