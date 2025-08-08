@@ -63,7 +63,7 @@ Euler = 0.5772156649  # Euler's constant
 PI = math.pi  # Pi value
 
 # NUMERICAL INTEGRATION
-MAXT = 90 * 24 * 60 * 60  # Max time [s]
+MAXT = 365 * 24 * 60 * 60  # Max time [s]
 WARMUP = 3 * 24 * 60 * 60  # Warmup period [s]
 DELTI = 150  # Delta t [s]
 TS = 12  # Save every TS timesteps

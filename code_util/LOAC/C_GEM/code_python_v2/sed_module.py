@@ -7,9 +7,8 @@ from config import (
     tau_ero_lb, tau_ero_ub, tau_dep_lb, tau_dep_ub, distance, ws, DELTI, TS
 )
 from variables import U, DEPTH, v, tau_b, Mero, tau_ero, tau_dep, erosion, deposition, Chezy, include_constantDEPTH
-from file_module import Rates
 
-def sed(t):
+def sed(t, io):
     """Calculate sediment erosion and deposition rates."""
     for i in range(1, M + 1):
         # Erosion and deposition rates for SPM [kg m^-2 s^-1]
@@ -43,5 +42,5 @@ def sed(t):
         
     # Write erosion/deposition process rates [kg m^-2 s^-1]
     if (float(t) / float(TS * DELTI)) % 1 == 0:
-        Rates(erosion, "erosion.dat", t)
-        Rates(deposition, "deposition.dat", t)
+        io.write_rates(erosion, "erosion.dat", t)
+        io.write_rates(deposition, "deposition.dat", t)

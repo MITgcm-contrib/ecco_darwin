@@ -5,9 +5,8 @@ Transport module (translated from transport.c)
 from config import MAXV, M, TS, DELTI, DELXI, M2
 from variables import v, U, C, fl, Z, dispersion, D, U, Dold2
 from schemes_module import openbound, tvd, crank_nicholson_dispersion
-from file_module import transwrite
 
-def transport(t):
+def transport(t, io):
     for name, tracer in v.items():
         if tracer["env"] != 1:
             continue
@@ -32,4 +31,4 @@ def transport(t):
         tracer["avg"][1:M + 1] += co_new[1:M + 1]
 
         if t % (TS * DELTI) == 0:
-            transwrite(co_new, tracer["name"], t)
+            io.write_tracer(co_new, tracer["name"], t)  # <— here

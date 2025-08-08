@@ -6,7 +6,6 @@ from config import (
     redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS
 )
 from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity
-from file_module import Rates
 
 def gamma_approx(p):
     """Accurate approximation of the incomplete gamma integral for primary production."""
@@ -47,7 +46,7 @@ def gamma_approx(p):
 
     return res
 
-def biogeo(t):
+def biogeo(t, io):
     """Biogeochemical reaction network simulation."""
     piston_velocity(t,v['S']['c'],kflow,kwind,vp)
 
@@ -131,10 +130,10 @@ def biogeo(t):
 
     # Optional output
     if (float(t) / float(TS * DELTI)) % 1 == 0:
-        Rates(NPP, "NPP.dat", t)
-        Rates(aer_deg, "aer_deg.dat", t)
-        Rates(denit, "denit.dat", t)
-        Rates(nit, "nit.dat", t)
-        Rates(O2_ex, "O2_ex.dat", t)
-        Rates(NEM, "NEM.dat", t)
-        Rates(phy_death, "phy_death.dat", t)
+        io.write_rates(NPP, "NPP.dat", t)
+        io.write_rates(aer_deg, "aer_deg.dat", t)
+        io.write_rates(denit, "denit.dat", t)
+        io.write_rates(nit, "nit.dat", t)
+        io.write_rates(O2_ex, "O2_ex.dat", t)
+        io.write_rates(NEM, "NEM.dat", t)
+        io.write_rates(phy_death, "phy_death.dat", t)

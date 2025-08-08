@@ -6,9 +6,8 @@ from config import M, DELTI, TS, M1, M2, ITE
 from variables import D, Dold2, TH, TU, E, Y
 from uphyd_module import new_bc, new_uh, update
 from tridag_module import tridag, conv, adaptive_tols
-from file_module import hydwrite
 
-def hyd(t):
+def hyd(t, io):
     Dold2[1:M+1] = D[1:M+1]
     new_bc(t)
 
@@ -32,4 +31,4 @@ def hyd(t):
     new_uh()
 
     if t % (TS * DELTI) == 0:
-        hydwrite(t)
+        io.write_hyd(t)
