@@ -2,6 +2,8 @@ Python Idealized Estuary C-GEM model
 Original C version from Volta et al., 2014 www.geosci-model-dev.net/7/1271/2014/
 Converted to Python in ./code_python
 
+code_python_v2 includes an updated version of the code. It is faster and includes a built-in function for activating CO2 fluxes in config.py in the main code (USE_CO2_FLUX). This new version uses more vectorization, removes excess use of loops, and uses Numba when possible. It also relaxes the tolerance criterion for flux convergence with possibility to relax when CFL condition allows. Thresholds can be set in config.py.
+
 Addition of carbonate chemistry and air-sea CO2 flux in ./code_python_FCO2
 FCO2 computed from:
 Laruelle et al 2017 and Regnier et al 2002 for parametrizing the air-sea fluxes
