@@ -2,7 +2,7 @@ import numpy as np
 from numba import njit
 from config import (
     M, PI, EL, DELXI, G, Qr, Chezy_lb, Chezy_ub,
-    DEPTH_lb, DEPTH_ub, distance, B_ub, B_lb
+    DEPTH_lb, DEPTH_ub, distance, B_ub, B_lb, USE_CO2_FLUX
 )
 from variables import (
     v, Dold, D, DEPTH, TH, E, Y, U, TU, B, ZZ, Z, fl, dispersion,
@@ -86,15 +86,20 @@ def init():
         arr[:] = 0.0
 
     # Init all tracers
-    initialize_substance("S", "S.dat", 30.3, 0.0)
-    initialize_substance("DIA", "DIA.dat", 10.0, 50.0)
-    initialize_substance("dSi", "dSi.dat", 10.0, 250.0)
-    initialize_substance("NO3", "NO3.dat", 50.0, 198.0)
-    initialize_substance("NH4", "NH4.dat", 0.1, 520.0)
-    initialize_substance("PO4", "PO4.dat", 0.1, 17.0)
-    initialize_substance("O2", "O2.dat", 250.0, 106.0)
-    initialize_substance("TOC", "TOC.dat", 0.1, 393.0)
-    initialize_substance("SPM", "SPM.dat", 0.03, 0.07)
+    initialize_substance("S", "S.dat", 34.0, 0.0)
+    initialize_substance("DIA", "DIA.dat", 1.0, 10.0)
+    initialize_substance("dSi", "dSi.dat", 9.0, 87.0)
+    initialize_substance("NO3", "NO3.dat", 5.0, 72.0)
+    initialize_substance("NH4", "NH4.dat", 1.0, 18.0)
+    initialize_substance("PO4", "PO4.dat", 1.0, 3.0)
+    initialize_substance("O2", "O2.dat", 280.0, 280.0)
+    initialize_substance("TOC", "TOC.dat", 0.0, 545.0)
+    initialize_substance("SPM", "SPM.dat", 0.0, 0.01)
+
+    if USE_CO2_FLUX:
+        initialize_substance("DIC", "DIC.dat", 2000, 1837)
+        initialize_substance("ALK", "ALK.dat", 2223, 1749)
+        initialize_substance("pH", "pH.dat", 8.2, 7.67)
 
 def initialize_substance(name, filename, clb, cub):
     v[name]["name"] = filename

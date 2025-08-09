@@ -39,12 +39,23 @@ class OutputManager:
             f.write(b"\n")
 
     # ----- internals -----
+    def _norm_path(self, filename: str) -> str:
+        """
+        Ensure a .dat extension if none is provided, and join with prefix.
+        Examples: "DIC" -> "DIC.dat"; "rates/NPP" -> "rates/NPP.dat";
+                  "ALK.txt" stays "ALK.txt".
+        """
+        root, ext = os.path.splitext(filename)
+        if ext == "":
+            filename = filename + ".dat"
+        return os.path.join(self.prefix, filename)
+
     def _get_fh(self, filename: str):
         """
         Open tracer/rate file with truncate-on-first-open if overwrite_all=True.
         Reuses the handle afterward.
         """
-        path = os.path.join(self.prefix, filename)
+        path = self._norm_path(filename)
         fh = self._open_fhs.get(path)
         if fh is None:
             os.makedirs(os.path.dirname(path) or ".", exist_ok=True)

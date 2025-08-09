@@ -1,11 +1,19 @@
 import numpy as np
 import math
-from variables import v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg, denit, nit, O2_ex, NEM, kflow,kwind,vp
+from variables import (
+    v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg,
+    denit, nit, O2_ex, NEM, kflow,kwind,vp,Hplus,FCO2
+)
 from config import (
     KD1, KD2, Pbmax, alpha, kexcr, kgrowth, kmaint, kmort, redsi, redn,
-    redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS
+    redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2_ox, KO2_nit, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS,
+    USE_CO2_FLUX,pCO2,CO2_PISTON_FROM_O2
 )
-from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity
+from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, co2_flux_step
+# Import carbonate helpers lazily to avoid overhead if disabled
+if USE_CO2_FLUX:
+    # if these live in fun_module / density.py, import as needed
+    from fun_module import pH, KB, K1_CO2, K2_CO2, K0_CO2
 
 def gamma_approx(p):
     """Accurate approximation of the incomplete gamma integral for primary production."""
@@ -104,14 +112,14 @@ def biogeo(t, io):
     # Degradation
     aer_deg[1:M+1] = (
         kox * Fhet_val * TOC / (TOC + KTOC) *
-        O2 / (O2 + KO2)
+        O2 / (O2 + KO2_ox)
     )
     denit[1:M+1] = (
         kdenit * Fhet_val * TOC / (TOC + KTOC) *
         KinO2 / (O2 + KinO2) * NO3 / (NO3 + KNO3)
     )
     nit[1:M+1] = (
-        knit * Fnit_val * O2 / (O2 + KO2) * NH4 / (NH4 + KNH4)
+        knit * Fnit_val * O2 / (O2 + KO2_nit) * NH4 / (NH4 + KNH4)
     )
 
     O2_eq = O2sat(t, v['S']['c'][1:M+1])
@@ -127,6 +135,21 @@ def biogeo(t, io):
     v['PO4']['c'][1:M+1] += redp * (aer_deg[1:M+1] + denit[1:M+1] - NPP[1:M+1]) * DELTI
     v['O2']['c'][1:M+1] += (-aer_deg[1:M+1] + NPP_NH4[1:M+1] + (138.0 / 106.0) * NPP_NO3[1:M+1] - 2.0 * nit[1:M+1] + O2_ex[1:M+1]) * DELTI
     v['TOC']['c'][1:M+1] += (-aer_deg[1:M+1] - denit[1:M+1] + phy_death[1:M+1]) * DELTI
+
+    # ---------------- CO2 FLUX (optional) ----------------
+    if USE_CO2_FLUX:
+        co2_flux_step(
+            t,
+            v['S']['c'], v['DIC']['c'], v['ALK']['c'], v['pH']['c'],
+            DEPTH, vp,
+            NPP_NO3, NPP_NH4, aer_deg, denit, nit,
+            FCO2, pCO2
+        )
+
+        # optional output
+        if (float(t) / float(TS * DELTI)) % 1 == 0:
+            io.write_rates(FCO2, "FCO2.dat", t)
+            io.write_tracer(v['pH']['c'], v['pH']['name'], t)
 
     # Optional output
     if (float(t) / float(TS * DELTI)) % 1 == 0:

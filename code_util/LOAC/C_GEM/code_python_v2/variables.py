@@ -2,7 +2,7 @@
 Global variables and structures (translated from variables.h)
 """
 import numpy as np
-from config import M, MAXV
+from config import M, MAXV, USE_CO2_FLUX
 
 # Create a helper function for consistent zero-based indexing with ignored 0 index
 def zeros_array():
@@ -62,22 +62,41 @@ O2_ex = zeros_array()                       # O2 flux across air-water interface
 NEM = zeros_array()                         # Net Ecosystem Metabolism [mmol C/m^3/s]
 
 
-# Chemical Species and SPM
-names = ['DIA', 'dSi', 'NO3', 'NH4', 'PO4', 'O2', 'TOC', 'S', 'SPM']
+# Base chemical species and SPM
+BASE_NAMES = ['DIA', 'dSi', 'NO3', 'NH4', 'PO4', 'O2', 'TOC', 'S', 'SPM']
+
+# Optional CO2 system tracers (only when enabled)
+CO2_NAMES = ['DIC', 'ALK', 'pH'] if USE_CO2_FLUX else []
+
+# Build tracer dict
+names = BASE_NAMES + CO2_NAMES
+
+# Default env flags (keep 0 like your legacy init; pH stays diagnostic)
+_default_env = {name: 1 for name in names}
+if 'pH' in names:
+    _default_env['pH'] = 0  # diagnostic; not transported
+
 v = {
     name: {
         "name": name,
-        "env": 0,
+        "env": _default_env[name],
         "c": np.zeros(M + 1, dtype=np.float64),
         "clb": 0.0,
         "cub": 0.0,
         "avg": np.zeros(M + 1, dtype=np.float64),
         "concflux": np.zeros(M + 1, dtype=np.float64),
-        "advflux": np.zeros(M + 1, dtype=np.float64),
-        "disflux": np.zeros(M + 1, dtype=np.float64),
+        "advflux":  np.zeros(M + 1, dtype=np.float64),
+        "disflux":  np.zeros(M + 1, dtype=np.float64),
     }
     for name in names
 }
+
+# --- CO2 flux working arrays (only when enabled) ---
+if USE_CO2_FLUX:
+    # Volumetric CO2 flux (mmol C m^-3 s^-1), indexed 0..M (0 unused if that’s your convention)
+    FCO2  = np.zeros(M + 1, dtype=np.float64)
+    # Hydrogen ion concentration (same unit basis as your carbonate solver)
+    Hplus = np.zeros(M + 1, dtype=np.float64)
 
 # Global Flag
 include_constantDEPTH = 0  # Include constant depth formulation
