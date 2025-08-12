@@ -115,8 +115,8 @@ def get_water_temp(t, sim_start_dt=None):
 
 def get_sediment(t, sim_start_dt=None):
     global interpolated_sediment
-    if t <= WARMUP:
-        return 0.01  # use constant from init_module
+    #if t <= WARMUP:
+    #    return 0.01  # use constant from init_module
     index = int((t - WARMUP) // DELTI)
     if index < 0:
         index = 0
