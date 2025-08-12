@@ -1,10 +1,11 @@
 import numpy as np
 import math
 from numba import njit, prange
-from config import PI, AMPL, pfun, Uw_sal, Uw_tid, water_temp, WARMUP, distance, M
-from variables import v, U, DEPTH, kflow, kwind, vp
+from config import PI, AMPL, pfun, Uw_sal, Uw_tid, water_temp, WARMUP, distance, M, USE_CO2_FLUX
 from config import G, MOLAR_MASS_B, PH_ITERS, CO2_PISTON_FROM_O2, pCO2, M, DELTI
 from density import dens_scalar  # <- njit-friendly core, NOT dens()
+if USE_CO2_FLUX:
+    from variables import Hplus
 
 @njit(cache=True)
 def Tabs(t):
@@ -60,11 +61,11 @@ def O2sat(t,S):
     return out
 
 @njit(parallel=True, cache=True)
-def piston_velocity(t,S,kflow,kwind,vp):
+def piston_velocity(t,S,U_in,DEPTH_in,kflow,kwind,vp):
     d_o2 = D_O2(t)
     sc = Sc(t,S)
     for i in prange(M + 1):
-        kflow[i] = np.sqrt(np.abs(U[i]) * d_o2 / DEPTH[i])
+        kflow[i] = np.sqrt(np.abs(U_in[i]) * d_o2 / DEPTH_in[i])
         wind_speed = Uw_sal if i <= distance else Uw_tid
         kwind[i] = (1.0 / 3.6e5) * 0.31 * wind_speed**2 * (sc[i] / 660.0)**-0.5
         vp[i] = kflow[i] + kwind[i]
@@ -73,168 +74,182 @@ def piston_velocity(t,S,kflow,kwind,vp):
 @njit(parallel=True, cache=True)
 def p_bar_all(t, S, depth, out_p):
     """
-    Hydrostatic pressure at mid-depth in *bar*.
+    Hydrostatic pressure at mid-depth (bar), using a 2-step pressure/density refinement.
     Inputs:
-      S[i]      : salinity
-      depth[i]  : water depth [m]
+      S[i]     : salinity (PSS-78)
+      depth[i] : water depth [m]
+    Writes:
+      out_p[i] : mid-column pressure [bar]
     """
     T_C = Tabs(t) - 273.15
     n = depth.shape[0]
+
+    # i=0 often unused in your grid; keep it deterministic
+    if n > 0:
+        out_p[0] = 0.0
+
     for i in prange(1, n):
+        # mid-depth (avoid zero depth)
         h = 0.5 * depth[i]
-        # first guess: rho at P=0
-        rho0 = dens_scalar(S[i], T_C, 0.0)
-        P_dbar = rho0 * 9.81 * h / 1.0e4
-        # one refinement with pressure-dependent rho
+        if h <= 0.0:
+            out_p[i] = 0.0
+            continue
+
+        # first guess: density at P=0 dbar
+        rho = dens_scalar(S[i], T_C, 0.0)
+        P_dbar = rho * G * h / 1.0e4
+
+        # one refinement with pressure-dependent density
         rho = dens_scalar(S[i], T_C, P_dbar)
-        P_dbar = rho * 9.81 * h / 1.0e4
-        out_p[i] = 0.1 * P_dbar  # convert dbar -> bar
+        P_dbar = rho * G * h / 1.0e4
+
+        # convert dbar -> bar
+        out_p[i] = 0.1 * P_dbar
 
 # ---------- Henry's K0 (CO2) ----------
-@njit(parallel=True, cache=True)
-def K0_CO2(t, S, out_K0):
-    """
-    Henry constant K0 for CO2 (Regnier-like parametrization)
-    Units consistent with your flux formula (mmol m^-3 atm^-1 or mol kg^-1 atm^-1),
-    depending on how you treat DIC. This mirrors your scalar K0_CO2.
-    """
-    tk = Tabs(t)
-    tk100 = tk / 100.0
-    tk1002 = tk100 * tk100
-    ln_part = 93.4517 / tk100 - 60.2409 + 23.3585 * math.log(tk100)
-    for i in prange(1, S.shape[0]):
-        out_K0[i] = math.exp(ln_part + S[i] * (0.023517 - 0.023656 * tk100 + 0.0047036 * tk1002))
-
-# ---------- K1, K2 with pressure correction ----------
-@njit(parallel=True, cache=True)
-def K1_CO2(t, S, pbar, out_K1):
-    """
-    First dissociation constant (Miller 1995 / Darwin notes).
-    Uses simple pressure correction with water_temp.
-    """
-    tk = Tabs(t)
-    invtk = 1.0 / tk
-    dlogtk = math.log(tk)
-    tC = tk - 273.15
-    for i in prange(1, S.shape[0]):
-        s  = S[i]; s2 = s * s
-        K1_p0 = 10.0 ** (-1.0 * (3670.7 * invtk - 62.008 + 9.7944 * dlogtk - 0.0118 * s + 0.000116 * s2))
-        # pressure correction (bar-based gas constant 83.143)
-        out_K1[i] = K1_p0 * math.exp((24.2 - 0.085 * tC) * pbar[i] / (83.143 * tk))
-
-@njit(parallel=True, cache=True)
-def K2_CO2(t, S, pbar, out_K2):
-    """
-    Second dissociation constant (Miller 1995 / Darwin notes).
-    """
-    tk = Tabs(t)
-    invtk = 1.0 / tk
-    tC = tk - 273.15
-    for i in prange(1, S.shape[0]):
-        s  = S[i]; s2 = s * s
-        K2_p0 = 10.0 ** (-1.0 * (1394.7 * invtk + 4.777 - 0.0184 * s + 0.000118 * s2))
-        out_K2[i] = K2_p0 * math.exp((16.4 - 0.040 * tC) * pbar[i] / (83.143 * tk))
-
-# ---------- KB (boric acid) ----------
-@njit(parallel=True, cache=True)
-def KB(t, S, out_KB):
-    tk = Tabs(t)
-    invtk = 1.0 / tk
-    dlogtk = math.log(tk)
-    for i in prange(1, S.shape[0]):
-        s = S[i]
-        sqrts = math.sqrt(s)
-        s2 = s * s
-        s15 = s * sqrts
-        out_KB[i] = math.exp(
-            (-8966.90 - 2890.53 * sqrts - 77.942 * s + 1.728 * s15 - 0.0996 * s2) * invtk
-            + (148.0248 + 137.1942 * sqrts + 1.62142 * s)
-            + (-24.4344 - 25.085 * sqrts - 0.2474 * s) * dlogtk
-            + 0.053105 * sqrts * tk
-        )
-
-# ---------- pH solver (fixed small number of iterations) ----------
 @njit(cache=True)
-def _pH_one(sal, H_init, dic, alk, KB_val, K1, K2):
-    """
-    One-cell pH fixed-point loop (Follows 2006-like).
-    Returns hydrogen ion concentration H+ (same units as inputs, mol/kg or mmol m^-3).
-    """
-    # total boron from salinity: bt [mol/kg]
-    # bt_g (mg/kg) = 0.1336 * S  -> mol/kg = bt_g * 1e-3 / MOLAR_MASS_B
+def _K0_CO2_scalar(tk, s):
+    tk100  = tk / 100.0
+    tk1002 = tk100 * tk100
+    return math.exp(93.4517 / tk100 - 60.2409 + 23.3585 * math.log(tk100)
+                    + s * (0.023517 - 0.023656 * tk100 + 0.0047036 * tk1002))
+
+@njit(cache=True)
+def _K1_CO2_scalar(tk, tC, s, pbar):
+    invtk = 1.0 / tk
+    dlogk = math.log(tk)
+    s2    = s * s
+    K1_p0 = 10.0 ** (-1.0 * (3670.7*invtk - 62.008 + 9.7944*dlogk - 0.0118*s + 0.000116*s2))
+    return K1_p0 * math.exp((24.2 - 0.085 * tC) * pbar / (83.143 * tk))
+
+@njit(cache=True)
+def _K2_CO2_scalar(tk, tC, s, pbar):
+    invtk = 1.0 / tk
+    s2    = s * s
+    K2_p0 = 10.0 ** (-1.0 * (1394.7*invtk + 4.777 - 0.0184*s + 0.000118*s2))
+    return K2_p0 * math.exp((16.4 - 0.040 * tC) * pbar / (83.143 * tk))
+
+@njit(cache=True)
+def _KB_scalar(tk, s):
+    invtk = 1.0 / tk
+    dlogk = math.log(tk)
+    sqs   = math.sqrt(s)
+    s2    = s * s
+    s15   = s * sqs
+    return math.exp(
+        (-8966.90 - 2890.53*sqs - 77.942*s + 1.728*s15 - 0.0996*s2) * invtk
+        + (148.0248 + 137.1942*sqs + 1.62142*s)
+        + (-24.4344 - 25.085*sqs - 0.2474*s) * dlogk
+        + 0.053105 * sqs * tk
+    )
+
+# ---- safe H+ (mol/kg) solve (Follows-style) ----
+@njit(cache=True)
+def _H_solve(sal, H_init, dic_kg, alk_kg, KB, K1, K2):
+    # total boron: 0.1336*S mg/kg -> mol/kg
     bt = (0.1336 * sal) * 1e-3 / MOLAR_MASS_B
-    hg = H_init
+    hg = H_init if H_init > 0.0 else 1e-12
     for _ in range(PH_ITERS):
-        # borate from boric acid
-        bohg = bt * KB_val / (hg + KB_val)  # mol/kg
-        # carbonate alkalinity
-        cag = alk - bohg
-        # gamma = DIC / CA
-        gamm = dic / max(cag, 1e-30)
-        # quadratic for carbonate system
-        K1g = K1
-        K2g = K2
-        A = (1.0 - gamm) * (1.0 - gamm) * K1g * K1g
-        B = 4.0 * K1g * K2g * (1.0 - 2.0 * gamm)
-        disc = A - B
-        if disc < 0.0:
-            disc = 0.0
-        hg = 0.5 * ((gamm - 1.0) * K1g + math.sqrt(disc))
-        if hg <= 0.0:
-            hg = 1e-12
+        bohg = bt * KB / (hg + KB)
+        cag  = alk_kg - bohg
+        if cag < 1e-30: cag = 1e-30
+        gamma = dic_kg / cag
+        disc = (1.0 - gamma)*(1.0 - gamma)*K1*K1 - 4.0*K1*K2*(1.0 - 2.0*gamma)
+        if disc < 0.0: disc = 0.0
+        hg_new = 0.5 * ((gamma - 1.0) * K1 + math.sqrt(disc))
+        hg = hg_new if hg_new > 0.0 else 1e-12
     return hg
 
+# ---- SEMI-IMPLICIT carbonate step (like SPM fix) ----
 @njit(parallel=True, cache=True)
-def pH(S, DIC, ALK, KB_v, K1_v, K2_v, H_guess, out_H):
-    for i in prange(1, S.shape[0]):
-        out_H[i] = _pH_one(S[i], H_guess[i], DIC[i], ALK[i], KB_v[i], K1_v[i], K2_v[i])
+def co2_step_semi_implicit(
+    t,
+    S, depth, vp,
+    DIC_v, ALK_v, pH_arr,             # state in mmol/m^3; pH dimensionless
+    NPP_NO3, NPP_NH4, aer_deg, denit, nit,
+    FCO2_out                           # output mmol/m^3/s
+):
+    """
+    Semi-implicit DIC update with frozen linearization of FCO2:
+      FCO2 ≈ -(vp/depth)/denom * DIC_v + (vp/depth)*(K0_v*pCO2_air)
+    ALK explicit. pH recomputed after update. Uses p_bar_all for K1/K2 and rho.
+    """
+    n  = DIC_v.shape[0]
+    tk = Tabs(t)
+    tC = tk - 273.15
 
-# ---------- complete CO2 exchange step (vectorized & in-place) ----------
-@njit(parallel=True, cache=True)
-def co2_flux_step(t,
-                  S, DIC, ALK, pH_arr, depth, vp,
-                  NPP_NO3, NPP_NH4, aer_deg, denit, nit,
-                  out_FCO2, pCO2_air):
-    """
-    Computes air–sea CO2 exchange and updates DIC, ALK, pH in-place.
-    Writes volumetric flux to out_FCO2 (mmol C m^-3 s^-1).
-    All arrays expected length >= M+1 with index 0 unused, just like the rest of the model.
-    """
-    n = depth.shape[0]
-    # work arrays
+    # mid-column pressure (bar) for all cells
     pbar = np.zeros(n)
-    K0   = np.zeros(n)
-    K1   = np.zeros(n)
-    K2   = np.zeros(n)
-    KBv  = np.zeros(n)
-    H    = np.zeros(n)
-
-    # 1) pressure and constants
     p_bar_all(t, S, depth, pbar)
-    K0_CO2(t, S, K0)
-    K1_CO2(t, S, pbar, K1)
-    K2_CO2(t, S, pbar, K2)
-    KB(t, S, KBv)
 
-    # 2) pH (solve for H+) using current pH as initial guess
+    rho   = np.zeros(n)     # kg/m^3
+    H     = np.zeros(n)     # mol/kg
+    denom = np.zeros(n)     # dimensionless buffer factor
+    k     = np.zeros(n)     # s^-1
+    b     = np.zeros(n)     # mmol/m^3/s
+
+    # 1) coefficients & density & H from OLD state
     for i in prange(1, n):
-        H[i] = 10.0 ** (-pH_arr[i])
-    pH(S, DIC, ALK, KBv, K1, K2, H, H)
+        s        = S[i]
+        pbar_i   = pbar[i]               # bar
+        p_dbar   = 10.0 * pbar_i         # dbar
+        # density at mid-depth pressure
+        rho_i    = dens_scalar(s, tC, p_dbar)
+        rho[i]   = rho_i
 
-    # 3) CO2* and flux
+        # equilibrium constants in mol/kg basis
+        K0 = _K0_CO2_scalar(tk, s)
+        K1 = _K1_CO2_scalar(tk, tC, s, pbar_i)
+        K2 = _K2_CO2_scalar(tk, tC, s, pbar_i)
+        KB = _KB_scalar(tk, s)
+
+        # convert state to mol/kg for speciation
+        dic_kg = (DIC_v[i] * 1e-3) / rho_i
+        alk_kg = (ALK_v[i] * 1e-3) / rho_i
+
+        # H+ from old state
+        H0 = 10.0 ** (-pH_arr[i]) if pH_arr[i] > 0.0 else 1e-8
+        Hi = _H_solve(s, H0, dic_kg, alk_kg, KB, K1, K2)
+        H[i] = Hi
+
+        # buffer factor
+        d = 1.0 + (K1 / Hi) + (K1 * K2 / (Hi * Hi))
+        if d < 1e-12: d = 1e-12
+        denom[i] = d
+
+        # linearization slope & intercept (per volume)
+        vpCO2     = CO2_PISTON_FROM_O2 * vp[i]
+        inv_depth = 1.0 / (depth[i] if depth[i] > 1.0e-6 else 1.0e-6)
+        k[i]      = vpCO2 * inv_depth / d
+        K0_v      = K0 * rho_i * 1e3                    # mol/kg → mmol/m^3
+        b[i]      = vpCO2 * inv_depth * (K0_v * pCO2)
+
+    # 2) semi-implicit DIC; explicit ALK (per-volume, mmol/m^3)
     for i in prange(1, n):
-        denom = 1.0 + (K1[i] / H[i]) + (K1[i] * K2[i] / (H[i] * H[i]))
-        co2s  = DIC[i] / max(denom, 1e-30)
-        vpCO2 = CO2_PISTON_FROM_O2 * vp[i]
-        RCO2  = - vpCO2 * (co2s - K0[i] * pCO2_air)   # mmol C m^-2 s^-1
-        out_FCO2[i] = RCO2 / max(depth[i], 1e-6)
+        rhs = DIC_v[i] + DELTI * (-NPP_NO3[i] - NPP_NH4[i] + aer_deg[i] + denit[i] + b[i])
+        DIC_v[i] = rhs / (1.0 + DELTI * k[i])
+        ALK_v[i] += DELTI * ((15.0/106.0)*aer_deg[i] + (93.4/106.0)*denit[i]
+                             - 2.0*nit[i] - (15.0/106.0)*NPP_NH4[i] + (17.0/106.0)*NPP_NO3[i])
 
-        # 4) Update tracers (mmol C m^-3 s^-1 * Δt)
-        DIC[i] += (out_FCO2[i] - NPP_NO3[i] - NPP_NH4[i] + aer_deg[i] + denit[i]) * DELTI
-        ALK[i] += (((15.0/106.0) * aer_deg[i]) + ((93.4/106.0) * denit[i]) - (2.0 * nit[i])
-                   - ((15.0/106.0) * NPP_NH4[i]) + ((17.0/106.0) * NPP_NO3[i])) * DELTI
-        # 5) store pH
-        if not (H[i] > 0.0) or not math.isfinite(H[i]):
-            # fallback to previous pH (or a default) and small H+
-            H[i] = 1e-12
-        pH_arr[i] = -math.log10(max(H[i], 1e-12))
+    # 3) recompute pH from NEW state (mol/kg), reuse pbar for consistency
+    for i in prange(1, n):
+        s        = S[i]
+        pbar_i   = pbar[i]
+        p_dbar   = 10.0 * pbar_i
+        rho_i    = rho[i]  # already at mid-depth pressure
+
+        dic_kg = (DIC_v[i] * 1e-3) / rho_i
+        alk_kg = (ALK_v[i] * 1e-3) / rho_i
+
+        H0   = 10.0 ** (-pH_arr[i]) if pH_arr[i] > 0.0 else 1e-8
+        H[i] = _H_solve(
+            s, H0, dic_kg, alk_kg,
+            _KB_scalar(tk, s),
+            _K1_CO2_scalar(tk, tC, s, pbar_i),
+            _K2_CO2_scalar(tk, tC, s, pbar_i)
+        )
+        pH_arr[i] = -math.log10(H[i] if H[i] > 1e-12 else 1e-12)
+
+    # 4) diagnostic FCO2 from NEW DIC and frozen (k,b)
+    for i in prange(1, n):
+        FCO2_out[i] = -k[i] * DIC_v[i] + b[i]

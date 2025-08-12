@@ -51,11 +51,12 @@ kox = 6.08e-4  # Aerobic degradation rate [muM C s^-1]
 kdenit = 5.05e-4  # Denitrification rate [muM C s^-1]
 knit = 2.73e-5  # Nitrification rate [muM C s^-1]
 
-# --- physics/constants used by CO2 chemistry ---
+# --- physics/constants and forcings used by CO2 chemistry ---
 USE_CO2_FLUX = True          # ⇦ turn ON to enable air–sea CO2 exchange
 MOLAR_MASS_B = 10.811          # g mol^-1 (atomic B)
 PH_ITERS = 50                   # pH fixed-point iterations (fast + stable)
 CO2_PISTON_FROM_O2 = 0.915
+pCO2 = 380 * 1e-6  # CO2 partial pressure in the atmosphere [atm]
 
 # EXTERNAL FORCINGS
 Qr = -177.0  # River discharge [m^3/s]
@@ -64,7 +65,6 @@ pfun = 0.0787  # Tidal frequency [cycle/hr]
 Uw_sal = 8  # Wind speed in saline estuary [m/s]
 Uw_tid = 8  # Wind speed in tidal river [m/s]
 water_temp = 12  # Water temperature [C]
-pCO2 = 380 * 1e-6  # CO2 partial pressure in the atmosphere [atm]
 
 # OTHER PARAMETERS
 Euler = 0.5772156649  # Euler's constant
@@ -77,8 +77,8 @@ DELTI = 150  # Delta t [s]
 TS = 12  # Save every TS timesteps
 DELXI = 2000  # Delta x [m]
 # Convergence criterion
-TOL = 1e-6  # Convergence criterion
-ITE = 200
+TOL = 1e-2  # Convergence criterion
+ITE = 1000
 TH_ABS_FLOOR = TOL   # m   ← match legacy
 TU_ABS_FLOOR = TOL   # m/s ← match legacy
 TH_REL       = TOL   # relative per |TH|~1 m → 1e-10

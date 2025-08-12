@@ -2,18 +2,17 @@ import numpy as np
 import math
 from variables import (
     v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg,
-    denit, nit, O2_ex, NEM, kflow,kwind,vp,Hplus,FCO2
+    denit, nit, O2_ex, NEM, kflow, kwind, U
 )
 from config import (
     KD1, KD2, Pbmax, alpha, kexcr, kgrowth, kmaint, kmort, redsi, redn,
     redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2_ox, KO2_nit, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS,
-    USE_CO2_FLUX,pCO2,CO2_PISTON_FROM_O2
+    USE_CO2_FLUX
 )
-from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, co2_flux_step
-# Import carbonate helpers lazily to avoid overhead if disabled
 if USE_CO2_FLUX:
-    # if these live in fun_module / density.py, import as needed
-    from fun_module import pH, KB, K1_CO2, K2_CO2, K0_CO2
+    from variables import FCO2
+
+from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, co2_step_semi_implicit
 
 def gamma_approx(p):
     """Accurate approximation of the incomplete gamma integral for primary production."""
@@ -56,7 +55,7 @@ def gamma_approx(p):
 
 def biogeo(t, io):
     """Biogeochemical reaction network simulation."""
-    piston_velocity(t,v['S']['c'],kflow,kwind,vp)
+    piston_velocity(t,v['S']['c'],U,DEPTH,kflow,kwind,vp)
 
     i_arr = np.arange(1, M + 1)
 
@@ -138,21 +137,22 @@ def biogeo(t, io):
 
     # ---------------- CO2 FLUX (optional) ----------------
     if USE_CO2_FLUX:
-        co2_flux_step(
+
+        co2_step_semi_implicit(
             t,
-            v['S']['c'], v['DIC']['c'], v['ALK']['c'], v['pH']['c'],
-            DEPTH, vp,
+            v['S']['c'], DEPTH, vp,
+            v['DIC']['c'], v['ALK']['c'], v['pH']['c'],
             NPP_NO3, NPP_NH4, aer_deg, denit, nit,
-            FCO2, pCO2
+            FCO2
         )
 
         # optional output
-        if (float(t) / float(TS * DELTI)) % 1 == 0:
+        if t % (TS * DELTI) == 0:
             io.write_rates(FCO2, "FCO2.dat", t)
             io.write_tracer(v['pH']['c'], v['pH']['name'], t)
 
     # Optional output
-    if (float(t) / float(TS * DELTI)) % 1 == 0:
+    if t % (TS * DELTI) == 0:
         io.write_rates(NPP, "NPP.dat", t)
         io.write_rates(aer_deg, "aer_deg.dat", t)
         io.write_rates(denit, "denit.dat", t)

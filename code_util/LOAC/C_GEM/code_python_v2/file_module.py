@@ -1,3 +1,4 @@
+# file_module.py
 import os
 import numpy as np
 from config import M
@@ -6,7 +7,8 @@ from variables import DEPTH, B, U
 class OutputManager:
     """
     Fast writers for hydro + tracers + rates.
-    Starts fresh each run (files truncated), then appends efficiently.
+    Starts fresh each run for hydro/width; tracers/rates depend on overwrite_all.
+    pH is always truncated on first write.
     """
     def __init__(self, prefix: str = "",
                  depth_fmt="%.6g", u_fmt="%.6g", tracer_fmt="%.15e",
@@ -17,7 +19,10 @@ class OutputManager:
         self.tracer_fmt = tracer_fmt
         self.buffer_bytes = buffer_bytes
         self.overwrite_all = overwrite_all
-        self._open_fhs = {}  # path -> handle (for tracers & rates)
+        self._open_fhs = {}  # path -> handle
+
+        # any of these filenames (with or without .dat) will be truncated on first open
+        self._force_truncate_basenames = {"pH", "pH.dat"}
 
         os.makedirs(prefix or ".", exist_ok=True)
 
@@ -33,33 +38,28 @@ class OutputManager:
             f.write(b"t\t")
             np.arange(M + 1, dtype=np.int32).tofile(f, sep="\t")
             f.write(b"\n0\t")
-            np.ascontiguousarray(B[:M+1], dtype=np.float64).tofile(
-                f, sep="\t", format=self.depth_fmt
-            )
+            np.ascontiguousarray(B[:M+1], dtype=np.float64).tofile(f, sep="\t", format=self.depth_fmt)
             f.write(b"\n")
 
-    # ----- internals -----
-    def _norm_path(self, filename: str) -> str:
-        """
-        Ensure a .dat extension if none is provided, and join with prefix.
-        Examples: "DIC" -> "DIC.dat"; "rates/NPP" -> "rates/NPP.dat";
-                  "ALK.txt" stays "ALK.txt".
-        """
-        root, ext = os.path.splitext(filename)
-        if ext == "":
-            filename = filename + ".dat"
-        return os.path.join(self.prefix, filename)
+    def _canonical_name(self, filename: str) -> str:
+        # ensure .dat extension
+        return filename if filename.endswith(".dat") else f"{filename}.dat"
 
     def _get_fh(self, filename: str):
         """
-        Open tracer/rate file with truncate-on-first-open if overwrite_all=True.
-        Reuses the handle afterward.
+        Open tracer/rate file.
+        - If overwrite_all=True → truncate on first open.
+        - Additionally, pH (pH / pH.dat) always truncates on first open.
         """
-        path = self._norm_path(filename)
+        fname = self._canonical_name(filename)
+        path = os.path.join(self.prefix, fname)
+
         fh = self._open_fhs.get(path)
         if fh is None:
             os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-            mode = "wb" if self.overwrite_all else "ab"
+            base = os.path.basename(fname)
+            force_trunc = base in self._force_truncate_basenames
+            mode = "wb" if (self.overwrite_all or force_trunc) else "ab"
             fh = open(path, mode, buffering=self.buffer_bytes)
             self._open_fhs[path] = fh
         return fh

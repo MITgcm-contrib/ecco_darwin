@@ -22,6 +22,54 @@ def openbound(co, clb, cub):
         co[M] = co[M] - (cub - co[M]) * U[M1] * (float(DELTI) / float(DELXI))
     co[M1] = co[M]
 
+def openbound_carbonate(co, clb, cub, U, M):
+    """
+    Enforce DIC/ALK BCs at both ends with sign-aware inflow/outflow.
+    - co: tracer array indexed 0..M (and optionally M+1 if you keep a right ghost)
+    - clb, cub: scalar or array-like; if array-like we use clb[1], cub[M]
+    - U: velocity array (use your conventional indices; here we take U[1] and U[M])
+    """
+
+    # helpers to accept scalar or array-like bcs
+    def _left_val(bc):
+        try:
+            return float(bc[1])   # array-like with 1..M interior
+        except Exception:
+            return float(bc)      # scalar
+
+    def _right_val(bc):
+        try:
+            return float(bc[M])
+        except Exception:
+            return float(bc)
+
+    lbc = _left_val(clb)
+    rbc = _right_val(cub)
+
+    # face velocities (adjust if your U is staggered differently)
+    uL = float(U[1])   # near left face
+    uR = float(U[M])   # near right face
+
+    # ---- Left boundary (upstream) ----
+    if uL > 0.0:                 # inflow from left
+        co[1] = lbc              # Dirichlet into first interior cell
+        # left ghost (if present) consistent with Dirichlet
+        if co.shape[0] >= 2:     # co[0] exists for 0..M
+            co[0] = 2.0*lbc - co[1]
+    else:                        # outflow at left → zero-gradient
+        if co.shape[0] >= 2:
+            co[0] = co[1]
+
+    # ---- Right boundary (downstream) ----
+    if uR < 0.0:                 # inflow from right
+        co[M] = rbc              # Dirichlet into last interior cell
+        # right ghost only if it exists (0..M+1 layout)
+        if co.shape[0] > M+1:
+            co[M+1] = 2.0*rbc - co[M]
+    else:                        # outflow at right → zero-gradient ghost
+        if co.shape[0] > M+1:
+            co[M+1] = co[M]
+
 # -------------------------------
 # TVD Advection with Minmod Limiter
 # -------------------------------
