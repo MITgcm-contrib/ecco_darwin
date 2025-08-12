@@ -1,81 +1,123 @@
 """
-Sediment module (translated from sed.c)
+Initialization module (translated from init.c)
 """
 
-from config import (
-    M, rho_w, G, Chezy_lb, Chezy_ub, Mero_lb, Mero_ub,
-    tau_ero_lb, tau_ero_ub, tau_dep_lb, tau_dep_ub, distance, ws, DELTI, TS, WARMUP
-)
-from variables import U, DEPTH, v, tau_b, Mero, tau_ero, tau_dep, erosion, deposition, Chezy, include_constantDEPTH, B
-from forcings_module import get_sediment, get_discharge
-from file_module import Rates
+import math
+from config import M, PI, EL, DELXI, G, Chezy_lb, Chezy_ub, DEPTH_lb, DEPTH_ub, B_ub, B_lb, distance
+from variables import v, D, Dold, DEPTH, E, Y, U, TU, B, ZZ, Z, fl, dispersion, GPP, NPP, NPP_NO3, NPP_NH4, phy_death, aer_deg, denit, nit, O2_ex, Chezy, C, FCO2, Hplus
+import numpy as np
+from forcings_module import get_discharge, initialize_forcings
+from config import SIM_START_DATETIME, Qr, DELTI, MAXT
 
-def sed(t):
-    """Calculate sediment erosion and deposition rates."""
-    for i in range(1, M + 1):
-        # Erosion and deposition rates for SPM [mg m^-2 s^-1]
-        tau_b[i] = rho_w * G * U[i]**2 / Chezy[i]**2
-        Mero[i] = Mero_ub if i >= distance else Mero_lb
+def get_min_sediment_value():
+    """Get the minimum sediment value from the time series."""
+    from forcings_module import interpolated_sediment
+    import numpy as np
+    
+    if interpolated_sediment is not None:
+        return np.min(interpolated_sediment) / 1000.0  # Convert mg/L to g/L to match get_sediment()
+    else:
+        return 0.01  # Fallback value
 
-        tau_ero[i] = (
-            tau_ero_lb + (tau_ero_ub - tau_ero_lb) * (i - distance) / (M - distance)
-            if i >= distance else tau_ero_lb
-        )
 
-        tau_dep[i] = (
-            tau_dep_lb + (tau_dep_ub - tau_dep_lb) * (i - distance) / (M - distance)
-            if i >= distance else tau_dep_lb
-        )
+def init():
+    """Initialize model arrays and set up boundary conditions."""
+    include_constantDEPTH = 0
 
-        erosion[i] = (
-            0.0 if tau_ero[i] >= tau_b[i]
-            else Mero[i] * (tau_b[i] / tau_ero[i] - 1.0)
-        )
-        deposition[i] = (
-            ws * (1.0 - tau_b[i] / tau_dep[i]) * v['SPM']['c'][i]
-            if tau_dep[i] >= tau_b[i] else 0.0
-        )
+    initialize_forcings(SIM_START_DATETIME, DELTI, MAXT)
+
+    # Convergence length [m]
+    LC = 1.0 / -(1.0 / float(EL) * math.log(float(B_ub) / float(B_lb)))
+
+    # Van der Burgh's coefficient [-]
+    K = 4.38 * DEPTH_lb**0.36 * B_lb**-0.21 * LC**-0.14
+
+    Qr0 = -get_discharge(0, SIM_START_DATETIME)
+    #print(f"[DEBUG] Qr0={Qr0}")
+
+    # Dispersion coefficient [m^2/s]
+    for i in range(M + 1):
+        N = -PI * Qr0 / (DEPTH_lb * B_lb)
+        D0 = 26 * math.sqrt(N * G) * DEPTH_lb**1.5  # use abs(N) to prevent domain error *maybe*
+        beta = -(K * LC * Qr0) / (D0 * B_lb * DEPTH_lb)
+        d = D0 * (1.0 - beta * (math.exp((i * DELXI) / LC) - 1.0))
+        dispersion[i] = max(d, 0.0)
+
+    for i in range(M + 1):
+        # Hydrodynamics: Initialize arrays
+        E[i] = 0.0
+        Y[i] = -5.0
+        Chezy[i] = Chezy_lb - (Chezy_lb - Chezy_ub) * (i - 50) / (M - 50) if i >= distance else Chezy_lb
+
+        U[i] = 0.0
+        TU[i] = 0.0
+        B[i] = B_lb * math.exp(-i * float(DELXI) / float(LC)) if i > 0 else B_lb
+        ZZ[i] = B[i] * (DEPTH_lb - (DEPTH_lb - DEPTH_ub) / float(EL) * i * float(DELXI))
+        Z[i] = 0.0
 
         if include_constantDEPTH == 1:
-            tau_ero[i] = tau_ero_ub if i >= distance else tau_ero_lb
-            tau_dep[i] = tau_dep_ub if i >= distance else tau_dep_lb
+            ZZ[i] = B[i] * DEPTH_lb
+            Chezy[i] = Chezy_ub if i >= distance else Chezy_lb
 
-        # Update SPM concentration [g/l]
-        #v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
-        #v['SPM']['c'][i] = get_sediment(t) + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
-        #if t <= WARMUP:
-       #     # pure physical model during warmup - let system equilibrate
-       #     v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
-       # else:
-       #     # hybrid model after warmup - time series + physical processes
-       #     v['SPM']['c'][i] = get_sediment(t) + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i]) * DELTI
-       # Calculate SPM flux at upstream boundary [kg m^-2 s^-1]
-        
-        # Calculate SPM flux at upstream boundary following the specified sequence
-        spm_flux_kg_per_m2_per_s = 0.0
-        if i == M:  # Apply only at upstream boundary after warmup
-            # convert concentration to kg/m³
-            smp_kg_per_m3 = get_sediment(t)  # g/L = kg/m³ (direct conversion)
-            
-            # get discharge and multiply to get flux in kg/s
-            discharge = get_discharge(t)  # m³/s
-            flux_kg_per_s = discharge * smp_kg_per_m3  # [m³/s] × [kg/m³] = [kg/s]
-            
-            # dvide by surface area (width × depth) to get kg/m²/s
-            surface_area = B[i] * DEPTH[i]  # [m²]
-            if surface_area > 0:
-                spm_flux_kg_per_m2_per_s = flux_kg_per_s / surface_area  # [kg/s] / [m²] = [kg/m²/s]
+        for t in range(5):
+            C[i][t] = 0.0
 
-        
+        # FIX: Set proper initial water depths instead of zero
+        H = B[i] * 2.0  # 2 meters initial water depth
+        TH = B[i] * 2.0
+        D[i] = H + ZZ[i]
+        Dold[i] = H + ZZ[i]
+        DEPTH[i] = D[i] / B[i]
 
-        # Update SPM concentration [g/l]
-        v['SPM']['c'][i] = v['SPM']['c'][i] + (1.0 / DEPTH[i]) * (erosion[i] - deposition[i] + spm_flux_kg_per_m2_per_s) * DELTI
+        # Transport: Initialize arrays
+        fl[i] = 0.0
+        dispersion[i] = 0.0
 
-    # Write erosion/deposition process rates [mg m^-2 s^-1]
-    if (float(t) / float(TS * DELTI)) % 1 == 0:
-        Rates(erosion, "erosion.dat", t)
-        Rates(deposition, "deposition.dat", t)
+        # Biogeochemistry: Initialize arrays
+        GPP[i] = NPP[i] = NPP_NO3[i] = NPP_NH4[i] = phy_death[i] = 0.0
+        aer_deg[i] = denit[i] = nit[i] = O2_ex[i] = FCO2[i] = 0.0
 
 
 
+    # Boundary conditions for substances
+    initialize_substance("S", "S.dat", 34.0, 0.0)
+    initialize_substance("DIA", "DIA.dat", 1.0, 10.0)
+    initialize_substance("dSi", "dSi.dat", 9.0, 87.0)
+    initialize_substance("NO3", "NO3.dat", 132.0, 24.0)
+    initialize_substance("NH4", "NH4.dat", 12.0, 4.0)
+    initialize_substance("PO4", "PO4.dat", 30.0, 2.0)
+    initialize_substance("O2", "O2.dat", 280.0, 280.0)
+    initialize_substance("TOC", "TOC.dat", 0.0, 545.0)
+    initialize_substance("SPM", "SPM.dat", 0.0, get_min_sediment_value())
+    initialize_substance("DIC", "DIC.dat", 2000, 1837)
+    initialize_substance("ALK", "ALK.dat", 2223, 1749)
+    initialize_substance("pH", "pH.dat", 8.2, 7.67)
 
+    #print(f"[DEBUG] After init(): D[M]={D[M]}, B[M]={B[M]}, DEPTH[M]={DEPTH[M]}")
+    #print(f"[DEBUG] After init(): Qr0={Qr0}, U[M]={U[M]}")
+
+    # init_sub(substance name, filename, concentration lower bound, concentration upper bound)
+def initialize_substance(name, filename, clb, cub):
+    """Initialize the given substance with boundary conditions."""
+    v[name]["name"] = filename
+    v[name]["env"] = 1
+    v[name]["clb"] = clb
+    v[name]["cub"] = cub
+
+    if name == "S" or name == "SPM":
+        for i in range(0, M + 1):
+            v[name]["c"][i] = clb + (cub - clb) / float(M) * i
+            if v[name]["c"][i] < 0:
+                v[name]["c"][i] = 0
+            v[name]["avg"][i] = v[name]["concflux"][i] = 0.0
+            v[name]["advflux"][i] = v[name]["disflux"][i] = 0.0
+    else:
+        for i in range(1, M + 1):
+            v[name]["c"][i] = clb + (cub - clb) / float(M) * i
+            v[name]["avg"][i] = v[name]["concflux"][i] = 0.0
+            v[name]["advflux"][i] = v[name]["disflux"][i] = 0.0
+
+    # pH is not affected by advection/diffusion
+    # it changes only based on S, DIC, ALK which are advected/diffused
+    if name == "pH":
+        v[name]["env"] = 0
