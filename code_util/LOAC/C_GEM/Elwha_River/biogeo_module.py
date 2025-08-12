@@ -22,8 +22,8 @@ def biogeo(t):
 
     for i in range(1, M + 1):
         # Underwater light field and nutrient dependence
-        SPM = get_sediment(t)
-        KD = KD1 + KD2 * (1000.0 * SPM + 100.0)
+
+        KD = KD1 + KD2 * (1000.0 * v['SPM']['c'][i] + 100.0)
         Ebottom = max(1e-300, I0(t) * math.exp(-KD * DEPTH[i]))
         psurf = I0(t) * alpha / Pbmax
         pbot = Ebottom * alpha / Pbmax
