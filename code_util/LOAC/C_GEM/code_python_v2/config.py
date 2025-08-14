@@ -79,8 +79,8 @@ DELXI = 2000  # Delta x [m]
 # Convergence criterion
 TOL = 1e-2  # Convergence criterion
 ITE = 1000
-TH_ABS_FLOOR = TOL   # m   ← match legacy
-TU_ABS_FLOOR = TOL   # m/s ← match legacy
+TH_ABS_FLOOR = TOL   # m
+TU_ABS_FLOOR = TOL   # m/s
 TH_REL       = TOL   # relative per |TH|~1 m → 1e-10
 TU_REL       = TOL   # relative per |TU|~1 m/s → 1e-10
 LOOSE_CAP    = TOL*10    # allow up to 10× looser when CFL/shallow

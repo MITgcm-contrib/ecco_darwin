@@ -15,14 +15,13 @@ def hyd(t, io):
         tridag()
         tol_th, tol_tu = adaptive_tols()  # uses TU, not U
 
-        r_th = conv(3, M1, TH, E)   # returns residual and copies TH->E
-        r_tu = conv(2, M2, TU, Y)   # returns residual and copies TU->Y
+        r_th = conv(3, M1, TH, E)   # returns residual
+        r_tu = conv(2, M2, TU, Y)   # returns residual
 
-        update()                    # keep before convergence check (legacy behavior)
-
+        update()
+    # Convergence check
         if (r_th < tol_th) and (r_tu < tol_tu):
             break
-
     else:
         # didn’t converge: optional fallback (halve dt, extra damped pass, log warning)
         raise RuntimeError("hyd: could not converge")

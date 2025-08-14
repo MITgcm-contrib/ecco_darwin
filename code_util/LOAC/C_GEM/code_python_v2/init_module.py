@@ -29,8 +29,6 @@ def calculate_dispersion(EL, B_ub, B_lb, DELXI, Qr, G, DEPTH_lb, B_lb_val, dispe
         d = D0 * (1.0 - beta * exp_term)
         dispersion_out[i] = max(d, 0.0)
 
-    #dispersion_out[:] *= 10
-
 @njit
 def init_hydro(DELXI, EL, LC, distance, include_constantDEPTH,
                       E, Y, Chezy, U, TU, B, ZZ, Z, C, TH, D, Dold, DEPTH, fl):
@@ -81,7 +79,7 @@ def init():
     init_hydro(DELXI, EL, LC, distance, include_constantDEPTH,
                       E, Y, Chezy, U, TU, B, ZZ, Z, C, TH, D, Dold, DEPTH, fl)
 
-    # Zero out biogeochem arrays
+    # Zero out biogeochemical arrays
     for arr in [GPP, NPP, NPP_NO3, NPP_NH4, phy_death, aer_deg, denit, nit, O2_ex]:
         arr[:] = 0.0
 
@@ -122,8 +120,6 @@ def initialize_substance(name, filename, clb, cub):
         v[name]["concflux"][1:] = 0.0
         v[name]["advflux"][1:] = 0.0
         v[name]["disflux"][1:] = 0.0
-
-
 
     v[name]["avg"][:] = 0.0
     v[name]["concflux"][:] = 0.0

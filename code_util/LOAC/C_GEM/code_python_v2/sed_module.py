@@ -17,19 +17,19 @@ def sed(t, io):
     eps = 1e-30
 
     # bed shear τb [Pa]
-    tau_b_arr = rho_w * G * (Uloc * Uloc) / np.maximum(Cz * Cz, eps)
+    tau_b_arr = rho_w * G * Uloc**2 / np.maximum(Cz**2, eps)
 
-    # spatial fields (same as legacy)
+    # spatial fields
     Mero_arr      = np.where(i >= distance, Mero_ub, Mero_lb)
-    ramp          = (i - 50) / (M - 50)              # legacy ramp (can be <0)
+    ramp          = (i - distance) / (M - distance)
     tau_ero_ramp  = np.where(i >= distance, tau_ero_lb + (tau_ero_ub - tau_ero_lb) * ramp, tau_ero_lb)
     tau_dep_ramp  = np.where(i >= distance, tau_dep_lb + (tau_dep_ub - tau_dep_lb) * ramp, tau_dep_lb)
 
-    # sign-preserving denominators (avoid divide-by-zero, keep sign)
+    # sign-preserving denominators
     den_ero = np.where(tau_ero_ramp >= 0.0, np.maximum(tau_ero_ramp,  eps), np.minimum(tau_ero_ramp, -eps))
     den_dep = np.where(tau_dep_ramp >= 0.0, np.maximum(tau_dep_ramp,  eps), np.minimum(tau_dep_ramp, -eps))
 
-    # erosion [kg m^-2 s^-1] (explicit)
+    # erosion [kg m^-2 s^-1]
     erosion_arr = np.where(
         tau_ero_ramp >= tau_b_arr, 0.0, Mero_arr * (tau_b_arr / den_ero - 1.0)
     )
@@ -52,7 +52,7 @@ def sed(t, io):
     # commit
     v['SPM']['c'][sl] = spm_new
 
-    # publish diagnostics / fields (match legacy intent)
+    # publish diagnostics / fields
     tau_b[sl]   = tau_b_arr
     Mero[sl]    = Mero_arr
     tau_ero[sl] = tau_ero_ramp
@@ -64,7 +64,7 @@ def sed(t, io):
         tau_ero[sl] = np.where(i >= distance, tau_ero_ub, tau_ero_lb)
         tau_dep[sl] = np.where(i >= distance, tau_dep_ub, tau_dep_lb)
 
-    # integer write cadence (avoid float modulo)
+    # integer write cadence
     write_every = max(1, int(TS * DELTI))
     if (t % write_every) == 0:
         io.write_rates(erosion,    "erosion",    t)

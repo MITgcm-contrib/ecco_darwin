@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from variables import (
     v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg,
     denit, nit, O2_ex, NEM, kflow, kwind, U
@@ -10,9 +9,9 @@ from config import (
     USE_CO2_FLUX
 )
 if USE_CO2_FLUX:
-    from variables import FCO2
+    from variables import FCO2, dDIC_dt, dALK_dt, pH_new
 
-from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, co2_step_semi_implicit
+from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, carbonate_tendencies
 
 def gamma_approx(p):
     """Accurate approximation of the incomplete gamma integral for primary production."""
@@ -57,8 +56,6 @@ def biogeo(t, io):
     """Biogeochemical reaction network simulation."""
     piston_velocity(t,v['S']['c'],U,DEPTH,kflow,kwind,vp)
 
-    i_arr = np.arange(1, M + 1)
-
     # Light field
     I0_val = I0(t)
     Fhet_val = Fhet(t)
@@ -73,7 +70,7 @@ def biogeo(t, io):
     appGAMMAbot = gamma_approx(pbot)
     with np.errstate(divide='ignore'):
         integral = (appGAMMAsurf - appGAMMAbot + np.log(I0_val / Ebottom)) / KD
-    integral = np.where(Ebottom >= 1e-300, integral, 0.0)
+    integral = np.where((Ebottom >= 1e-300), integral, 0.0)
 
     # Nutrient limitation
     dSi = v['dSi']['c'][1:M+1]
@@ -101,7 +98,7 @@ def biogeo(t, io):
     NPP_NH4[1:M+1] = fNH4 * prod
     NPP[1:M+1] = NPP_NO3[1:M+1] + NPP_NH4[1:M+1]
 
-    # Mortality & silicon use
+    # Mortality & silica use
     phy_death[1:M+1] = kmort * DIA
     Si_consumption[1:M+1] = np.maximum(0.0, redsi * NPP[1:M+1])
 
@@ -137,19 +134,24 @@ def biogeo(t, io):
 
     # ---------------- CO2 FLUX (optional) ----------------
     if USE_CO2_FLUX:
-
-        co2_step_semi_implicit(
+        # compute tendencies from current state
+        carbonate_tendencies(
             t,
             v['S']['c'], DEPTH, vp,
             v['DIC']['c'], v['ALK']['c'], v['pH']['c'],
             NPP_NO3, NPP_NH4, aer_deg, denit, nit,
-            FCO2
+            dDIC_dt, dALK_dt, pH_new, FCO2
         )
+
+        # update exactly like other tracers
+        v['DIC']['c'][1:M + 1] += dDIC_dt[1:M + 1] * DELTI
+        v['ALK']['c'][1:M + 1] += dALK_dt[1:M + 1] * DELTI
+        v['pH']['c'][1:M+1] = pH_new[1:M+1]
+
 
         # optional output
         if t % (TS * DELTI) == 0:
             io.write_rates(FCO2, "FCO2.dat", t)
-            io.write_tracer(v['pH']['c'], v['pH']['name'], t)
 
     # Optional output
     if t % (TS * DELTI) == 0:

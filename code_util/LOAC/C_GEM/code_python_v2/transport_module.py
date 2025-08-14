@@ -2,43 +2,41 @@
 Transport module (translated from transport.c)
 """
 
-from config import MAXV, M, TS, DELTI, DELXI, M2, USE_CO2_FLUX
-from variables import v, U, C, fl, Z, dispersion, D, U, Dold2
-from schemes_module import openbound, tvd, crank_nicholson_dispersion, openbound_carbonate
+from config import M, TS, DELTI
+from variables import v
+from schemes_module import openbound, disp_sch, tvd
 
 def transport(t, io):
-    for name, tracer in v.items():
-        if name == "pH":
-            continue
-        if tracer["env"] != 1:
-            continue
+    """Main transport routine (optimized old-style)."""
+    # Bind globals to locals
+    vloc = v
+    Mloc = M
+    openb = openbound
+    adv   = tvd
+    disp  = disp_sch
 
-        co = tracer["c"]
-        clb = tracer["clb"]
-        cub = tracer["cub"]
+    step = TS * DELTI
+    write_now = (t % step == 0.0)
+    if not write_now:
+        r = t / step
+        write_now = abs(r - round(r)) < 1e-12
 
-        # Apply boundary conditions
-        if name in ("DIC", "ALK"):
-            openbound_carbonate(co, clb, cub, U, M)
+    for name, tr in vloc.items():
+        co = tr["c"]
+
+        if tr["env"] == 1:
+            # BCs, advection, dispersion for transported tracers
+            openb(co, name)
+            adv(co, name, t)
+            disp(co)
+            # accumulate averages
+            tr["avg"][1:Mloc+1] += co[1:Mloc+1]
+
+            if write_now:
+                io.write_tracer(co, tr["name"], t)
+
         else:
-            openbound(co, clb, cub)  # your existing generic BC
-
-        # Advection step (copy for cold state)
-        cold = co.copy()
-        co_advected = co.copy()
-        tvd(co_advected, cold, fl, U, D, Dold2, DELTI, DELXI, M, M2)
-
-        # Dispersion step
-        co_new = crank_nicholson_dispersion(co_advected, D, dispersion, DELXI, DELTI)
-        if (tracer["name"] in ("DIC", "ALK", "pH")) and (not USE_CO2_FLUX) :
-            pass
-        else:
-            tracer["c"][:] = co_new
-            # Accumulate average with optional Kahan
-            tracer["avg"][1:M + 1] += co_new[1:M + 1]
-
-        if t % (TS * DELTI) == 0:
-            if (tracer["name"] in ("DIC", "ALK")) and (not USE_CO2_FLUX) :
-                pass
-            else:
-                io.write_tracer(co_new, tracer["name"], t)
+            # Non-transported (pH): just average + optional write
+            tr["avg"][1:Mloc+1] += co[1:Mloc+1]
+            if write_now:
+                io.write_tracer(co, tr["name"], t)

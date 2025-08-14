@@ -1,13 +1,10 @@
 """
 Tridiagonal matrix solver module (translated from tridag.c)
 """
-import math
 import numpy as np
-from config import M, M1, M2, M3, DELTI, DELXI, G, RS, Qr, TH_ABS_FLOOR, TU_ABS_FLOOR, TH_REL, TU_REL, LOOSE_CAP
-from variables import D, Z, C, U, B, H, TH, TU, Chezy, DEPTH
+from config import M1, M2, DELTI, DELXI, G, RS, Qr, TH_ABS_FLOOR, TU_ABS_FLOOR, TH_REL, TU_REL, LOOSE_CAP
+from variables import D, U, B, H, TH, TU, Chezy, DEPTH
 from scipy.linalg import solve_banded
-from scipy.linalg.lapack import get_lapack_funcs
-from numba import njit
 
 def build_tridiag_system():
     """
@@ -45,8 +42,8 @@ def build_tridiag_system():
             )
             upper[idx] = 1.0 / (2.0 * DELXI * B_right)
     # after the loop that fills lower/diag/upper
-    lower[0] = 0.0  # matches C[2][1] = 0
-    upper[-1] = 0.0  # matches C[M1][3] = 0
+    lower[0] = 0.0
+    upper[-1] = 0.0
     # Boundary overrides
     diag[0] = (
         1.0 / (G * DELTI)
@@ -79,6 +76,9 @@ def conv(s, e, x, y):
     return float(r)
 
 def adaptive_tols():
+    """
+        CFL adaptive convergence check
+    """
     # Magnitudes to scale relative tolerances
     th_mag = np.max(np.abs(TH[3:M1+1:2])) or 1.0   # avoid 0
     tu_mag = np.max(np.abs(TU[2:M2+1:2])) or 1.0
@@ -92,7 +92,7 @@ def adaptive_tols():
     # Simpler: cfl = np.max(np.abs(U[2:M2+1])) * DELTI * DELXI
     cfl = np.max(np.abs(U[2:M2+1])) * DELTI * DELXI
 
-    shallow = np.any(DEPTH[2:M2+1] < 1e-3)  # or a domain-specific threshold
+    shallow = np.any(DEPTH[2:M2+1] < 1e-3)
 
     if cfl > 0.7 or shallow:
         # allow a bit looser stopping to avoid thrashing;

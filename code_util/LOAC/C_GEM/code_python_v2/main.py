@@ -1,8 +1,6 @@
 """
 Main model routine (translated from main.c)
 """
-import os
-from os import listdir
 from init_module import init
 from hyd_module import hyd
 from transport_module import transport
@@ -15,6 +13,7 @@ np.set_printoptions(precision=16)
 
 def main():
     """Main model routine."""
+    # Load writer
     io = OutputManager(prefix="outputs/", overwrite_all=True)
 
     init()  # Initialize the model
