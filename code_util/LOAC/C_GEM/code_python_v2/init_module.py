@@ -39,7 +39,7 @@ def init_hydro(DELXI, EL, LC, distance, include_constantDEPTH,
     Chezy[:] = Chezy_lb
     for idx in range(M + 1):
         if idx >= distance:
-            Chezy[idx] = Chezy_lb - (Chezy_lb - Chezy_ub) * (idx - 50) / (M - 50)
+            Chezy[idx] = Chezy_lb - (Chezy_lb - Chezy_ub) * (idx - distance) / (M - distance)
 
     U[:] = 0.0
     TU[:] = 0.0
