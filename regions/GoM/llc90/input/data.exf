@@ -124,4 +124,7 @@
   obcsEstartdate1   = 19920115,
   obcsEstartdate2   = 031519,
   obcsEperiod       = 2615438.0,
- /
+  obcsNstartdate1   = 19920115,
+  obcsNstartdate2   = 031519,
+  obcsNperiod       = 2615438.0,
+/
