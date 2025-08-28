@@ -1,5 +1,6 @@
 #include "DARWIN_OPTIONS.h"
 
+#ifdef DARWIN_ALLOW_MACROALGAE
 CBOP
 C     ROUTINE: DARWIN_MACROALGAE
 C     INTERFACE: ==========================================================
@@ -512,4 +513,5 @@ C       Production oxygen by macroalgae growth
              
       RETURN
       END SUBROUTINE
+#endif
       
