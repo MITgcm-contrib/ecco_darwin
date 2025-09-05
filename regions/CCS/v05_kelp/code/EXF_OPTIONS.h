@@ -184,7 +184,7 @@ C        be defined but ALLOW_BULKFORMULAE needs to be undef
 C-  Other forcing fields
 #define ALLOW_RUNOFF
 #undef  ALLOW_RUNOFTEMP
-#undef  ALLOW_SALTFLX
+#define  ALLOW_SALTFLX
 
 #if (defined (ALLOW_BULKFORMULAE) && defined (ATMOSPHERIC_LOADING))
 C Note: To use EXF_CALC_ATMRHO, both ALLOW_BULKFORMULAE
@@ -218,7 +218,7 @@ C-  Allows to read-in seaice fraction from files (areaMaskFile)
 
 C-  Use spatial interpolation to interpolate
 C   forcing files from input grid to model grid.
-#define USE_EXF_INTERPOLATION
+#undef USE_EXF_INTERPOLATION
 C   for interpolated vector fields, rotate towards model-grid axis
 C   using old rotation formulae (instead of grid-angles)
 #undef EXF_USE_OLD_VEC_ROTATION

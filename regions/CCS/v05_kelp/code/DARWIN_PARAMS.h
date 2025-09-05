@@ -24,11 +24,13 @@ C     darwin_useEXFwind      :: whether to use wind speed from exf package
      &    darwin_haveSurfPAR,
      &    darwin_useSEAICE,
      &    darwin_useQsw,
+     &    darwin_haveVentHe3,
      &    darwin_useEXFwind
       LOGICAL darwin_chlInitBalanced
       LOGICAL darwin_haveSurfPAR
       LOGICAL darwin_useSEAICE
       LOGICAL darwin_useQsw
+      LOGICAL darwin_haveVentHe3
       LOGICAL darwin_useEXFwind
 
 C--   COMMON/darwin_forcing_params_i/ darwin parameters related to forcing

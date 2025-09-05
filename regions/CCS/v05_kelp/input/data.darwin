@@ -3,6 +3,64 @@
  ironperiod = -12,
  darwin_inscal_iron= 1000.,
 #
+ DOCrunofffile = './BGC_runoff/DOC_CCS_cutout',
+ DOCrunoffstartdate1 = 19920101,
+ DOCrunoffstartdate2 = 120000,
+ DOCrunoffperiod     = 86400.0,
+#
+ DONrunofffile = './BGC_runoff/DON_CCS_cutout',
+ DONrunoffstartdate1 = 19920101,
+ DONrunoffstartdate2 = 120000,
+ DONrunoffperiod     = 86400.0,
+#
+ DOPrunofffile = './BGC_runoff/DOP_CCS_cutout',
+ DOPrunoffstartdate1 = 19920101,
+ DOPrunoffstartdate2 = 120000,
+ DOPrunoffperiod     = 86400.0,
+ R_DOFe_DOP_runoff   = 3E-4,
+#
+ DINrunofffile = './BGC_runoff/DIN_CCS_cutout',
+ DINrunoffstartdate1 = 19920101,
+ DINrunoffstartdate2 = 120000,
+ DINrunoffperiod     = 86400.0,
+ R_NO3_DIN_runoff    = 0.6531,
+ R_NO2_DIN_runoff    = 0.0158,
+ R_NH4_DIN_runoff    = 0.3311,
+#
+ IPrunofffile = './BGC_runoff/DIP_CCS_cutout',
+ IPrunoffstartdate1 = 19920101,
+ IPrunoffstartdate2 = 120000,
+ IPrunoffperiod     = 86400.0,
+ R_DFe_DIP_runoff   = 3E-4,
+ R_DIP_IP_runoff    = 0.25,
+#
+ DSirunofffile = './BGC_runoff/DSi_CCS_cutout',
+ DSirunoffstartdate1 = 19920101,
+ DSirunoffstartdate2 = 120000,
+ DSirunoffperiod     = 86400.0,
+#
+ POCrunofffile = './BGC_runoff/POC_CCS_cutout',
+ POCrunoffstartdate1 = 19920101,
+ POCrunoffstartdate2 = 120000,
+ POCrunoffperiod     = 86400.0,
+#
+ POPrunofffile = './BGC_runoff/PP_CCS_cutout',
+ POPrunoffstartdate1 = 19920101,
+ POPrunoffstartdate2 = 120000,
+ POPrunoffperiod     = 86400.0,
+ R_POFe_POP_runoff   = 3E-4,
+#
+ PONrunofffile = './BGC_runoff/PN_CCS_cutout',
+ PONrunoffstartdate1 = 19920101,
+ PONrunoffstartdate2 = 120000,
+ PONrunoffperiod     = 86400.0,
+#
+ DICrunofffile = './BGC_runoff/DIC_CCS_cutout',
+ DICrunoffstartdate1 = 19920101,
+ DICrunoffstartdate2 = 120000,
+ DICrunoffperiod     = 86400.0,
+ R_ALK_DIC_runoff    = 0.9886,
+#
  pCO2File = 'apCO2',
  pCO2startdate1 = 19920101,
  pCO2startdate2 = 000000,
@@ -14,6 +72,17 @@
  /
  &DARWIN_INTERP_PARAMS
  iron_interpMethod = 0,
+ DOCrunoff_interpMethod = 0,
+ DONrunoff_interpMethod = 0,
+ DOPrunoff_interpMethod = 0,
+ DINrunoff_interpMethod = 0,
+ IPrunoff_interpMethod = 0,
+ DSirunoff_interpMethod = 0,
+ DOPrunoff_interpMethod = 0,
+ POCrunoff_interpMethod = 0,
+ POPrunoff_interpMethod = 0,
+ PONrunoff_interpMethod = 0,
+ DICrunoff_interpMethod = 0,
 #
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,
@@ -47,34 +116,34 @@
  SURFALKMIN  =   100.0,
  /
  &DARWIN_MACROALGAE_PARAMS
- mp_spp_Vmax_NO3 = 2.09 _d -4
- mp_spp_Ks_NO3 = 10.20 _d 0
- mp_spp_Vmax_NH4 = 2.05 _d -4
- mp_spp_Ks_NH4 = 5.31 _d 0
- mp_spp_Vmax_Urea = 3.33 _d -6
- mp_spp_Ks_Urea = 7.75 _d 0
- mp_spp_Gmax_cap = 2.31 _d -6
- mp_spp_PARs = 213.7942 _d 0
- mp_spp_PARc = 20.5841 _d 0
- mp_spp_Qmin = 10.18 _d 0
- mp_spp_Qmax = 54.0 _d 0
- mp_spp_Topt1 = 13.0 _d 0
- mp_spp_K1 = 0.04 _d 0
- mp_spp_Topt2 = 18.0 _d 0
- mp_spp_K2 = 0.05 _d 0
- mp_spp_CD = 0.5 _d 0
- mp_spp_E = 2.31 _d -8
- mp_spp_death = 1.15 _d -7
- mp_wave_mort_factor = 1.0 _d 0
- mp_spp_katten = 1.0 _d -4
- mp_spp_carbon = 0.3 _d 0
- mp_spp_vertical = .FALSE.
- mp_spp_length_subsurface = 109.98 _d 0
- mp_spp_length_canopy = 243.46 _d 0
- mp_spp_length_watercolumn = 98.7 _d 0
- mp_spp_maxlength = 30.0 _d 0
+ mp_spp_Vmax_NO3 = 2.09E-4
+ mp_spp_Ks_NO3 = 10.20
+ mp_spp_Vmax_NH4 = 2.05E-4
+ mp_spp_Ks_NH4 = 5.31
+ mp_spp_Vmax_Urea = 3.33E-6
+ mp_spp_Ks_Urea = 7.75
+ mp_spp_Gmax_cap = 2.31E-6
+ mp_spp_PARs = 213.7942
+ mp_spp_PARc = 20.5841
+ mp_spp_Qmin = 10.18
+ mp_spp_Qmax = 54.0
+ mp_spp_Topt1 = 13.0
+ mp_spp_K1 = 0.04
+ mp_spp_Topt2 = 18.0
+ mp_spp_K2 = 0.05
+ mp_spp_CD = 0.5
+ mp_spp_E = 2.31E-8
+ mp_spp_death = 1.15E-7
+ mp_wave_mort_factor = 1.0
+ mp_spp_katten = 1.0E-4
+ mp_spp_carbon = 0.3
+ mp_spp_vertical = .TRUE.
+ mp_spp_length_subsurface = 109.98
+ mp_spp_length_canopy = 243.46
+ mp_spp_length_watercolumn = 98.7
+ mp_spp_maxlength = 30.0
  mp_spp_allN = .TRUE.
- /
+/
  &DARWIN_RANDOM_PARAMS
  smallgrow=0.66098,
  biggrow=0.43148,
