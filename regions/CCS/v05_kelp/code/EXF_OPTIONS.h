@@ -218,7 +218,7 @@ C-  Allows to read-in seaice fraction from files (areaMaskFile)
 
 C-  Use spatial interpolation to interpolate
 C   forcing files from input grid to model grid.
-#undef USE_EXF_INTERPOLATION
+#define USE_EXF_INTERPOLATION
 C   for interpolated vector fields, rotate towards model-grid axis
 C   using old rotation formulae (instead of grid-angles)
 #undef EXF_USE_OLD_VEC_ROTATION
