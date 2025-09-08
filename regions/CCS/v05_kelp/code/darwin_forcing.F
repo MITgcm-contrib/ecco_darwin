@@ -51,12 +51,6 @@ C#ifdef ALLOW_WAVE_FORCING
 #include "EXF_OPTIONS.h"
 #include "EXF_FIELDS.h"
 C#endif
-
-
-C#ifdef ALLOW_WAVE_FORCING 
-C#include "EXF_OPTIONS.h"
-C#include "EXF_FIELDS.h"
-C#endif
 #ifdef DARWIN_NUTRIENT_RUNOFF
 #include "EXF_INTERP_SIZE.h"
 #include "DARWIN_EXF_PARAMS.h"
