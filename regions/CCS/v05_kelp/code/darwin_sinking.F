@@ -237,6 +237,14 @@ C
 #ifdef DARWIN_ALLOW_CONS
           botSnkSi(i,j,bi,bj) = botSnkSi(i,j,bi,bj) + dTsub(k)*flux
 #endif
+
+#ifdef DARWIN_ALLOW_TSS
+          flux = wTSS_sink*MAX(0 _d 0, Ptr(i,j,k,bi,bj,iTSS))
+          gTr(i,j,k  ,iTSS) = gTr(i,j,k  ,iTSS) - flux*upfc
+#ifdef DARWIN_ALLOW_CONS
+          botSnkTSS(i,j,bi,bj) = botSnkTSS(i,j,bi,bj) + dTsub(k)*flux
+#endif          
+#endif
           DO l = 1, nplank
            flux = biosink(l)*MAX(0 _d 0, Ptr(i,j,k,bi,bj,ic+l-1))
            gTr(i,j,k  ,ic+l-1 )=gTr(i,j,k  ,ic+l-1 ) - flux*upfc

@@ -56,6 +56,26 @@ C
       _RL DARWIN_Ndenit(sNx,sNy,Nr,nSx,nSy)
 #endif
 
+# ifdef DARWIN_BOTTOM_SINK
+      COMMON /DARWIN_CONS_BOTTOM/
+     &      botSnkC,
+     &      botSnkN,
+     &      botSnkP,
+     &      botSnkFe,
+#ifdef DARWIN_ALLOW_TSS
+     &      botSnkTSS,
+#endif
+     &      botSnkSi
+      _RL botSnkC(sNx,sNy,nSx,nSy)
+      _RL botSnkN(sNx,sNy,nSx,nSy)
+      _RL botSnkP(sNx,sNy,nSx,nSy)
+      _RL botSnkFe(sNx,sNy,nSx,nSy)
+      _RL botSnkSi(sNx,sNy,nSx,nSy)
+#ifdef DARWIN_ALLOW_TSS
+      _RL botSnkTSS(sNx,sNy,nSx,nSy)
+#endif
+# endif
+
 C Carbon Variables
 
        COMMON /CARBON_NEEDS/

@@ -131,17 +131,23 @@ C        convert W/m2 to uEin/s/m2
        DO j=jMin,jMax
         DO i=iMin,iMax
 C TODO should include hFacC
-         atten(i,j) = (katten_w + katten_Chl*Chl(i,j))*DRF(k)
+C         atten(i,j) = (katten_w + katten_Chl*Chl(i,j))*DRF(k)
+         atten(i,j) = (katten_w + katten_Chl*Chl(i,j))
 C Self-shading by macroalgae
 #ifdef DARWIN_ALLOW_MACROALGAE
          mag(i,j) = Ptracer(i,j,k,bi,bj,iMagB)*
      & Ptracer(i,j,k,bi,bj,iMagQ)     
-         atten(i,j) = (katten_w + katten_Chl*Chl(i,j) +
-     & mp_spp_katten*mag(i,j))*DRF(k)     
+C         atten(i,j) = (katten_w + katten_Chl*Chl(i,j) +
+C     & mp_spp_katten*mag(i,j))*DRF(k)     
          atten_chl(i,j) = katten_Chl*Chl(i,j)*DRF(k)         
          atten_kelp(i,j) = mp_spp_katten*mag(i,j)*DRF(k)         
          atten_water(i,j) = katten_w*DRF(k)
+         atten(i,j) = atten(i,j) + mp_spp_katten*mag(i,j)
 #endif
+#ifdef DARWIN_ALLOW_TSS
+         atten(i,j) = atten(i,j) + katten_TSS*Ptracer(i,j,k,bi,bj,iTSS)
+#endif
+         atten(i,j) = atten(i,j)*DRF(k)
 #ifdef DARWIN_AVPAR
          PAR(i,j,k) = PARF(i,j)*(1.0 - EXP(-atten(i,j)))/atten(i,j)
 #else /* USE_MIDPAR */

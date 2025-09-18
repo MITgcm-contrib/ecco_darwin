@@ -599,11 +599,14 @@ C     mp_spp_allN         :: []               Use of nitrogen species for uptake
 #endif
 
 C--   COMMON /DARWIN_TSS_PARAMS_r/
-C     wTSS_sink     :: []               sediment sinking velocity [m/s]
+C     wTSS_sink     :: sediment sinking velocity [m/s]
+C     katten_TSS    :: Suspended matter attenuation [m2/g]
 #ifdef DARWIN_ALLOW_TSS
       COMMON /DARWIN_TSS_PARAMS_r/
-     &    wTSS_sink
+     &    wTSS_sink,
+     &    katten_TSS
       _RL wTSS_sink
+      _RL katten_TSS
 #endif
 
 C--   COMMON /DARWIN_DEPENDENT_PARAMS_i/

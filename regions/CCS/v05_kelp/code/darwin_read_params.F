@@ -196,7 +196,8 @@ C physiological parameters
 
 #ifdef DARWIN_ALLOW_TSS
       NAMELIST/DARWIN_TSS_PARAMS/
-     &    wTSS_sink
+     &    wTSS_sink,
+     &    katten_TSS
 #endif
 
 #ifdef DARWIN_ALLOW_CDOM
@@ -505,7 +506,8 @@ C physiology for macrolagae model
 
 #ifdef DARWIN_ALLOW_TSS
 C sediment vertical sinking velocity [m/s]
-       wTSS_sink = 1.0e-3
+       wTSS_sink = 1.0 _d -3
+       katten_TSS = 7 _d -2
        
        READ(UNIT=iUnit, NML=DARWIN_TSS_PARAMS)
 #endif
