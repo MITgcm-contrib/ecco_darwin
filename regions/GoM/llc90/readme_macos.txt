@@ -24,10 +24,6 @@
   git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
   git clone https://github.com/darwinproject/darwin3
 
-# Note that darwin3 includes a full copy of MITgcm;
-# MITgcm head branch is downloaded to access latest tools/build_options
-  git clone --depth 1 https://github.com/MITgcm/MITgcm.git
-
 # Use backport_ckpt68y for consistency with "version 2" of
 # ecco_darwin/v06/1deg/readme_darwin_v4r5.txt
   cd darwin3
@@ -37,8 +33,7 @@
 ==============
 # 3. Build executable
   cd build
-  ../tools/genmake2 -mo ../../ecco_darwin/regions/GoM/llc90/code \
-     -of ../../MITgcm/tools/build_options/darwin_arm64_gfortran
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/GoM/llc90/code
   make depend
   make -j
 
@@ -47,17 +42,19 @@
   cd ../run
   ln -sf ../build/mitgcmuv .
 
-# Get forcing and configuration files from:
-# --> https://nasa-ext.box.com/s/3d3qz47tvnhp2y8wbvd821rwdxk1m2un
-# --> https://nasa-ext.box.com/s/l7y193atfj5d4hxlwr8o1s3tvnbzecdp
-# --> https://nasa-ext.box.com/s/7m8wv9gj2cyf8nhpg2d8f2b4n92b8ftr
-# --> https://nasa-ext.box.com/s/g2dchqvo0t70qnwk8s2d49owb2oorq33
-# and deposit or link the contents of these directories
-# inside the darwin3/run directory, for example,
-  ln -sf <path_to_download_location>/NOAA_MBL/* .
-  ln -sf <path_to_download_location>/GoM/llc90/run_template/* .
-  ln -sf <path_to_download_location>/ECCO_Darwin/v06/* .
-  ln -sf <path_to_download_location>/ECCO_Darwin/oasim .
+# Get contents of llc90/run_template from
+# https://nasa-ext.box.com/s/a8iptfxasd95uxc4or9xmmgb68em8ext
+# for example,
+  GoM_PATH=$HOME/Box/Public/GoM/llc90/run_template
+  ln -sf $GoM_PATH/* .
+
+# Get contents of v06, oasim, and NOAA_MBL from
+# https://nasa-ext.box.com/s/ln8r6w9by0w0g6gadr8ibpe1dn9ddiae
+# for example,
+  ECCO_Darwin_PATH=$HOME/Box/Public/ECCO_Darwin
+  ln -sf $ECCO_Darwin_PATH/v06/* .
+  ln -sf $ECCO_Darwin_PATH/oasim .
+  ln -sf $ECCO_Darwin_PATH/NOAA_MBL/* .
 
   mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
   mkdir diags/monthly/IOPS diags/monthly/PAR diags/monthly/RRS 
