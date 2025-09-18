@@ -307,6 +307,20 @@ c--   read forcing fields from files and temporal interpolation
      &     DICrunoff_interpMethod,
 #endif
      &     mytime, myiter, mythid )
+     
+       call exf_set_fld(
+     &     'TSSrunoff', TSSrunofffile, TSSrunoffmask,
+     &     TSSrunoffStartTime, TSSrunoffperiod, TSSrunoffRepCycle,
+     &     darwin_inscal_TSSrunoff,
+     &     TSSrunoff_exfremo_intercept, TSSrunoff_exfremo_slope,
+     &     TSSrunoff, TSSrunoff0, TSSrunoff1,
+#ifdef USE_EXF_INTERPOLATION
+     &     TSSrunoff_lon0, TSSrunoff_lon_inc,
+     &     TSSrunoff_lat0, TSSrunoff_lat_inc,
+     &     TSSrunoff_nlon, TSSrunoff_nlat, xC, yC,
+     &     TSSrunoff_interpMethod,
+#endif
+     &     mytime, myiter, mythid )
 
         _EXCH_XY_RL( surfPAR, myThid )
         _EXCH_XY_RL( inputFe, myThid )
@@ -327,6 +341,7 @@ c--   read forcing fields from files and temporal interpolation
         _EXCH_XY_RL( POPrunoff, myThid )
         _EXCH_XY_RL( PONrunoff, myThid )
         _EXCH_XY_RL( DICrunoff, myThid )
+        _EXCH_XY_RL( TSSrunoff, myThid )
 
       ENDIF
 

@@ -699,6 +699,42 @@ C DICrunoff forcing parameters for exf
       _RL  DICrunoff_lat_inc(MAX_LAT_INC)
 #endif
 
+C TSSrunoff forcing parameters for exf
+
+      _RL TSSrunoffStartTime
+
+      COMMON/darwin_forcing_TSSrunoff_c/
+     &    TSSrunoffmask
+      COMMON/darwin_forcing_TSSrunoff_i/
+     &    TSSrunoffstartdate1, TSSrunoffstartdate2
+      COMMON/darwin_forcing_TSSrunoff_r/
+     &    TSSrunoffStartTime,
+     &    TSSrunoffperiod, TSSrunoffRepCycle, TSSrunoffconst,
+     &    TSSrunoff_exfremo_intercept, TSSrunoff_exfremo_slope,
+     &    darwin_inscal_TSSrunoff
+      CHARACTER*1 TSSrunoffmask
+      INTEGER TSSrunoffstartdate1
+      INTEGER TSSrunoffstartdate2
+      _RL TSSrunoffperiod
+      _RL TSSrunoffRepCycle
+      _RL TSSrunoffconst
+      _RL TSSrunoff_exfremo_intercept
+      _RL TSSrunoff_exfremo_slope
+      _RL darwin_inscal_TSSrunoff
+
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_TSSrunoff_i/
+     &    TSSrunoff_nlon, TSSrunoff_nlat, TSSrunoff_interpMethod
+      COMMON/darwin_interp_TSSrunoff_r/
+     &    TSSrunoff_lon0, TSSrunoff_lat0, TSSrunoff_lon_inc,
+     &    TSSrunoff_lat_inc
+      INTEGER TSSrunoff_interpMethod, TSSrunoff_nlon, TSSrunoff_nlat
+      _RL  TSSrunoff_lon0
+      _RL  TSSrunoff_lat0
+      _RL  TSSrunoff_lon_inc
+      _RL  TSSrunoff_lat_inc(MAX_LAT_INC)
+#endif
+
 C--   COMMON/DARWIN_RUNOFF_PARAMS_r/ Parameters for runoff nutrient input
 C     R_ALK_DIC_runoff  :: [eq/mol C]     ALK:DIC ratio in runoff
 C     R_NO3_DIN_runoff  :: [mol N/mol N]  NO3 fraction of DIN in runoff

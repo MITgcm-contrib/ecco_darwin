@@ -31,7 +31,8 @@ C     ventHe3file   :: file with He3 flux from hydrothermal vents (mmol He/m2/s)
      &    POCrunofffile,
      &    POPrunofffile,
      &    PONrunofffile,
-     &    DICrunofffile
+     &    DICrunofffile,
+     &    TSSrunofffile
 
       CHARACTER*128 PARfile
       CHARACTER*128 ironfile
@@ -52,6 +53,7 @@ C     ventHe3file   :: file with He3 flux from hydrothermal vents (mmol He/m2/s)
       CHARACTER*128 POPrunofffile
       CHARACTER*128 PONrunofffile
       CHARACTER*128 DICrunofffile
+      CHARACTER*128 TSSrunofffile
 
 C--   COMMON /DARWIN_FIELDS_R/
 C     ventHe3   :: He3 flux from hydrothermal vents (mmol He/m2/s)
@@ -74,7 +76,8 @@ C     ventHe3   :: He3 flux from hydrothermal vents (mmol He/m2/s)
      &    POCrunoff0, POCrunoff1, POCrunoff,
      &    POPrunoff0, POPrunoff1, POPrunoff,
      &    PONrunoff0, PONrunoff1, PONrunoff,
-     &    DICrunoff0, DICrunoff1, DICrunoff
+     &    DICrunoff0, DICrunoff1, DICrunoff,
+     &    TSSrunoff0, TSSrunoff1, TSSrunoff
 
       _RL PAR0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL PAR1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
@@ -151,6 +154,10 @@ C     ventHe3   :: He3 flux from hydrothermal vents (mmol He/m2/s)
       _RL DICrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL DICrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL DICrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      
+      _RL TSSrunoff0(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL TSSrunoff1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL TSSrunoff(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
 
 CEOP
 
