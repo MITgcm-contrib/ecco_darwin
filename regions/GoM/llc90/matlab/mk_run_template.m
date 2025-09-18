@@ -88,7 +88,7 @@ for fld={'THETA', 'DIC', 'NO3', 'NO2', 'NH4', 'PO4', 'FeT', 'SiO2', ...
         fin=[pnm fnm(t).name];
         tmp=readbin(fin,[nx ny nz]);
         
-        % western boundary condition
+        % eastern boundary condition
         fout=[region_name suf2 '_' fld{1} '_East'];
         writebin(fout,squeeze(tmp(end,:,:)),1,prec,t-1)
         

@@ -178,7 +178,7 @@ end
 
 % {{{ get and save regional fields
 % 1-deg monthly-mean diagnostics from BaseRun10 (our v06 baseline)
-pin='/nobackupnfs1/hzhang1/testing_darwin68y/darwin3/BaseRun10/diags/';
+pin='/nobackupnfs1/hzhang1/testing_darwin68y/darwin3/BaseRun10_3/diags/';
 pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/'];
 % {{{ get and save scalar 2D fields
 fin={'diags_state/state_2d_set1.'};
@@ -262,7 +262,7 @@ for t=1:length(dnm)
     foutu=['U/U' suf2 '.' dy];
     foutv=['V/V' suf2 '.' dy];
     fldu=read_llc_fkij(fnm,NX,fc,kxv,ix,jx);
-    fldv=read_llc_fkij(fnm,NX,fc,kxu,ix,jx-1);
+    fldv=-read_llc_fkij(fnm,NX,fc,kxu,ix,jx-1);
     writebin(foutu,fldu);
     writebin(foutv,fldv);
 end
@@ -321,6 +321,14 @@ for yr=1991:2023
         writebin(fout,fld);
     end
 end
+% }}}
+% {{{ get and save iron dust
+fnm=[pin 'runoff-2d-Fekete-1deg-mon-V4-SMOOTH_S60scalving_v3.bin'];
+fnm=['/nobackup/dcarrol2/forcing/iron_dust/LLC_270/' ...
+     'llc270_Mahowald_2009_soluble_iron_dust.bin'];
+fout=[pout region_name suf1 '_iron_dust'];
+fld=read_llc_fkij(fnm,NX,fc,1:12,ix,jx);
+writebin(fout,fld);
 % }}}
 
 % }}}
