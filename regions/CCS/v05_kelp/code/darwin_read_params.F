@@ -194,6 +194,11 @@ C physiological parameters
      &    mp_spp_allN 
 #endif
 
+#ifdef DARWIN_ALLOW_TSS
+      NAMELIST/DARWIN_TSS_PARAMS/
+     &    wTSS_sink
+#endif
+
 #ifdef DARWIN_ALLOW_CDOM
       NAMELIST/DARWIN_CDOM_PARAMS/
      &    fracCDOM,
@@ -497,6 +502,13 @@ C physiology for macrolagae model
        
        READ(UNIT=iUnit, NML=DARWIN_MACROALGAE_PARAMS)
 #endif
+
+#ifdef DARWIN_ALLOW_TSS
+C sediment vertical sinking velocity [m/s]
+       wTSS_sink = 1.0e-3
+       
+       READ(UNIT=iUnit, NML=DARWIN_TSS_PARAMS)
+#endif
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C     DARWIN_RADTRANS_PARAMS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -561,6 +573,9 @@ C     log all parameters to a namelist file
        WRITE(UNIT=oUnit, NML=DARWIN_DEPENDENT_PARAMS)
 #ifdef DARWIN_ALLOW_MACROALGAE
        WRITE(UNIT=oUnit, NML=DARWIN_MACROALGAE_PARAMS)
+#endif
+#ifdef DARWIN_ALLOW_TSS
+       WRITE(UNIT=oUnit, NML=DARWIN_TSS_PARAMS)
 #endif
 #ifdef ALLOW_RADTRANS
        WRITE(UNIT=oUnit, NML=DARWIN_RADTRANS_PARAMS)

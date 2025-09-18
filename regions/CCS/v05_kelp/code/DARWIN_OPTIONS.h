@@ -39,6 +39,9 @@ C enable air-sea carbon exchange and Alk and O2 tracers
 C enable macroalgae model (MACMODS)
 #define DARWIN_ALLOW_MACROALGAE
 
+C enable passive tracers of total suspended sediment
+#define DARWIN_ALLOW_TSS
+
 C optional bits
 
 C enable denitrification code

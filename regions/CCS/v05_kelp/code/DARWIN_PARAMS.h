@@ -598,6 +598,14 @@ C     mp_spp_allN         :: []               Use of nitrogen species for uptake
       LOGICAL mp_spp_allN        
 #endif
 
+C--   COMMON /DARWIN_TSS_PARAMS_r/
+C     wTSS_sink     :: []               sediment sinking velocity [m/s]
+#ifdef DARWIN_ALLOW_TSS
+      COMMON /DARWIN_TSS_PARAMS_r/
+     &    wTSS_sink
+      _RL wTSS_sink
+#endif
+
 C--   COMMON /DARWIN_DEPENDENT_PARAMS_i/
 C     laCDOM    :: index of reference waveband for CDOM absorption spectrum
 C     kMinFeSed :: minimum level index for iron sedimentation
