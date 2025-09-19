@@ -1,14 +1,14 @@
  &PTRACERS_PARM01
- PTRACERS_numInUse= 34,
+ PTRACERS_numInUse= 35,
 #
- PTRACERS_advScheme(:)= 34*33,
- PTRACERS_diffKh(:)= 34*0.E3,
- PTRACERS_diffKr(:)= 34*1.E-5,
- PTRACERS_useGMRedi(:)= 34*.TRUE.,
+ PTRACERS_advScheme(:)= 35*33,
+ PTRACERS_diffKh(:)= 35*0.E3,
+ PTRACERS_diffKr(:)= 35*1.E-5,
+ PTRACERS_useGMRedi(:)= 35*.TRUE.,
  PTRACERS_zeroHAdv(32:34) = 3*.TRUE.,
  PTRACERS_zeroVAdv(32:34) = 3*.TRUE.,
 #
- PTRACERS_EvPrRn(:)= 34*0.E3,
+ PTRACERS_EvPrRn(:)= 35*0.E3,
 #
  PTRACERS_names( 1)= 'DIC',
  PTRACERS_names( 2)= 'NO3',
@@ -44,6 +44,7 @@
  PTRACERS_names(32)= 'Bmag',
  PTRACERS_names(33)= 'Cmag',
  PTRACERS_names(34)= 'Qmag',
+ PTRACERS_names(35)= 'TSS',
 #
 # uM is shorthand for mmol m^-3
 #
@@ -81,6 +82,7 @@
  PTRACERS_units(32)= 'gDryWeight/m2' 
  PTRACERS_units(33)= 'gC/m2'
  PTRACERS_units(34)= 'mgN/gDryWeight'
+ PTRACERS_units(35)= 'g/m^3'
 #
  PTRACERS_initialFile( 1)= 'init/DIC_80x100x48.16-Jan-1992',
  PTRACERS_initialFile( 2)= 'init/NO3_80x100x48.16-Jan-1992',
@@ -116,4 +118,5 @@
  PTRACERS_initialFile(32)= 'init2/ini_CCS_80x100x48_Bmag.bin',
  PTRACERS_initialFile(33)= 'init2/ini_CCS_80x100x48_Cmag.bin',
  PTRACERS_initialFile(34)= 'init2/ini_CCS_80x100x48_Qmag.bin',
+ PTRACERS_initialFile(35)= 'init2/ini_CCS_80x100x48_TSS.bin',
  &

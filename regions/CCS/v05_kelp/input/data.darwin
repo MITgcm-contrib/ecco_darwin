@@ -3,6 +3,11 @@
  ironperiod = -12,
  darwin_inscal_iron= 1000.,
 #
+ pCO2File = 'apCO2',
+ pCO2startdate1 = 19920101,
+ pCO2startdate2 = 000000,
+ pCO2period     = 86400.0,
+#
  DOCrunofffile = './BGC_runoff/DOC_CCS_cutout',
  DOCrunoffstartdate1 = 19920101,
  DOCrunoffstartdate2 = 120000,
@@ -61,10 +66,10 @@
  DICrunoffperiod     = 86400.0,
  R_ALK_DIC_runoff    = 0.9886,
 #
- pCO2File = 'apCO2',
- pCO2startdate1 = 19920101,
- pCO2startdate2 = 000000,
- pCO2period     = 86400.0,
+ TSSrunofffile = './BGC_runoff/TSS_CCS_cutout',
+ TSSrunoffstartdate1 = 19920101,
+ TSSrunoffstartdate2 = 120000,
+ TSSrunoffperiod     = 86400.0,
 #
  darwin_useEXFwind = .TRUE.,
  darwin_useQsw = .TRUE.,
@@ -83,6 +88,7 @@
  POPrunoff_interpMethod = 0,
  PONrunoff_interpMethod = 0,
  DICrunoff_interpMethod = 0,
+ TSSrunoff_interpMethod = 0,
 #
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,
@@ -143,6 +149,8 @@
  mp_spp_length_watercolumn = 98.7
  mp_spp_maxlength = 30.0
  mp_spp_allN = .TRUE.
+/
+ &DARWIN_TSS_PARAMS
 /
  &DARWIN_RANDOM_PARAMS
  smallgrow=0.66098,

@@ -406,7 +406,7 @@ C === nutrient runoff ==================================================
 #ifdef DARWIN_ALLOW_TSS
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iTSS),
-     I                          TSSrunoff(1-OLx,1-OLy,bi,bj),
+     I                          TSSrunoff(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 #endif

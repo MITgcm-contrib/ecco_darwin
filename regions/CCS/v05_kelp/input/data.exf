@@ -43,7 +43,10 @@
   precipstartdate2  = 030000,
   precipperiod      = 21600.0,
 #
-  runoffperiod      = -12,
+  runofffile        = './JRA55-do/jra55_do_runoff_CCS_cutout',
+  runoffstartdate1  = 19920101,
+  runoffstartdate2  = 120000,
+  runoffperiod      = 86400.0,,
 #
   uwindstartdate1   = 19920101,
   uwindstartdate2   = 000000,

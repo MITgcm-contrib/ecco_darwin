@@ -37,6 +37,7 @@ C these cannot be modified for now
       INTEGER esi
       INTEGER eChl
       INTEGER eMag
+      INTEGER eTSS
       INTEGER nDarwin       
       PARAMETER (iDIC   =1)
       PARAMETER (iNO3   =iDIC+1)
@@ -122,9 +123,10 @@ C these cannot be modified for now
 #ifdef DARWIN_ALLOW_TSS
       INTEGER iTSS
       PARAMETER(iTSS=eMag+1)
-      PARAMETER (nDarwin=iTSS)      
+      PARAMETER(eTSS = iTSS )
 #else
-      PARAMETER (nDarwin=eMag)
+      PARAMETER(eTSS = eMag )
 #endif
+      PARAMETER(nDarwin = eTSS )
 CEOP
 #endif /* ALLOW_DARWIN */
