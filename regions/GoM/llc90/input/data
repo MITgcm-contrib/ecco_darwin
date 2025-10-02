@@ -96,7 +96,7 @@
  chkptFreq   =31536000.0,
 # taveFreq    =31536000.0,
 # dumpFreq    =31536000.0,
- monitorFreq = 43200.0,
+ monitorFreq = 86400.0,
 # monitorFreq = 6307200.0,
  dumpInitAndLast = .TRUE.,
  pickupStrictlyMatch=.FALSE.,

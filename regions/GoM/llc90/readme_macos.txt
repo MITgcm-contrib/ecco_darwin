@@ -59,4 +59,5 @@
   mkdir diags diags/3hourly diags/daily diags/monthly diags/budget
   mkdir diags/monthly/IOPS diags/monthly/PAR diags/monthly/RRS 
   cp -r ../../ecco_darwin/regions/GoM/llc90/input/* .
+  cp data.diagnostics_lite data.diagnostics
   ./mitgcmuv >& output.txt &

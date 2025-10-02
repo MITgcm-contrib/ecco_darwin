@@ -4,20 +4,12 @@
 # These instructions assume WSL has already been downloaded and installed on your windows machine. 
 
 ==============
-# 1. Install mpi and python
+# 1. Install mpi
 
 # One way to do this is via miniconda. Go to https://www.anaconda.com/download/success and download the Windows Miniconda Installer. Follow screen prompts to run
   
-# Install gfortran
-  brew install gcc
-
 # Install open-mpi
-  brew install open-mpi
-
-# Install python
-  brew install python3
-  cd /opt/homebrew/bin
-  sudo ln -sf python3 python
+  conda install conda-forge::openmpi
 
 ==============
 # 2. Get code, make sure you are in the directory where you want the model to be. This will create a directory named "darwin3" where the rest of the instructions take place.

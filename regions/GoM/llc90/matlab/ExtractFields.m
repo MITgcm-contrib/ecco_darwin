@@ -22,6 +22,7 @@ prec='real*4';
 
 % {{{ extract indices for desired region
 pin='/nobackup/dcarrol2/grid/ECCO_V4r5/';
+%pin='~/Box/Public/grid/ECCO_V4r5/';
 fnm=[pin 'Depth.data'];
 [fld fc ix jx] = ...
     quikread_llc(fnm,NX,1,prec,pin,minlat,maxlat,minlon,maxlon);
@@ -48,6 +49,7 @@ close all
 
 % {{{ get and save grid information
 pout=['/nobackup/dmenemen/ecco_darwin/' region_name '/grid/'];
+%pout='~/Box/Public/GoM/llc90/grid/';
 eval(['mkdir ' pout])
 eval(['cd ' pout])
 % {{{ grid cell center
@@ -96,7 +98,7 @@ for f=1:length(fc)
         fldy=read_llc_fkij(finy,NX,fc,1,ix,jx);
       case {4,5}
         fldx=read_llc_fkij(finy,NX,fc,1,ix,jx);
-        fldy=read_llc_fkij(finx,NX,fc,1,ix,jx); % <<<<<<<<
+        fldy=read_llc_fkij(finx,NX,fc,1,ix,jx);
     end
 end
 writebin(foutx,fldx);
@@ -159,8 +161,8 @@ for f=1:length(fc)
         fldx=read_llc_fkij(finx,NX,fc,kx,ix,jx);
         fldy=read_llc_fkij(finy,NX,fc,kx,ix,jx);
       case {4,5}
-        fldx=read_llc_fkij(finy,NX,fc,kx,ix,jx-1); % <<<<<<<<
-        fldy=read_llc_fkij(finx,NX,fc,kx,ix,jx);
+        fldx=read_llc_fkij(finy,NX,fc,kx,ix,jx);
+        fldy=read_llc_fkij(finx,NX,fc,kx,ix,jx-1); % <<<<<<<<
     end
 end
 writebin(foutx,fldx);
