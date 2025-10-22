@@ -1,0 +1,194 @@
+[
+   {
+    "name": "sea surface height",
+    "fields" : "ETAN",
+    "dataset_description": "Parameters include model sea level",
+    "filename" : "SEA_SURFACE_HEIGHT",
+    "dimension" : "2D",
+    "frequency" : "AVG_MON, SNAP"
+   },
+   {
+    "name": "average 2-dimentional fields for budget purpose",
+    "fields": "oceFWflx, SFLUX, TFLUX, oceSPflx, oceQsw, fluxCO2, gDICsurf",
+    "dataset_description": "Parameters include air-sea flxues",
+    "filename" : "average_2d",
+    "dimension" : "2D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "average 2-dimentional sediment flux",
+    "fields": "DICFsed, ALKFsed, O2Fsed, NO3Fsed, PO4Fsed, NH4Fsed",
+    "dataset_description": "Parameters include sediment flxues",
+    "filename" : "average_2d_sed1",
+    "dimension" : "2D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "average 2-dimentional flux from water column to sediment",
+    "fields": "sedFlPOC, sedFlPIC, sedFlPOP, sedFlPON, sedFplkC, sedFplkN, sedFplkP",
+    "dataset_description": "Parameters include flux from water column to sediment",
+    "filename" : "average_2d_sed2",
+    "dimension" : "2D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "sea-ice and snow concentration and thickness",
+    "fields":"SIarea, SIheff",
+    "dataset_description": "Parameters include sea-ice concentration [SIarea], grid-cell averaged sea-ice thickness [SIheff]",
+    "filename" : "SEA_ICE_CONC_THICKNESS",
+    "dimension" : "2D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean temperature and salinity",
+    "fields": "THETA, SALT",
+    "dataset_description": "Parameters include seawater potential temperature [THETA] and salinity [SALT].",
+    "filename" : "OCEAN_TEMPERATURE_SALINITY",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON, SNAP"
+   },
+   {
+    "name": "ocean major BGC tracers",
+    "fields": "TRAC01, TRAC02, TRAC03, TRAC04, TRAC05, TRAC06, TRAC07, TRAC18, TRAC19",
+    "dataset_description": "Parameters include seawater DIC [TRAC01], NO3 [TRAC02], NO2 [TRAC03], NH4 [TRAC04], PO4 [TRAC05], FeT [TRAC06], SiO2 [TRAC07], ALK [TRAC18], O2 [TRAC19]",
+    "filename" : "OCEAN_MAJOR_BGC",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON, SNAP"
+   },
+   {
+    "name": "ocean minor BGC tracers",
+    "fields": "TRAC08, TRAC09, TRAC10, TRAC11, TRAC12, TRAC13, TRAC14, TRAC15, TRAC16, TRAC17, TRAC20, TRAC21, TRAC22, TRAC23, TRAC24, TRAC25, TRAC26, TRAC27, TRAC28, TRAC29, TRAC30, TRAC31",
+    "dataset_description": "Parameters include seawater DOC [TRAC08], DON [TRAC09], DOP [TRAC10], DOFe [TRAC11], POC [TRAC12], PON [TRAC13], POP [TRAC14], POFe [TRAC15], POSi [TRAC16], PIC [TRAC17], c1 [TRAC20], c2 [TRAC21], c3 [TRAC22], c4 [TRAC23], c5 [TRAC24], c6 [TRAC25], c7 [TRAC26], Chl1 [TRAC27], Chl2 [TRAC28], Chl3 [TRAC29], Chl4 [TRAC30], Chl5 [TRAC31]",
+    "filename" : "OCEAN_MINOR_BGC",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean BGC states",
+    "fields": "PAR, PP, pH",
+    "dataset_description": "Parameters include seawater total PAR at layer center [PAR], Primary Production [PP], potential of hydrogen [pH]",
+    "filename" : "OCEAN_BGC_STATES",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional volume fluxes",
+    "fields": "UVELMASS, VVELMASS, WVELMASS",
+    "dataset_description" : "Parameters include the three dimensional ocean volume fluxes in the model x, y, and z-directions. Volume fluxes are calculated by multiplying ocean velocities with wet grid cell areas (i.e., horizontal fluxes account for partial cells and the time-varying vertical coordinate).",
+    "filename" : "OCEAN_VOLUME_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional potential temperature fluxes",
+    "fields":"ADVx_TH, DFxE_TH, ADVy_TH, DFyE_TH, ADVr_TH, DFrE_TH, DFrI_TH",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean potential temperature fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_TEMPERATURE_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional salinity fluxes",
+    "fields":"ADVx_SLT, DFxE_SLT, ADVy_SLT, DFyE_SLT, ADVr_SLT, DFrE_SLT, DFrI_SLT, oceSPtnd",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean salinity fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_SALINITY_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional DIC (TRAC01) fluxes",
+    "fields":"ADVxTr01, ADVyTr01, ADVrTr01, DFxETr01, DFyETr01, DFrETr01, DFrITr01, gDAR01, C_DIC, C_DICPIC, respDIC, rDIC_DOC, rDIC_POC, dDIC_PIC",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean DIC fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_DIC_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional ALK (TRAC18) fluxes",
+    "fields":"ADVxTr18, ADVyTr18, ADVrTr18, DFxETr18, DFyETr18, DFrETr18, DFrITr18, gDAR18, C_ALK, S_ALK",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean ALK fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_ALK_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional NO3 (TRAC02) fluxes",
+    "fields":"ADVxTr02, ADVyTr02, ADVrTr02, DFxETr02, DFyETr02, DFrETr02, DFrITr02, gDAR02, C_NO3, S_NO3",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean NO3 fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_NO3_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional NO2 (TRAC03) fluxes",
+    "fields":"ADVxTr03, ADVyTr03, ADVrTr03, DFxETr03, DFyETr03, DFrETr03, DFrITr03, gDAR03, C_NO2, S_NO2",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean NO2 fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_NO2_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional NH4 (TRAC04) fluxes",
+    "fields":"ADVxTr04, ADVyTr04, ADVrTr04, DFxETr04, DFyETr04, DFrETr04, DFrITr04, gDAR04, C_NH4, S_NH4",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean NH4 fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_NH4_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional PO4 (TRAC05) fluxes",
+    "fields":"ADVxTr05, ADVyTr05, ADVrTr05, DFxETr05, DFyETr05, DFrETr05, DFrITr05, gDAR05, C_PO4, S_PO4",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean PO4 fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_PO4_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional FeT (TRAC06) fluxes",
+    "fields":"ADVxTr06, ADVyTr06, ADVrTr06, DFxETr06, DFyETr06, DFrETr06, DFrITr06, gDAR06, C_FeT, S_FeT, sedFe, freeFeLs",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean FeT fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_FeT_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean two-dimensional FeT (TRAC06) fluxes",
+    "fields":"sfcSolFe",
+    "dataset_description" : "Parameters include the two dimensional Soluble iron input at sea surface",
+    "filename" : "OCEAN_FeT_SURFACE",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional SiO2 (TRAC07) fluxes",
+    "fields":"ADVxTr07, ADVyTr07, ADVrTr07, DFxETr07, DFyETr07, DFrETr07, DFrITr07, gDAR07, C_Si, S_Si",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean SiO2 fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_SiO2_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional O2 (TRAC19) fluxes",
+    "fields":"ADVxTr19, ADVyTr19, ADVrTr19, DFxETr19, DFyETr19, DFrETr19, DFrITr19, gDAR19, C_O2, S_O2",
+    "dataset_description" : "Parameters include the three dimensional advective and diffusive ocean O2 fluxes in the model x, y, and z-directions. Horizontal fluxes account for partial cells and the time-varying vertical coordinate.",
+    "filename" : "OCEAN_O2_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean two-dimensional CO2 fluxes budget",
+    "fields":"fluxCO2, gDICsurf, apCO2, apCO2sat",
+    "dataset_description" : "Parameters include the two dimensional CO2 flux at sea surface",
+    "filename" : "OCEAN_CO2_FLUX_SURFACE",
+    "dimension" : "2D",
+    "frequency" : "AVG_MON"
+   },
+   {
+    "name": "ocean three-dimensional CO2 fluxes budget",
+    "fields":"THETA, SALT, TRAC01, TRAC05, TRAC07, TRAC18",
+    "dataset_description" : "Parameters include the two dimensional CO2 flux at sea surface",
+    "filename" : "OCEAN_CO2_FLUX",
+    "dimension" : "3D",
+    "frequency" : "AVG_MON"
+   },
+]
