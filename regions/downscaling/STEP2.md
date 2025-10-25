@@ -73,8 +73,9 @@ ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2023/xx*42.data .
 cp ../../../../config/input/* .
-ln -sf ../../../../config/dv .
+cp ../../../../config/dv .
 mkdir diags
+vim data # set debugLevel = 1
 # modify job_ECCO_darwin as needed
 qsub job_ECCO_darwin
 ```

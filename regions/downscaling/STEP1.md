@@ -72,7 +72,7 @@ To get more information about the options required for this code run ``gen_bathy
 
 **Note:** If you plan to run the model on a single processor you can jump to the following step.
 
-ECCO-Darwin model allow multiprocessing by divinding the regional domain in tiles for which on processor will be dedicated. The python code ``mitgrid2tiles.py`` in the ``utils`` folder will help you split the mitgrid onto the processors depending on your choice of sNx & sNy [(see MITgcm doc)](https://darwin3.readthedocs.io/en/latest/getting_started/getting_started.html#customizing-the-model-configuration-code-parameters-and-compilation-options) and generate the tilefiles. Below are the instructions to run the code in a terminal:
+ECCO-Darwin model allow multiprocessing by divinding the regional domain in tiles for which on processor will be dedicated. The python code ``mitgrid2tiles.py`` in the ``utils`` folder will help you split the mitgrid onto the processors depending on your choice of sNx & sNy [(see MITgcm doc)](https://darwin3.readthedocs.io/en/latest/getting_started/getting_started.html#customizing-the-model-configuration-code-parameters-and-compilation-options) and generate the tile files. Below are the instructions to run the code in a terminal:
 
 ```
 conda activate downscaling

@@ -3,7 +3,7 @@
 ## I. Preliminary information
 **Requirement**: Before proceding to the following intructions, you will need to complete steps in the README, STEP 1 and STEP 2.
 
-Following these instructions you will finish to generate the regional setup by converting the output vector from STEP 2 into initial and boundary conditions of your cut out.
+Following these instructions you will convert the output vector from STEP 2 into initial and boundary conditions of your cut out.
 
 ## II. Get output from parent grid
 
@@ -12,22 +12,22 @@ Following these instructions you will get the output files from the parent grid 
 Go in the run directory where you ran the global model simulation (here ECCO-Darwinv5 LLC270):
 
 ```
-mkdir dv_outputs
-cd dv_outputs
-mkdir grid pickups
+mkdir dv/outputs
+cd dv/outputs
+mkdir grid pickups OBCS
 cd ..
 ```
 
 > - Get the grid files (**Warning:** These files are available only if you set debugLevel=1 in data – see STEP 2)
 
 ```
-cp XC* YC* AngleCS* AngleSN* hFacC* DRF* dv_outputs/grid/.
+cp XC* YC* AngleCS* AngleSN* hFacC* DRF* dv/outputs/grid/.
 ```
 > - Get the initial and boundary (dv) conditions files
 ```
-cp pickup*.XXXXXXXXXX.* dv_outputs/pickups/.
-mv dv bcs
-mv bcs dv_outputs/.
+cp pickup*.XXXXXXXXXX.* dv/outputs/pickups/.
+mv dv OBCS
+mv OBCS dv/outputs/.
 ```
 
 **Note**: replace "XXXXXXXXXX" by the iteration of the pickup file you want to start the regional model (Example: In ECCO-Darwinv5: pickup*.0000683784* corresponds to the begining of year: 1992+(683784xtimestep)/(365.25x86400) = 2018) with timestep=1200
@@ -41,13 +41,13 @@ Following these instructions you will generate the pickup files necessary to run
 ```
 conda activate downscaling
 cd ecco_darwin/regions/downscaling/utils/
-python3 gen_pickup.py -d /path/to/save/the/grid -n name_of_the_region\
+python3 gen_pickups.py -d /path/to/save/the/grid -n name_of_the_region\
                       -i teration_nubmer -sg Sigma_gaussian_filter\
                       -v -nc             
 ```
 **Example:**
 ```
- python3 gen_pickup.py -d ecco_darwin/regions/downscaling/ -n NorthSlope \
+ python3 gen_pickups.py -d ecco_darwin/regions/downscaling/ -n NorthSlope \
                        -i 683784 -v -nc
 ```
 To get more information about the options required for this code run ``gen_pickup.py -h``. Here are additional details about the options:
