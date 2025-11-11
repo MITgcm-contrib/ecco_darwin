@@ -3,7 +3,7 @@
 ## I. Preliminary information
 **Requirement**: Before proceding to the following intructions, you will need to complete steps in the README and in STEP1.
 
-Following these instructions you will run the llc global configuration using ``diagnostic_vec`` package to extract data vector along the boundaries of your regional model. ``diagnostic_vec`` package was designed to output model diagnostics from llc global model in a subset of the model domain e.g. along a vector (or "vec").
+Following these instructions, you will run the global LLC configuration using ``diagnostic_vec`` package to extract data vector along the boundaries of your regional model. ``diagnostic_vec`` package was designed to output model diagnostics from global LLC model in a subset of the model domain e.g., along a vector (or "vec").
 
 ## II. Prepare the simulation for ``diagnostic_vec`` extraction
 
@@ -16,7 +16,7 @@ vim packages.conf
 ##### add the following line to package.conf #####
 diagnostics_vec
 ```
-> - Turn on the package in ``data.pkg``
+> - Turn on the ``diagnostic_vec`` package in ``data.pkg``
 ```
 cd ../input
 vim data.pkg
@@ -24,15 +24,15 @@ vim data.pkg
  useDiagnostics_vec=.TRUE.,
 ```
 
-### b. Generate a ``data.diagnostics_vec`` parameter file
+### b. Generate the ``data.diagnostics_vec`` namelist/parameter file
 > - copy ``data.diagnostics_vec`` file into the ``input`` directory
 ```
 cd config/input
 cp ../../ecco_darwin/regions/downscaling/utils/data.diagnostics_vec .
 ```
-> - Modify the ``data.diagnostics_vec`` file according to the specificities of your domain and your requirements.
+> - Modify the ``data.diagnostics_vec`` file according to your specific domain and requirements.
 
-**Note:** You can modify ``data.diagnostic`` file with only the diagnostics you want to save. This won't affect ``diagnostic_vec`` and the fewer diagnostics saved the faster the simulation can be integrated.
+**Note:** You can modify ``data.diagnostic`` file to contain only the diagnostics you want to store. This won't affect ``diagnostic_vec`` and reducing the number of diagnostics will speed up the model integration.
 
 ### c. Set the compile time ``DIAGNOSTICS_VEC_SIZE.h`` file
 > - copy ``DIAGNOSTICS_VEC_SIZE.h`` file into the ``code_darwin`` directory
@@ -80,6 +80,6 @@ vim data # set debugLevel = 1
 qsub job_ECCO_darwin
 ```
 
-**Note:** At the end of the simulation you will get a binary file for every parameter set in ``data.diagnostics_vec``, each containing the number of iterations chosen for the parameter.
+**Note:** At the end of the simulation, you will have a binary file for every parameter set in ``data.diagnostics_vec``, each containing the number of iterations chosen for the parameter.
 
-**CONGRATULATIONS!!** You have run ECCO-Darwin and generated the vector files necessary for STEP 3.
+**CONGRATULATIONS!!** You have run ECCO-Darwin and generated the output vector files necessary for STEP 3.

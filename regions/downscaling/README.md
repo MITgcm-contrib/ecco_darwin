@@ -1,25 +1,25 @@
-# How to generate an ECCO-Darwin regional cut out
+# How to generate an ECCO-Darwin regional cut-out
 
 Authors: Clément Bertin, Michael Wood, Dustin Carroll
 
 ## General information
-This repository has been created to guide ECCO-Darwin users in generating their own regional configuration of the global ECCO-Darwin simulation. 
-By following the instructions you will be able to extract the information needed at the boundaries of your regional cut out from ECCO-Darwin v5 global simulation and generate the boundary conditions with latitude/longitude coordinates.
+This repository has been created to guide ECCO-Darwin users in generating their own regional configuration of the global-ocean ECCO-Darwin simulation. 
+By following the instructions, you will be able to extract the information needed at the boundaries of your regional cut-out from ECCO-Darwin and generate the initial/boundary conditions with lon-lat coordinates.
 
 ## Main steps
 The instruction files are organized as follows:
 1. **README.md**: Requirements for getting started.
 2. **STEP1.md**: Instructions to generate regional model grid files.
-3. **STEP2.md**: Instructions to extract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit: Michael Wood)
-4. **STEP3.md**: Instructions to generate regional model setup
+3. **STEP2.md**: Instructions to extract vectors from any LLC global configuration along the boundaries of the regional model using the ``diagnostic_vec`` package (credit: Michael Wood).
+4. **STEP3.md**: Instructions to generate regional model set-up.
 
 ## Getting Started
 To generate the regional configuration you will need:
 
-1. Supercomputing capabilities to run ECCO-Darwin v5 global model (*Along this guide we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA supercomputer*)
-2. python3 with a dedicated anaconda environment (*This environment can be set up on the supercomputer or a local machine*). 
+1. Supercomputing capabilities to run the global-ocean v05 ECCO-Darwin model (*Along this guide we give an example by running v05 ECCO-Darwin (LLC 270) model on Pleidaes NASA supercomputer*).
+2. Python3 with a dedicated anaconda environment (*This environment can be set up on the supercomputer or a local machine*). 
 
-### 1. Get ECCO-Darwin v5 setup & merge ``diagnostic_vec`` with MITgcm
+### 1. Get v05 ECCO-Darwin set-up & merge ``diagnostic_vec`` with MITgcm
 
 Below, we detail the instructions to run ECCO-Darwin on the NASA Pleiades supercomputer:
 
@@ -33,7 +33,7 @@ git checkout 24885b71
 ```
 > - clone diagnostic_vec github
 
-**Note**: This package is not included in the official MITgcm realease but can be easly merged to it. More information on ``diagnostic_vec`` package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood). 
+**Note**: This package is not included in the official MITgcm realease but can be easly added to it. More information on ``diagnostic_vec`` package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood). 
 ```
 cd ..
 git clone https://github.com/mhwood/diagnostics_vec.git
@@ -46,7 +46,7 @@ python3 copy_pkg_files_to_MITgcm.py -m ../../darwin3/
 python3 copy_verification_files_to_MITgcm.py -m ../../darwin3/
 ```
 
-> - Get ECCO-Darwin v5 setup
+> - Get v05 ECCO-Darwin set-up
 ```
 cd ../.. (back to downscaling folder)
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
