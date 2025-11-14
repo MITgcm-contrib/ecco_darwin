@@ -1393,7 +1393,7 @@
       "units": "uM C",
       "standard_name": "concentration of carbon in Phytoplankton Functional Type 4",
       "comments_1": "Concentration of carbon in Phytoplankton Functional Type 4 at the center of the tracer cell on the native model grid",
-      "comments_2": "Phytoplankton Function Type 4 = Prochlorococcus",
+      "comments_2": "Phytoplankton Function Type 4 = high-light-adapted Prochlorococcus",
       "grid_dimension": "3D",
       "grid_location": "c",
       "coverage_content_type": "modelResult"
@@ -1404,7 +1404,7 @@
       "units": "uM C",
       "standard_name": "concentration of carbon in Phytoplankton Functional Type 5",
       "comments_1": "Concentration of carbon in Phytoplankton Functional Type 5 at the center of the tracer cell on the native model grid",
-      "comments_2": "Phytoplankton Function Type 5 = Prochlorococcus",
+      "comments_2": "Phytoplankton Function Type 5 = low-light-adapted Prochlorococcus",
       "grid_dimension": "3D",
       "grid_location": "c",
       "coverage_content_type": "modelResult"
