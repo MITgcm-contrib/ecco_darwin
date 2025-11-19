@@ -8,17 +8,54 @@ Pixel area and Water mask can be found at:
 /nobackup/rsavelli/GloFas/GLOFAS_pixarea_Global_03min.nc    ::  pixel area m2
 /nobackup/rsavelli/GloFas/GLOFAS_fracwater_Global_03min.nc  ::  water mask [0-1]
 
+################## Set up work environment ##################
+
+First time-steps, clone ECCO-Darwin GitHub repo and create a Python environment. Make sure Python is installed on your 
+computer (see https://www.python.org). Run the following commands in the terminal:
+
+cd <directory of your choice>
+git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
+cd ecco_darwin/code_util/LOAC/GloFas
+python3 -m venv glofas_processing
+source glofas_processing/bin/activate
+pip install netCDF4 h5py xarray numpy matplotlib scipy tqdm h5py MITgcmutils pickle5
+
+Every time you are processing GloFas files, run the following command in the terminal to load the Python virtual environment 
+while being in the GloFas directory of the cloned GitHub repo:
+
+cd <directory of your choice>/ecco_darwin/code_util/LOAC/GloFas
+source glofas_processing/bin/activate
+
+You can now run the following scripts .py.
+
+Once you are done processing the GloFas file, just close your Python virtual environment:
+
+deactivate
+
 ################## make_coastal_GLOFAS.py ##################
 
 make_coastal_GLOFAS.py is a Python script that keeps only the coastal grid cells, converts daily runoff into m/s, and saves it into a binary 
-file. The script also removes duplicated rivers that are accounted for several times along the coastline. Run the following command in the 
-terminal:
+file. The script also removes river duplicates that are accounted for several times along the coastline. Script can be run in single-file or 
+batch mode. For example, run the following command in the terminal:
 
-python3 make_coastal_GLOFAS.py glofas_input_NCDFfile True
+for single-file mode:
+
+python3 make_coastal_GLOFAS.py \
+--ncfile raw/glofas_original_2024.nc \
+--plot True
+
+for batch mode:
+
+python3 make_coastal_GLOFAS.py \
+--indir /nobackup/rsavelli/GloFas/ \
+--plot True
+
+python3 make_coastal_GLOFAS.py --indir raw/ --plot True
 
 Inputs:
-  glofas_input_NCDFfile : input netcdf file. m3/sec
-  arg_plot : save map of annual discharge
+  --indir Directory containing *.nc GloFAS files to process
+  --ncfile Single NetCDF file to process
+  --plot save map of annual discharge
 Outputs:
   Binary file GloFas_<year> compatible with load_GLOFAS_to_ECCO.py
 
@@ -29,7 +66,11 @@ coastal grid cells of ECCO and writes binary files GloFas_runoff_<year> that can
 indexes and area weights between GloFas and ECCO grids and aggregates runoff to ECCO grid cells. Set directories and ECCO grid dimensions in 
 the script's header. Script saves grid mapping into a pickle file. For example, run the following command in the terminal:
 
-python3 load_GLOFAS_to_ECCO.py --compute-grid true --coast-mask ECCO_V4r5_coastMask_orig.mat --mapping-file glofas_ECCO_V4r5_grid.pkl --out-prefix GloFAS_runoff_ECCO_V4r5_
+python3 load_GLOFAS_to_ECCO.py \
+--compute-grid true \
+--coast-mask ECCO_V4r5_coastMask_orig.mat \
+--mapping-file glofas_ECCO_V4r5_grid.pkl \
+--out-prefix GloFAS_runoff_ECCO_V4r5_
 
 Inputs:
   Automatically scans and iterates through GloFas_<year> files
@@ -48,7 +89,8 @@ that you have already loaded JRA55-DO onto your ECCO grid (for example, see load
 https://github.com/MITgcm-contrib/ecco_darwin/blob/master/code_util/LOAC/GlobalNews/load_jra55_do_ECCO_V4r5_NAS.m). Set directories and ECCO grid
 dimensions in the script's header. Run the following command in the terminal:
 
-python3 patch_jra55_do_antarctica_to_glofas.py --glofas_prefix GloFAS_runoff_ECCO_V4r5_
+python3 patch_jra55_do_antarctica_to_glofas.py \
+--glofas_prefix GloFAS_runoff_ECCO_V4r5_
 
 Inputs:
   Automatically scans and iterates through glofas_prefix_<year>
