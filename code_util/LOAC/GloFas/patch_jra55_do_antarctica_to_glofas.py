@@ -23,10 +23,10 @@ args = parser.parse_args()
 # ================================================
 
 # Folder containing GloFAS→ECCO binary files
-glofas_dir = '/Users/rsavelli/Documents/CMS_LOAC/'
+glofas_dir = '/nobackup/rsavelli/LOAC/ECCO_V4r5/freshwater_glofas/'
 # JRA55-do runoff file for year 2000 gridded on ECCO grid (any leap year works as it repeats over year)
-jra_path = "/Volumes/G-DRIVEArmorATD/Documents/CMS_LOAC/jra55/river_runoff_ECCOv4r5/jra55_do_runoff_ECCO_V4r5_2000"
-gridDir = '/Users/rsavelli/Documents/Models/grid/ECCO_V4r5/'   # contains XC.data, YC.data, RAC.data, hFacC.data
+jra_path = "/nobackupp27/rsavelli/LOAC/ECCO_V4r5/freshwater_runoff/jra55_do_runoff_ECCO_V4r5_2000"
+gridDir = '/nobackup/dcarrol2/LOAC/grid/ECCO_V4r5_raw/'   # contains XC.data, YC.data, RAC.data, hFacC.data
 
 # dtype of all files
 dtype = '>f4'

@@ -95,12 +95,12 @@ def main(glofas_input_NCDFfile,arg_plot):
     year = (np.floor(np.mean(ds["valid_time"].data.astype('datetime64[Y]').astype(int) + 1970))).astype(int)
 
     #load pixel area m2
-    area_ds = xr.open_dataset('GLOFAS_pixarea_Global_03min.nc', engine="netcdf4")
+    area_ds = xr.open_dataset('/nobackup/rsavelli/GloFas/GLOFAS_pixarea_Global_03min.nc', engine="netcdf4")
     area = area_ds["Band1"]  # shape: (lat, lon)
     area = area.isel(lat=slice(0, 3000))
 
     # load water mask [0-1]
-    water_ds = xr.open_dataset("GLOFAS_fracwater_Global_03min.nc", engine="netcdf4")
+    water_ds = xr.open_dataset("/nobackup/rsavelli/GloFas/GLOFAS_fracwater_Global_03min.nc", engine="netcdf4")
     water = water_ds["Band1"]  # shape: (lat, lon)
     ocean = water.isnull().astype(int)
     ocean = ocean.isel(lat=slice(0, 3000))

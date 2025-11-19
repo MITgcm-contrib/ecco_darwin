@@ -59,12 +59,12 @@ def parse_args():
 # ----------------------
 # User-editable settings
 # ----------------------
-gridDir = '/Users/rsavelli/Documents/Models/grid/ECCO_V4r5/'   # contains XC.data, YC.data, RAC.data, hFacC.data
-dataDir = '/Users/rsavelli/Documents/CMS_LOAC/'  # contains coastal mask
-binDir1 = '/Users/rsavelli/Documents/CMS_LOAC/'  # directory with GloFAS runoff binary files
-cellarea_file = os.path.join(binDir1, 'GloFas/GLOFAS_pixarea_Global_03min.nc')  # cellarea per source grid cell
-saveDir = '/Users/rsavelli/Documents/CMS_LOAC/'
-writeDir = '/Users/rsavelli/Documents/CMS_LOAC/'
+gridDir = '/nobackup/dcarrol2/LOAC/grid/ECCO_V4r5_raw/'   # contains XC.data, YC.data, RAC.data, hFacC.data
+dataDir = '/nobackup/dcarrol2/LOAC/mat/JRA55-do/coast_mask/'  # contains coastal mask
+binDir1 = './'  # directory with GloFAS runoff binary files
+cellarea_file = os.path.join(binDir1, '/nobackup/rsavelli/GloFas/GLOFAS_pixarea_Global_03min.nc')  # cellarea per source grid cell
+saveDir = './'
+writeDir = '/nobackup/rsavelli/LOAC/ECCO_V4r5/freshwater_glofas/'
 
 filename_pattern = 'GloFas_*'  # adjust to your filenames
 
