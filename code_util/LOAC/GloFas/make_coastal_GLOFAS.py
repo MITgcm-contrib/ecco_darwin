@@ -4,9 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import savefig
 from scipy.ndimage import binary_dilation
-import dask
 import argparse
 from tqdm import tqdm
+import glob
+import os
+import sys
 
 def clean_duplicate_rivers(coastal_runoff, radius=9, rel_tol=0.10):
     """
@@ -159,10 +161,38 @@ def main(glofas_input_NCDFfile,arg_plot):
             # Convert to big-endian and write
             arr_2d.astype(dtype).tofile(f)
 
+    del arr_2d, coastal_runoff, coastal_annual_dis, cleaned_coastal, runoff, area, annual_dis, ds
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process GloFAS runoff NetCDF and extract coastal runoff.")
-    parser.add_argument("ncfile", help="Path to GloFAS NetCDF input file (one year).")
-    parser.add_argument("plot", help="Whether to plot annual discharge (True/False).")
+
+    parser = argparse.ArgumentParser(description="Process GloFAS runoff files (single file or batch).")
+
+    parser.add_argument("--indir", help="Directory containing *.nc GloFAS files to process.", default=None)
+    parser.add_argument("--plot", help="Plot annual discharge? (True/False)", default="False")
+    parser.add_argument("--ncfile", help="Optional: single NetCDF file to process", default=None)
+
     args = parser.parse_args()
 
-    main(args.ncfile, args.plot)
+    # ================================================
+    # Batch mode: directory containing *.nc
+    # ================================================
+    if args.indir is not None:
+        nc_files = sorted(glob.glob(os.path.join(args.indir, "*.nc")))
+        if len(nc_files) == 0:
+            print(f"No .nc files found in {args.indir}")
+            sys.exit(1)
+
+        print(f"Found {len(nc_files)} GloFAS files in {args.indir}")
+
+        for f in nc_files:
+            main(f, args.plot)
+
+    # ================================================
+    # Single file mode
+    # ================================================
+    elif args.ncfile is not None:
+        main(args.ncfile, args.plot)
+
+    else:
+        print("Error: Provide either --indir <folder> or --ncfile <file>.")
+        sys.exit(1)
