@@ -26,9 +26,13 @@ while being in the GloFas directory of the cloned GitHub repo:
 cd <directory of your choice>/ecco_darwin/code_util/LOAC/GloFas
 source glofas_processing/bin/activate
 
-You can now run the following scripts .py.
+You can now run the following scripts .py. Justa heads up, processing GloFas files can be heavy on RAM with large-sized arrays being processed. 
+On HPC, run the following scripts on computation nodes. For example, run the following command on HPC:
 
-Once you are done processing the GloFas file, just close your Python virtual environment:
+qsub -I -q long -l select=1:ncpus=40:model=rom_ait,walltime=120:00:00 -m abe
+
+Wait for node allocation and then run the Python scripts. Once you are done processing the GloFas file, just close your Python virtual 
+environment:
 
 deactivate
 
