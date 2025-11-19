@@ -47,7 +47,7 @@ python3 make_coastal_GLOFAS.py \
 for batch mode:
 
 python3 make_coastal_GLOFAS.py \
---indir /nobackup/rsavelli/GloFas/ \
+--indir /nobackup/rsavelli/GloFas/raw/ \
 --plot True
 
 python3 make_coastal_GLOFAS.py --indir raw/ --plot True
