@@ -18,7 +18,7 @@ git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
 cd ecco_darwin/code_util/LOAC/GloFas
 python3 -m venv glofas_processing
 source glofas_processing/bin/activate
-pip install netCDF4 h5py xarray numpy matplotlib scipy tqdm h5py MITgcmutils pickle5
+pip install h5py netCDF4 xarray numpy matplotlib scipy tqdm MITgcmutils pickle5
 
 Every time you are processing GloFas files, run the following command in the terminal to load the Python virtual environment 
 while being in the GloFas directory of the cloned GitHub repo:
