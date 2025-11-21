@@ -54,7 +54,7 @@ cp ../../darwin3/pkg/diagnostics_vec/DIAGNOSTICS_VEC_SIZE.h .
 ---
 ## II. Compile and run the simulation
 Before proceding copy the mask files on the supercomputer capability in the folder: "regions/configs/parent_run/dv".\
-Below is an exemple to extract vectors from ECCO-Darwin v5.\
+Below is an exemple to extract vectors from v05 ECCO-Darwin.\
 On the supercomputer (example on Pleiades) run:
 ```
 cd darwin3/regions

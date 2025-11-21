@@ -207,9 +207,9 @@ To get more information about the options required for this code run ``stitch_nc
 The following steps will permit to generate the grid files from the ECCO global model ("parent_run") required to generate the masks files.\
 <u>Note:</u> For this step you will need to run the ECCO-Darwin model on the supercomputer for 1 time step. 
 
-Below is an exemple with ECCO-Darwin v5. On the supercomputer (example on Pleiades) run:
+Below is an example using v05 ECCO-Darwin. On the supercomputer (example on Pleiades) run:
 ```
-cd downscalling/darwin3/regions/parent_run
+cd downscaling/darwin3/regions/parent_run
 mkdir parent_run
 cd parent_run
 mkdir build run
