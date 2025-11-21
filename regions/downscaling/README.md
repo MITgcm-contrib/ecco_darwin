@@ -1,6 +1,6 @@
 # How to generate an ECCO regional cut out
 
-*Authors:* **Clément Bertin$^1$, Michael Wood$^2$, Dustin Carroll$^{1,2}$**
+*Authors:* **Clément Bertin[^1], Michael Wood[^2], Dustin Carroll[^1][^2]**
 
 ---
 ## General information
@@ -94,6 +94,6 @@ cd [MITgcm dir]/utils/python/MITgcmutils
 python setup.py install
 ```
 ---
-$^1$ Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA
+[^1]: Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA
 
-$^2$ Moss Landing Marine Laboratories, San José State University, Moss Landing, CA, USA
+[^2]: Moss Landing Marine Laboratories, San José State University, Moss Landing, CA, USA
