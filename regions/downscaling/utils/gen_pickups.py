@@ -84,7 +84,7 @@ def Zinterp(data0, drF0, drF1, HFacC1):
     return(data1)
 
 ############################################################
-#                  GRID WORK FUNCTIONS                    #
+#                  GRID WORK FUNCTIONS                     #
 ############################################################
 
 def transp_tiles(data):
@@ -113,7 +113,7 @@ def UVrot(uvel, vvel, angle_cos, angle_sin):
 ############################################################
 
 def read_eccogrid(config_dir):
-    grid_dir = os.path.join(config_dir, 'dv/outputs/grid/')
+    grid_dir = os.path.join(config_dir, 'parent/outputs/grid/')
     XC = transp_tiles(mds.rdmds(grid_dir+'XC'))
     YC = transp_tiles(mds.rdmds(grid_dir+'YC'))
     dXC = transp_tiles(mds.rdmds(grid_dir+'DXC'))
@@ -160,7 +160,7 @@ def gen_nc(XC1, YC1, drF1, Nr1, pickup_phy, pickup_sic, pickup_ggl90, pickup_dar
 def gen_pickup(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast, 
                XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level):
     #### Read pickup file
-    pickup_dir = os.path.join(config_dir, 'dv/outputs/pickups/')
+    pickup_dir = os.path.join(config_dir, 'parent/outputs/pickups/')
     if print_level>=1:
         print('        > Reading in the ECCO pickup file')
     pickup0, _, metap = mds.rdmds(os.path.join(pickup_dir,'pickup'), itrs=pickup_itr, returnmeta=True)
@@ -205,7 +205,7 @@ def gen_pickup(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, c
 def gen_pickup_seaice(config_dir, pickup_itr, AngleCS0, AngleSN0, WCmask0, coast, 
                       XC1, YC1, HFacC1, Dtri, sigmaG, print_level):
     #### Read pickup file
-    pickup_dir = os.path.join(config_dir, 'dv/outputs/pickups/')
+    pickup_dir = os.path.join(config_dir, 'parent/outputs/pickups/')
     if print_level>=1:
         print('        > Reading in the ECCO pickup_seaice file')
     pickup0, _, metap = mds.rdmds(os.path.join(pickup_dir,'pickup_seaice'), itrs=pickup_itr, returnmeta=True)
@@ -241,7 +241,7 @@ def gen_pickup_seaice(config_dir, pickup_itr, AngleCS0, AngleSN0, WCmask0, coast
 def gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
                   XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, init_fnm):
     #### Read pickup file
-    pickup_dir = os.path.join(config_dir, 'dv/outputs/pickups/')
+    pickup_dir = os.path.join(config_dir, 'parent/outputs/pickups/')
     if print_level>=1:
         print(f'        > Reading in the ECCO {init_fnm} file')
     pickup0, _, metap = mds.rdmds(os.path.join(pickup_dir,init_fnm), itrs=pickup_itr, returnmeta=True)
@@ -265,7 +265,7 @@ def gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0
 def gen_pickup_ptracers(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
                         XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, init_fnm):
     #### Read pickup file
-    pickup_dir = os.path.join(config_dir, 'dv/outputs/pickups/')
+    pickup_dir = os.path.join(config_dir, 'parent/outputs/pickups/')
     if print_level>=1:
         print(f'        > Reading in the ECCO {init_fnm} file')
     pickup0, _, metap = mds.rdmds(os.path.join(pickup_dir, init_fnm), itrs=pickup_itr, returnmeta=True)
@@ -290,7 +290,15 @@ def gen_pickup_ptracers(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0
 #                     MAIN FUNCTION                        #
 ############################################################
 
-def gen_pickup_files(config_dir, model_name, pickup_itr, sigmaG, print_level, gennc):
+def gen_pickup_files(config_dir, model_name, pickup_itr, sigmaG, bgc, print_level, gennc):
+
+    #################################################
+    ############# Create forcing folder #############
+    #################################################
+    if 'forcings' not in os.listdir(config_dir):
+        os.mkdir(os.path.join(config_dir,'forcings'))
+    if 'pickups' not in os.listdir(os.path.join(config_dir,'forcings')):
+        os.mkdir(os.path.join(os.path.join(config_dir,'forcings'),'pickups'))
 
     #################################################
     ####### Read regional grid file (Level 1) #######
@@ -356,16 +364,18 @@ def gen_pickup_files(config_dir, model_name, pickup_itr, sigmaG, print_level, ge
         print('    - Creating ggl90 initial conditions for the '+model_name+' model from ECCO data')
     pickup_ggl90 = gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
                                  XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_ggl90')
-    #--------- darwin condition ---------#
-    if print_level>=1:
-        print('    - Creating darwin initial conditions for the '+model_name+' model from ECCO data')
-    pickup_darwin = gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
-                                  XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_darwin')
-    #--------- ptracer condition ---------#
-    if print_level>=1:
-        print('    - Creating ptracers initial conditions for the '+model_name+' model from ECCO data')
-    pickup_ptracers = gen_pickup_ptracers(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
-                                                       XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_ptracers')
+
+    if bgc == True:
+        #--------- darwin condition ---------#
+        if print_level>=1:
+            print('    - Creating darwin initial conditions for the '+model_name+' model from ECCO data')
+        pickup_darwin = gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
+                                      XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_darwin')
+        #--------- ptracer condition ---------#
+        if print_level>=1:
+            print('    - Creating ptracers initial conditions for the '+model_name+' model from ECCO data')
+        pickup_ptracers = gen_pickup_ptracers(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
+                                              XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_ptracers')
     
     ####################################
     ####### Generate netcdf file #######
@@ -395,22 +405,25 @@ if __name__ == '__main__':
                         help="iteration of the begining the regional model", dest="itr",
                         type=int, required=True, default=1)
     parser.add_argument("-sg", '--sigma_Gfilt', nargs='?', type=int)
+    parser.add_argument("-bgc", "--darwin", action="store_true", default='False',
+                        help="generate darwin biogeochemistry pickups")
     parser.add_argument("-v", "--verbose", action="store_true", default='False')
     parser.add_argument("-nc", "--netcdf", action="store_true", default='False',
-                        help="generate a verifiaction netcdf file",)
+                        help="generate a verifiaction netcdf file")
 
     args = parser.parse_args()
     config_dir = args.config_dir
     model_name = args.reg_nm
     pickup_itr = args.itr
     sigmaG = args.sigma_Gfilt
+    gennc = args.netcdf
     if args.verbose == True:
     	print_level = 1
     else:
     	print_level = 0
-    gennc = args.netcdf
+    bgc = args.darwin
 
-    gen_pickup_files(config_dir, model_name, pickup_itr, sigmaG, print_level, gennc)
+    gen_pickup_files(config_dir, model_name, pickup_itr, sigmaG, bgc, print_level, gennc)
 
 
 

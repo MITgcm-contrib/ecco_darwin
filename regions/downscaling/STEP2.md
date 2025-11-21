@@ -1,22 +1,27 @@
-# Step II: Extracting regional model boundary information
+# Extract regional model boundary information
 
-## I. Preliminary information
-**Requirement**: Before proceding to the following intructions, you will need to complete steps in the README and in STEP1.
+---
+## Preliminary information
+**Requirement**: 
+> Before proceding to the following intructions, you will need to complete steps in README and STEP1.\
+> Supercomputing capacities will be needed to run any ECCO model.
 
-Following these instructions, you will run the global LLC configuration using ``diagnostic_vec`` package to extract data vector along the boundaries of your regional model. ``diagnostic_vec`` package was designed to output model diagnostics from global LLC model in a subset of the model domain e.g., along a vector (or "vec").
+At the end of this step, you will have ran ECCO global configuration using ``diagnostic_vec`` package and extracted vectors along the boundaries of your regional model.\
+<u>Note:</u> ``diagnostic_vec`` package was designed to output model diagnostics from ECCO llc global model in a subset of the model domain e.g. along a vector (or "vec").
 
-## II. Prepare the simulation for ``diagnostic_vec`` extraction
+---
+## I. Prepare the simulation for ``diagnostic_vec`` extraction
 
 ### a. Turn on ``diagnostic_vec`` package
 
 > - Enable the package in ``packages.conf``
 ```
-cd config/code_darwin
+cd regions/configs/parent_run/code_darwin
 vim packages.conf
 ##### add the following line to package.conf #####
 diagnostics_vec
 ```
-> - Turn on the ``diagnostic_vec`` package in ``data.pkg``
+> - Turn on the package in ``data.pkg``
 ```
 cd ../input
 vim data.pkg
@@ -24,20 +29,21 @@ vim data.pkg
  useDiagnostics_vec=.TRUE.,
 ```
 
-### b. Generate the ``data.diagnostics_vec`` namelist/parameter file
-> - copy ``data.diagnostics_vec`` file into the ``input`` directory
+### b. Generate a ``data.diagnostics_vec`` parameter file
+> - copy ``data.diagnostics_vec`` file from the ``utils`` folder into the ``input`` directory
 ```
-cd config/input
+cd regions/configs/parent_run/input/
 cp ../../ecco_darwin/regions/downscaling/utils/data.diagnostics_vec .
 ```
-> - Modify the ``data.diagnostics_vec`` file according to your specific domain and requirements.
+> - Modify the ``data.diagnostics_vec`` file according to the specificities of your domain and your requirements (see details inside the files).
 
-**Note:** You can modify ``data.diagnostic`` file to contain only the diagnostics you want to store. This won't affect ``diagnostic_vec`` and reducing the number of diagnostics will speed up the model integration.
+<u>Note:</u>  You can modify ``data.diagnostic`` file with only the diagnostics you want to save.\
+This won't affect ``diagnostic_vec`` and the fewer diagnostics saved the faster the simulation can be integrated.
 
 ### c. Set the compile time ``DIAGNOSTICS_VEC_SIZE.h`` file
-> - copy ``DIAGNOSTICS_VEC_SIZE.h`` file into the ``code_darwin`` directory
+> - copy ``DIAGNOSTICS_VEC_SIZE.h`` file from the ``utils`` folder into the ``input`` directory
 ```
-cd ../code_darwin
+cd regions/configs/parent_run/code_darwin/
 cp ../../darwin3/pkg/diagnostics_vec/DIAGNOSTICS_VEC_SIZE.h .
 ```
 > - Modify the ``DIAGNOSTICS_VEC_SIZE.h`` file as follows:
@@ -45,20 +51,25 @@ cp ../../darwin3/pkg/diagnostics_vec/DIAGNOSTICS_VEC_SIZE.h .
     - nVEC_mask: number of lateral boundary mask used in the ``data.diagnostics_vec`` file (in the example file nVEC_mask=20)
     - nSURF_mask: number of surface boundary mask used in the ``data.diagnostics_vec`` file (in the example file nSURF_mask=1)
 
-## IV. Compile and run the simulation
+---
+## II. Compile and run the simulation
+Before proceding copy the mask files on the supercomputer capability in the folder: "regions/configs/parent_run/dv".\
+Below is an exemple to extract vectors from ECCO-Darwin v5.\
+On the supercomputer (example on Pleiades) run:
 ```
-cd darwin3/reg_mod
+cd darwin3/regions
+rm -r parent_run (if extsting from STEP1)
 mkdir parent_run
 cd parent_run
 mkdir build run
 ```
 > - Compile the code
 ```
-cd build
+for Pleiades users only:
 module purge
 module load comp-intel mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
-../../../tools/genmake2 -of ../../../../config/code/linux_amd64_ifort+mpi_ice_nas \
-  -mpi -mo '../../../../config/code_darwin/ ../../../../config/code/'
+../../../tools/genmake2 -of ../../../../regions/configs/parent_run/code/linux_amd64_ifort+mpi_ice_nas \
+-mpi -mo '../../../../regions/configs/parent_run/code_darwin ../../../../regions/configs/parent_run/code'
 make depend
 make -j 16
 ```
@@ -66,20 +77,17 @@ make -j 16
 ```
 cd ../run
 ln -sf ../build/mitgcmuv .
-ln -sf /nobackupp19/dmenemen/public/llc_270/iter42/input/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_initial_conditions/* .
-ln -sf /nobackupp19/dmenemen/public/llc_270/ecco_darwin_v5/input/darwin_forcing/* .
+ln -sf /nobackup/hzhang1/pub/llc270_FWD/nbp19_dmenemen_public_llc270/* .
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/hzhang1/forcing/era_xx .
 ln -sf /nobackup/hzhang1/pub/llc270_FWD/input/19920101/to2023/xx*42.data .
-cp ../../../../config/input/* .
-cp ../../../../config/dv .
+cp -r ../../../../regions/configs/parent_run/dv .
+cp ../../../../regions/configs/parent_run/input/* .
 mkdir diags
-vim data # set debugLevel = 1
+# modify data as needed to run the model only on the years required
 # modify job_ECCO_darwin as needed
 qsub job_ECCO_darwin
 ```
 
-**Note:** At the end of the simulation, you will have a binary file for every parameter set in ``data.diagnostics_vec``, each containing the number of iterations chosen for the parameter.
+<u>Note:</u> At the end of the simulation you will get a binary file for every parameter set in ``data.diagnostics_vec``, each containing the number of iterations chosen for the parameter.
 
-**CONGRATULATIONS!!** You have run ECCO-Darwin and generated the output vector files necessary for STEP 3.

@@ -1,25 +1,27 @@
-# How to generate an ECCO-Darwin regional cut-out
+# How to generate an ECCO regional cut out
 
-Authors: Clément Bertin, Michael Wood, Dustin Carroll
+*Authors:* **Clément Bertin$^1$, Michael Wood$^2$, Dustin Carroll$^{1,2}$**
 
+---
 ## General information
-This repository has been created to guide ECCO-Darwin users in generating their own regional configuration of the global-ocean ECCO-Darwin simulation. 
-By following the instructions, you will be able to extract the information needed at the boundaries of your regional cut-out from ECCO-Darwin and generate the initial/boundary conditions with lon-lat coordinates.
+This repository has been created to guide ECCO/ECCO-Darwin users in generating their own regional configuration of the global ECCO state estimate.\
+<u>Note:</u> The following instructions show how to extract a regional cut out from the ECCO-Darwin v5 estinate, but this can be reproduce on any ECCO product.
 
 ## Main steps
 The instruction files are organized as follows:
 1. **README.md**: Requirements for getting started.
-2. **STEP1.md**: Instructions to generate regional model grid files.
-3. **STEP2.md**: Instructions to extract vectors from any LLC global configuration along the boundaries of the regional model using the ``diagnostic_vec`` package (credit: Michael Wood).
-4. **STEP3.md**: Instructions to generate regional model set-up.
+2. **STEP1.md**: Instructions to generate the input files STEP2.
+3. **STEP2.md**: Instructions to extract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit: Michael Wood)
+4. **STEP3.md**: Instructions to setup the regional model
 
+---
 ## Getting Started
 To generate the regional configuration you will need:
 
-1. Supercomputing capabilities to run the global-ocean v05 ECCO-Darwin model (*Along this guide we give an example by running v05 ECCO-Darwin (LLC 270) model on Pleidaes NASA supercomputer*).
-2. Python3 with a dedicated anaconda environment (*This environment can be set up on the supercomputer or a local machine*). 
+1. Supercomputing capabilities to run ECCO state estimate (*Along this guide we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA supercomputer*)
+2. python3 with a dedicated anaconda environment (*This environment can be set up on the supercomputer or a local machine*). 
 
-### 1. Get v05 ECCO-Darwin set-up & merge ``diagnostic_vec`` with MITgcm
+### 1. Get ECCO-Darwin v5 setup & merge ``diagnostic_vec`` with MITgcm
 
 Below, we detail the instructions to run ECCO-Darwin on the NASA Pleiades supercomputer:
 
@@ -33,7 +35,7 @@ git checkout 24885b71
 ```
 > - clone diagnostic_vec github
 
-**Note**: This package is not included in the official MITgcm realease but can be easly added to it. More information on ``diagnostic_vec`` package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood). 
+<u>Note:</u>: This package is not included in the official MITgcm realease but can be easly merged to it. More information on ``diagnostic_vec`` package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood). 
 ```
 cd ..
 git clone https://github.com/mhwood/diagnostics_vec.git
@@ -46,14 +48,15 @@ python3 copy_pkg_files_to_MITgcm.py -m ../../darwin3/
 python3 copy_verification_files_to_MITgcm.py -m ../../darwin3/
 ```
 
-> - Get v05 ECCO-Darwin set-up
+> - Get ECCO-Darwin v5 setup
 ```
 cd ../.. (back to downscaling folder)
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
-mkdir config
-cp -r ecco_darwin/v05/llc270/code config/.
-cp -r ecco_darwin/v05/llc270/code_darwin config/.
-cp -r ecco_darwin/v05/llc270/input config/.
+mkdir regions/configs/parent_run/
+cd regions/configs/parent_run/
+cp -r ecco_darwin/v05/llc270/code .
+cp -r ecco_darwin/v05/llc270/code_darwin .
+cp -r ecco_darwin/v05/llc270/input .
 ```
 
 ### 2. Create the python3 anaconda environment
@@ -63,13 +66,14 @@ You can either create this environment on your supercomputer or a local machine.
 > - Install anaconda following the instructions on this page: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 > - Open a terminal and Create the environment:
 ```
-conda create --name downscaling
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda create --name downscaling python=3.12
 conda activate downscaling
 ```
 > - Install the following packages
 ```
-conda install numpy matplotlib scipy pyproj netcdf4 xarray
-conda install -c conda-forge xesmf 
+conda install numpy matplotlib scipy pyproj netcdf4 xarray xesmf xgcm xmitgcm pyresample cartopy
 ```
 > - Install [simplegrid](https://github.com/nasa/simplegrid) package, which is not available by `pip` or `conda install`. Instead, it must be cloned and then installed locally: 
 ```
@@ -83,13 +87,13 @@ git clone https://github.com/ECCO-GROUP/ECCOv4-py.git
 mkdir [conda dir]/envs/downscaling/lib/python3.12/site-packages/ecco_v4_py
 cp ECCOv4-py/ecco_v4_py/* [conda dir]/envs/downscaling/lib/python3.12/site-packages/ecco_v4_py/.
 ```
-> - Install the following additional packages
-```
-conda install -c conda-forge xgcm xmitgcm pyresample cartopy
-```
 - Install [MITgcm utils](https://github.com/MITgcm/MITgcm):
 ```
 git clone https://github.com/MITgcm/MITgcm.git
 cd [MITgcm dir]/utils/python/MITgcmutils
 python setup.py install
 ```
+---
+$^1$ Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA
+
+$^2$ Moss Landing Marine Laboratories, San José State University, Moss Landing, CA, USA

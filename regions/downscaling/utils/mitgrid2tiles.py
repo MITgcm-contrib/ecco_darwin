@@ -34,7 +34,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--config_dir", action="store",
-                        help="The directory where to store the mitgrid", dest="config_dir",
+                        help="The directory where the mitgrid is stored", dest="config_dir",
                         type=str, required=True)
     parser.add_argument("-n", "--reg_nm", action="store",
                         help="Name of the regional cutout", dest="reg_nm",
