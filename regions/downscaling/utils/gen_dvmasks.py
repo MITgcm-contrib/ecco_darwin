@@ -65,13 +65,13 @@ def gen_bnd_mask(XC0, YC0, bathy0, B_coords, resolution):
     ### Initialize
     mask = np.zeros(XC0.shape)
     mask_dict = []
+    ctr = 1
     for n in range(B_coords.shape[0]): 
         ### Get global coordinates closer to regional coordinates
         x = B_coords[n,0]; y = B_coords[n,1]
         dist = get_circle_dist(x, y, XC0, YC0)
         rows, cols = np.where(dist <= resolution*np.sqrt(2))
         ### Store mask information is not land  
-        ctr = 1
         for i in range(len(rows)):
             row = rows[i]; col = cols[i]
             if bathy0[row,col]<0:
