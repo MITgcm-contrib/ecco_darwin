@@ -245,7 +245,7 @@ on your local machine:
 ```
 cd /path/where/region/files/are/strored/
 mkdir parents/outputs/grid/
-cp XC* YC* DXC* DYC* AngleCS* AngleSN* hFacC* DRF* parents/outputs/grid/.
+cp XC* YC* DXC* DYC* AngleCS* AngleSN* hFacC* hFacW* hFacS* RF* DRF* parents/outputs/grid/.
 cp bathy270_filled_noCaspian_r4 parents/outputs/grid/.
 ```
 

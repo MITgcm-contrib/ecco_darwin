@@ -5,7 +5,9 @@
 ---
 ## General information
 This repository has been created to guide ECCO/ECCO-Darwin users in generating their own regional configuration of the global ECCO state estimate.\
-<u>Note:</u> The following instructions show how to extract a regional cut out from the ECCO-Darwin v5 estinate, but this can be reproduce on any ECCO product.
+<u>Notes:</u> 
+> These instructions require a good level of understanding on how ECCO/MITgcm model works and run.\
+> The following instructions show how to extract a regional cut out from the ECCO-Darwin v5 estimate, but this can be reproduce on any ECCO product.
 
 ## Main steps
 The instruction files are organized as follows:
