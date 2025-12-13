@@ -1,4 +1,4 @@
-# Generate the regional set-up forcing conditions
+# Generate regional set-up initial and boundary conditions
 
 ---
 ## Preliminary information
@@ -25,12 +25,12 @@ cp -r dv ouput/.
 mv dv OBCS
 ```
 
-<u>Note:</u>: replace "XXXXXXXXXX" by the iteration of the pickup file you want your regional model to start with\
-**Example:** In v05 ECCO-Darwin: pickup*.0000683784* corresponds to the begining of year: 1992 + (683784 x timestep) / (365.25 x 86400) = 2018) with timestep = 1200
+<u>Note</u>: replace "XXXXXXXXXX" by the iteration of the pickup file you want your regional model to start with\
+**Example:** In v05 ECCO-Darwin: pickup*.0000683784* corresponds to the begining of the year: 1992 + (683784 x timestep) / (365.25 x 86400) = 2018) with timestep = 1200.
 
 ---
 
-Runing ``gen_pickups.py`` in the ``utils`` folder, you will generate the initial conditions for your regional set-up (``pickup`` files)\
+By running ``gen_pickups.py`` in the ``utils`` folder, you will generate the initial conditions for your regional set-up (``pickup`` files)\
 Below are the instructions to run the code in a terminal with the anaconda envrironment:
 
 ```
@@ -52,12 +52,12 @@ To get more information about the options required for this code run ``gen_picku
 > - -sg: sigma for the Gaussian Filter applied to the interpolation. This parameter is **optional**, if not prescribed, sigmaG will take the value of the average size of the grid cell of the parent grid in the selected region.
 > - -bgc: generate Darwin pickup files if runing the ECCO-Darwin model.
 > - -v: verbose.
-> - -nc: generate a NetCDF file containing all forcing matrices (**optional**). This is for a control purpose only, it is not required to run the simulation. 
+> - -nc: generate a NetCDF file containing all forcing matrices (**optional**). This is for control purposes only, it is not required to run the simulation. 
 
 ---
-## II. Generate the Boundary conditions
+## II. Generate the boundary conditions
 
-Runing ``gen_obcs.py`` in the ``utils`` folder, you will generate the booundary conditions for your regional set-up (``OBCS`` files)\
+Runing ``gen_obcs.py`` in the ``utils`` folder, you will generate the boundary conditions for your regional set-up (``OBCS`` files)\
 Below are the instructions to run the code in a terminal with the anaconda envrironment:
 
 ```
@@ -77,15 +77,15 @@ To get more information about the options required for this code run ``gen_picku
 > - -n: The name of your region.
 > - -bnd: Open boundaries of your domain where you need to generate boundary conditions >> 'E' (East), 'W' (West), 'N' (North), 'S' (South)
 > - -i: iteration of the obcs files extracted from diagnostics_vec.
-> - -bgc: generate Darwin pickup files if runing the ECCO-Darwin model.
+> - -bgc: generate Darwin pickup files (if runing the ECCO-Darwin model).
 > - -v: verbose.
 
 ---
 
-**CONGRATULATIONS!!** You have now generated the pickup and boundary files required to run your regional setup.\
+**CONGRATULATIONS!!** You have now generated the pickup and boundary files required to run your regional set-up.\
 
-Considering the vast capabilities of ECCO/MITgcm and the amount of parameters that can be tuned, we let the users generate their own regional setup.\
+Considering the vast capabilities of ECCO/MITgcm and the amount of parameters that can be tuned, we let the users generate and customize their own regional set-up.\
 You can however start from the ``gen_mod`` folder used in STEP1 as a starting point.\
 You can also check the ``gen_mod/reg_example_files``.\
-We put important files to setup the regional model such as ``data.obcs`` where you set the OBCS files to read.
+We placed important files for setting up the regional model (such as ``data.obcs``) where you set the OBCS files to read.
 
