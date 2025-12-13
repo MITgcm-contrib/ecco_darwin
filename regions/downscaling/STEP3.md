@@ -69,8 +69,9 @@ python3 gen_obcs.py -d /path/to/regional/files -n name_of_the_region\
 **Example:**
 ```
  python3 gen_obcs.py -d ecco_darwin/regions/downscaling/ -n NorthSlope \
-                     -bnd EWNS -i 683785 710065 -bgc -v -nc
+                     -bnd EWN -i 683785 710065 -bgc -v
 ```
+
 To get more information about the options required for this code run ``gen_pickup.py -h``. Here are additional details about the options:
 > - -d: The directory where mitgrid is stored.
 > - -n: The name of your region.
@@ -78,7 +79,6 @@ To get more information about the options required for this code run ``gen_picku
 > - -i: iteration of the obcs files extracted from diagnostics_vec.
 > - -bgc: generate Darwin pickup files if runing the ECCO-Darwin model.
 > - -v: verbose.
-> - -nc: generate a NetCDF file containing all forcing matrices (**optional**). This is for a control purpose only, it is not required to run the simulation. 
 
 ---
 
