@@ -20,7 +20,7 @@ conda activate downscaling
 cd ecco_darwin/regions/downscaling/utils/
 python3 gen_mitgrid.py -d /path/to/save/the/grid -n name_of_the_region\ 
                        -c left_lon right_lon left_lat right_lat -r dlon dlat\
-                       -e espg -v
+                       -e epsg -v
 ```  
 **Example:**
 ```
@@ -32,9 +32,9 @@ To get more information about the options required for this code run ``gen_mitgr
 Below are additional details about the option:
 > - -d: The directory where to store the mitgrid
 > - -n: The name of your region. It will be the name of the mitgrid
-> - -c: The coordinates of the corners of your region (for the center of the cell). It can be in any ESPG.
-> - -r: The resolution of the grid in the format of the chosen ESPG
-> - -e: The ESPG of the coordinates input
+> - -c: The coordinates of the corners of your region (for the center of the cell). It can be in any EPSG.
+> - -r: The resolution of the grid in the format of the chosen EPSG
+> - -e: The EPSG of the coordinates input
 > - -v: Verbose
 
 <u>Note</u>: The code will return the output shape information (n_rows, n_cols). Note this information it will be needed on the next step.

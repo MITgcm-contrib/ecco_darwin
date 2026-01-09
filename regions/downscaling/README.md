@@ -83,6 +83,13 @@ git clone https://github.com/nasa/simplegrid.git
 cd simplegrid
 pip install .
 ```
+You will need to update computegrid.py routine of simplegrid here:
+```
+cd [conda dir]/envs/downscaling/lib/python3.12/site-packages/simplegrid/
+vim computegrid.py
+:%s/np.PZERO/0.0/g
+:wq
+```
 > - install the [ecco_v4_py](https://github.com/ECCO-GROUP/ECCOv4-py). While a `pip` and `conda`  install of `ecco-v4-py` is available (`pip install ecco-v4-py`), it is recommended to manually generate a package in the conda environment site-packages to avoid some issues:
 ```
 git clone https://github.com/ECCO-GROUP/ECCOv4-py.git
