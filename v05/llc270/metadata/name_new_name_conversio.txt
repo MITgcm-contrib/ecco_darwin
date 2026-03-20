@@ -1,0 +1,173 @@
+"name": "ADVrTr01", "new_name": "ADVr_DIC",
+"name": "ADVrTr02", "new_name": "ADVr_NO3",
+"name": "ADVrTr03", "new_name": "ADVr_NO2",
+"name": "ADVrTr04", "new_name": "ADVr_NH4",
+"name": "ADVrTr05", "new_name": "ADVr_PO4",
+"name": "ADVrTr06", "new_name": "ADVr_FeT",
+"name": "ADVrTr07", "new_name": "ADVr_SiO2",
+"name": "ADVrTr18", "new_name": "ADVr_ALK",
+"name": "ADVrTr19", "new_name": "ADVr_O2",
+
+"name": "ADVxTr01", "new_name": "ADVx_DIC",
+"name": "ADVxTr02", "new_name": "ADVx_NO3",
+"name": "ADVxTr03", "new_name": "ADVx_NO2",
+"name": "ADVxTr04", "new_name": "ADVx_NH4",
+"name": "ADVxTr05", "new_name": "ADVx_PO4",
+"name": "ADVxTr06", "new_name": "ADVx_FeT",
+"name": "ADVxTr07", "new_name": "ADVx_SiO2",
+"name": "ADVxTr18", "new_name": "ADVx_ALK",
+"name": "ADVxTr19", "new_name": "ADVx_O2",
+
+"name": "ADVyTr01", "new_name": "ADVy_DIC",
+"name": "ADVyTr02", "new_name": "ADVy_NO3",
+"name": "ADVyTr03", "new_name": "ADVy_NO2",
+"name": "ADVyTr04", "new_name": "ADVy_NH4",
+"name": "ADVyTr05", "new_name": "ADVy_PO4",
+"name": "ADVyTr06", "new_name": "ADVy_FeT",
+"name": "ADVyTr07", "new_name": "ADVy_SiO2",
+"name": "ADVyTr18", “new_name": "ADVy_ALK",
+"name": "ADVyTr19", "new_name": "ADVy_O2",
+
+"name": "DFrETr01", "new_name": "DFrE_DIC",
+"name": "DFrETr02", "new_name": "DFrE_NO3",
+"name": "DFrETr03", "new_name": "DFrE_NO2",
+"name": "DFrETr04", "new_name": "DFrE_NH4",
+"name": "DFrETr05", "new_name": "DFrE_PO4",
+"name": "DFrETr06", "new_name": "DFrE_FeT",
+"name": "DFrETr07", "new_name": "DFrE_SiO2",
+"name": "DFrETr18", "new_name": "DFrE_ALK",
+"name": "DFrETr19", "new_name": "DFrE_O2",
+
+"name": "DFrITr01", "new_name": "DFrI_DIC",
+"name": "DFrITr02", "new_name": "DFrI_NO3",
+"name": "DFrITr03", "new_name": "DFrI_NO2",
+"name": "DFrITr04", "new_name": "DFrI_NH4",
+"name": "DFrITr05", "new_name": "DFrI_PO4",
+"name": "DFrITr06", "new_name": "DFrI_FeT",
+"name": "DFrITr07", "new_name": "DFrI_SiO2",
+"name": "DFrITr18", "new_name": "DFrI_ALK",
+"name": "DFrITr19", "new_name": "DFrI_O2",
+
+"name": "DFxETr01", "new_name": "DFxE_DIC",
+"name": "DFxETr02", "new_name": "DFxE_NO3",
+"name": "DFxETr03", "new_name": "DFxE_NO2",
+"name": "DFxETr04", "new_name": "DFxE_NH4",
+"name": "DFxETr05", "new_name": "DFxE_PO4",
+"name": "DFxETr06", "new_name": "DFxE_FeT",
+"name": "DFxETr07", "new_name": "DFxE_SiO2",
+"name": "DFxETr18", "new_name": "DFxE_ALK",
+"name": "DFxETr19", "new_name": "DFxE_O2",
+
+"name": "DFyETr01", "new_name": "DFyE_DIC",
+"name": "DFyETr02", "new_name": "DFyE_NO3",
+"name": "DFyETr03", "new_name": "DFyE_NO2",
+ "name": "DFyETr04", "new_name": "DFyE_NH4",
+"name": "DFyETr05", "new_name": "DFyE_PO4",
+"name": "DFyETr06", "new_name": "DFyE_FeT",
+"name": "DFyETr07", "new_name": "DFyE_SiO2",
+"name": "DFyETr18", "new_name": "DFyE_ALK",
+"name": "DFyETr19", "new_name": "DFyE_O2",
+
+"name": "TRAC01", "new_name": "DIC",
+"name": "TRAC02", "new_name": "NO3",
+"name": "TRAC03", "new_name": "NO2",
+"name": "TRAC04", "new_name": "NH4",
+"name": "TRAC05", "new_name": "PO4",
+"name": "TRAC06", "new_name": "FeT",
+"name": "TRAC07", "new_name": "SiO2",
+"name": "TRAC08", "new_name": "DOC",
+"name": "TRAC09", "new_name": "DON",
+"name": "TRAC10", "new_name": "DOP",
+"name": "TRAC11", "new_name": "DOFe",
+"name": "TRAC12", "new_name": "POC",
+"name": "TRAC13", "new_name": "PON",
+"name": "TRAC14", "new_name": "POP",
+"name": "TRAC15", "new_name": "POFe",
+"name": "TRAC16", "new_name": "POSi",
+"name": "TRAC17", "new_name": "PIC",
+"name": "TRAC18", "new_name": "ALK",
+"name": "TRAC19", "new_name": "O2",
+"name": "TRAC20", "new_name": "PFT1_C",
+"name": "TRAC21", "new_name": "PFT2_C",
+"name": "TRAC22", "new_name": "PFT3_C",
+"name": "TRAC23", "new_name": "PFT4_C",
+"name": "TRAC24", "new_name": "PFT5_C",
+"name": "TRAC25", "new_name": "ZFT1_C",
+"name": "TRAC26", "new_name": "ZFT2_C",
+"name": "TRAC27", "new_name": "PFT1_Chl",
+"name": "TRAC28", "new_name": "PFT2_Chl",
+"name": "TRAC29", "new_name": "PFT3_Chl",
+"name": "TRAC30", "new_name": "PFT4_Chl",
+"name": "TRAC31", "new_name": "PFT5_Chl",
+	
+"name": "gO2surf", "new_name": "O2_surfTend",
+"name": "gDICsurf", "new_name": "DIC_surfTend",
+"name": "gDAR01", "new_name": "DIC_tend",
+"name": "gDAR02", "new_name": "NO3_tend",
+"name": "gDAR03", "new_name": "NO2_tend",
+"name": "gDAR04", "new_name": "NH4_tend",
+"name": "gDAR05", "new_name": "PO4_tend",
+"name": "gDAR06", "new_name": "FeT_tend",
+"name": "gDAR07", "new_name": "SiO2_tend",
+"name": "gDAR18", "new_name": "ALK_tend",
+"name": "gDAR19", "new_name": "O2_tend",
+
+"name": "C_DIC", "name": "DIC_consum",
+"name": "C_DICPIC", "name": "DIC_consum_PIC",
+"name": "C_ALK", "new_name": "ALK_consum",
+"name": "S_ALK", "new_name": "ALK_source",
+"name": "C_NO3", "new_name": "NO3_consum",
+"name": "S_NO3", "new_name": "NO3_source",
+"name": "C_NO2", "new_name": "NO2_consum",
+"name": "S_NO2", "new_name": "NO2_source",
+"name": "C_NH4", "new_name": "NH4_consum",
+"name": "S_NH4", "new_name": "NH4_source",
+"name": "C_PO4", "new_name": "PO4_consum",
+"name": "S_PO4", "new_name": "PO4_source",
+"name": "C_Fe", "new_name": "FeT_consum",
+"name": "S_Fe", "new_name": "FeT_source",
+"name": "C_O2", "new_name": "O2_consum",
+"name": "S_O2", "new_name": "O2_source",
+"name": "C_Si", "new_name": "SiO2_consum",
+"name": "S_Si", "new_name": "SiO2_source",
+"name": "freeFeLs", "new_name": "FeTLossFreeLimit",
+"name": "sedFe", "new_name": "sedimentFeT",
+"name": "sfcSolFe", "new_name": "SolFeTDustSurf",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+      
+      
+      
