@@ -25,6 +25,7 @@
    },
    {
       "name": "ADVrTr01",
+      "new_name": "ADVr_DOC",
       "long_name": "Vertical advective flux of dissolved inorganic carbon (DIC)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of DIC (TRAC01) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -37,6 +38,7 @@
    },
    {
       "name": "ADVrTr02",
+      "new_name": "ADVr_NO3",
       "long_name": "Vertical advective flux of nitrate (NO3)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of NO3 (TRAC02) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -49,6 +51,7 @@
    },
    {
       "name": "ADVrTr03",
+      "new_name": "ADVr_NO2",
       "long_name": "Vertical advective flux of nitrate (NO2)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of NO2 (TRAC03) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -61,6 +64,7 @@
    },
    {
       "name": "ADVrTr04",
+      "new_name": "ADVr_NH4",
       "long_name": "Vertical advective flux of ammonia (NH4)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of NH4 (TRAC04) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -73,6 +77,7 @@
    },
    {
       "name": "ADVrTr05",
+      "new_name": "ADVr_PO4",
       "long_name": "Vertical advective flux of phosphate (PO4)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of PO4 (TRAC05) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -85,6 +90,7 @@
    },
    {
       "name": "ADVrTr06",
+      "new_name": "ADVr_FeT",
       "long_name": "Vertical advective flux of total dissolved iron (FeT)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of FeT (TRAC06) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -97,6 +103,7 @@
    },
    {
       "name": "ADVrTr07",
+      "new_name": "ADVr_SiO2",
       "long_name": "Vertical advective flux of silicon dioxide (SiO2)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of SiO2 (TRAC07) in the +z direction through the top 'w' face of the tracer cell on the native model grid, 1 meq = 1 mmol",
@@ -109,6 +116,7 @@
    },
    {
       "name": "ADVrTr18",
+      "new_name": "ADVr_ALK",
       "long_name": "Vertical advective flux of alkalinty (ALK)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of ALK (TRAC18) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -121,6 +129,7 @@
    },
    {
       "name": "ADVrTr19",
+      "new_name": "ADVr_O2",
       "long_name": "Vertical advective flux of dissolved oxygen (O2)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of O2 (TRAC19) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
@@ -157,6 +166,7 @@
    },
    {
       "name": "ADVxTr01",
+      "new_name": "ADVx_DIC",
       "long_name": "Lateral advective flux of dissolved inorganic carbon (DIC) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of DIC (TRAC01) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -169,6 +179,7 @@
    },
    {
       "name": "ADVxTr02",
+      "new_name": "ADVx_NO3",
       "long_name": "Lateral advective flux of nitrate (NO3) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of NO3 (TRAC02) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -181,6 +192,7 @@
    },
    {
       "name": "ADVxTr03",
+      "new_name": "ADVx_NO2",
       "long_name": "Lateral advective flux of nitrite (NO2) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of NO2 (TRAC03) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -193,6 +205,7 @@
    },
    {
       "name": "ADVxTr04",
+      "new_name": "ADVx_NH4",
       "long_name": "Lateral advective flux of ammonia (NH4) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of NH4 (TRAC04) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -205,6 +218,7 @@
    },
    {
       "name": "ADVxTr05",
+      "new_name": "ADVx_PO4",
       "long_name": "Lateral advective flux of phosphate (PO4) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of PO4 (TRAC05) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -217,6 +231,7 @@
    },
    {
       "name": "ADVxTr06",
+      "new_name": "ADVx_FeT",
       "long_name": "Lateral advective flux of total dissolved iron (FeT) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of FeT (TRAC06) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -229,6 +244,7 @@
    },
    {
       "name": "ADVxTr07",
+      "new_name": "ADVx_SiO2",
       "long_name": "Lateral advective flux of silicate (SiO2) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of SiO2 (TRAC07) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -241,6 +257,7 @@
    },
    {
       "name": "ADVxTr18",
+      "new_name": "ADVx_ALK",
       "long_name": "Lateral advective flux of alkalinity (ALK) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of ALK (TRAC18) in the +x direction through the 'u' face of the tracer cell on the native model grid, 1 meq = 1 mmol",
@@ -253,6 +270,7 @@
    },
    {
       "name": "ADVxTr19",
+      "new_name": "ADVx_O2",
       "long_name": "Lateral advective flux of dissolved oxygen (O2) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of O2 (TRAC19) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -288,6 +306,7 @@
    },
    {
       "name": "ADVyTr01",
+      "new_name": "ADVy_DIC",
       "long_name": "Lateral advective flux of dissolved inorganic carbon (DIC) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of DIC (TRAC01) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -300,6 +319,7 @@
    },
    {
       "name": "ADVyTr02",
+      "new_name": "ADVy_NO3",
       "long_name": "Lateral advective flux of nitrate (NO3) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of NO3 (TRAC02) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -312,6 +332,7 @@
    },
    {
       "name": "ADVyTr03",
+      "new_name": "ADVy_NO2",
       "long_name": "Lateral advective flux of nitrite (NO2) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of NO2 (TRAC03) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -324,6 +345,7 @@
    },
    {
       "name": "ADVyTr04",
+      "new_name": "ADVy_NH4",
       "long_name": "Lateral advective flux of ammonia (NH4) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of NH4 (TRAC04) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -336,6 +358,7 @@
    },
    {
       "name": "ADVyTr05",
+      "new_name": "ADVy_PO4",
       "long_name": "Lateral advective flux of phosphate (PO4) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of PO4 (TRAC05) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -348,6 +371,7 @@
    },
    {
       "name": "ADVyTr06",
+      "new_name": "ADVy_FeT",
       "long_name": "Lateral advective flux of total dissolved iron (FeT) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of FeT (TRAC06) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -360,6 +384,7 @@
    },
    {
       "name": "ADVyTr07",
+      "new_name": "ADVy_SiO2",
       "long_name": "Lateral advective flux of silicate (SiO2) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of SiO2 (TRAC07) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -372,6 +397,7 @@
    },
    {
       "name": "ADVyTr18",
+      "new_name": "ADVy_ALK",
       "long_name": "Lateral advective flux of alkalinity (ALK) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of ALK (TRAC18) in the +y direction through the 'v' face of the tracer cell on the native model grid, 1 meq = 1 mmol",
@@ -384,6 +410,7 @@
    },
    {
       "name": "ADVyTr19",
+      "new_name": "ADVy_O2",
       "long_name": "Lateral advective flux of dissolved oxygen (O2) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral advective flux of O2 (TRAC19) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -420,6 +447,7 @@
    },
    {
       "name": "DFrETr01",
+      "new_name": "DFrE_DIC",
       "long_name": "Vertical diffusive flux of dissolved inorganic carbon (DIC) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of DIC (TRAC01) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of DIC are provided",
@@ -432,6 +460,7 @@
    },
    {
       "name": "DFrETr02",
+      "new_name": "DFrE_NO3",
       "long_name": "Vertical diffusive flux of nitrate (NO3) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of NO3 (TRAC02) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of NO3 are provided",
@@ -444,6 +473,7 @@
    },
    {
       "name": "DFrETr03",
+      "new_name": "DFrE_NO2",
       "long_name": "Vertical diffusive flux of nitrite (NO2) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of NO2 (TRAC03) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of NO2 are provided",
@@ -456,6 +486,7 @@
    },
    {
       "name": "DFrETr04",
+      "new_name": "DFrE_NH4",
       "long_name": "Vertical diffusive flux of ammonia (NH4) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of NH4 (TRAC04) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of NH4 are provided",
@@ -468,6 +499,7 @@
    },
    {
       "name": "DFrETr05",
+      "new_name": "DFrE_PO4",
       "long_name": "Vertical diffusive flux of phosphate (PO4) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of PO4 (TRAC05) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of PO4 are provided",
@@ -480,6 +512,7 @@
    },
    {
       "name": "DFrETr06",
+      "new_name": "DFrE_FeT",
       "long_name": "Vertical diffusive flux of total dissolved iron (FeT) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of FeT (TRAC06) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of FeT are provided",
@@ -492,6 +525,7 @@
    },
    {
       "name": "DFrETr07",
+      "new_name": "DFrE_SiO2",
       "long_name": "Vertical diffusive flux of silicate (SiO2) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of SiO2 (TRAC07) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of SiO2 are provided",
@@ -504,6 +538,7 @@
    },
    {
       "name": "DFrETr18",
+      "new_name": "DFrE_ALK",
       "long_name": "Vertical diffusive flux of alkalinity (ALK) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of ALK (TRAC18) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of ALK are provided, 1 meq = 1 mmol",
@@ -516,6 +551,7 @@
    },
    {
       "name": "DFrETr19",
+      "new_name": "DFrE_O2",
       "long_name": "Vertical diffusive flux of dissolved oxygen (O2) (explicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The explicit term of the vertical diffusive flux of O2 (TRAC19) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of O2 are provided",
@@ -552,6 +588,7 @@
    },
    {
       "name": "DFrITr01",
+      "new_name": "DFrI_DIC",
       "long_name": "Vertical diffusive flux of dissolved inorganic carbon (DIC) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of DIC (TRAC01) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of DIC are provided",
@@ -564,6 +601,7 @@
    },
    {
       "name": "DFrITr02",
+      "new_name": "DFrI_NO3",
       "long_name": "Vertical diffusive flux of nitrate (NO3) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of NO3 (TRAC02) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of NO3 are provided",
@@ -576,6 +614,7 @@
    },
    {
       "name": "DFrITr03",
+      "new_name": "DFrI_NO2",
       "long_name": "Vertical diffusive flux of nitrite (NO2) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of NO2 (TRAC03) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of NO2 are provided",
@@ -588,6 +627,7 @@
    },
    {
       "name": "DFrITr04",
+      "new_name": "DFrI_NH4",
       "long_name": "Vertical diffusive flux of ammonia (NH4) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of NH4 (TRAC04) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of NH4 are provided",
@@ -600,6 +640,7 @@
    },
    {
       "name": "DFrITr05",
+      "new_name": "DFrI_PO4",
       "long_name": "Vertical diffusive flux of phosphate (PO4) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of PO4 (TRAC05) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of PO4 are provided",
@@ -612,6 +653,7 @@
    },
    {
       "name": "DFrITr06",
+      "new_name": "DFrI_FeT",
       "long_name": "Vertical diffusive flux of total dissolved iron (FeT) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of FeT (TRAC06) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of FeT are provided",
@@ -624,6 +666,7 @@
    },
    {
       "name": "DFrITr07",
+      "new_name": "DFrI_SiO2",
       "long_name": "Vertical diffusive flux of silicate (SiO2) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of SiO2 (TRAC07) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of SiO2 are provided",
@@ -636,6 +679,7 @@
    },
    {
       "name": "DFrITr18",
+      "new_name": "DFrI_ALK",
       "long_name": "Vertical diffusive flux of alkalinity (ALK) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of ALK (TRAC18) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of ALK are provided, 1 meq = 1 mmol",
@@ -648,6 +692,7 @@
    },
    {
       "name": "DFrITr19",
+      "new_name": "DFrI_O2",
       "long_name": "Vertical diffusive flux of dissolved oxygen (O2) (implicit term)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "The implicit term of the vertical diffusive flux of O2 (TRAC19) in the +z direction through the top 'w' face of the tracer cell on the native model grid. In the ECCO V4r5 model, an implicit scheme is used to calculate vertical diffusive tracer fluxes due to background diffusivity and the Kwz component of the GM-Redi tensor (vertical flux as a function of vertical gradient) while an explicit scheme is used to calculate the vertical diffusive fluxes from the Kwx and Kwy components of the GM-Redi tensor (vertical flux as a function of horizontal gradient). Both implicit and explicit components of vertical diffusive flux of O2 are provided",
@@ -684,6 +729,7 @@
    },
    {
       "name": "DFxETr01",
+      "new_name": "DFxE_DIC",
       "long_name": "Lateral diffusive flux of dissolved inorganic carbon (DIC) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of DIC (TRAC01) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -696,6 +742,7 @@
    },
    {
       "name": "DFxETr02",
+      "new_name": "DFxE_NO3",
       "long_name": "Lateral diffusive flux of nitrate (NO3) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of NO3 (TRAC02) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -708,6 +755,7 @@
    },
    {
       "name": "DFxETr03",
+      "new_name": "DFxE_NO2",
       "long_name": "Lateral diffusive flux of nitrite (NO2) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of NO2 (TRAC03) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -720,6 +768,7 @@
    },
    {
       "name": "DFxETr04",
+      "new_name": "DFxE_NH4",
       "long_name": "Lateral diffusive flux of ammonia (NH4) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of NH4 (TRAC04) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -732,6 +781,7 @@
    },
    {
       "name": "DFxETr05",
+      "new_name": "DFxE_PO4",
       "long_name": "Lateral diffusive flux of phosphate (PO4) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of PO4 (TRAC05) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -744,6 +794,7 @@
    },
    {
       "name": "DFxETr06",
+      "new_name": "DFxE_FeT",
       "long_name": "Lateral diffusive flux of total dissolved iron (FeT) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of FeT (TRAC06) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -756,6 +807,7 @@
    },
    {
       "name": "DFxETr07",
+      "new_name": "DFxE_SiO2",
       "long_name": "Lateral diffusive flux of silicate (SiO2) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of SiO2 (TRAC07) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -768,6 +820,7 @@
    },
    {
       "name": "DFxETr18",
+      "new_name": "DFxE_ALK",
       "long_name": "Lateral diffusive flux of alkalinity (ALK) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of ALK (TRAC18) in the +x direction through the 'u' face of the tracer cell on the native model grid, 1 meq = 1 mmol",
@@ -780,6 +833,7 @@
    },
    {
       "name": "DFxETr19",
+      "new_name": "DFxE_O2",
       "long_name": "Lateral diffusive flux of dissolved oxygen (O2) in the model +x direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of O2 (TRAC19) in the +x direction through the 'u' face of the tracer cell on the native model grid",
@@ -816,6 +870,7 @@
    },
    {
       "name": "DFyETr01",
+	  "new_name": "DFyE_DIC",
       "long_name": "Lateral diffusive flux of dissolved inorganic carbon (DIC) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of DIC (TRAC01) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -828,6 +883,7 @@
    },
    {
       "name": "DFyETr02",
+      "new_name": "DFyE_NO3",
       "long_name": "Lateral diffusive flux of nitrate (NO3) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of NO3 (TRAC02) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -840,6 +896,7 @@
    },
    {
       "name": "DFyETr03",
+      "new_name": "DFyE_NO2",
       "long_name": "Lateral diffusive flux of nitrite (NO2) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of NO2 (TRAC03) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -852,6 +909,7 @@
    },
    {
       "name": "DFyETr04",
+      "new_name": "DFyE_NH4",
       "long_name": "Lateral diffusive flux of ammonia (NH4) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of NH4 (TRAC04) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -864,6 +922,7 @@
    },
    {
       "name": "DFyETr05",
+      "new_name": "DFyE_PO4",
       "long_name": "Lateral diffusive flux of phosphate (PO4) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of PO4 (TRAC05) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -876,6 +935,7 @@
    },
    {
       "name": "DFyETr06",
+      "new_name": "DFyE_FeT",
       "long_name": "Lateral diffusive flux of total dissolved iron (FeT) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of FeT (TRAC06) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -888,6 +948,7 @@
    },
    {
       "name": "DFyETr07",
+      "new_name": "DFyE_SiO2",
       "long_name": "Lateral diffusive flux of silicate (SiO2) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of SiO2 (TRAC07) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -900,6 +961,7 @@
    },
    {
       "name": "DFyETr18",
+      "new_name": "DFyE_ALK",
       "long_name": "Lateral diffusive flux of alkalinity (ALK) in the model +y direction",
       "units": "mmmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of ALK (TRAC18) in the +y direction through the 'v' face of the tracer cell on the native model grid, 1 meq = 1 mmol",
@@ -912,6 +974,7 @@
    },
    {
       "name": "DFyETr19",
+      "new_name": "DFyE_O2",
       "long_name": "Lateral diffusive flux of dissolved oxygen (O2) in the model +y direction",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Lateral diffusive flux of O2 (TRAC19) in the +y direction through the 'v' face of the tracer cell on the native model grid",
@@ -1147,6 +1210,7 @@
    },
    {
       "name": "TRAC01",
+      "new_name": "DIC",
       "long_name": "Concentration of dissolved inorganic carbon (DIC)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_dissolved_inorganic_carbon_in_sea_water",
@@ -1159,6 +1223,7 @@
    },
    {
       "name": "TRAC02",
+      "new_name": "NO3",
       "long_name": "Concentration of nitrate (NO3)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_nitrate_in_sea_water",
@@ -1171,6 +1236,7 @@
    },
    {
       "name": "TRAC03",
+      "new_name": "NO2",
       "long_name": "Concentration of nitrite (NO2)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_nitrite_in_sea_water",
@@ -1183,6 +1249,7 @@
    },
    {
       "name": "TRAC04",
+      "new_name": "NH4",
       "long_name": "Concentration of ammonia (NH4)",
       "units": "mmol m-3",
       "comments_1": "Concentration of amonia (NH4) at the center of the tracer cell on the native model grid",
@@ -1194,6 +1261,7 @@
    },
    {
       "name": "TRAC05",
+      "new_name": "PO4",
       "long_name": "Concentration of phosphate (PO4)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_phosphate_in_sea_water",
@@ -1206,6 +1274,7 @@
    },
    {
       "name": "TRAC06",
+      "new_name": "FeT",
       "long_name": "Concentration of total dissolved iron (FeT)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_dissolved_iron_in_sea_water",
@@ -1218,6 +1287,7 @@
    },
    {
       "name": "TRAC07",
+      "new_name": "SiO2",
       "long_name": "Concentration of silica (SiO2)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_silicate_in_sea_water",
@@ -1230,6 +1300,7 @@
    },
    {
       "name": "TRAC08",
+      "new_name": "DOC",
       "long_name": "Concentration of dissolved organic carbon (DOC)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_dissolved_inorganic_carbon_in_sea_water",
@@ -1242,6 +1313,7 @@
    },
    {
       "name": "TRAC09",
+      "new_name": "DON",
       "long_name": "Concentration of dissolved organic nitrate (DON)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_dissolved_organic_nitrogen_in_sea_water",
@@ -1254,6 +1326,7 @@
    },
    {
       "name": "TRAC10",
+      "new_name": "DOP",
       "long_name": "Concentration of dissolved organic phosphorous (DOP)",
       "units": "mmol m-3",
       "comments_1": "Concentration of dissolved organic phosphorous (DOP) at the center of the tracer cell on the native model grid",
@@ -1265,6 +1338,7 @@
    },
    {
       "name": "TRAC11",
+      "new_name": "DOFe",
       "long_name": "Concentration of dissolved organic iron (DOFe)",
       "units": "mmol m-3",
       "comments_1": "Concentration of dissolved organic iron (DOFe) at the center of the tracer cell on the native model grid",
@@ -1276,8 +1350,9 @@
    },
    {
       "name": "TRAC12",
+      "new_name": "POC",
       "long_name": "Concentration of particulate organic carbon (POC)",
-      "units": "uM C",
+      "units": "mmol m-3",
       "standard_name": "mole_concentration_of_particulate_organic_matter_expressed_as_carbon_in_sea_water",
       "comments_1": "Concentration of particulate organic carbon (POC) at the center of the tracer cell on the native model grid",
       "comments_2": "",
@@ -1288,6 +1363,7 @@
    },
    {
       "name": "TRAC13",
+      "new_name": "PON",
       "long_name": "Concentration of particulate organic nitrogen (PON)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_particulate_organic_matter_expressed_as_nitrogen_in_sea_water",
@@ -1300,8 +1376,9 @@
    },
    {
       "name": "TRAC14",
+      "new_name": "POP",
       "long_name": "Concentration of particulate organic phosphorous (POP)",
-      "units": "uM P",
+      "units": "mmol m-3",
       "standard_name": "mole_concentration_of_particulate_organic_matter_expressed_as_phosphorus_in_sea_water",
       "comments_1": "Concentration of particulate organic phosphorous (POP) at the center of the tracer cell on the native model grid",
       "comments_2": "",
@@ -1312,8 +1389,9 @@
    },
    {
       "name": "TRAC15",
+      "new_name": "POFe",
       "long_name": "Concentration of particulate organic iron (POFe)",
-      "units": "uM Fe",
+      "units": "mmol m-3",
       "standard_name": "mole_concentration_of_particulate_organic_matter_expressed_as_iron_in_sea_water",
       "comments_1": "Concentration of particulate organic iron (POFe) at the center of the tracer cell on the native model grid",
       "comments_2": "",
@@ -1324,8 +1402,9 @@
    },
    {
       "name": "TRAC16",
+      "new_name": "POSi",
       "long_name": "Concentration of particulate organic silica (POSi)",
-      "units": "uM Si",
+      "units": "mmol m-3",
       "standard_name": "mole_concentration_of_particulate_organic_matter_expressed_as_silicon_in_sea_water",
       "comments_1": "Concentration of particulate organic silica (POSi) at the center of the tracer cell on the native model grid",
       "comments_2": "",
@@ -1336,8 +1415,9 @@
    },
    {
       "name": "TRAC17",
+      "new_name": "PIC",
       "long_name": "Concentration of particulate inorganic carbon (PIC)",
-      "units": "uM C",
+      "units": "mmol m-3",
       "comments_1": "Concentration of particulate inorganic carbon (PIC) at the center of the tracer cell on the native model grid",
       "comments_2": "",
       "GCMD_keywords": "EARTH SCIENCE > OCEANS > OCEAN CHEMISTRY > INORGANIC MATTER",
@@ -1347,6 +1427,7 @@
    },
    {
       "name": "TRAC18",
+      "new_name": "ALK",
       "long_name": "Concentration of alkalinity (ALK)",
       "units": "mmol m-3",
       "standard_name": "sea_water_alkalinity_expressed_as_mole_equivalent",
@@ -1359,6 +1440,7 @@
    },
    {
       "name": "TRAC19",
+      "new_name": "O2",
       "long_name": "Concentration of dissolved oxygen (O2)",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_dissolved_molecular_oxygen_in_sea_water",
@@ -1371,6 +1453,7 @@
    },
    {
       "name": "TRAC20",
+      "new_name": "PFT1_C",
       "long_name": "Concentration of carbon in Phytoplankton Functional Type 1",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_phytoplankton_expressed_as_carbon_in_sea_water",
@@ -1383,6 +1466,7 @@
    },
    {
       "name": "TRAC21",
+      "new_name": "PFT2_C",
       "long_name": "concentration of carbon in Phytoplankton Functional Type 2",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_phytoplankton_expressed_as_carbon_in_sea_water",
@@ -1395,6 +1479,7 @@
    },
    {
       "name": "TRAC22",
+      "new_name": "PFT3_C",
       "long_name": "Concentration of carbon in Phytoplankton Functional Type 3",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_phytoplankton_expressed_as_carbon_in_sea_water",
@@ -1407,6 +1492,7 @@
    },
    {
       "name": "TRAC23",
+      "new_name": "PFT4_C",
       "long_name": "Concentration of carbon in Phytoplankton Functional Type 4",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_phytoplankton_expressed_as_carbon_in_sea_water",
@@ -1419,6 +1505,7 @@
    },
    {
       "name": "TRAC24",
+      "new_name": "PFT5_C",
       "long_name": "Concentration of carbon in Phytoplankton Functional Type 5",
       "units": "mmol m-3",
       "standard_name": "concentration of carbon in Phytoplankton Functional Type 5",
@@ -1431,6 +1518,7 @@
    },
    {
       "name": "TRAC25",
+      "new_name": "ZFT1_C",
       "long_name": "Concentration of carbon in Zooplankton Functional Type 1",
       "units": "mmol m-3",
       "standard_name": "mole_concentration_of_zooplankton_expressed_as_carbon_in_sea_water",
@@ -1443,6 +1531,7 @@
    },
    {
       "name": "TRAC26",
+      "new_name": "ZFT2_C",
       "long_name": "Concentration of carbon in Zooplankton Functional Type 1",
       "units": "mmol m-3",
       "standard_name": "concentration of carbon in Zooplankton Functional Type 2",
@@ -1455,6 +1544,7 @@
    },
    {
       "name": "TRAC27",
+      "new_name": "PFT1_Chl",
       "long_name": "Concentration of Chlorophyll-a in Phytoplankton Functional Type 1",
       "units": "mg m-3",
       "standard_name": "mass_concentration_of_chlorophyll_in_sea_water",
@@ -1467,6 +1557,7 @@
    },
    {
       "name": "TRAC28",
+      "new_name": "PFT2_Chl",
       "long_name": "Concentration of Chlorophyll-a in Phytoplankton Functional Type 2",
       "units": "mg m-3",
       "standard_name": "mass_concentration_of_chlorophyll_in_sea_water",
@@ -1479,6 +1570,7 @@
    },
    {
       "name": "TRAC29",
+      "new_name": "PFT3_Chl",
       "long_name": "Concentration of Chlorophyll-a in Phytoplankton Functional Type 3",
       "units": "mg m-3",
       "standard_name": "mass_concentration_of_chlorophyll_in_sea_water",
@@ -1491,6 +1583,7 @@
    },
    {
       "name": "TRAC30",
+      "new_name": "PFT4_Chl",
       "long_name": "Concentration of Chlorophyll-a in Phytoplankton Functional Type 4",
       "units": "mg m-3",
       "standard_name": "mass_concentration_of_chlorophyll_in_sea_water",
@@ -1503,6 +1596,7 @@
    },
    {
       "name": "TRAC31",
+      "new_name": "PFT5_Chl",
       "long_name": "Concentration of Chlorophyll-a in Phytoplankton Functional Type 5",
       "units": "mg m-3",
       "standard_name": "mass_concentration_of_chlorophyll_in_sea_water",
@@ -1586,6 +1680,7 @@
    },
    {
       "name": "gO2surf",
+      "new_name": "O2_surfTend",
       "long_name": "Tendency of dissolved oxygen due to air-sea exchange",
       "units": "mmol m-3 s-1",
       "comments_1": "Tendency of dissolved oxygen (O2) due to air-sea oxygen flux at the surface",
@@ -1675,6 +1770,7 @@
    },
    {
       "name": "gDICsurf",
+      "new_name": "DIC_surfTend",
       "long_name": "Tendency of dissolved inorganic carbon (DIC) due to air-sea exchange and virtal flux",
       "units": "mmol m-3 s-1",
       "comments_1": "Tendency of dissolved inorganic carbon (DIC) due to air-sea exch + oldvirt.flux at the center of the tracer cell on the native model grid",
@@ -1686,6 +1782,7 @@
    },
    {
       "name": "gDAR01",
+      "new_name": "DIC_tend",
       "long_name": "Tendency of dissolved organic carbon (DIC)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of dissolved organic carbon (DIC) at the center of the tracer cell on the native model grid",
@@ -1697,6 +1794,7 @@
    },
    {
       "name": "gDAR02",
+      "new_name": "NO3_tend",
       "long_name": "Tendency of nitrate (NO3)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of nitrate (NO3) at the center of the tracer cell on the native model grid",
@@ -1708,8 +1806,9 @@
    },
    {
       "name": "gDAR03",
+      "new_name": "NO2_tend",
       "long_name": "Tendency of nitrite (NO2)",
-      "units": "uMN s-1"
+      "units": "mmol m-3 s-1"
       "comments_1": "Tendency of nitrite (NO2) at the center of the tracer cell on the native model grid",
       "comments_2": "",     
       "GCMD_keywords": "EARTH SCIENCE > OCEANS > OCEAN CHEMISTRY > NITRITE",  
@@ -1719,6 +1818,7 @@
    },
    {
       "name": "gDAR04",
+      "new_name": "NH4_tend",
       "long_name": "Tendency of ammonia (NH4)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of ammonia (NH4) at the center of the tracer cell on the native model grid",
@@ -1730,6 +1830,7 @@
    },
    {
       "name": "gDAR05",
+      "new_name": "PO4_tend",
       "long_name": "Tendency of phosphate (PO4)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of phosphate (PO4) at the center of the tracer cell on the native model grid",
@@ -1741,6 +1842,7 @@
    },
    {
       "name": "gDAR06",
+      "new_name": "FeT_tend",
       "long_name": "Tendency of total dissolved iron (FeT)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of total dissolved iron (FeT) at the center of the tracer cell on the native model grid",
@@ -1752,6 +1854,7 @@
    },
    {
       "name": "gDAR07",
+      "new_name": "SiO2_tend",
       "long_name": "Tendency of silica (SiO2)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of silica (SiO2) at the center of the tracer cell on the native model grid",
@@ -1763,6 +1866,7 @@
    },
    {
       "name": "gDAR18",
+      "new_name": "ALK_tend",
       "long_name": "Tendency of alkalinity (ALK)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of alkalinity (ALK) at the center of the tracer cell on the native model grid, 1 meq = 1 mmol",
@@ -1774,6 +1878,7 @@
    },
    {
       "name": "gDAR19",
+      "new_name": "O2_tend",
       "long_name": "Tendency of dissolved oxygen (O2)",
       "units": "mmol m-3 s-1"
       "comments_1": "Tendency of dissolved oxygen (O2) at the center of the tracer cell on the native model grid",
@@ -1785,6 +1890,7 @@
    },
    {
       "name": "C_DIC",
+      "new_name": "DIC_consum",
       "long_name": "Consumption of dissolved organic carbon (DIC)",
       "units": "mmol m-3 s-1",
       "standard_name": "tendency_of_mole_concentration_of_dissolved_inorganic_carbon_in_sea_water_due_to_biological_processes",
@@ -1797,6 +1903,7 @@
    },
    {
       "name": "C_DICPIC",
+      "new_name": "DIC_consum_PIC",
       "long_name": "Consumption of dissolved organic carbon (DIC) due to particulate organic carbon (PIC)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of dissolved organic carbon (DIC) due to particulate organic carbon (PIC) at the center of the tracer cell on the native model grid",
@@ -1808,6 +1915,7 @@
    },
    {
       "name": "C_ALK",
+      "new_name": "ALK_consum",
       "long_name": "Consumption of alkalinity (ALK)",
       "units": "mmol m-3 s-1",
       "standard_name": "tendency_of_sea_water_alkalinity_expressed_as_mole_equivalent_due_to_biological_processes",
@@ -1820,6 +1928,7 @@
    },
    {
       "name": "S_ALK",
+      "new_name": "ALK_source",
       "long_name": "Non-transport source of alkalinity (ALK)",
       "units": "mmol m-3 s-1",
       "comments_1": "Non-transport source of alkalinity (ALK) at the center of the tracer cell on the native model grid, 1 meq = 1 mmol",
@@ -1831,6 +1940,7 @@
    },
    {
       "name": "C_NO3",
+      "new_name": "NO3_consum",
       "long_name": "Consumption of nitrate (NO3)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of nitrate (NO3) at the center of the tracer cell on the native model grid",
@@ -1842,6 +1952,7 @@
    },
    {
       "name": "S_NO3",
+      "new_name": "NO3_source",
       "long_name": "Non-transport source of nitrate (NO3)",
       "units": "mmol m-3 s-1",
       "comments_1": "Non-transport source of nitrate (NO3) at the center of the tracer cell on the native model grid",
@@ -1853,6 +1964,7 @@
    },
    {
       "name": "C_NO2",
+      "new_name": "NO2_consum",
       "long_name": "Consumption of nitrite (NO2)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of nitrite (NO2) at the center of the tracer cell on the native model grid",
@@ -1864,6 +1976,7 @@
    },
    {
       "name": "S_NO2",
+      "new_name": "NO2_source",
       "long_name": "Non-transport source of nitrite (NO2)",
       "units": "mmol m-3 s-1",
       "comments_1": "Non-transport source of nitrite (NO2) at the center of the tracer cell on the native model grid",
@@ -1875,6 +1988,7 @@
    },
    {
       "name": "C_NH4",
+      "new_name": "NO2_consum",
       "long_name": "Consumption of ammonia (NH4)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of ammonia (NH4) at the center of the tracer cell on the native model grid",
@@ -1886,6 +2000,7 @@
    },
    {
       "name": "S_NH4",
+      "new_name": "NO2_source",
       "long_name": "Non-transport source of amonia (NH4)",
       "units": "mmol m-3 s-1",
       "comments_1": "Non-transport source of amonia (NH4) at the center of the tracer cell on the native model grid",
@@ -1897,6 +2012,7 @@
    },
    {
       "name": "C_PO4",
+      "new_name": "PO4_consum",
       "long_name": "Consumption of phosphate (PO4)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of phosphate (PO4) at the center of the tracer cell on the native model grid",
@@ -1908,6 +2024,7 @@
    },
    {
       "name": "S_PO4",
+      "new_name": "PO4_source",
       "long_name": "Non-transport source of phosphate (PO4)",
       "units": "mmol m-3 s-1",
       "comments_1": "Non-transport source of phosphate (PO4) at the center of the tracer cell on the native model grid",
@@ -1919,6 +2036,7 @@
    },
    {
       "name": "C_Fe",
+      "new_name": "FeT_consum",
       "long_name": "Consumption of dissolved total iron (FeT)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of dissolved iron (FeT) at the center of the tracer cell on the native model grid",
@@ -1930,6 +2048,7 @@
    },
    {
       "name": "S_Fe",
+      "new_name": "FeT_source",
       "long_name": "Non-transport source of total dissolved iron (FeT)",
       "units": "mmol m-3 s-1",
       "comments_1": "Non-transport source of total dissolved iron (FeT) at the center of the tracer cell on the native model grid",
@@ -1941,6 +2060,7 @@
    },
    {
       "name": "C_O2",
+      "new_name": "O2_consum",
       "long_name": "Consumption of dissolved oxygen (O2)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of dissolved oxygen (O2) at the center of the tracer cell on the native model grid",
@@ -1952,6 +2072,7 @@
    },
    {
       "name": "S_O2",
+      "new_name": "O2_source",
       "long_name": "Non-transport source of dissolved oxygen (O2)",
       "units": "mmol m-3 s-1",
 	  "comments_1": "Non-transport source of dissolved oxygen (O2) at the center of the tracer cell on the native model grid",
@@ -1963,6 +2084,7 @@
    },
    {
       "name": "C_Si",
+      "new_name": "SiO2_consum",
       "long_name": "Consumption of silica (SiO2)",
       "units": "mmol m-3 s-1",
       "comments_1": "Consumption of silica (SiO2) at the center of the tracer cell on the native model grid",
@@ -1974,6 +2096,7 @@
    },
    {
       "name": "S_Si",
+      "new_name": "SiO2_source",
       "long_name": "Non-transport source of silica (SiO2)",
       "units": "mmol m-3 s-1",
 	  "comments_1": "Non-transport source of silica (SiO2) at the center of the tracer cell on the native model grid",
@@ -1985,6 +2108,7 @@
    },
    {
       "name": "freeFeLs",
+      "new_name": "FeTLossFreeLimit",
       "long_name": "Loss of total dissolved iron (FeT) due to free iron limit",
       "units": "mmol m-3 s-1",
       "comments_1": "Loss of total dissolved iron (FeT) due to free iron limit at the center of the tracer cell on the native model grid",
@@ -1996,6 +2120,7 @@
    },
    {
       "name": "sfcSolFe",
+      "new_name": "SolFeDustSurf",
       "long_name": "Solubile iron (Fe) input due to atmospheric dust at surface",
       "units": "mmol m-2 s-1",
       "comments_1": "Solubile iron (Fe) input due to atmospheric dust at the center of the tracer cell on the native model grid",
