@@ -25,7 +25,7 @@
    },
    {
       "name": "ADVrTr01",
-      "new_name": "ADVr_DOC",
+      "new_name": "ADVr_DIC",
       "long_name": "Vertical advective flux of dissolved inorganic carbon (DIC)",
       "units": "mmol m-3 m3 s-1",
       "comments_1": "Vertical advective flux of DIC (TRAC01) in the +z direction through the top 'w' face of the tracer cell on the native model grid",
