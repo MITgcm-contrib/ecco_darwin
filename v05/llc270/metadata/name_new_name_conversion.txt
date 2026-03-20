@@ -61,7 +61,7 @@
 "name": "DFyETr01", "new_name": "DFyE_DIC",
 "name": "DFyETr02", "new_name": "DFyE_NO3",
 "name": "DFyETr03", "new_name": "DFyE_NO2",
- "name": "DFyETr04", "new_name": "DFyE_NH4",
+"name": "DFyETr04", "new_name": "DFyE_NH4",
 "name": "DFyETr05", "new_name": "DFyE_PO4",
 "name": "DFyETr06", "new_name": "DFyE_FeT",
 "name": "DFyETr07", "new_name": "DFyE_SiO2",
