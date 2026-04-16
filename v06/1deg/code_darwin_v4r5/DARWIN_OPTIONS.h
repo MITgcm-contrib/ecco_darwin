@@ -128,7 +128,7 @@ C turn on debugging output
 #undef DARWIN_DEBUG
 
 C compute and print global element totals
-#undef DARWIN_ALLOW_CONS
+#define DARWIN_ALLOW_CONS
 
 C value for unused traits
 #define DARWIN_UNUSED 0
