@@ -307,7 +307,48 @@
    fields(1,84) = 'pH      ',
    filename(84) = 'diags/monthly/pH',
 #---
-
+  frequency(85) = 2635200.0,
+   fields(1:11,85) = 'TRAC21  ',
+                     'fnut0001','fIph0001','fTph0001',
+                     'limN0001','limP0001','limS0001',
+                     'limF0001','PC0001  ','Mort0001','Resp0001',
+   filename(85) = 'diags/monthly/PFT1_lim',
+#---
+  frequency(86) = 2635200.0,
+   fields(1:11,86) = 'TRAC22  ',
+                     'fnut0002','fIph0002','fTph0002',
+                     'limN0002','limP0002','limS0002',
+                     'limF0002','PC0002  ','Mort0002','Resp0002',
+   filename(86) = 'diags/monthly/PFT2_lim',
+#---
+  frequency(87) = 2635200.0,
+   fields(1:11,87) = 'TRAC23  ',
+                     'fnut0003','fIph0003','fTph0003',
+                     'limN0003','limP0003','limS0003',
+                     'limF0003','PC0003  ','Mort0003','Resp0003',
+   filename(87) = 'diags/monthly/PFT3_lim',
+#---
+  frequency(88) = 2635200.0,
+   fields(1:11,88) = 'TRAC24  ',
+                     'fnut0004','fIph0004','fTph0004',
+                     'limN0004','limP0004','limS0004',
+                     'limF0004','PC0004  ','Mort0004','Resp0004',
+   filename(88) = 'diags/monthly/PFT4_lim',
+#---
+  frequency(89) = 2635200.0,
+   fields(1:11,89) = 'TRAC25  ',
+                     'fnut0005','fIph0005','fTph0005',
+                     'limN0005','limP0005','limS0005',
+                     'limF0005','PC0005  ','Mort0005','Resp0005',
+   filename(89) = 'diags/monthly/PFT5_lim',
+#---
+  frequency(90) = 2635200.0,
+   fields(1:11,90) = 'TRAC26  ',
+                     'fnut0006','fIph0006','fTph0006',
+                     'limN0006','limP0006','limS0006',
+                     'limF0006','PC0006  ','Mort0006','Resp0006',
+   filename(90) = 'diags/monthly/PFT5_lim',   
+   
  &
 
  /
