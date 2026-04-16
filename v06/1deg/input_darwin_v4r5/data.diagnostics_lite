@@ -347,7 +347,7 @@
                      'fnut0006','fIph0006','fTph0006',
                      'limN0006','limP0006','limS0006',
                      'limF0006','PC0006  ','Mort0006','Resp0006',
-   filename(90) = 'diags/monthly/PFT5_lim',   
+   filename(90) = 'diags/monthly/PFT6_lim',   
    
  &
 
