@@ -290,7 +290,7 @@
   frequency(77) = 2635200.0,
    fields(1:15,77) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
         'DFxETr01','DFyETr01','DFrETr01','DFrITr01','gDAR01  ',
-        'cDIC    ','cDIC_PIC','respDIC ','rDIC_DOC','rDIC_POC',
+        'C_DIC    ','C_DICPIC','respDIC ','rDIC_DOC','rDIC_POC',
         'dDIC_PIC',
    filename(77) = 'diags/budget/average_DIC_3d',
 #---
@@ -327,7 +327,7 @@
   frequency(83) = 2635200.0,
    fields(1:13,83) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
         'DFxETr06','DFyETr06','DFrETr06','DFrITr06','gDAR06  ',
-        'C_Fe    ','S_Fe    ','sedFe   ','freeFe  ',
+        'C_Fe    ','S_Fe    ','sedFe   ','freeFeLs',
    filename(83) = 'diags/budget/average_Fe_3d',
 #---
   frequency(84) = 2635200.0,
@@ -370,7 +370,41 @@
         'TRAC18  ','TRAC05  ','TRAC07  ',
   filename(90) = 'diags/budget/CO2_flux_budget_3d',
 #---
-
+  frequency(91) = 2635200.0,
+   fields(1:11,91) = 'TRAC20  ',
+                     'fnut0001','fIph0001','fTph0001',
+                     'limN0001','limP0001','limS0001',
+                     'limF0001','PC0001  ','Mort0001','Resp0001',
+   filename(91) = 'diags/monthly/PFT1_lim',
+#---
+  frequency(92) = 2635200.0,
+   fields(1:11,92) = 'TRAC21  ',
+                     'fnut0002','fIph0002','fTph0002',
+                     'limN0002','limP0002','limS0002',
+                     'limF0002','PC0002  ','Mort0002','Resp0002',
+   filename(92) = 'diags/monthly/PFT2_lim',
+#---
+  frequency(93) = 2635200.0,
+   fields(1:11,93) = 'TRAC22  ',
+                     'fnut0003','fIph0003','fTph0003',
+                     'limN0003','limP0003','limS0003',
+                     'limF0003','PC0003  ','Mort0003','Resp0003',
+   filename(93) = 'diags/monthly/PFT3_lim',
+#---
+  frequency(94) = 2635200.0,
+   fields(1:11,94) = 'TRAC23  ',
+                     'fnut0004','fIph0004','fTph0004',
+                     'limN0004','limP0004','limS0004',
+                     'limF0004','PC0004  ','Mort0004','Resp0004',
+   filename(94) = 'diags/monthly/PFT4_lim',
+#---
+  frequency(95) = 2635200.0,
+   fields(1:11,95) = 'TRAC24  ',
+                     'fnut0005','fIph0005','fTph0005',
+                     'limN0005','limP0005','limS0005',
+                     'limF0005','PC0005  ','Mort0005','Resp0005',
+   filename(95) = 'diags/monthly/PFT5_lim',
+#---
  &
 
  /
