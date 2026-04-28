@@ -1,0 +1,72 @@
+# Diagnostic Package Choices
+#-----------------
+# for each output-stream:
+#  filename(n) : prefix of the output file name (only 8.c long) for outp.stream n
+#  frequency(n):< 0 : write snap-shot output every |frequency| seconds
+#               > 0 : write time-average output every frequency seconds
+#  timePhase(n)     : write at time = timePhase + multiple of |frequency|
+#  levels(:,n) : list of levels to write to file (Notes: declared as REAL)
+#                 when this entry is missing, select all common levels of this list
+#  fields(:,n) : list of diagnostics fields (8.c) (see "available_diagnostics.log"
+#                 file for the list of all available diag. in this particular config)
+#-----------------
+ &diagnostics_list
+#
+ dumpatlast = .false.,
+#
+ diag_mnc     = .FALSE.,
+
+#  frequency(1) = 3600.,
+#   fields(1,1) = 'EXFswdn','EXFswnet',
+#   filename(1) = 'diag2D_P',
+
+  frequency(1) = 86400.,
+   fields(1,1) = 'BLGNPP',
+   filename(1) = 'diag3D/diag3D',
+
+ frequency(2) = 86400.,
+   fields(1,2) = 'BLGMLD  ','BLGCHLSA','MXLDEPTH','ETAN',
+   filename(2) = 'diag2D/diag2D',
+# frequency(1) = 432000.,
+#  fields(1,1) = 'EXFhs','EXFhl','EXFlwnet','EXFswnet','EXFlwdn','EXFswdn','EXFqnet','EXFtaux',
+#                'EXFtauy','EXFuwind','EXFvwind','EXFwspee','EXFatemp','EXFaqh','EXFevap',
+#                'EXFpreci','EXFempmr','MXLDEPTH','ETAN',
+#  filename(1) = 'diag2D_P',
+#
+# frequency(3) = 2629710.,
+#   fields(1,3) = 'TRAC01','TRAC02','TRAC03','TRAC04',
+#                 'TRAC05','TRAC06','TRAC07','TRAC08','TRAC09',
+#                 'BLGCHL','THETA','SALT','UVEL','VVEL','BLGPSM','BLGPLG','BLGPDIA','BLGLLIM','BLGNLIM','BLGPLIM','BLGFELIM','WVEL',
+#   filename(3) = 'diag3D_monthly',
+
+# frequency(4) = 2629710.,
+#   fields(1,4) = 'BLGMLD  ','BLGCHLSA','MXLDEPTH',
+#   filename(4) = 'diag2D_monthly',
+
+##
+#  frequency(3) = 432000.0,
+#   fields(1,3) = 'BLGPCO2 ','BLGMLD  ','BLGCFLX ',
+#                'BLGOFLX ','BLGSURFE',
+#   filename(3) = 'diag2D_B',
+##
+#  frequency(4) = 432000.0,
+#   fields(1,4) = 'TRAC01  ','TRAC02  ','TRAC03  ','TRAC04  ','TRAC05  ','TRAC06  ',
+#                  'TRAC07  ','TRAC08  ','TRAC09  ','BLGPH3D ','BLGNCP  ','BLGNPP  ',
+#                  'BLGCHL  ','BLGPOC  ',
+#   filename(4) =  'diag3D_B',
+##
+ /
+# Parameter for Diagnostics of per level statistics:
+#-----------------
+# for each output-stream:
+#  stat_fname(n) : prefix of the output file name (only 8.c long) for outp.stream n
+#  stat_freq(n):< 0 : write snap-shot output every |stat_freq| seconds
+#               > 0 : write time-average output every stat_freq seconds
+#  stat_phase(n)    : write at time = stat_phase + multiple of |stat_freq|
+#  stat_region(:,n) : list of "regions" (default: 1 region only=global)
+#  stat_fields(:,n) : list of diagnostics fields (8.c) (see "available_diagnostics.log"
+#                 file for the list of all available diag. in this particular config)
+#-----------------
+ &DIAG_STATIS_PARMS
+ /
+

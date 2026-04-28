@@ -1,0 +1,9 @@
+# Packages
+ &PACKAGES
+ useCAL=.true.,
+ useEXF=.true.,
+ useKPP   = .true.,
+ useDiagnostics=.true.,
+ useOBCS=.true.,
+ useDOWN_SLOPE= .true.,
+ /
