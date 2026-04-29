@@ -1,6 +1,5 @@
 # Instructions for building and running a Red Sea regional simulation
 # on arm64 macOS (based on ecco_darwin/v05/llc270/readme2.txt).
-# See ecco_darwin/doc/MITgcm_on_Mac.txt for additional instructions.
 
 ==============
 # 1. Get code
@@ -11,7 +10,12 @@
   mkdir build run
 
 ==============
-# 2. Build executable
+# 2. Compile environment setup and darwin3 compatibility fixes
+# See ecco_darwin/doc/MITgcm_on_Mac.txt for instructions on setting up
+# compile environment (if needed) and fixing darwin3 compatibility issues.
+
+==============
+# 3. Build executable
   cd build
   ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/v05/code -mpi \
    -of ../../ecco_darwin/regions/RedSea/v05/code/darwin_arm64_gfortran
@@ -19,7 +23,7 @@
   make -j
 
 ==============
-# 3. Instructions for running simulation (1992-2023 period)
+# 4. Instructions for running simulation (1992-2023 period)
   cd ../run
   ln -sf ../build/mitgcmuv .
 
