@@ -2,9 +2,13 @@
 # which can be installed using:
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install gfortran
+#######################################################
+# 1. gfortran install and verify
+
+# 1.1 Install gfortran
   brew install gcc
 
+# 1.2 Verify gfortran using MITgcm verification experiment
 # Get MITgcm code
   git clone --depth 1 https://github.com/MITgcm/MITgcm.git
 
@@ -17,12 +21,12 @@
 # End time: .....
 
 ########################################################
-# Compile and run MITgcm using parallel MPI compilation
+# 2. Compile and run MITgcm using parallel MPI compilation
 
-# Extra package needed for parallel MPI compilation
+# 2.1 Install Extra package needed for parallel MPI compilation
   brew install open-mpi
 
-# Run an MPI verification experiment
+# 2.2 Run an MPI verification experiment
   cd MITgcm/verification
   export MPI_INC_DIR=/opt/homebrew/include
   ./testreport -mpi -t lab_sea
@@ -32,13 +36,16 @@
 # Sanity-check that $MPI_INC_DIR/mpi.h exists
 
 ########################################################
+# 3. darwin3 compatibility fixes
 # The following notes pertain to running the older version
 # of darwin3 (git checkout 24885b71) used for ecco_darwin/v05
 
+# 3.1 build_options compatibility fix
 # Note that, almost certainly, you will need to update the
 # darwin3/tools/build_options. You can overwrite these files
 # with those from MITgcm/tools/build_options downloaded above.
 
+# 3.2 python compatibilitry fix
 # Note that darwin3/tools/darwin/cog requires python
 # If python is not available, one way to install is:
   brew install python3
