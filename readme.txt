@@ -43,7 +43,8 @@ Simulations:
   --RedSea--
     /v05: Red Sea llc270 cut-out for KAUST
     /v05_coral: Red Sea llc270 cut-out including model for coral reefs
-    /kaust_v1s3: Red Sea 1km 65 levels 
+    /kaust_v1s3: Red Sea 1km 65 levels
+    /kaust_baby: 0.3-deg kaust test set-up
   --totten--
     /llc1080: east Antarctica totten lon-lat
 
