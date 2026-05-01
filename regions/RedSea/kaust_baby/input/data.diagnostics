@@ -2,60 +2,81 @@
 #-----------------
 # for each output-stream:
 #  filename(n) : prefix of the output file name (only 8.c long) for outp.stream n
-#  frequency(n):< 0 : write snap-shot output every |frequency| seconds
-#               > 0 : write time-average output every frequency seconds
-#  timePhase(n)     : write at time = timePhase + multiple of |frequency|
+#  frequency(n):< 0 : write snap-shot output every multiple of |frequency| (iter)
+#               > 0 : write time-average output every multiple of frequency (iter)
 #  levels(:,n) : list of levels to write to file (Notes: declared as REAL)
 #                 when this entry is missing, select all common levels of this list
-#  fields(:,n) : list of diagnostics fields (8.c) (see "available_diagnostics.log"
-#                 file for the list of all available diag. in this particular config)
-#-----------------
+#  fields(:,n) : list of diagnostics fields (8.c) (see "available_diagnostics" file 
+#                 for the list of all available diag. in this particular config)
+#--------------------------------------------------------------------
+#
  &diagnostics_list
 #
- dumpatlast = .false.,
-#
- diag_mnc     = .FALSE.,
+  dumpatlast = .TRUE.,
+   
+#daily diagnostics
+#--- 
+  frequency(7) = 86400.,
+   fields(1,7) = 'EXFwspee',
+   filename(7) = 'diags/daily/wspeed',
+#--- 
+  frequency(8) = 86400.,
+   fields(1,8) = 'THETA   ',
+   levels(1,8) = 1.,
+   filename(8) = 'diags/daily/SST',
+#---     
+  frequency(9) = 86400.,
+   fields(1,9) = 'SALTanom',
+   levels(1,9) = 1.,
+   filename(9) = 'diags/daily/SSSanom',
+#---           
+   frequency(15) = 86400.,
+    fields(1,15) = 'MXLDEPTH',
+    filename(15) = 'diags/daily/mldDepth',
+#---  
 
-#  frequency(1) = 3600.,
-#   fields(1,1) = 'EXFswdn','EXFswnet',
-#   filename(1) = 'diag2D_P',
+#monthly diagnostics
+#---
+  frequency(16) = 2635200.,
+   fields(1,16) = 'THETA   ',
+   filename(16) = 'diags/monthly/THETA',   
+#---
+  frequency(17) = 2635200.,
+   fields(1,17) = 'SALTanom',
+   filename(17) = 'diags/monthly/SALTanom',
+#--- 
+  frequency(18) = 2635200.,
+   fields(1,18) = 'THETA   ',
+   levels(1,18) = 1.,
+   filename(18) = 'diags/monthly/SST',
+#--- 
+  frequency(19) = 2635200.,
+   fields(1,19) = 'SALTanom',
+   levels(1,19) = 1.,
+   filename(19) = 'diags/monthly/SSSanom',
+#---
+  frequency(20) = 2635200.,
+   fields(1,20) = 'MXLDEPTH',
+   filename(20) = 'diags/monthly/mldDepth',
+#---
+  frequency(21) = 2635200.,
+   fields(1,21) = 'oceQsw  ',
+   filename(21) = 'diags/monthly/oceanQsw',
+#---    
+  frequency(20) = 2635200.,
+   fields(1,20) = 'oceQnet ',
+   filename(20) = 'diags/monthly/oceanQnet',
+#---    
+  frequency(21) = 2635200.,
+   fields(1,21) = 'EXFwspee',
+   filename(21) = 'diags/monthly/wspeed',
+#--- 
+  frequency(22) = 2635200.,
+   fields(1,22) = 'WVEL    ',
+   filename(22) = 'diags/monthly/wVel',
 
-  frequency(1) = 86400.,
-   fields(1,1) = 'BLGNPP',
-   filename(1) = 'diag3D/diag3D',
-
- frequency(2) = 86400.,
-   fields(1,2) = 'BLGMLD  ','BLGCHLSA','MXLDEPTH','ETAN',
-   filename(2) = 'diag2D/diag2D',
-# frequency(1) = 432000.,
-#  fields(1,1) = 'EXFhs','EXFhl','EXFlwnet','EXFswnet','EXFlwdn','EXFswdn','EXFqnet','EXFtaux',
-#                'EXFtauy','EXFuwind','EXFvwind','EXFwspee','EXFatemp','EXFaqh','EXFevap',
-#                'EXFpreci','EXFempmr','MXLDEPTH','ETAN',
-#  filename(1) = 'diag2D_P',
-#
-# frequency(3) = 2629710.,
-#   fields(1,3) = 'TRAC01','TRAC02','TRAC03','TRAC04',
-#                 'TRAC05','TRAC06','TRAC07','TRAC08','TRAC09',
-#                 'BLGCHL','THETA','SALT','UVEL','VVEL','BLGPSM','BLGPLG','BLGPDIA','BLGLLIM','BLGNLIM','BLGPLIM','BLGFELIM','WVEL',
-#   filename(3) = 'diag3D_monthly',
-
-# frequency(4) = 2629710.,
-#   fields(1,4) = 'BLGMLD  ','BLGCHLSA','MXLDEPTH',
-#   filename(4) = 'diag2D_monthly',
-
-##
-#  frequency(3) = 432000.0,
-#   fields(1,3) = 'BLGPCO2 ','BLGMLD  ','BLGCFLX ',
-#                'BLGOFLX ','BLGSURFE',
-#   filename(3) = 'diag2D_B',
-##
-#  frequency(4) = 432000.0,
-#   fields(1,4) = 'TRAC01  ','TRAC02  ','TRAC03  ','TRAC04  ','TRAC05  ','TRAC06  ',
-#                  'TRAC07  ','TRAC08  ','TRAC09  ','BLGPH3D ','BLGNCP  ','BLGNPP  ',
-#                  'BLGCHL  ','BLGPOC  ',
-#   filename(4) =  'diag3D_B',
-##
  /
+
 # Parameter for Diagnostics of per level statistics:
 #-----------------
 # for each output-stream:
@@ -68,5 +89,5 @@
 #                 file for the list of all available diag. in this particular config)
 #-----------------
  &DIAG_STATIS_PARMS
- /
 
+ /

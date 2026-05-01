@@ -1,46 +1,23 @@
-# Open-boundaries
+# ***************
+# Open boundaries
+# ***************
  &OBCS_PARM01
-# OB_Ieast =  34*0,137*-1,1061*0,
-# OB_Ieast = 151*0,334*-1,1515*0,
-# OB_Ieast = 150*0,335*-1,1515*0,
-# OB_Ieast = 146*0,342*-1,1512*0,
- OB_Ieast = 150*0,334*-1,1516*0
-# 
- useOBCSbalance=.true.,
- OBCS_balanceFacE=-1,
+ OB_Ieast  =   72*-1,
+#
+ useOBCSprescribe=.TRUE.,
+#
+ OBEsFile='obcs/RedSea_64x72x41_SALT_East',
+ OBEtFile='obcs/RedSea_64x72x41_THETA_East',
+ OBEuFile='obcs/RedSea_64x72x41_U_East',
+ OBEvFile='obcs/RedSea_64x72x41_V_East',
+#
  OBCS_monitorFreq=864000.,
-#
  useOBCStides = .false.,
-#
  useOBCSsponge = .true.,
- useOBCSprescribe = .true.,
-#
- OBEuFile = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_UobcsE_19960101_20230101.bin', 
- OBEvFile = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_VobcsE_19960101_20230101.bin',
- OBEtFile = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_TobcsE_19960101_20230101.bin',
- OBEsFile = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_SobcsE_19960101_20230101.bin',
-#
- OBEptrFile(1)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_dic_glodapv2_sgl_daily_19960101_20230101.bin',
- OBEptrFile(2)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_alk_glodapv2_sgl_daily_19960101_20230101.bin',
- OBEptrFile(3)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_o2_glorys_sgl_daily_19960101_20230101.bin',
- OBEptrFile(4)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_no3_glorys_sgl_daily_19960101_20230101.bin',
- OBEptrFile(5)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_po4_glorys_sgl_daily_19960101_20230101.bin',
- OBEptrFile(6)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_fe_glorys_sgl_daily_19960101_20230101.bin',
- OBEptrFile(7)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_don_glodapv2_sgl_daily_19960101_20230101.bin',
- OBEptrFile(8)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_dop_glodapv2_sgl_daily_19960101_20230101.bin',
- OBEptrFile(9)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_phyto_glorys_sgl_daily_19960101_20230101.bin',
-#
- OBEetaFile_tr = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_eta_tr_19960101_20230101.bin',
  useOBCSbalance=.TRUE.,
  OBCS_balanceFacE=-1,
 #
-/
-
-# Orlanski parameters
-# &OBCS_PARM02
-#Cmax = 0.25,
-#cVelTimeScale = 500.,
-/
+ &
 # Sponge layer parameters
  &OBCS_PARM03
  spongeThickness = 10,
@@ -48,4 +25,4 @@
  Urelaxobcsbound = 86400.0,
  Vrelaxobcsinner = 432000.0,
  Vrelaxobcsbound = 86400.0,
-/
+ &
