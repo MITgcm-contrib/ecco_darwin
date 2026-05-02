@@ -21,11 +21,11 @@
 #   filename(1) = 'diag2D_P',
 
   frequency(1) = 86400.,
-   fields(1,1) = 'BLGNPP',
+   fields(1,1) = 'THETA',
    filename(1) = 'diag3D/diag3D',
 
  frequency(2) = 86400.,
-   fields(1,2) = 'BLGMLD  ','BLGCHLSA','MXLDEPTH','ETAN',
+   fields(1,2) = 'ETAN',
    filename(2) = 'diag2D/diag2D',
 # frequency(1) = 432000.,
 #  fields(1,1) = 'EXFhs','EXFhl','EXFlwnet','EXFswnet','EXFlwdn','EXFswdn','EXFqnet','EXFtaux',
