@@ -12,7 +12,6 @@ C            must be > number of bathymetric steps
 C            The default value (=tile domain size) can increased (if needed)
 C             or reduced (to save memory space).
       INTEGER DWNSLP_size
-CMM      PARAMETER ( DWNSLP_size = xSize * (Oly+sNy+Oly) )
       PARAMETER ( DWNSLP_size = xSize * (Oly+sNy+Oly+1) )
 
 c#endif /* ALLOW_DOWN_SLOPE */

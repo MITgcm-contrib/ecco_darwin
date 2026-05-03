@@ -1,26 +1,19 @@
-C $Header: /u/gcmpack/MITgcm/pkg/obcs/OBCS_OPTIONS.h,v 1.15 2012/09/20 19:04:46 dimitri Exp $
-C $Name:  $
-
 C CPP options file for OBCS package
-C
 C Use this file for selecting options within the OBCS package
-C
 
 #ifndef OBCS_OPTIONS_H
 #define OBCS_OPTIONS_H
 #include "PACKAGES_CONFIG.h"
 #include "CPP_OPTIONS.h"
 
-#define ALLOW_OBCS_TIDES
 #ifdef ALLOW_OBCS
 C Package-specific Options & Macros go here
 
 C Enable individual open boundaries
 #undef ALLOW_OBCS_NORTH
 #undef ALLOW_OBCS_SOUTH
-#undef ALLOW_OBCS_WEST
-
 #define ALLOW_OBCS_EAST
+#undef ALLOW_OBCS_WEST
 
 C This include hooks to the Orlanski Open Boundary Radiation code
 #define ALLOW_ORLANSKI
@@ -32,7 +25,7 @@ C from a file
 C Enable OB conditions following Stevens (1990)
 #undef ALLOW_OBCS_STEVENS
 
-C This includes hooks to sponge layer treatment of uvel, vvel
+C Allow sponge layer treatment of open boundary conditions
 #define ALLOW_OBCS_SPONGE
 
 C Include hooks to sponge layer treatment of pkg/seaice variables
@@ -40,6 +33,11 @@ C Include hooks to sponge layer treatment of pkg/seaice variables
 
 C balance barotropic velocity
 #define ALLOW_OBCS_BALANCE
+
+C add tidal contributions to normal OB flow
+C NOTE that at the moment tidal forcing is applied
+C only to "normal" flow.
+#define ALLOW_OBCS_TIDES
 
 C Use older implementation of obcs in seaice-dynamics
 C note: most of the "experimental" options listed below have not yet

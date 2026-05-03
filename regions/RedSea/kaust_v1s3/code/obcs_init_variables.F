@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm/pkg/obcs/obcs_init_variables.F,v 1.44 2012/11/15 20:46:52 dimitri Exp $
-C $Name: checkpoint64e $
-
 #include "OBCS_OPTIONS.h"
 
 CBOP
@@ -417,7 +414,6 @@ C  new:
       IF ( OBNUphFile .NE. ' '  ) CALL READ_REC_XZ_RL
      &     (OBNUphFile,fp,tidalComponents,OBNUph,1,nIter0,myThid )
 # endif
-
 # ifdef ALLOW_OBCS_SOUTH
       IF ( OBSVamFile .NE. ' '  ) CALL READ_REC_XZ_RL
      &     (OBSVamFile,fp,tidalComponents,OBSVam,1,nIter0,myThid )

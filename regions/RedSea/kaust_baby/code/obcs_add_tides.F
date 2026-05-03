@@ -1,6 +1,3 @@
-C $Header: /u/gcmpack/MITgcm/pkg/obcs/obcs_add_tides.F,v 1.2 2012/11/15 20:46:52 dimitri Exp $
-C $Name: checkpoint64e $
-
 #include "OBCS_OPTIONS.h"
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
