@@ -13,7 +13,8 @@
 # 2. Build executable
   cd build
   rm *
-  ../tools/genmake2 -mods ../../ecco_darwin/regions/RedSea/kaust_v1s3/code/  -of=../../ecco_darwin/regions/RedSea/kaust_v1s3/shaheen_build_options -mpi -make=gmake -rootdir=..
+  ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/kaust_v1s3/code -mpi \
+   -of=../../ecco_darwin/regions/RedSea/kaust_v1s3/shaheen_build_options -make=gmake
   make depend
   make -j 16
 
