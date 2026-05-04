@@ -140,14 +140,11 @@
 #   tauSaltClimRelax  - Relaxation to climatology time scale     (s)
 #   cAdjFreq 	      - Convective adjustment period (s)
 #
- nIter0=_stTIME_,
-# nTimeSteps=960,
- nTimeSteps=_nsteps_,
+ nIter0=0,
+ nTimeSteps=960,
+# nTimeSteps=58560,
 # deltaT =30,
  deltaT =90,
-# deltaTmom = 90.,
-# deltaTtracer = 90.,
-# deltaTClock  = 90.,
  pickupStrictlyMatch=.FALSE.,
  cAdjFreq=0.,
  abEps = 0.01,
@@ -157,8 +154,8 @@
  taveFreq=0,
  dumpFreq=0,
  dumpInitAndLast=.FALSE.,
-# monitorFreq=3600.,
- monitorFreq=86400.,
+ monitorFreq=3600.,
+# monitorFreq=86400.,
 # 2 months restoring timescale for temperature
 # tauThetaClimRelax= 5184000.,
 # 3 months restoring timescale for salinity
@@ -209,10 +206,10 @@
 #   uVelInitFile    - File containing initial zonal velocity data
 #   vVelInitFile    - File containing initial meridional velocity data
 #
- bathyFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/redsea_bathy_new_r64_cf.bin',
- hydrogThetaFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Tic_1km_65l_19960101_r64_adj.bin',
- hydrogSaltFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Sic_1km_65l_19960101_r64_adj.bin',
- uVelInitFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Uic_1km_65l_19960101_r64_adj.bin',
- vVelInitFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Vic_1km_65l_19960101_r64_adj.bin',
- diffKrFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/kappa_new.bin',
+ bathyFile='../redsea_bathy_new_r64_cf.bin',
+ hydrogThetaFile='../Tic_1km_65l_19960101_r64_adj.bin',
+ hydrogSaltFile='../Sic_1km_65l_19960101_r64_adj.bin',
+ uVelInitFile='../Uic_1km_65l_19960101_r64_adj.bin',
+ vVelInitFile='../Vic_1km_65l_19960101_r64_adj.bin',
+ diffKrFile='../kappa_new.bin',
  /

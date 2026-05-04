@@ -206,10 +206,10 @@
 #   uVelInitFile    - File containing initial zonal velocity data
 #   vVelInitFile    - File containing initial meridional velocity data
 #
- bathyFile='../redsea_bathy_new_r64_cf.bin',
- hydrogThetaFile='../Tic_1km_65l_19960101_r64_adj.bin',
- hydrogSaltFile='../Sic_1km_65l_19960101_r64_adj.bin',
- uVelInitFile='../Uic_1km_65l_19960101_r64_adj.bin',
- vVelInitFile='../Vic_1km_65l_19960101_r64_adj.bin',
- diffKrFile='../kappa_new.bin',
+ bathyFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/redsea_bathy_new_r64_cf.bin',
+ hydrogThetaFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Tic_1km_65l_19960101_r64_adj.bin',
+ hydrogSaltFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Sic_1km_65l_19960101_r64_adj.bin',
+ uVelInitFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Uic_1km_65l_19960101_r64_adj.bin',
+ vVelInitFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/PHY_init/Vic_1km_65l_19960101_r64_adj.bin',
+ diffKrFile='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/kappa_new.bin',
  /

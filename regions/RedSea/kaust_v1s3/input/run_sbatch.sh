@@ -32,7 +32,7 @@ echo $start $nsteps
 
 ierr=0
 
-sbatch --dependency=afterok:${SLURM_JOB_ID} run_sbatch.sh
+# sbatch --dependency=afterok:${SLURM_JOB_ID} run_sbatch.sh
 #time srun -n 1656 --hint=nomultithread ./mitgcmuv65x  ||  ierr=1
 #time srun -n 1656 ./mitgcmuv65x ||  ierr=1
 /usr/bin/time srun -n 1649 --hint=nomultithread ./mitgcmuv ||  ierr=1
