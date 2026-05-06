@@ -51,7 +51,7 @@ WORKDIR=~/mitgcm/
   cd $WORKDIR/darwin3/build
   rm *
   ../tools/genmake2 -of=../../ecco_darwin/regions/RedSea/kaust_baby/darwin_arm64_gfortran -mpi \
-    -mo '../../ecco_darwin/regions/RedSea/kaust_baby/code_darwin ../../ecco_darwin/regions/RedSea/kaust_baby/code'
+   -mo '../../ecco_darwin/regions/RedSea/kaust_baby/code_darwin ../../ecco_darwin/regions/RedSea/kaust_baby/code'
   make depend
   make -j
 
