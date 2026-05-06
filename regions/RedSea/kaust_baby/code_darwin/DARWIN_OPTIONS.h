@@ -134,7 +134,7 @@ C value for unused traits
 #define  DARWIN_UNUSED 0
 
 C fill diagnostics for most tendency terms
-#define  DARWIN_DIAG_TENDENCIES
+#undef  DARWIN_DIAG_TENDENCIES
 
 
 C deprecated
