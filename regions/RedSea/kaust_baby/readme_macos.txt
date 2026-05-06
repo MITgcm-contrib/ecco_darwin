@@ -3,9 +3,9 @@
 ==============
 # 1. Get code
   git clone git@github.com:MITgcm-contrib/ecco_darwin.git
-  git clone https://github.com/MITgcm/MITgcm
-  cd MITgcm
-  git checkout checkpoint67u
+  git clone git@github.com:darwinproject/darwin3
+  cd darwin3
+  git checkout 24885b71
   mkdir build run
 
 ==============
