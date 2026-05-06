@@ -1,17 +1,19 @@
 # Instructions for building and running a physics-only
 # RedSea/kaust_v1s3 configuration on shaheen at KAUST
 
+WORKDIR=/scratch/wangy0m/ECCO_Darwin/
+
 ==============
 # 1. Get code
   git clone git@github.com:MITgcm-contrib/ecco_darwin.git
-  git clone git@github.com:MITgcm/MITgcm
-  cd MITgcm
-  git checkout checkpoint67u
+  git clone git@github.com:darwinproject/darwin3
+  cd $WORKDIR/darwin3
+  git checkout 24885b71
   mkdir build run
 
 ==============
 # 2. Build executable
-  cd build
+  cd $WORKDIR/darwin3/build
   rm *
   ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/kaust_v1s3/code -mpi \
    -of=../../ecco_darwin/regions/RedSea/kaust_v1s3/shaheen_build_options -make=gmake
@@ -29,7 +31,7 @@
 
 ==============
 # 4. Instructions for running simulation (only physics part now for testing)
-  cd ../run
+  cd $WORKDIR/darwin3/run
   ln -sf ../build/mitgcmuv .
   cp ../../ecco_darwin/regions/RedSea/kaust_v1s3/input/* .
 
