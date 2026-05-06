@@ -5,7 +5,7 @@
 # OB_Ieast = 150*0,335*-1,1515*0,
 # OB_Ieast = 146*0,342*-1,1512*0,
  OB_Ieast = 150*0,334*-1,1516*0
-# 
+#
  useOBCSbalance=.true.,
  OBCS_balanceFacE=-1,
  OBCS_monitorFreq=864000.,
@@ -31,8 +31,6 @@
 # OBEptrFile(9)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_phyto_glorys_sgl_daily_19960101_20230101.bin',
 #
  OBEetaFile_tr = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_eta_tr_19960101_20230101.bin',
- useOBCSbalance=.TRUE.,
- OBCS_balanceFacE=-1,
 #
 /
 

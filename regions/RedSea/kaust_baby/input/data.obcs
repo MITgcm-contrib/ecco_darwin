@@ -1,23 +1,22 @@
-# ***************
-# Open boundaries
-# ***************
+# Open-boundaries
  &OBCS_PARM01
  OB_Ieast  =   72*-1,
 #
- useOBCSprescribe=.TRUE.,
+ useOBCSbalance=.true.,
+ OBCS_balanceFacE=-1,
+ OBCS_monitorFreq=864000.,
 #
- OBEsFile='obcs/RedSea_64x72x41_SALT_East',
- OBEtFile='obcs/RedSea_64x72x41_THETA_East',
+ useOBCStides = .false.,
+#
+ useOBCSsponge = .true.,
+ useOBCSprescribe = .true.,
+#
  OBEuFile='obcs/RedSea_64x72x41_U_East',
  OBEvFile='obcs/RedSea_64x72x41_V_East',
+ OBEtFile='obcs/RedSea_64x72x41_THETA_East',
+ OBEsFile='obcs/RedSea_64x72x41_SALT_East',
 #
- OBCS_monitorFreq=864000.,
- useOBCStides = .false.,
- useOBCSsponge = .true.,
- useOBCSbalance=.TRUE.,
- OBCS_balanceFacE=-1,
-#
- &
+/
 # Sponge layer parameters
  &OBCS_PARM03
  spongeThickness = 10,
@@ -25,4 +24,4 @@
  Urelaxobcsbound = 86400.0,
  Vrelaxobcsinner = 432000.0,
  Vrelaxobcsbound = 86400.0,
- &
+/

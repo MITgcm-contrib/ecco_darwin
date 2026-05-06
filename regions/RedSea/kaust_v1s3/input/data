@@ -34,12 +34,11 @@
 #   momViscosity    - On/Off flag for momentum mixing
 #
 
- tRef               = 6*23.,6*22.,2*21.,4*20.,2*19.,4*18.,2*17.,4*16.,
-                      2*15.,2*14.,2*13.,2*12.,2*11.,4*9.,2*8.,2*7.,2*6.,
- sRef               = 50*38,
+ tRef               = 6*23.,6*22.,4*21.,4*20.,4*19.,4*18.,4*17.,4*16.,
+                      4*15.,4*14.,4*13.,4*12.,4*11.,3*9.,2*8.,2*7.,2*6.,
+ sRef               = 65*38,
  no_slip_sides=.FALSE.,
  no_slip_bottom=.TRUE.,
-
  
  viscAr = 1.E-4,
 #- This is the standard Leith Viscosity, prop to grad(curl v_h)
