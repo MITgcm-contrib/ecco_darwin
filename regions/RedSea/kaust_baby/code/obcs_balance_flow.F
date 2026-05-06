@@ -534,6 +534,28 @@ CMM)
 #endif /* ALLOW_OBCS_NORTH */
 
 #ifdef ALLOW_OBCS_SOUTH
+C2p(
+        IF ( useRealFreshWaterFlux ) THEN
+C KEEP SSH BALANCED
+      theMean = 0. _d 0
+      DO bj=myByLo(myThid),myByHi(myThid)
+       DO bi=myBxLo(myThid),myBxHi(myThid)
+        tileMean(bi,bj) = 0. _d 0
+         DO j=1,sNy
+          DO i=1,sNx
+           tmpVal  = EtaN(i,j,bi,bj)-OBEeta_tr(1,1,1)  !2p -/+ to reduce/increase SSH
+           tmpMask = hFacC(i,j,1,bi,bj)
+           IF ( tmpMask.GT.0. _d 0 ) THEN
+            tmpVol = rA(i,j,bi,bj)*tmpMask
+            tileMean(bi,bj) = tileMean(bi,bj) + tmpVol*tmpVal
+           ENDIF
+          ENDDO
+         ENDDO
+       ENDDO
+      ENDDO
+      CALL GLOBAL_SUM_TILE_RL( tileMean, theMean, myThid )
+        ENDIF
+C2p)
       IF ( OBCS_balanceFacS.NE.0. ) THEN
        DO bj=myByLo(myThid),myByHi(myThid)
         DO bi=myBxLo(myThid),myBxHi(myThid)
