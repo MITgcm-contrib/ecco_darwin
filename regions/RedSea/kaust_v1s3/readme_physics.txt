@@ -15,10 +15,11 @@ WORKDIR=/scratch/wangy0m/ECCO_Darwin/
 # 2. Build executable
   cd $WORKDIR/darwin3/build
   rm *
+  module load python
   ../tools/genmake2 -mo ../../ecco_darwin/regions/RedSea/kaust_v1s3/code -mpi \
    -of=../../ecco_darwin/regions/RedSea/kaust_v1s3/shaheen_build_options -make=gmake
   make depend
-  make -j 16
+  gmake -j 16
 
 ==============
 # 3. Prepare input data
