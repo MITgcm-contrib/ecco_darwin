@@ -84,11 +84,18 @@ def get_regbnd_info(vnm, bnd, Nr, tstp, grid1):
         raise ValueError('Boundary '+bnd+' not recognized')
 
     #----------- surface mask ------------# 
-    if vnm in ['AREA','UICE','VICE','HEFF','HSNOW', 'ETAN']:
-        mask1 = mask1[:1,:,:]
-        obcs_init = np.zeros((tstp, 1, np.size(XC1)))
+    if seaice == True:
+        if vnm in ['AREA','UICE','VICE','HEFF','HSNOW', 'ETAN']:
+            mask1 = mask1[:1,:,:]
+            obcs_init = np.zeros((tstp, 1, np.size(XC1)))
+        else:
+            obcs_init = np.zeros((tstp, Nr, np.size(XC1)))
     else:
-        obcs_init = np.zeros((tstp, Nr, np.size(XC1)))
+        if vnm in ['AREA', 'ETAN']:
+            mask1 = mask1[:1,:,:]
+            obcs_init = np.zeros((tstp, 1, np.size(XC1)))
+        else:
+            obcs_init = np.zeros((tstp, Nr, np.size(XC1)))
         
     return XC1, YC1, mask1, obcs_init
 
@@ -195,10 +202,16 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
     dv_diags_dir = os.path.join(config_dir, 'parent/outputs/OBCS/')
     sfx = dv_diags_dir+f"{bnd}_BC_mask_{vnm}"
     itrs = [int(glob.glob(sfx+".*")[i][len(sfx)+1:-4]) for i in range(len(glob.glob(sfx+".*")))]
-    if vnm in ['AREA','UICE','VICE','HEFF','HSNOW','ETAN']:
-        Nr = 1
+    if seaice == True:
+        if vnm in ['AREA','UICE','VICE','HEFF','HSNOW','ETAN']:
+            Nr = 1
+        else:
+            Nr = Nr0
     else:
-        Nr = Nr0
+        if vnm in ['AREA','ETAN']:
+            Nr = 1
+        else:
+            Nr = Nr0
 
     #--------- Read dv diagnostic --------#
     for itr in itrs:
@@ -212,14 +225,25 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
             dv_diagU = np.reshape(dv_diagU, (tstp, Nr, nm_pt))
             dv_diagV = np.reshape(dv_diagV, (tstp, Nr, nm_pt))
             dv_diag = np.zeros((tstp, Nr, nm_pt))
-            if vnm in ['UVEL','UICE']:
-                for m in range(nm_pt):
-                    dv_diag[:,:,m] = bnd_domain[bnd]['AngleCS'][m] * dv_diagU[:,:,m] -\
-                                     bnd_domain[bnd]['AngleSN'][m] * dv_diagV[:,:,m]
-            elif vnm in ['VVEL','VICE']:
-                for m in range(nm_pt):
-                    dv_diag[:,:,m] = bnd_domain[bnd]['AngleSN'][m] * dv_diagU[:,:,m] +\
-                                     bnd_domain[bnd]['AngleCS'][m] * dv_diagV[:,:,m]
+            
+            if seaice == True:
+                if vnm in ['UVEL','UICE']:
+                    for m in range(nm_pt):
+                        dv_diag[:,:,m] = bnd_domain[bnd]['AngleCS'][m] * dv_diagU[:,:,m] -\
+                                         bnd_domain[bnd]['AngleSN'][m] * dv_diagV[:,:,m]
+                elif vnm in ['VVEL','VICE']:
+                    for m in range(nm_pt):
+                        dv_diag[:,:,m] = bnd_domain[bnd]['AngleSN'][m] * dv_diagU[:,:,m] +\
+                                         bnd_domain[bnd]['AngleCS'][m] * dv_diagV[:,:,m]
+            else:
+                if vnm in ['UVEL']:
+                    for m in range(nm_pt):
+                        dv_diag[:,:,m] = bnd_domain[bnd]['AngleCS'][m] * dv_diagU[:,:,m] -\
+                                         bnd_domain[bnd]['AngleSN'][m] * dv_diagV[:,:,m]
+                elif vnm in ['VVEL']:
+                    for m in range(nm_pt):
+                        dv_diag[:,:,m] = bnd_domain[bnd]['AngleSN'][m] * dv_diagU[:,:,m] +\
+                                         bnd_domain[bnd]['AngleCS'][m] * dv_diagV[:,:,m]
         else:
             dv_diag =  np.fromfile(sfx+f".{itr:010d}.bin", '>f4')
             nm_pt = len(bnd_domain[bnd]['XC'])
@@ -232,19 +256,35 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
             dv_diag = np.concatenate([dv_diag_all, dv_diag], axis=0)
         
     #------- Vertical interpolation ------#
-    if vnm in ['UVEL','UICE']:
-        msk_pts = bnd_domain[bnd]['maskW']
-    elif vnm in ['VVEL','VICE']:
-        msk_pts = bnd_domain[bnd]['maskS']
+    if seaice == True:
+        if vnm in ['UVEL','UICE']:
+            msk_pts = bnd_domain[bnd]['maskW']
+        elif vnm in ['VVEL','VICE']:
+            msk_pts = bnd_domain[bnd]['maskS']
+        else:
+            msk_pts = bnd_domain[bnd]['maskC']
     else:
-        msk_pts = bnd_domain[bnd]['maskC']
+        if vnm in ['UVEL']:
+            msk_pts = bnd_domain[bnd]['maskW']
+        elif vnm in ['VVEL']:
+            msk_pts = bnd_domain[bnd]['maskS']
+        else:
+            msk_pts = bnd_domain[bnd]['maskC']
 
-    if vnm not in ['AREA','UICE','VICE','HEFF','HSNOW', 'ETAN']:
-        dv_diag_IT, msk_pts_IT = Zinterp(dv_diag, msk_pts, grid0['drF'], grid1['drF'])
+    if seaice == True:
+        if vnm not in ['AREA','UICE','VICE','HEFF','HSNOW','ETAN']:
+            dv_diag_IT, msk_pts_IT = Zinterp(dv_diag, msk_pts, grid0['drF'], grid1['drF'])
+        else:
+            msk_pts = msk_pts[:1,:]
+            dv_diag_IT = dv_diag
+            msk_pts_IT = msk_pts
     else:
-        msk_pts = msk_pts[:1,:]
-        dv_diag_IT = dv_diag
-        msk_pts_IT = msk_pts
+        if vnm not in ['AREA', 'ETAN']:
+            dv_diag_IT, msk_pts_IT = Zinterp(dv_diag, msk_pts, grid0['drF'], grid1['drF'])
+        else:
+            msk_pts = msk_pts[:1,:]
+            dv_diag_IT = dv_diag
+            msk_pts_IT = msk_pts
 
     return dv_diag_IT, msk_pts_IT
 
@@ -282,7 +322,13 @@ def Zinterp(dv_diag, msk_pts, delR0, delR1):
             # handle possible bottom missing values
             if np.size(np.abs(Z0[np.isnan(tmp0[0])])) > 0:
                 bottom_depth = np.abs(Z0[np.isnan(tmp0[0])])[0]
-                bottom_values = tmp1[:,np.where(~np.isnan(tmp1[0]))[0][-1]]
+                tmp = np.where(~np.isnan(tmp1[0]))[0]
+                if tmp.size > 1:
+                          bottom_values = tmp1[:,np.where(~np.isnan(tmp1[0]))[0][-1]]
+                elif tmp.size == 0:
+                          bottom_values = 0.
+                else: 
+                          bottom_values = tmp1[:,np.where(~np.isnan(tmp1[0]))[0][0]]    
                 idB = np.where(np.logical_and(np.isnan(tmp1[0]), np.abs(Z1) < bottom_depth))[0]
                 if len(idB) != 0:
                     tmp1[:,idB[0]] = bottom_values
@@ -475,39 +521,40 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
             obcs.ravel('C').astype('>f4').tofile( os.path.join(out_dir,output_file))
      
     #--------- sea-ice condition ---------#
-    if print_level>=1:
-        print('> Creating sea-ice OBCS for the '+reg_nm+' model')
-    vnms = ['AREA','HEFF','HSNOW','UICE','VICE']
-    for vnm in vnms:
+    if seaice == True:
         if print_level>=1:
-            print(f'    - Processing {vnm} file')
-        for bnd in bnd_ls:
-            output_file = vnm+'_'+bnd+'.bin'
-            ### Read diagnotic_vec output
-            dv_diag, msk_pts = read_dv_diags(itrs, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1)
-            tstp = len(dv_diag)
-            ### Get regional boundaary info
-            XC1, YC1, mask1, obcs = get_regbnd_info(vnm, bnd, Nr1, tstp, grid1)
-            ### Horizontal intrpolation
-            for t in range(tstp):
-                obcs_tmp = gen_obcs(dv_diag[t], bnd_domain[bnd]['XC'], bnd_domain[bnd]['YC'], msk_pts, XC1, YC1, mask1)
-                if bnd in ['east','west']:
-                    obcs_tmp = obcs_tmp[:,:,0]
-                elif bnd in ['north','south']:
-                    obcs_tmp = obcs_tmp[:,0,:]
-                obcs[t] = obcs_tmp
+            print('> Creating sea-ice OBCS for the '+reg_nm+' model')
+        vnms = ['AREA','HEFF','HSNOW','UICE','VICE']
+        for vnm in vnms:
             if print_level>=1:
-                print(f'       * saving the {bnd} OBCS file')
-            obcs.ravel('C').astype('>f4').tofile( os.path.join(out_dir,output_file))
-     
+                print(f'    - Processing {vnm} file')
+            for bnd in bnd_ls:
+                output_file = vnm+'_'+bnd+'.bin'
+                ### Read diagnotic_vec output
+                dv_diag, msk_pts = read_dv_diags(itrs, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1)
+                tstp = len(dv_diag)
+                ### Get regional boundaary info
+                XC1, YC1, mask1, obcs = get_regbnd_info(vnm, bnd, Nr1, tstp, grid1)
+                ### Horizontal intrpolation
+                for t in range(tstp):
+                    obcs_tmp = gen_obcs(dv_diag[t], bnd_domain[bnd]['XC'], bnd_domain[bnd]['YC'], msk_pts, XC1, YC1, mask1)
+                    if bnd in ['east','west']:
+                        obcs_tmp = obcs_tmp[:,:,0]
+                    elif bnd in ['north','south']:
+                        obcs_tmp = obcs_tmp[:,0,:]
+                    obcs[t] = obcs_tmp
+                if print_level>=1:
+                    print(f'       * saving the {bnd} OBCS file')
+                obcs.ravel('C').astype('>f4').tofile( os.path.join(out_dir,output_file))
+            
     #--------- ptracer condition ---------#
     if bgc == True:
         if print_level>=1:
             print('> Creating biogeochemical OBCS for the '+reg_nm+' model')
-        sfx = os.path.join(config_dir, 'parent/outputs/OBCS/')+f"{bnd_ls[0]}_BC_mask_PTRACE*"
+        sfx = os.path.join(config_dir, 'parent/outputs/OBCS/')+f"{bnd_ls[0]}_BC_mask_TRAC*"
         ptr_ls = glob.glob(sfx)
         ptr_ls = np.unique([int(ptr_ls[i][len(sfx)-1:-15]) for i in range(len(ptr_ls))])
-        vnms = [f'PTRACE{i:02d}' for i in ptr_ls]
+        vnms = [f'TRAC{i:02d}' for i in ptr_ls]
         for vnm in vnms:
             if print_level>=1:
                 print(f'    - Processing {vnm} file')
@@ -550,8 +597,10 @@ if __name__ == '__main__':
     parser.add_argument("-i", "--itr", nargs='+', action="store",
                         help="iteration of the begining the regional model", dest="itr",
                         type=int, required=True)
+    parser.add_argument("-seaice", "--si", action="store_true", default='False',
+                        help="generate sea-ice obcs")
     parser.add_argument("-bgc", "--darwin", action="store_true", default='False',
-                        help="generate darwin biogeochemistry pickups")
+                        help="generate darwin biogeochemistry obcs")
     parser.add_argument("-v", "--verbose", action="store_true", default='False')
     
 
@@ -560,13 +609,14 @@ if __name__ == '__main__':
     reg_nm = args.reg_nm
     bds = args.bnd_nm
     itrs = args.itr
+    seaice = args.si
     bgc = args.darwin
     if args.verbose == True:
         print_level = 1
     else:
         print_level = 0
 
-    gen_obcs_files(config_dir, reg_nm, bds, itrs, bgc, print_level)
+    gen_obcs_files(config_dir, reg_nm, bds, itrs, seaice, bgc, print_level)
 
 
 

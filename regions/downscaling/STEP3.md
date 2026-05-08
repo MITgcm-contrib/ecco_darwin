@@ -64,12 +64,12 @@ Below are the instructions to run the code in a terminal with the anaconda envri
 conda activate downscaling
 cd ecco_darwin/regions/downscaling/utils/
 python3 gen_obcs.py -d /path/to/regional/files -n name_of_the_region\
-                    -bnd EWNS -i iter_list  -bgc -v          
+                    -bnd EWNS -i iter_list -seaice -bgc -v          
 ```
 **Example:**
 ```
  python3 gen_obcs.py -d ecco_darwin/regions/downscaling/ -n NorthSlope \
-                     -bnd EWN -i 683785 710065 -bgc -v
+                     -bnd EWN -i 683785 710065 -seaice -bgc -v
 ```
 
 To get more information about the options required for this code run ``gen_pickup.py -h``. Here are additional details about the options:
@@ -77,7 +77,8 @@ To get more information about the options required for this code run ``gen_picku
 > - -n: The name of your region.
 > - -bnd: Open boundaries of your domain where you need to generate boundary conditions >> 'E' (East), 'W' (West), 'N' (North), 'S' (South)
 > - -i: iteration of the obcs files extracted from diagnostics_vec.
-> - -bgc: generate Darwin pickup files (if runing the ECCO-Darwin model).
+> - -seaice: generate sea-ice obcs files.
+> - -bgc: generate Darwin obcs files (if runing the ECCO-Darwin model).
 > - -v: verbose.
 
 ---
