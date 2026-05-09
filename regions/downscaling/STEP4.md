@@ -1,9 +1,9 @@
-# Build and run your downscaled setup (in progress)
+# Build and run your downscaled regional setup (in progress)
 
 ---
 ## Preliminary information
 **Requirement**: 
-> Before proceding to the following intructions, you will need to complete steps in the README, STEP 1, STEP 2 and STEP 3.\
+> Before proceding to the following intructions, you will need to complete steps in the README, STEP 1, STEP 2 and STEP 3.
 
 ---
 ## I. Prepare code directories
@@ -26,8 +26,7 @@ cp downscalling/darwin3/regions/gen_ncgrid/build/SIZE.h ecco_darwin/regions/YOUR
 ---
 ## II. Prepare namelists
 
-Then, you need to prepare data namelists files as inputs to copy when preparing the model for run.\
-Once again, you can follow and copy examples from existing regional setups:
+Then, you need to prepare data namelists files as inputs to copy when preparing the model for run. Once again, you can follow and copy examples from existing regional setups:
 
 ```
 cp -r ecco_darwin/regions/GoM_1km/inputs ecco_darwin/regions/YOURSETUP/.
@@ -36,7 +35,7 @@ cp -r ecco_darwin/regions/GoM_1km/inputs_darwin ecco_darwin/regions/YOURSETUP/.
 
 ### a. data namelist (ecco_darwin/regions/YOURSETUP/code/data)
 
-Like for SIZE.h, you can re-use the data namelist file configured for STEP 1, Section IV, b.\
+Like for SIZE.h, you can re-use the data namelist file configured for STEP 1, Section IV, b.
 
 Set your iteration number to zero, remove pickupSuff line and set deltaT to samll value to respect CFL conditions\ 
 in # Time stepping parameters (&PARM03):
@@ -46,7 +45,7 @@ in # Time stepping parameters (&PARM03):
  deltaT=30.,
 ```
 
-Make sure tRef, sRef and delR are matching your grid and add the following lines in # Gridding parameters (&PARM04):
+Make sure tRef, sRef and delR are matching your vertical grid and add the following lines in # Gridding parameters (&PARM04):
 
 ```
  xgOrigin =   -97.9849,
@@ -55,8 +54,7 @@ Make sure tRef, sRef and delR are matching your grid and add the following lines
  delYfile = 'delYFile',
 ```
 
-with xgOrigin and ygOrigin, the minimum longitude and latitude of your domain, delX, the grid spacing in x-direction (use same value as STEP 1, Section I).\
-delYFile is a simple binary file containing the grid spacing in the y-direction in a vector format(see Python function gen_delYFile.py).\
+with xgOrigin and ygOrigin, the minimum longitude and latitude of your domain, delX, the grid spacing in x-direction (use same value as STEP 1, Section I).\ delYFile is a simple binary file containing the grid spacing in the y-direction in a vector format(see Python function gen_delYFile.py).
 
 Finally, add the following lines in # Input datasets (&PARM05) to restart the model from a specific iteration in your pickup files generated in STEP 3, Section I:
 
@@ -78,9 +76,7 @@ Make sure to set startDate_1 in data.cal to the corresponding iteration you woul
 
 ### c. data.exf namelist (ecco_darwin/regions/YOURSETUP/inputs/data.exf)
 
-This is where you configure the forcing to be read by the model. Make sure to either provide global forcing with their interpolation parameters or to provide forcings adapted to your grid in &EXF_NML_02 and &EXF_NML_04 (see https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html).\
-It is also in data.exf that you configure OBCs date, time and period parameters in &EXF_NML_OBCS. Be sure that your OBCs either start before or at the same time than your startDate_1 in data.cal.\
-obcsXXstartdate1 is given by iteration number used in STEP 3, Section II, gen_obcs.py.
+This is where you configure the forcing to be read by the model. Make sure to either provide global forcing with their interpolation parameters or to provide forcings adapted to your grid in &EXF_NML_02 and &EXF_NML_04 (see https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html). It is also in data.exf that you configure OBCs date, time and period parameters in &EXF_NML_OBCS. Be sure that your OBCs either start before or at the same time than your startDate_1 in data.cal. obcsXXstartdate1 is given by iteration number used in STEP 3, Section II, gen_obcs.py.
 Make sure to have lines for each of your OBCs (here only 3 for East, North and South):
 
 ```
@@ -88,11 +84,11 @@ Make sure to have lines for each of your OBCs (here only 3 for East, North and S
   obcsNstartdate1   = 19921231,
   obcsNstartdate2   = 002000,
   obcsNperiod       = 2629800.0,
-`#`
+\#
   obcsSstartdate1   = 19921231,
   obcsSstartdate2   = 002000,
   obcsSperiod       = 2629800.0,
-`#`
+\#
   obcsEstartdate1   = 19921231,
   obcsEstartdate2   = 002000,
   obcsEperiod       = 2629800.0,
@@ -114,7 +110,7 @@ GGL90TKEFile = 'pickup_ggl90.0000026352.data',
 
 This namelist defines packages used for the model integration. Make sure it looks like this:
 ```
-`# Packages
+\# Packages
  &PACKAGES
  useCAL         = .TRUE.,
  useEXF         = .TRUE.,
