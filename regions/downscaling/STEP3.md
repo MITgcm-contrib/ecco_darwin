@@ -61,6 +61,7 @@ Runing ``gen_obcs.py`` in the ``utils`` folder, you will generate the boundary c
 Below are the instructions to run the code in a terminal with the anaconda envrironment:
 
 ```
+mkdir path/to/save/the/grid/forcings/OBCS
 conda activate downscaling
 cd ecco_darwin/regions/downscaling/utils/
 python3 gen_obcs.py -d /path/to/regional/files -n name_of_the_region\

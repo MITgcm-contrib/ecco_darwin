@@ -177,7 +177,13 @@ qsub job_downsc_ivy
 ### c. Stitch the grid tiles in a netcdf file
 
 **Requirement**:
-> In part b. you have generated mnc_XXX folders. Download them back to your local machine (so it is accessible by anaconda environment).
+> In part b. you have generated mnc_XXX folders. Download them back to your local machine (so it is accessible by anaconda environment).\
+Create a mncs folder in your grid directory and copy the mnc_XXX folders into it:
+
+```
+mkdir /path/to/save/the/grid/mncs
+cp -r mnc_* /path/to/save/the/grid/mncs.
+```
 
 Runing ``stitch_ncgrid.py`` in the ``utils`` folder, you will generate the netcdf grid file\
 Below are the instructions to run the code in a terminal:
