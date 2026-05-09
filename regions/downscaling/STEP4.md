@@ -84,11 +84,11 @@ Make sure to have lines for each of your OBCs (here only 3 for East, North and S
   obcsNstartdate1   = 19921231,
   obcsNstartdate2   = 002000,
   obcsNperiod       = 2629800.0,
-`#`
+#
   obcsSstartdate1   = 19921231,
   obcsSstartdate2   = 002000,
   obcsSperiod       = 2629800.0,
-`#`
+#
   obcsEstartdate1   = 19921231,
   obcsEstartdate2   = 002000,
   obcsEperiod       = 2629800.0,
@@ -109,8 +109,9 @@ GGL90TKEFile = 'pickup_ggl90.0000026352.data',
 ### f. data.pkg namelist (ecco_darwin/regions/YOURSETUP/inputs/data.pkg)
 
 This namelist defines packages used for the model integration. Make sure it looks like this:
+
 ```
-`#` Packages
+# Packages
  &PACKAGES
  useCAL         = .TRUE.,
  useEXF         = .TRUE.,
