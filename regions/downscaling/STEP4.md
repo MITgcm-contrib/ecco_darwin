@@ -1,4 +1,4 @@
-# Build and run your downscaled regional setup (in progress)
+# Build and run your downscaled regional setup
 
 ---
 ## Preliminary information
@@ -59,7 +59,13 @@ Make sure tRef, sRef and delR are matching your vertical grid and add the follow
  delYfile = 'delYFile',
 ```
 
-with xgOrigin and ygOrigin, the minimum longitude and latitude of your domain, delX, the grid spacing in x-direction (use same value as STEP 1, Section I). delYFile is a simple binary file containing the grid spacing in the y-direction in vector format (In progress:  see Python function gen_delYFile.py).
+with xgOrigin and ygOrigin, the minimum longitude and latitude of your domain, delX, the grid spacing in x-direction (use same value as STEP 1, Section I). delYFile is a simple binary file containing the grid spacing in the y-direction in vector format. You can generate your own delYfile by following these instructions:
+```
+conda activate downscaling
+cd ecco_darwin/regions/downscaling/utils/
+python3 gen_delYFile.py -d /path/to/save/the/grid -n name_of_the_region
+```
+The delYFile will be saved in /path/to/save/the/grid.
 
 Finally, add the following lines in # Input datasets (&PARM05) to restart the model from a specific iteration in your pickup files generated in STEP 3, Section I:
 
@@ -137,20 +143,20 @@ This namelist defines packages used for the model integration. Make sure it look
 ```
 usePTRACERS and useGCHEM can be undefined if running WITHOUT Darwin.
 
-### h. Additional namelists for Darwin run (ecco_darwin/regions/YOURSETUP/inputs_darwin/)
+### h. Additional namelists for Darwin run (ecco_darwin/regions/YOURSETUP/inputs_darwin/) (in progress)
 
-If you want to run your downscaled regional setup with the Darwin package, make sure you generated initial and boundary conditions for all the ptracers and Darwin state variables in STEP 3.\
+If you want to run your downscaled regional setup with the Darwin package, make sure you generated initial and boundary conditions for all the ptracers and Darwin state variables in STEP 3.
 
-Make sure the GCHEM and Ptracers packages are enabled in data.pkg.\
+Make sure the GCHEM and Ptracers packages are enabled in data.pkg.
 
 Then, modify the data.ptracers according to the version of Darwin used in the parent model when proceeding to the downscaling (number of tracers, names, units):
 ```
  useGCHEM       = .TRUE.,
  usePTRACERS    = .TRUE.,
 ```
-In data.ptracers, set PTRACERS_Iter0 to XXX (In progress: to add after test with Darwin).\
+In data.ptracers, set PTRACERS_Iter0 to XXX (In progress: to add after test with Darwin).
 
-In data.darwin, set darwin_pickupSuff to XXXX and darwin_chlIter0 to XXXX (In progress: to add after test with Darwin). In data.darwin, you also specify forcings for iron dust deposition and atmospheric surface pCO2. These can be either already adapted to your downscaled regional setup grid or, if provided on a different grid, interpolated during the model integration if you provide associated interpolation parameters (&DARWIN_INTERP_PARAMS, similar to data.exf https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html).\
+In data.darwin, set darwin_pickupSuff to XXXX and darwin_chlIter0 to XXXX (In progress: to add after test with Darwin). In data.darwin, you also specify forcings for iron dust deposition and atmospheric surface pCO2. These can be either already adapted to your downscaled regional setup grid or, if provided on a different grid, interpolated during the model integration if you provide associated interpolation parameters (&DARWIN_INTERP_PARAMS, similar to data.exf https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html).
 
 Modify data.diagnostics according to the Ptracers or Darwin state variables you want as outputs. See more details:
 https://darwin3.readthedocs.io/en/latest/outp_pkgs/outp_pkgs.html#using-available-diagnostics.
@@ -160,7 +166,7 @@ https://darwin3.readthedocs.io/en/latest/outp_pkgs/outp_pkgs.html#using-availabl
 
 ### a. Forcing files for physics
 
-To constrain your downscaled regional setup during its integration, you need physical forcings for atmospheric surface temperature, specific humidity, precipitations, wind horizontal velocity components, freshwater runoff and short and long -wave downwelling radations. Provide files either already adapted to your downscaled regional setup grid or on a different grid. If provided on a different grid, make sure to fill out the interpolation parameters (&EXF_NML_04) so they can be interpolated during the model integration. You can find a set of forcings files for the global LLC270 solution here: https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx.\
+To constrain your downscaled regional setup during its integration, you need physical forcings for atmospheric surface temperature, specific humidity, precipitations, wind horizontal velocity components, freshwater runoff and short and long -wave downwelling radations. Provide files either already adapted to your downscaled regional setup grid or on a different grid. If provided on a different grid, make sure to fill out the interpolation parameters (&EXF_NML_04) so they can be interpolated during the model integration. You can find a set of forcings files for the global LLC270 solution here: https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx.
 
 Follow EXF package documentation for more details: https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html.
 
@@ -190,7 +196,7 @@ https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html
 ---
 ## IV. Compile and run
 
-The following example assumed you intend to run the model on high-performance computer in parallel mode. To run the model on your local machine, I recommend MITgcm_on_Mac, MITgcm_on_Ubuntu and MITgcm_on_Windows documentation in https://github.com/MITgcm-contrib/ecco_darwin/tree/master/doc.\
+The following example assumed you intend to run the model on high-performance computer in parallel mode. To run the model on your local machine, I recommend MITgcm_on_Mac, MITgcm_on_Ubuntu and MITgcm_on_Windows documentation in https://github.com/MITgcm-contrib/ecco_darwin/tree/master/doc.
 
 ### a. Compile
 
@@ -230,15 +236,16 @@ ln -sf ../build/mitgcmuv .
 
 Create a symbolic link pointing to your forcings files:
 ```
-ln -sf /PATH2FORCINGS/. 
+ln -sf /PATH2FORCINGS/* . 
 ```
 Here, you can either create the link directly into your run directory or create a forcings directory in your run directory. Make sure, you provide the correct path is data.exf and data.darwin.
 
-Then, create a symbolic link pointing to your initial, open boundary conditions and bathymetry files for the downscaled regional setup:
+Then, create a symbolic link pointing to your initial, open boundary conditions, bathymetry and delYFile files for the downscaled regional setup:
 ```
 ln -sf /YOURSETUP/grid/forcings/pickups/*0000026352* .
 ln -sf /YOURSETUP/grid/forcings/OBCS/* .
-ln -sf /YOURSETUP/grid/GoM_1km_bathymetry.bin .
+ln -sf /YOURSETUP/grid/YOURSETUP_bathymetry.bin .
+ln -sf /YOURSETUP/grid/delYFile .
 ```
 
 Copy your namelist files:
