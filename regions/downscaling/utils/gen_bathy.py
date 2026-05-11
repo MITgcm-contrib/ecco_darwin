@@ -181,7 +181,7 @@ def gen_bathy_file(config_dir, bathy_dir, model_name, size_dom, hFac, Scell_w, C
     bathy[mask_grid==0] = 0
 
     output_file = os.path.join(config_dir,model_name+'_bathymetry.bin')
-    bathy.ravel('C').astype('>f4').tofile(output_file)
+    bathy.ravel('C').astype('>f8').tofile(output_file)
 
 
 if __name__ == '__main__':

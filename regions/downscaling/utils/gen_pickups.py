@@ -42,8 +42,7 @@ def Hinterp(data0, lmask0, coast0, Dtri, XC1, YC1, sigmaG):
             for i in range(len(id_coast[0])):
                 tmp[id_coast[0][i],id_coast[1][i]] = np.nanmean(tmp[id_coast[0][i]-3:id_coast[0][i]+4,
                                                                 id_coast[1][i]-3:id_coast[1][i]+4])
-            # Downscal data (barycentric interpolation + Gaussian filter)
-            #tmp[np.isnan(tmp)] = 0
+            # Downscale data (barycentric interpolation + Gaussian filter)
             fill = np.nanmean(tmp)
             tmp[np.isnan(tmp)] = fill
             tranform = LinearNDInterpolator(Dtri, tmp.ravel())
@@ -59,8 +58,7 @@ def Hinterp(data0, lmask0, coast0, Dtri, XC1, YC1, sigmaG):
         for i in range(len(id_coast[0])):
             tmp[id_coast[0][i],id_coast[1][i]] = np.nanmean(tmp[id_coast[0][i]-3:id_coast[0][i]+4,
                                                                 id_coast[1][i]-3:id_coast[1][i]+4])
-        # Downscal data (barycentric interpolation + Gaussian filter)
-        #tmp[np.isnan(tmp)] = 0
+        # Downscale data (barycentric interpolation + Gaussian filter)
         fill = np.nanmean(tmp)
         tmp[np.isnan(tmp)] = fill
         tranform = LinearNDInterpolator(Dtri, tmp.ravel())
@@ -88,8 +86,6 @@ def Zinterp(data0, drF0, drF1, HFacC1):
                      pass
                 else:
                      id_bot0 = np.where(depth0>=depth1[id_bot1])[0][0]          
-                #interp = interp1d(depth0[:id_bot0+1], data0[:id_bot0+1,j,i], fill_value='extrapolate')
-                #data1[:id_bot1+1,j,i] = interp(depth1[:id_bot1+1])
                 # 4. Interpolate WITHOUT extrapolation
                 data1[:id_bot1+1,j,i] = np.interp(
                     depth1[:id_bot1+1],
@@ -366,29 +362,29 @@ def gen_pickup_files(config_dir, model_name, pickup_itr, sigmaG, bgc, print_leve
     ####### Generate pickup file #######
     ####################################
     #--------- physics condition ---------#
-#    if print_level>=1:
-#        print('    - Creating physics initial conditions for the '+model_name+' model from ECCO data')
-#    pickup_phy = gen_pickup(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
-#                            XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level)
+    if print_level>=1:
+        print('    - Creating physics initial conditions for the '+model_name+' model from ECCO data')
+    pickup_phy = gen_pickup(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
+                            XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level)
     
     #--------- sea-ice condition ---------#
-#    if print_level>=1:
-#        print('    - Creating sea-ice initial conditions for the '+model_name+' model from ECCO data')
-#    pickup_sic = gen_pickup_seaice(config_dir, pickup_itr, AngleCS0, AngleSN0, WCmask0, coast,
-#                                   XC1, YC1, HFacC1, Dtri, sigmaG, print_level)
+    if print_level>=1:
+        print('    - Creating sea-ice initial conditions for the '+model_name+' model from ECCO data')
+    pickup_sic = gen_pickup_seaice(config_dir, pickup_itr, AngleCS0, AngleSN0, WCmask0, coast,
+                                   XC1, YC1, HFacC1, Dtri, sigmaG, print_level)
     
     #--------- ggl90 condition ---------#
-#    if print_level>=1:
-#        print('    - Creating ggl90 initial conditions for the '+model_name+' model from ECCO data')
-#    pickup_ggl90 = gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
-#                                 XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_ggl90')
+    if print_level>=1:
+        print('    - Creating ggl90 initial conditions for the '+model_name+' model from ECCO data')
+    pickup_ggl90 = gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
+                                 XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_ggl90')
 
-#    if bgc == True:
-#        #--------- darwin condition ---------#
-#        if print_level>=1:
-#            print('    - Creating darwin initial conditions for the '+model_name+' model from ECCO data')
-#        pickup_darwin = gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
-#                                      XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_darwin')
+    if bgc == True:
+        #--------- darwin condition ---------#
+        if print_level>=1:
+            print('    - Creating darwin initial conditions for the '+model_name+' model from ECCO data')
+        pickup_darwin = gen_pickup_1D(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0, drF0, coast,
+                                      XC1, YC1, Nr1, drF1, HFacC1, Dtri, sigmaG, print_level, 'pickup_darwin')
         #--------- ptracer condition ---------#
         if print_level>=1:
             print('    - Creating ptracers initial conditions for the '+model_name+' model from ECCO data')
