@@ -1,0 +1,159 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jnorth =  2130*-1,
+ OB_Jsouth =   2130*1,
+ OB_Ieast  =   1840*-1,
+#
+ useOBCSprescribe=.TRUE.,
+ useOBCSbalance  =.FALSE.,
+#
+ OBNsFile='SALT_north.bin',
+ OBNtFile='THETA_north.bin',
+ OBNuFile='UVEL_north.bin',
+ OBNvFile='VVEL_north.bin',
+#
+ OBSsFile='SALT_south.bin',
+ OBStFile='THETA_south.bin',
+ OBSuFile='UVEL_south.bin',
+ OBSvFile='VVEL_south.bin',
+#
+ OBEsFile='SALT_east.bin',
+ OBEtFile='THETA_east.bin',
+ OBEuFile='UVEL_east.bin',
+ OBEvFile='VVEL_east.bin',
+#
+ OBNptrFile(1) = 'TRAC01_north.bin',
+ OBEptrFile(1) = 'TRAC01_east.bin',
+ OBSptrFile(1) = 'TRAC01_south.bin',
+#
+ OBNptrFile(1) = 'TRAC01_north.bin',
+ OBEptrFile(1) = 'TRAC01_east.bin',
+ OBSptrFile(1) = 'TRAC01_south.bin',
+# 
+ OBNptrFile(1) = 'TRAC01_north.bin',
+ OBEptrFile(1) = 'TRAC01_east.bin',
+ OBSptrFile(1) = 'TRAC01_south.bin',
+#
+ OBNptrFile(2) = 'TRAC02_north.bin',
+ OBEptrFile(2) = 'TRAC02_east.bin',
+ OBSptrFile(2) = 'TRAC02_south.bin',
+#
+ OBNptrFile(3) = 'TRAC03_north.bin',
+ OBEptrFile(3) = 'TRAC03_east.bin',
+ OBSptrFile(3) = 'TRAC03_south.bin',
+#
+ OBNptrFile(4) = 'TRAC04_north.bin',
+ OBEptrFile(4) = 'TRAC04_east.bin',
+ OBSptrFile(4) = 'TRAC04_south.bin',
+#
+ OBNptrFile(5) = 'TRAC05_north.bin',
+ OBEptrFile(5) = 'TRAC05_east.bin',
+ OBSptrFile(5) = 'TRAC05_south.bin',
+#
+ OBNptrFile(6) = 'TRAC06_north.bin',
+ OBEptrFile(6) = 'TRAC06_east.bin',
+ OBSptrFile(6) = 'TRAC06_south.bin',
+#
+ OBNptrFile(7) = 'TRAC07_north.bin',
+ OBEptrFile(7) = 'TRAC07_east.bin',
+ OBSptrFile(7) = 'TRAC07_south.bin',
+#
+ OBNptrFile(8) = 'TRAC08_north.bin',
+ OBEptrFile(8) = 'TRAC08_east.bin',
+ OBSptrFile(8) = 'TRAC08_south.bin',
+#
+ OBNptrFile(9) = 'TRAC09_north.bin',
+ OBEptrFile(9) = 'TRAC09_east.bin',
+ OBSptrFile(9) = 'TRAC09_south.bin',
+#
+ OBNptrFile(10) = 'TRAC10_north.bin',
+ OBEptrFile(10) = 'TRAC10_east.bin',
+ OBSptrFile(10) = 'TRAC10_south.bin',
+#
+ OBNptrFile(11) = 'TRAC11_north.bin',
+ OBEptrFile(11) = 'TRAC11_east.bin',
+ OBSptrFile(11) = 'TRAC11_south.bin',
+#
+ OBNptrFile(12) = 'TRAC12_north.bin',
+ OBEptrFile(12) = 'TRAC12_east.bin',
+ OBSptrFile(12) = 'TRAC12_south.bin',
+#
+ OBNptrFile(13) = 'TRAC13_north.bin',
+ OBEptrFile(13) = 'TRAC13_east.bin',
+ OBSptrFile(13) = 'TRAC13_south.bin',
+#
+ OBNptrFile(14) = 'TRAC14_north.bin',
+ OBEptrFile(14) = 'TRAC14_east.bin',
+ OBSptrFile(14) = 'TRAC14_south.bin',
+#
+ OBNptrFile(15) = 'TRAC15_north.bin',
+ OBEptrFile(15) = 'TRAC15_east.bin',
+ OBSptrFile(15) = 'TRAC15_south.bin',
+#
+ OBNptrFile(16) = 'TRAC16_north.bin',
+ OBEptrFile(16) = 'TRAC16_east.bin',
+ OBSptrFile(16) = 'TRAC16_south.bin',
+#
+ OBNptrFile(17) = 'TRAC17_north.bin',
+ OBEptrFile(17) = 'TRAC17_east.bin',
+ OBSptrFile(17) = 'TRAC17_south.bin',
+#
+ OBNptrFile(18) = 'TRAC18_north.bin',
+ OBEptrFile(18) = 'TRAC18_east.bin',
+ OBSptrFile(18) = 'TRAC18_south.bin',
+#
+ OBNptrFile(19) = 'TRAC19_north.bin',
+ OBEptrFile(19) = 'TRAC19_east.bin',
+ OBSptrFile(19) = 'TRAC19_south.bin',
+#
+ OBNptrFile(20) = 'TRAC20_north.bin',
+ OBEptrFile(20) = 'TRAC20_east.bin',
+ OBSptrFile(20) = 'TRAC20_south.bin',
+#
+ OBNptrFile(21) = 'TRAC21_north.bin',
+ OBEptrFile(21) = 'TRAC21_east.bin',
+ OBSptrFile(21) = 'TRAC21_south.bin',
+#
+ OBNptrFile(22) = 'TRAC22_north.bin',
+ OBEptrFile(22) = 'TRAC22_east.bin',
+ OBSptrFile(22) = 'TRAC22_south.bin',
+#
+ OBNptrFile(23) = 'TRAC23_north.bin',
+ OBEptrFile(23) = 'TRAC23_east.bin',
+ OBSptrFile(23) = 'TRAC23_south.bin',
+#
+ OBNptrFile(24) = 'TRAC24_north.bin',
+ OBEptrFile(24) = 'TRAC24_east.bin',
+ OBSptrFile(24) = 'TRAC24_south.bin',
+#
+ OBNptrFile(25) = 'TRAC25_north.bin',
+ OBEptrFile(25) = 'TRAC25_east.bin',
+ OBSptrFile(25) = 'TRAC25_south.bin',
+#
+ OBNptrFile(26) = 'TRAC26_north.bin',
+ OBEptrFile(26) = 'TRAC26_east.bin',
+ OBSptrFile(26) = 'TRAC26_south.bin',
+#
+ OBNptrFile(27) = 'TRAC27_north.bin',
+ OBEptrFile(27) = 'TRAC27_east.bin',
+ OBSptrFile(27) = 'TRAC27_south.bin',
+#
+ OBNptrFile(28) = 'TRAC28_north.bin',
+ OBEptrFile(28) = 'TRAC28_east.bin',
+ OBSptrFile(28) = 'TRAC28_south.bin',
+#
+ OBNptrFile(29) = 'TRAC29_north.bin',
+ OBEptrFile(29) = 'TRAC29_east.bin',
+ OBSptrFile(29) = 'TRAC29_south.bin',
+#
+ OBNptrFile(30) = 'TRAC30_north.bin',
+ OBEptrFile(30) = 'TRAC30_east.bin',
+ OBSptrFile(30) = 'TRAC30_south.bin',
+#
+ OBNptrFile(31) = 'TRAC31_north.bin',
+ OBEptrFile(31) = 'TRAC31_east.bin',
+ OBSptrFile(31) = 'TRAC31_south.bin',
+#
+ &
