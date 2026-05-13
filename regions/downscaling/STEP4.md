@@ -13,8 +13,8 @@ You can follow or copy the architecture used in existing regional setups:
 
 ```
 mkdir ecco_darwin/regions/YOURSETUP
-cp -r ecco_darwin/regions/GoM_1km/code ecco_darwin/regions/YOURSETUP/.
-cp -r ecco_darwin/regions/GoM_1km/code_darwin ecco_darwin/regions/YOURSETUP/.
+cp -r ecco_darwin/regions/GoM/GoM_1km/code ecco_darwin/regions/YOURSETUP/.
+cp -r ecco_darwin/regions/GoM/GoM_1km/code_darwin ecco_darwin/regions/YOURSETUP/.
 ```
 
 Copy your previously configured SIZE.h file from STEP 1, Section IV.b. It must match your downscaled regional setup dimensions.
@@ -53,8 +53,8 @@ Make sure the version of Darwin you are using (based on your parent run) matches
 Then, you need to prepare data namelists files as inputs to copy when preparing the model for run. Once again, you can follow and copy examples from existing regional setups:
 
 ```
-cp -r ecco_darwin/regions/GoM_1km/inputs ecco_darwin/regions/YOURSETUP/.
-cp -r ecco_darwin/regions/GoM_1km/inputs_darwin ecco_darwin/regions/YOURSETUP/.
+cp -r ecco_darwin/regions/GoM/GoM_1km/inputs ecco_darwin/regions/YOURSETUP/.
+cp -r ecco_darwin/regions/GoM/GoM_1km/inputs_darwin ecco_darwin/regions/YOURSETUP/.
 ```
 
 ### a. data namelist (ecco_darwin/regions/YOURSETUP/code/data)
