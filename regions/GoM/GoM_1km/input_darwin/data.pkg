@@ -7,5 +7,4 @@
  useGCHEM       = .TRUE.,
  usePTRACERS    = .TRUE.,
  useGGL90 = .TRUE.,
- useGMRedi      = .TRUE.,
  /

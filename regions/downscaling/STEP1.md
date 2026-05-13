@@ -119,14 +119,14 @@ vim SIZE.h
     ---> Modify sNx to Nr parameters according to your choices in III.
 cd ../input/
 vim data
-    ---> Modify parameters according to your downscalled setup (see instructions below)
+    ---> Modify parameters according to your downscalled set-up (see instructions below)
     ---> Add the name of your bathyfile: "bathyFile="
 cd ..
 
 ==============================
 for Pleiades users only:
 vim job_downsc_ivy 
-    ---> Modify the job file according to your setup 
+    ---> Modify the job file according to your set-up 
 ```
 
 <u>Note:</u> See how to modify the job file [here](https://www.nas.nasa.gov/hecc/support/kb/running-jobs-with-pbs-121/)\

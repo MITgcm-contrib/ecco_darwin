@@ -23,7 +23,7 @@ To generate the regional configuration, you will need:
 1. Supercomputing capabilities to run ECCO state estimate (*Along this guide we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA supercomputer*)
 2. python3 with a dedicated anaconda environment (*This environment can be set up on the supercomputer or a local machine*). 
 
-### 1. Get ECCO-Darwin v5 setup & merge ``diagnostic_vec`` with MITgcm
+### 1. Get ECCO-Darwin v5 set-up & merge ``diagnostic_vec`` with MITgcm
 
 Below, we detail the instructions to run ECCO-Darwin on the NASA Pleiades supercomputer:
 
@@ -50,7 +50,7 @@ python3 copy_pkg_files_to_MITgcm.py -m ../../darwin3/
 python3 copy_verification_files_to_MITgcm.py -m ../../darwin3/
 ```
 
-> - Get ECCO-Darwin v5 setup
+> - Get ECCO-Darwin v5 set-up
 ```
 cd ../.. (back to downscaling folder)
 git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git

@@ -5,5 +5,4 @@
  useOBCS        = .TRUE.,
  useDiagnostics = .TRUE.,
  useGGL90 = .TRUE.,
- useGMRedi      = .TRUE.,
  /

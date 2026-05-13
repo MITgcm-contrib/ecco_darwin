@@ -1,4 +1,4 @@
-# Build and run your downscaled regional setup
+# Build and run your downscaled regional set-up
 
 ---
 ## Preliminary information
@@ -9,7 +9,7 @@
 ## I. Prepare code directories
 
 First, you need to build the code and code_darwin directories containing specific routines of the model in the ecco_darwin repo you cloned.\
-You can follow or copy the architecture used in existing regional setups:
+You can follow or copy the architecture used in existing regional set-ups:
 
 ```
 mkdir ecco_darwin/regions/YOURSETUP
@@ -17,7 +17,7 @@ cp -r ecco_darwin/regions/GoM/GoM_1km/code ecco_darwin/regions/YOURSETUP/.
 cp -r ecco_darwin/regions/GoM/GoM_1km/code_darwin ecco_darwin/regions/YOURSETUP/.
 ```
 
-Copy your previously configured SIZE.h file from STEP 1, Section IV.b. It must match your downscaled regional setup dimensions.
+Copy your previously configured SIZE.h file from STEP 1, Section IV.b. It must match your downscaled regional set-up dimensions.
 
 ```
 cp downscalling/darwin3/regions/gen_ncgrid/build/SIZE.h ecco_darwin/regions/YOURSETUP/code/.
@@ -37,7 +37,6 @@ monitor
 rw
 salt_plume
 obcs
-gmredi
 ```
 These packages will be necessary to run the downscaled model. If you want to run your model with the Darwin package, add the following packages to packages.conf:
 ```
@@ -50,7 +49,7 @@ Make sure the version of Darwin you are using (based on your parent run) matches
 ---
 ## II. Prepare namelists
 
-Then, you need to prepare data namelists files as inputs to copy when preparing the model for run. Once again, you can follow and copy examples from existing regional setups:
+Then, you need to prepare data namelists files as inputs to copy when preparing the model for run. Once again, you can follow and copy examples from existing regional set-ups:
 
 ```
 cp -r ecco_darwin/regions/GoM/GoM_1km/inputs ecco_darwin/regions/YOURSETUP/.
@@ -159,14 +158,13 @@ This namelist defines packages used for the model integration. Make sure it look
  useOBCS        = .TRUE.,
  useDiagnostics = .TRUE.,
  useGGL90 = .TRUE.,
- useGMRedi      = .TRUE.,
  /
 ```
 usePTRACERS and useGCHEM can be undefined if running WITHOUT Darwin.
 
 ### h. Additional namelists for Darwin run (ecco_darwin/regions/YOURSETUP/inputs_darwin/)
 
-If you want to run your downscaled regional setup with the Darwin package, make sure you generated initial and boundary conditions for all the ptracers and Darwin state variables in STEP 3.
+If you want to run your downscaled regional set-up with the Darwin package, make sure you generated initial and boundary conditions for all the ptracers and Darwin state variables in STEP 3.
 
 Make sure the GCHEM and Ptracers packages are enabled in data.pkg.
 
@@ -183,7 +181,7 @@ In STEP 3, Section I, you generated initial condition pickup files for each Ptra
 ```
 Make sure PTRACERS_Iter0 is absent or commented.
 
-In data.darwin, make sure darwin_pickupSuff is absent or commented and set darwin_chlIter0 to 0. In data.darwin, you also specify forcings for iron dust deposition and atmospheric surface pCO2. These can be either already adapted to your downscaled regional setup grid or, if provided on a different grid, interpolated during the model integration if you provide associated interpolation parameters (&DARWIN_INTERP_PARAMS, similar to data.exf https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html).
+In data.darwin, make sure darwin_pickupSuff is absent or commented and set darwin_chlIter0 to 0. In data.darwin, you also specify forcings for iron dust deposition and atmospheric surface pCO2. These can be either already adapted to your downscaled regional set-up grid or, if provided on a different grid, interpolated during the model integration if you provide associated interpolation parameters (&DARWIN_INTERP_PARAMS, similar to data.exf https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html).
 
 Modify data.diagnostics according to the Ptracers or Darwin state variables you want as outputs. See more details:
 https://darwin3.readthedocs.io/en/latest/outp_pkgs/outp_pkgs.html#using-available-diagnostics.
@@ -193,7 +191,7 @@ https://darwin3.readthedocs.io/en/latest/outp_pkgs/outp_pkgs.html#using-availabl
 
 ### a. Forcing files for physics
 
-To constrain your downscaled regional setup during its integration, you need physical forcings for atmospheric surface temperature, specific humidity, precipitation, wind horizontal velocity components, freshwater runoff and short- and long-wave downwelling radiation. Provide files either already adapted to your downscaled regional setup grid or on a different grid. If provided on a different grid, make sure to fill out the interpolation parameters (&EXF_NML_04) so they can be interpolated during the model integration. You can find a set of forcing files for the global LLC270 solution here: https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx.
+To constrain your downscaled regional set-up during its integration, you need physical forcings for atmospheric surface temperature, specific humidity, precipitation, wind horizontal velocity components, freshwater runoff and short- and long-wave downwelling radiation. Provide files either already adapted to your downscaled regional set-up grid or on a different grid. If provided on a different grid, make sure to fill out the interpolation parameters (&EXF_NML_04) so they can be interpolated during the model integration. You can find a set of forcing files for the global LLC270 solution here: https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx.
 
 Follow EXF package documentation for more details: https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html.
 
@@ -214,7 +212,7 @@ If running the model with the Darwin package, you have to provide additional for
 
 If darwin_useQsw, darwin_useSEAICE and darwin_useEXFwind are set to TRUE, you don't need to provide files for Photosynthetically active radiation (PAR), fraction of surface covered by ice and wind speed, as the model will derive these forcings from the EXF package. See running parameters for the Darwin package: https://darwin3.readthedocs.io/en/latest/phys_pkgs/darwin.html#running.
 
-Once again, depending on the grid of your forcings, you might need to provide interpolation parameters in &DARWIN_INTERP_PARAMS. If provided on your downscaled regional setup grid, you can leave iron_interpMethod and pCO2_interpMethod to zero.
+Once again, depending on the grid of your forcings, you might need to provide interpolation parameters in &DARWIN_INTERP_PARAMS. If provided on your downscaled regional set-up grid, you can leave iron_interpMethod and pCO2_interpMethod to zero.
 
 Follow Darwin and EXF packages documentation for more details:
 https://darwin3.readthedocs.io/en/latest/phys_pkgs/darwin.html
@@ -227,7 +225,7 @@ The following example assumes you intend to run the model on a high-performance 
 
 ### a. Compile
 
-To compile the model, first, create new directories for compiling and running your setup in your downscaling repo (or create a new one):
+To compile the model, first, create new directories for compiling and running your set-up in your downscaling repo (or create a new one):
 
 ```
 mkdir /downscalling/darwin3/regions/downscaled
@@ -267,7 +265,7 @@ ln -sf /PATH2FORCINGS/* .
 ```
 Here, you can either create the link directly into your run directory or create a forcings directory in your run directory. Make sure you provide the correct path in data.exf and data.darwin.
 
-Then, create a symbolic link pointing to your initial, open boundary conditions, bathymetry and delYFile files for the downscaled regional setup:
+Then, create a symbolic link pointing to your initial, open boundary conditions, bathymetry and delYFile files for the downscaled regional set-up:
 ```
 ln -sf /YOURSETUP/grid/forcings/pickups/*0000026352* .
 ln -sf /YOURSETUP/grid/forcings/OBCS/* .
