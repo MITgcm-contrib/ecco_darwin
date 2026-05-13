@@ -293,11 +293,17 @@ def gen_pickup_ptracers(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0
         tmp = Hinterp(pickup0[i], WCmask0, coast, Dtri, XC1, YC1, sigmaG)
         pickup1[i] = Zinterp(tmp, drF0, drF1, HFacC1)
     #### Generate new pickup files
+    out_pckf = metap['fldlist']
     output_dir = os.path.join(config_dir, 'forcings/pickups/')
     if print_level>=1:
-        print(f'        > Generating {init_fnm[7:]} initial conditions file')
-    mds.wrmds(output_dir, pickup1, ndims=3, dataprec='float64',  nrecords=metap['nrecords'][0], 
-              dimlist=[pickup1.shape[3], pickup1.shape[2], pickup1.shape[1]], itr=pickup_itr)
+        print('        > Generating Ptracers initial conditions file')
+    for i in range(len(out_pckf)):
+        print('                   > '+out_pckf[i])
+        data = pickup1[i]
+        print('shape =', data.shape)
+        print('ndim  =', data.ndim)
+        print('dtype =', data.dtype)
+        mds.wrmds(output_dir+'pickup_'+out_pckf[i], data, ndims=3, dataprec='float64',  nrecords=1, dimlist=[data.shape[2], data.shape[1], data.shape[0]], itr=pickup_itr)
     return pickup1
 
 ############################################################

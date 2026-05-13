@@ -3,11 +3,11 @@
 ---
 ## Preliminary information
 **Requirement**: 
-> Before proceding to the following intructions, you will need to complete steps in README and STEP1.\
+> Before proceeding to the following instructions, you will need to complete the steps in README and STEP1.\
 > Supercomputing capacities will be needed to run any ECCO model.
 
-At the end of this step, you will have ran ECCO global configuration using ``diagnostic_vec`` package and extracted vectors along the boundaries of your regional model.\
-<u>Note:</u> ``diagnostic_vec`` package was designed to output model diagnostics from ECCO llc global model in a subset of the model domain e.g. along a vector (or "vec").
+At the end of this step, you will have run ECCO global configuration using ``diagnostic_vec`` package and extracted vectors along the boundaries of your regional model.\
+<u>Note:</u> ``diagnostic_vec`` package was designed to output model diagnostics from ECCO LLC global model in a subset of the model domain, e.g., along a vector (or "vec").
 
 ---
 ## I. Prepare the simulation for ``diagnostic_vec`` extraction
@@ -47,14 +47,14 @@ cd regions/configs/parent_run/code_darwin/
 cp ../../darwin3/pkg/diagnostics_vec/DIAGNOSTICS_VEC_SIZE.h .
 ```
 > - Modify the ``DIAGNOSTICS_VEC_SIZE.h`` file as follows:
-    - VEC_points: correspond to the max number of points that can be stored in a diagnostics_vec mask. See maximum number given in STEP 1 runing ``gen_dvmasks``.
+    - VEC_points: correspond to the max number of points that can be stored in a diagnostics_vec mask. See the maximum number given in STEP 1 running ``gen_dvmasks``.
     - nVEC_mask: number of lateral boundary mask used in the ``data.diagnostics_vec`` file (in the example file nVEC_mask=20)
     - nSURF_mask: number of surface boundary mask used in the ``data.diagnostics_vec`` file (in the example file nSURF_mask=1)
 
 ---
 ## II. Compile and run the simulation
-Before proceding copy the mask files on the supercomputer capability in the folder: "regions/configs/parent_run/dv".\
-Below is an exemple to extract vectors from v05 ECCO-Darwin.\
+Before proceeding, copy the mask files on the supercomputer capability in the folder: "regions/configs/parent_run/dv".\
+Below is an example to extract vectors from v05 ECCO-Darwin.\
 On the supercomputer (example on Pleiades) run:
 ```
 cd darwin3/regions
@@ -89,5 +89,5 @@ mkdir diags
 qsub job_ECCO_darwin
 ```
 
-<u>Note:</u> At the end of the simulation you will get a binary file for every parameter set in ``data.diagnostics_vec``, each containing the number of iterations chosen for the parameter.
+<u>Note:</u> At the end of the simulation, you will get a binary file for every parameter set in ``data.diagnostics_vec``, each containing the number of iterations chosen for the parameter.
 

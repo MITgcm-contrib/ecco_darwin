@@ -1,10 +1,10 @@
-# Generate regional cut out input files
+# Generate regional cut-out input files
 
 ---
 ## Preliminary information
 **Requirement**: 
-> Before proceding to the following intructions, you will need to complete steps in README.\
-> The anaconda python environment will be needed to run the codes.
+> Before proceeding to the following instructions, you will need to complete the steps in README.\
+> The anaconda python environment will be needed to run the code.
 
 At the end of this step, you will have generated several model input files needed to run ECCO model with ``diagnostics_vec``.
 
@@ -13,7 +13,7 @@ At the end of this step, you will have generated several model input files neede
 
 ``.mitgrid`` file contains all the grid information of the regional domain.\
 Runing ``gen_mitgrid.py`` in the ``utils`` folder, you will generate the ``.mitgrid`` file\
-Below are the instructions to run the code in a terminal with the envrironment previously created:
+Below are the instructions to run the code in a terminal with the environment previously created:
 
 ```
 conda activate downscaling
@@ -45,8 +45,8 @@ Below are additional details about the option:
 **Requirement**: 
 
 > The code generating the bathymetry file uses GEBCO data to get the bathymetry information.\
-> This step then require to first download the [netcdf GEBCO  dataset](https://www.gebco.net/data_and_products/gridded_bathymetry_data/#global).\
-> <u>Note:</u> you can use any bathymetry file as long as depth variable is named “elevation”.
+> This step then requires first downloading the [netcdf GEBCO  dataset](https://www.gebco.net/data_and_products/gridded_bathymetry_data/#global).\
+> <u>Note:</u> you can use any bathymetry file as long as the depth variable is named “elevation”.
 
 Runing ``gen_bathy.py`` in the ``utils`` folder, you will generate the bathymetry file.\
 Below are the instructions to run the code in a terminal:
@@ -70,18 +70,18 @@ To get more information about the options required for this code run ``gen_bathy
 Here are additional details about the option:
 > - -d: The directory where the mitgrid is stored and where the bathymetry file will be stored
 > - -g: Path to the GEBCO netcdf file.
-> - -n: The name of your region. It will be the name of the bathymetryfile.
-> - -s: Size of the downscaled domain. It correspond to n_rows and n_cols information from mitgrid code.
-> - -cs: Minimum fraction size of a cell (hFacMin) and minimum dimension size of a cell (hFacMinDr). This is two paramters you will set later for in the ``data`` file of your downscaled model. More information on these parameters [here](https://darwin3.readthedocs.io/en/latest/algorithm/vert-grid.html#topography-partially-filled-cells).
-> - -cw: Height of the 2 first surface layers of the downscaled model. This is the 2 first numbers you will set later for the deltaR parameter in the ``data`` file of your model.  
+> - -n: The name of your region. It will be the name of the bathymetry file.
+> - -s: Size of the downscaled domain. It corresponds to n_rows and n_cols information from mitgrid code.
+> - -cs: Minimum fraction size of a cell (hFacMin) and minimum dimension size of a cell (hFacMinDr). These are two parameters you will set later in the ``data`` file of your downscaled model. More information on these parameters [here](https://darwin3.readthedocs.io/en/latest/algorithm/vert-grid.html#topography-partially-filled-cells).
+> - -cw: Height of the first two surface layers of the downscaled model. These are the 2 first numbers you will set later for the deltaR parameter in the ``data`` file of your model.  
 > - -wp: Indexes (row and column) of the central cells of the downscaled domain.  **Warning**: This should be a wet cell, so select the wet cell closest to the center.
 > - -v: Verbose
 
 ---
-## III. Generate tiles for mutliprocessing
+## III. Generate tiles for multiprocessing
 
-ECCO simulations run on multiprocessors by divinding the regional domain in tiles for which on processor will be dedicated.\
-Runing ``mitgrid2tiles.py`` in the ``utils`` folder, you will split the mitgrid onto the processors depending on your choice of sNx & sNy [(see MITgcm doc)](https://darwin3.readthedocs.io/en/latest/getting_started/getting_started.html#customizing-the-model-configuration-code-parameters-and-compilation-options) and generate the tile files.\
+ECCO simulations run on multiprocessors by dividing the regional domain into tiles for which one processor will be dedicated.\
+Running ``mitgrid2tiles.py`` in the ``utils`` folder, you will split the mitgrid onto the processors depending on your choice of sNx & sNy [(see MITgcm doc)](https://darwin3.readthedocs.io/en/latest/getting_started/getting_started.html#customizing-the-model-configuration-code-parameters-and-compilation-options) and generate the tile files.\
 Below are the instructions to run the code in a terminal:
 
 ```
@@ -98,18 +98,18 @@ python3 mitgrid2tiles.py -d /path/to/save/the/grid -n name_of_the_region\
 To get more information about the options required for this code run ``mitgrid2tiles.py -h``. Here are additional details about the option:
 > - -d: The directory where to store the mitgrid
 > - -n: The name of your region
-> - -s: Size of the downscaled domain. It correspond to n_rows and n_cols information from mitgrid code.
-> - -p: Number of processors you want to slpit the region on the width (sNx) and the height (sNy)
+> - -s: Size of the downscaled domain. It corresponds to n_rows and n_cols information from mitgrid code.
+> - -p: Number of processors you want to split the region on the width (sNx) and the height (sNy)
 
 ---
 ## IV. Generate grid file (netcdf)
 
-The following steps will permit to generate a netcdf file containing the different grid information as they will be interpreted by the model for you regional cut out.\
+The following steps will permit you to generate a netcdf file containing the different grid information as it will be interpreted by the model for your regional cutout.\
 <u>Note:</u> For this step you will need to run the ECCO-Darwin model on the supercomputer for 1 time step. 
 
 ### a. Set the cut-out configuration parameters
 
-Here you will to start setting up the configuration parameters for your downscalled model.\
+Here you will start setting up the configuration parameters for your downscalled model.\
 On your supercomputer:
 ```
 cd downscalling/regions/configs/
@@ -120,20 +120,20 @@ vim SIZE.h
 cd ../input/
 vim data
     ---> Modify parameters according to your downscalled setup (see instructions below)
-    ---> Add the name of you bathyfile: "bathyFile="
+    ---> Add the name of your bathyfile: "bathyFile="
 cd ..
 
 ==============================
 for Pleiades users only:
 vim job_downsc_ivy 
-    ---> Modify the job file according to you setup 
+    ---> Modify the job file according to your setup 
 ```
 
 <u>Note:</u> See how to modify the job file [here](https://www.nas.nasa.gov/hecc/support/kb/running-jobs-with-pbs-121/)\
-In the data file change the parameters according to the downsacled model configuration you want to create.\
-Below are the details of importante parameters to set:
+In the data file, change the parameters according to the downscaled model configuration you want to create.\
+Below are the details of important parameters to set:
 > - tRef: reference vertical profile for potential temperature (size = Nr the number of vertical levels)
-> - sRef: reference vertical profile for salinity/specific humidity (size = Nr the number of vertical levels)
+> - sRef: reference vertical profile for salinity/specific humidity (size = Nr, the number of vertical levels)
 > - hFacMinDr: Minimum dimension size of a cell (same as bathy file option -cs)
 > - hFacMin: Minimum fraction size of a cell (same as bathy file option -cs)
 > - delR: Vertical grid spacing (size = Nr the number of vertical levels)
@@ -142,9 +142,9 @@ Below are the details of importante parameters to set:
 ### b. Compile and run the regional model on 1 step
 
 **Requirement**:
-> The bathymetry and tiles files generated in eralier should be accessible for the simulation.
+> The bathymetry and tiles files generated earlier should be accessible for the simulation.
 
-Uplpoad ``regnm_bathymetry.bin``, ``regnm.mitgrid`` files and ``tiles`` folder on your supercomputer capability in the following folder "downscalling/regions/configs/".\
+Upload ``regnm_bathymetry.bin``, ``regnm.mitgrid`` files, and ``tiles`` folder on your supercomputer capability in the following folder "downscalling/regions/configs/".\
 Then follow these instructions (example on Pleiades):
 
 ```
@@ -178,7 +178,7 @@ qsub job_downsc_ivy
 
 **Requirement**:
 > In part b. you have generated mnc_XXX folders. Download them back to your local machine (so it is accessible by anaconda environment).\
-Create a mncs folder in your grid directory and copy the mnc_XXX folders into it:
+Create an mncs folder in your grid directory and copy the mnc_XXX folders into it:
 
 ```
 mkdir /path/to/save/the/grid/mncs
@@ -210,8 +210,8 @@ To get more information about the options required for this code run ``stitch_nc
 ## V. Generate mask files for ``diagnostics_vec``
 
 ### a. Compile and run ECCO global state estimate on 1 step
-The following steps will permit to generate the grid files from the ECCO global model ("parent_run") required to generate the masks files.\
-<u>Note:</u> For this step you will need to run the ECCO-Darwin model on the supercomputer for 1 time step. 
+The following steps will permit the generation of the grid files from the ECCO global model ("parent_run") required to generate the masks files.\
+<u>Note:</u> For this step, you will need to run the ECCO-Darwin model on the supercomputer for 1 time step. 
 
 Below is an example using v05 ECCO-Darwin. On the supercomputer (example on Pleiades) run:
 ```
@@ -246,17 +246,17 @@ qsub job_ECCO_darwin
 ```
 <u>Note:</u> You can modify ``job_ECCO_darwin`` and use the debug loop to go faster here.
 
-Once the run finished copy following grid files generated on your local machine (so it is accessible by anaconda environment).
+Once the run finishes, copy the following grid files generated on your local machine (so it is accessible by anaconda environment).
 on your local machine:
 ```
-cd /path/where/region/files/are/strored/
+cd /path/where/region/files/are/stored/
 mkdir parents/outputs/grid/
 cp XC* YC* DXC* DYC* AngleCS* AngleSN* hFacC* hFacW* hFacS* RF* DRF* parents/outputs/grid/.
 cp bathy270_filled_noCaspian_r4 parents/outputs/grid/.
 ```
 
 ### c. Generate the masks files
-Runing ``gen_dvmasks.py`` in the ``utils`` folder, you will generate the dv mask files required for Step 2.\
+Running ``gen_dvmasks.py`` in the ``utils`` folder, you will generate the dv mask files required for Step 2.\
 Below are the instructions to run the code in a terminal:
 
 ```
@@ -271,9 +271,9 @@ python3 gen_dvmasks.py -d ecco_darwin/regions/downscaling/ -n NorthSlope\
                        -bfl bathy270_filled_noCaspian_r4 -bnd ENW -r 18 -v
 ```
 To get more information about the options required for this code run ``gen_dvmasks.py -h``. Here are additional details about the options:
-> - -d: The directory where "parent" folder is stored or should be stored (parent folder nust have the grid files in it)
+> - -d: The directory where "parent" folder is stored or should be stored (parent folder must have the grid files in it)
 > - -n: The name of your region
 > - -bfl: name of the ECCO global model bathymetry file to use
 > - -bnd: Open boundaries of your domain where you want to extract boundary conditions. Can be either 'E' (East), 'W' (West), 'N' (North), 'S' (South)
-> - -r: Horizontal grid resolution in meters of the global model in km (**Warning**: This must be an integer). This information is used the searching radius for matching global model coordinates with regional setup boundaries coordinates.
+> - -r: Horizontal grid resolution in meters of the global model in km (**Warning**: This must be an integer). This information is used to search the radius for matching global model coordinates with regional setup boundaries coordinates.
 

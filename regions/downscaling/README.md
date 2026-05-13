@@ -7,18 +7,18 @@
 This repository has been created to guide ECCO/ECCO-Darwin users in generating their own regional configuration of the global ECCO state estimate.\
 <u>Notes:</u> 
 > These instructions require a good level of understanding on how ECCO/MITgcm model works and run.\
-> The following instructions show how to extract a regional cut out from the ECCO-Darwin v5 estimate, but this can be reproduce on any ECCO product.
+> The following instructions show how to extract a regional cutout from the ECCO-Darwin v5 estimate, but this can be reproduced on any ECCO product.
 
 ## Main steps
 The instruction files are organized as follows:
 1. **README.md**: Requirements for getting started.
 2. **STEP1.md**: Instructions to generate the input files STEP2.
 3. **STEP2.md**: Instructions to extract vectors from any llc global configuration along the boundaries of the required regional model using ``diagnostic_vec`` package (credit: Michael Wood)
-4. **STEP3.md**: Instructions to setup the regional model
+4. **STEP3.md**: Instructions to set up the regional model
 
 ---
 ## Getting Started
-To generate the regional configuration you will need:
+To generate the regional configuration, you will need:
 
 1. Supercomputing capabilities to run ECCO state estimate (*Along this guide we give an example by running ECCO-Darwin v5 [llc270] model on Pleidaes NASA supercomputer*)
 2. python3 with a dedicated anaconda environment (*This environment can be set up on the supercomputer or a local machine*). 
@@ -37,7 +37,7 @@ git checkout 24885b71
 ```
 > - clone diagnostic_vec github
 
-<u>Note:</u>: This package is not included in the official MITgcm realease but can be easly merged to it. More information on ``diagnostic_vec`` package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood). 
+<u>Note:</u>: This package is not included in the official MITgcm release but can be easily merged to it. More information on ``diagnostic_vec`` package at https://github.com/mhwood/diagnostics_vec (*Credit*: Mike Wood). 
 ```
 cd ..
 git clone https://github.com/mhwood/diagnostics_vec.git
@@ -66,7 +66,7 @@ cp -r ecco_darwin/v05/llc270/input .
 You can either create this environment on your supercomputer or a local machine.
 
 > - Install anaconda following the instructions on this page: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
-> - Open a terminal and Create the environment:
+> - Open a terminal and create the environment:
 ```
 conda config --add channels defaults
 conda config --add channels conda-forge
