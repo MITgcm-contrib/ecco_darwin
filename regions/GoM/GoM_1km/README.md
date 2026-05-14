@@ -23,7 +23,8 @@ cd build
 ```
 module purge
 module load comp-intel/2020.4.304 mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
-../../../tools/genmake2 -of ../../../../ecco_darwin/v05/llc270/code/linux_amd64_ifort+mpi_ice_nas -mo '../../../../ecco_darwin/regions/GoM_1km/code_darwin ../../../../ecco_darwin/regions/GoM_1km/code' -mpi
+../tools/genmake2 -of ../../ecco_darwin/v05/llc270/code/linux_amd64_ifort+mpi_ice_nas \
+  -mo '../../ecco_darwin/regions/GoM/GoM_1km/code_darwin ../../ecco_darwin/regions/GoM/GoM_1km/code' -mpi
 make depend
 make -j 16
 ```
@@ -36,11 +37,13 @@ Copy forcings, initial and boundary conditions and namelists:
 cd ../run
 ln -sf ../build/mitgcmuv .
 ln -sf /nobackup/hzhang1/forcing/era5 ERA5
+ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
 ln -sf /nobackup/rsavelli/GoM_highres/grid/forcings/pickups/*0000026352* .
 ln -sf /nobackup/rsavelli/GoM_highres/grid/forcings/OBCS/* .
-ln -sf /nobackup/rsavelli/GoM_highres/grid/GoM_1km_bathymetry.bin .
-cp ../../../../ecco_darwin/regions/GoM_1km/input/* .
-cp ../../../../ecco_darwin/regions/GoM_1km/input_darwin/* .
+ln -sf /nobackup/rsavelli/GoM_highres/grid/GoM_1km_bathymetry_8.bin .
+ln -sf /nobackup/rsavelli/GoM_highres/grid/delYFile .
+cp ../../ecco_darwin/regions/GoM/GoM_1km/input/* .
+cp ../../ecco_darwin/regions/GoM/GoM_1km/input_darwin/* .
 ```
 
 Create diagnostic directory:
