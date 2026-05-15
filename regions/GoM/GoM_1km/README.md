@@ -38,6 +38,9 @@ cd ../run
 ln -sf ../build/mitgcmuv .
 ln -sf /nobackup/hzhang1/forcing/era5 ERA5
 ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
+ln -sf /nobackup/rsavelli/LOAC/GoM_1km/jra55_do/* .
+ln -sf /nobackup/rsavelli/LOAC/GoM_1km/bgc_runoff/* .
+ln -sf /nobackup/rsavelli/GoM_highres/grid/forcings/iron_monthly_clim_Hamilton_kgFem2s_GoM_1km .
 ln -sf /nobackup/rsavelli/GoM_highres/grid/forcings/pickups/*0000026352* .
 ln -sf /nobackup/rsavelli/GoM_highres/grid/forcings/OBCS/* .
 ln -sf /nobackup/rsavelli/GoM_highres/grid/GoM_1km_bathymetry_8.bin .

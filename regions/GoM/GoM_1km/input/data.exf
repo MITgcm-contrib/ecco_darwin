@@ -19,7 +19,7 @@
  &
 #
  &EXF_NML_02
-# apressurefile     = 'ERA5/ERA5_pres',
+ apressurefile     = 'ERA5/ERA5_pres',
  atempfile         = 'ERA5/ERA5_tmp2m_degC',
  aqhfile           = 'ERA5/ERA5_spfh2m',
  precipfile        = 'ERA5/ERA5_rain',
@@ -44,8 +44,10 @@
  precipstartdate2  = 003000,
  precipperiod      = 3600.0,
 #
- runofffile        = 'jra55_do_runoff_LLC4320_GoM_zero.bin',
- runoffperiod      = 0,
+ runofffile        = 'jra55_do_runoff_GoM_1km',
+ runoffstartdate1  = 19920101,
+ runoffstartdate2  = 120000,
+ runoffperiod      = 86400.0,
 #
  uwindstartdate1   = 19920101,
  uwindstartdate2   = 000000,
