@@ -1,7 +1,7 @@
 for regular ECCO-Darwin (w/ pkg/ctrl)
 
-# iter42/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/iter42/input
-# ecco_darwin_v5/input is available at https://data.nas.nasa.gov/ecco/data.php?dir=/eccodata/llc_270/ecco_darwin_v5/input
+# iter42/input is available at https://data.nas.nasa.gov/ecco/llc_270/iter42/input/
+# ecco_darwin_v5/input is available at https://data.nas.nasa.gov/ecco/llc_270/ecco_darwin_v5/input/
 # forcing/era_xx is available at https://ecco.jpl.nasa.gov/drive/files/Version5/Alpha/era_xx
 # for unified forcing (combination of atmospheric forcing and optmized corrections, see #3.1 below):
 # forcing/era_xx_it42_v2 is available at https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC270/era_xx_it42_v2
