@@ -97,16 +97,35 @@ C  k                    :: vertical level
       _RL scavLoss(1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr)
       _RL scv,scav_pom
       _RL flx, POCl
+
 #ifdef DARWIN_ALLOW_CARBON
-C     Sediment fluxes
-      _RL OmegaC0(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+C     Bottom-water state used by benthic emulator
+      _RL OmegaC0      (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL Tbot         (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL NO3bot       (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
 #ifdef DARWIN_ALLOW_RADIv2
-      _RL DICFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL ALKFsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL O2Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL NO3Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL PO4Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL NH4Fsediment(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+C     2-D benthic emulator flux fields
+      _RL DICFsediment (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL ALKFsediment (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+      _RL DICFcarb     (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL ALKFcarb     (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL DICFrest     (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL ALKFrest     (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+      _RL O2Fsediment  (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL NO3Fsediment (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL NH4Fsediment (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL PO4Fsediment (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+
+C     Local single-cell temporaries for emulator call
+      _RL JDIC, JTA
+      _RL JO2, JNO3, JNH4, JPO4
+
+      _RL JDICcarb, JTAcarb
+      _RL JDICrest, JDICrestRaw, JTArest, yR
+
 C     Dependent variables for sediment flux for validation
       _RL fluxPIC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL fluxPOC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
@@ -116,12 +135,7 @@ C     Dependent variables for sediment flux for validation
       _RL flxplnkC(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL flxplnkP(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL flxplnkN(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL sed_a1, sed_b1, sed_c1, sed_d1, sed_e1
-      _RL sed_a2, sed_b2, sed_c2, sed_d2, sed_e2
-      _RL sed_a3, sed_b3, sed_c3, sed_d3, sed_e3
-      _RL sed_a4, sed_b4, sed_c4, sed_d4, sed_e4, sed_f4, sed_g4
-      _RL sed_a5, sed_b5, sed_c5, sed_d5, sed_e5
-      _RL sed_a6, sed_b6, sed_c6, sed_d6, sed_e6
+
 #endif
 #endif
       _RL ptr(nDarwin), gtr(nDarwin), PARl(nlam)
@@ -687,7 +701,6 @@ C === pre-sinking diags ================================================
       ENDIF
 #endif
 
-C === Sediment fluxes ==========================================================
 #ifdef DARWIN_ALLOW_CARBON
 C save omegaC above seafloor
       DO j=jMin,jMax
@@ -696,12 +709,15 @@ C      grid cell just above sea floor
        k = kLowC(i,j,bi,bj)
        IF (k .GT. 0) THEN
         OmegaC0(i,j) = omegaC(i,j,k,bi,bj)
+        NO3bot(i,j)  = MAX(0.0, Ptracer(i,j,k,bi,bj,iNO3))
        ELSE
         OmegaC0(i,j) = 0. _d 0
+        NO3bot(i,j) = 0. _d 0
        ENDIF
       ENDDO
       ENDDO
 #ifdef DARWIN_ALLOW_RADIv2
+
       DO j=jMin,jMax
       DO i=iMin,iMax
 C      grid cell just above sea floor
@@ -714,6 +730,7 @@ C       Dependent variables
         fluxPOP(i,j) = wP_sink*MAX(0.0,Ptracer(i,j,k,bi,bj,iPOP))
         fluxPON(i,j) = wN_sink*MAX(0.0,Ptracer(i,j,k,bi,bj,iPON))
         absT = ABS(Theta(i,j,k,bi,bj))
+        Tbot(i,j) = Theta(i,j,k,bi,bj)
 
 C       Reset fluxes to zero before accumulation
         flxplnkC(i,j) = 0.0
@@ -727,99 +744,67 @@ C       Reset fluxes to zero before accumulation
            flxplnkN(i,j) = flxplnkC(i,j) * R_NC(l)
          ENDDO
 
-        sed_a1 = sed_globala1
-        sed_b1 = sed_globalb1
-        sed_c1 = sed_globalc1
-        sed_d1 = sed_globald1
-        sed_e1 = sed_globale1
-        sed_a2 = sed_globala2
-        sed_b2 = sed_globalb2
-        sed_c2 = sed_globalc2
-        sed_d2 = sed_globald2
-        sed_e2 = sed_globale2
-        sed_a3 = sed_globala3
-        sed_b3 = sed_globalb3
-        sed_c3 = sed_globalc3
-        sed_d3 = sed_globald3
-        sed_e3 = sed_globale3
-        sed_a4 = sed_globala4
-        sed_b4 = sed_globalb4
-        sed_c4 = sed_globalc4
-        sed_d4 = sed_globald4
-        sed_e4 = sed_globale4
-        sed_f4 = sed_globalf4
-        sed_g4 = sed_globalg4
-        sed_a5 = sed_globala5
-        sed_b5 = sed_globalb5
-        sed_c5 = sed_globalc5
-        sed_d5 = sed_globald5
-        sed_e5 = sed_globale5
-        sed_a6 = sed_globala6
-        sed_b6 = sed_globalb6
-        sed_c6 = sed_globalc6
-        sed_d6 = sed_globald6
-        sed_e6 = sed_globale6
-  
-        DICFsediment(i,j) = sed_a1 +
-     &                      sed_b1*absT +
-     &                      sed_c1*omegaC0(i,j) +
-     &                      sed_d1*(fluxPOC(i,j)+flxplnkC(i,j)) +
-     &                      sed_e1*fluxPIC(i,j)        
+      CALL BENTHIC_EMULATOR(
+     &     OmegaC0(i,j),
+     &     ( fluxPOC(i,j) + flxplnkC(i,j) ),
+     &     ( fluxPON(i,j) + flxplnkN(i,j) ),
+     &     ( fluxPOP(i,j) + flxplnkP(i,j) ),
+     &     NO3bot(i,j),
+     &     JDIC, JTA,
+     &     JO2, JNH4, JPO4, JNO3,
+     &     JDICcarb, JTAcarb,
+     &     JDICrest, JDICrestRaw, JTArest, yR )
 
-        ALKFsediment(i,j) = sed_a2 +
-     &                      sed_b2*absT +
-     &                      sed_c2*omegaC0(i,j) +
-     &                      sed_d2*(fluxPOC(i,j)+flxplnkC(i,j)) +
-     &                      sed_e2*fluxPIC(i,j)
+      DICFsediment(i,j) = JDIC
+      ALKFsediment(i,j) = JTA
 
-        O2Fsediment(i,j)  = sed_a3 +
-     &                      sed_b3*absT +
-     &                      sed_c3*omegaC0(i,j) +
-     &                      sed_d3*(fluxPOC(i,j)+flxplnkC(i,j)) +
-     &                      sed_e3*fluxPIC(i,j)  
+      DICFcarb(i,j)     = JDICcarb
+      ALKFcarb(i,j)     = JTAcarb
+      DICFrest(i,j)     = JDICrest
+      ALKFrest(i,j)     = JTArest
 
-        NO3Fsediment(i,j) = sed_a4 + 
-     &                      sed_b4*(fluxPON(i,j)+flxplnkN(i,j)) +
-     &                      sed_c4*DICFsediment(i,j) +
-     &                      sed_d4*O2Fsediment(i,j) +
-     &                      sed_e4*(absT*DICFsediment(i,j)) +
-     &                      sed_f4*(absT*O2Fsediment(i,j)) +
-     &                      sed_g4*(DICFsediment(i,j)*O2Fsediment(i,j))
-
-        PO4Fsediment(i,j) = sed_a5 + 
-     &                      sed_b5*absT +
-     &                      sed_c5*omegaC0(i,j) +
-     &                      sed_d5*(fluxPOP(i,j)+flxplnkP(i,j)) +
-     &                      sed_e5*fluxPIC(i,j)  
-
-        NH4Fsediment(i,j) = sed_a6 + 
-     &                      sed_b6*absT +
-     &                      sed_c6*omegaC0(i,j) +
-     &                      sed_d6*(fluxPON(i,j)+flxplnkN(i,j)) +
-     &                      sed_e6*fluxPIC(i,j)  
-
+      O2Fsediment(i,j)  = JO2
+      NO3Fsediment(i,j) = JNO3
+      NH4Fsediment(i,j) = JNH4
+      PO4Fsediment(i,j) = JPO4
+     
 #ifdef DARWIN_ALLOW_CONS
 C       Accumulate for conservation check
         radiFluxC(i,j,bi,bj) = radiFluxC(i,j,bi,bj) +
      &    DICFsediment(i,j)*dTsub(k)*maskC(i,j,k,bi,bj)
+
         radiFluxA(i,j,bi,bj) = radiFluxA(i,j,bi,bj) +
      &    ALKFsediment(i,j)*dTsub(k)*maskC(i,j,k,bi,bj)
+
+C       O2 conservation check
         radiFluxO(i,j,bi,bj) = radiFluxO(i,j,bi,bj) +
      &    O2Fsediment(i,j)*dTsub(k)*maskC(i,j,k,bi,bj)
+
+C       Nitrogen conservation check:
+C       include benthic NO3 and NH4 fluxes
+        radiFluxN(i,j,bi,bj) = radiFluxN(i,j,bi,bj) +
+     &    ( NO3Fsediment(i,j) + NH4Fsediment(i,j) )
+     &    * dTsub(k) * maskC(i,j,k,bi,bj)
+
+C       Phosphorus conservation check
         radiFluxP(i,j,bi,bj) = radiFluxP(i,j,bi,bj) +
      &    PO4Fsediment(i,j)*dTsub(k)*maskC(i,j,k,bi,bj)
-        radiFluxN(i,j,bi,bj) = radiFluxN(i,j,bi,bj) +
-     &    (NO3Fsediment(i,j) + NH4Fsediment(i,j)) *
-     &    dTsub(k)*maskC(i,j,k,bi,bj)
 #endif
        ELSE
 
         DICFsediment(i,j) = 0. _d 0
         ALKFsediment(i,j) = 0. _d 0
-        O2Fsediment(i,j) = 0. _d 0
+
+        DICFcarb(i,j)     = 0. _d 0
+        ALKFcarb(i,j)     = 0. _d 0
+        DICFrest(i,j)     = 0. _d 0
+        ALKFrest(i,j)     = 0. _d 0
+
+        O2Fsediment(i,j)  = 0. _d 0
         NO3Fsediment(i,j) = 0. _d 0
-        PO4Fsediment(i,j) = 0. _d 0
         NH4Fsediment(i,j) = 0. _d 0
+        PO4Fsediment(i,j) = 0. _d 0
+
         fluxPIC(i,j) = 0. _d 0
         fluxPOC(i,j) = 0. _d 0
         fluxPOP(i,j) = 0. _d 0
@@ -827,12 +812,12 @@ C       Accumulate for conservation check
         flxplnkC(i,j) = 0. _d 0
         flxplnkN(i,j) = 0. _d 0
         flxplnkP(i,j) = 0. _d 0
+
         radiFluxC(i,j,bi,bj) = 0. _d 0
         radiFluxA(i,j,bi,bj) = 0. _d 0
         radiFluxO(i,j,bi,bj) = 0. _d 0
-        radiFluxP(i,j,bi,bj) = 0. _d 0
         radiFluxN(i,j,bi,bj) = 0. _d 0
-      
+        radiFluxP(i,j,bi,bj) = 0. _d 0      
        ENDIF
       ENDDO
       ENDDO
@@ -864,14 +849,14 @@ C     and rescale for nonlinear free surface if appropriate
      I                        myIter, myTime, myThid )
 
       CALL DARWIN_ADD_BOTFORC(
-     U                        gPtr(1-OLx,1-OLy,1,iPO4),
-     I                        PO4Fsediment, oneRL,
+     U                        gPtr(1-OLx,1-OLy,1,iNH4),
+     I                        NH4Fsediment, oneRL,
      I                        bi, bj, iMin, iMax, jMin, jMax,
      I                        myIter, myTime, myThid )
 
       CALL DARWIN_ADD_BOTFORC(
-     U                        gPtr(1-OLx,1-OLy,1,iNH4),
-     I                        NH4Fsediment, oneRL,
+     U                        gPtr(1-OLx,1-OLy,1,iPO4),
+     I                        PO4Fsediment, oneRL,
      I                        bi, bj, iMin, iMax, jMin, jMax,
      I                        myIter, myTime, myThid )
 
@@ -1145,14 +1130,28 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(gDIC,   'gDICsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gALK,   'gALKsurf',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(gO2,    'gO2surf ',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(OmegaC0,     'OmegCbot',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(OmegaC0,'OmegCbot',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(Tbot,   'Tbot    ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(NO3bot, 'NO3bot  ',0,1,2,bi,bj,myThid)
+
 #ifdef DARWIN_ALLOW_RADIv2
+C      Total benthic carbon-system fluxes
        CALL DIAGNOSTICS_FILL(DICFsediment,'DICFsed ',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(ALKFsediment,'ALKFsed ',0,1,2,bi,bj,myThid)
+
+C      Partitioned benthic carbon-system fluxes
+       CALL DIAGNOSTICS_FILL(DICFcarb,    'DICFcarb',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(ALKFcarb,    'ALKFcarb',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(DICFrest,    'DICFrest',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(ALKFrest,    'ALKFrest',0,1,2,bi,bj,myThid)
+
+C      Benthic nutrient / oxygen fluxes
        CALL DIAGNOSTICS_FILL(O2Fsediment, 'O2Fsed  ',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(NO3Fsediment,'NO3Fsed ',0,1,2,bi,bj,myThid)
-       CALL DIAGNOSTICS_FILL(PO4Fsediment,'PO4Fsed ',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(NH4Fsediment,'NH4Fsed ',0,1,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(PO4Fsediment,'PO4Fsed ',0,1,2,bi,bj,myThid)
+
+C      Organic matter / particle flux drivers into sediments
        CALL DIAGNOSTICS_FILL(fluxPIC,     'sedFlPIC',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(fluxPOC,     'sedFlPOC',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(fluxPOP,     'sedFlPOP',0,1,2,bi,bj,myThid)

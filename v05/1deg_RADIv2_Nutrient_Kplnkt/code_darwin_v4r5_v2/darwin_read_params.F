@@ -182,36 +182,34 @@ C----
      &    selectHFconst, selectK1K2const,
      &    selectPHsolver,
 #ifdef DARWIN_ALLOW_RADIv2
-     &    sed_globala1,
-     &    sed_globalb1,
-     &    sed_globalc1,
-     &    sed_globald1,
-     &    sed_globale1,
-     &    sed_globala2,
-     &    sed_globalb2,
-     &    sed_globalc2,
-     &    sed_globald2,
-     &    sed_globale2,
-     &    sed_globala3,
-     &    sed_globalb3,
-     &    sed_globalc3,
-     &    sed_globald3,
-     &    sed_globale3,
-     &    sed_globala4,
-     &    sed_globalb4,
-     &    sed_globalc4,
-     &    sed_globald4,
-     &    sed_globale4,
-     &    sed_globala5,
-     &    sed_globalb5,
-     &    sed_globalc5,
-     &    sed_globald5,
-     &    sed_globale5,
-     &    sed_globala6,
-     &    sed_globalb6,
-     &    sed_globalc6,
-     &    sed_globald6,
-     &    sed_globale6,
+     &    useBenthicCarbEmul,
+     &    useBenthicNutrEmul,
+     &    disable_carb_below_omega_emul,
+     &    a_omega_emul,
+     &    m_omega_emul,
+     &    a_fpoc_carb_emul,
+     &    b_fpoc_carb_emul,
+     &    omega_c_emul,
+     &    s_omega_emul,
+     &    a_om_emul,
+     &    b_om_emul,
+     &    y_max_emul,
+     &    K_F_emul,
+     &    omega_carb_cutoff_emul,
+     &    a_o2_emul,
+     &    b_o2_emul,
+     &    a_nh4_emul,
+     &    b_nh4_emul,
+     &    a_po4_emul,
+     &    b_po4_emul,
+     &    a_rel_emul,
+     &    b_rel_emul,
+     &    m_rel_emul,
+     &    a_upt_emul,
+     &    b_upt_emul,
+     &    m_upt_emul,
+     &    K_ox_emul,
+     &    K_no3_emul,
 #endif
 #endif
      &    diaz_ini_fac,
@@ -364,43 +362,46 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       oC0 = -4.88682 _d -7
 
 #ifdef DARWIN_ALLOW_RADIv2
-C for sediment model
-      sed_globala1 = 2.07 _d -5
-      sed_globalb1 = -5.64 _d -7
-      sed_globalc1 = -5.42 _d -6
-      sed_globald1 = 1.45 _d 0
-      sed_globale1 = 4.19 _d -1
-      sed_globala2 = 1.55 _d -5
-      sed_globalb2 = -2.94 _d -7
-      sed_globalc2 = -6.55 _d -6
-      sed_globald2 = 5.83 _d -1
-      sed_globale2 = 1.38 _d -1
-      sed_globala3 = -1.35 _d -5
-      sed_globalb3 = 5.08 _d -8
-      sed_globalc3 = 1.79 _d -6 
-      sed_globald3 = -1.07 _d 0 
-      sed_globale3 = -4.47 _d -1
-      sed_globala4 = 3.0 _d -6
-      sed_globalb4 = -7.14 _d -1
-      sed_globalc4 = 1.94 _d -1
-      sed_globald4 = 2.81 _d -1
-      sed_globale4 = -2.21 _d -2
-      sed_globalf4 = -2.97 _d -2
-      sed_globalg4 = -3.20 _d 2
-      sed_globala5 = -2.42 _d -7
-      sed_globalb5 = 1.54 _d -8
-      sed_globalc5 = -4.77 _d -8
-      sed_globald5 = 1.64 _d 0
-      sed_globale5 = 1.20 _d -2
-      sed_globala6 = -3.87 _d -6
-      sed_globalb6 = 9.15 _d -8
-      sed_globalc6 = -7.26 _d -7
-      sed_globald6 = 1.73 _d 0
-      sed_globale6 = 1.51 _d -1
+      useBenthicCarbEmul = .FALSE.
+      useBenthicNutrEmul = .TRUE.
+      disable_carb_below_omega_emul = .TRUE.
+
+      a_omega_emul = 1.14977D-05
+      m_omega_emul = 9.06144D-01
+      a_fpoc_carb_emul = 3.37238D-01
+      b_fpoc_carb_emul = 1.01618D0
+      omega_c_emul = 2.14209D0
+      s_omega_emul = 6.47735D-01
+
+      a_om_emul = 2.4637D0
+      b_om_emul = 1.0998D0
+      y_max_emul = 1.55574D-01
+      K_F_emul = 3.90217D-06
+      omega_carb_cutoff_emul = 8.D-01
+
+      a_o2_emul = 1.25293D-01
+      b_o2_emul = 8.23182D-01
+
+      a_nh4_emul = 4.628803378861619D0
+      b_nh4_emul = 1.1442327109390382D0
+
+      a_po4_emul = 9.2733D-01
+      b_po4_emul = 9.78D-01
+
+      a_rel_emul = 8.73271D-02
+      b_rel_emul = 8.2085D-01
+      m_rel_emul = 1.13361D0
+
+      a_upt_emul = 1.03302D0
+      b_upt_emul = 1.17522D0
+      m_upt_emul = 1.30298D0
+
+      K_ox_emul = 13.8395D0
+      K_no3_emul = 49.3342D0
 #endif
 #endif
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCiCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C     DARWIN_PARAMS
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 

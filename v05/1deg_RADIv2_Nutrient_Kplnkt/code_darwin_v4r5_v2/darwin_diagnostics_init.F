@@ -823,7 +823,15 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+      WRITE(diagName,'(A)')'Tbot    '
+      WRITE(diagTitle,'(A)')'Temperature above the seabed'
+      diagUnits = '1               '
+      diagCode  = 'SM P    M1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
 # ifdef DARWIN_ALLOW_RADIv2
+C-- Total benthic carbon-system fluxes
       WRITE(diagName,'(A)')'DICFsed '
       WRITE(diagTitle,'(A)')'DIC sediment flux'
       diagUnits = 'mmol C/m2/s     '
@@ -838,6 +846,36 @@ C-      use units & names from data.ptracers :
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+C-- Partitioned benthic carbon-system fluxes
+      WRITE(diagName,'(A)')'DICFcarb'
+      WRITE(diagTitle,'(A)')'DIC sediment flux carbonate part'
+      diagUnits = 'mmol C/m2/s     '
+      diagCode  = 'SM      U1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'ALKFcarb'
+      WRITE(diagTitle,'(A)')'ALK sediment flux carbonate part'
+      diagUnits = 'meq/m2/s        '
+      diagCode  = 'SM      U1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'DICFrest'
+      WRITE(diagTitle,'(A)')'DIC sediment flux residual part'
+      diagUnits = 'mmol C/m2/s     '
+      diagCode  = 'SM      U1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'ALKFrest'
+      WRITE(diagTitle,'(A)')'ALK sediment flux residual part'
+      diagUnits = 'meq/m2/s        '
+      diagCode  = 'SM      U1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+C-- Benthic oxygen and nutrient fluxes
       WRITE(diagName,'(A)')'O2Fsed  '
       WRITE(diagTitle,'(A)')'O2 sediment flux'
       diagUnits = 'mmol O2/m2/s    '
@@ -847,24 +885,33 @@ C-      use units & names from data.ptracers :
 
       WRITE(diagName,'(A)')'NO3Fsed '
       WRITE(diagTitle,'(A)')'NO3 sediment flux'
-      diagUnits = 'mmol NO3/m2/s   '
+      diagUnits = 'mmol N/m2/s     '
       diagCode  = 'SM      U1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
-     I     diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'NH4Fsed '
+      WRITE(diagTitle,'(A)')'NH4 sediment flux'
+      diagUnits = 'mmol N/m2/s     '
+      diagCode  = 'SM      U1      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
       WRITE(diagName,'(A)')'PO4Fsed '
       WRITE(diagTitle,'(A)')'PO4 sediment flux'
-      diagUnits = 'mmol PO4/m2/s   '
+      diagUnits = 'mmol P/m2/s     '
       diagCode  = 'SM      U1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
-  
-      WRITE(diagName,'(A)')'NH4Fsed '
-      WRITE(diagTitle,'(A)')'NH4 sediment flux'
-      diagUnits = 'mmol NH4/m2/s   '
+
+C-- Bottom-water NO3 concentration used by benthic emulator
+      WRITE(diagName,'(A)')'NO3bot  '
+      WRITE(diagTitle,'(A)')'Bottom-water NO3 at seafloor'
+      diagUnits = 'mmol N/m3       '
       diagCode  = 'SM      U1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
 
       WRITE(diagName,'(A)')'sedFlPOC'
       WRITE(diagTitle,'(A)')'POC flux from water column to sediment'
