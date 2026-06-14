@@ -1,9 +1,11 @@
 # Packages
  &PACKAGES
- useCAL=.true.,
- useEXF=.true.,
- useKPP   = .true.,
- useDiagnostics=.true.,
- useOBCS=.true.,
- useDOWN_SLOPE= .true.,
+ useCAL         = .TRUE.,
+ useEXF         = .TRUE.,
+ useKPP         = .TRUE.,
+ useDiagnostics = .TRUE.,
+ useOBCS        = .TRUE.,
+ useDOWN_SLOPE  = .TRUE.,
+ useGCHEM       = .TRUE.,
+ usePTRACERS    = .TRUE.,
  /

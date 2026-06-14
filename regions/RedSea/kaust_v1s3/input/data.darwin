@@ -1,9 +1,9 @@
  &DARWIN_FORCING_PARAMS
- ironfile = 'era_xx_it42_v2/RedSea_64x72_iron_dust',
+ ironfile = '/scratch/wangy0m/ECCO_Darwin/Data/RedSea_2000x2000_iron_dust',
  ironperiod = -12,
  darwin_inscal_iron= 1000.,
 #
- pCO2File = 'apCO2',
+ pCO2File = '/scratch/wangy0m/ECCO_Darwin/Data/NOAA_MBL/apCO2',
  pCO2startdate1 = 19920101,
  pCO2startdate2 = 000000,
  pCO2period     = 86400.0,

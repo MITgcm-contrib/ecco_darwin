@@ -16,17 +16,16 @@ WORKDIR=/scratch/wangy0m/ECCO_Darwin/
 # 2. Build executable
   cd $WORKDIR/darwin3/build
   rm *
+  module load python
   ../tools/genmake2 -of=../../ecco_darwin/regions/RedSea/kaust_v1s3/shaheen_build_options -mpi -make=gmake \
    -mo '../../ecco_darwin/regions/RedSea/kaust_v1s3/code_darwin ../../ecco_darwin/regions/RedSea/kaust_v1s3/code'
   make depend
   make -j 16
+  % if make -j 16 not working, simply: make
 
 ==============
-# 3. Instructions for running simulation (1992-2023 period)
+# 3. Instructions for running simulation (currently only for 1996 to resolve seasonal cycle)
   cd $WORKDIR/darwin3/run
   ln -sf ../build/mitgcmuv .
-  ln -sf $WORKDIR/Data_for_testing/* .
-  mkdir diags diags/daily diags/monthly
   cp ../../ecco_darwin/regions/RedSea/kaust_v1s3/input/* .
-  cp ../../ecco_darwin/regions/RedSea/kaust_v1s3/input_darwin/* .
   sbatch run_sbatch.sh

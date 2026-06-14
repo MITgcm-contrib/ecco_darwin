@@ -19,25 +19,40 @@
  OBEvFile = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_VobcsE_19960101_20230101.bin',
  OBEtFile = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_TobcsE_19960101_20230101.bin',
  OBEsFile = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_SobcsE_19960101_20230101.bin',
-#
-# OBEptrFile(1)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_dic_glodapv2_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(2)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_alk_glodapv2_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(3)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_o2_glorys_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(4)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_no3_glorys_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(5)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_po4_glorys_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(6)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_fe_glorys_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(7)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_don_glodapv2_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(8)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_dop_glodapv2_sgl_daily_19960101_20230101.bin',
-# OBEptrFile(9)='/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/65L_phyto_glorys_sgl_daily_19960101_20230101.bin',
-#
  OBEetaFile_tr = '/scratch/wangy0m/from_scratch/Data_Input/input_20240924/OBCS/Glorys12v1_RS_1km_65l_eta_tr_19960101_20230101.bin',
 #
-/
-
-# Orlanski parameters
-# &OBCS_PARM02
-#Cmax = 0.25,
-#cVelTimeScale = 500.,
+ OBEptrFile(1)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_DIC_East',
+ OBEptrFile(2)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_NO3_East',
+ OBEptrFile(3)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_NO2_East',
+ OBEptrFile(4)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_NH4_East',
+ OBEptrFile(5)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_PO4_East',
+ OBEptrFile(6)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_FeT_East',
+ OBEptrFile(7)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_SiO2_East',
+ OBEptrFile(8)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_DOC_East',
+ OBEptrFile(9)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_DON_East',
+ OBEptrFile(10)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_DOP_East',
+ OBEptrFile(11)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_DOFe_East',
+ OBEptrFile(12)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_POC_East',
+ OBEptrFile(13)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_PON_East',
+ OBEptrFile(14)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_POP_East',
+ OBEptrFile(15)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_POFe_East',
+ OBEptrFile(16)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_POSi_East',
+ OBEptrFile(17)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_PIC_East',
+ OBEptrFile(18)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_ALK_East',
+ OBEptrFile(19)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_O2_East',
+ OBEptrFile(20)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_c1_East',
+ OBEptrFile(21)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_c2_East',
+ OBEptrFile(22)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_c3_East',
+ OBEptrFile(23)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_c4_East',
+ OBEptrFile(24)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_c5_East',
+ OBEptrFile(25)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_c6_East',
+ OBEptrFile(26)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_c7_East',
+ OBEptrFile(27)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_Chl1_East',
+ OBEptrFile(28)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_Chl2_East',
+ OBEptrFile(29)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_Chl3_East',
+ OBEptrFile(30)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_Chl4_East',
+ OBEptrFile(31)='/scratch/wangy0m/ECCO_Darwin/Data/run_template/obcs_new/RedSea_2000x2000x65_Chl5_East',
+#
 /
 # Sponge layer parameters
  &OBCS_PARM03

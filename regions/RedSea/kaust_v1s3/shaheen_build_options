@@ -33,7 +33,8 @@ INCLUDES="-I${MPICH_DIR}/include"
 #####    FFLAGS='-byteswapio -Mnodclchk -Mextend'
 #####    FOPTIM='-pc=64 -fastsse -O3 -Msmart'
     FFLAGS='-hbyteswapio'
-    FOPTIM='-O3'
+##### CYW: on 2026-06-13, change FOPTIM from O3 to O2 hfp0 to fix NaN issue in Red Sea darwin     
+    FOPTIM='-O2 -hfp0'
 # -Mvect=cachesize:512000,transform
 
 #    LDFLAGS=

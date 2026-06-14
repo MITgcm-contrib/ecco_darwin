@@ -20,11 +20,14 @@
 #   fields(1,1) = 'EXFswdn','EXFswnet',
 #   filename(1) = 'diag2D_P',
 
-  frequency(1) = 86400.,
-   fields(1,1) = 'THETA',
+  frequency(1) = 2629800.,
+   fields(1,1) = 'TRAC01','TRAC02','TRAC03','TRAC04','TRAC05','TRAC06','TRAC07','TRAC08','TRAC09','TRAC10',
+                 'TRAC11','TRAC12','TRAC13','TRAC14','TRAC15','TRAC16','TRAC17','TRAC18','TRAC19','TRAC20',
+                 'TRAC21','TRAC22','TRAC23','TRAC24','TRAC25','TRAC26','TRAC27','TRAC28','TRAC29','TRAC30',
+                 'TRAC31','THETA','SALT',
    filename(1) = 'diag3D/diag3D',
 
- frequency(2) = 86400.,
+ frequency(2) = 2629800.,
    fields(1,2) = 'ETAN',
    filename(2) = 'diag2D/diag2D',
 # frequency(1) = 432000.,
