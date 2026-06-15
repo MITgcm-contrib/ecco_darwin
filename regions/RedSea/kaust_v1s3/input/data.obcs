@@ -4,7 +4,7 @@
 # OB_Ieast = 151*0,334*-1,1515*0,
 # OB_Ieast = 150*0,335*-1,1515*0,
 # OB_Ieast = 146*0,342*-1,1512*0,
- OB_Ieast = 150*0,334*-1,1516*0
+ OB_Ieast = 2000*-1,
 #
  useOBCSbalance=.true.,
  OBCS_balanceFacE=-1,

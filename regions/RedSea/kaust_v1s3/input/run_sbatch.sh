@@ -12,7 +12,8 @@
 date
 echo "beginning: MITgcm id is: ${SLURM_JOB_ID}" 
 
- nsteps=58560
+ nsteps=175320
+ last_pickup_step=175320
 ## nsteps=350400
 
 start=`cat tmp.start`
@@ -33,6 +34,11 @@ echo $start $nsteps
 ierr=0
 
 # sbatch --dependency=afterok:${SLURM_JOB_ID} run_sbatch.sh
+if [ "$endstep" -le "$last_pickup_step" ]; then
+    sbatch --dependency=afterok:${SLURM_JOB_ID} run_sbatch.sh
+# else
+#     echo "Reached last pickup step ($last_pickup_step). No further job submitted."
+fi
 #time srun -n 1656 --hint=nomultithread ./mitgcmuv65x  ||  ierr=1
 #time srun -n 1656 ./mitgcmuv65x ||  ierr=1
 /usr/bin/time srun -n 1649 --hint=nomultithread ./mitgcmuv ||  ierr=1
