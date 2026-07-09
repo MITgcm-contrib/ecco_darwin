@@ -616,67 +616,41 @@ C     R_POFe_POP_runoff :: [mol Fe/mol P] Fe:P ratio for particulate organic mat
       _RL R_POFe_POP_runoff
 
 C--   COMMON/DARWIN_OAE_PARAMS_R/ Parameters for Ocean Alkalinity Enhancement
-C     OAE_lat           :: [deg N]        latitude of injection site
-C     OAE_lon           :: [deg E]        longitude of injection site
-C     OAE_rate          :: [mol s-1]      alkalinity injection rate
-C     OAE_sigma         :: [km]           Gaussian standard deviation
-C     OAE_weight        :: [0-1]          Weight aasociated with gaussian distribution 
 
-      INTEGER, PARAMETER :: maxOAEsites = 100
-      INTEGER, PARAMETER :: maxOAECells = 5000
+      _RL AinjectionStartTime
 
-      COMMON /DARWIN_OAE_PARAMS_R/
-     &    OAE_lat,
-     &    OAE_lon,
-     &    OAE_rate,
-     &    OAE_sigma,
-     &    OAE_weight
+      COMMON/darwin_forcing_Ainjection_c/
+     &    Ainjectionmask
+      COMMON/darwin_forcing_Ainjection_i/
+     &    Ainjectionstartdate1, Ainjectionstartdate2
+      COMMON/darwin_forcing_Ainjection_r/
+     &    AinjectionStartTime,
+     &    Ainjectionperiod, AinjectionRepCycle, Ainjectionconst,
+     &    Ainjection_exfremo_intercept, Ainjection_exfremo_slope,
+     &    darwin_inscal_Ainjection
+      CHARACTER*1 Ainjectionmask
+      INTEGER Ainjectionstartdate1
+      INTEGER Ainjectionstartdate2
+      _RL Ainjectionperiod
+      _RL AinjectionRepCycle
+      _RL Ainjectionconst
+      _RL Ainjection_exfremo_intercept
+      _RL Ainjection_exfremo_slope
+      _RL darwin_inscal_Ainjection
 
-      _RL OAE_lat(maxOAEsites)
-      _RL OAE_lon(maxOAEsites)
-      _RL OAE_rate(maxOAEsites)
-      _RL OAE_sigma(maxOAEsites)
-      _RL OAE_weight(maxOAECells,maxOAEsites)
+#ifdef USE_EXF_INTERPOLATION
+      COMMON/darwin_interp_Ainjection_i/
+     &    Ainjection_nlon, Ainjection_nlat, Ainjection_interpMethod
+      COMMON/darwin_interp_Ainjection_r/
+     &    Ainjection_lon0, Ainjection_lat0, Ainjection_lon_inc,
+     &    Ainjection_lat_inc
+      INTEGER Ainjection_interpMethod, Ainjection_nlon, Ainjection_nlat
+      _RL  Ainjection_lon0
+      _RL  Ainjection_lat0
+      _RL  Ainjection_lon_inc
+      _RL  Ainjection_lat_inc(MAX_LAT_INC)
+#endif
 
-C--   COMMON/DARWIN_OAE_PARAMS_I/ Integer parameters
-C     nOAEsites         :: number of active OAE injection sites
-C     OAE_startDate     :: [YYYYMMDD] injection start date
-C     OAE_stopDate      :: [YYYYMMDD] injection stop date
-C     OAE_i             :: single nearest wet cell per site
-C     OAE_j             :: single nearest wet cell per site
-C     OAE_bi            :: single nearest wet cell per site
-C     OAE_bj            :: single nearest wet cell per site
-
-      COMMON /DARWIN_OAE_PARAMS_I/
-     &    nOAEsites,
-     &    OAE_startDate,
-     &    OAE_stopDate,
-     &    OAE_i,
-     &    OAE_j,
-     &    OAE_bi,
-     &    OAE_bj
-
-      INTEGER nOAEsites
-      INTEGER OAE_startDate(maxOAEsites)
-      INTEGER OAE_stopDate(maxOAEsites)
-      INTEGER OAE_i(maxOAEsites)
-      INTEGER OAE_j(maxOAEsites)
-      INTEGER OAE_bi(maxOAEsites)
-      INTEGER OAE_bj(maxOAEsites)
-      INTEGER OAE_nCells(maxOAEsites)
-      INTEGER OAE_iCell(maxOAECells,maxOAEsites)
-      INTEGER OAE_jCell(maxOAECells,maxOAEsites)
-      INTEGER OAE_biCell(maxOAECells,maxOAEsites)
-      INTEGER OAE_bjCell(maxOAECells,maxOAEsites)
-
-C--   COMMON/DARWIN_OAE_PARAMS_L/ Logical parameters
-C     OAE_useGaussian   :: distribute source using Gaussian kernel
-
-      COMMON /DARWIN_OAE_PARAMS_L/
-     &    OAE_useGaussian
-
-      LOGICAL OAE_useGaussian	
-      
 CEOP
 
 #endif /* ALLOW_DARWIN */

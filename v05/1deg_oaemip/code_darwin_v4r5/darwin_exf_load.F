@@ -1,21 +1,20 @@
 #include "DARWIN_OPTIONS.h"
 #include "EXF_OPTIONS.h"
 
-C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 CBOP
-C     !ROUTINE: DARWIN_EXF_INIT_VARIA
+C !ROUTINE: DARWIN_EXF_LOAD
 
-C     !INTERFACE:
-      SUBROUTINE DARWIN_EXF_INIT_VARIA( myThid )
+C !INTERFACE: ==========================================================
+      SUBROUTINE DARWIN_EXF_LOAD( mytime, myiter, mythid )
 
-C     !DESCRIPTION:
-C     Initialize DARWIN constants
+C !DESCRIPTION:
+C     Load and interpolate forcing fields for darwin package
 
-C     !USES:
+C !USES: ===============================================================
       IMPLICIT NONE
-#include "EEPARAMS.h"
 #include "SIZE.h"
 #include "GRID.h"
+#include "EEPARAMS.h"
 #include "PARAMS.h"
 #ifdef ALLOW_EXF
 #include "EXF_INTERP_SIZE.h"
@@ -24,227 +23,26 @@ C     !USES:
 #include "DARWIN_EXF_PARAMS.h"
 #include "DARWIN_EXF_FIELDS.h"
 
-C     !INPUT PARAMETERS:
-      INTEGER myThid
+C !INPUT PARAMETERS: ===================================================
+      _RL     mytime
+      integer myiter
+      integer mythid
 CEOP
 
 #ifdef ALLOW_DARWIN
 #ifdef ALLOW_EXF
 
+C !LOCAL VARIABLES: ====================================================
 #ifdef ALLOW_RADTRANS
       INTEGER l
 #endif
 
-C     these load constant forcing fields
+c--   read forcing fields from files and temporal interpolation
 
-      call exf_init_fld (
-     &     'PAR', PARfile, PARmask,
-     &     PARperiod, darwin_inscal_PAR, PARconst,
-     &     surfPAR, PAR0, PAR1,
-#ifdef USE_EXF_INTERPOLATION
-     &     PAR_lon0, PAR_lon_inc,
-     &     PAR_lat0, PAR_lat_inc,
-     &     PAR_nlon, PAR_nlat, xC, yC,
-     &     PAR_interpMethod,
-#endif
-     &     mythid )
+      IF (.NOT.(darwin_loadFieldsEarly.AND.myiter.EQ.niter0)) THEN
 
-      call exf_init_fld (
-     &     'iron', ironfile, ironmask,
-     &     ironperiod, darwin_inscal_iron, ironconst,
-     &     inputFe, iron0, iron1,
-#ifdef USE_EXF_INTERPOLATION
-     &     iron_lon0, iron_lon_inc,
-     &     iron_lat0, iron_lat_inc,
-     &     iron_nlon, iron_nlat, xC, yC,
-     &     iron_interpMethod,
-#endif
-     &     mythid )
 
-      call exf_init_fld (
-     &     'ice', icefile, icemask,
-     &     iceperiod, darwin_inscal_ice, iceconst,
-     &     iceFrac, ice0, ice1,
-#ifdef USE_EXF_INTERPOLATION
-     &     ice_lon0, ice_lon_inc,
-     &     ice_lat0, ice_lat_inc,
-     &     ice_nlon, ice_nlat, xC, yC,
-     &     ice_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'wind', windfile, windmask,
-     &     windperiod, darwin_inscal_wind, windconst,
-     &     windSpeed, wind0, wind1,
-#ifdef USE_EXF_INTERPOLATION
-     &     wind_lon0, wind_lon_inc,
-     &     wind_lat0, wind_lat_inc,
-     &     wind_nlon, wind_nlat, xC, yC,
-     &     wind_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'pCO2', pCO2file, pCO2mask,
-     &     pCO2period, darwin_inscal_pCO2, pCO2const,
-     &     atmospCO2, pCO20, pCO21,
-#ifdef USE_EXF_INTERPOLATION
-     &     pCO2_lon0, pCO2_lon_inc,
-     &     pCO2_lat0, pCO2_lat_inc,
-     &     pCO2_nlon, pCO2_nlat, xC, yC,
-     &     pCO2_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'ventHe3', ventHe3file, ventHe3mask,
-     &     ventHe3period, darwin_inscal_ventHe3, ventHe3const,
-     &     ventHe3, ventHe30, ventHe31,
-#ifdef USE_EXF_INTERPOLATION
-     &     ventHe3_lon0, ventHe3_lon_inc,
-     &     ventHe3_lat0, ventHe3_lat_inc,
-     &     ventHe3_nlon, ventHe3_nlat, xC, yC,
-     &     ventHe3_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'DOCrunoff', DOCrunofffile, DOCrunoffmask,
-     &     DOCrunoffperiod, darwin_inscal_DOCrunoff, DOCrunoffconst,
-     &     DOCrunoff, DOCrunoff0, DOCrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     DOCrunoff_lon0, DOCrunoff_lon_inc,
-     &     DOCrunoff_lat0, DOCrunoff_lat_inc,
-     &     DOCrunoff_nlon, DOCrunoff_nlat, xC, yC,
-     &     DOCrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'DONrunoff', DONrunofffile, DONrunoffmask,
-     &     DONrunoffperiod, darwin_inscal_DONrunoff, DONrunoffconst,
-     &     DONrunoff, DONrunoff0, DONrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     DONrunoff_lon0, DONrunoff_lon_inc,
-     &     DONrunoff_lat0, DONrunoff_lat_inc,
-     &     DONrunoff_nlon, DONrunoff_nlat, xC, yC,
-     &     DONrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'DOPrunoff', DOPrunofffile, DOPrunoffmask,
-     &     DOPrunoffperiod, darwin_inscal_DOPrunoff, DOPrunoffconst,
-     &     DOPrunoff, DOPrunoff0, DOPrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     DOPrunoff_lon0, DOPrunoff_lon_inc,
-     &     DOPrunoff_lat0, DOPrunoff_lat_inc,
-     &     DOPrunoff_nlon, DOPrunoff_nlat, xC, yC,
-     &     DOPrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'DINrunoff', DINrunofffile, DINrunoffmask,
-     &     DINrunoffperiod, darwin_inscal_DINrunoff, DINrunoffconst,
-     &     DINrunoff, DINrunoff0, DINrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     DINrunoff_lon0, DINrunoff_lon_inc,
-     &     DINrunoff_lat0, DINrunoff_lat_inc,
-     &     DINrunoff_nlon, DINrunoff_nlat, xC, yC,
-     &     DINrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'IPrunoff', IPrunofffile, IPrunoffmask,
-     &     IPrunoffperiod, darwin_inscal_IPrunoff, IPrunoffconst,
-     &     IPrunoff, IPrunoff0, IPrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     IPrunoff_lon0, IPrunoff_lon_inc,
-     &     IPrunoff_lat0, IPrunoff_lat_inc,
-     &     IPrunoff_nlon, IPrunoff_nlat, xC, yC,
-     &     IPrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'DSirunoff', DSirunofffile, DSirunoffmask,
-     &     DSirunoffperiod, darwin_inscal_DSirunoff, DSirunoffconst,
-     &     DSirunoff, DSirunoff0, DSirunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     DSirunoff_lon0, DSirunoff_lon_inc,
-     &     DSirunoff_lat0, DSirunoff_lat_inc,
-     &     DSirunoff_nlon, DSirunoff_nlat, xC, yC,
-     &     DSirunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'POCrunoff', POCrunofffile, POCrunoffmask,
-     &     POCrunoffperiod, darwin_inscal_POCrunoff, POCrunoffconst,
-     &     POCrunoff, POCrunoff0, POCrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     POCrunoff_lon0, POCrunoff_lon_inc,
-     &     POCrunoff_lat0, POCrunoff_lat_inc,
-     &     POCrunoff_nlon, POCrunoff_nlat, xC, yC,
-     &     POCrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'POPrunoff', POPrunofffile, POPrunoffmask,
-     &     POPrunoffperiod, darwin_inscal_POPrunoff, POPrunoffconst,
-     &     POPrunoff, POPrunoff0, POPrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     POPrunoff_lon0, POPrunoff_lon_inc,
-     &     POPrunoff_lat0, POPrunoff_lat_inc,
-     &     POPrunoff_nlon, POPrunoff_nlat, xC, yC,
-     &     POPrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'PONrunoff', PONrunofffile, PONrunoffmask,
-     &     PONrunoffperiod, darwin_inscal_PONrunoff, PONrunoffconst,
-     &     PONrunoff, PONrunoff0, PONrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     PONrunoff_lon0, PONrunoff_lon_inc,
-     &     PONrunoff_lat0, PONrunoff_lat_inc,
-     &     PONrunoff_nlon, PONrunoff_nlat, xC, yC,
-     &     PONrunoff_interpMethod,
-#endif
-     &     mythid )
-
-      call exf_init_fld (
-     &     'DICrunoff', DICrunofffile, DICrunoffmask,
-     &     DICrunoffperiod, darwin_inscal_DICrunoff, DICrunoffconst,
-     &     DICrunoff, DICrunoff0, DICrunoff1,
-#ifdef USE_EXF_INTERPOLATION
-     &     DICrunoff_lon0, DICrunoff_lon_inc,
-     &     DICrunoff_lat0, DICrunoff_lat_inc,
-     &     DICrunoff_nlon, DICrunoff_nlat, xC, yC,
-     &     DICrunoff_interpMethod,
-#endif
-     &     mythid )
-
-       call exf_init_fld (
-     &     'Ainjection', Ainjectionfile, Ainjectionmask,
-     &     Ainjectionperiod, darwin_inscal_Ainjection,
-     &     Ainjectionconst, Ainjection, Ainjection0, Ainjection1,
-#ifdef USE_EXF_INTERPOLATION
-     &     Ainjection_lon0, Ainjection_lon_inc,
-     &     Ainjection_lat0, Ainjection_lat_inc,
-     &     Ainjection_nlon, Ainjection_nlat, xC, yC,
-     &     Ainjection_interpMethod,
-#endif
-     &     mythid )
-
-      IF (darwin_loadFieldsEarly) THEN
-C       these load time-varying forcing fields
-C       (usually done in darwin_fields_load, but may be needed for chl)
-        call exf_set_fld(
+       call exf_set_fld(
      &     'PAR', PARfile, PARmask,
      &     PARStartTime, PARperiod, PARRepCycle,
      &     darwin_inscal_PAR,
@@ -256,9 +54,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     PAR_nlon, PAR_nlat, xC, yC,
      &     PAR_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'iron', ironfile, ironmask,
      &     ironStartTime, ironperiod, ironRepCycle,
      &     darwin_inscal_iron,
@@ -270,9 +68,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     iron_nlon, iron_nlat, xC, yC,
      &     iron_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'ice', icefile, icemask,
      &     iceStartTime, iceperiod, iceRepCycle,
      &     darwin_inscal_ice,
@@ -284,9 +82,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     ice_nlon, ice_nlat, xC, yC,
      &     ice_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'wind', windfile, windmask,
      &     windStartTime, windperiod, windRepCycle,
      &     darwin_inscal_wind,
@@ -298,9 +96,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     wind_nlon, wind_nlat, xC, yC,
      &     wind_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'pCO2', pCO2file, pCO2mask,
      &     pCO2StartTime, pCO2period, pCO2RepCycle,
      &     darwin_inscal_pCO2,
@@ -312,9 +110,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     pCO2_nlon, pCO2_nlat, xC, yC,
      &     pCO2_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'ventHe3', ventHe3file, ventHe3mask,
      &     ventHe3StartTime, ventHe3period, ventHe3RepCycle,
      &     darwin_inscal_ventHe3,
@@ -326,9 +124,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     ventHe3_nlon, ventHe3_nlat, xC, yC,
      &     ventHe3_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'DOCrunoff', DOCrunofffile, DOCrunoffmask,
      &     DOCrunoffStartTime, DOCrunoffperiod, DOCrunoffRepCycle,
      &     darwin_inscal_DOCrunoff,
@@ -340,9 +138,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     DOCrunoff_nlon, DOCrunoff_nlat, xC, yC,
      &     DOCrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'DONrunoff', DONrunofffile, DONrunoffmask,
      &     DONrunoffStartTime, DONrunoffperiod, DONrunoffRepCycle,
      &     darwin_inscal_DONrunoff,
@@ -354,9 +152,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     DONrunoff_nlon, DONrunoff_nlat, xC, yC,
      &     DONrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'DOPrunoff', DOPrunofffile, DOPrunoffmask,
      &     DOPrunoffStartTime, DOPrunoffperiod, DOPrunoffRepCycle,
      &     darwin_inscal_DOPrunoff,
@@ -368,9 +166,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     DOPrunoff_nlon, DOPrunoff_nlat, xC, yC,
      &     DOPrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'DINrunoff', DINrunofffile, DINrunoffmask,
      &     DINrunoffStartTime, DINrunoffperiod, DINrunoffRepCycle,
      &     darwin_inscal_DINrunoff,
@@ -382,9 +180,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     DINrunoff_nlon, DINrunoff_nlat, xC, yC,
      &     DINrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'IPrunoff', IPrunofffile, IPrunoffmask,
      &     IPrunoffStartTime, IPrunoffperiod, IPrunoffRepCycle,
      &     darwin_inscal_IPrunoff,
@@ -396,9 +194,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     IPrunoff_nlon, IPrunoff_nlat, xC, yC,
      &     IPrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'DSirunoff', DSirunofffile, DSirunoffmask,
      &     DSirunoffStartTime, DSirunoffperiod, DSirunoffRepCycle,
      &     darwin_inscal_DSirunoff,
@@ -410,9 +208,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     DSirunoff_nlon, DSirunoff_nlat, xC, yC,
      &     DSirunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'POCrunoff', POCrunofffile, POCrunoffmask,
      &     POCrunoffStartTime, POCrunoffperiod, POCrunoffRepCycle,
      &     darwin_inscal_POCrunoff,
@@ -424,9 +222,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     POCrunoff_nlon, POCrunoff_nlat, xC, yC,
      &     POCrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'POPrunoff', POPrunofffile, POPrunoffmask,
      &     POPrunoffStartTime, POPrunoffperiod, POPrunoffRepCycle,
      &     darwin_inscal_POPrunoff,
@@ -438,9 +236,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     POPrunoff_nlon, POPrunoff_nlat, xC, yC,
      &     POPrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'PONrunoff', PONrunofffile, PONrunoffmask,
      &     PONrunoffStartTime, PONrunoffperiod, PONrunoffRepCycle,
      &     darwin_inscal_PONrunoff,
@@ -452,9 +250,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     PONrunoff_nlon, PONrunoff_nlat, xC, yC,
      &     PONrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'DICrunoff', DICrunofffile, DICrunoffmask,
      &     DICrunoffStartTime, DICrunoffperiod, DICrunoffRepCycle,
      &     darwin_inscal_DICrunoff,
@@ -466,9 +264,9 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     DICrunoff_nlon, DICrunoff_nlat, xC, yC,
      &     DICrunoff_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
-        call exf_set_fld(
+       call exf_set_fld(
      &     'Ainjection', Ainjectionfile, Ainjectionmask,
      &     AinjectionStartTime, Ainjectionperiod, AinjectionRepCycle,
      &     darwin_inscal_Ainjection,
@@ -480,7 +278,7 @@ C       (usually done in darwin_fields_load, but may be needed for chl)
      &     Ainjection_nlon, Ainjection_nlat, xC, yC,
      &     Ainjection_interpMethod,
 #endif
-     &     starttime, nIter0, mythid )
+     &     mytime, myiter, mythid )
 
         _EXCH_XY_RL( surfPAR, myThid )
         _EXCH_XY_RL( inputFe, myThid )

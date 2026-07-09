@@ -1571,6 +1571,40 @@ C--   DICrunoff
      &   ' /* mask for DICrunoff forcing */')
       ENDIF
 
+C--   Ainjection
+      IF ( Ainjectionfile.NE.' ' ) THEN
+       CALL EXF_FLD_SUMMARY( 'Ainjection forcing',
+     I      Ainjectionfile, AinjectionRepCycle, Ainjectionperiod,
+     I      AinjectionStartTime, useExfYearlyFields, addBlkLn, myThid )
+#ifdef USE_EXF_INTERPOLATION
+       CALL EXF_PRINT_INTERP( 'Ainjection',
+     &  Ainjection_lon0, Ainjection_lon_inc, Ainjection_lat0, Ainjection_lat
+     &_inc,
+     &  Ainjection_nlon, Ainjection_nlat, Ainjection_interpMethod, myThid )
+#endif
+       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
+     &                     SQUEEZE_RIGHT , myThid )
+       CALL WRITE_0D_RL(Ainjection_exfremo_intercept,INDEX_NONE,
+     &   'Ainjection_exfremo_intercept =',
+     &   ' /* intercept for Ainjection forcing mean removal */')
+       CALL WRITE_0D_RL(Ainjection_exfremo_slope,INDEX_NONE,
+     &   'Ainjection_exfremo_slope =',
+     &   ' /* slope for Ainjection forcing trend removal */')
+       CALL WRITE_0D_RL(darwin_inscal_Ainjection,INDEX_NONE,
+     &   'darwin_inscal_Ainjection =',
+     &   ' /* scaling factor for Ainjection fields */')
+      ELSE
+       CALL WRITE_0D_RL(Ainjectionconst,INDEX_NONE,
+     &   'Ainjectionconst =',
+     &   ' /* constant Ainjection forcing */')
+      ENDIF
+
+      IF ( Ainjectionfile.NE.' ' .OR. Ainjectionconst.NE.0 _d 0 ) THEN
+       CALL WRITE_0D_C(Ainjectionmask,-1,INDEX_NONE,
+     &   'Ainjectionmask =',
+     &   ' /* mask for Ainjection forcing */')
+      ENDIF
+
       CALL PRINT_MESSAGE( blkLin, standardMessageUnit,
      &                     SQUEEZE_RIGHT , myThid )
 

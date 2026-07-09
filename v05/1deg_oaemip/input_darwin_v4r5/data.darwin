@@ -70,14 +70,10 @@
  darwin_useQsw = .TRUE.,
  darwin_useSEAICE = .TRUE.,
 #
- nOAEsites = 1
- OAE_lat = 26.5
- OAE_lon = -134.5
- OAE_rate = 3.17e4,
- OAE_startDate = 20030101
- OAE_stopDate  = 20331231
- OAE_useGaussian = .TRUE.
- OAE_sigma = 250.
+# Ainjectionfile = 'Ainjection_ECCO_V4r5',
+# Ainjectionstartdate1 = 20030101,
+# Ainjectionstartdate2 = 120000,
+# Ainjectionperiod     = 86400.0,
  /
  &DARWIN_INTERP_PARAMS
  iron_interpMethod = 0,
@@ -92,6 +88,7 @@
 # POPrunoff_interpMethod = 0,
 # PONrunoff_interpMethod = 0,
 # DICrunoff_interpMethod = 0,
+# Ainjection_interpMethod = 0,
 #
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,

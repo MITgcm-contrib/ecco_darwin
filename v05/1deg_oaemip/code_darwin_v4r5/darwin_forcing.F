@@ -66,7 +66,7 @@ C  i,j                  :: loop indices
 C  k                    :: vertical level
       LOGICAL  DIAGNOSTICS_IS_ON
       EXTERNAL DIAGNOSTICS_IS_ON
-      INTEGER i,j,k,kdn,iTr,l,isub
+      INTEGER i,j,k,kdn,iTr,l,isub,isite,icell
       CHARACTER*8 diagname
       _RL dTsub(Nr)
       _RL midTime, subTime
@@ -412,52 +412,14 @@ C === nutrient runoff ==================================================
 
 C === OAE experiments ==================================================
 #ifdef DARWIN_OAE
-C--   Initialize OAE alkalinity forcing field (mmol m-2 s-1)
-      DO j=jMin,jMax
-        DO i=iMin,iMax
-          Ainjection(i,j,bi,bj) = 0. _d 0
-        ENDDO
-      ENDDO
-C-- Loop through injection sites
-      DO isite = 1,nOAEsites
-C-- Check time
-      IF ( myTime .LT. OAE_startTime(isite) .OR.
-     &       myTime .GT. OAE_stopTime(isite) ) THEN
-       CYCLE
-       ENDIF
-C- convert rate mol s-1 to flux mmol m-2 s-1
-        flux0 = 1000. _d 0
-     &           * OAE_rate(isite)
-     &           / rA(ii,jj,bi,bj)
-
-      IF ( .NOT. OAE_useGaussian ) THEN
-            Ainjection(ii,jj,bi,bj)
-     &      = Ainjection(ii,jj,bi,bj)
-     &      + flux0
-      ELSEIF ( OAE_useGaussian ) THEN
-            DO icell = 1,OAE_nCells(isite)
-
-              ii = OAE_iCell(icell,isite)
-              jj = OAE_jCell(icell,isite)
-
-              Ainjection(ii,jj,bi,bj)
-     &        = Ainjection(ii,jj,bi,bj)
-     &        + 1000. _d 0
-     &        * OAE_rate(isite)
-     &        * OAE_weight(icell,isite)
-     &        / rA(ii,jj,bi,bj)
-
-            ENDDO
-      ENDIF
-      ENDDO
-
+      CALL TIMER_START('DARWIN_OAE [DARWIN_FORCING]',myThid)
       CALL DARWIN_ADD_SURFFORC(
      U                          gPtr(1-OLx,1-OLy,1,iALK),
      I                          Ainjection(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
 #endif
-
+     
 C === iron =============================================================
 
 C     compute (and limit if DARWIN_MINFE) free iron
@@ -1373,6 +1335,9 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(flxplnkC,    'sedFplkC',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(flxplnkP,    'sedFplkP',0,1,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(flxplnkN,    'sedFplkN',0,1,2,bi,bj,myThid)
+#endif
+#ifdef DARWIN_OAE
+       CALL DIAGNOSTICS_FILL(Ainjection,'ALKinj  ',0,1,2,bi,bj,myThid)
 #endif
 #endif
 

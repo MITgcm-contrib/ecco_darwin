@@ -232,6 +232,19 @@ C     errCount  :: error counter
      I                         myThid )
       ENDIF
 
+      IF ( Ainjectionfile .NE. ' ' ) THEN
+# ifdef ALLOW_DEBUG
+       IF (debugMode) CALL DEBUG_CALL('GETFFIELD_START Ainjection',
+     &  myThid)
+# endif
+       CALL EXF_GETFFIELD_START( useExfYearlyFields,
+     I                         'darwin', 'Ainjection', Ainjectionperiod,
+     I                         Ainjectionstartdate1, 
+     I                         Ainjectionstartdate2,
+     U                         AinjectionStartTime, errCount,
+     I                         myThid )
+      ENDIF
+
       IF ( errCount.GE.1 ) THEN
        WRITE(msgBuf,'(A,I3,A)')
      &     'DARWIN_EXF_INIT_FIXED: detected', errCount,' fatal error(s)'
@@ -239,167 +252,6 @@ C     errCount  :: error counter
        CALL ALL_PROC_DIE( 0 )
        STOP 'ABNORMAL END: S/R DARWIN_EXF_INIT_FIXED'
       ENDIF
-
-#ifdef DARWIN_OAE
-C========================================================
-C     OAE SITE to GRID CELL MAPPING (INITIALIZATION ONLY)
-C========================================================
-        WRITE(msgBuf,'(A)')
-     &   'OAE: initializing site index mapping'
-        CALL PRINT_MESSAGE(msgBuf,
-     &       standardMessageUnit,
-     &       SQUEEZE_RIGHT,myThid)
-
-        DO isite = 1,nOAEsites
-C========================================================
-C     SEARCH OVER ALL TILES
-C========================================================
-         OAE_nCells(isite) = 0  
-         DO bj = 1,nSy
-           DO bi = 1,nSx
-            DO j = 1,sNy
-             DO i = 1,sNx
-C--     Only ocean points
-              IF ( hFacC(i,j,1,bi,bj) .GT. 0. _d 0 ) THEN
-C--     Longitude wrap
-                dlon = XC(i,j,bi,bj) - OAE_lon(isite)
-                dlat = YC(i,j,bi,bj) - OAE_lat(isite)
-                IF ( dlon .GT.  180. ) dlon = dlon - 360.
-                IF ( dlon .LT. -180. ) dlon = dlon + 360.
-C--     simple spherical metric (robust enough for 1° ECCO)
-                dist2 =
-     &            dlat*dlat + dlon*dlon
-C--     keep minimum
-                IF ( dist2 .LT. 1.0d20 ) THEN
-                  minDist = dist2
-                  OAE_i(isite)  = i
-                  OAE_j(isite)  = j
-                  OAE_bi(isite) = bi
-                  OAE_bj(isite) = bj
-                ENDIF
-              ENDIF
-            ENDDO
-           ENDDO
-          ENDDO
-         ENDDO
-
-C========================================================
-C     SAFETY CHECK
-C========================================================
-        IF ( OAE_i(isite) .LT. 0 ) THEN
-          WRITE(msgBuf,'(A,I4)')
-     &     'OAE ERROR: no ocean cell found for site ', isite
-          CALL PRINT_ERROR(msgBuf,myThid)
-          STOP 'ABNORMAL END'
-        ENDIF
-
-C========================================================
-C     PRINT RESULT
-C========================================================
-        WRITE(msgBuf,'(A,I4,A,2I6)')
-     &    'OAE site mapped: ', isite,
-     &    '  -> (i,j)=', OAE_i(isite), OAE_j(isite)
-
-        CALL PRINT_MESSAGE(msgBuf,
-     &      standardMessageUnit,
-     &      SQUEEZE_RIGHT,myThid)
-
-
-C========================================================
-C     GAUSSIAN FOOTPRINT CONSTRUCTION
-C========================================================
-        WRITE(msgBuf,'(A)')
-     &   'OAE: initializing gaussian mapping'
-        CALL PRINT_MESSAGE(msgBuf,
-     &       standardMessageUnit,
-     &       SQUEEZE_RIGHT,myThid)
-
-        icount = 0
-        weight_sum = 0. _d 0
-
-        DO bj = 1,nSy
-           DO bi = 1,nSx
-
-            DO j = 1,sNy
-             DO i = 1,sNx
-
-              dlon = XC(i,j,bi,bj) - OAE_lon(isite)
-              dlat = YC(i,j,bi,bj) - OAE_lat(isite)
-
-              IF ( dlon .GT. 180. ) dlon = dlon - 360.
-              IF ( dlon .LT.-180. ) dlon = dlon + 360.
-
-              dx = dlon * 111000. _d 0 * COS(YC(i,j,bi,bj)*deg2rad)
-              dy = dlat * 111000. _d 0
-
-              dist2 = dx*dx + dy*dy
-
-              IF ( dist2 .LT. (3.0*OAE_sigma)**2 ) THEN
-                icount = icount + 1
-
-                IF ( icount .GT. maxOAECells ) THEN
-                  CALL PRINT_ERROR(
-     &              'OAE: increase maxOAECells',
-     &              myThid )
-                  STOP 'ABNORMAL END'
-                ENDIF
-
-                OAE_iCell(icount,isite) = i
-                OAE_jCell(icount,isite) = j
-                OAE_biCell(icount,isite) = bi
-                OAE_bjCell(icount,isite) = bj
-      
-                OAE_weight(icount,isite) = EXP( -r2 /(2.0*OAE_sigma(isite)
-     &                                  *OAE_sigma(isite)) )
-              
-              ENDIF
-              IF ( hFacC(i,j,bi,bj) .EQ. 0.0 ) THEN
-                 OAE_weight(icount,isite) = 0
-              ENDIF
-
-              weight_sum = weight_sum + OAE_weight(icount,isite)
-
-                IF ( icount .GT. maxOAECells ) THEN
-                  CALL PRINT_ERROR(
-     &              'OAE: increase maxOAECells',
-     &              myThid )
-                  STOP 'ABNORMAL END'
-                ENDIF
-
-        ENDIF
-
-        ENDDO
-        ENDDO
-        ENDDO
-        ENDDO
-
-        DO ic = 1, icount
-            OAE_weight(ic,isite)
-     &        = OAE_weight(ic,isite) / weight_sum
-          ENDDO
-
-        OAE_nCells(isite) = icount
-
-        IF ( OAE_nCells(isite) .LE. 0 ) THEN
-            CALL PRINT_ERROR(
-     &        'OAE: no Gaussian cells found',
-     &        myThid )
-            STOP 'ABNORMAL END'
-          ENDIF
-
-          WRITE(msgBuf,'(A,I4,A,I6)')
-     &      'OAE site ', isite,
-     &      ' cells = ', OAE_nCells(isite)
-
-          CALL PRINT_MESSAGE(msgBuf,
-     &        standardMessageUnit,
-     &        SQUEEZE_RIGHT,myThid)
-
-C - end loop over sites
-          ENDDO
-
-#endif
-
 
       _END_MASTER( myThid )
       _BARRIER

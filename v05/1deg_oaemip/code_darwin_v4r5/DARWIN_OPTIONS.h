@@ -158,7 +158,7 @@ C enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
 #undef  DARWIN_ALLOW_DIAZ
 
 C nutrient runoff                                             
-#define DARWIN_NUTRIENT_RUNOFF                                
+#undef DARWIN_NUTRIENT_RUNOFF                                
                  
 C OAE injection
 #define DARWIN_OAE

@@ -260,18 +260,17 @@ C
      &    DICrunoffmask,
      &    darwin_inscal_DICrunoff,
 C
-     &    nOAEsites,
-     &    OAE_lat,
-     &    OAE_lon,
-     &    OAE_rate,
-     &    OAE_startDate,
-     &    OAE_stopDate,
-     &    OAE_useGaussian,
-     &    OAE_sigma,
-     &    OAE_i,
-     &    OAE_j,
-     &    OAE_bi,
-     &    OAE_bj 
+     &    Ainjectionfile,
+     &    Ainjectionperiod,
+     &    AinjectionRepCycle,
+     &    AinjectionStartTime,
+     &    Ainjectionstartdate1,
+     &    Ainjectionstartdate2,
+     &    Ainjectionconst,
+     &    Ainjection_exfremo_intercept,
+     &    Ainjection_exfremo_slope,
+     &    Ainjectionmask,
+     &    darwin_inscal_Ainjection
 
 #ifdef USE_EXF_INTERPOLATION
       NAMELIST/darwin_interp_params/
@@ -402,7 +401,15 @@ C
      &    DICrunoff_nlat,
      &    DICrunoff_lon_inc,
      &    DICrunoff_interpMethod,
-     &    DICrunoff_lat_inc
+     &    DICrunoff_lat_inc,
+C
+     &    Ainjection_lon0,
+     &    Ainjection_lat0,
+     &    Ainjection_nlon,
+     &    Ainjection_nlat,
+     &    Ainjection_lon_inc,
+     &    Ainjection_interpMethod,
+     &    Ainjection_lat_inc
 #endif
 
 C Open and read the data.darwin file
@@ -626,18 +633,18 @@ C Open and read the data.darwin file
 
       darwin_inscal_DICrunoff    =  1. _d 0
 
-      nOAEsites = 0
-      OAE_useGaussian = .FALSE.
-      OAE_sigma(:) = 0. _d 0
-      OAE_lat(:) = 0. _d 0
-      OAE_lon(:) = 0. _d 0
-      OAE_rate(:) = 0. _d 0
-      OAE_startDate(:) = 0
-      OAE_stopDate(:)  = 0
-      OAE_i(:) = -1
-      OAE_j(:) = -1
-      OAE_bi(:) = -1
-      OAE_bj(:) = -1
+      Ainjectionfile = ' '
+      Ainjectionperiod             = 0.0 _d 0
+      AinjectionRepCycle           = repeatPeriod
+      AinjectionStartTime          = UNSET_RL
+      Ainjectionstartdate1         = 0
+      Ainjectionstartdate2         = 0
+      Ainjectionconst              = 0 _d 0
+      Ainjection_exfremo_intercept = 0.0 _d 0
+      Ainjection_exfremo_slope     = 0.0 _d 0
+      Ainjectionmask = 'c'
+
+      darwin_inscal_Ainjection    =  1. _d 0
 
 #ifdef USE_EXF_INTERPOLATION
 
@@ -753,6 +760,13 @@ C Open and read the data.darwin file
       DICrunoff_lon_inc = inp_dLon
       DICrunoff_interpMethod  = 1
 
+      Ainjection_lon0 = inp_lon0
+      Ainjection_lat0 = inp_lat0
+      Ainjection_nlon = inp_gNx
+      Ainjection_nlat = inp_gNy
+      Ainjection_lon_inc = inp_dLon
+      Ainjection_interpMethod  = 1
+
       DO j=1,MAX_LAT_INC
         PAR_lat_inc(j) = inp_dLat(j)
         iron_lat_inc(j) = inp_dLat(j)
@@ -770,6 +784,7 @@ C Open and read the data.darwin file
         POPrunoff_lat_inc(j) = inp_dLat(j)
         PONrunoff_lat_inc(j) = inp_dLat(j)
         DICrunoff_lat_inc(j) = inp_dLat(j)
+        Ainjection_lat_inc(j) = inp_dLat(j)
       ENDDO
 #endif /* USE_EXF_INTERPOLATION */
 
@@ -1006,6 +1021,13 @@ C     warn if darwin and radtrans ice forcing are different
         WRITE(msgBuf,'(3A)') 'DARWIN_EXF_READPARMS: The use of ',
      &   'useExfYearlyFields AND ',
      &   'DICrunoffRepCycle is not implemented'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+       ENDIF
+       IF ( AinjectionRepCycle.NE.0. ) THEN
+        WRITE(msgBuf,'(3A)') 'DARWIN_EXF_READPARMS: The use of ',
+     &   'useExfYearlyFields AND ',
+     &   'AinjectionRepCycle is not implemented'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
        ENDIF
