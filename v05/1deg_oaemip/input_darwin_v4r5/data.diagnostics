@@ -260,10 +260,21 @@
    fields(1,72) = 'pH      ',
    filename(72) = 'diags/monthly/pH',
 #---
-  frequency(73) = 1.,
+  frequency(73) = 2635200.,
    fields(1,73) = 'ALKinj  ',
    filename(73) = 'diags/monthly/ALKinj',
 #---
+  frequency(74) = 86400.,
+   fields(1,74) = 'C_ALKNO3',
+   filename(74) = 'diags/monthly/ConsALK_NO3',
+#---
+  frequency(75) = 86400.,
+   fields(1,75) = 'C_ALKPIC',
+   filename(75) = 'diags/monthly/ConsALK_PIC',
+#---
+  frequency(76) = 86400.,
+   fields(1,76) = 'TRAC32  ',
+   filename(76) = 'diags/monthly/ALKtr',
  &
 
  /

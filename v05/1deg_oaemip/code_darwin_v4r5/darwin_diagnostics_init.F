@@ -1005,6 +1005,20 @@ C-      use units & names from data.ptracers :
       diagCode  = 'SM      U1      '
       CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+      
+      WRITE(diagName,'(A)')'C_ALKNO3'
+      WRITE(diagTitle,'(A)')'Consumption of alkalinity from NO3 upk'
+      diagUnits = 'meq/m3/s        '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+      WRITE(diagName,'(A)')'C_ALKPIC'
+      WRITE(diagTitle,'(A)')'Consumption of alkalinity from PIC'
+      diagUnits = 'meq/m3/s        '
+      diagCode  = 'SMR     MR      '
+      CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I           diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 #endif /* DARWIN_OAE */
 #endif /* DARWIN_ALLOW_CARBON */
 

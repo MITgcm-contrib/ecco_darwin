@@ -418,6 +418,11 @@ C === OAE experiments ==================================================
      I                          Ainjection(1-OLx,1-OLy,bi,bj), 1 _d 0,
      I                          bi, bj, iMin, iMax, jMin, jMax,
      I                          myIter, myTime, myThid )
+      CALL DARWIN_ADD_SURFFORC(
+     U                          gPtr(1-OLx,1-OLy,1,iALKtr),
+     I                          Ainjection(1-OLx,1-OLy,bi,bj), 1 _d 0,
+     I                          bi, bj, iMin, iMax, jMin, jMax,
+     I                          myIter, myTime, myThid )
 #endif
      
 C === iron =============================================================
@@ -1150,6 +1155,12 @@ C      nutrient consumption diagnostics
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsO2), 'C_O2    ',
      &       0,Nr,2,bi,bj,myThid)
 #endif
+#ifdef DARWIN_OAE
+       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsALKNO3),
+     &       'C_ALKNO3',0,Nr,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsALKPIC),
+     &       'C_ALKPIC',0,Nr,2,bi,bj,myThid)
+#endif
 
 C      compute 'source' diagnostics: tendencies without consumption;
 C      add full tendencies to consumption and store result back into
@@ -1200,7 +1211,7 @@ C      diags(iCons*) for convenience
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iConsO2), 'S_O2    ',
      &       0,Nr,2,bi,bj,myThid)
 #endif
-
+       
        DO iTr=1,nDarwin
         diagname = 'gDAR'//PTRACERS_ioLabel(iTr)
         CALL DIAGNOSTICS_FILL(gPtr(1-OLx,1-OLy,1,iTr), diagname,

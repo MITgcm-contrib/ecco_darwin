@@ -100,6 +100,9 @@ CCOG]]]
 #ifdef DARWIN_ALLOW_CARBON
       INTEGER i_O2
 #endif
+#ifdef DARWIN_OAE
+      INTEGER i_ALKtr
+#endif
 #ifdef DARWIN_ALLOW_CDOM
       INTEGER i_CDOM, e_CDOM
 #endif
@@ -122,7 +125,7 @@ CCOG]]]
 #ifdef DARWIN_ALLOW_CSTORE
       INTEGER i_ch, e_ch
 #endif
-CCOG[[[end]]] (checksum: 1916d588f1c9768c75358b16b3668716)
+CCOG[[[end]]] (checksum: 63e81cddddb3e870ba05e59617f149ec)
       INTEGER n_DARWIN
       LOGICAL addBlkLn
       CHARACTER*1 blkLin
@@ -170,6 +173,9 @@ CCOG]]]
 #ifdef DARWIN_ALLOW_CARBON
      &    i_O2,
 #endif
+#ifdef DARWIN_OAE
+     &    i_ALKtr,
+#endif
 #ifdef DARWIN_ALLOW_CDOM
      &    i_CDOM, e_CDOM,
 #endif
@@ -192,7 +198,7 @@ CCOG]]]
 #ifdef DARWIN_ALLOW_CSTORE
      &    i_ch, e_ch,
 #endif
-CCOG[[[end]]] (checksum: 0e66f1b9da7ec7a8cdcee6982dbf6ee5)
+CCOG[[[end]]] (checksum: f1f82165223d1a7e30c127c8856d5871)
      &    n_DARWIN
 
       _BEGIN_MASTER(myThid)
@@ -232,6 +238,9 @@ CCOG]]]
 #ifdef DARWIN_ALLOW_CARBON
        i_O2 = iO2
 #endif
+#ifdef DARWIN_OAE
+       i_ALKtr = iALKtr
+#endif
 #ifdef DARWIN_ALLOW_CDOM
        i_CDOM = iCDOM
        e_CDOM = eCDOM
@@ -262,7 +271,7 @@ CCOG]]]
        i_ch = ich
        e_ch = ech
 #endif
-CCOG[[[end]]] (checksum: a71e683a0fd6b38624b27db90e6ece19)
+CCOG[[[end]]] (checksum: 57611586b54abc9f5ce9146cc92e95b8)
        n_DARWIN = nDARWIN
 
        CALL MDSFINDUNIT( oUnit, mythid )
@@ -2800,6 +2809,13 @@ CCOG]]]
      &                   SQUEEZE_RIGHT,myThid)
 #endif
 
+#ifdef DARWIN_OAE
+      WRITE(msgBuf,'(A,I4,X,A,A32)') 'DARWIN_CHECK: ',
+     &  iALKtr ,'ALKtr     ', PTRACERS_names(iALKtr )
+      CALL PRINT_MESSAGE(msgBuf,standardMessageUnit,
+     &                   SQUEEZE_RIGHT,myThid)
+#endif
+
 #ifdef DARWIN_ALLOW_CDOM
       DO j = 1, eCDOM+1-iCDOM
         iPtr = iCDOM + j - 1
@@ -2877,7 +2893,7 @@ CCOG]]]
      &                     SQUEEZE_RIGHT,myThid)
       ENDDO
 #endif
-CCOG[[[end]]] (checksum: 05ba5478d3ba98e0625cfbc0f8f1432c)
+CCOG[[[end]]] (checksum: dc5a5ce4cc5d5222cf5c32fd3f77134c)
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 C     Log plankton types with ptracer indices
