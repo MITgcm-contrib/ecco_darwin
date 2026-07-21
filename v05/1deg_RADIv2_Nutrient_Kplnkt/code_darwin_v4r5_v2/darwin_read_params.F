@@ -362,7 +362,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       oC0 = -4.88682 _d -7
 
 #ifdef DARWIN_ALLOW_RADIv2
-      useBenthicCarbEmul = .FALSE.
+      useBenthicCarbEmul = .TRUE.
       useBenthicNutrEmul = .TRUE.
       disable_carb_below_omega_emul = .TRUE.
 
