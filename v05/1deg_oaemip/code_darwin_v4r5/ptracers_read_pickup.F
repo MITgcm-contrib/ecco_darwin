@@ -50,6 +50,9 @@ C     msgBuf      :: Informational/error message buffer
       INTEGER filePrec, nbFields
       INTEGER missFldDim, nMissing
       INTEGER nj, ioUnit
+#ifdef DARWIN_OAE
+      INTEGER numInUseSave
+#endif
       PARAMETER( missFldDim = 2*PTRACERS_num )
       CHARACTER*(10) suff
       CHARACTER*(MAX_LEN_FNAM) fn
@@ -65,6 +68,7 @@ CEOP
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 C Patch for passive tracer of added ALK
 #ifdef DARWIN_OAE
+      numInUseSave = PTRACERS_numInUse
       PTRACERS_numInUse = PTRACERS_numInUse-1
 #endif
 
@@ -343,6 +347,11 @@ C-       Read 2nd Order moments as consecutive records
 C--   end: pickup_read_mdsio, SOM pickups
 c     ENDIF
 #endif /* PTRACERS_ALLOW_DYN_STATE */
+
+C -- restore numInUse after skipping read pickup for added alk
+#ifdef DARWIN_OAE
+      PTRACERS_numInUse = numInUseSave
+#endif
 
 #endif /* ALLOW_PTRACERS */
 
