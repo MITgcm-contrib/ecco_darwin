@@ -2,19 +2,24 @@
 from ._baseline import AMPL, pfun, BOUNDARIES as _BASE_BOUNDARIES  # noqa: F401
 
 # --- riverine boundary chemistry: upstream WQP grabs + literature TOC ----------
-# Upstream (cub) from WQP mainstem stations Sagwon / Franklin Bluffs (~55-137 km
+# Upstream (cub) from WQP mainstem stations (Sagwon -> Franklin Bluffs, ~55-137 km
 # inland, unambiguously freshwater). The Sagavanirktok drains Brooks Range limestone,
-# so it is a HARD-water river: ALK 2078 (n=23) and DIC 2017 (solved from ALK + the
-# observed pH 8.00, n=24) are genuinely high, above the placeholder. NO3 11 (n=27) is
-# well sampled. TOC = 250 is LITERATURE-augmented (Rember & Trefry 2004 report Sag
-# DOC 167-742 uM over the season; the WQP upstream DOC has n=1 and is unreliable) --
+# so it is a HARD-water river with genuinely high alkalinity. NO3 11 (n=27) is well
+# sampled. TOC = 250 is LITERATURE-augmented (Rember & Trefry 2004 report Sag DOC
+# 167-742 uM over the season; the WQP upstream DOC has n=1 and is unreliable) --
 # flagged as such. NH4/PO4 are near zero upstream. Marine clb unchanged.
-# See tools/build_boundary_chem.py.
+#
+# CARBONATE: DIC solved to reproduce the observed PAIRED-sample pCO2. 16 co-located
+# ALK+pH open-water grabs across 3 mainstem stations give median ALK 1609 and median
+# water pCO2 666 uatm (SUPERSATURATED -> outgas); DIC back-solved -> 1628. This
+# replaces the earlier median-ALK + median-pH (separate) solve (ALK 2078, DIC 2017),
+# which gave a spurious pCO2 ~339 (undersaturated) -- median pH understates the flux-
+# relevant pCO2. tools/usgs_carbonate_boundary.py bbox -149.2,69.0,-148.3,70.2.
 BOUNDARIES = dict(_BASE_BOUNDARIES)
 for _sp, _cub in [("NO3", 11.0), ("NH4", 1.0), ("PO4", 0.1), ("TOC", 250.0),
-                  ("pH", 8.00), ("ALK", 2078.0), ("DIC", 2017.0)]:
+                  ("pH", 7.88), ("ALK", 1608.7), ("DIC", 1628.0)]:
     BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
-BOUNDARY_CHEM_SOURCE = "WQP Sagwon/Franklin Bluffs (upstream) + Rember 2004 TOC (lit)"
+BOUNDARY_CHEM_SOURCE = "WQP Sagavanirktok mainstem (paired-pCO2 DIC) + Rember 2004 TOC (lit)"
 
 # Observed USGS 00010 (blended to the regression outside the 93-day
 # open-water record). Removes the +2.6 C regression warm bias directly. See

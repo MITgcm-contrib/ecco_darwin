@@ -21,18 +21,31 @@ WATERTEMP_FILE = "kuparuk_watertemp_obs_2022_degC.csv"
 # soft tundra headwater and is likely a LOWER bound for the delta. Treat as
 # "far better than the shipped placeholder, still not delta-observed."
 #
-# DIC is NOT in the LTER record. Rather than guess a ratio, it is SOLVED from the
-# two carbonate variables that ARE observed -- pH 7.32 and ALK 274.4 -- via the
-# model's own carbonate system at S=0, T~10 C, giving DIC = 284.8 (which reproduces
-# pH 7.32 exactly, confirmed). So DIC is derived, not independently measured.
-# Only Kuparuk gets this -- the other three rivers have no LTER data and keep the
-# shared placeholder. Species not covered here (dSi, O2, DIA, S, SPM) also stay
-# placeholder. See tools/lter_boundary.py.
 BOUNDARIES = dict(_BASE_BOUNDARIES)
-for _sp, _cub in [("NO3", 3.46), ("NH4", 0.37), ("PO4", 0.05), ("TOC", 295.6),
-                  ("pH", 7.32), ("ALK", 274.4), ("DIC", 284.8)]:
+
+# --- NUTRIENTS: Arctic LTER headwater reference reach (see caveat above) ------
+# NO3/NH4/PO4/TOC still come from the LTER headwater record -- no delta-proximal
+# nutrient series is available. Species not covered (dSi, O2, DIA, S, SPM) stay
+# placeholder. See tools/lter_boundary.py.
+for _sp, _cub in [("NO3", 3.46), ("NH4", 0.37), ("PO4", 0.05), ("TOC", 295.6)]:
     BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)   # keep marine clb, override river cub
-BOUNDARY_CHEM_SOURCE = "Arctic LTER headwater (reference reach), knb-lter-arc.10303"
+
+# --- CARBONATE: the river's OWN near-tidewater gauge (DELTA-PROXIMAL) ---------
+# ALK and pH are open-water (Jun-Sep) samples at gauge 15896000 (nr Deadhorse,
+# ~tidewater) -- NOT the 163-km-upstream LTER headwater. DIC is solved to reproduce
+# the observed PAIRED-sample pCO2: 48 co-located ALK+pH grabs give median water pCO2
+# 796 uatm (SUPERSATURATED -> outgas), and DIC is back-solved from the median ALK
+# (1099) and that pCO2 -> 1141 (tools/usgs_carbonate_boundary.py siteid USGS-15896000).
+# The delta alkalinity (1099) is ~4x the soft-water headwater value (274) -- downstream
+# mineral weathering, exactly the "LTER is a lower bound for the delta" caveat above --
+# so the river outgasses as Arctic rivers physically do. The retired headwater proxy
+# (pH 7.32, ALK 274.4, DIC 284.8) sat at pCO2 ~ 421 uatm (== atmosphere), holding the
+# model spuriously near equilibrium.
+for _sp, _cub in [("pH", 7.64), ("ALK", 1099.1), ("DIC", 1141.1)]:
+    BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)   # keep marine clb, override river cub
+
+BOUNDARY_CHEM_SOURCE = ("carbonate: USGS 15896000 delta gauge (paired-pCO2 DIC); "
+                        "nutrients: Arctic LTER reference reach, knb-lter-arc.10303")
 
 LABEL = "Kuparuk"
 DISCHARGE_FILE = "kuparuk_river_discharge_2022_m3sec.csv"

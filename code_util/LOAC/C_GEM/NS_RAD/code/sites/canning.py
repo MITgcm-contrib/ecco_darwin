@@ -1,5 +1,19 @@
 """Canning River -- ~6,200 km2, western boundary of ANWR."""
-from ._baseline import WATERTEMP_FILE, AMPL, pfun, BOUNDARIES  # noqa: F401
+from ._baseline import WATERTEMP_FILE, AMPL, pfun, BOUNDARIES as _BASE_BOUNDARIES  # noqa: F401
+
+# --- riverine boundary chemistry: CARBONATE only (weakest-constrained site) ----
+# The Canning itself has NO discrete carbonate samples. Its region (eastern North
+# Slope / ANWR) is pooled instead: 40 open-water ALK grabs (28 co-located with pH)
+# across 20 stations near Kaktovik (Hulahula/Sadlerochit/Marsh-Creek drainages, the
+# Canning's neighbours and the same terrain its discharge is proxied from). Median
+# ALK 1797 mmol/m^3 and median PAIRED water pCO2 613 uatm (SUPERSATURATED -> outgas);
+# DIC back-solved -> 1804. All other species keep the shared placeholder -- consistent
+# with this being the site with reconstructed discharge and borrowed temperature too.
+# tools/usgs_carbonate_boundary.py bbox -146.5,69.0,-143.5,70.6.
+BOUNDARIES = dict(_BASE_BOUNDARIES)
+for _sp, _cub in [("pH", 7.97), ("ALK", 1796.6), ("DIC", 1803.7)]:
+    BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
+BOUNDARY_CHEM_SOURCE = "WQP eastern-ANWR regional pool (paired-pCO2 DIC); other species placeholder"
 
 LABEL = "Canning"
 DISCHARGE_FILE = "canning_river_discharge_2022_m3sec.csv"

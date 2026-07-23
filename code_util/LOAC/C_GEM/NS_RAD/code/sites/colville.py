@@ -6,16 +6,23 @@ from ._baseline import WATERTEMP_FILE, AMPL, pfun, BOUNDARIES as _BASE_BOUNDARIE
 # (WQP, ~32 km inland at the delta head -- i.e. essentially the model's upstream
 # boundary location, and freshwater not brackish). Open-water medians, converted to
 # model units (mmol/m^3): alkalinity mg/L CaCO3 x 19.98; DOC mg/L x 83.3; N species
-# mg/L-as-N x 71.4; PO4 mg/L-as-PO4 x 10.5. DIC solved from the observed ALK (1319)
-# and pH (7.80, n=113) via the model carbonate system -> 1302. Colville drains
-# carbonate-rich terrain, so its alkalinity/DIC are genuinely high (near the old
-# placeholder); the large correction is TOC (358 vs placeholder 1582, ~5x lower).
-# The marine clb end is unchanged. See tools/build_boundary_chem.py.
+# mg/L-as-N x 71.4; PO4 mg/L-as-PO4 x 10.5. Colville drains carbonate-rich terrain,
+# so alkalinity is genuinely high; the large correction was TOC (358 vs placeholder
+# 1582, ~5x lower). The marine clb end is unchanged.
+#
+# CARBONATE: DIC is solved to reproduce the observed PAIRED-sample pCO2. The 74
+# co-located ALK+pH grabs at USGS-15880000 give a median water pCO2 of 658 uatm
+# (SUPERSATURATED -> the river outgasses), so DIC is back-solved from the median ALK
+# (1319) and that pCO2 -> 1337. This replaces the earlier median-ALK + median-pH
+# (separate) solve, which gave DIC 1302 and a spurious pCO2 ~459 (near atmospheric):
+# taking pH and ALK medians independently understates the flux-relevant pCO2, since
+# pH and ALK covary and the CO2-rich samples are what drive the air-sea flux.
+# tools/usgs_carbonate_boundary.py siteid USGS-15880000.
 BOUNDARIES = dict(_BASE_BOUNDARIES)
 for _sp, _cub in [("NO3", 5.0), ("NH4", 4.0), ("PO4", 0.5), ("TOC", 358.0),
-                  ("pH", 7.80), ("ALK", 1319.0), ("DIC", 1302.0)]:
+                  ("pH", 7.82), ("ALK", 1318.9), ("DIC", 1336.6)]:
     BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
-BOUNDARY_CHEM_SOURCE = "WQP Colville R nr Nuiqsut (upstream mainstem)"
+BOUNDARY_CHEM_SOURCE = "WQP Colville R nr Nuiqsut 15880000 (paired-pCO2 DIC)"
 
 LABEL = "Colville"
 DISCHARGE_FILE = "colville_river_discharge_2022_m3sec.csv"
