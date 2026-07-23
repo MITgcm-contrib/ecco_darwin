@@ -322,7 +322,13 @@ def _pbar_rho(S, water_temp, depth):
     separate _p_bar so the density needed for the mmol/m^3 <-> mol/kg conversion below
     is not computed twice."""
     rho = dens(S, water_temp, depth / 2.0)
-    return (depth / 2.0 * rho * G) * 0.1, rho
+    # Mid-column hydrostatic pressure rho*g*h [Pa] -> bar (the Millero 1995 K1/K2
+    # pressure corrections take pressure in bar). Pa->bar is 1e-5; the original *0.1
+    # was a 1e4x unit error that gave pb ~ 657 bar at ~1.3 m depth instead of ~0.066,
+    # inflating K1/K2/KB ~1.9x and biasing the DIAGNOSED pH ~0.3-0.5 low. FCO2 is
+    # nearly unaffected -- the K1/K2 inflation is absorbed by the compensating H+
+    # shift that conserves alkalinity -- so this corrects the pH field, not the flux.
+    return (depth / 2.0 * rho * G) * 1.0e-5, rho
 
 
 @njit(cache=True)
