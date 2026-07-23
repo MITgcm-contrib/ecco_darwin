@@ -42,9 +42,11 @@ velocity (hydrodynamics), and a set of transported scalars (temperature, salinit
 suspended matter, and the biogeochemical species). Each scalar $C$ obeys a
 one-dimensional advection–dispersion–reaction equation,
 
-$$\frac{\partial (A\,C)}{\partial t} \;+\; \frac{\partial (Q\,C)}{\partial x}
-\;=\; \frac{\partial}{\partial x}\!\left(A\,K\,\frac{\partial C}{\partial x}\right)
-\;+\; A\,\sum_j S_j(C,\dots),$$
+```math
+\frac{\partial (A\,C)}{\partial t} \;+\; \frac{\partial (Q\,C)}{\partial x}
+\;=\; \frac{\partial}{\partial x}\left(A\,K\,\frac{\partial C}{\partial x}\right)
+\;+\; A\,\sum_j S_j(C,\dots),
+```
 
 where $x$ is distance along the channel, $A(x,t)$ the wetted cross-sectional area,
 $Q=A\,U$ the volumetric discharge, $U$ the section-averaged velocity, $K$ the
@@ -77,10 +79,12 @@ the landward end ($x=E_L$) is the **riverine** boundary.
 converges exponentially from the seaward width $B_{lb}$ to the prismatic upstream width
 $B_{ub}$ over a short delta-flare length $L_F$, and is constant thereafter,
 
-$$B(s) = \begin{cases}
+```math
+B(s) = \begin{cases}
 B_{lb}\,\exp(-s/L_C), & 0 \le s < L_F, \quad L_C = -L_F / \ln(B_{ub}/B_{lb}),\\
 B_{ub}, & s \ge L_F,
-\end{cases}$$
+\end{cases}
+```
 
 with $s$ the distance from the seaward boundary. This replaces the whole-domain Savenije
 exponential of standard C-GEM, which fits these rivers poorly; per-river geometry is set
@@ -102,7 +106,9 @@ tridiagonal system is iterated to convergence (`hyd_module`).
 **Marine boundary elevation.** The seaward water level is the sum of an astronomical tide
 and a wind-driven storm surge,
 
-$$\eta(t) = \sum_i A_i \cos\!\big(\omega_i\, t/3600 - G_i\big) \;+\; \eta_{\text{surge}}(t),$$
+```math
+\eta(t) = \sum_i A_i \cos\big(\omega_i\, t/3600 - G_i\big) \;+\; \eta_{\text{surge}}(t),
+```
 
 a multi-constituent harmonic reconstruction (amplitudes $A_i$, speeds $\omega_i$, phases
 $G_i$ from the nearest NOAA CO-OPS station), plus $\eta_{\text{surge}}$, the observed
@@ -116,11 +122,13 @@ fallback is used.
 The dispersion coefficient is computed **per timestep from local hydraulics** using the
 Seo & Cheong (1998) river formula,
 
-$$K = 5.915\left(\frac{W}{H}\right)^{0.620}\left(\frac{U}{u_*}\right)^{1.428} H\,u_*,
-\qquad u_* = \sqrt{g}\,\frac{U}{C_z},$$
+```math
+K = 5.915\left(\frac{W}{H}\right)^{0.620}\left(\frac{U}{u_\ast}\right)^{1.428} H\,u_\ast,
+\qquad u_\ast = \sqrt{g}\,\frac{U}{C_z},
+```
 
 with $W$ the local width, $H$ the local depth, $U$ the local velocity, and shear velocity
-$u_*$ taken from the model's own Chézy friction (so $U/u_* = C_z/\sqrt{g}$; no channel
+$u_\ast$ taken from the model's own Chézy friction (so $U/u_\ast = C_z/\sqrt{g}$; no channel
 slope is required, which matters because SWORD slopes at these delta reaches are
 unusable). This replaces the Van der Burgh / Savenije estuary form, which collapses to zero
 under realistic shallow geometry, leaving transport purely advective. $K$ is capped at
@@ -146,8 +154,10 @@ dispersion machinery as salinity, with time-varying boundary values (sea tempera
 the mouth, river temperature upstream). After transport, a surface heat budget warms/cools
 the interior each timestep (`heat_module`),
 
-$$\rho_w\, c_{p,w}\, H\, \frac{\partial T}{\partial t}
-= Q_{sw} + Q_{lw} + Q_{sens} + Q_{lat},$$
+```math
+\rho_w\, c_{p,w}\, H\, \frac{\partial T}{\partial t}
+= Q_{sw} + Q_{lw} + Q_{sens} + Q_{lat},
+```
 
 with net shortwave $Q_{sw}$ (albedo $\alpha_w=0.06$), net longwave $Q_{lw}$ (clear-sky
 Brutsaert emissivity), and turbulent sensible $Q_{sens}$ and latent $Q_{lat}$ heat from
@@ -170,7 +180,7 @@ diagnosed from it. Four mechanisms:
 - **Surface melt** — warm air (sensible) plus absorbed shortwave (ice albedo $\alpha_{ice}
   =0.6$) thin the slab in spring.
 - **Hydraulic (freshet) break-up** — when discharge exceeds a multiple
-  ($\text{BREAKUP\_Q\_FACTOR}=3$) of the annual-mean discharge, the freshet surge clears the
+  (`BREAKUP_Q_FACTOR` = 3, default) of the annual-mean discharge, the freshet surge clears the
   cover mechanically. This is the North-Slope-specific mechanism; a purely thermal model
   breaks up weeks too late.
 
@@ -189,19 +199,23 @@ $T,S,p$ equation of state), so it shares the mol kg⁻¹ basis of the dissociati
 $K_0,K_1,K_2$ (carbonic acid; Millero 1995 / Weiss 1974) and $K_B$ (boric acid). Hydrogen
 ion is found by the Follows et al. (2006) iteration,
 
-$$[\mathrm{H^+}] = \tfrac12\Big[(\gamma-1)K_1 + \sqrt{(1-\gamma)^2 K_1^2 - 4K_1K_2(1-2\gamma)}\Big],
-\qquad \gamma = \frac{\mathrm{DIC}}{\mathrm{Alk_C}},$$
+```math
+[\mathrm{H^+}] = \tfrac12\Big[(\gamma-1)K_1 + \sqrt{(1-\gamma)^2 K_1^2 - 4K_1K_2(1-2\gamma)}\Big],
+\qquad \gamma = \frac{\mathrm{DIC}}{\mathrm{Alk_C}},
+```
 
 with carbonate alkalinity $\mathrm{Alk_C} = \mathrm{ALK} - [\mathrm{B(OH)_4^-}]$, iterated
 to convergence ($\le 50$ iterations). Aqueous CO₂ is
-$[\mathrm{CO_2^*}] = \mathrm{DIC}\,/\,(1 + K_1/[\mathrm{H^+}] + K_1K_2/[\mathrm{H^+}]^2)$,
+$[\mathrm{CO_2^\ast}] = \mathrm{DIC}\,/\,(1 + K_1/[\mathrm{H^+}] + K_1K_2/[\mathrm{H^+}]^2)$,
 and pH $= -\log_{10}[\mathrm{H^+}]$. Guards return a neutral pH 7 for degenerate
 (near-zero) carbonate states, a bounded transient over a few ice-out steps.
 
 **Air–sea CO₂ flux** (sign convention: $F_{CO_2}>0$ is outgassing):
 
-$$F_{CO_2} = (1-f_i)\,\frac{v_{p,CO_2}}{H}\big([\mathrm{CO_2^*}] - K_0\,p\mathrm{CO_2^{atm}}\big),
-\qquad v_{p,CO_2} = 0.915\,v_p,$$
+```math
+F_{CO_2} = (1-f_i)\,\frac{v_{p,CO_2}}{H}\big([\mathrm{CO_2^\ast}] - K_0\,p\mathrm{CO_2^{atm}}\big),
+\qquad v_{p,CO_2} = 0.915\,v_p,
+```
 
 with $v_p$ the O₂ piston velocity (§10) and $p\mathrm{CO_2^{atm}}$ the atmospheric partial
 pressure (Barrow).
@@ -224,13 +238,17 @@ $P = P_b^{\max}\big(1-e^{-I/E_k}\big)$ is integrated analytically over the water
 (a difference of exponential-integral terms), with a photoacclimated $E_k$ from a variable
 chlorophyll:carbon ratio. Nutrient limitation is multiplicative (Liebig via product form),
 
-$$L_{nut} = \frac{dSi}{dSi+K_{dSi}}\cdot\frac{NO_3+NH_4}{NO_3+NH_4+K_N}\cdot\frac{PO_4}{PO_4+K_{PO4}}.$$
+```math
+L_{nut} = \frac{dSi}{dSi+K_{dSi}}\cdot\frac{NO_3+NH_4}{NO_3+NH_4+K_N}\cdot\frac{PO_4}{PO_4+K_{PO4}}.
+```
 
 Gross and net production, and phytoplankton mortality, are
 
-$$\mathrm{GPP} = P_b^{\max}\,\mathrm{DIA}\,L_{nut}\,\mathcal{I},\qquad
+```math
+\mathrm{GPP} = P_b^{\max}\,\mathrm{DIA}\,L_{nut}\,\mathcal{I},\qquad
 \mathrm{NPP} = \frac{\mathrm{GPP}}{H}(1-k_{exc})(1-k_{grw}) - k_{maint}\,\mathrm{DIA},\qquad
-\mathrm{PD} = k_{mort}\,\mathrm{DIA},$$
+\mathrm{PD} = k_{mort}\,\mathrm{DIA},
+```
 
 where $\mathcal I$ is the depth-integrated light-limited growth. NPP is partitioned into
 nitrate- and ammonium-based uptake ($\mathrm{NPP_{NO3}}$, $\mathrm{NPP_{NH4}}$) by an
@@ -242,18 +260,22 @@ $\mathrm{Si_{cons}}=r_{Si}\,\mathrm{NPP}$.
 Heterotrophic degradation of the labile pool proceeds aerobically and, at low oxygen, by
 denitrification; ammonium is nitrified:
 
-$$\begin{aligned}
+```math
+\begin{aligned}
 \text{aerobic:}\quad & R_{ox} = k_{ox}\,f_{het}\,\frac{TOC}{TOC+K_{TOC}}\,\frac{O_2}{O_2+K_{O2}^{ox}},\\
 \text{denitrification:}\quad & R_{den} = k_{den}\,f_{het}\,\frac{TOC}{TOC+K_{TOC}}\,\frac{K_{inO2}}{O_2+K_{inO2}}\,\frac{NO_3}{NO_3+K_{NO3}},\\
 \text{nitrification:}\quad & R_{nit} = k_{nit}\,f_{nit}\,\frac{O_2}{O_2+K_{O2}^{nit}}\,\frac{NH_4}{NH_4+K_{NH4}}.
-\end{aligned}$$
+\end{aligned}
+```
 
 ### 10.3 Gas exchange (piston velocity)
 
 The gas-transfer velocity combines a current-shear (surface-renewal) and a wind term,
 
-$$v_p = \underbrace{\sqrt{|U|\,D_{O_2}/H}}_{\text{shear}}
-\;+\; \underbrace{\tfrac{1}{3.6\times10^5}\,0.31\,U_w^2\,(Sc/660)^{-1/2}}_{\text{wind}},$$
+```math
+v_p = \underbrace{\sqrt{|U|\,D_{O_2}/H}}_{\text{shear}}
+\;+\; \underbrace{\tfrac{1}{3.6\times10^5}\,0.31\,U_w^2\,(Sc/660)^{-1/2}}_{\text{wind}},
+```
 
 with $D_{O_2}(T)$ the molecular diffusivity and $Sc(T,S)$ the Schmidt number. Oxygen
 exchange is $O_{2,ex} = (1-f_i)\,(v_p/H)\,(O_2^{sat}-O_2)$; CO₂ uses $0.915\,v_p$ (§9); the
@@ -264,7 +286,8 @@ Arctic gases rescale $v_p$ by their Schmidt numbers (§12).
 Applied to each cell per timestep (Redfield ratios $r_N=16/106$, $r_P=1/106$,
 $r_{Si}=16/80$; alkalinity changes follow Wolf-Gladrow et al. 2007):
 
-$$\begin{aligned}
+```math
+\begin{aligned}
 \Delta\mathrm{DIA} &= (\mathrm{NPP}-\mathrm{PD})\,\Delta t, &
 \Delta\mathrm{dSi} &= -\mathrm{Si_{cons}}\,\Delta t,\\
 \Delta\mathrm{NO_3} &= \big(-\tfrac{94.4}{106}R_{den}+R_{nit}-r_N\mathrm{NPP_{NO3}}\big)\Delta t, &
@@ -274,7 +297,8 @@ $$\begin{aligned}
 \Delta\mathrm{O_2} &= \big(-R_{ox}+\mathrm{NPP_{NH4}}+\tfrac{138}{106}\mathrm{NPP_{NO3}}-2R_{nit}+O_{2,ex}\big)\Delta t, &
 \Delta\mathrm{DIC} &= \big(-F_{CO_2}-\mathrm{NPP}+R_{ox}+R_{den}\big)\Delta t,\\
 \Delta\mathrm{ALK} &= \big(\tfrac{15}{106}R_{ox}+\tfrac{93.4}{106}R_{den}-2R_{nit}-\tfrac{15}{106}\mathrm{NPP_{NH4}}+\tfrac{17}{106}\mathrm{NPP_{NO3}}\big)\Delta t. &&
-\end{aligned}$$
+\end{aligned}
+```
 
 Net ecosystem metabolism is reported as $\mathrm{NEM}=\mathrm{NPP}-R_{ox}-R_{den}$ (minus
 the Arctic-extension respiration terms when enabled).
@@ -300,9 +324,11 @@ write-up and citations: [`arctic_biogeochemistry.md`](arctic_biogeochemistry.md)
 A second DOC pool `RDOC` (refractory + chromophoric) is oxidized slowly by microbes and
 photochemically by sunlight, both to DIC (`TOC` remains the labile pool):
 
-$$R_{RDOC} = k_{refr}\,f_{het}\,\frac{RDOC}{RDOC+K_{RDOC}}\,\frac{O_2}{O_2+K_{O2}^{ox}},
+```math
+R_{RDOC} = k_{refr}\,f_{het}\,\frac{RDOC}{RDOC+K_{RDOC}}\,\frac{O_2}{O_2+K_{O2}^{ox}},
 \qquad
-R_{photo} = \Phi_{photo}\,\frac{RDOC}{RDOC+K_{RDOC}}\,\frac{I_{abs}}{H},$$
+R_{photo} = \Phi_{photo}\,\frac{RDOC}{RDOC+K_{RDOC}}\,\frac{I_{abs}}{H},
+```
 
 where $I_{abs}=I_{use}-I_{bottom}$ is the PAR absorbed in the column and $\Phi_{photo}$ an
 apparent photomineralisation efficiency (Cory et al. 2014). A fraction $f_{lab}$ of the
@@ -315,12 +341,14 @@ because $I_{use}$ is already ice-attenuated.
 (sign convention: flux $>0$ is outgassing). Schmidt numbers use Wanninkhof (2014) and
 equilibrium solubilities Wiesenburg & Guinasso (1979, CH₄) / Weiss & Price (1980, N₂O):
 
-$$\begin{aligned}
+```math
+\begin{aligned}
 R_{CH_4,ox} &= k_{ch4}\,f_{het}\,\frac{CH_4}{CH_4+K_{ch4}}\,\frac{O_2}{O_2+K_{ch4}^{O2}}, &
 F_{CH_4} &= (1-f_i)\,\frac{v_{p,CH_4}}{H}\big(CH_4 - CH_4^{eq}\big),\\
 P_{N_2O} &= \tfrac12\big(y_{nit}R_{nit} + y_{den}N_{den}\big), &
 F_{N_2O} &= (1-f_i)\,\frac{v_{p,N_2O}}{H}\big(N_2O - N_2O^{eq}\big),
-\end{aligned}$$
+\end{aligned}
+```
 
 with $N_{den}=\tfrac{94.4}{106}R_{den}$ the N reduced by denitrification, and
 $v_{p,gas}=v_p\sqrt{Sc_{ref}/Sc_{gas}}$. Methanotrophy consumes 2 O₂ per CH₄ and produces
@@ -332,9 +360,11 @@ A first-order sediment-oxygen-demand closure (per-area flux ÷ depth), returning
 alkalinity, nitrate loss, and CH₄ from the bed. Benthic terms run **under ice** (sediment
 respiration continues), so they feed the ice-out vent:
 
-$$\mathrm{SOD} = \frac{k_{sod}\,f_{het}}{H}\,\frac{O_2}{O_2+K_{sod}},\quad
+```math
+\mathrm{SOD} = \frac{k_{sod}\,f_{het}}{H}\,\frac{O_2}{O_2+K_{sod}},\quad
 B_{den} = \frac{k_{bden}\,f_{het}}{H}\,\frac{NO_3}{NO_3+K_{NO3}},\quad
-B_{CH_4} = \frac{k_{meth}\,f_{het}}{H}\Big(1-\frac{O_2}{O_2+K_{sod}}\Big).$$
+B_{CH_4} = \frac{k_{meth}\,f_{het}}{H}\Big(1-\frac{O_2}{O_2+K_{sod}}\Big).
+```
 
 SOD adds DIC (aerobic benthic respiration); benthic denitrification adds alkalinity
 (~1 eq per mol NO₃ reduced) and removes nitrate; methanogenesis sources CH₄.
@@ -344,7 +374,9 @@ SOD adds DIC (aerobic benthic respiration); benthic denitrification adds alkalin
 Tundra/thermokarst/tributary inputs entering *along* the channel (not only at the upstream
 boundary) are represented as a mixing source applied after transport,
 
-$$\Delta C_i = \frac{q_{lat,i}}{V_i}\,(c_{lat}-C_i)\,\Delta t, \qquad V_i = A_i\,\Delta x,$$
+```math
+\Delta C_i = \frac{q_{lat,i}}{V_i}\,(c_{lat}-C_i)\,\Delta t, \qquad V_i = A_i\,\Delta x,
+```
 
 where the total lateral inflow $Q_{lat}$ is spread uniformly over the domain and $c_{lat}$
 is the lateral water's chemistry (per species). This is the minimal *solute-source* form —
