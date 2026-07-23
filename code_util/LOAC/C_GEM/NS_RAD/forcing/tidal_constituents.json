@@ -1,0 +1,220 @@
+{
+ "colville": {
+  "station_id": "9496345",
+  "station_name": "Cape Halkett",
+  "n_constituents": 8,
+  "approx_range_m": 0.396,
+  "constituents": [
+   {
+    "name": "M2",
+    "amp_m": 0.0701,
+    "phase_deg": 252.8,
+    "speed_deg_hr": 28.984104
+   },
+   {
+    "name": "S2",
+    "amp_m": 0.03658,
+    "phase_deg": 305.7,
+    "speed_deg_hr": 30.0
+   },
+   {
+    "name": "O1",
+    "amp_m": 0.03658,
+    "phase_deg": 160.6,
+    "speed_deg_hr": 13.943035
+   },
+   {
+    "name": "K1",
+    "amp_m": 0.02438,
+    "phase_deg": 181.9,
+    "speed_deg_hr": 15.041069
+   },
+   {
+    "name": "P1",
+    "amp_m": 0.00914,
+    "phase_deg": 180.3,
+    "speed_deg_hr": 14.958931
+   },
+   {
+    "name": "K2",
+    "amp_m": 0.00914,
+    "phase_deg": 309.9,
+    "speed_deg_hr": 30.082138
+   },
+   {
+    "name": "M4",
+    "amp_m": 0.0061,
+    "phase_deg": 150.6,
+    "speed_deg_hr": 57.96821
+   },
+   {
+    "name": "Q1",
+    "amp_m": 0.0061,
+    "phase_deg": 150.1,
+    "speed_deg_hr": 13.398661
+   }
+  ]
+ },
+ "kuparuk": {
+  "station_id": "9497645",
+  "station_name": "Prudhoe Bay",
+  "n_constituents": 8,
+  "approx_range_m": 0.384,
+  "constituents": [
+   {
+    "name": "M2",
+    "amp_m": 0.06401,
+    "phase_deg": 275.7,
+    "speed_deg_hr": 28.984104
+   },
+   {
+    "name": "O1",
+    "amp_m": 0.03353,
+    "phase_deg": 186.8,
+    "speed_deg_hr": 13.943035
+   },
+   {
+    "name": "S2",
+    "amp_m": 0.03048,
+    "phase_deg": 314.9,
+    "speed_deg_hr": 30.0
+   },
+   {
+    "name": "K1",
+    "amp_m": 0.02438,
+    "phase_deg": 158.4,
+    "speed_deg_hr": 15.041069
+   },
+   {
+    "name": "Q1",
+    "amp_m": 0.01219,
+    "phase_deg": 173.6,
+    "speed_deg_hr": 13.398661
+   },
+   {
+    "name": "N2",
+    "amp_m": 0.00914,
+    "phase_deg": 258.2,
+    "speed_deg_hr": 28.43973
+   },
+   {
+    "name": "P1",
+    "amp_m": 0.00914,
+    "phase_deg": 177.2,
+    "speed_deg_hr": 14.958931
+   },
+   {
+    "name": "K2",
+    "amp_m": 0.00914,
+    "phase_deg": 318.4,
+    "speed_deg_hr": 30.082138
+   }
+  ]
+ },
+ "sagavanirktok": {
+  "station_id": "9497778",
+  "station_name": "Cross Island (Dinkum Sands)",
+  "n_constituents": 8,
+  "approx_range_m": 0.378,
+  "constituents": [
+   {
+    "name": "M2",
+    "amp_m": 0.06401,
+    "phase_deg": 308.2,
+    "speed_deg_hr": 28.984104
+   },
+   {
+    "name": "S2",
+    "amp_m": 0.03048,
+    "phase_deg": 349.5,
+    "speed_deg_hr": 30.0
+   },
+   {
+    "name": "O1",
+    "amp_m": 0.03048,
+    "phase_deg": 198.0,
+    "speed_deg_hr": 13.943035
+   },
+   {
+    "name": "K1",
+    "amp_m": 0.02438,
+    "phase_deg": 172.0,
+    "speed_deg_hr": 15.041069
+   },
+   {
+    "name": "N2",
+    "amp_m": 0.01219,
+    "phase_deg": 289.2,
+    "speed_deg_hr": 28.43973
+   },
+   {
+    "name": "Q1",
+    "amp_m": 0.00914,
+    "phase_deg": 190.0,
+    "speed_deg_hr": 13.398661
+   },
+   {
+    "name": "P1",
+    "amp_m": 0.00914,
+    "phase_deg": 171.8,
+    "speed_deg_hr": 14.958931
+   },
+   {
+    "name": "K2",
+    "amp_m": 0.00914,
+    "phase_deg": 349.6,
+    "speed_deg_hr": 30.082138
+   }
+  ]
+ },
+ "canning": {
+  "station_id": "9498306",
+  "station_name": "Point Thomson",
+  "n_constituents": 7,
+  "approx_range_m": 0.354,
+  "constituents": [
+   {
+    "name": "M2",
+    "amp_m": 0.07315,
+    "phase_deg": 271.1,
+    "speed_deg_hr": 28.984104
+   },
+   {
+    "name": "S2",
+    "amp_m": 0.03658,
+    "phase_deg": 318.5,
+    "speed_deg_hr": 30.0
+   },
+   {
+    "name": "O1",
+    "amp_m": 0.02438,
+    "phase_deg": 206.0,
+    "speed_deg_hr": 13.943035
+   },
+   {
+    "name": "K1",
+    "amp_m": 0.01829,
+    "phase_deg": 146.4,
+    "speed_deg_hr": 15.041069
+   },
+   {
+    "name": "N2",
+    "amp_m": 0.00914,
+    "phase_deg": 268.5,
+    "speed_deg_hr": 28.43973
+   },
+   {
+    "name": "K2",
+    "amp_m": 0.00914,
+    "phase_deg": 322.4,
+    "speed_deg_hr": 30.082138
+   },
+   {
+    "name": "P1",
+    "amp_m": 0.0061,
+    "phase_deg": 151.0,
+    "speed_deg_hr": 14.958931
+   }
+  ]
+ }
+}

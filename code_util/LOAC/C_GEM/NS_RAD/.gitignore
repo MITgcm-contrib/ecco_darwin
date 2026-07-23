@@ -1,0 +1,39 @@
+# ---- NS-RAD .gitignore ----
+
+# Model run outputs (regenerable via tools/build_all.sh; large, ~GB)
+runs/
+
+# Report PDFs: the single combined report (docs/ns_rad_report.pdf) IS the kept,
+# tracked deliverable. The six part-PDFs it is stitched from are throwaway build
+# intermediates — regenerated every build, then deleted by build_all.sh. Rebuild
+# the report with `tools/build_all.sh --figures-only` (which recreates the parts,
+# stitches them, then removes them), not `make_report.py` alone.
+docs/ns_rad_model_summary.pdf
+docs/ns_rad_model_schematic.pdf
+docs/ns_rad_geometry.pdf
+docs/ns_rad_river_networks.pdf
+docs/ns_rad_diagnostics.pdf
+docs/ns_rad_validation.pdf
+
+# Legacy per-field text outputs (NetCDF is the default; .dat are transient)
+*.dat
+
+# Python / Numba caches
+__pycache__/
+*.py[cod]
+*.nbc
+*.nbi
+.ipynb_checkpoints/
+
+# OS / editor / IDE
+.DS_Store
+.idea/
+*.swp
+*~
+
+# Claude Code workspace (not project content)
+.claude/
+
+# Scratch
+*.tmp
+scratch/

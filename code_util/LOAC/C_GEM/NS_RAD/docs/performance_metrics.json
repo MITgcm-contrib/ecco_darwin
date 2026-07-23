@@ -1,0 +1,11 @@
+{
+  "per_site_sec": {
+    "kuparuk": 868,
+    "colville": 874,
+    "sagavanirktok": 903,
+    "canning": 913
+  },
+  "serial_total_sec": 3558,
+  "parallel_total_sec": 913,
+  "config": "2-year run, DELTI=75 s, TS=48 (hourly), NetCDF, numba, 14 cores"
+}
