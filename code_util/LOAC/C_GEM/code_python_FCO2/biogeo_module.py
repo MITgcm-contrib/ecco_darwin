@@ -9,7 +9,8 @@ from config import (
     KD1, KD2, Pbmax, alpha, kexcr, kgrowth, kmaint, kmort, redsi, redn,
     redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2_ox, KO2_nit, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS, pCO2
 )
-from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, K0_CO2, K1_CO2, K2_CO2, pH, KB
+from fun_module import I0, Fhet, Fnit, O2sat, piston_velocity, K0_CO2, K1_CO2, K2_CO2, pH, KB, Tabs
+from density import dens
 from file_module import Rates
 
 def biogeo(t):
@@ -72,13 +73,24 @@ def biogeo(t):
         O2_ex[i] = (vp[i] / DEPTH[i]) * (O2sat(t, i) - v['O2']['c'][i])
         NEM[i] = NPP[i] - aer_deg[i] - denit[i]
 
-        # Estimate pH (Follows et al., 2006)
-        Hplus[i] = pH(t, i, 10**(-v['pH']['c'][i]), v['S']['c'][i], v['DIC']['c'][i], v['ALK']['c'][i], KB(t, i), K1_CO2(t, i), K2_CO2(t, i))  # mol/kg or mmol m-3
+        # Estimate pH (Follows et al., 2006). The carbonate speciation MUST be done in
+        # mol/kg: the equilibrium constants K0/K1/K2/KB are on the mol/kg-SW scale, but
+        # DIC/ALK are carried in mmol/m^3. Convert to mol/kg before the solve, then
+        # convert CO2* and K0 back to mmol/m^3 for the flux. Without this, (co2s - K0*pCO2)
+        # subtracts mmol/m^3 from mol/kg (a ~1e6x unit mismatch) so the atmospheric-
+        # saturation term is inert and FCO2 is spuriously always-outgassing; the borate
+        # correction inside pH() is likewise inert. (C-GEM v2 carbonate-units fix.)
+        rho_i = dens(v['S']['c'][i], Tabs(t) - 273.15, DEPTH[i] / 2)  # water density [kg/m^3]
+        dic_kg = v['DIC']['c'][i] * 1.0e-3 / rho_i  # mmol/m^3 -> mol/kg
+        alk_kg = v['ALK']['c'][i] * 1.0e-3 / rho_i  # mmol/m^3 -> mol/kg
+        Hplus[i] = pH(t, i, 10**(-v['pH']['c'][i]), v['S']['c'][i], dic_kg, alk_kg, KB(t, i), K1_CO2(t, i), K2_CO2(t, i))  # mol/kg
         # Evaluate[CO2*]
-        co2s = v['DIC']['c'][i] / (1.0 + (K1_CO2(t, i) / Hplus[i]) + (K1_CO2(t, i) * K2_CO2(t, i) / (Hplus[i] * Hplus[i])))  # mol/kg or mmol m-3
+        co2s_kg = dic_kg / (1.0 + (K1_CO2(t, i) / Hplus[i]) + (K1_CO2(t, i) * K2_CO2(t, i) / (Hplus[i] * Hplus[i])))  # mol/kg
+        co2s = co2s_kg * rho_i * 1.0e3  # mol/kg -> mmol/m^3
         # CO2 fluxes
         vpCO2 = 0.915 * vp[i]  # convert O2 piston velocity to CO2 piston velocity (Regnier et al., 2002) [m/s]
-        RCO2 = - vpCO2 * (co2s - K0_CO2(t, i) * pCO2)  # rate of exchange mmol C m^−2 s^−1
+        K0_v = K0_CO2(t, i) * rho_i * 1.0e3  # Henry's K0: mol/kg/atm -> mmol/m^3/atm
+        RCO2 = - vpCO2 * (co2s - K0_v * pCO2)  # rate of exchange mmol C m^−2 s^−1
         FCO2[i] = RCO2 / DEPTH[i]  # CO2 flux mmol C m^−3 s^−1
 
         # Update biogeochemical state variables [mmol m^-3]
