@@ -258,21 +258,32 @@ the effect on `FCO2` — that needs a full multi-year run.
 `EL = 27175` is unchanged and common to all four. It is a modelling choice (how far upstream to simulate)
 rather than an observable, kept uniform for comparability.
 
-**`BOUNDARIES` — Kuparuk now uses Arctic LTER chemistry; the other three are still placeholder.** The riverine
-(`cub`) end for Kuparuk's NO3, NH4, PO4, TOC, pH, ALK and DIC comes from the Arctic LTER Streams record
-(EDI `knb-lter-arc.10303`, natural *Reference* reach only — the fertilized reaches are a P-enrichment
-experiment), open-water medians 1978-2019. Built by `tools/lter_boundary.py`, hard-coded in `sites/kuparuk.py`.
-Two caveats travel with it: (1) the LTER site is ~163 km upstream of the model's boundary (Dalton Highway
-headwaters, 720 m), so these are a headwater *proxy* — alkalinity especially (274 vs the old placeholder 1596)
-is soft tundra water and likely a lower bound for the delta; (2) DIC is not measured by LTER, so it is solved
-from the observed pH and ALK (284.8, reproduces pH 7.32). The placeholder it replaced was off by 5-10× on
-carbon and nitrogen. **Colville, Sagavanirktok and Canning still carry the shared placeholder** — no LTER data
-exists for them — so cross-site chemistry comparison is not yet clean. **Impact on the result:** the corrected
-chemistry cut Kuparuk's outgassing well below the other three — the placeholder had been overstating it ~5× via
-too much DOC (respiration fuel) and alkalinity. **(These specific FCO₂ magnitudes predate the mol/kg carbonate
-fix, which later dropped all of them ~60× — see "Carbonate chemistry" — so the *relative* chemistry impact
-stands but the absolute values are superseded.)** This was the single largest boundary-chemistry correction in
-the reconfiguration; the mol/kg carbonate fix is the largest *carbonate* one.
+**`BOUNDARIES` — the riverine carbonate boundary (`cub` DIC/ALK/pH) now comes from delta-proximal USGS
+discrete samples for all four rivers, and all four outgas.** Built and reproduced by
+`tools/usgs_carbonate_boundary.py` from the USGS Water Quality Portal. The method is the load-bearing part:
+**DIC is back-solved to reproduce the observed PAIRED-sample `pCO2`** — `pCO2` is computed per grab from
+co-located (same-activity) ALK+pH+T, the median is taken, and DIC is solved from the well-constrained median
+ALK and that median `pCO2`. The earlier boundaries solved DIC from median ALK + median pH taken *separately*,
+which **understated the flux-relevant `pCO2`** (pH and ALK covary; the median pH is biased by high-pH low-flow
+grabs while the CO₂-rich grabs drive the air–sea flux) and left three rivers spuriously near equilibrium.
+
+| river | source (open-water paired ALK+pH) | *n* | ALK | median `pCO2` | DIC |
+|---|---|---|---|---|---|
+| Colville | USGS 15880000 (nr Nuiqsut, delta head) | 74 | 1319 | 658 µatm | 1337 |
+| Kuparuk | USGS 15896000 (nr Deadhorse, tidewater) | 48 | 1099 | 796 µatm | 1141 |
+| Sagavanirktok | Sag mainstem, 3 stations | 16 | 1609 | 666 µatm | 1628 |
+| Canning | eastern-ANWR regional pool, 20 stations | 28 | 1797 | 613 µatm | 1804 |
+
+**Kuparuk's carbonate was upgraded off the Arctic-LTER *headwater* proxy** (EDI `knb-lter-arc.10303`, ~163 km
+upstream, soft-water ALK 274) **onto its own near-tidewater gauge** (delta ALK 1099, ~4× higher from downstream
+mineral weathering — exactly the "lower bound for the delta" caveat the LTER note had flagged). Kuparuk's
+*nutrients* (NO3/NH4/PO4/TOC) still come from LTER; Canning has no discrete carbonate of its own, so its region
+is pooled and only its carbonate is sourced (all other species stay placeholder — consistent with it being the
+weakest site). **Result (year-2 open-water FCO₂, gC m⁻² yr⁻¹): every river flips to a realistic net CO₂
+source, 100 % of open-water cells outgassing** — Colville −3.9→**+94.6**, Kuparuk −9.3→**+177.5**,
+Sagavanirktok −51.7→**+91.8**, Canning +425→**+106.6** (its placeholder had been over-outgassing). The prior
+near-equilibrium/uptake was a boundary-chemistry artifact (DIC ≈ ALK), not a model deficiency; this and the
+`_pbar_rho` pressure fix (Known defects) together make the carbon flux physical.
 
 **Canning is the weakest-constrained site**: observed geometry, but *reconstructed* discharge, *borrowed*
 temperature, and only 28 surveys behind its depth.
@@ -555,13 +566,15 @@ basis of the constants, then converts CO2* and the Henry term back to mmol/m³ f
 **The mol/kg fix is a first-order correction to `FCO2`, not cosmetic.** The pre-v2 code (which we inherited)
 subtracted the atmospheric-saturation term `K0·pCO2` in **mol/kg** from `co2s` in **mmol/m³** — ~10⁶× too
 small — so it was effectively negligible and `FCO2 ≈ vp·co2s`: *always outgassing, proportional to dissolved
-CO₂, ignoring the air–sea gradient*. With the units reconciled (saturation ≈ 14 vs co2s ≈ 20 mmol/m³) the flux
-is the real disequilibrium residual, and the rivers turn out **near CO₂ equilibrium** — FCO₂ dropped ~60× on
-Colville/Kuparuk and flipped to slight uptake on the high-pH Sagavanirktok; only placeholder-chemistry Canning
-still clearly outgasses. **Consequence:** FCO₂ is now near equilibrium and therefore *genuinely sensitive to
-the boundary DIC/ALK* (placeholder for Colville/Sag/Canning), so its **sign is unconstrained** for those three
-until the chemistry is sourced. The old "net outgassing in all four" was an artefact of the unit bug. This
-retired the "known defect" note below.
+CO₂, ignoring the air–sea gradient*. With the units reconciled the flux became the real disequilibrium
+residual — so `FCO2` is now **genuinely sensitive to the boundary DIC/ALK**, and its sign is set by whether the
+river carries a respiratory CO₂ excess (DIC > carbonate alkalinity). With the *delta-proximal* carbonate
+boundaries now sourced for all four rivers (see `BOUNDARIES` above), the observed water `pCO2` is 580–800 µatm
+(supersaturated) and **all four rivers outgas** (+92 to +178 gC m⁻² yr⁻¹, 100 % of open-water cells) — the
+physically expected behaviour for Arctic permafrost rivers. *(Historical note: with the earlier boundaries
+these three read near-equilibrium/uptake and Canning over-outgassed; that was a boundary-chemistry artifact
+of DIC ≈ ALK, not the flux code. Two things had to be right for the sign to be trustworthy — the mol/kg
+saturation term here, and the `_pbar_rho` pressure unit fix in Known defects.)*
 
 **Output.** `.dat` files, tab-separated, appended one row per save, time in column 0 followed by `M` values —
 so each file is a time × distance matrix. Written when `(t / (TS*DELTI)) % 1 == 0`. State variables go through
@@ -586,8 +599,9 @@ Inherited from upstream, not introduced locally. Left as-is so far.
 - **Carbonate unit inconsistency — FIXED (mol/kg solve, ported from C-GEM v2).** The old solve mixed mmol/m³
   state with mol/kg constants (the borate term, and — more consequentially — the `K0·pCO2` saturation term in
   `FCO2`, ~10⁶× too small). It is now solved consistently in mol/kg with a density conversion; see "Carbonate
-  chemistry" above. This was a first-order correction to `FCO2` (rivers are near CO₂ equilibrium, not strongly
-  outgassing), not the small change the earlier note anticipated.
+  chemistry" above. This was a first-order correction to `FCO2` — it made the flux the real air–sea
+  disequilibrium residual rather than always-outgassing, so the sign then followed the boundary DIC/ALK (now
+  delta-sourced; all four rivers outgas). Not the small change the earlier note anticipated.
 - **`fun_module._pbar_rho` carbonate pressure — FIXED (Pa→bar unit error).** The mid-column hydrostatic
   pressure was returned as `(depth/2·rho·G)·0.1` — Pascals scaled by `0.1` — instead of the Pa→bar factor
   `1e-5`. At these rivers' ~1.3 m depth that gave `pb ≈ 657 bar` instead of `≈ 0.066 bar` (10⁴× too large),
