@@ -588,6 +588,17 @@ Inherited from upstream, not introduced locally. Left as-is so far.
   `FCO2`, ~10⁶× too small). It is now solved consistently in mol/kg with a density conversion; see "Carbonate
   chemistry" above. This was a first-order correction to `FCO2` (rivers are near CO₂ equilibrium, not strongly
   outgassing), not the small change the earlier note anticipated.
+- **`fun_module._pbar_rho` carbonate pressure — FIXED (Pa→bar unit error).** The mid-column hydrostatic
+  pressure was returned as `(depth/2·rho·G)·0.1` — Pascals scaled by `0.1` — instead of the Pa→bar factor
+  `1e-5`. At these rivers' ~1.3 m depth that gave `pb ≈ 657 bar` instead of `≈ 0.066 bar` (10⁴× too large),
+  inflating the Millero-1995 pressure corrections on `K1/K2/KB` ~1.9× and biasing the **diagnosed pH ~0.3–0.5
+  units low** (median ~6.8 vs the physical ~7.7 in freshwater cells). **`FCO2` is essentially unaffected
+  (<2%):** the flux uses `co2s` from the *same* pressure-corrected constants and the H⁺ that the solve shifts
+  to conserve alkalinity, so the `K1/K2` inflation cancels out of the flux — the bug corrupts only the pH
+  **output** field, not the air–sea flux. Verified by driving the flux with correctly-solved DIC/ALK (98% sign
+  agreement with the stored `FCO2`) and by watching `c_pH` drift under the buggy pressure in an instrumented
+  run. Because `FCO2` moves slightly, output is **not** bit-identical to pre-fix runs but is physically
+  equivalent for the flux. Fixed at `code/fun_module.py` (commit `d825cec`).
 - **`init_module` line 33** hardcodes `50` in the Chezy ramp (`(i - 50) / (M - 50)`) while the surrounding
   conditional keys off `distance`, which is `1` in the current config. For `1 <= i < 50` the numerator is
   negative and Chezy exceeds `Chezy_lb`.
