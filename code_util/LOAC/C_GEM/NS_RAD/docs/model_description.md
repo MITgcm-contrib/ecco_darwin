@@ -77,19 +77,48 @@ the landward end ($`x=E_L`$) is the **riverine** boundary.
 
 **Width.** NS-RAD uses a *flare + prismatic* width law (`WIDTH_MODEL="flare"`): the width
 converges exponentially from the seaward width $`B_{lb}`$ to the prismatic upstream width
-$`B_{ub}`$ over a short delta-flare length $`L_F`$, and is constant thereafter,
+$`B_{ub}^{\text{tot}}`$ over a short delta-flare length $`L_F`$, and is constant thereafter,
 
 ```math
 B(s) = \begin{cases}
-B_{lb}\,\exp(-s/L_C), & 0 \le s < L_F, \quad L_C = -L_F / \ln(B_{ub}/B_{lb}),\\
-B_{ub}, & s \ge L_F,
+B_{lb}\,\exp(-s/L_C), & 0 \le s < L_F, \quad L_C = -L_F / \ln(B_{ub}^{\text{tot}}/B_{lb}),\\
+B_{ub}^{\text{tot}}, & s \ge L_F,
 \end{cases}
 ```
 
 with $`s`$ the distance from the seaward boundary. This replaces the whole-domain Savenije
 exponential of standard C-GEM, which fits these rivers poorly; per-river geometry is set
-from SWORD v17c node widths and USGS ADCP depth surveys. Setting `WIDTH_MODEL="expo"`
+from SWORD v17b node widths and USGS ADCP depth surveys. Setting `WIDTH_MODEL="expo"`
 recovers the original exponential law.
+
+**Two widths: total conveyance and per-thread.** These rivers are braided upstream and
+deltaic at the mouth, so $`B`$ above is the **total** conveyance and water-surface width,
+summed over parallel threads: $`B_{lb}`$ is the SWORD distributary sum and
+$`B_{ub}^{\text{tot}}`$ the raw (un-divided) SWORD width in the prismatic reach, both direct
+observations. Longitudinal dispersion, however, is a *within*-channel shear process, so it is
+driven by a separate per-thread width
+
+```math
+B_{\text{thread}}(s) = B(s)\,/\,n_{\text{chan}}(s), \qquad
+n_{\text{chan}}(s) = n_{lb}\left(\frac{n_{ub}}{n_{lb}}\right)^{s/L_F},\quad
+n_{ub} = \frac{B_{ub}^{\text{tot}}}{B_{ub}},
+```
+
+blended geometrically over the same $`L_F`$, so that $`B_{\text{thread}}`$ reduces exactly to
+the SWORD per-channel median $`B_{ub}`$ upstream and to the mean distributary width
+$`B_{lb}/n_{lb}`$ at the mouth. Only §5 uses $`B_{\text{thread}}`$; the cross-section,
+velocity, residence time and air–water interface all use the total $`B`$.
+
+This matters because a single width field would otherwise change meaning along the domain —
+a distributary *sum* at the mouth but *one of n* braids upstream — while carrying the total
+discharge through both, over-estimating velocity by $`\sim n_{\text{chan}}`$ in the braided
+reach. Since $`Z = B\,D`$, scaling $`B`$ scales the cross-section and leaves depth unchanged,
+so the dominant effect is on the water-surface area that basin-integrated fluxes are
+multiplied by (~2× on the braided rivers). Velocity and residence time also respond, and
+because the flow-driven gas-transfer velocity scales as $`\sqrt{U}`$ (§9), the *per-area*
+air–water flux shifts as well — by −16% to +7% across the four rivers, and not at all on the
+genuinely single-thread ones. `CGEM_MULTICHANNEL=off` recovers the previous single-width
+formulation. See `docs/multichannel_test.md`.
 
 **Depth and cross-section.** Depth is prescribed from at-a-station hydraulic geometry
 $`D = c\,Q^{f}`$ evaluated at the open-water mean discharge (from the USGS surveys); the
@@ -123,17 +152,26 @@ The dispersion coefficient is computed **per timestep from local hydraulics** us
 Seo & Cheong (1998) river formula,
 
 ```math
-K = 5.915\left(\frac{W}{H}\right)^{0.620}\left(\frac{U}{u_\ast}\right)^{1.428} H\,u_\ast,
-\qquad u_\ast = \sqrt{g}\,\frac{U}{C_z},
+K = 5.915\left(\frac{B_{\text{thread}}}{H}\right)^{0.620}\left(\frac{U}{u_\ast}\right)^{1.428} H\,u_\ast,
+\qquad U = \frac{|Q_r|}{B\,H}, \qquad u_\ast = \sqrt{g}\,\frac{U}{C_z},
 ```
 
-with $`W`$ the local width, $`H`$ the local depth, $`U`$ the local velocity, and shear velocity
+with $`H`$ the local depth, $`U`$ the local discharge-derived velocity, and shear velocity
 $`u_\ast`$ taken from the model's own Chézy friction (so $`U/u_\ast = C_z/\sqrt{g}`$; no channel
 slope is required, which matters because SWORD slopes at these delta reaches are
-unusable). This replaces the Van der Burgh / Savenije estuary form, which collapses to zero
+unusable). Note the two widths (§3): the aspect ratio uses the **per-thread** width
+$`B_{\text{thread}}`$, because the Seo & Cheong regression is a within-channel shear
+relation fitted to single-thread rivers, while the velocity is a conveyance quantity and
+uses the **total** width $`B`$. For a single-thread channel the two coincide and this is the
+original expression. (The two choices are mutually consistent: if $`n`$ threads share a
+depth, the per-thread velocity $`Q_i/(B_i H)`$ equals the conveyance velocity $`Q/(B H)`$,
+so there is no separate per-thread velocity.)
+
+This replaces the Van der Burgh / Savenije estuary form, which collapses to zero
 under realistic shallow geometry, leaving transport purely advective. $`K`$ is capped at
 $`K_{\max} = 4\,\Delta x^2/\Delta t \approx 2133`$ m² s⁻¹ for numerical stability of the
-dispersion scheme (reported once per run if it binds).
+dispersion scheme (reported once per run if it binds). The cap **does** bind, rarely — at
+peak-freshet timesteps at low water, on the order of a percent of cell-timesteps.
 
 ## 6. Transport scheme
 
@@ -174,7 +212,13 @@ diagnosed from it. Four mechanisms:
 - **Freeze-up** — heat removed below the freezing point by the surface budget is converted
   to new ice via the latent heat of fusion, $`\Delta h = Q_{\text{freeze}}\Delta t / (\rho_{ice} L_f)`$.
 - **Conductive (Stefan) growth** — under an existing cover the base is at freezing and the
-  slab conducts heat to a surface at $`\min(T_{air},0)`$: $`\rho_{ice}L_f\,dh/dt = k_{ice} (T_{freeze}-T_{surf})/h`$. Capped at the local depth (**bottom-fast**).
+  slab conducts heat to a surface at $`\min(T_{air},0)`$: $`\rho_{ice}L_f\,dh/dt = k_{ice} (T_{freeze}-T_{surf})/h`$.
+- **Bottom-fast grounding** — the local depth limits how much *new* ice can form (once the
+  slab reaches the bed there is no water left to freeze), but a falling water level does not
+  remove ice: grounded ice keeps its thickness, so $`h`$ may exceed the instantaneous depth.
+  Truncating $`h`$ to the live, tide- and surge-varying depth instead — the earlier
+  behaviour — destroyed ice on every low-water excursion and thinned the cover through
+  midwinter rather than growing it.
 - **Surface melt** — warm air (sensible) plus absorbed shortwave (ice albedo $`\alpha_{ice} =0.6`$) thin the slab in spring.
 - **Hydraulic (freshet) break-up** — when discharge exceeds a multiple
   (`BREAKUP_Q_FACTOR` = 3, default) of the annual-mean discharge, the freshet surge clears the
@@ -277,6 +321,13 @@ v_p = \underbrace{\sqrt{|U|\,D_{O_2}/H}}_{\text{shear}}
 with $`D_{O_2}(T)`$ the molecular diffusivity and $`Sc(T,S)`$ the Schmidt number. Oxygen
 exchange is $`O_{2,ex} = (1-f_i)\,(v_p/H)\,(O_2^{sat}-O_2)`$; CO₂ uses $`0.915\,v_p`$ (§9); the
 Arctic gases rescale $`v_p`$ by their Schmidt numbers (§12).
+
+Note the $`\sqrt{|U|}`$ in the shear term: the air–water flux **per unit area** is not
+independent of channel geometry. Widening the cross-section to its true braided value (§3)
+slows the flow and reduces $`v_p`$, which is why adopting the multi-channel width lowered
+the per-area CO₂ flux on the braided rivers even though the depth — and hence the
+$`\cdot/H`$ conversion — was unchanged. The single-thread rivers, whose velocity did not
+change, show no such shift.
 
 ### 10.4 Reaction stoichiometry
 

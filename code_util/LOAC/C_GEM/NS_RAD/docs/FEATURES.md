@@ -21,8 +21,8 @@ per-decision reference is [`CLAUDE.md`](../CLAUDE.md).
 - **NetCDF output** (`output.nc`, compact, self-describing) as the default, with the
   legacy tab-separated `.dat` path preserved (`CGEM_OUTPUT=dat|both`).
 - **Environment-variable controls** — `CGEM_MAXT_DAYS` / `CGEM_WARMUP_DAYS` (smoke tests
-  without editing `config.py`), `CGEM_TS` (output cadence), `CGEM_ICE`, `CGEM_CARB_UNITS`,
-  `CGEM_DISTANCE`, `CGEM_FONT_SCALE`.
+  without editing `config.py`), `CGEM_TS` (output cadence), `CGEM_OUTPUT`, `CGEM_ICE`,
+  `CGEM_MULTICHANNEL`, `CGEM_N_CHAN_UP`, `CGEM_DISTANCE`, `CGEM_FONT_SCALE`.
 - **Multi-river runner** — `tools/run_sites.sh` runs each river as its own process in its
   own output directory (required: state is global, allocated at import), in parallel.
 - **Run outputs organized by type** — `runs/definitive/`, `runs/regression_bnd/`,
@@ -30,13 +30,24 @@ per-decision reference is [`CLAUDE.md`](../CLAUDE.md).
 
 ## 2. Channel geometry & hydrodynamics
 
-- **Observation-based geometry** — channel **width** from SWORD v17c nodes (per-channel,
+- **Observation-based geometry** — channel **width** from SWORD v17b nodes (per-channel,
   braiding/distributary corrections) and **depth** from USGS ADCP surveys via at-a-station
   hydraulic geometry `D = c·Q^f` (~1–2 m). *Was:* a single hybrid placeholder (15 m deep).
   See CLAUDE.md → *Geometry*.
 - **Flare + prismatic width law** (`WIDTH_MODEL="flare"`) — width converges over a short
   delta flare then is prismatic, which fits these rivers by AIC. *Was:* whole-domain
   Savenije exponential (poor fit, R² 0.02–0.23).
+- **Multi-channel geometry** (`CGEM_MULTICHANNEL`, on by default) — `B` is the **total**
+  conveyance and water-surface width (summed over parallel braids/distributaries, with the
+  prismatic end read directly from SWORD's raw width), while a separate per-thread width
+  `B/n_chan` drives the shear-dispersion closure. *Was:* one width field whose definition
+  changed along the domain — a distributary **sum** at the mouth but **one of n** braids
+  upstream — while carrying the total discharge through both, which over-estimated braided
+  velocity by ~`n_chan` and under-estimated water-surface area by the same factor. Roughly
+  doubles the basin-integrated carbon flux on the two braided rivers (Colville 2.19×,
+  Sagavanirktok 1.57×) and leaves the two single-thread rivers unchanged; also shifts their
+  per-area flux (−16% to +7%) via the √U dependence of the gas-transfer velocity.
+  `=off` reverts bit-identically. See [`multichannel_test.md`](multichannel_test.md).
 - **Seo & Cheong (1998) longitudinal dispersion** (`DISPERSION_MODEL="seo"`) computed per
   timestep from local width/depth/velocity, with `u*` from the model's own friction.
   *Was:* Van der Burgh / Savenije estuary form, which collapsed to zero under realistic
@@ -67,7 +78,11 @@ per-decision reference is [`CLAUDE.md`](../CLAUDE.md).
   warms/cools the interior; makes mid-channel temperature physical, not a boundary blend.
 - **Prognostic river-ice model** (`ice_module.py`) — freeze-up from the heat-budget
   deficit, conductive (Stefan) growth, surface melt, and **hydraulic (freshet) break-up**
-  (the North-Slope-specific mechanism), with a bottom-fast cap. Couplings: insulates the
+  (the North-Slope-specific mechanism), with **bottom-fast grounding**: depth limits how much
+  new ice can form, but a falling water level never destroys ice already there. *Was:*
+  thickness truncated to the live water depth every step — a one-way ratchet against a
+  ~0.8 m/day tide+surge swing that thinned the cover through midwinter instead of growing it
+  (98% of midwinter thinning sat at that cap). Couplings: insulates the
   heat budget, shuts O₂/CO₂ gas exchange, attenuates under-ice PAR, and **conserves** state
   year-round instead of zeroing it under ice. See [`ice_model_plan.md`](ice_model_plan.md).
 

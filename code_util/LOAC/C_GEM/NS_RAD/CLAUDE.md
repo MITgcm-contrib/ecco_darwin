@@ -25,6 +25,17 @@ tools/run_sites.sh kuparuk            # one site
 SERIAL=1 tools/run_sites.sh           # one at a time
 ```
 
+`tools/build_all.sh` is the one-command wrapper around the whole product: run the four rivers, then rebuild
+every figure and stitch `docs/ns_rad_report.pdf`. Use it, not `make_report.py`, to regenerate the report — the
+six section PDFs are throwaway intermediates it creates, stitches and deletes. A failing figure does not abort
+the rest; it prints a PASS/FAIL summary and exits non-zero.
+
+```bash
+tools/build_all.sh                    # run 4 rivers + all figures + report + movies (~15 min)
+tools/build_all.sh --figures-only     # rebuild figures from existing runs/
+tools/build_all.sh --with-idealized   # also run + verify + figure the idealized fixture
+```
+
 Or directly, which is what the script does per site:
 
 ```bash
@@ -35,7 +46,14 @@ CGEM_SITE=kuparuk PYTHONPATH=../../../code python ../../../code/main.py
 `runs/` is organized by **run-type, then river**: `runs/definitive/<site>/` are these operational runs (all
 analysis tools read these); `runs/regression_bnd/<site>/` is the independent-boundary check consumed only by
 `make_validation_pdf.py`; `runs/idealized/` is the verification fixture (see the Idealized verification site
-section). The old flat `runs/<site>`, `runs_baseline/` and `runs_regression_bnd/` layout is retired.
+section). Three archives hold the states two recent changes were measured against, each isolating **one**
+variable: `runs/singlechannel_archive/<site>/` is pre-multichannel, `runs/multichannel_preicefix/<site>/` is
+post-multichannel but pre-ice-fix, and `runs/definitive/` is current. So
+`tools/compare_adoption.py` diffs the first two (width change alone, both with the old ice) and
+`tools/compare_icefix.py` diffs the last two (ice change alone, both with the new width) — do not compare
+`singlechannel_archive` directly against `definitive`, which would conflate them.
+`runs/experiment_multichannel/` holds the multichannel sensitivity sweep and the distributary diagnostic. The
+old flat `runs/<site>`, `runs_baseline/` and `runs_regression_bnd/` layout is retired.
 
 Sites **must** run in separate directories: `main.py` deletes every `*.dat` in the cwd at startup. They also
 must be separate processes — `variables.py` allocates all state at import time from `config.M`, so two sites
@@ -48,8 +66,24 @@ Smoke test without editing `config.py` (it used to require hand-editing `MAXT`, 
 CGEM_MAXT_DAYS=2 CGEM_WARMUP_DAYS=1 tools/run_sites.sh
 ```
 
-No build, no test suite, no linter config, no dependency manifest. Requires `numpy`, `numba`, and
-`matplotlib` for plotting only.
+No build, no linter config, no dependency manifest, and no unit tests — **`tools/verify_idealized.py` is the
+closest thing to a test suite** (see the Idealized verification site section) and is what to run after a change
+that could affect physics. Requires `numpy`, `numba`, and `netCDF4` (output is NetCDF by default);
+`matplotlib` for the figure tools, `ffmpeg` for movies, `python-docx` only to rebuild the Word guide.
+
+Everything tunable at run time is an environment variable, read in `config.py` at import:
+
+| var | default | effect |
+|---|---|---|
+| `CGEM_SITE` | `colville` | which `code/sites/<name>.py` to load |
+| `CGEM_MAXT_DAYS` / `CGEM_WARMUP_DAYS` | 730 / 365 | run and warmup length — the smoke-test knobs |
+| `CGEM_OUTPUT` | `nc` | `nc`, `dat`, or `both` (see Output, and the bit-identity caveat below) |
+| `CGEM_TS` | 12 | output save cadence (saves every `TS*DELTI` seconds) |
+| `CGEM_ICE` | `on` | `off` reverts every coupling to the legacy `previousdays` gate |
+| `CGEM_MULTICHANNEL` | `on` | `off` reverts to legacy single-channel width, bit-identically |
+| `CGEM_N_CHAN_UP` | derived | override the prismatic thread count, for sensitivity sweeps |
+| `CGEM_DISTANCE` | per-site | saline grid points; swept and rejected as a salinity lever (see Geometry) |
+| `CGEM_FONT_SCALE` | 1.0 | figure tools only (`tools/nsrad_style.py`) |
 
 `numba` **is installed** (`~/miniforge3`, Python 3.13, numba 0.66.0 / llvmlite 0.48.0, numpy 2.4.3) and is now
 load-bearing: essentially every per-cell hot loop is `@njit` — the hydro kernels (`tridag_module`,
@@ -58,11 +92,8 @@ load-bearing: essentially every per-cell hot loop is `@njit` — the hydro kerne
 fails at import if numba is missing.
 
 `main.py` deletes every `*.dat` in the **current working directory** at startup and writes outputs there, so
-always run it from the directory you want results in. Plot with `python "plot outputs.py"` (note the space in
-the filename) — it reads `FCO2.dat` from the cwd and is hardcoded to one variable at a time. Its colorbar is
-still labelled `Salinity (PSU)` while it plots `FCO2`, and its `xlim(0, 130)` and "Distance from the mouth
-(km)" axis are left over from the 160 km site — the columns are 200 m cells, so 136 of them span ~27 km, not
-130. Relabel when reusing it.
+always run it from the directory you want results in. (The upstream one-variable `plot outputs.py` scratch
+script has been deleted — the `tools/make_*.py` figure generators replaced it and read `output.nc`.)
 
 At the shipped settings (`DELTI=75`, `MAXT=2 years`) this is ~840k timesteps over 136 grid points. Runtime
 has come down in three optimization passes (192 min → hydro/density jit → per-cell jit → Python-orchestration
@@ -81,9 +112,10 @@ Two consequences of that work to be aware of when editing:
   jitted kernels require typed arrays, and the mutate-in-place contract would break silently.
 - **The jitted kernels take arrays as arguments, not globals.** Numba freezes module globals as
   compile-time constants, so a kernel closing over `D` would stop seeing updates. Keep the
-  thin-wrapper pattern in `tridag_module` / `uphyd_module` when adding more. For a quick smoke test, cut `MAXT` and `WARMUP` in `config.py` — biogeochemistry
-and sediment are skipped entirely until `t > WARMUP`, so a run shorter than `WARMUP` exercises only
-hydrodynamics and transport.
+  thin-wrapper pattern in `tridag_module` / `uphyd_module` when adding more.
+
+Note what a smoke test does and does not exercise: biogeochemistry and sediment are skipped entirely until
+`t > WARMUP`, so a run shorter than `WARMUP` covers only hydrodynamics, transport, heat and ice.
 
 ## Idealized verification site
 
@@ -244,7 +276,12 @@ After the change: **350–638 m²/s at all 136 points, for every site.**
 Fischer returns 21661 m²/s. That exceeds `DISP_MAX` and would make `disp_sch`'s Crank–Nicolson right-hand
 side oscillatory: the scheme builds `r[i] = 1 − (c1+c2)·DELTI/(8·DELXI²)`, so `r ≥ 0` needs
 `K ≤ 4·DELXI²/DELTI` = **2133 m²/s** at the shipped `DELTI=75`, `DELXI=200`. `DISP_MAX` enforces this and
-reports once per run if it binds. It does not currently bind for any site.
+reports once per run if it binds. **It does bind** — the Colville run log carries the warning (an earlier
+note here claimed it did not, which was wrong). It is rare and confined to peak-freshet timesteps at low
+water: an offline reconstruction puts it at a couple of percent of cell-timesteps at most, and the
+multichannel geometry (below) makes it *less* frequent, not more. The warning fires once per run, so the log
+alone tells you it happened, not how often — check with the reconstruction in `tools/compare_multichannel.py`
+if it matters.
 
 **Root cause of both.** C-GEM's width law *and* its dispersion closure both derive from Savenije's
 tide-dominated alluvial-estuary theory. This config has `AMPL = 0.2 m` and `distance = 1` — negligible tides,
@@ -252,11 +289,78 @@ essentially no saline intrusion. These are rivers with short delta flares, not f
 framework was being applied outside its regime; the width misfit and the collapsing dispersion were the same
 problem surfacing twice.
 
-**Verified:** all four sites run with finite output, no negative concentrations, no capping. **Not verified:**
+**Verified:** all four sites run with finite output and no negative concentrations. **Not verified:**
 the effect on `FCO2` — that needs a full multi-year run.
 
 `EL = 27175` is unchanged and common to all four. It is a modelling choice (how far upstream to simulate)
 rather than an observable, kept uniform for comparability.
+
+### `B` is the TOTAL conveyance width; dispersion uses a separate per-thread width
+
+`CGEM_MULTICHANNEL` — **on by default**, `=off` reverts to the legacy single-channel geometry
+bit-identically. Full write-up and the sensitivity analysis: `docs/multichannel_test.md`.
+
+**The defect this fixes.** One `B(x)` was doing two physically different jobs *and changing definition
+between them*: `B_lb` is the SWORD delta distributary **sum** (total across parallel paths), `B_ub` is the
+SWORD **per-channel** median (one of *n* braids) — with the total discharge carried through both. In a
+braided reach that divides total Q by one braid's area, over-estimating velocity by ~`n_chan` and
+under-estimating residence time and water-surface area by the same factor. Symptom: a spurious 3× velocity
+jet just inside the Colville mouth (0.156 → 0.467 m/s over 5.4 km), created purely by the definition change.
+
+**The fix.** `B` is the total conveyance/surface width everywhere — prismatic end = the observed
+`B_UB_TOTAL` — and `variables.B_thread = B / n_chan` feeds *only* the Seo & Cheong closure, which is a
+within-channel shear process. `n_chan` blends geometrically from `N_CHAN_LB` to the derived prismatic thread
+count over `L_FLARE`. Two properties hold by construction and are asserted in the verification: upstream
+`B_thread` reduces **exactly** to the site's `B_ub`, and at the mouth to `B_lb / N_CHAN_LB`.
+
+**Read the braided total; do not reconstruct it.** SWORD's raw width is *already* summed across braids, so
+sites declare the observed `B_UB_TOTAL` (`tools/extract_sword.py` emits it) and `config` derives the thread
+count. `B_ub × median(n_chan_mod)` is **not** the braided total — `B_ub` is a median of per-node *ratios*,
+and the median of a ratio is not the ratio of medians (Colville: 1052 observed vs 1269 reconstructed).
+
+| river | `B_ub` per-thread | `B_UB_TOTAL` observed | IQR | threads | flare is |
+|---|---|---|---|---|---|
+| Colville | 423 | **1052** | 792–1354 | 2.49 | ~half definitional |
+| Kuparuk | 58 | 60 | 42–78 | 1.03 | real |
+| Sagavanirktok | 102 | 224.5 | 146–318 | 2.20 | partly definitional |
+| Canning | 64 | 63 | 53–78 | 1.00 (clamped) | real |
+
+**What it changes.** `ZZ = B·depth`, so scaling `B` scales the cross-section and leaves `DEPTH` untouched. The
+largest effect is on the **water-surface area**, so the **basin-integrated** flux roughly doubles on the
+braided rivers. Measured, year 2, `tools/compare_adoption.py`:
+
+| river | surface area | per-area gC m⁻² yr⁻¹ | basin tC yr⁻¹ |
+|---|---|---|---|
+| Colville | 2.13× | 93.8 → 96.8 (1.07×) | 1321 → 2900 (**2.19×**) |
+| Sagavanirktok | 1.79× | 91.2 → 76.5 (**0.84×**) | 339 → 531 (1.57×) |
+| Kuparuk *(control)* | 1.02× | 176.4 → 175.7 (1.00×) | 429 → 437 (1.02×) |
+| Canning *(control)* | 1.00× | 105.7 → 105.8 (1.00×) | 337 → 337 (1.00×) |
+
+**The per-area flux is NOT invariant** — a tempting but wrong inference from "`DEPTH` is unchanged". Velocity
+falls with the widened cross-section, and the flow-driven piston velocity goes as **√U**
+(`fun_module._piston_velocity_loop`: `kflow = sqrt(|U|·D_O2/DEPTH)`), so gas exchange per unit area falls too;
+the 1.5–1.8× longer transit then shifts the along-channel DIC/ALK balance. Decomposition: Sagavanirktok
+0.88× = `vp` 0.961 × chemistry 0.917; Colville 1.07× = `vp` 0.928 × chemistry 1.153. Per-volume reaction
+rates barely move (Sag `denit` 0.999×, `aer_deg` 0.998×) — it is the residence time that changes.
+
+So the braided rivers' **pre-adoption per-area fluxes were biased high**: the too-narrow cross-section made
+the water flow ~`n_chan` too fast and therefore exchange gas too vigorously. Sagavanirktok is where that shows
+cleanly (−16%); on Colville a compensating chemistry change masked it. Kuparuk and Canning, being genuinely
+single-thread, are unchanged to 3 significant figures — which is the control that confirms the mechanism is
+the velocity change and nothing else.
+
+**Do not read the salinity as constrained.** Mouth salinity improves — the model can now reach marine values
+(27.1 PSU vs a baseline that capped at 11.6) where four earlier levers could not — but it does **not** close
+the observed 8–32 PSU misfit (summer median 1.40 PSU), and it is highly sensitive to the one uncertain
+number: over the SWORD IQR alone the summer median spans 0.02–3.23 PSU. The *capability* to intrude is
+robust; the *typical* intrusion is not.
+
+**Verify a run used the geometry you intended.** `config` prints it into every run log — `grep multichannel
+runs/definitive/<site>/run.log`. This exists because **zsh does not word-split unquoted expansions**, so
+`env $EXTRA python main.py` with a multi-assignment `$EXTRA` passes one malformed assignment, the flag
+evaluates false, and the run produces output *byte-identical to the old baseline* — which reads as "the
+change did nothing" rather than "the flag never arrived". That invalidated a whole sweep before it was
+caught. Write launches with literal, separate `VAR=value` assignments.
 
 **`BOUNDARIES` — the riverine carbonate boundary (`cub` DIC/ALK/pH) now comes from delta-proximal USGS
 discrete samples for all four rivers, and all four outgas.** Built and reproduced by
@@ -284,6 +388,12 @@ source, 100 % of open-water cells outgassing** — Colville −3.9→**+94.6**, 
 Sagavanirktok −51.7→**+91.8**, Canning +425→**+106.6** (its placeholder had been over-outgassing). The prior
 near-equilibrium/uptake was a boundary-chemistry artifact (DIC ≈ ALK), not a model deficiency; this and the
 `_pbar_rho` pressure fix (Known defects) together make the carbon flux physical.
+
+**Those four numbers predate the multi-channel adoption** (they are the single-channel geometry, retained here
+because they are what isolates the carbonate-boundary effect). On the current geometry the per-area fluxes are
+**Colville +96.8, Kuparuk +175.7, Sagavanirktok +76.5, Canning +105.8** — the two single-thread rivers
+unchanged, the two braided ones shifted by the velocity/gas-transfer effect described under *`B` is the TOTAL
+conveyance width*. Basin-integrated totals are **2900 / 437 / 531 / 337 tC yr⁻¹**.
 
 **Canning is the weakest-constrained site**: observed geometry, but *reconstructed* discharge, *borrowed*
 temperature, and only 28 surveys behind its depth.
@@ -371,18 +481,21 @@ This is what makes interior temperature physical rather than a linear blend of t
 boundaries — verified to lift mid-channel summer temperature above both end-members
 under net input of ~200–300 W/m². Toggle with `config.HEAT_BUDGET`.
 
-Four things it does NOT do well, in decreasing severity:
+Humidity is now **observed**: `main.py` reads `relhum_2022_frac.csv` (Deadhorse Airport,
+colocated with PRDA2; built by `tools/build_humidity.py`) and passes it per timestep as
+`heat_budget`'s `rel_hum` argument. `config.REL_HUMIDITY = 0.85` survives only as that
+argument's default — the comment block above it in `config.py` still describes the old
+assumed-constant regime and is stale.
 
-1. **Humidity is assumed** (`config.REL_HUMIDITY = 0.85`), because PRDA2's `DEWP` is
-   empty for 2022. Latent heat is a leading term; this is the dominant uncertainty.
-   Source ERA5-Land humidity if modelled temperature needs to be trusted quantitatively.
-2. **Heat lost below freezing becomes ice** (with `ICE_MODEL` on). The per-step freeze
+Three things it does NOT do well, in decreasing severity:
+
+1. **Heat lost below freezing becomes ice** (with `ICE_MODEL` on). The per-step freeze
    energy is booked to `heat_module.ice_energy_deficit` and `ice_module` converts it to
    ice thickness via `rho_ice*L_fusion`. With `ICE_MODEL` off it is discarded and T is
    simply clamped at 0 °C (the old imitation).
-3. **No cloud cover** — longwave uses clear-sky emissivity (Brutsaert), biasing cooling
+2. **No cloud cover** — longwave uses clear-sky emissivity (Brutsaert), biasing cooling
    high.
-4. **Daily-mean shortwave** — no diurnal cycle; fine midsummer, poor in shoulder seasons.
+3. **Daily-mean shortwave** — no diurnal cycle; fine midsummer, poor in shoulder seasons.
 
 With `ICE_MODEL` on the budget runs **year-round** and **skips ice-covered cells** (the
 slab insulates them; `ice_module` holds the under-ice water at freezing). With `ICE_MODEL`
@@ -401,8 +514,13 @@ the legacy `previousdays` gate. Four mechanisms:
 
 - **Freeze-up** — the freeze-clamp energy `heat_budget` books becomes new ice.
 - **Conductive (Stefan) growth** — under an existing cover the base is at freezing and the
-  slab conducts heat out to a surface at `min(T_air, 0)`; this builds the ~1.5–2 m winter
-  thickness the frazil term alone cannot. Capped at local depth (**bottom-fast**).
+  slab conducts heat out to a surface at `min(T_air, 0)`; this builds the winter thickness
+  the frazil term alone cannot.
+- **Bottom-fast grounding** — the local depth limits how much *new* ice can form (once the
+  slab reaches the bed there is no water left to freeze), but a falling water level never
+  *removes* ice: grounded ice rests on the bed at unchanged thickness, so a grounded slab
+  can be thicker than the instantaneous water depth. See the *Bottom-fast ice was a
+  one-way ratchet* note below — the earlier unconditional cap was a real defect.
 - **Surface melt** — warm air (sensible) + absorbed shortwave (ice albedo) thin the slab
   in spring.
 - **Hydraulic break-up** — when discharge exceeds `BREAKUP_Q_FACTOR × annual-mean
@@ -422,6 +540,43 @@ the legacy `previousdays` gate. Four mechanisms:
 Ice thickness and fraction are written each save step (`file_module.icewrite` →
 `ice_thickness`/`ice_frac` in the NetCDF/.dat output). **Deferred:** the ice draft does not
 yet reduce the hydrodynamic cross-section (`docs/ice_model_plan.md` Tier 3).
+
+#### Bottom-fast ice was a one-way ratchet — FIXED
+
+`ice_module` used to truncate thickness to the local depth unconditionally, every timestep:
+`if h > DEPTH[i]: h = DEPTH[i]`. But `DEPTH` is the **live** water depth, and on this coast
+it swings **~0.8 m per day** on tide + storm surge — comparable to the *entire* water column
+on the three shallow rivers. So the cap chopped the cover roughly twice a day, and the
+clipped ice was **destroyed**: when the water rose again it could only return by slow
+conduction. The cover therefore ratcheted *thinner* through midwinter instead of growing.
+
+**98% of every midwinter thinning event sat exactly at the cap** — the attribution is
+unambiguous, and the behaviour was identical in the pre-multichannel runs (7.70% vs 7.54% of
+steps thinning), so it long predated that work.
+
+The fix: bottom-fast ice **grounds**, it does not melt. Depth limits how much *new* ice can
+form; existing thickness is never reduced by a falling water level
+(`h = DEPTH[i] if DEPTH[i] > h_prev else h_prev`). Year-2 deep winter, days 10–110
+(`tools/compare_icefix.py`, both sides on the same multi-channel geometry):
+
+| river | depth | thinning steps | reversals | domain-mean ice | peak ice | ice destroyed |
+|---|---|---|---|---|---|---|
+| Colville | 2.11 m | 1.13% → **0** | 8/100 → **0** | 1.29→1.64 ⇒ 1.29→**2.07** | 1.96 → 2.12 | 0.54 → **0** |
+| Kuparuk | 1.20 m | 3.41% → **0** | 25/100 → **0** | 0.89→0.80 ⇒ 1.17→**1.39** | 1.20 → 1.40 | 1.53 → **0** |
+| Canning | 0.97 m | 4.95% → **0** | 29/100 → **0** | 0.74→0.60 ⇒ 1.02→**1.17** | 1.02 → 1.19 | 1.89 → **0** |
+| Sagavanirktok | 0.85 m | 7.54% → **0** | 35/100 → **0** | 0.69→0.53 ⇒ 0.94→**1.06** | 0.94 → 1.07 | 2.08 → **0** |
+
+Ice now **grows** through winter on all four; before, three of the four were *losing* ice
+through midwinter. The severity scaled with shallowness, as the mechanism predicts.
+
+**The carbon results are completely unaffected — verified, not assumed.** Per-area and
+basin-integrated `FCO2` are identical to four significant figures on every river (ratio
+1.000), because gas exchange is gated on the *binary* `ice_frac`, which does not move: the
+slab never approached `ICE_FORM_THRESH`, so `ice_frac` still flips exactly twice per cell per
+year and the open-water fraction is unchanged to 0.01%. (Canning has one cell at 16.2 km that
+freezes, briefly reopens in a late-October warm spell and refreezes — 274 flips, physical,
+and identical before and after.) What *was* wrong is the slab thickness itself, which feeds
+under-ice PAR through Beer–Lambert. `runs/multichannel_preicefix/` holds the pre-fix runs.
 
 ### Provenance of the temperature forcing — do not use `watertemp.csv` as a river input
 
@@ -496,8 +651,8 @@ from `EL / DELXI` and forced even, with `M1..M3` as the offset variants the sche
 **Per-timestep call graph**, driven by the loop in `main.py`:
 
 ```
-main() ── exfread() × 6 ──> forcings interpolated to time t
-      ├─ recompute dispersion[] from Qr (Van der Burgh / Savenije)
+main() ── exfread() × 9+ ──> forcings interpolated to time t
+      ├─ recompute dispersion[] from Qr (Seo & Cheong)
       ├─ hyd(t, Qr) ──> new_bc → [coeff_a → tridag → conv → update]* → new_uh
       ├─ transport(t, previousdays) ──> per species: openbound → tvd → disp_sch
       ├─ heat_budget(t, ...) ──> surface heat flux onto v['T'] (skips ice cells)
@@ -507,10 +662,12 @@ main() ── exfread() × 6 ──> forcings interpolated to time t
            └─ sed(t, previousdays)
 ```
 
-Six `exfread` calls over five distinct files — `windspeed.csv` is read twice, into `Uw_sal` and `Uw_tid`, so
-the saline/tidal wind split in `fun_module.piston_velocity` is fed identical values.
+Nine fixed `exfread` calls over eight distinct files (discharge, wind ×2, solar, air temp, relative humidity,
+pCO2, river temp, sea temp), plus one per `BOUNDARY_FORCING` entry and one for `SURGE_FILE` when set.
+`windspeed.csv` is read twice, into `Uw_sal` and `Uw_tid`, so the saline/tidal wind split in
+`fun_module.piston_velocity` is fed identical values.
 
-`exfread` used to re-open and `genfromtxt`-parse the whole CSV on **every** call — 6 parses per timestep ×
+`exfread` used to re-open and `genfromtxt`-parse the whole CSV on **every** call — one parse per call ×
 ~840k timesteps. It now caches parsed series in `file_module._FORCING_CACHE`, keyed by filename; the
 interpolation still runs per timestep, so results are bit-for-bit unchanged. The rolling ice-sum is cached
 alongside. If you add a forcing that changes on disk mid-run, this cache is what will bite you.
@@ -550,8 +707,11 @@ All parameters + citations are in `config.py` under "ARCTIC BIOGEOCHEMISTRY EXTE
 `ice_frac`, and `previousdays` no longer gates them. `previousdays` survives only as the **legacy** gate used
 when `CGEM_ICE=off`. In that legacy path: `file_module.exfread` returns two values, the interpolated forcing
 and `previousdays` — a rolling `nbday_ice`-day cumulative sum of the same series; only the water-temperature
-call's second return is meaningful, and `main.py` relies on `watertemp.csv` being read **last** so that
-`previousdays` holds the right value. Reordering those `exfread` calls will silently break the legacy ice
+call's second return is meaningful, so `main.py` relies on the **`P_WATERTEMP` (river temperature) call being
+the last one that binds `previousdays`**. The calls after it (`P_SEATEMP`, the boundary-forcing loop,
+`P_SURGE`) discard the second return into `_` for exactly this reason — note that `P_SEATEMP` *is*
+`watertemp.csv`, so "last file read" and "last `previousdays`" are no longer the same call. Reordering these
+`exfread` calls, or binding `previousdays` in one of the trailing ones, will silently break the legacy ice
 logic. When `previousdays <= 0` (legacy only), `transport`, `biogeo`, and `sed` zero their state rather than
 integrating.
 
@@ -570,16 +730,22 @@ CO₂, ignoring the air–sea gradient*. With the units reconciled the flux beca
 residual — so `FCO2` is now **genuinely sensitive to the boundary DIC/ALK**, and its sign is set by whether the
 river carries a respiratory CO₂ excess (DIC > carbonate alkalinity). With the *delta-proximal* carbonate
 boundaries now sourced for all four rivers (see `BOUNDARIES` above), the observed water `pCO2` is 580–800 µatm
-(supersaturated) and **all four rivers outgas** (+92 to +178 gC m⁻² yr⁻¹, 100 % of open-water cells) — the
+(supersaturated) and **all four rivers outgas** (+77 to +176 gC m⁻² yr⁻¹ on the current multi-channel
+geometry; +92 to +178 on the single-channel geometry those boundaries were commissioned against, 100 % of
+open-water cells) — the
 physically expected behaviour for Arctic permafrost rivers. *(Historical note: with the earlier boundaries
 these three read near-equilibrium/uptake and Canning over-outgassed; that was a boundary-chemistry artifact
 of DIC ≈ ALK, not the flux code. Two things had to be right for the sign to be trustworthy — the mol/kg
 saturation term here, and the `_pbar_rho` pressure unit fix in Known defects.)*
 
-**Output.** `.dat` files, tab-separated, appended one row per save, time in column 0 followed by `M` values —
-so each file is a time × distance matrix. Written when `(t / (TS*DELTI)) % 1 == 0`. State variables go through
-`file_module.transwrite` (filename from `v[name]["name"]`), process rates through `Rates` (filename hardcoded
-at the `biogeo` call site).
+**Output.** A single self-describing **`output.nc`** per run directory by default
+(`config.OUTPUT_FORMAT`/`CGEM_OUTPUT = nc`), written when `(t / (TS*DELTI)) % 1 == 0`. All the analysis and
+figure tools read this. The legacy path writes one tab-separated **`.dat`** per variable — appended one row
+per save, time in column 0 followed by `M` values, so each file is a time × distance matrix — and is still
+available via `CGEM_OUTPUT=dat` (or `both`), which is what the bit-identity harness uses. Either way the write
+calls are the same: state variables through `file_module.transwrite` (filename from `v[name]["name"]`),
+process rates through `Rates` (filename hardcoded at the `biogeo` call site), ice through `icewrite`, and
+`close_output()` at the end — which the NetCDF path **needs** in order to flush.
 
 ## Known defects in the vendored code
 
@@ -641,9 +807,28 @@ The forcing CSVs are single-column daily series for 2022, no header, and `exfrea
 `code/` also carries a `.idea/` PyCharm directory from upstream, still named for the earlier
 `code_python_FCO2` project.
 
-## Documentation caveat
+## Where the other documentation lives
 
-`readme.txt` refers to `./code_python_FCO2` and `./code_python`; the actual directories are
-`code` and `forcing`. It is the upstream C-GEM readme and its paths do not
-describe this tree. It is still the authoritative citation list — Volta et al. 2014/2016, Regnier et al.
-2002/2013, Follows et al. 2006, Laruelle et al. 2017.
+This file is the per-decision developer reference — architecture, provenance, and why each non-obvious choice
+was made. It is not the only doc, and the others are not redundant with it:
+
+| doc | what it is for |
+|---|---|
+| `README.md` (root) | the outward-facing project page — what NS-RAD is, quick start, layout, citation |
+| `docs/README.md` | index of `docs/`, and **which files are hand-written vs generated** — read before editing anything in there |
+| `docs/FEATURES.md` | catalog of everything NS-RAD adds on top of upstream C-GEM, as *was → now* |
+| `docs/model_description.md` | the technical model description: governing equations, parameterizations, parameter tables |
+| `docs/performance.md`, `ice_model_plan.md`, `arctic_biogeochemistry.md`, `idealized_verification.md` | the deep write-ups this file summarizes |
+
+**Only the Markdown files in `docs/` are hand-written.** The PDFs, `.docx`, movies, `.json` and `.png` there
+are generated artifacts — regenerate with `tools/build_all.sh`, never hand-edit.
+
+**Documentation caveat.** `readme.txt` refers to `./code_python_FCO2` and `./code_python`; the actual
+directories are `code` and `forcing`. It is the upstream C-GEM readme and its paths do not describe this tree.
+It is still the authoritative citation list — Volta et al. 2014/2016, Regnier et al. 2002/2013, Follows et al.
+2006, Laruelle et al. 2017.
+
+Both previously-noted drifts in the sibling docs are now fixed: `docs/FEATURES.md` no longer advertises a
+`CGEM_CARB_UNITS` variable (it does not exist in `config.py`), and the **v17c** SWORD references throughout
+the code, tools and docs are corrected to **v17b** — the extraction reads `na_sword_v17b.nc`, so v17b was
+always the right label.

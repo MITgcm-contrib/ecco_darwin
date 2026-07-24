@@ -14,9 +14,13 @@ on top of it.
 
 ## What it does
 
-- **Four rivers, observation-based** — channel geometry from SWORD v17c widths + USGS ADCP
+- **Four rivers, observation-based** — channel geometry from SWORD v17b widths + USGS ADCP
   depth surveys; discharge from USGS gauges; a river-appropriate dispersion closure
   (Seo & Cheong 1998) replacing the tide-estuary Savenije form.
+- **Multi-channel geometry** — these rivers braid upstream and split into distributaries at
+  the delta, so the model carries a **total** conveyance width for hydrodynamics and surface
+  area and a separate **per-thread** width for shear dispersion. See
+  [`docs/multichannel_test.md`](docs/multichannel_test.md).
 - **Carbonate system + air–sea CO₂** — Follows et al. (2006) / Millero (1995) carbonate
   solve → pH and FCO₂ (sign convention: FCO₂ > 0 is outgassing).
 - **Transported temperature + surface heat budget** — interior temperature is
@@ -72,7 +76,7 @@ python tools/verify_idealized.py --full         # + full seasonal run (all exten
 | `forcing/` | 2022 forcing data (discharge, meteorology, tides, boundary chemistry) |
 | `tools/` | run script, figure/PDF/movie generators, the `build_all.sh` wrapper, the verification harness |
 | `docs/` | generated PDFs + movies, and the design/methods write-ups |
-| `runs/` | model output — `definitive/<river>/`, `regression_bnd/<river>/`, `idealized/` *(git-ignored)* |
+| `runs/` | model output — `definitive/<river>/`, `regression_bnd/<river>/`, `idealized/`, plus archives of the states recent changes were measured against *(git-ignored)* |
 | `CLAUDE.md` | the developer guide: architecture, provenance, every non-obvious decision |
 
 ## Documentation
