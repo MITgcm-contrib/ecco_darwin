@@ -34,9 +34,18 @@ Two growth/melt mechanisms and one mechanical one:
 
 BOTTOM-FAST ICE
 ---------------
-Shallow reaches freeze to the bed. Thickness is capped at the local depth; where the cap
-binds the channel is closed (ice_frac stays 1 and downstream couplings treat the cell as
-sealed). This is the North-Slope-specific behaviour that motivated a real ice model.
+Shallow reaches freeze to the bed. The local depth limits how much NEW ice can form -- once
+the slab reaches the bed there is no water left to freeze -- but ice already present is
+never removed by a falling water level: grounded ice rests on the bed at unchanged
+thickness. Where the bed is reached the channel is closed (ice_frac stays 1 and downstream
+couplings treat the cell as sealed). This is the North-Slope-specific behaviour that
+motivated a real ice model.
+
+The distinction matters because DEPTH is the live, tide- and surge-varying depth: capping
+h to it outright destroyed ice on every low-water excursion and thinned the cover through
+midwinter (see (5) in _ice_loop). Note that a grounded slab may now be thicker than the
+instantaneous water depth; nothing downstream divides by (DEPTH - h), and the ice draft
+still does not reduce the hydrodynamic cross-section (docs/ice_model_plan.md Tier 3).
 
 COUPLINGS (applied elsewhere, driven by ice_frac / ice_thickness set here)
 - heat_module: skips ice-covered cells (insulation); holds under-ice water at T_FREEZE.
@@ -73,6 +82,8 @@ def _ice_loop(ice_thickness, ice_frac, T, DEPTH, deficit, M,
 
     for i in range(1, M + 1):
         h = ice_thickness[i]
+        h_prev = h                                  # thickness at the start of the step,
+                                                    # for the grounding rule at (5) below
 
         if h <= ICE_FORM_THRESH:
             # (1) freeze-up: convert this step's booked freeze energy into new ice
@@ -99,9 +110,24 @@ def _ice_loop(ice_thickness, ice_frac, T, DEPTH, deficit, M,
 
         if h < 0.0:
             h = 0.0
-        # bottom-fast cap: ice cannot exceed the local water depth
+        # (5) bottom-fast: ice cannot GROW past the bed, but GROUNDING does not destroy it.
+        #
+        # DEPTH is the LIVE water depth, and on this coast it swings ~0.8 m over a day on
+        # tide + storm surge -- comparable to the whole water column on the three shallow
+        # rivers. Truncating h to DEPTH on every low-water excursion (the previous
+        # behaviour) was therefore a ONE-WAY RATCHET: the clipped ice was destroyed, and
+        # when the water rose again it could only return by slow conduction. The cover
+        # ratcheted THINNER through midwinter instead of growing -- domain-mean thickness
+        # on the Sagavanirktok fell 0.81 -> 0.55 m over days 10-110, reversing direction on
+        # 35 of 99 days, and 98% of all midwinter thinning events sat exactly at this cap.
+        #
+        # Physically, bottom-fast ice GROUNDS: when the water drains from under it, it
+        # rests on the bed at unchanged thickness. So the depth limits how much NEW ice can
+        # form (there is no water left to freeze) but never removes ice already there.
+        # Spring surface melt at (3) and break-up at (4) are applied before this and still
+        # thin the cover normally.
         if DEPTH[i] > 0.0 and h > DEPTH[i]:
-            h = DEPTH[i]
+            h = DEPTH[i] if DEPTH[i] > h_prev else h_prev
 
         ice_thickness[i] = h
         ice_frac[i] = 1.0 if h > ICE_FORM_THRESH else 0.0
