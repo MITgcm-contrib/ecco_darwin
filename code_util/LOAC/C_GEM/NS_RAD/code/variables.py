@@ -26,7 +26,13 @@ DEPTH = _z()                  # Water depth [m]
 Chezy = _z()                  # Chezy coefficient [m^-1/2 s^-1] (units per config.py)
 H = _z()                      # Free cross-section [m^2]
 U = _z()                      # Flow velocity [m/s]
-B = _z()                      # Width [m]
+B = _z()                      # Width [m] -- TOTAL conveyance/surface width, summed over
+                              #   parallel threads where the channel is braided or deltaic
+B_thread = _z()               # PER-THREAD width [m] = B / n_chan. Equals B for a
+                              #   single-thread channel (and whenever MULTICHANNEL is off).
+                              #   Used only by the Seo & Cheong shear-dispersion closure,
+                              #   which is a WITHIN-channel process -- see config.MULTICHANNEL.
+n_chan = _z()                 # Parallel thread count at each grid point [-] (>= 1)
 TH = _z()                     # Temporary free cross-section [m]
 TU = _z()                     # Temporary velocity [m/s]
 LC = 0.0                      # Width convergence length [m]

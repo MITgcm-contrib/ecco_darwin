@@ -5,33 +5,64 @@ Initialization module (translated from init.c)
 import math
 from file_module import exfread
 from config import (M, PI, EL, DELXI, G, Chezy_lb, Chezy_ub, DEPTH_lb, DEPTH_ub,
-                    B_ub, B_lb, distance, BOUNDARIES, WIDTH_MODEL, L_FLARE, LATERAL_INFLOW)
-from variables import v, D, Dold, DEPTH, E, Y, U, TU, B, ZZ, Z, fl, dispersion, GPP, NPP, NPP_NO3, NPP_NH4, phy_death, aer_deg, denit, nit, O2_ex, Chezy, C, FCO2, Hplus, q_lat
+                    B_ub, B_lb, distance, BOUNDARIES, WIDTH_MODEL, L_FLARE, LATERAL_INFLOW,
+                    MULTICHANNEL, N_CHAN_LB, N_CHAN_UP)
+from variables import v, D, Dold, DEPTH, E, Y, U, TU, B, B_thread, n_chan, ZZ, Z, fl, dispersion, GPP, NPP, NPP_NO3, NPP_NH4, phy_death, aer_deg, denit, nit, O2_ex, Chezy, C, FCO2, Hplus, q_lat
 import numpy as np
+
+# Prismatic-end TOTAL conveyance width. With MULTICHANNEL off this is the site's
+# B_ub unchanged; with it on, B_ub is the PER-CHANNEL median so the total across
+# N_CHAN_UP braids is the conveyance the river actually offers. See config.MULTICHANNEL.
+B_ub_total = float(B_ub) * N_CHAN_UP
+
 
 def width_at(s):
     """
-    Channel width [m] at distance s [m] upstream of the seaward boundary.
+    TOTAL conveyance/surface width [m] at distance s [m] upstream of the seaward
+    boundary -- summed across parallel threads where the channel braids or splits.
 
     WIDTH_MODEL == 'flare' (default): width converges exponentially over the first
-    L_FLARE metres from B_lb down to the prismatic width B_ub, and is constant at
-    B_ub thereafter. SWORD v17c node widths support this shape over the original
+    L_FLARE metres from B_lb down to the prismatic width B_ub_total, and is constant
+    thereafter. SWORD v17b node widths support this shape over the original
     whole-domain exponential for 3 of the 4 rivers by AIC -- these are rivers with
     short delta flares, not tide-dominated funnel estuaries. See config.WIDTH_MODEL.
 
     WIDTH_MODEL == 'expo': the original C-GEM law, exponential over the whole domain.
     """
     if WIDTH_MODEL == "expo":
-        LC = 1.0 / -(1.0 / float(EL) * math.log(float(B_ub) / float(B_lb)))
+        LC = 1.0 / -(1.0 / float(EL) * math.log(B_ub_total / float(B_lb)))
         return B_lb * math.exp(-s / LC) if s > 0 else B_lb
 
     if s <= 0.0:
         return float(B_lb)
     if s >= L_FLARE:
-        return float(B_ub)
-    # exponential across the flare only: B(L_FLARE) == B_ub exactly
-    LC_flare = -float(L_FLARE) / math.log(float(B_ub) / float(B_lb))
+        return B_ub_total
+    # exponential across the flare only: B(L_FLARE) == B_ub_total exactly
+    LC_flare = -float(L_FLARE) / math.log(B_ub_total / float(B_lb))
     return B_lb * math.exp(-s / LC_flare)
+
+
+def n_chan_at(s):
+    """
+    Number of parallel threads at distance s [m] upstream of the seaward boundary:
+    delta distributaries at the mouth, braids in the prismatic reach.
+
+    Blended GEOMETRICALLY over the same L_FLARE the width uses, so that the derived
+    per-thread width B/n_chan is itself a smooth exponential between its two
+    endpoints (B_lb/N_CHAN_LB at the mouth, exactly B_ub upstream) rather than
+    picking up a kink from mixing an exponential with a linear ramp.
+
+    Returns 1.0 everywhere unless config.MULTICHANNEL is on.
+    """
+    if not MULTICHANNEL:
+        return 1.0
+    # blend over whatever length the width itself converges over
+    L = float(EL) if WIDTH_MODEL == "expo" else float(L_FLARE)
+    if s <= 0.0:
+        return N_CHAN_LB
+    if s >= L:
+        return N_CHAN_UP
+    return N_CHAN_LB * (N_CHAN_UP / N_CHAN_LB) ** (s / L)
 
 
 def init():
@@ -56,8 +87,14 @@ def init():
 
         U[i] = 0.0
         TU[i] = 0.0
-        B[i] = width_at(i * float(DELXI))
-        ZZ[i] = B[i] * (DEPTH_lb - (DEPTH_lb - DEPTH_ub) / float(EL) * i * float(DELXI))
+        _s = i * float(DELXI)
+        B[i] = width_at(_s)
+        # Per-thread width for the shear-dispersion closure only; == B[i] unless
+        # MULTICHANNEL is on. Everything else (cross-section, depth, gas exchange,
+        # surface area) uses the TOTAL width B[i]. See config.MULTICHANNEL.
+        n_chan[i] = n_chan_at(_s)
+        B_thread[i] = B[i] / n_chan[i]
+        ZZ[i] = B[i] * (DEPTH_lb - (DEPTH_lb - DEPTH_ub) / float(EL) * _s)
         Z[i] = 0.0
 
         if include_constantDEPTH == 1:

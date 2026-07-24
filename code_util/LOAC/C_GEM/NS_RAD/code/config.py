@@ -108,7 +108,7 @@ distance = int(os.environ.get("CGEM_DISTANCE", _site.distance))  # Grid points i
 # 'flare'  : width converges exponentially over 0..L_FLARE, then is PRISMATIC.
 # 'expo'   : the original C-GEM law, exponential convergence over the whole domain.
 #
-# SWORD v17c node widths say 'flare' is the right shape for these rivers. Formal
+# SWORD v17b node widths say 'flare' is the right shape for these rivers. Formal
 # model comparison on 1 km binned log-width over the 27 km domain (AIC, lower better):
 #
 #     river           exponential      constant      flare+prismatic   best
@@ -126,6 +126,106 @@ distance = int(os.environ.get("CGEM_DISTANCE", _site.distance))  # Grid points i
 # intrusion). The exponential convergence law comes from Savenije's alluvial-estuary
 # theory and is being applied outside its regime. Set 'expo' to recover the original.
 WIDTH_MODEL = "flare"
+
+# MULTI-CHANNEL GEOMETRY  (ON by default; CGEM_MULTICHANNEL=off reverts)
+# ---------------------------------------------------------------------
+# THE PROBLEM. A single width field B(x) is asked to do two physically different
+# jobs, and in the flare its DEFINITION silently changes between them:
+#
+#   B_lb is the SWORD delta distributary SUM  -> total width across PARALLEL paths
+#   B_ub is the SWORD per-channel median      -> ONE of n parallel braids
+#
+# and the model carries the TOTAL discharge through both. For a braided reach that
+# divides total Q by one braid's area, over-estimating velocity by ~n_chan and
+# under-estimating residence time and water-surface area by the same factor. For
+# Colville the observed braided TOTAL upstream is 1052 m against a 1550 m mouth, so
+# roughly HALF that river's apparent "flare" is this definition change rather than
+# real convergence. (Consistent with the AIC table above, where a CONSTANT width also
+# beat the exponential for Colville.) Kuparuk (60 vs B_ub 58) and Canning (63 vs 64)
+# are genuinely single-thread, so their flares are entirely real.
+#
+# THE FIX. Keep B as the TOTAL conveyance/surface width everywhere -- so the
+# prismatic end becomes the observed B_UB_TOTAL -- and derive a separate per-thread width
+#
+#     B_thread(x) = B(x) / n_chan(x)
+#
+# for the ONE closure that is a within-channel process: Seo & Cheong shear
+# dispersion. n_chan blends geometrically from N_CHAN_LB (delta distributaries) at
+# the mouth to N_CHAN_UP (braids) over the same L_FLARE the width uses.
+#
+# ZZ = B * depth, so scaling B scales the cross-section and leaves DEPTH untouched.
+# The largest single effect is therefore on the water-surface AREA that any
+# basin-integrated flux is multiplied by (~2x on the braided rivers).
+#
+# The per-AREA flux is NOT invariant, though -- a tempting but wrong inference from
+# "DEPTH is unchanged". Velocity drops with the widened cross-section, and the
+# flow-driven part of the piston velocity goes as sqrt(U) (fun_module
+# _piston_velocity_loop: kflow = sqrt(|U|*D_O2/DEPTH)), so gas exchange per unit area
+# falls too; the longer transit time also shifts the along-channel DIC/ALK balance.
+# Measured year-2 open-water response: Sagavanirktok 0.88x (vp 0.961 x chemistry
+# 0.917), Colville 1.07x (vp 0.928 x chemistry 1.153), and the single-thread controls
+# Kuparuk 1.00x / Canning 1.00x. The braided rivers' pre-adoption per-area fluxes were
+# biased HIGH because their too-narrow cross-section made the water flow ~n_chan too
+# fast and so exchange gas too vigorously.
+#
+# Consistency check on the construction: at the mouth B_thread = B_lb / N_CHAN_LB
+# (the mean distributary width); upstream B_thread = B_ub exactly, i.e. it reduces
+# to the SWORD per-channel median the sites already carry. With MULTICHANNEL off,
+# n_chan == 1 everywhere, B_thread is B, and every field is bit-identical to the
+# pre-2026-07 single-channel code -- which is what CGEM_MULTICHANNEL=off is for.
+#
+# WHAT ADOPTING THIS CHANGED (docs/multichannel_test.md has the full table): the
+# BASIN-INTEGRATED carbon flux roughly doubles on the braided rivers with the corrected
+# water-surface area (Colville 2.19x, Sagavanirktok 1.57x; the single-thread Kuparuk and
+# Canning are unchanged, as they should be). The per-AREA flux also moves -- see the
+# sqrt(U) note above -- by -12% to +7%. Mouth salinity improves but does NOT close the
+# observed 8-32 PSU misfit, and it is highly sensitive to the thread count: over the
+# SWORD IQR alone the summer median spans 0.02-3.23 PSU. Do not read it as constrained.
+#
+# THE PRISMATIC TOTAL IS OBSERVED, NOT RECONSTRUCTED. The site supplies B_UB_TOTAL --
+# the median RAW (un-divided) SWORD width beyond the flare, which is already the sum
+# across braids -- and the thread count is DERIVED from it as B_UB_TOTAL / B_ub. Doing
+# it this way round matters: B_ub is a median of per-node ratios, so
+# B_ub * median(n_chan_mod) is NOT the braided total (Colville: 1052 m observed vs
+# 423*3 = 1269 m reconstructed, a 20% error). tools/extract_sword.py emits both.
+MULTICHANNEL = os.environ.get("CGEM_MULTICHANNEL", "on") != "off"
+N_CHAN_LB = float(getattr(_site, "N_CHAN_LB", 1.0)) if MULTICHANNEL else 1.0
+_b_ub_total = float(getattr(_site, "B_UB_TOTAL", _site.B_ub))
+# CGEM_N_CHAN_UP overrides the derived thread count, for sensitivity sweeps over the
+# observational spread in B_UB_TOTAL (its SWORD IQR). See docs/multichannel_test.md.
+# Clamped at 1: a channel cannot have fewer than one thread, and the ratio can land
+# just under it on a genuinely single-thread river (Canning 63/64 = 0.98) purely from
+# the median-of-ratios mismatch described above.
+# `or None` so an EMPTY CGEM_N_CHAN_UP falls back to the derived value instead of
+# raising on float("") -- an empty env var means "not supplied", not "zero".
+_n_up_env = os.environ.get("CGEM_N_CHAN_UP") or None
+N_CHAN_UP = (max(1.0, float(_n_up_env) if _n_up_env else _b_ub_total / float(_site.B_ub))
+             if MULTICHANNEL else 1.0)
+
+# Echo the multi-channel state into the run log. This is not cosmetic: a run whose
+# geometry silently differs from what was intended produces plausible output with no
+# outward sign -- and when it falls back to single-channel, output IDENTICAL to the
+# old baseline, which reads as "the change did nothing" rather than "the flag never
+# arrived". A zsh word-splitting slip (unquoted expansions are NOT split in zsh) once
+# invalidated a whole sensitivity sweep exactly that way. A run log that states the
+# geometry it used cannot be misread. See docs/multichannel_test.md.
+if MULTICHANNEL:
+    print(f"  [multichannel] ON  n_chan: {N_CHAN_LB:.2f} (mouth) -> {N_CHAN_UP:.2f} "
+          f"(prismatic); B_ub total = {float(_site.B_ub) * N_CHAN_UP:.0f} m "
+          f"(per-thread {float(_site.B_ub):.0f} m)")
+else:
+    print("  [multichannel] OFF (CGEM_MULTICHANNEL=off) -- legacy single-channel "
+          "geometry; B is the per-channel width upstream and the distributary sum "
+          "at the mouth. Reproduces pre-adoption results.")
+
+# DISTRIBUTARY DISCHARGE SHARE  (EXPERIMENTAL)
+# -------------------------------------------
+# Fraction of the gauged river discharge this site carries. 1.0 for a whole river.
+# A delta distributary run (e.g. sites/colville_main.py) sets its conveyance share
+# here, so the two channels of a two-outlet delta can be run as separate processes
+# and aggregated afterwards -- the multi-SITE machinery doubling as multi-CHANNEL
+# machinery, with no change to the single-channel solver. Applied to Qr in main.py.
+Q_FRACTION = float(getattr(_site, "Q_FRACTION", 1.0))
 
 RS = 1.0  # Storage width ratio
 rho_w = 1000.0  # Density of pure water [kg/m^3]

@@ -62,7 +62,7 @@ SURGE_FILE = "surge_prudhoe_2022_m.csv"
 GAUGE = "15896000"
 DISCHARGE_IS_UPSTREAM_PROXY = False
 
-# --- geometry: SWORD v17c nodes + USGS channel surveys -----------------------
+# --- geometry: SWORD v17b nodes + USGS channel surveys -----------------------
 # Width from SWORD per-channel node width, 149 nodes. This is the ONLY one of the
 # four whose width profile actually fits C-GEM's exponential convergence with any
 # skill (R2 = 0.23 per-channel, 0.63 on raw width over the model domain).
@@ -89,6 +89,17 @@ L_FLARE = 7000    # flare length [m]; width converges over 0..L_FLARE,
 # Gauge sits near tidewater, so this depth is the most representative of the four.
 DEPTH_lb = 1.34
 DEPTH_ub = 1.34
+
+# Multi-channel geometry for CGEM_MULTICHANNEL=on (config.MULTICHANNEL). B_UB_TOTAL is
+# the OBSERVED raw braided total beyond the flare; config derives the thread count from it. Two seaward
+# distributaries at the delta (SWORD, widths 335+182 = B_lb); the prismatic reach is
+# SINGLE-THREAD (see the per-channel note above), so N_CHAN_UP = 1 and the flare here
+# is a REAL convergence, not a definition change. This site is the control.
+N_CHAN_LB = 2.0
+B_UB_TOTAL = 60.0      # SWORD v17b raw prismatic median [m]; IQR 42-78, 127 nodes.
+                        # 60 vs B_ub 58 -> thread count 1.03: SINGLE-THREAD, confirmed by
+                        # median n_chan_mod = 1.0. This site's flare is REAL convergence,
+                        # not a definition change -- the control for the experiment.
 
 distance = 1
 GEOMETRY_IS_PLACEHOLDER = False

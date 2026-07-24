@@ -6,6 +6,13 @@
    1310,
    240
   ],
+  "prismatic": {
+   "raw_total_med": 1052.0,
+   "raw_total_p25": 792.0,
+   "raw_total_p75": 1354.5,
+   "n_chan_mod_med": 3.0,
+   "n_nodes": 102
+  },
   "dist_km": [
    6.75,
    8.25,
@@ -278,6 +285,13 @@
    335,
    182
   ],
+  "prismatic": {
+   "raw_total_med": 60.0,
+   "raw_total_p25": 42.0,
+   "raw_total_p75": 78.0,
+   "n_chan_mod_med": 1.0,
+   "n_nodes": 127
+  },
   "dist_km": [
    0.75,
    2.25,
@@ -688,6 +702,13 @@
    320,
    233
   ],
+  "prismatic": {
+   "raw_total_med": 224.5,
+   "raw_total_p25": 146.5,
+   "raw_total_p75": 318.5,
+   "n_chan_mod_med": 2.0,
+   "n_nodes": 111
+  },
   "dist_km": [
    3.75,
    5.25,
@@ -1008,6 +1029,13 @@
    562,
    236
   ],
+  "prismatic": {
+   "raw_total_med": 63.0,
+   "raw_total_p25": 52.9,
+   "raw_total_p75": 78.5,
+   "n_chan_mod_med": 1.0,
+   "n_nodes": 68
+  },
   "dist_km": [
    9.75,
    11.25,

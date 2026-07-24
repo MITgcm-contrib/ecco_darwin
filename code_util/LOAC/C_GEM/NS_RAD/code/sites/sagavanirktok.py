@@ -38,7 +38,7 @@ SURGE_FILE = "surge_prudhoe_2022_m.csv"
 GAUGE = "15908000"
 DISCHARGE_IS_UPSTREAM_PROXY = True
 
-# --- geometry: SWORD v17c nodes + USGS surveys, WITH A BORROWED RATIO --------
+# --- geometry: SWORD v17b nodes + USGS surveys, WITH A BORROWED RATIO --------
 # B_lb = 98 m is observed (SWORD per-channel near the mouth). B_ub is NOT observed.
 # SWORD shows this river WIDENING upstream even after the per-channel correction
 # (98 -> 119 m, i.e. a negative convergence length), from only 46 nodes with a data
@@ -67,6 +67,17 @@ B_ub = 102        # PRISMATIC width [m] = SWORD per-channel median in the prisma
 # B_ub (per-channel median) above.
 L_FLARE = 7000    # flare length [m]; width converges over 0..L_FLARE, then prismatic.
 WIDTH_RATIO_IS_BORROWED = True
+
+# Multi-channel geometry for CGEM_MULTICHANNEL=on (config.MULTICHANNEL). B_UB_TOTAL is
+# the OBSERVED raw braided total beyond the flare; config derives the thread count from it.
+# N_CHAN_LB = the two seaward distributaries SWORD resolves (320+233 = B_lb).
+# This river is braided AND its SWORD coverage has a 5-20 km gap -- it is the least
+# trustworthy of the four here. Treat any Sag multichannel result as indicative only.
+N_CHAN_LB = 2.0
+B_UB_TOTAL = 224.5     # SWORD v17b raw prismatic median [m]; IQR 146-318, 111 nodes.
+                        # 224.5 vs B_ub 102 -> thread count 2.20 (median n_chan_mod = 2.0).
+                        # Braided, but this river's SWORD coverage has a 5-20 km gap, so it
+                        # is the least trustworthy of the four -- indicative only.
 
 # Depth from D = 0.280*Q^0.259 (189 surveys, 1991-2026) at open-water mean 127.6 m3/s.
 # These same 189 surveys are what contradict the shipped DEPTH = 15 m, which was

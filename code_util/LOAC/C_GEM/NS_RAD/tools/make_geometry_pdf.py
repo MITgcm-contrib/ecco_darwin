@@ -59,8 +59,15 @@ def load_site(name):
     m = importlib.import_module(f"sites.{name}")
     per = getattr(m, "B_lb_perchan", m.B_lb)
     nch = getattr(m, "N_CHAN_MOUTH", 1)
+    # Multi-channel geometry (config.MULTICHANNEL, on by default). The model's B is the
+    # TOTAL conveyance width, running B_lb -> B_UB_TOTAL; the per-thread width that the
+    # dispersion closure sees runs B_lb/N_CHAN_LB -> B_ub. Both are plotted, because the
+    # SWORD overlays compare against different ones: the per-channel node scatter belongs
+    # with the per-thread curve, the delta sum with the conveyance curve.
     return dict(B_lb=m.B_lb, B_ub=m.B_ub, L_FLARE=m.L_FLARE, EL=m.EL,
-                DEPTH=m.DEPTH_lb, B_lb_perchan=per, N_CHAN=nch)
+                DEPTH=m.DEPTH_lb, B_lb_perchan=per, N_CHAN=nch,
+                B_ub_total=float(getattr(m, "B_UB_TOTAL", m.B_ub)),
+                N_CHAN_LB=float(getattr(m, "N_CHAN_LB", 1.0)))
 
 
 def flare(s, B_lb, B_ub, L_FLARE):
@@ -84,9 +91,10 @@ def page_width(pdf, geo, sw):
     fig = plt.figure(figsize=(11, 8.5))
     fig.suptitle("Channel width — idealized C-GEM geometry vs SWORD", x=0.055,
                  ha="left", fontsize=13, weight="bold")
-    fig.text(0.055, 0.935, "Line = model flare (mouth width → prismatic upstream). "
-             "Black = SWORD per-channel width (median + IQR). Triangle = SWORD delta-mouth "
-             "distributary sum, the conveyance width the flare starts from (B_lb).",
+    fig.text(0.055, 0.935, "Solid = model TOTAL conveyance width (what B is: summed over "
+             "parallel threads). Dashed = per-thread width B/n_chan, which the shear-dispersion "
+             "closure uses and which the black SWORD per-channel median + IQR is the check on. "
+             "Triangle = SWORD delta-mouth distributary sum (B_lb).",
              wrap=True,
              color=INK2, fontsize=8.0)
     gs = fig.add_gridspec(2, 2, left=0.07, right=0.97, top=0.90, bottom=0.09,
@@ -96,9 +104,17 @@ def page_width(pdf, geo, sw):
         g = geo[s]
         x = np.linspace(0, 27.0, 200)
         xm = x * 1000.0
-        w_model = [flare(v, g["B_lb"], g["B_ub"], g["L_FLARE"]) for v in xm]
+        # TOTAL conveyance width -- this is the model's B array (see config.MULTICHANNEL)
+        w_model = [flare(v, g["B_lb"], g["B_ub_total"], g["L_FLARE"]) for v in xm]
         ax.plot(x, w_model, color=C[s], lw=1.8, zorder=4,
-                label=f"model flare (mouth {g['B_lb']:.0f} m → {g['B_ub']:.0f} m)")
+                label=f"model B, total ({g['B_lb']:.0f} → {g['B_ub_total']:.0f} m)")
+        # PER-THREAD width B/n_chan -- what the Seo & Cheong dispersion closure sees.
+        # Drawn only where it actually differs from the total (braided/deltaic sites).
+        if g["N_CHAN_LB"] > 1.0 or g["B_ub_total"] > g["B_ub"] * 1.01:
+            w_thread = [flare(v, g["B_lb"] / g["N_CHAN_LB"], g["B_ub"], g["L_FLARE"])
+                        for v in xm]
+            ax.plot(x, w_thread, color=C[s], lw=1.3, ls="--", alpha=0.85, zorder=4,
+                    label=f"per-thread B/n_chan ({g['B_lb']/g['N_CHAN_LB']:.0f} → {g['B_ub']:.0f} m)")
         d = sw.get(s, {})
         # SWORD per-channel width: every node (faint scatter) + robust median line & IQR
         # band (main stem, non-trib). Braided raw totals are divided by n_chan_mod, so
@@ -158,7 +174,7 @@ def page_table(pdf, geo, sw):
                      "widths and the exact braided sum will be overlaid and the mouth "
                      "widths refined when it lands.")
     notes = [
-        "WIDTH is width-averaged (1-D model, no lateral/vertical structure). Derived from SWORD v17c per-channel "
+        "WIDTH is width-averaged (1-D model, no lateral/vertical structure). Derived from SWORD v17b per-channel "
         "node widths (~200 m spacing) over the model domain, then a flare law: exponential convergence over "
         "L_FLARE down to a prismatic upstream width B_ub. Depth from at-a-station hydraulic geometry D = c·Q^f on "
         "USGS ADCP surveys, at each river's 2022 open-water mean discharge.",

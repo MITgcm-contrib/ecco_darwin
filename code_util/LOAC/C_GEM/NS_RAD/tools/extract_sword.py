@@ -33,6 +33,9 @@ MOUTH = {"colville": (-150.7, 70.44, 0.65),
          "canning": (-145.85, 70.13, 0.40)}
 BAND_DEG = 0.03      # seaward latitude band (~3 km) over which distributaries are summed
 DOMAIN_KM = 27.2     # model domain length
+# Flare length per site (must match sites/<name>.py L_FLARE) -- the prismatic braided
+# total below is measured BEYOND this, where the channel is no longer converging.
+L_FLARE_KM = {"colville": 5.5, "kuparuk": 7.0, "sagavanirktok": 7.0, "canning": 7.0}
 
 
 def main():
@@ -86,13 +89,38 @@ def main():
         scat = sorted(zip([round(float(v), 2) for v in dist[inbox]],
                           [round(float(v), 1) for v in pc[inbox]]))
 
+        # --- PRISMATIC BRAIDED TOTAL: the raw (un-divided) SWORD width beyond the
+        # flare. This is the TOTAL conveyance the river offers across all parallel
+        # braids, and it is a DIRECT observation -- it does not go through the
+        # per-channel division at all, so it is the right number for the model's
+        # cross-section. Note it is NOT width_perchan_med * median(n_chan_mod):
+        # B_ub is a median of per-node RATIOS, and the median of a ratio is not the
+        # ratio of medians (Colville: 1052 observed vs 423*3 = 1269 reconstructed).
+        # config derives the per-grid-point thread count from this. ----------------
+        pris = (dist >= float(L_FLARE_KM.get(name, 7.0))) & (dist <= DOMAIN_KM)
+        raw_pris = wi[keep][pris]
+        nch_pris = nci[keep][pris]
+        prismatic = {
+            "raw_total_med": round(float(np.median(raw_pris)), 1),
+            "raw_total_p25": round(float(np.percentile(raw_pris, 25)), 1),
+            "raw_total_p75": round(float(np.percentile(raw_pris, 75)), 1),
+            "n_chan_mod_med": round(float(np.median(nch_pris)), 2),
+            "n_nodes": int(pris.sum()),
+        } if pris.sum() >= 2 else None
+
         out[name] = {"delta_sum_m": round(delta_sum),
                      "n_chan": len(chan),
                      "chan_widths": [round(c) for c in sorted(chan, reverse=True)],
+                     "prismatic": prismatic,
                      "dist_km": dk, "width_perchan_med": wmed,
                      "width_perchan_p25": wlo, "width_perchan_p75": whi,
                      "scatter_dist_km": [p[0] for p in scat],
                      "scatter_width": [p[1] for p in scat]}
+        if prismatic:
+            print(f"{'':14s} prismatic braided TOTAL = {prismatic['raw_total_med']:.0f} m "
+                  f"[IQR {prismatic['raw_total_p25']:.0f}-{prismatic['raw_total_p75']:.0f}], "
+                  f"median n_chan_mod = {prismatic['n_chan_mod_med']:.1f}, "
+                  f"{prismatic['n_nodes']} nodes")
         print(f"{name:14s} delta SUM={delta_sum:.0f} m  ({len(chan)} ch "
               f"{[round(c) for c in sorted(chan, reverse=True)]})  per-chan profile "
               f"median~{int(np.median(wmed)) if wmed else 0} m, {len(dk)} bins")

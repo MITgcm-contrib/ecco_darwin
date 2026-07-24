@@ -30,7 +30,7 @@ DISCHARGE_IS_RECONSTRUCTED = True
 DISCHARGE_DONOR_GAUGE = "15980000"
 DISCHARGE_IS_UPSTREAM_PROXY = False
 
-# --- geometry: SWORD v17c nodes + USGS channel surveys -----------------------
+# --- geometry: SWORD v17b nodes + USGS channel surveys -----------------------
 # Width from SWORD per-channel node width, 136 nodes. Single-channel river, so the
 # braiding correction barely applies here. Its 0.55 convergence ratio is also the
 # donor for the Sagavanirktok.
@@ -53,6 +53,15 @@ L_FLARE = 7000    # flare length [m]; width converges over 0..L_FLARE,
 # reconstructed DISCHARGE and borrowed TEMPERATURE: the weakest-constrained site.
 DEPTH_lb = 1.11
 DEPTH_ub = 1.11
+
+# Multi-channel geometry for CGEM_MULTICHANNEL=on (config.MULTICHANNEL). B_UB_TOTAL is
+# the OBSERVED raw braided total beyond the flare; config derives the thread count from it. Two seaward
+# distributaries (SWORD, 562+236 = B_lb); single-channel river upstream, so N_CHAN_UP = 1
+# and this flare is a real convergence.
+N_CHAN_LB = 2.0
+B_UB_TOTAL = 63.0      # SWORD v17b raw prismatic median [m]; IQR 53-78, 68 nodes.
+                        # 63 vs B_ub 64 -> thread count 0.98, i.e. single-thread (median
+                        # n_chan_mod = 1.0). Clamped to 1.0 in config; real flare.
 
 distance = 1
 GEOMETRY_IS_PLACEHOLDER = False

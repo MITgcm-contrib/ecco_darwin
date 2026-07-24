@@ -36,8 +36,8 @@ SURGE_FILE = "surge_prudhoe_2022_m.csv"
 GAUGE = "15875000"
 DISCHARGE_IS_UPSTREAM_PROXY = True
 
-# --- geometry: SWORD v17c nodes + USGS channel surveys -----------------------
-# Width from SWORD v17c node width / n_chan_mod (per conveyance channel; raw SWORD
+# --- geometry: SWORD v17b nodes + USGS channel surveys -----------------------
+# Width from SWORD v17b node width / n_chan_mod (per conveyance channel; raw SWORD
 # width is the sum across braids and this river runs 3-4 braided channels upstream,
 # which made it appear to WIDEN inland before the correction). Lakes excluded,
 # restricted to the model domain, 104 nodes.
@@ -52,6 +52,22 @@ B_lb = SWORD_MOUTH_SUM
 B_ub = 423         # PRISMATIC width upstream of the flare [m]
 L_FLARE = 5500    # flare length [m]; width converges over 0..L_FLARE,
                    # then is prismatic. Fit R2 = 0.392 (vs exponential-over-27km).
+
+# Multi-channel geometry, used ONLY when CGEM_MULTICHANNEL=on (see config.MULTICHANNEL).
+# N_CHAN_LB = the 2 seaward distributaries SWORD resolves at Harrison Bay (whose widths
+# sum to B_lb). B_UB_TOTAL = the median RAW SWORD width in the prismatic reach (>5.5 km,
+# main stem, 102 nodes) -- i.e. the braided TOTAL conveyance, measured directly rather
+# than reconstructed from B_ub x a braid count. config derives the thread count from it
+# (1052/423 = 2.49); note that is NOT the median n_chan_mod of 3.0, because B_ub is a
+# median of per-node ratios and the median of a ratio is not the ratio of medians.
+#
+# The consequence: the total prismatic conveyance is 1052 m against a 1550 m mouth, so
+# roughly HALF of Colville's apparent "flare" is the B_lb(sum)/B_ub(per-channel) definition
+# change rather than real convergence -- and the pre-adoption 3x velocity acceleration just
+# inside the mouth (0.156 -> 0.467 m/s over 5.4 km) was an artifact of it.
+# tools/extract_sword.py.
+N_CHAN_LB = 2.0
+B_UB_TOTAL = 1052.0     # SWORD v17b raw prismatic median [m]; IQR 792-1354
 
 # Depth from at-a-station hydraulic geometry D = 0.360*Q^0.297 (208 USGS ADCP
 # surveys, 1953-2026) evaluated at the 2022 open-water mean discharge, 484.5 m3/s.

@@ -19,7 +19,7 @@ from lateral_module import lateral
 from config import (M, MAXT, DELTI, WARMUP, TS, DEPTH_lb, B_lb, PI, G, EL, B_ub,
                     DELXI, SITE, SITE_LABEL, DISCHARGE_FILE, WATERTEMP_FILE, ICE_MODEL,
                     WIND_FILE, SOLAR_FILE, AIRTEMP_FILE, RELHUM_FILE, PCO2_FILE,
-                    SEATEMP_FILE, BOUNDARY_FORCING, SURGE_FILE)
+                    SEATEMP_FILE, BOUNDARY_FORCING, SURGE_FILE, Q_FRACTION)
 from variables import dispersion, v
 
 # Forcings live alongside the code tree, not on the original author's machine.
@@ -92,7 +92,9 @@ def main():
         # Read forcing files
         # River discharge (per-site; selected by CGEM_SITE)
         Qr, previousdays = exfread(P_DISCHARGE, t)
-        Qr = - Qr
+        # Q_FRACTION is 1.0 for a whole river and is the conveyance share for a delta
+        # distributary run (sites/colville_main.py etc.) -- see config.Q_FRACTION.
+        Qr = - Qr * Q_FRACTION
 
         # Dispersion coefficient [m^2/s], from LOCAL width/depth/velocity.
         # Replaces the Van der Burgh / Savenije estuary form, which under

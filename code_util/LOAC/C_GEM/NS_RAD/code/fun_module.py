@@ -6,7 +6,7 @@ import math
 from config import (PI, AMPL, pfun, WARMUP, distance, M, pH_ite, G, mass_mol_B,
                     kISS, wMAX, DISPERSION_MODEL, DISP_MAX,
                     TIDE_AMP, TIDE_SPEED, TIDE_PHASE)
-from variables import v, U, DEPTH, kflow, kwind, vp, Hplus, B, Chezy, dispersion
+from variables import v, U, DEPTH, kflow, kwind, vp, Hplus, B, B_thread, Chezy, dispersion
 from density import dens
 from numba import njit
 import random
@@ -445,21 +445,32 @@ _disp_capped = [False]   # report the numerical cap once per run, not per timest
 
 
 @njit(cache=True)
-def _river_dispersion_loop(B, DEPTH, Chezy, dispersion, q, M, G, DISP_MAX):
+def _river_dispersion_loop(B, B_thread, DEPTH, Chezy, dispersion, q, M, G, DISP_MAX):
     """Jitted longitudinal dispersion coefficient per cell, Seo & Cheong (1998) from local
-    width/depth/velocity with u* from the Chezy friction, capped at DISP_MAX for scheme stability."""
-    # Verbatim transcription of the loop below. Returns the FIRST K that exceeded
-    # DISP_MAX (0.0 if none), so the Python wrapper can emit the once-per-run warning.
+    width/depth/velocity with u* from the Chezy friction, capped at DISP_MAX for scheme stability.
+
+    TWO widths, because they play different roles. The velocity is a CONVEYANCE quantity
+    -- total discharge through the total cross-section -- so it uses the total width B.
+    The aspect ratio W/H in the Seo & Cheong regression is a WITHIN-channel shear
+    property, so it uses the per-thread width B_thread. For a single-thread channel the
+    two arrays are identical and this is the original expression exactly.
+
+    (Note the two choices are consistent: if n threads share the depth, the per-thread
+    velocity q_i/(W_i*H) equals the conveyance velocity q/(B*H), so there is no separate
+    per-thread velocity to compute.)"""
+    # Returns the FIRST K that exceeded DISP_MAX (0.0 if none), so the Python wrapper
+    # can emit the once-per-run warning.
     capped_K = 0.0
     for i in range(M + 1):
         W = B[i] if B[i] > 1e-3 else 1e-3
+        Wt = B_thread[i] if B_thread[i] > 1e-3 else 1e-3
         H = DEPTH[i] if DEPTH[i] > 1e-3 else 1e-3
         U = q / (W * H)
         if U < 1e-9:
             dispersion[i] = 0.0
             continue
         ustar = math.sqrt(G) * U / Chezy[i]
-        K = 5.915 * (W / H) ** 0.620 * (U / ustar) ** 1.428 * H * ustar
+        K = 5.915 * (Wt / H) ** 0.620 * (U / ustar) ** 1.428 * H * ustar
         if K > DISP_MAX:
             if capped_K == 0.0:
                 capped_K = K
@@ -493,7 +504,7 @@ def river_dispersion(Qr):
     if DISPERSION_MODEL != "seo":
         raise SystemExit(f"unknown DISPERSION_MODEL={DISPERSION_MODEL!r}")
 
-    capped_K = _river_dispersion_loop(B, DEPTH, Chezy, dispersion, abs(Qr), M, G, DISP_MAX)
+    capped_K = _river_dispersion_loop(B, B_thread, DEPTH, Chezy, dispersion, abs(Qr), M, G, DISP_MAX)
     if capped_K > 0.0 and not _disp_capped[0]:
         print(f"  [dispersion] Seo-Cheong K={capped_K:.0f} exceeds the numerical "
               f"ceiling DISP_MAX={DISP_MAX:.0f} m2/s; capping. "

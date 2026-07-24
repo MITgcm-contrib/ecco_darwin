@@ -174,7 +174,7 @@ def page_forcings(pdf, Q, t_new, air):
 # ---------------------------------------------------------------- page 2
 def page_geometry(pdf, cfg):
     fig = plt.figure(figsize=(11, 8.5))
-    fig.suptitle("Channel geometry — SWORD v17c widths, USGS survey depths",
+    fig.suptitle("Channel geometry — SWORD v17b widths, USGS survey depths",
                  x=0.06, ha="left", fontsize=13, weight="bold")
     fig.text(0.06, 0.945, "Width law changed from whole-domain exponential to "
              "flare + prismatic (config.WIDTH_MODEL).", color=INK2, fontsize=8.5)

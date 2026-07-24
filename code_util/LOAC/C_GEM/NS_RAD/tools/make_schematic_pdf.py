@@ -150,10 +150,10 @@ def page_dataflow(pdf):
         "Discharge — USGS gauges, per river",
         "cfs→m³/s (0.3048³); Canning",
         "reconstructed from Hulahula ×2.97",
-        "Geometry via SWORD v17c widths",
+        "Geometry via SWORD v17b widths",
     ))
     box(ax, 26, iy, 22, ih, "CHANNEL GEOMETRY", fc=GEO_F, ec=GEO, tc=GEO, fs=8.5, lines=(
-        "Width — SWORD v17c nodes / n_chan",
+        "Width — SWORD v17b nodes / n_chan",
         "flare + prismatic (not exponential)",
         "Depth — USGS ADCP surveys,",
         "hydraulic geometry D = c·Q^f (1–2 m)",
