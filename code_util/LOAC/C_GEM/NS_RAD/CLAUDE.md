@@ -34,7 +34,18 @@ the rest; it prints a PASS/FAIL summary and exits non-zero.
 tools/build_all.sh                    # run 4 rivers + all figures + report + movies (~15 min)
 tools/build_all.sh --figures-only     # rebuild figures from existing runs/
 tools/build_all.sh --with-idealized   # also run + verify + figure the idealized fixture
+tools/build_all.sh --with-regression  # also build runs/regression_bnd (+~20 min; see below)
 ```
+
+**The report needs a SECOND set of runs to be complete.** `make_validation_pdf.py` reads
+`runs/regression_bnd/`, which holds Kuparuk and Sagavanirktok rerun with the pure air-temperature regression
+as the upstream T boundary instead of their own observed-blended series — otherwise their modelled temperature
+would be scored against the very USGS record that feeds their boundary, which is near-tautological. Colville
+and Canning already use the regression, so they are not rebuilt. Without these runs the report silently builds
+**5 of 6 parts** and the entire model-vs-observation section is missing. Produce them once with
+`tools/run_regression_bnd.sh` (~20 min; it verifies the boundary override actually took effect) or pass
+`--with-regression`. They only go stale when the temperature forcing changes, which is why they are not part
+of the default build.
 
 Or directly, which is what the script does per site:
 
@@ -82,6 +93,7 @@ Everything tunable at run time is an environment variable, read in `config.py` a
 | `CGEM_ICE` | `on` | `off` reverts every coupling to the legacy `previousdays` gate |
 | `CGEM_MULTICHANNEL` | `on` | `off` reverts to legacy single-channel width, bit-identically |
 | `CGEM_N_CHAN_UP` | derived | override the prismatic thread count, for sensitivity sweeps |
+| `CGEM_WATERTEMP_FILE` | per-site | override the upstream T boundary; builds `runs/regression_bnd` |
 | `CGEM_DISTANCE` | per-site | saline grid points; swept and rejected as a salinity lever (see Geometry) |
 | `CGEM_FONT_SCALE` | 1.0 | figure tools only (`tools/nsrad_style.py`) |
 

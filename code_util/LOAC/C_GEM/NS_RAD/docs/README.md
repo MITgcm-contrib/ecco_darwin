@@ -57,12 +57,20 @@ deleted. They are gitignored; rebuild the report with `tools/build_all.sh --figu
 One command rebuilds the model run and every artifact above:
 
 ```bash
-tools/build_all.sh                  # run the 4 rivers, then all figure PDFs, the combined
-                                    #   report, and the movies (~15 min; model run dominates)
-tools/build_all.sh --figures-only   # skip the model run; rebuild figures from existing runs/
-tools/build_all.sh --with-idealized # ALSO run + verify + figure the idealized fixture
-SERIAL=1 tools/build_all.sh         # run the four rivers one at a time
+tools/build_all.sh                   # run the 4 rivers, then all figure PDFs, the combined
+                                     #   report, and the movies (~15 min; model run dominates)
+tools/build_all.sh --figures-only    # skip the model run; rebuild figures from existing runs/
+tools/build_all.sh --with-idealized  # ALSO run + verify + figure the idealized fixture
+tools/build_all.sh --with-regression # ALSO build runs/regression_bnd (see note below)
+SERIAL=1 tools/build_all.sh          # run the four rivers one at a time
 ```
+
+**A complete report needs `runs/regression_bnd/`.** The validation section compares modelled
+temperature against observations, and for Kuparuk and Sagavanirktok that has to use a boundary
+*independent* of the gauge being validated against — so those two are rerun with the pure
+air-temperature regression as the upstream T boundary (`tools/run_regression_bnd.sh`, ~20 min,
+once). Without it `build_all.sh` prints a SKIP and the report builds **5 of 6 parts**, missing
+the whole model-vs-observation section.
 
 Individual artifacts can be rebuilt with their `tools/make_*.py` script directly (see the
 tables above). `tools/make_report.py` only stitches the six existing report PDFs together —

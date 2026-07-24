@@ -42,7 +42,20 @@ except ModuleNotFoundError as exc:
 
 SITE_LABEL = _site.LABEL
 DISCHARGE_FILE = _site.DISCHARGE_FILE
-WATERTEMP_FILE = _site.WATERTEMP_FILE
+# Upstream (riverine) temperature boundary. CGEM_WATERTEMP_FILE overrides the site's
+# choice; this is what produces the REGRESSION-BOUNDARY run that the validation document
+# needs (runs/regression_bnd, tools/run_regression_bnd.sh). Kuparuk and Sagavanirktok
+# normally use their own observed-blended series, so validating their modelled temperature
+# against the very USGS record that feeds their boundary would be near-tautological. Rerun
+# them with the pure air-temperature regression (river_watertemp_2022_degC.csv) and the
+# comparison becomes an independent skill test. Colville and Canning already use the
+# regression, so their regression-boundary run would be identical to the definitive one.
+WATERTEMP_FILE = os.environ.get("CGEM_WATERTEMP_FILE") or _site.WATERTEMP_FILE
+if WATERTEMP_FILE != _site.WATERTEMP_FILE:
+    # Echo it, for the same reason the multichannel state is echoed below: a run whose
+    # boundary silently differs from what was intended is indistinguishable in the output.
+    print(f"  [watertemp] upstream T boundary OVERRIDDEN: {_site.WATERTEMP_FILE} "
+          f"-> {WATERTEMP_FILE}")
 BOUNDARIES = _site.BOUNDARIES
 
 # Meteorological forcing filenames. Shared/regional for the four real rivers (the
