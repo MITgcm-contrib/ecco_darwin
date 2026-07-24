@@ -11,4 +11,8 @@ config.py selects one of these at import time via the CGEM_SITE environment
 variable. See SITES below for valid keys.
 """
 
-SITES = ("colville", "kuparuk", "sagavanirktok", "canning", "idealized")
+SITES = ("colville", "kuparuk", "sagavanirktok", "canning", "idealized",
+         # EXPERIMENTAL: the two Colville delta distributaries, run as separate
+         # processes and aggregated afterwards -- the multi-SITE machinery doubling as
+         # multi-CHANNEL machinery. Not rivers; see sites/_colville_delta.py.
+         "colville_main", "colville_minor")
