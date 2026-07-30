@@ -109,7 +109,7 @@
  iron_lat0    = -90.,
  iron_lat_inc = 95*1.894736842105263,
  iron_nlon    = 144,
- iron_nlat    = 95,
+ iron_nlat    = 96,
 #
  pCO2_lon0    = 0.0D0,
  pCO2_lon_inc = 360.0D0,
