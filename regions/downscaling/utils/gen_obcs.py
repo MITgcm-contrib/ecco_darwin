@@ -26,7 +26,7 @@ def transp_tiles(data, reverse=False):
     return data_out
 
 def gen_bnd_domain(bnd_ls, dv_masks_ls, grid, Nr):
-    
+
     ### Initialize boundary filler information
     var_ls = ['XC','YC','AngleCS','AngleSN','maskC','maskW','maskS']
     boundary_domain_dict = dict.fromkeys(bnd_ls, var_ls)
@@ -54,7 +54,7 @@ def gen_bnd_domain(bnd_ls, dv_masks_ls, grid, Nr):
     return boundary_domain_dict
 
 def get_regbnd_info(vnm, bnd, Nr, tstp, grid1):
-    
+
     #---------- Get right mask -----------#
     if vnm == 'UVEL' or vnm == 'UICE':
         mask = grid1['maskW']
@@ -62,7 +62,7 @@ def get_regbnd_info(vnm, bnd, Nr, tstp, grid1):
         mask = grid1['maskS']
     else:
         mask = grid1['maskC']
-       
+
     #-------- Get bnd mask/coord ---------#
     if bnd == 'west':
         XC1 = grid1['XC'][:,:1]
@@ -83,7 +83,7 @@ def get_regbnd_info(vnm, bnd, Nr, tstp, grid1):
     else:
         raise ValueError('Boundary '+bnd+' not recognized')
 
-    #----------- surface mask ------------# 
+    #----------- surface mask ------------#
     if seaice == True:
         if vnm in ['AREA','UICE','VICE','HEFF','HSNOW', 'ETAN']:
             mask1 = mask1[:1,:,:]
@@ -96,7 +96,7 @@ def get_regbnd_info(vnm, bnd, Nr, tstp, grid1):
             obcs_init = np.zeros((tstp, 1, np.size(XC1)))
         else:
             obcs_init = np.zeros((tstp, Nr, np.size(XC1)))
-        
+
     return XC1, YC1, mask1, obcs_init
 
 def gen_obcs(dv_diag, XC0, YC0, mask00, XC1, YC1, mask1):
@@ -108,18 +108,28 @@ def gen_obcs(dv_diag, XC0, YC0, mask00, XC1, YC1, mask1):
     #----------- Generaet OBCS -----------#
     for k in range(len(obcs)):
         if np.any(mask1[k] > 0):
-            ### initialize interpolation at depth k 
+            ### initialize interpolation at depth k
             coord0 = coord00.copy()
             val0 = dv_diag[k].reshape(-1,1)
             mask0 = mask00[k].reshape(-1,1)
             coord0 = coord0[mask0[:,0] != 0, :]
             val0 = val0[mask0[:,0] != 0, :]
-            if len(val0)>4:
-                val1 = griddata(coord0, val0, (XC1, YC1), method='linear',fill_value=0)
-                val1 = val1[:, :, 0]
-                if not np.any(val1!=0):
-                    val1 = griddata(coord0, val0, (XC1, YC1), method='nearest', fill_value=0)
+            if len(val0) > 0:
+                if len(val0)>4:
+                    val1 = griddata(coord0, val0, (XC1, YC1), method='linear', fill_value=np.nan)
                     val1 = val1[:, :, 0]
+                else:
+                    val1 = np.full(XC1.shape, np.nan)
+                ### points outside the convex hull of the native samples (or
+                ### where there were too few points to triangulate at all)
+                ### come back NaN from griddata -- fall back to the true
+                ### nearest native sample for those instead of leaving a
+                ### zero for Hextrapol to chain-propagate one cell at a time.
+                needs_nearest = np.isnan(val1)
+                if np.any(needs_nearest):
+                    val1_near = griddata(coord0, val0, (XC1, YC1), method='nearest')
+                    val1_near = val1_near[:, :, 0]
+                    val1[needs_nearest] = val1_near[needs_nearest]
             else:
                 val1 = np.zeros_like(XC1).astype(float)
             ### Apply bathymetry masks
@@ -201,7 +211,13 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
     #------------- Initialize ------------#
     dv_diags_dir = os.path.join(config_dir, 'parent/outputs/OBCS/')
     sfx = dv_diags_dir+f"{bnd}_BC_mask_{vnm}"
-    itrs = [int(glob.glob(sfx+".*")[i][len(sfx)+1:-4]) for i in range(len(glob.glob(sfx+".*")))]
+    ### An explicit multi-value -i is treated as an exact whitelist; with
+    ### zero or one value, auto-discover every "{bnd}_BC_mask_{vnm}.*" file
+    ### and read all of them, sorted chronologically ascending.
+    if len(itrs_ls) > 1:
+        itrs = sorted(itrs_ls)
+    else:
+        itrs = sorted(int(p[len(sfx)+1:-4]) for p in glob.glob(sfx+".*"))
     if seaice == True:
         if vnm in ['AREA','UICE','VICE','HEFF','HSNOW','ETAN']:
             Nr = 1
@@ -214,6 +230,7 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
             Nr = Nr0
 
     #--------- Read dv diagnostic --------#
+    dv_diag_chunks = []
     for itr in itrs:
         ### Rotate U/V fields
         if 'VEL' in vnm or 'ICE' in vnm:
@@ -225,7 +242,7 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
             dv_diagU = np.reshape(dv_diagU, (tstp, Nr, nm_pt))
             dv_diagV = np.reshape(dv_diagV, (tstp, Nr, nm_pt))
             dv_diag = np.zeros((tstp, Nr, nm_pt))
-            
+
             if seaice == True:
                 if vnm in ['UVEL','UICE']:
                     for m in range(nm_pt):
@@ -248,13 +265,11 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
             dv_diag =  np.fromfile(sfx+f".{itr:010d}.bin", '>f4')
             nm_pt = len(bnd_domain[bnd]['XC'])
             tstp = int(np.size(dv_diag)/(Nr*nm_pt))
-            dv_diag = np.reshape(dv_diag, (tstp, Nr, nm_pt)) 
-        ### merge timesteps 
-        if itr==itrs[0]:
-            dv_diag_all = dv_diag
-        else:
-            dv_diag = np.concatenate([dv_diag_all, dv_diag], axis=0)
-        
+            dv_diag = np.reshape(dv_diag, (tstp, Nr, nm_pt))
+        dv_diag_chunks.append(dv_diag)
+    ### merge all files, in chronological order, exactly once
+    dv_diag = np.concatenate(dv_diag_chunks, axis=0)
+
     #------- Vertical interpolation ------#
     if seaice == True:
         if vnm in ['UVEL','UICE']:
@@ -293,7 +308,7 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
 ############################################################
 
 def Zinterp(dv_diag, msk_pts, delR0, delR1):
-    
+
     #----------- Calculate deph ----------#
     # Parents
     Zbot0 = np.cumsum(delR0)
@@ -307,7 +322,7 @@ def Zinterp(dv_diag, msk_pts, delR0, delR1):
     #-------- Inteprolate vertical -------#
     ### Diagnostics
     idS = np.where(np.abs(Z1)<np.abs(Z0[0]))[0]
-    dv_diag_IT = np.zeros((dv_diag.shape[0], len(Z1), dv_diag.shape[2]))    
+    dv_diag_IT = np.zeros((dv_diag.shape[0], len(Z1), dv_diag.shape[2]))
     for i in range(dv_diag.shape[2]):
         tmp0 = dv_diag[:,:,i].copy()
         if np.sum(tmp0 != 0) > 1:
@@ -327,17 +342,18 @@ def Zinterp(dv_diag, msk_pts, delR0, delR1):
                           bottom_values = tmp1[:,np.where(~np.isnan(tmp1[0]))[0][-1]]
                 elif tmp.size == 0:
                           bottom_values = 0.
-                else: 
-                          bottom_values = tmp1[:,np.where(~np.isnan(tmp1[0]))[0][0]]    
+                else:
+                          bottom_values = tmp1[:,np.where(~np.isnan(tmp1[0]))[0][0]]
                 idB = np.where(np.logical_and(np.isnan(tmp1[0]), np.abs(Z1) < bottom_depth))[0]
                 if len(idB) != 0:
-                    tmp1[:,idB[0]] = bottom_values
+                    # fill every child level in the gap, not just the first
+                    tmp1[:, idB] = bottom_values[:, None] if np.ndim(bottom_values) else bottom_values
             # Fill remaining NaNs downward
             tmp1[np.isnan(tmp1)] = 0
             dv_diag_IT[:,:,i] = tmp1
     ### Wet cells mask
     if msk_pts.shape[0] != len(Z1):
-        msk_pts_IT = np.zeros((len(Z1), msk_pts.shape[1]))  
+        msk_pts_IT = np.zeros((len(Z1), msk_pts.shape[1]))
         for i in range(msk_pts.shape[1]):
             # interpolate on vertical
             tmp0 = msk_pts[:,i].copy()
@@ -351,6 +367,9 @@ def Zinterp(dv_diag, msk_pts, delR0, delR1):
                 if np.size(np.abs(Z0[tmp0 == 0])) > 0:
                     bottom_depth = np.abs(Z0[tmp0 == 0])[0]
                     bottom_value = tmp1[~np.isnan(tmp1)][-1]
+                    idB = np.where(np.logical_and(np.isnan(tmp1), np.abs(Z1) < bottom_depth))[0]
+                    if len(idB) != 0:
+                        tmp1[idB] = bottom_value
                 msk_pts_IT[:,i] = tmp1
             elif np.sum(tmp0 != 0) == 1:
                 msk_pts_IT[0, i] = msk_pts[0, i]
@@ -358,7 +377,7 @@ def Zinterp(dv_diag, msk_pts, delR0, delR1):
         msk_pts_IT = msk_pts
     msk_pts_IT[np.isnan(msk_pts_IT)] = 0
     msk_pts_IT = np.round(msk_pts_IT).astype(int)
-    
+
     return dv_diag_IT, msk_pts_IT
 
 ############################################################
@@ -368,7 +387,6 @@ def Zinterp(dv_diag, msk_pts, delR0, delR1):
 def Hextrapol(var_grid, wet_grid, verbose=False):
     """
     Fill zero values in var_grid using the nearest non-zero neighbors within wet areas.
-    Legacy implementation using NumPy.
 
     Parameters:
         var_grid (ndarray): 2D array with variable data, where zeros represent missing values.
@@ -454,7 +472,7 @@ def Vextrapol(full_grid, level_grid, wet_grid, level, mean_vertical_difference):
 #                     MAIN FUNCTION                        #
 ############################################################
 
-def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
+def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, seaice, bgc, print_level):
 
     grd_ls = ['XC', 'YC', 'AngleCS', 'AngleSN', 'HFacC', 'HFacS', 'HFacW', 'drF']
     ###############################################
@@ -472,7 +490,7 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
     if print_level>=1:
         print('> Reading in the regional model tile geometry')
     tmp = read_ncgrid(config_dir, reg_nm, grd_ls)
-    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:,:-1,:]
+    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:,1:,:]
     tmp[grd_ls.index("HFacW")] = tmp[grd_ls.index("HFacW")][:,:,:-1]
     grid1 = dict(zip(grd_ls, tmp))
     Nr1 = tmp[grd_ls.index("HFacC")].shape[0]
@@ -484,7 +502,7 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
     bnd_ls, dv_masks_ls = read_dv_masks(config_dir, boundaries, llc)
     for nm in ['C','S','W']:
         tmp = np.copy(grid1["HFac"+nm]); tmp[tmp>0] = 1
-        grid1.update({"mask"+nm: tmp}); del tmp
+        grid1["mask"+nm] = tmp
 
     #################################################
     #######        Generate OBCS files        #######
@@ -493,7 +511,7 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
     #-------- Get boundary domain --------#
     if print_level>=1:
         print('> Getting boundary domain')
-    bnd_domain = gen_bnd_domain(bnd_ls, dv_masks_ls, grid0, Nr0) 
+    bnd_domain = gen_bnd_domain(bnd_ls, dv_masks_ls, grid0, Nr0)
     #--------- physics condition ---------#
     if print_level>=1:
         print('> Creating physics OBCS for the '+reg_nm+' model')
@@ -511,15 +529,19 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
             ### Horizontal intrpolation
             for t in range(tstp):
                 obcs_tmp = gen_obcs(dv_diag[t], bnd_domain[bnd]['XC'], bnd_domain[bnd]['YC'], msk_pts, XC1, YC1, mask1)
-                if bnd in ['east','west']:
+                if bnd == 'east':
+                    obcs_tmp = obcs_tmp[:,:,-1]
+                elif bnd == 'west':
                     obcs_tmp = obcs_tmp[:,:,0]
-                elif bnd in ['north','south']:
+                elif bnd == 'north':
+                    obcs_tmp = obcs_tmp[:,-1,:]
+                elif bnd == 'south':
                     obcs_tmp = obcs_tmp[:,0,:]
                 obcs[t] = obcs_tmp
             if print_level>=1:
                 print(f'       * saving the {bnd} OBCS file')
             obcs.ravel('C').astype('>f4').tofile( os.path.join(out_dir,output_file))
-     
+
     #--------- sea-ice condition ---------#
     if seaice == True:
         if print_level>=1:
@@ -538,15 +560,19 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
                 ### Horizontal intrpolation
                 for t in range(tstp):
                     obcs_tmp = gen_obcs(dv_diag[t], bnd_domain[bnd]['XC'], bnd_domain[bnd]['YC'], msk_pts, XC1, YC1, mask1)
-                    if bnd in ['east','west']:
-                        obcs_tmp = obcs_tmp[:,:,0]
-                    elif bnd in ['north','south']:
-                        obcs_tmp = obcs_tmp[:,0,:]
+                    if bnd == 'east':
+                       obcs_tmp = obcs_tmp[:,:,-1]
+                    elif bnd == 'west':
+                       obcs_tmp = obcs_tmp[:,:,0]
+                    elif bnd == 'north':
+                       obcs_tmp = obcs_tmp[:,-1,:]
+                    elif bnd == 'south':
+                       obcs_tmp = obcs_tmp[:,0,:]
                     obcs[t] = obcs_tmp
                 if print_level>=1:
                     print(f'       * saving the {bnd} OBCS file')
                 obcs.ravel('C').astype('>f4').tofile( os.path.join(out_dir,output_file))
-            
+
     #--------- ptracer condition ---------#
     if bgc == True:
         if print_level>=1:
@@ -568,14 +594,19 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, bgc, print_level):
                 ### Horizontal intrpolation
                 for t in range(tstp):
                     obcs_tmp = gen_obcs(dv_diag[t], bnd_domain[bnd]['XC'], bnd_domain[bnd]['YC'], msk_pts, XC1, YC1, mask1)
-                    if bnd in ['east','west']:
+                    if bnd == 'east':
+                        obcs_tmp = obcs_tmp[:,:,-1]
+                    elif bnd == 'west':
                         obcs_tmp = obcs_tmp[:,:,0]
-                    elif bnd in ['north','south']:
+                    elif bnd == 'north':
+                        obcs_tmp = obcs_tmp[:,-1,:]
+                    elif bnd == 'south':
                         obcs_tmp = obcs_tmp[:,0,:]
                     obcs[t] = obcs_tmp
                 if print_level>=1:
                     print(f'       * saving the {bnd} OBCS file')
                 obcs.ravel('C').astype('>f4').tofile( os.path.join(out_dir,output_file))
+
     return
 
 ############################################################
@@ -602,7 +633,7 @@ if __name__ == '__main__':
     parser.add_argument("-bgc", "--darwin", action="store_true", default='False',
                         help="generate darwin biogeochemistry obcs")
     parser.add_argument("-v", "--verbose", action="store_true", default='False')
-    
+
 
     args = parser.parse_args()
     config_dir = args.config_dir
@@ -617,27 +648,3 @@ if __name__ == '__main__':
         print_level = 0
 
     gen_obcs_files(config_dir, reg_nm, bds, itrs, seaice, bgc, print_level)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
