@@ -41,11 +41,11 @@ if __name__ == '__main__':
                         type=str, required=True)
     parser.add_argument("-s", "--size_dom", nargs='+', action="store",
                         help="list of the mitgrid shape: \
-                        [number of rows, number of colums]", 
+                        [number of rows, number of columns]", 
                         dest="size_dom", type=int, required=True)
     parser.add_argument("-p", "--size_proc", nargs='+', action="store",
                         help="list of the processor size: \
-                        [sNx, SNy] from Size.h file", 
+                        [sNx, sNy] from SIZE.h", 
                         dest="size_proc", type=int, required=True)
 
     

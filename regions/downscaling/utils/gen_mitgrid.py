@@ -116,16 +116,16 @@ if __name__ == '__main__':
                         type=str, required=True)
     parser.add_argument("-c", "--corners", nargs='+', action="store",
                         help="list of the coordinates of the corners: \
-                        left longitude right longitude left latitude right latitude]", 
+                        [left longitude, right longitude, left latitude, right latitude]", 
                         dest="corners", type=float, required=True)
     parser.add_argument("-r", "--reso", nargs='+', action="store",
                         help="list of the longitude and latitude increment: \
-                        longitude increment latitude increment]", 
+                        [longitude increment, latitude increment]", 
                         dest="reso", type=float, required=True)
     parser.add_argument("-e", "--espg", action="store",
-                        help="ESPG of the input coordinates (default is WGS84; ESPG:4326)", 
+                        help="EPSG of the input coordinates (default is WGS84; EPSG:4326)", 
                         dest="espg", type=int, required=False, default=4326)
-    parser.add_argument("-v", "--verbose", action="store_true", default='False')
+    parser.add_argument("-v", "--verbose", action="store_true", default=False)
     
     args = parser.parse_args()
     config_dir = args.config_dir
