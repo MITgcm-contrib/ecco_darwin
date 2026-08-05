@@ -490,8 +490,18 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, seaice, bgc, print_leve
     if print_level>=1:
         print('> Reading in the regional model tile geometry')
     tmp = read_ncgrid(config_dir, reg_nm, grd_ls)
-    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:,1:,:]
-    tmp[grd_ls.index("HFacW")] = tmp[grd_ls.index("HFacW")][:,:,:-1]
+    ### On a C-grid HFacS has ny+1 rows and HFacW has nx+1 columns: entry j is
+    ### the SOUTH face of cell j (resp. the WEST face of cell i). MITgcm masks
+    ### every OBCS normal velocity with the INTERIOR face of the boundary cell
+    ### (obcs_apply_uv.F): _maskS(Jobc) north / _maskS(Jobc+1) south,
+    ### _maskW(Iobc) east / _maskW(Iobc+1) west. Trimming BOTH ends is what
+    ### makes a single slice correct for both boundaries on each axis:
+    ###   [0]  -> face 1    = interior face of the low-index boundary (S / W)
+    ###   [-1] -> face n-1  = interior face of the high-index boundary (N / E)
+    ### Trimming only one end (e.g. [:,1:,:]) is right for S/E but silently
+    ### hands N/W the OUTER domain-edge face instead.
+    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:,1:-1,:]
+    tmp[grd_ls.index("HFacW")] = tmp[grd_ls.index("HFacW")][:,:,1:-1]
     grid1 = dict(zip(grd_ls, tmp))
     Nr1 = tmp[grd_ls.index("HFacC")].shape[0]
     del tmp

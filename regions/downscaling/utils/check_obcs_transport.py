@@ -404,8 +404,11 @@ def main(config_dir, reg_nm, boundaries, itrs, do_correct, do_plot, output_dir,
     llc = tmp[grd_ls.index("XC")].shape[1]
 
     tmp = read_ncgrid(config_dir, reg_nm, grd_ls)
-    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:, 1:, :]
-    tmp[grd_ls.index("HFacW")] = tmp[grd_ls.index("HFacW")][:, :, :-1]
+    ### Interior-face trim -- must stay identical to gen_obcs.py's, see the
+    ### long comment there: [0] -> interior face of S/W, [-1] -> interior face
+    ### of N/E, matching how MITgcm masks OBCS normal velocities.
+    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:, 1:-1, :]
+    tmp[grd_ls.index("HFacW")] = tmp[grd_ls.index("HFacW")][:, :, 1:-1]
     grid1 = dict(zip(grd_ls, tmp))
     Nr1 = tmp[grd_ls.index("HFacC")].shape[0]
     for nm in ['S', 'W']:
@@ -419,8 +422,13 @@ def main(config_dir, reg_nm, boundaries, itrs, do_correct, do_plot, output_dir,
     grid0['dxG'] = transp_tiles(mds.rdmds(parent_grid_dir + 'DXG'))
     grid0['dyG'] = transp_tiles(mds.rdmds(parent_grid_dir + 'DYG'))
     tmp = read_ncgrid(config_dir, reg_nm, ['dxG', 'dyG'])
-    grid1['dxG'] = tmp[0][:-1, :]
-    grid1['dyG'] = tmp[1][:, :-1]
+    ### dxG is (ny+1, nx) and dyG is (ny, nx+1): they live on the SAME
+    ### staggered faces as HFacS/HFacW respectively, so they must get the SAME
+    ### interior-face trim. Trimming them the other way round (dxG[:-1], as
+    ### before) paired the interior-face mask with the outer-edge face length,
+    ### so the transport integral mixed two different faces.
+    grid1['dxG'] = tmp[0][1:-1, :]
+    grid1['dyG'] = tmp[1][:, 1:-1]
 
     bnd_ls, dv_masks_ls = read_dv_masks(config_dir, boundaries, llc)
     bnd_domain = gen_bnd_domain(bnd_ls, dv_masks_ls, grid0, Nr0)

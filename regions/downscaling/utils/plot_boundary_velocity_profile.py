@@ -130,8 +130,11 @@ def main(config_dir, reg_nm, boundaries, itrs, output_dir, verbose, legacy_bug_m
     llc = tmp[grd_ls.index("XC")].shape[1]
 
     tmp = read_ncgrid(config_dir, reg_nm, grd_ls)
-    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:, 1:, :]
-    tmp[grd_ls.index("HFacW")] = tmp[grd_ls.index("HFacW")][:, :, :-1]
+    ### Interior-face trim -- must stay identical to gen_obcs.py's, see the
+    ### long comment there: [0] -> interior face of S/W, [-1] -> interior face
+    ### of N/E, matching how MITgcm masks OBCS normal velocities.
+    tmp[grd_ls.index("HFacS")] = tmp[grd_ls.index("HFacS")][:, 1:-1, :]
+    tmp[grd_ls.index("HFacW")] = tmp[grd_ls.index("HFacW")][:, :, 1:-1]
     grid1 = dict(zip(grd_ls, tmp))
     Nr1 = tmp[grd_ls.index("HFacC")].shape[0]
     for nm in ['S', 'W']:
