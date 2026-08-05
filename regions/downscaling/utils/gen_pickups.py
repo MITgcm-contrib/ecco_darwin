@@ -1,4 +1,5 @@
 import os
+import glob
 import argparse
 import numpy as np
 import xarray as xr
@@ -310,15 +311,43 @@ def gen_pickup_ptracers(config_dir, pickup_itr, Nr0, AngleCS0, AngleSN0, WCmask0
 #                     MAIN FUNCTION                        #
 ############################################################
 
+def check_inputs(config_dir, model_name, pickup_itr):
+    """Fail early, with an actionable message, when the config_dir does not
+    have what this script reads (see the downscaling README's Directory
+    layout section)."""
+    problems = []
+    ncgrid = os.path.join(config_dir, model_name + '_ncgrid.nc')
+    if not os.path.isfile(ncgrid):
+        problems.append(f"  missing: {ncgrid}\n"
+                        f"      -> produced by stitch_ncgrid.py (STEP1, Section IV.c). "
+                        f"Check -n '{model_name}' matches the file name.")
+    grid_dir = os.path.join(config_dir, 'parent/outputs/grid/')
+    if not os.path.isdir(grid_dir):
+        problems.append(f"  missing: {grid_dir}\n"
+                        f"      -> copy the parent grid files here (STEP1, Section V.b). "
+                        f"Note the folder is 'parent', singular -- not 'parents'.")
+    pickup_dir = os.path.join(config_dir, 'parent/outputs/pickups/')
+    if not os.path.isdir(pickup_dir):
+        problems.append(f"  missing: {pickup_dir}\n"
+                        f"      -> copy the parent pickup files here (STEP3, Section I).")
+    elif not glob.glob(os.path.join(pickup_dir, f'pickup*.{pickup_itr:010d}.*')):
+        have = sorted({os.path.basename(p).split('.')[1]
+                       for p in glob.glob(os.path.join(pickup_dir, 'pickup*.*.data'))})
+        problems.append(f"  no pickup files for iteration {pickup_itr:010d} in: {pickup_dir}\n"
+                        f"      -> iterations present: {have if have else 'none'}. "
+                        f"Pass one of these to -i.")
+    if problems:
+        raise SystemExit("ERROR: the -d directory is missing files this script needs:\n"
+                         + "\n".join(problems))
+
 def gen_pickup_files(config_dir, model_name, pickup_itr, sigmaG, bgc, print_level, gennc):
+
+    check_inputs(config_dir, model_name, pickup_itr)
 
     #################################################
     ############# Create forcing folder #############
     #################################################
-    if 'forcings' not in os.listdir(config_dir):
-        os.mkdir(os.path.join(config_dir,'forcings'))
-    if 'pickups' not in os.listdir(os.path.join(config_dir,'forcings')):
-        os.mkdir(os.path.join(os.path.join(config_dir,'forcings'),'pickups'))
+    os.makedirs(os.path.join(config_dir, 'forcings', 'pickups'), exist_ok=True)
 
     #################################################
     ####### Read regional grid file (Level 1) #######
@@ -416,20 +445,22 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--config_dir", action="store",
-                        help="The directory where data files are stored", dest="config_dir",
+                        help="The config directory holding <reg_nm>_ncgrid.nc and parent/outputs/ \
+                        (grid + pickups); pickups are written to forcings/pickups/", dest="config_dir",
                         type=str, required=True)
     parser.add_argument("-n", "--reg_nm", action="store",
                         help="Name of the regional cutout", dest="reg_nm",
                         type=str, required=True)
     parser.add_argument("-i", "--itr", action="store",
-                        help="iteration of the begining the regional model", dest="itr",
+                        help="Iteration number of the parent pickup file to start the regional \
+                        model from", dest="itr",
                         type=int, required=True, default=1)
     parser.add_argument("-sg", '--sigma_Gfilt', nargs='?', type=int)
-    parser.add_argument("-bgc", "--darwin", action="store_true", default='False',
+    parser.add_argument("-bgc", "--darwin", action="store_true", default=False,
                         help="generate darwin biogeochemistry pickups")
-    parser.add_argument("-v", "--verbose", action="store_true", default='False')
-    parser.add_argument("-nc", "--netcdf", action="store_true", default='False',
-                        help="generate a verifiaction netcdf file")
+    parser.add_argument("-v", "--verbose", action="store_true", default=False)
+    parser.add_argument("-nc", "--netcdf", action="store_true", default=False,
+                        help="generate a verification netcdf file")
 
     args = parser.parse_args()
     config_dir = args.config_dir

@@ -8,6 +8,80 @@ from scipy.interpolate import interp1d, griddata, LinearNDInterpolator
 from scipy.spatial import Delaunay, cKDTree
 
 ############################################################
+#                   VALIDATION HELPERS                     #
+############################################################
+
+VALID_BND = {'E': 'east', 'W': 'west', 'N': 'north', 'S': 'south'}
+
+def check_boundaries(bnd_str):
+    """Validate a -bnd string up front, before any slow I/O happens."""
+    if not bnd_str:
+        raise SystemExit("ERROR: -bnd is empty. Give a string of boundary letters, e.g. 'ENW'.")
+    bad = [c for c in bnd_str if c not in VALID_BND]
+    if bad:
+        raise SystemExit(
+            f"ERROR: unrecognized boundary letter(s) {bad} in -bnd '{bnd_str}'. "
+            f"Valid letters are E (east), W (west), N (north), S (south), e.g. 'ENW'.")
+    dup = [c for c in set(bnd_str) if bnd_str.count(c) > 1]
+    if dup:
+        raise SystemExit(f"ERROR: boundary letter(s) {sorted(dup)} repeated in -bnd '{bnd_str}'.")
+    return bnd_str
+
+def check_input_layout(config_dir, reg_nm, boundaries, need_dv_output=True):
+    """
+    Fail early, and with an actionable message, when the config_dir does not
+    have the layout every utils script assumes (see the Directory layout
+    section of the downscaling README).
+    """
+    problems = []
+
+    ncgrid = os.path.join(config_dir, reg_nm + '_ncgrid.nc')
+    if not os.path.isfile(ncgrid):
+        problems.append(f"  missing: {ncgrid}\n"
+                        f"      -> produced by stitch_ncgrid.py (STEP1, Section IV.c). "
+                        f"Check -n '{reg_nm}' matches the file name.")
+
+    grid_dir = os.path.join(config_dir, 'parent/outputs/grid/')
+    if not os.path.isdir(grid_dir):
+        problems.append(f"  missing: {grid_dir}\n"
+                        f"      -> copy the parent grid files here (STEP1, Section V.b). "
+                        f"Note the folder is 'parent', singular.")
+
+    mask_dir = os.path.join(config_dir, 'parent/inputs/')
+    for c in boundaries:
+        nm = VALID_BND[c]
+        f = os.path.join(mask_dir, nm + '_BC_mask.bin')
+        if not os.path.isfile(f):
+            problems.append(f"  missing: {f}\n"
+                            f"      -> produced by gen_dvmasks.py -bnd {c} (STEP1, Section V.c).")
+
+    if need_dv_output:
+        dv_dir = os.path.join(config_dir, 'parent/outputs/OBCS/')
+        if not os.path.isdir(dv_dir):
+            problems.append(f"  missing: {dv_dir}\n"
+                            f"      -> copy the diagnostics_vec output here (STEP3, Section I).")
+        elif not glob.glob(os.path.join(dv_dir, '*_BC_mask_*.bin')):
+            problems.append(f"  no '*_BC_mask_*.bin' files in: {dv_dir}\n"
+                            f"      -> these come from the STEP2 run. If the run produced files "
+                            f"under different names, check nml_vecFiles in data.diagnostics_vec.")
+
+    if problems:
+        raise SystemExit("ERROR: the -d directory is missing files this script needs:\n"
+                         + "\n".join(problems))
+
+def warn_if_all_zero(arr, vnm, bnd):
+    """
+    diagnostics_vec silently writes a correctly-named file full of zeros when
+    a field name in data.diagnostics_vec isn't one it recognizes (its
+    IF/ELSE-IF chain has no ELSE). Catching that here saves discovering it as
+    a dead boundary in the model run.
+    """
+    if arr.size and not np.any(arr):
+        print(f"    WARNING: every value read for {vnm} at the {bnd} boundary is zero. "
+              f"Check that '{vnm}' is a field name diagnostics_vec recognizes and that it "
+              f"is listed in data.diagnostics_vec for this boundary's mask.")
+
+############################################################
 #                  GRID WORK FUNCTIONS                     #
 ############################################################
 
@@ -35,6 +109,11 @@ def gen_bnd_domain(bnd_ls, dv_masks_ls, grid, Nr):
         boundary_domain_dict[bnd] = {k: None for k in keys}
     for i in range(len(bnd_ls)):
         npts = np.sum(dv_masks_ls[i]!=0)
+        if npts == 0:
+            raise SystemExit(
+                f"ERROR: the {bnd_ls[i]} boundary mask has no points. Re-run gen_dvmasks.py "
+                f"for this boundary (STEP1, Section V.c) and check its -r search radius is "
+                f"large enough, in km, for the parent grid.")
         ### make empty arrays to fill in
         for nm in var_ls:
             if nm[:-1]=='mask':
@@ -300,7 +379,14 @@ def read_dv_diags(itrs_ls, vnm, bnd, bnd_domain, Nr0, Nr1, grid0, grid1):
             dv_diag = np.reshape(dv_diag, (tstp, Nr, nm_pt))
         dv_diag_chunks.append(dv_diag)
     ### merge all files, in chronological order, exactly once
+    if not dv_diag_chunks:
+        raise SystemExit(
+            f"ERROR: no diagnostics_vec files found for {vnm} at the {bnd} boundary "
+            f"(looked for '{sfx}.*.bin'). Check that this field is listed in "
+            f"data.diagnostics_vec for this boundary's mask, and that -i matches the "
+            f"iteration numbers actually written by the STEP2 run.")
     dv_diag = np.concatenate(dv_diag_chunks, axis=0)
+    warn_if_all_zero(dv_diag, vnm, bnd)
 
     #------- Vertical interpolation ------#
     if seaice == True:
@@ -514,6 +600,10 @@ def Vextrapol(full_grid, level_grid, wet_grid, level, mean_vertical_difference):
 
 def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, seaice, bgc, print_level):
 
+    ### fail fast, before any slow grid reading, if the inputs aren't there
+    check_boundaries(boundaries)
+    check_input_layout(config_dir, reg_nm, boundaries, need_dv_output=True)
+
     grd_ls = ['XC', 'YC', 'AngleCS', 'AngleSN', 'HFacC', 'HFacS', 'HFacW', 'drF']
     ###############################################
     #######   Read parent/region grid info  #######
@@ -558,6 +648,9 @@ def gen_obcs_files(config_dir, reg_nm, boundaries, itrs, seaice, bgc, print_leve
     #######        Generate OBCS files        #######
     #################################################
     out_dir = os.path.join(config_dir,'forcings/OBCS/')
+    ### create it rather than dying on the first tofile(); gen_pickups.py
+    ### already creates its own forcings/pickups/ the same way
+    os.makedirs(out_dir, exist_ok=True)
     #-------- Get boundary domain --------#
     if print_level>=1:
         print('> Getting boundary domain')
@@ -682,22 +775,27 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--config_dir", action="store",
-                        help="The directory where data files are stored", dest="config_dir",
+                        help="The config directory holding <reg_nm>_ncgrid.nc, parent/inputs/ \
+                        (dv masks) and parent/outputs/ (grid + diagnostics_vec output); \
+                        OBCS files are written to forcings/OBCS/", dest="config_dir",
                         type=str, required=True)
     parser.add_argument("-n", "--reg_nm", action="store",
                         help="Name of the regional cutout", dest="reg_nm",
                         type=str, required=True)
     parser.add_argument("-bnd", "--bnd_nm", action="store",
-                        help="boundaries where to generate a mask", dest="bnd_nm",
+                        help="Boundaries to generate OBCS for, as a string of E/W/N/S \
+                        (e.g. ENW)", dest="bnd_nm",
                         type=str, required=True)
     parser.add_argument("-i", "--itr", nargs='+', action="store",
-                        help="iteration of the begining the regional model", dest="itr",
+                        help="Iteration number(s) of the diagnostics_vec output files to read. \
+                        With 2+ values this is an exact whitelist; with 0 or 1 value every \
+                        matching file is auto-discovered and read", dest="itr",
                         type=int, required=True)
-    parser.add_argument("-seaice", "--si", action="store_true", default='False',
+    parser.add_argument("-seaice", "--si", action="store_true", default=False,
                         help="generate sea-ice obcs")
-    parser.add_argument("-bgc", "--darwin", action="store_true", default='False',
+    parser.add_argument("-bgc", "--darwin", action="store_true", default=False,
                         help="generate darwin biogeochemistry obcs")
-    parser.add_argument("-v", "--verbose", action="store_true", default='False')
+    parser.add_argument("-v", "--verbose", action="store_true", default=False)
 
 
     args = parser.parse_args()

@@ -88,15 +88,49 @@ def gen_bnd_mask(XC0, YC0, bathy0, B_coords, resolution):
 #                        SKELETON                          #
 ############################################################
 
+VALID_BND = {'E': 'east', 'W': 'west', 'N': 'north', 'S': 'south'}
+
+def check_inputs(config_dir, reg_nm, boundaries, bathy_file):
+    """Fail early, with an actionable message, on a bad -bnd or a config_dir
+    that doesn't have what this script reads (see the downscaling README's
+    Directory layout section)."""
+    if not boundaries:
+        raise SystemExit("ERROR: -bnd is empty. Give a string of boundary letters, e.g. 'ENW'.")
+    bad = [c for c in boundaries if c not in VALID_BND]
+    if bad:
+        raise SystemExit(
+            f"ERROR: unrecognized boundary letter(s) {bad} in -bnd '{boundaries}'. "
+            f"Valid letters are E (east), W (west), N (north), S (south), e.g. 'ENW'.")
+
+    problems = []
+    ncgrid = os.path.join(config_dir, reg_nm + '_ncgrid.nc')
+    if not os.path.isfile(ncgrid):
+        problems.append(f"  missing: {ncgrid}\n"
+                        f"      -> produced by stitch_ncgrid.py (STEP1, Section IV.c). "
+                        f"Check -n '{reg_nm}' matches the file name.")
+    grid_dir = os.path.join(config_dir, 'parent/outputs/grid/')
+    if not os.path.isdir(grid_dir):
+        problems.append(f"  missing: {grid_dir}\n"
+                        f"      -> copy the parent grid files here (STEP1, Section V.b). "
+                        f"Note the folder is 'parent', singular -- not 'parents'.")
+    else:
+        bathy = os.path.join(grid_dir, bathy_file)
+        if not os.path.isfile(bathy):
+            problems.append(f"  missing: {bathy}\n"
+                            f"      -> the -bfl parent bathymetry file must sit in "
+                            f"parent/outputs/grid/ alongside XC/YC (STEP1, Section V.b).")
+    if problems:
+        raise SystemExit("ERROR: the -d directory is missing files this script needs:\n"
+                         + "\n".join(problems))
+
 def gen_dvmasks(config_dir, reg_nm, bathy_file, boundaries, resolution, print_level):
-    
+
+    check_inputs(config_dir, reg_nm, boundaries, bathy_file)
+
     #### Create the parent folder
-    if 'parent' not in os.listdir(config_dir):
-        os.mkdir(os.path.join(config_dir,'parent'))
     parent_dir = os.path.join(config_dir,'parent')
-    if 'inputs' not in os.listdir(parent_dir):
-        os.mkdir(os.path.join(parent_dir,'inputs'))
     save_dir = os.path.join(parent_dir,'inputs')
+    os.makedirs(save_dir, exist_ok=True)
 
     #### Read ECCO grid information
     if print_level==1:
@@ -140,8 +174,15 @@ def gen_dvmasks(config_dir, reg_nm, bathy_file, boundaries, resolution, print_le
             raise SystemExit("boundary name "+bnd+" doesn't exist. Please specify a boundary with S,N,W or E")
         ## compute the mask
         tmp = gen_bnd_mask(XC0, YC0, bathy0, locals()[f'{bnd}_coords'], resolution*1e3)
-        if print_level == 1:
-            print('        The '+masks_nm[i]+' boundary mask has '+str(tmp[2])+' points')
+        if tmp[2] == 0:
+            raise SystemExit(
+                f"ERROR: the {masks_nm[i]} boundary mask came out empty (0 points). No parent "
+                f"cell was matched within the -r search radius ({resolution} km). Check that "
+                f"-r is the parent grid spacing in KM as an integer (e.g. 18 for llc270), and "
+                f"that this boundary really lies inside the parent domain.")
+        ### printed unconditionally: VEC_points in DIAGNOSTICS_VEC_SIZE.h must be
+        ### >= the largest of these counts (STEP2, Section I.c)
+        print('        The '+masks_nm[i]+' boundary mask has '+str(tmp[2])+' points')
         masks_grids.append(tmp[0])
         masks_dicts.append(tmp[1])
 
@@ -162,7 +203,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--config_dir", action="store",
-                        help="The directory where parents folder is stored", dest="config_dir",
+                        help="The config directory holding <reg_nm>_ncgrid.nc and the \
+                        parent/ folder (parent/outputs/grid/ must hold the parent grid \
+                        files); masks are written to parent/inputs/", dest="config_dir",
                         type=str, required=True)
     parser.add_argument("-n", "--reg_nm", action="store",
                         help="Name of the regional cutout", dest="reg_nm",
@@ -171,12 +214,15 @@ if __name__ == '__main__':
                         help="The ECCO global model bathymetry file name", dest="bathy_fle",
                         type=str, required=True)
     parser.add_argument("-bnd", "--bnd_nm", action="store",
-                        help="boundaries where to generate a mask", dest="bnd_nm",
+                        help="Boundaries to generate a mask for, as a string of E/W/N/S \
+                        (e.g. ENW)", dest="bnd_nm",
                         type=str, required=True)
     parser.add_argument("-r", "--reso", action="store",
-                        help="Parent grid spacing/ also reprsent the size of the searching area for boundary coordinates", 
+                        help="Parent (global) model horizontal grid spacing in KM, integer \
+                        (e.g. 18 for llc270). Also sets the search radius used to match \
+                        parent cells to the regional boundary coordinates", 
                         dest="reso", type=int, required=True)
-    parser.add_argument("-v", "--verbose", action="store_true", default='False')
+    parser.add_argument("-v", "--verbose", action="store_true", default=False)
 
     args = parser.parse_args()
     config_dir = args.config_dir
