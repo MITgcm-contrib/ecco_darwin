@@ -200,11 +200,11 @@ if __name__ == '__main__':
                         type=str, required=True)
     parser.add_argument("-s", "--dom_size", nargs='+', action="store",
                         help="list of the mitgrid shape: \
-                        [number of rows, number of columns]", 
+                        [number of rows, number of colums]", 
                         dest="dom_size", type=int, required=True)
     parser.add_argument("-cs", "--Scell_size", nargs='+', action="store",
                         help="list with the  minimum fraction and dimension size of a \
-                        cell, in this order: [hFacMin, hFacMinDr]", 
+                        cell: [hFacC_Min, hFacC_MinDir]", 
                         dest="Scell_size", type=float, required=True)
     parser.add_argument("-cw", "--Scell_width", nargs='+', action="store",
                         help="list with the 2 first surface layer height for the \
@@ -214,7 +214,7 @@ if __name__ == '__main__':
                         help="list with the position of the wet cell situated\
                         in the center of the domain: [row_wet_cell, col_wet_cell]", 
                         dest="wetC_pt", type=int, required=True)
-    parser.add_argument("-v", "--verbose", action="store_true", default=False)
+    parser.add_argument("-v", "--verbose", action="store_true", default='False')
     
     args = parser.parse_args()
     config_dir = args.config_dir

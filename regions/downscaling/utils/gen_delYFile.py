@@ -27,8 +27,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--config_dir", action="store",
-                        help="The config directory where <model_name>.mitgrid is stored; \
-                        delYFile is written back into the same directory", dest="config_dir",
+                        help="The directory where parents folder is stored", dest="config_dir",
                         type=str, required=True)
     parser.add_argument("-n", "--model_name", action="store",
                         help="Name of the regional cutout", dest="model_name",

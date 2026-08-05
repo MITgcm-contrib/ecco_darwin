@@ -49,64 +49,64 @@
 #
 ################################################################################
 # 
- nml_vecFiles(1)   = 'dv/east_BC_mask.bin',
- nml_vecFiles(2)   = 'dv/east_BC_mask.bin',
- nml_vecFiles(3)   = 'dv/east_BC_mask.bin',
- nml_vecFiles(4)   = 'dv/east_BC_mask.bin',
- nml_vecFiles(5)   = 'dv/east_BC_mask.bin',
- nml_vecFiles(6)   = 'dv/north_BC_mask.bin',
- nml_vecFiles(7)   = 'dv/north_BC_mask.bin',
- nml_vecFiles(8)   = 'dv/north_BC_mask.bin',
- nml_vecFiles(9)   = 'dv/north_BC_mask.bin',
- nml_vecFiles(10)  = 'dv/north_BC_mask.bin',
- nml_vecFiles(11)  = 'dv/west_BC_mask.bin',
- nml_vecFiles(12)  = 'dv/west_BC_mask.bin',
- nml_vecFiles(13)  = 'dv/west_BC_mask.bin',
- nml_vecFiles(14)  = 'dv/west_BC_mask.bin',
- nml_vecFiles(15)  = 'dv/west_BC_mask.bin',
- nml_vecFiles(16)  = 'dv/south_BC_mask.bin',
- nml_vecFiles(17)  = 'dv/south_BC_mask.bin',
- nml_vecFiles(18)  = 'dv/south_BC_mask.bin',
- nml_vecFiles(19)  = 'dv/south_BC_mask.bin',
- nml_vecFiles(20)  = 'dv/south_BC_mask.bin',
+ nml_vecFiles(1)   = 'dv/East_mask.bin',
+ nml_vecFiles(2)   = 'dv/East_mask.bin',
+ nml_vecFiles(3)   = 'dv/East_mask.bin',
+ nml_vecFiles(4)   = 'dv/East_mask.bin',
+ nml_vecFiles(5)   = 'dv/East_mask.bin',
+ nml_vecFiles(6)   = 'dv/North_mask.bin',
+ nml_vecFiles(7)   = 'dv/North_mask.bin',
+ nml_vecFiles(8)   = 'dv/North_mask.bin',
+ nml_vecFiles(9)   = 'dv/North_mask.bin',
+ nml_vecFiles(10)  = 'dv/North_mask.bin',
+ nml_vecFiles(11)  = 'dv/West_mask.bin',
+ nml_vecFiles(12)  = 'dv/West_mask.bin',
+ nml_vecFiles(13)  = 'dv/West_mask.bin',
+ nml_vecFiles(14)  = 'dv/West_mask.bin',
+ nml_vecFiles(15)  = 'dv/West_mask.bin',
+ nml_vecFiles(16)  = 'dv/South_mask.bin',
+ nml_vecFiles(17)  = 'dv/South_mask.bin',
+ nml_vecFiles(18)  = 'dv/South_mask.bin',
+ nml_vecFiles(19)  = 'dv/South_mask.bin',
+ nml_vecFiles(20)  = 'dv/South_mask.bin',
 #
 #######################################################
 # Here later BC's have 365 iterations per file (1 year)
 #######################################################
- nml_vec_iters_per_file(1:20) = 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365,
+ nml_vec_iters_per_file(1:15) = 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365, 365,
 #
 ##############################################################
 # Here later BC's have an averaging period of 1 day (24*60*60)
 ##############################################################
- nml_vec_avg_periods(1:20) = 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400.,
+ nml_vec_avg_periods(1:15) = 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400., 86400.,
 #
 ############################################
 # Saving 2D sea-ice BC's for every boundary
 ############################################
 # East
  nml_fields2D(1,1) = 'ETAN    ',
- nml_fields2D(1:2,2) = 'UICE    ','VICE    ',
- nml_fields2D(1,3) = 'AREA    ',
- nml_fields2D(1,4) = 'HSNOW   ',
- nml_fields2D(1,5) = 'HEFF    ',
+ nml_fields2D(1:2,2) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,3) = 'SIarea  ',
+ nml_fields2D(1,4) = 'SIhsnow ',
+ nml_fields2D(1,5) = 'SIheff  ',
 # North
  nml_fields2D(1,6) = 'ETAN    ',
- nml_fields2D(1:2,7) = 'UICE    ','VICE    ',
- nml_fields2D(1,8) = 'AREA    ',
- nml_fields2D(1,9) = 'HSNOW   ',
- nml_fields2D(1,10) = 'HEFF    ',
+ nml_fields2D(1:2,7) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,8) = 'SIarea  ',
+ nml_fields2D(1,9) = 'SIhsnow ',
+ nml_fields2D(1,10) = 'SIheff  ',
 # West
  nml_fields2D(1,11) = 'ETAN    ',
- nml_fields2D(1:2,12) = 'UICE    ','VICE    ',
- nml_fields2D(1,13) = 'AREA    ',
- nml_fields2D(1,14) = 'HSNOW   ',
- nml_fields2D(1,15) = 'HEFF    ',
+ nml_fields2D(1:2,12) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,13) = 'SIarea  ',
+ nml_fields2D(1,14) = 'SIhsnow ',
+ nml_fields2D(1,15) = 'SIheff  ',
 # South
  nml_fields2D(1,16) = 'ETAN    ',
- nml_fields2D(1:2,17) = 'UICE    ','VICE    ',
- nml_fields2D(1,18) = 'AREA    ',
- nml_fields2D(1,19) = 'HSNOW   ',
- nml_fields2D(1,20) = 'HEFF    ',
+ nml_fields2D(1:2,17) = 'SIuice  ','SIuice  ',
+ nml_fields2D(1,18) = 'SIarea  ',
+ nml_fields2D(1,19) = 'SIhsnow ',
+ nml_fields2D(1,20) = 'SIheff  ',
 #
 ############################################################
 # Saving 3D physics and Bio Tracers BC's for every boundary

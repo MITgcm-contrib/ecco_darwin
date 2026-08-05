@@ -55,7 +55,7 @@ Below are the instructions to run the code in a terminal:
 conda activate downscaling
 cd ecco_darwin/regions/downscaling/utils/
 python3 gen_bathy.py -d /path/to/save/the/grid -g /path/to/gebco/file/ 
-                     -n name_of_the_region -s n_rows n_cols -cs hFacMin hFacMinDr\
+                     -n name_of_the_region -s n_rows n_cols -cs min_Scell_size max_Scell_size\
                      -cw first_surface_cell_height second_surface_cell_height\
                      -wp row_wet_central_cell col_wet_central_cell -v 
 ```
@@ -72,7 +72,7 @@ Here are additional details about the option:
 > - -g: Path to the GEBCO netcdf file.
 > - -n: The name of your region. It will be the name of the bathymetry file.
 > - -s: Size of the downscaled domain. It corresponds to n_rows and n_cols information from mitgrid code.
-> - -cs: Minimum fraction size of a cell (hFacMin) and minimum dimension size of a cell (hFacMinDr), **in that order**. These are two parameters you will set later in the ``data`` file of your downscaled model, and the values must match (see STEP4, Section II.a). More information on these parameters [here](https://darwin3.readthedocs.io/en/latest/algorithm/vert-grid.html#topography-partially-filled-cells).
+> - -cs: Minimum fraction size of a cell (hFacMin) and minimum dimension size of a cell (hFacMinDr). These are two parameters you will set later in the ``data`` file of your downscaled model. More information on these parameters [here](https://darwin3.readthedocs.io/en/latest/algorithm/vert-grid.html#topography-partially-filled-cells).
 > - -cw: Height of the first two surface layers of the downscaled model. These are the 2 first numbers you will set later for the deltaR parameter in the ``data`` file of your model.  
 > - -wp: Indexes (row and column) of the central cells of the downscaled domain.  **Warning**: This should be a wet cell, so select the wet cell closest to the center.
 > - -v: Verbose
@@ -109,22 +109,22 @@ The following steps will permit you to generate a netcdf file containing the dif
 
 ### a. Set the cut-out configuration parameters
 
-Here you will start setting up the configuration parameters for your downscaled model.\
+Here you will start setting up the configuration parameters for your downscalled model.\
 On your supercomputer:
 ```
-cd downscaling/regions/configs/
-cp -r ../../ecco_darwin/regions/downscaling/gen_ncgrid .
+cd downscalling/regions/configs/
+cp -r ecco_darwin/regions/downscaling/gen_ncgrid .
 cd gen_ncgrid/code/
 vim SIZE.h
     ---> Modify sNx to Nr parameters according to your choices in III.
 cd ../input/
 vim data
-    ---> Modify parameters according to your downscaled set-up (see instructions below)
+    ---> Modify parameters according to your downscalled set-up (see instructions below)
     ---> Add the name of your bathyfile: "bathyFile="
 cd ..
-```
-> - for Pleiades users only:
-```
+
+==============================
+for Pleiades users only:
 vim job_downsc_ivy 
     ---> Modify the job file according to your set-up 
 ```
@@ -144,26 +144,21 @@ Below are the details of important parameters to set:
 **Requirement**:
 > The bathymetry and tiles files generated earlier should be accessible for the simulation.
 
-Upload ``regnm_bathymetry.bin``, ``regnm.mitgrid`` files, and the ``tiles`` folder to your supercomputer, in the following folder: "downscaling/regions/".\
-Then follow these instructions (example on Pleiades). The block below starts from
-``downscaling/regions/configs/gen_ncgrid``, where the previous block left off:
+Upload ``regnm_bathymetry.bin``, ``regnm.mitgrid`` files, and ``tiles`` folder on your supercomputer capability in the following folder "downscalling/regions/configs/".\
+Then follow these instructions (example on Pleiades):
 
 ```
-cd ../../../darwin3/regions/
+cd ../../darwin3/regions/
 mkdir gen_ncgrid
 cd gen_ncgrid
 mkdir run build
 cd build
 ```
 > - Compile the code
-
-<u>Note:</u> from ``downscaling/darwin3/regions/gen_ncgrid/build``, three levels up is ``darwin3/``
-(where ``tools`` lives) and four levels up is ``downscaling/`` (where ``regions`` lives). The two
-different prefixes below are both intentional.
 ```
 module purge
 module load comp-intel mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
-../../../tools/genmake2 -of ../../../tools/build_options/linux_amd64_ifort+mpi_ice_nas\
+../../../../tools/genmake2 -of ../../../../tools/build_options/linux_amd64_ifort+mpi_ice_nas\
 -mpi -mo '../../../../regions/configs/gen_ncgrid/code/'
 make depend
 make -j 16
@@ -220,16 +215,12 @@ The following steps will permit the generation of the grid files from the ECCO g
 
 Below is an example using v05 ECCO-Darwin. On the supercomputer (example on Pleiades) run:
 ```
-cd downscaling/darwin3/regions/
+cd downscaling/darwin3/regions/parent_run
 mkdir parent_run
 cd parent_run
 mkdir build run
-cd build
 ```
 > - Compile the code
-
-<u>Note:</u> ``genmake2`` must be run from inside ``build``, which is why the block above ends with
-``cd build``. Running it from ``parent_run`` will not resolve the relative paths below.
 ```
 for Pleiades users only:
 module purge
@@ -255,18 +246,13 @@ qsub job_ECCO_darwin
 ```
 <u>Note:</u> You can modify ``job_ECCO_darwin`` and use the debug loop to go faster here.
 
-### b. Copy the parent grid files back
-
-Once the run finishes, copy the following grid files generated by the run to the machine running
-your anaconda environment, into your ``config_dir`` (see "Directory layout" in the README).
-
-<u>Warning:</u> the folder is ``parent``, **singular** — ``gen_dvmasks.py``, ``gen_pickups.py``, and
-``gen_obcs.py`` all build this path literally and will not find a ``parents/`` directory.
+Once the run finishes, copy the following grid files generated on your local machine (so it is accessible by anaconda environment).
+on your local machine:
 ```
-cd /path/to/config_dir/
-mkdir -p parent/outputs/grid/
-cp XC* YC* DXC* DYC* AngleCS* AngleSN* hFacC* hFacW* hFacS* RF* DRF* parent/outputs/grid/.
-cp bathy270_filled_noCaspian_r4 parent/outputs/grid/.
+cd /path/where/region/files/are/stored/
+mkdir parents/outputs/grid/
+cp XC* YC* DXC* DYC* AngleCS* AngleSN* hFacC* hFacW* hFacS* RF* DRF* parents/outputs/grid/.
+cp bathy270_filled_noCaspian_r4 parents/outputs/grid/.
 ```
 
 ### c. Generate the masks files
@@ -285,19 +271,9 @@ python3 gen_dvmasks.py -d ecco_darwin/regions/downscaling/ -n NorthSlope\
                        -bfl bathy270_filled_noCaspian_r4 -bnd ENW -r 18 -v
 ```
 To get more information about the options required for this code run ``gen_dvmasks.py -h``. Here are additional details about the options:
-> - -d: Your ``config_dir`` — the directory where the "parent" folder is stored or should be stored (the parent folder must have the grid files from V.b in it)
+> - -d: The directory where "parent" folder is stored or should be stored (parent folder must have the grid files in it)
 > - -n: The name of your region
-> - -bfl: name of the ECCO global model bathymetry file to use, as copied into ``parent/outputs/grid/`` in V.b
+> - -bfl: name of the ECCO global model bathymetry file to use
 > - -bnd: Open boundaries of your domain where you want to extract boundary conditions. Can be either 'E' (East), 'W' (West), 'N' (North), 'S' (South)
-> - -r: Horizontal grid resolution of the **global (parent)** model, **in km** (**Warning**: This must be an integer — e.g. ``18`` for llc270). This sets the search radius used to match global model coordinates with the regional setup boundary coordinates.
-> - -v: Verbose
-
-The masks are written to ``<config_dir>/parent/inputs/`` as ``east_BC_mask.bin``,
-``west_BC_mask.bin``, ``north_BC_mask.bin``, and ``south_BC_mask.bin``, depending on which
-boundaries you requested with ``-bnd``.
-
-<u>Note:</u> the script prints a line per boundary of the form
-``The <boundary> boundary mask has N points``. **Write these numbers down** — the largest of them
-determines ``VEC_points`` in STEP2, Section I.c. An empty mask (0 points) is an error and stops
-the script; it usually means ``-r`` is too small or the boundary lies outside the parent domain.
+> - -r: Horizontal grid resolution in meters of the global model in km (**Warning**: This must be an integer). This information is used to search the radius for matching global model coordinates with regional setup boundaries coordinates.
 

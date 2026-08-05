@@ -17,10 +17,10 @@ cp -r ecco_darwin/regions/GoM/GoM_1km/code ecco_darwin/regions/YOURSETUP/.
 cp -r ecco_darwin/regions/GoM/GoM_1km/code_darwin ecco_darwin/regions/YOURSETUP/.
 ```
 
-Copy the SIZE.h file you configured in STEP 1, Section IV.a (and compiled with in Section IV.b). It must match your downscaled regional set-up dimensions.
+Copy your previously configured SIZE.h file from STEP 1, Section IV.b. It must match your downscaled regional set-up dimensions.
 
 ```
-cp downscaling/darwin3/regions/gen_ncgrid/build/SIZE.h ecco_darwin/regions/YOURSETUP/code/.
+cp downscalling/darwin3/regions/gen_ncgrid/build/SIZE.h ecco_darwin/regions/YOURSETUP/code/.
 ```
 
 Make sure the packages.conf file in ecco_darwin/regions/YOURSETUP/code/ contains the following packages:
@@ -52,13 +52,13 @@ Make sure the version of Darwin you are using (based on your parent run) matches
 Then, you need to prepare data namelists files as inputs to copy when preparing the model for run. Once again, you can follow and copy examples from existing regional set-ups:
 
 ```
-cp -r ecco_darwin/regions/GoM/GoM_1km/input ecco_darwin/regions/YOURSETUP/.
-cp -r ecco_darwin/regions/GoM/GoM_1km/input_darwin ecco_darwin/regions/YOURSETUP/.
+cp -r ecco_darwin/regions/GoM/GoM_1km/inputs ecco_darwin/regions/YOURSETUP/.
+cp -r ecco_darwin/regions/GoM/GoM_1km/inputs_darwin ecco_darwin/regions/YOURSETUP/.
 ```
 
-### a. data namelist (ecco_darwin/regions/YOURSETUP/input/data)
+### a. data namelist (ecco_darwin/regions/YOURSETUP/code/data)
 
-Like for SIZE.h, you can re-use the data namelist file you configured in STEP 1, Section IV.a.
+Like for SIZE.h, you can re-use the data namelist file configured for STEP 1, Section IV.b.
 
 Make sure that hFacMin and hFacMinDr in the data file match the values you provided in STEP 1, Section II when generating the bathymetry file. 
 
@@ -84,20 +84,9 @@ with xgOrigin and ygOrigin, the minimum longitude and latitude of your domain, d
 ```
 conda activate downscaling
 cd ecco_darwin/regions/downscaling/utils/
-python3 gen_delYFile.py -d /path/to/config_dir -n name_of_the_region -x n_rows -y n_cols
+python3 gen_delYFile.py -d /path/to/save/the/grid -n name_of_the_region
 ```
-**Example:**
-```
-python3 gen_delYFile.py -d ecco_darwin/regions/downscaling/ -n NorthSlope -x 840 -y 510
-```
-> - -d: Your `config_dir` — the directory where `<name_of_the_region>.mitgrid` is stored; `delYFile` is written back into the same directory.
-> - -n: The name of your region (must match the `.mitgrid` filename).
-> - -x: Grid size in the x-direction (`n_rows` from STEP 1, Section I).
-> - -y: Grid size in the y-direction (`n_cols` from STEP 1, Section I).
-
-<u>Note:</u> `-x` and `-y` are both required; the script reads the raw `.mitgrid` binary and needs the domain shape to reshape it.
-
-The delYFile will be saved in /path/to/config_dir.
+The delYFile will be saved in /path/to/save/the/grid.
 
 Finally, add the following lines in # Input datasets (&PARM05) to restart the model from a specific iteration in your pickup files generated in STEP 3, Section I:
 
@@ -110,20 +99,18 @@ Finally, add the following lines in # Input datasets (&PARM05) to restart the mo
  uVelInitFile    = 'pickup_U.0000026352.data',
  vVelInitFile    = 'pickup_V.0000026352.data',
  pSurfInitFile   = 'pickup_ETAN.0000026352.data',
-```
+````
 
-The files that `readBinaryPrec` governs — the bathymetry (`gen_bathy.py`), `delYFile` (`gen_delYFile.py`), and the pickup/initial-condition files (`gen_pickups.py`) — are all written in 64-bit precision, so set:
+Steps 1 to 3 in the downscaling method produced binary files in 64-bit precision format so make sure readBinaryPrec is set to 64-bit precision:
 ```
 readBinaryPrec=64,
 ```
-
-<u>Warning:</u> this does **not** apply to the OBCS files. `gen_obcs.py` writes them in **32-bit** precision, and they are read by the EXF package, which is governed by `exf_iprec_obcs` in `data.exf` (default `32`). Leave that default alone — setting `exf_iprec_obcs=64` to "match" `readBinaryPrec` will make the model misread the boundary conditions.
-### b. data.cal namelist (ecco_darwin/regions/YOURSETUP/input/data.cal)
+### b. data.cal namelist (ecco_darwin/regions/YOURSETUP/inputs/data.cal)
 
 Make sure to set startDate_1 in data.cal to the corresponding iteration you would like to restart the model from (suffix in the pickup files set in data).\
 **Example:** In v05 ECCO-Darwin: pickup*.0000683784* corresponds to the beginning of the year: 1992 + (683784 x timestep) / (365.25 x 86400) = 2018) with timestep of 1200 seconds. Here, the timestep is from the parent run.
 
-### c. data.exf namelist (ecco_darwin/regions/YOURSETUP/input/data.exf)
+### c. data.exf namelist (ecco_darwin/regions/YOURSETUP/inputs/data.exf)
 
 This is where you configure the forcing fields to be read by the model. Make sure to either provide global forcings along with their interpolation parameters or to provide forcing fields adapted to your grid in &EXF_NML_02 and &EXF_NML_04 (see https://mitgcm.readthedocs.io/en/latest/phys_pkgs/exf.html). It is also in data.exf that you configure OBCS date, time and period parameters in &EXF_NML_OBCS. Be sure that your OBCS either starts before or at the same time as your startDate_1 date in data.cal. obcsXXstartdate1 is given by the iteration number used in STEP 3, Section II, gen_obcs.py.
 Make sure to have lines for each of your OBCS (here only 3 for East, North and South):
@@ -143,11 +130,11 @@ Make sure to have lines for each of your OBCS (here only 3 for East, North and S
   obcsEperiod       = 2629800.0,
 ```
 
-### d. data.obcs namelist (ecco_darwin/regions/YOURSETUP/input/data.obcs)
+### d. data.obcs namelist (ecco_darwin/regions/YOURSETUP/inputs/data.obcs)
 
 Here, you provide the size and direction of your OBCS and corresponding files for each variable (see https://mitgcm.readthedocs.io/en/latest/phys_pkgs/obcs.html).
 
-### e. data.ggl90 namelist (ecco_darwin/regions/YOURSETUP/input/data.ggl90)
+### e. data.ggl90 namelist (ecco_darwin/regions/YOURSETUP/inputs/data.ggl90)
 
 Finally, provide the name of the pickup_ggl90 file generated in STEP 3, Section I:
 
@@ -155,11 +142,11 @@ Finally, provide the name of the pickup_ggl90 file generated in STEP 3, Section 
 GGL90TKEFile = 'pickup_ggl90.0000026352.data',
 ```
 
-### f. data.diagnostics namelist (ecco_darwin/regions/YOURSETUP/input/data.diagnostics)
+### f. data.diagnostics namelist (ecco_darwin/regions/YOURSETUP/inputs/data.diagnostics)
 
 You can specify your desired outputs that the model will produce during the integration in data.diagnostics. Follow documentation for more details on available diagnostics:  https://mitgcm.readthedocs.io/en/latest/outp_pkgs/outp_pkgs.html#usage-notes.
 
-### g. data.pkg namelist (ecco_darwin/regions/YOURSETUP/input/data.pkg)
+### g. data.pkg namelist (ecco_darwin/regions/YOURSETUP/inputs/data.pkg)
 
 This namelist defines packages used for the model integration. Make sure it looks like this:
 
@@ -175,18 +162,17 @@ This namelist defines packages used for the model integration. Make sure it look
 ```
 usePTRACERS and useGCHEM can be undefined if running WITHOUT Darwin.
 
-### h. Additional namelists for Darwin run (ecco_darwin/regions/YOURSETUP/input_darwin/)
+### h. Additional namelists for Darwin run (ecco_darwin/regions/YOURSETUP/inputs_darwin/)
 
 If you want to run your downscaled regional set-up with the Darwin package, make sure you generated initial and boundary conditions for all the ptracers and Darwin state variables in STEP 3.
 
-Make sure the GCHEM and Ptracers packages are enabled in data.pkg:
+Make sure the GCHEM and Ptracers packages are enabled in data.pkg.
+
+Then, modify the data.ptracers according to the version of Darwin used in the parent model when proceeding to the downscaling (number of tracers, names, units):
 ```
  useGCHEM       = .TRUE.,
  usePTRACERS    = .TRUE.,
 ```
-
-Then, modify data.ptracers according to the version of Darwin used in the parent model when proceeding to the downscaling (number of tracers, names, units).
-
 In STEP 3, Section I, you generated initial condition pickup files for each Ptracers. In data.ptracers, add the following lines in &PTRACERS_PARM01 to restart from specific initial conditions for each Ptracers:
 ```
  PTRACERS_initialFile( 1)= 'pickup_pTr01.0000026352.data',
@@ -242,8 +228,8 @@ The following example assumes you intend to run the model on a high-performance 
 To compile the model, first, create new directories for compiling and running your set-up in your downscaling repo (or create a new one):
 
 ```
-mkdir downscaling/darwin3/regions/downscaled
-cd downscaling/darwin3/regions/downscaled
+mkdir /downscalling/darwin3/regions/downscaled
+cd downscalling/darwin3/regions/downscaled
 mkdir build run
 cd build
 ```
@@ -271,7 +257,7 @@ cd ../run
 Create a symbolic link pointing to your newly created mitgcmuv executable:
 ```
 ln -sf ../build/mitgcmuv .
-```
+````
 
 Create a symbolic link pointing to your forcing files:
 ```
@@ -279,15 +265,13 @@ ln -sf /PATH2FORCINGS/* .
 ```
 Here, you can either create the link directly into your run directory or create a forcings directory in your run directory. Make sure you provide the correct path in data.exf and data.darwin.
 
-Then, create a symbolic link pointing to your initial, open boundary conditions, bathymetry and delYFile files for the downscaled regional set-up. These are the files produced in STEP 1 and STEP 3, so the paths below all point into the `config_dir` you have been passing to the `utils` scripts as `-d` (see "Directory layout" in the README):
+Then, create a symbolic link pointing to your initial, open boundary conditions, bathymetry and delYFile files for the downscaled regional set-up:
 ```
-ln -sf /path/to/config_dir/forcings/pickups/*0000026352* .
-ln -sf /path/to/config_dir/forcings/OBCS/* .
-ln -sf /path/to/config_dir/YOURSETUP_bathymetry.bin .
-ln -sf /path/to/config_dir/delYFile .
+ln -sf /YOURSETUP/grid/forcings/pickups/*0000026352* .
+ln -sf /YOURSETUP/grid/forcings/OBCS/* .
+ln -sf /YOURSETUP/grid/YOURSETUP_bathymetry.bin .
+ln -sf /YOURSETUP/grid/delYFile .
 ```
-
-<u>Note:</u> if you ran `check_obcs_transport.py -correct` in STEP 3, Section III and want to use the corrected set, link `forcings/OBCS_corrected/*` instead of `forcings/OBCS/*`.
 
 Copy your namelist files:
 ```
@@ -316,13 +300,4 @@ To start the integration and run your model, submit your batch file with the qsu
 ```
 qsub batch_file
 ```
-
----
-
-Before committing supercomputer time to a long production integration, run the short
-verification experiment in **STEP5**. It confirms that the model integrated stably (no NaN,
-CFL respected, no runaway drift) and — just as important — that it actually ingested the
-initial and boundary conditions you generated in STEP3. Both failure modes are silent: a run
-can complete cleanly while ignoring your pickups, or while carrying no flow at all through
-one of the open boundaries.
 
