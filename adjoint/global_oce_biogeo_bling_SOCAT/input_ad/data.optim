@@ -1,0 +1,22 @@
+# ********************************
+# Off-line optimization parameters
+# ********************************
+# Fresh-start configuration: optimcycle=0 forces m1qn3 to cold-start
+# (optim_readparms.F:162), so &M1QN3's coldStart flag does not need to
+# be set explicitly here. If you restart a stalled/capped run at
+# optimcycle>0 without a matching OPWARM.opt<cycle> pickup file, add
+#   coldStart=.TRUE.,
+# to the &M1QN3 block below -- otherwise optim.x will attempt a warm
+# restart and stop abnormally looking for a pickup file that doesn't
+# exist. See README.md, "Continuing past an iteration-cap stop."
+&OPTIM
+ optimcycle=0,
+ numiter=10,
+ nfunc=100,
+ dfminFrac = 0.1,
+ iprint=10,
+ nupdate=8,
+/
+
+&M1QN3
+/

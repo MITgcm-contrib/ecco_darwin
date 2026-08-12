@@ -1,0 +1,144 @@
+#######################
+# Adapted from a real, previously-tuned darwin3 offline (LLC90) config
+# (research/ECCO/offline/from_steph/run_6+4+0_offline/data.darwin) for our
+# 128x64 lat-lon grid, matching global_oce_biogeo_bling's circulation/forcing.
+# radtrans package is off for this run -- DARWIN_RADTRANS_PARAMS dropped.
+#######################
+ &DARWIN_FORCING_PARAMS
+# iron dust deposition: reusing BLING's own (Mahowald) forcing file, already
+# on our grid, as a pragmatic substitute for the reference config's
+# Hamilton (2020) product -- not regridding a second iron dataset for this pilot.
+ ironFile='mah_flux_smooth.bin',
+ ironPeriod= -12.,
+ darwin_inscal_iron= 1000.,
+#
+# wind speed for gas exchange: same file BLING already uses (tren_speed.bin),
+# already on our grid.
+ windFile='tren_speed.bin',
+ windPeriod= -12.,
+#
+# sea ice fraction: BLING's own forcing file (fice.bin), already on our
+# grid. BLING reads this via the core model's generic monthly-climatology
+# mechanism (READ_REC_XY_RS, tied to periodicExternalForcing/calendar) --
+# Darwin's own loader (exf_set_fld) needs the equivalent "12 calendar
+# months" convention (period=-12., same as ironFile/windFile above) to
+# read the SAME ice-fraction value at the same time as BLING does. The
+# reference config's iceperiod=86400. (daily) was for a different,
+# non-climatological ice product and is wrong for this 12-record file --
+# it both crashed (ran past record 12) and would have misaligned the
+# ice-cover data against BLING's even if it hadn't crashed.
+ icefile = 'fice.bin',
+ iceperiod     = -12.,
+#
+# constant atmospheric pCO2 (~2007-era, not the reference config's
+# pre-industrial 278ppm) -- revisit if/when comparing directly against BLING's
+# own atmospheric CO2 assumption.
+ pco2const = 380E-6,
+ /
+########################
+ &DARWIN_PARAMS
+ darwin_chlInitBalanced= T,
+ diaz_ini_fac= 0.1,
+ darwin_seed= 56,
+ tempCoeffArr= 1.0,
+ PARmin= 0.1,
+ alpfe= 1.00,
+ freefemax = .1E-3,
+ depthfesed= 7000.,
+ scav_tau= 1.0,
+ scav_inter=9.14351851851E-7,
+ scav_psi_wgt=0.0000000000E0,
+ scav_pic_wgt=0.0000000000E0,
+ scav_poc_wgt=0.06,
+ kdoc=  2.314814814814815E-7,   ! 1/50day
+ kdop=  2.893500000000000E-7,   ! 1/50day
+ kdon=  2.314814814814815E-7,   ! 1/50day
+ kdofe= 2.314814814814815E-7,   ! 1/50day
+ kPOC=  3.8580246913580247E-7,  ! 1/30day
+ kPOP=  4.8225000000000000E-7,  ! 1/30day
+ kPON=  3.8580246913580247E-7,  ! 1/30day
+ kPOFe= 3.8580246913580247E-7,  ! 1/30day
+ kPOSi= 1.5432e-07,             ! 1/75day
+ phygrazmin= 120E-10,
+ hollexp = 1.E0,
+ SURFDICMIN  =   100.0,
+ SURFALKMIN  =   100.0,
+ /
+########################
+ &DARWIN_CDOM_PARAMS
+  fracCDOM = 0.02,
+  cdomdegrd= 3.8580e-08,
+  CDOMbleach = 1.9329e-06,
+  PARCDOM = 60.,
+  CDOMcoeff = 0.1750000,
+ /
+########################
+ &DARWIN_RANDOM_PARAMS
+ /
+########################
+&DARWIN_TRAIT_PARAMS
+ grp_names= 'PicoCynao', 'PicoEuk', 'Cocco', 'Diazo', 'Diatom', 'Dino', 'Zoo'
+#
+ grp_nplank(:)=          1, 1, 1, 1,  1,  1, 4,
+ grp_photo(:)=           1, 1, 1, 1,  1,  1, 0,
+ grp_pred(:)=            0, 0, 0, 0,  0,  1, 1,
+ grp_prey(:)=            1, 1, 1, 1,  1,  1, 1,
+ grp_hasSi(:)=           0, 0, 0, 0,  1,  0, 0,
+ grp_hasPIC(:)=          1, 1, 1, 1,  1,  0, 0,
+ grp_DIAZO(:)=           0, 0, 0, 1,  0,  0, 0,
+ grp_useNH4(:)=          1, 1, 1, 1,  1,  1, 0,
+ grp_useNO2(:)=          1, 1, 1, 1,  1,  1, 0,
+ grp_useNO3(:)=          1, 1, 1, 1,  1,  1, 0,
+ grp_combNO(:)=          1, 1, 1, 1,  1,  1, 0,
+ grp_bacttype(:)=        0, 0, 0, 0,  0,  0, 0,
+ grp_aerobic(:)=         0, 0, 0, 0,  0,  0, 0,
+ grp_denit(:)=           0, 0, 0, 0,  0,  0, 0,
+ grp_tempMort(:)=        1, 1, 1, 1,  1, 1,  1,
+ grp_tempMort2(:)=       1, 1, 1, 1,  1, 1,  1,
+ grp_aptype(:)=          4, 1, 6, 8,  5, 9, 11,
+#
+a_R_PICPOC(:) = 2*4.19E-2,1*0.05,3*4.19E-2,
+
+ a_Xmin(:)= 6*120E-20,
+
+ a_phytoTempAe=0.0758, 0.0635, 0.0353, 0.0575, 0.0438, 0.0512,
+
+ a_mQyield(:)= 6*4E-5,
+ a_chl2cmax(:)=  4*.2, .3, .2,
+ a_acclimtimescl(:)= 6*5.7870370370370370E-6,
+ logvolbase= -0.9000,
+ logvolinc= 1.026,
+ logvol0ind(:)= 1, 2, 3, 3, 3,4, 4,
+ a_biosink(:)= 6*6.951416635391563E-7, 0.,  ! .05*dm**.85
+ b_biosink(:)= 6*.2833333333333333, 0.,
+ a_PCmax(1)= 1.1098,
+ a_PCmax(2)= 1.2104,
+ a_PCmax(3)= 1.9558,
+ a_PCmax(4)= 0.5954,
+ a_PCmax(5)= 2.4967,
+ a_PCmax(6)= 1.3363,
+#
+ a_PCmax_denom(:)= 6*86400.,
+ b_PCmax(:)=  0.28, 0.28, -0.10, -0.10, -0.10,-0.10, 0.,
+#
+ a_Qpmin = 6*0.005, 0.008,
+ a_Qpmax = 6*0.02,  0.01,
+#
+ darwin_effective_ksat= T,
+ darwin_select_kn_allom= 2,
+#
+ grp_ExportFracPreyPred(1:6,7)= 6*.8,
+ a_R_ChlC(7)= 0.,
+ a_grazemax(7)= 3.4722000000000000E-05,  ! prowe values
+ b_grazemax(7)= -0.16,
+#
+ a_phytoTempExp2= 7*.0003,
+ a_R_PC(:)= 7*0.008333333333333333,
+ a_R_FeC(:)= 3*0.008333333333333333E-3, 1*0.03333333333333333E-3, 3*0.008333333333333333E-3,
+ a_R_NC(:)= 7*0.13333333333333333,
+ a_R_SiC(:)= 4*0., 0.39999999999999999, 2*0.,
+ a_kgrazesat(:)= 7*10.0,
+ b_kgrazesat(:)= 7*0,
+#
+  grp_ass_eff(:,:)=49*0.32,
+/
