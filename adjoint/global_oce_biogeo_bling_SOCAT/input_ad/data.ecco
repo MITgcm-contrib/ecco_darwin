@@ -1,0 +1,18 @@
+# ******************
+# ECCO cost function
+# ******************
+#
+ &ECCO_COST_NML
+ using_cost_seaice = .FALSE.,
+ using_cost_sst = .FALSE.,
+ using_cost_altim = .FALSE.,
+ cost_iprec  = 32,
+ &
+
+ &ECCO_GENCOST_NML
+# SST gencost term disabled for the longer (1-month) run: it was a
+# placeholder using 'lev_clim_temp.bin' (15 depth-level records) as a
+# stand-in daily SST series, which only worked because the original
+# 4-timestep smoke test never got past day 1. Real constraint remains
+# the pH profiles (pkg/profiles).
+ &

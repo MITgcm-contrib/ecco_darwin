@@ -1,0 +1,41 @@
+# *********************
+# External Forcing Data
+# *********************
+#
+ &EXF_NML_01
+ exf_iprec         = 32,
+ exf_yftype        = 'RL',
+# useExfYearlyFields= .TRUE.,
+# twoDigitYear      = .TRUE.,
+ useExfCheckRange  = .FALSE.,
+ repeatPeriod = 31104000.,
+ &
+#
+ &EXF_NML_02
+# same values as BLING's own tauThetaClimRelax/tauSaltClimRelax (moved
+# here from "data" since EXF_READPARMS stops if both are set). climsst/
+# climsss are loaded but never applied to theta/salt in our config (that
+# only happens under ALLOW_BULK_OFFLINE, which we don't use) -- the actual
+# relaxation still runs through the core model's own tauThetaClimRelax/
+# thetaClimFile mechanism (ini_forcing.F), unchanged from BLING. Reusing
+# BLING's own monthly climatology files here just gives EXF something
+# valid to read for its own (otherwise inert) internal bookkeeping.
+ climsstfile   = 'lev_monthly_temp.bin',
+ climsststartdate1 = 20070101,
+ climsststartdate2 = 0,
+ climsstperiod = 2592000.,
+ climsstRepCycle = 31104000.,
+ climsssfile   = 'lev_monthly_salt.bin',
+ climsssstartdate1 = 20070101,
+ climsssstartdate2 = 0,
+ climsssperiod = 2592000.,
+ climsssRepCycle = 31104000.,
+ climsstTauRelax = 5184000.,
+ climsssTauRelax = 7776000.,
+ &
+#
+ &EXF_NML_03
+ &
+#
+ &EXF_NML_04
+ &

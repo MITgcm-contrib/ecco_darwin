@@ -1,0 +1,105 @@
+Reference results for global_oce_biogeo_bling_SOCAT
+=====================================================
+
+These are NOT pass/fail regression numbers in the usual MITgcm
+testreport sense (this experiment is a multi-day, multi-evaluation
+optimization campaign, not a short deterministic integration -- see
+README.md "Why this isn't a typical MITgcm verification experiment").
+They are the reference trajectory from the campaign this experiment
+was extracted from, for sanity-checking that a from-scratch rerun is
+tracking the same physics.
+
+1. Gradient check (pkg/grdchk), validating the TAF-generated adjoint
+   before committing to the optimization campaign
+---------------------------------------------------------------------
+Config: 1-month test window (nTimeSteps=2880), 2 test points, run
+separately for the two most pCO2-relevant biogeochemical controls.
+
+DIC (xx_ptr1), grid point (34,10,1):
+    adjoint gradient = -459.09582519531
+    finite-difference gradient (eps=1e-5, centered) = -459.09637192381
+    relative error = 1.19e-6
+DIC (xx_ptr1), grid point (35,10,1):
+    adjoint gradient = -332.98162841797
+    finite-difference gradient = -332.98208691122
+    relative error = 1.38e-6
+DIC RMS relative error: 1.2872724705626e-6
+
+ALK (xx_ptr2), grid point (34,10,1):
+    adjoint gradient = 407.41873168945
+    finite-difference gradient = 407.41926095507
+    relative error = -1.30e-6
+ALK (xx_ptr2), grid point (35,10,1):
+    adjoint gradient = 295.65786743164
+    finite-difference gradient = 295.65834338428
+    relative error = -1.61e-6
+ALK RMS relative error: 1.4627146411885e-6
+
+Expect: RMS relative error ~1e-6 (machine-precision-level agreement).
+A relative error above ~1e-3 indicates something is wrong with the
+adjoint code or build (stale .for/.o files, checkpointing
+misconfiguration, etc.) -- do not proceed to the optimization campaign.
+
+2. First-guess (optimcycle=0) cost function breakdown
+---------------------------------------------------------------------
+Total fc = 212372.702721180
+Monthly prof_PCO contributions (sum to the total above):
+    Jan  35041.3311664302   (n=2759 obs)
+    Feb  23205.7783327819   (n=2733 obs)
+    Mar  19837.5719235390   (n=2695 obs)
+    Apr  14098.2944822456   (n=2378 obs)
+    May  14842.3173166944   (n=2101 obs)
+    Jun  16322.0065689015   (n=1931 obs)
+    Jul  16780.8977505925   (n=2050 obs)
+    Aug  15370.0496288447   (n=1978 obs)
+    Sep  13844.7958051219   (n=2012 obs)
+    Oct  15582.3170741114   (n=2334 obs)
+    Nov  12582.1511987328   (n=2344 obs)
+    Dec  14865.1914731840   (n=2564 obs)
+
+3. M1QN3 cost function trajectory, cycles 0-10 (~7.3hr/cycle,
+   single-core; see README.md "Performance")
+---------------------------------------------------------------------
+cycle   fc                    step (-dfc)   cumulative %
+0       212372.702721180      --            --
+1       205231.624625958      7141.08        -3.36%
+2       204090.983013349      1140.64        -3.90%
+3       203085.762665770      1005.22        -4.38%
+4       202190.714912161       895.05        -4.80%
+5       201357.618549722       833.10        -5.19%
+6       200503.021795958       854.60        -5.58%
+7       199551.351134046       951.67        -6.05%
+8       198944.783752850       606.57        -6.33%
+9       198619.084252134       325.70        -6.48%
+10      198346.427310668       272.66        -6.60%
+
+Cycle 10 ends with m1qn3 hitting its configured iteration cap
+(omode=4, "maximal number of iterations"), NOT gradient convergence
+(realized relative precision on g = 4.40e-2, vs. requested epsg).
+This is expected given numiter=10 in the reference data.optim -- see
+README.md "Continuing past an iteration-cap stop" for how to extend
+the campaign, and "Known limitations" for why the campaign was still
+being extended (leg 2+) when this experiment was packaged.
+
+Expect: monotonically decreasing fc, no NaN/Inf, step sizes shrinking
+cycle-to-cycle (not strictly monotonically -- cycle 6/7 tick up
+slightly before resuming the shrink -- but no wild oscillation or
+divergence). Exact numbers will differ in the last few significant
+digits depending on compiler/platform (this reference was built with
+gfortran -O3 on macOS/arm64); differences beyond ~1e-3 relative should
+be investigated.
+
+4. M1QN3 diagnostics at cycle 10 (opt_010.txt)
+---------------------------------------------------------------------
+omode   = 4        (stopped: maximal number of iterations)
+niter   = 10
+nsim    = 11
+reverse = -1        (terminated, not continuing)
+mean(xx) = -7.8974381688892494E-009
+max(xx)  =  1.7707405277178623E-005
+min(xx)  = -1.8820792320184410E-005
+
+See README.md "Known limitations" for why these xx magnitudes (and
+their ~7-order-of-magnitude spread across the 8 control fields) are a
+flagged, unresolved methodological caveat, not a bug to silently
+"fix" by editing this reference output.
