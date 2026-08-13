@@ -13,7 +13,53 @@ from ._baseline import WATERTEMP_FILE, AMPL, pfun, BOUNDARIES as _BASE_BOUNDARIE
 BOUNDARIES = dict(_BASE_BOUNDARIES)
 for _sp, _cub in [("pH", 7.97), ("ALK", 1796.6), ("DIC", 1803.7)]:
     BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
-BOUNDARY_CHEM_SOURCE = "WQP eastern-ANWR regional pool (paired-pCO2 DIC); other species placeholder"
+
+# --- O2 and SPM (cub): USGS Water Quality Portal, same bbox as above -------------------
+# Open-water (Jun-Sep) medians. O2: n=24 discrete DO samples, 11.6 mg/L -> 362.5 mmol/m^3
+# (32 g/mol). SPM: n=9 Suspended Sediment Concentration samples, 4.0 mg/L -> 0.0040 g/L --
+# two orders of magnitude below the shared placeholder (2.0 g/L); the lowest sediment load
+# of the four, consistent with a mountain-fed, single-thread, less-braided system.
+for _sp, _cub in [("O2", 362.50), ("SPM", 0.0040)]:
+    BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
+
+# --- DIA (cub): epilithic->water-column proxy, NOT a phytoplankton measurement ----------
+# North Slope rivers have essentially no water-column phytoplankton monitoring (checked
+# WQP + literature) -- what IS measured is EPILITHIC chlorophyll (algae attached to the
+# streambed), a different compartment than DIA (this model's transported, advected tracer).
+# Kuparuk reference (unfertilized) reach epilithic chlorophyll = 2.8 mg Chl/m2 on rock (85%
+# of bed cover), Slavik et al. 2004 (Ecology 85:939-954) Table 2, July 1998 -- the only
+# quantitative North Slope epilithic value found, applied here for lack of a site-specific
+# one (consistent with Canning already being the weakest-constrained site). Converted to a
+# rough water-column-equivalent by DIVIDING BY THIS SITE'S DEPTH (as if the entire bed
+# stock were resuspended and evenly mixed through the water column -- NOT how these
+# compartments actually behave; a proxy, not a measurement), then to carbon via C:Chl = 75
+# gC/gChla (user-specified; close to the model's own Chla2CMIN-implied maximum of
+# 1/0.0125 = 80 gC/gChla) and to mmol via /12.011 g/mol:
+#   DIA = (2.8 / 1.11) * 75 / 12.011 = 15.751 mmol C/m^3   (this site's DEPTH_ub = 1.11 m,
+#   set below in the geometry section -- computed here as a literal since DEPTH_ub isn't
+#   defined yet at this point in the file)
+BOUNDARIES["DIA"] = (_BASE_BOUNDARIES["DIA"][0], 15.751)
+
+# --- MARINE (clb): ECCO-Darwin v5, nearest wet LLC270 cell to the delta mouth ---------
+# Cell (70.203N, -145.916E), ~8.5 km offshore of the SWORD mouth point (70.13N, -145.85W).
+# Climatological annual mean over the full archived record (272-292 months depending on
+# variable, native LLC270 monthly output, public NASA data.nas.nasa.gov/ecco portal, no
+# auth). S is SALTanom + 35 (MITgcm's standard salinity-anomaly convention). DIC/ALK/NO3/
+# NH4/PO4/dSi/O2/TOC units match the model's mmol m^-3 directly, no conversion. Built by
+# scratch/ecco_darwin/extract_all_rivers.py (not tracked -- rerun to reproduce or extend).
+# Unlike the other three sites, NO3/NH4/PO4 here still carry the SHARED PLACEHOLDER cub
+# (Canning has no discrete nutrient record of its own -- see the module docstring), so
+# this is the first time those two species get any site-specific value for Canning at all.
+# NOT sourced this way: DIA (ECCO-Darwin gives Chl1-5, not carbon biomass -- would need an
+# uncertain C:Chl ratio), pH (not in the archived output; could instead be diagnosed from
+# this DIC/ALK/S pair via the model's own carbonate solve), RDOC/CH4/N2O/SPM (no analog).
+for _sp, _clb in [("S", 29.8775), ("DIC", 2009.8823), ("ALK", 2107.3902), ("NO3", 5.8853),
+                   ("NH4", 0.0274), ("PO4", 0.8892), ("dSi", 7.8052), ("O2", 375.6487),
+                   ("TOC", 27.2495)]:
+    BOUNDARIES[_sp] = (_clb, BOUNDARIES[_sp][1])   # override marine clb, keep river cub
+
+BOUNDARY_CHEM_SOURCE = ("WQP eastern-ANWR regional pool (paired-pCO2 DIC); other species placeholder; "
+                        "marine (clb): ECCO-Darwin v5 nearest-cell climatology")
 
 LABEL = "Canning"
 DISCHARGE_FILE = "canning_river_discharge_2022_m3sec.csv"
@@ -34,7 +80,9 @@ DISCHARGE_IS_UPSTREAM_PROXY = False
 # Width from SWORD per-channel node width, 136 nodes. Single-channel river, so the
 # braiding correction barely applies here. Its 0.55 convergence ratio is also the
 # donor for the Sagavanirktok.
-EL = 27175
+EL = 0            # PLACEHOLDER pending an observed value -- see module docstring caveat.
+                  # M = int(EL/DELXI)+1, forced even (config.py) -> M=0 for this site: the
+                  # grid degenerates and Canning will NOT run until this is set to a real length.
 # DELTA-MOUTH WIDTH = raw SWORD v17b distributary SUM at the Camden Bay delta
 # (562 + 236 m across the two seaward-most channels, tools/extract_sword.py). The fresh
 # SWORD extraction shows a wide two-channel delta mouth, not the 272 m the earlier

@@ -45,10 +45,12 @@ conda install numba netcdf4 matplotlib ffmpeg
 
 ## Quick start
 
-One command runs all four rivers, then rebuilds every figure PDF and movie:
+One command runs the three runnable rivers (Colville, Kuparuk, Sagavanirktok), then rebuilds every figure PDF
+and movie. **Canning is excluded by default** — it has no observed estuary length yet (`EL=0` placeholder in
+`sites/canning.py`), which makes its grid degenerate and the site non-runnable; see *Status & caveats*.
 
 ```bash
-tools/build_all.sh                    # run 4 rivers + all figures  (~15 min run + figures)
+tools/build_all.sh                    # run 3 rivers + all figures
 tools/build_all.sh --figures-only     # rebuild figures from existing runs
 tools/build_all.sh --with-idealized   # also run + verify + figure the idealized fixture
 ```
@@ -57,7 +59,7 @@ Run a single river, or a fast smoke test:
 
 ```bash
 tools/run_sites.sh kuparuk                                   # one river -> runs/definitive/kuparuk/
-CGEM_MAXT_DAYS=2 CGEM_WARMUP_DAYS=1 tools/run_sites.sh       # 2-day smoke test, all four
+CGEM_MAXT_DAYS=2 CGEM_WARMUP_DAYS=1 tools/run_sites.sh       # 2-day smoke test, the 3 runnable rivers
 ```
 
 Verify the model on the idealized fixture (exits non-zero on any failure):
@@ -92,10 +94,23 @@ python tools/verify_idealized.py --full         # + full seasonal run (all exten
 
 ## Status & caveats
 
-- The Arctic biogeochemistry extension is **opt-in** (`config.ARCTIC_BGC`, default off); with it off the four
-  real rivers' existing fields are bit-identical to the shipped C-GEM network. Their RDOC/CH₄/N₂O boundary
-  chemistry is still placeholder pending data.
-- Canning discharge is reconstructed (no 2022 gauge); Canning boundary chemistry is placeholder.
+- **Canning is not currently runnable.** Its estuary length (`EL`) is a deliberate `0` placeholder pending an
+  observed value, which makes its grid degenerate (`M=0`). It is excluded from `tools/run_sites.sh`,
+  `tools/build_all.sh`, and every report/figure tool's default site list until that changes; its site config
+  (geometry, boundaries) is otherwise fully defined and it runs fine if named explicitly once `EL` is real.
+- The other three rivers' `EL` is now each one's own observed estuary length (Colville 4.15 / Kuparuk 7.16 /
+  Sagavanirktok 2.17 km), not a shared 27.175 km domain — paired with a finer grid (100 m / 30 s) after the
+  shorter domains proved numerically fragile at the old spacing during spring freshet. See CLAUDE.md →
+  *Geometry* for the full story, including why Kuparuk's freshet response is an accepted physical consequence
+  of geometry, not a bug.
+- Marine boundary chemistry (`S`, `DIC`, `ALK`, `NO3`, `NH4`, `PO4`, `dSi`, `O2`, `TOC`) is now sourced from
+  ECCO-Darwin v5 for all four rivers, and riverine `O2`/`SPM` from USGS discrete samples — see CLAUDE.md →
+  *Boundary conditions*. `DIA` is a heavily-caveated proxy (no water-column phytoplankton data exists for
+  these rivers); `RDOC`/`CH4`/`N2O` remain placeholder (moot while `ARCTIC_BGC` is off).
+- The Arctic biogeochemistry extension is **opt-in** (`config.ARCTIC_BGC`, default off); with it off the
+  three runnable rivers' existing fields are bit-identical to the shipped C-GEM network.
+- Canning discharge is reconstructed (no 2022 gauge); Canning's `NO3`/`NH4`/`PO4`/`TOC` riverine boundary is
+  still the shared placeholder (no discrete nutrient record of its own).
 - The wind-driven storm surge uses Prudhoe Bay as a regional proxy for all four rivers.
 
 ## Citation

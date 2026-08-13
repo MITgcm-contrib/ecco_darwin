@@ -22,7 +22,50 @@ BOUNDARIES = dict(_BASE_BOUNDARIES)
 for _sp, _cub in [("NO3", 5.0), ("NH4", 4.0), ("PO4", 0.5), ("TOC", 358.0),
                   ("pH", 7.82), ("ALK", 1318.9), ("DIC", 1336.6)]:
     BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
-BOUNDARY_CHEM_SOURCE = "WQP Colville R nr Nuiqsut 15880000 (paired-pCO2 DIC)"
+
+# --- O2 and SPM (cub): USGS Water Quality Portal, same gauge as above (siteid USGS-15880000)
+# ---------------------------------------------------------------------------------------
+# Open-water (Jun-Sep) medians. O2: n=63 discrete DO samples, 10.4 mg/L -> 325.0 mmol/m^3
+# (32 g/mol). SPM: n=74 Suspended Sediment Concentration samples, 16.5 mg/L -> 0.0165 g/L
+# -- two orders of magnitude below the shared placeholder (2.0 g/L), consistent with these
+# being clear, low-sediment-load tundra rivers, not the turbid estuary C-GEM shipped with.
+for _sp, _cub in [("O2", 325.00), ("SPM", 0.0165)]:
+    BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
+
+# --- DIA (cub): epilithic->water-column proxy, NOT a phytoplankton measurement ----------
+# North Slope rivers have essentially no water-column phytoplankton monitoring (checked
+# WQP + literature) -- what IS measured is EPILITHIC chlorophyll (algae attached to the
+# streambed), a different compartment than DIA (this model's transported, advected tracer).
+# Kuparuk reference (unfertilized) reach epilithic chlorophyll = 2.8 mg Chl/m2 on rock (85%
+# of bed cover), Slavik et al. 2004 (Ecology 85:939-954) Table 2, July 1998 -- the only
+# quantitative North Slope epilithic value found, applied to all four rivers for lack of a
+# site-specific one. Converted to a rough water-column-equivalent by DIVIDING BY THIS SITE'S
+# DEPTH (as if the entire bed stock were resuspended and evenly mixed through the water
+# column -- NOT how these compartments actually behave; a proxy, not a measurement), then to
+# carbon via C:Chl = 75 gC/gChla (user-specified; close to the model's own Chla2CMIN-implied
+# maximum of 1/0.0125 = 80 gC/gChla) and to mmol via /12.011 g/mol:
+#   DIA = (2.8 / 2.25) * 75 / 12.011 = 7.771 mmol C/m^3   (this site's DEPTH_ub = 2.25 m,
+#   set below in the geometry section -- computed here as a literal since DEPTH_ub isn't
+#   defined yet at this point in the file)
+BOUNDARIES["DIA"] = (_BASE_BOUNDARIES["DIA"][0], 7.771)
+
+# --- MARINE (clb): ECCO-Darwin v5, nearest wet LLC270 cell to the delta mouth ---------
+# Cell (70.568N, -150.789E), ~14.6 km offshore of the SWORD mouth point (70.44N, -150.7W).
+# Climatological annual mean over the full archived record (272-292 months depending on
+# variable, native LLC270 monthly output, public NASA data.nas.nasa.gov/ecco portal, no
+# auth). S is SALTanom + 35 (MITgcm's standard salinity-anomaly convention). DIC/ALK/NO3/
+# NH4/PO4/dSi/O2/TOC units match the model's mmol m^-3 directly, no conversion. Built by
+# scratch/ecco_darwin/extract_all_rivers.py (not tracked -- rerun to reproduce or extend).
+# NOT sourced this way: DIA (ECCO-Darwin gives Chl1-5, not carbon biomass -- would need an
+# uncertain C:Chl ratio), pH (not in the archived output; could instead be diagnosed from
+# this DIC/ALK/S pair via the model's own carbonate solve), RDOC/CH4/N2O/SPM (no analog).
+for _sp, _clb in [("S", 30.6588), ("DIC", 2042.7683), ("ALK", 2143.9555), ("NO3", 5.1300),
+                   ("NH4", 0.0338), ("PO4", 0.7973), ("dSi", 8.1513), ("O2", 372.9380),
+                   ("TOC", 39.3797)]:
+    BOUNDARIES[_sp] = (_clb, BOUNDARIES[_sp][1])   # override marine clb, keep river cub
+
+BOUNDARY_CHEM_SOURCE = ("WQP Colville R nr Nuiqsut 15880000 (paired-pCO2 DIC); "
+                        "marine (clb): ECCO-Darwin v5 nearest-cell climatology")
 
 LABEL = "Colville"
 DISCHARGE_FILE = "colville_river_discharge_2022_m3sec.csv"
@@ -41,7 +84,17 @@ DISCHARGE_IS_UPSTREAM_PROXY = True
 # width is the sum across braids and this river runs 3-4 braided channels upstream,
 # which made it appear to WIDEN inland before the correction). Lakes excluded,
 # restricted to the model domain, 104 nodes.
-EL = 27175        # unchanged; a modelling choice, kept common for comparability
+EL = 4150         # observed estuary length [m] (4.15 km)
+# Grid refined for the shorter EL: the shared default DELXI=200/DELTI=75 collapses this
+# domain to M=20 points. Colville's own 200-day/freshet diagnostic run didn't show as
+# unambiguous a blow-up as Kuparuk's (whose upstream boundary spiked to 4x nominal depth
+# under the shared default -- see kuparuk.py), but the same few-points-at-a-short-domain
+# structural issue applies, so the same precautionary refinement is used here too. DELXI
+# halved (M=42) with DELTI cut to keep dispersion's Crank-Nicolson stability margin
+# (DISP_MAX = 4 DELXI^2/DELTI) well above the ~350-650 m^2/s Seo & Cheong range. See
+# config.py's "GRID SPACING & CFL" note.
+DELXI = 100       # Delta x [m] (was 200 shared default) -> M=42
+DELTI = 30        # Delta t [s] (was 75 shared default)
 # DELTA-MOUTH WIDTH = raw SWORD v17b distributary SUM at the Harrison Bay delta
 # (1310 + 240 m across the two seaward-most channels, tools/extract_sword.py). The
 # fresh SWORD extraction shows Colville's mouth is a wide two-channel delta, not the

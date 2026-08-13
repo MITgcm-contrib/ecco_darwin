@@ -453,7 +453,10 @@ mass_mol_B = 10.8110  # molar mass of Boron g/mol
 # WARMUP exercises only hydrodynamics and transport.
 MAXT = int(os.environ.get("CGEM_MAXT_DAYS", 365 * 2)) * 24 * 60 * 60  # Max time [s]
 WARMUP = int(os.environ.get("CGEM_WARMUP_DAYS", 365)) * 24 * 60 * 60  # Warmup [s]
-DELTI = 75  # Delta t [s]
+# DELTI/DELXI are per-site overridable (sites/<name>.py) since the CFL-safe timestep for
+# a given grid spacing depends on each site's own depth/velocity/dispersion regime -- see
+# the "GRID SPACING & CFL" note below DISP_MAX. Default 75 s is the original shipped value.
+DELTI = int(getattr(_site, "DELTI", 75))  # Delta t [s] -- must stay int: main.py's range(0, MAXT+1, DELTI)
 # Save every TS timesteps. Default 12 -> every 900 s (~15 min), which produces ~4.6 GB
 # of .dat output per 2-year site. Override via CGEM_TS to thin it: CGEM_TS=48 gives
 # hourly output at ~1/4 the disk (plenty for diagnostics; still resolves the ~12 h
@@ -467,7 +470,7 @@ TS = int(os.environ.get("CGEM_TS", 12))
 # 'dat'  -> the legacy tab-separated .dat files (one per field).
 # 'both' -> write both. Override via CGEM_OUTPUT.
 OUTPUT_FORMAT = os.environ.get("CGEM_OUTPUT", "nc")
-DELXI = 200  # Delta x [m]
+DELXI = float(getattr(_site, "DELXI", 200))  # Delta x [m], per-site overridable (see DELTI above)
 TOL = 1e-10  # Convergence criterion
 M = int(EL / DELXI) + 1  # Max even grid points
 if M % 2 == 0:
@@ -511,3 +514,27 @@ DISPERSION_MODEL = "seo"
 # that requires K <= 4 DELXI^2 / DELTI. Exceeding it is a numerical failure, not a
 # physical statement, so the value is capped and the cap is reported once per run.
 DISP_MAX = 4.0 * DELXI ** 2 / DELTI
+
+# GRID SPACING & CFL. DELTI/DELXI are per-site (see above) because the CFL-safe pairing
+# depends on each site's own depth/velocity regime -- shrinking EL for the shorter
+# observed estuary lengths (Colville 4150 m, Kuparuk 7156 m, Sagavanirktok 2170 m) while
+# leaving DELXI=200 m collapsed the grid to M=20/36/10 points. Empirically (a 200-day run
+# through spring freshet, the peak-discharge/peak-velocity season) Kuparuk's shared-default
+# grid was already unstable: the upstream boundary spiked to U=3.97 m/s, depth=6.3 m
+# against a nominal 1.34 m -- a transient numerical blow-up at the boundary, not physical.
+#
+# A naive shallow-water CFL check -- (sqrt(g D) + |U|) DELTI/DELXI < 1 at the boundary --
+# is NOT the operative constraint: the ORIGINAL shipped 137-point config (EL=27175,
+# DELXI=200, DELTI=75) already exceeds it several-fold and has run for years without a
+# reported hydrodynamic blow-up, so the implicit hydrodynamic solve (hyd_module) tolerates
+# it fine in practice. The two-point boundary treatment on a now very-short, few-point
+# domain (schemes_module.openbound's explicit extrapolation is a much larger fraction of a
+# 10-36-point grid than a 137-point one) is the more likely failure mode, not a classical
+# advective/gravity-wave Courant violation.
+#
+# The fix actually applied: a modest 2x DELXI refinement per site (DELXI=100 m instead of
+# the shared 200 m default -- see each sites/<name>.py), with DELTI cut to 30 s so
+# DISP_MAX = 4 DELXI^2/DELTI stays well above the ~350-650 m^2/s Seo & Cheong dispersion
+# range (that ceiling, not a hydrodynamic CFL formula, is what's explicitly enforced in
+# code -- see DISP_MAX above). Verified by rerunning the same 200-day freshet window at the
+# refined grid and confirming depth/velocity stay physically bounded at all three sites.

@@ -29,7 +29,11 @@ SITEDIR = ROOT / "code" / "sites"
 OUT = ROOT / "docs" / "ns_rad_geometry.pdf"
 SWORD_JSON = ROOT / "docs" / "sword_widths.json"   # filled by the SWORD extraction
 
-SITES = ["colville", "kuparuk", "sagavanirktok", "canning"]
+# canning excluded for now -- EL=0 (placeholder, no observed estuary length yet --
+# see sites/canning.py), so it is not run by tools/run_sites.sh and has no
+# runs/definitive/canning output for this figure to read. Add it back once it has
+# a real EL and has been run.
+SITES = ["colville", "kuparuk", "sagavanirktok"]
 LABEL = {"colville": "Colville", "kuparuk": "Kuparuk",
          "sagavanirktok": "Sagavanirktok", "canning": "Canning"}
 C = {"colville": "#2a78d6", "kuparuk": "#eb6834",
@@ -133,6 +137,17 @@ def page_width(pdf, geo, sw):
         if d.get("delta_sum_m"):
             ax.plot([0], [d["delta_sum_m"]], "v", ms=8, color=C[s], mec="white",
                     mew=0.8, zorder=5, label=f"SWORD delta sum ({d['delta_sum_m']} m)")
+        # The width LAW/SWORD data above span the full ~27 km SWORD analysis range
+        # (tools/extract_sword.py DOMAIN_KM), independent of any one site's simulated
+        # domain -- but the model only actually RUNS from the mouth out to its own EL
+        # (Colville 4.15 / Kuparuk 7.16 / Sagavanirktok 2.17 km, since the estuary-length
+        # shortening), which is now far short of 27 km for all three. Mark it so the plot
+        # doesn't read as if the model simulates the whole shown range.
+        el_km = g["EL"] / 1000.0
+        ax.axvline(el_km, color=C[s], lw=1.0, ls=":", alpha=0.7, zorder=6)
+        ax.annotate(f"model domain ends ({el_km:.2f} km)", xy=(el_km, 0.03),
+                    xycoords=("data", "axes fraction"), fontsize=6.3, color=C[s],
+                    alpha=0.85, ha="left", va="bottom", rotation=90)
         ax.set_title(LABEL[s], loc="left", color=C[s], weight="medium")
         ax.set_xlabel("distance from mouth (km)", fontsize=7.5)
         ax.set_ylabel("width (m)", fontsize=7.5)

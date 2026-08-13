@@ -5,15 +5,18 @@
 # its results there, so every site must run from a separate directory or they will
 # clobber each other. That is what this script arranges.
 #
-# The four runs are fully independent -- they share no state and write no common
+# The runs are fully independent -- they share no state and write no common
 # files -- so they are launched in parallel by default. Because variables.py
 # allocates all model state at import time from config.M, separate processes are
 # also the only way to run multiple sites without a deep refactor.
 #
 # Usage:
-#   tools/run_sites.sh                          # all four, in parallel
+#   tools/run_sites.sh                          # colville+kuparuk+sagavanirktok, in parallel
+#                                                # (canning excluded by default -- see below)
 #   tools/run_sites.sh kuparuk                  # just one
 #   tools/run_sites.sh colville kuparuk         # a subset
+#   tools/run_sites.sh canning                  # canning only runs if named explicitly,
+#                                                # and only once it has a real EL (not 0)
 #   SERIAL=1 tools/run_sites.sh                 # one at a time (easier to read logs)
 #
 # Results land in runs/definitive/<site>/ ; stdout in runs/definitive/<site>/run.log
@@ -27,7 +30,10 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CODE="$ROOT/code"
 SITES=("${@:-}")
 if [ -z "${SITES[*]}" ]; then
-    SITES=(colville kuparuk sagavanirktok canning)
+    # canning excluded from the default run: EL=0 (placeholder, no observed estuary
+    # length yet -- see sites/canning.py) makes M=0, a degenerate grid that cannot run.
+    # Pass it explicitly (tools/run_sites.sh canning) once it has a real EL.
+    SITES=(colville kuparuk sagavanirktok)
 fi
 
 pids=()

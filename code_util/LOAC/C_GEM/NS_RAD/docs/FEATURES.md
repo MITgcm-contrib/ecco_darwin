@@ -34,6 +34,13 @@ per-decision reference is [`CLAUDE.md`](../CLAUDE.md).
   braiding/distributary corrections) and **depth** from USGS ADCP surveys via at-a-station
   hydraulic geometry `D = c·Q^f` (~1–2 m). *Was:* a single hybrid placeholder (15 m deep).
   See CLAUDE.md → *Geometry*.
+- **Observed estuary length, per river** (`EL`) — Colville 4.15 / Kuparuk 7.16 /
+  Sagavanirktok 2.17 km, replacing a shared 27.175 km modelling-choice domain used by all
+  four sites. Paired with a grid refinement (`DELXI`/`DELTI` 200 m/75 s → 100 m/30 s) after
+  the shorter domains proved numerically fragile at the old grid spacing during spring
+  freshet. Canning's `EL` is a deliberate `0` placeholder (no observed value yet), which
+  makes its grid degenerate (`M=0`) — it is excluded from the default run/report set until
+  that changes. See CLAUDE.md → *Geometry*.
 - **Flare + prismatic width law** (`WIDTH_MODEL="flare"`) — width converges over a short
   delta flare then is prismatic, which fits these rivers by AIC. *Was:* whole-domain
   Savenije exponential (poor fit, R² 0.02–0.23).
@@ -69,6 +76,18 @@ per-decision reference is [`CLAUDE.md`](../CLAUDE.md).
   actual saltwater-intrusion driver on this microtidal coast.
 - **Boundary chemistry** — Arctic LTER (Kuparuk headwater proxy) and WQP grabs
   (Colville, Sagavanirktok); DIC solved from observed pH + alkalinity.
+- **Marine (`clb`) boundary, all four rivers** — ECCO-Darwin v5 nearest-cell climatology
+  (`S`, `DIC`, `ALK`, `NO3`, `NH4`, `PO4`, `dSi`, `O2`, `TOC`), replacing the shipped
+  single-site placeholder. *Was:* the unmodified original C-GEM marine values, not
+  North-Slope-specific at all.
+- **Riverine (`cub`) `O2`/`SPM`, all four rivers** — USGS Water Quality Portal discrete
+  medians. `SPM` in particular corrects a ~100–500× too-high placeholder (real values
+  0.004–0.0165 g/L — these are clear tundra rivers, not the turbid shipped estuary).
+- **Riverine (`cub`) `DIA`, all four rivers** — a heavily-caveated proxy: no water-column
+  phytoplankton data exists for these rivers, so `DIA` is derived from Kuparuk's own
+  epilithic (benthic) chlorophyll (Slavik et al. 2004), resuspended-and-depth-normalized
+  per site, converted via C:Chl=75. See CLAUDE.md → *Boundary conditions* for the full
+  chain and its limits.
 
 ## 4. Temperature, heat & ice — new physics
 

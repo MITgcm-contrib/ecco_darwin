@@ -27,7 +27,11 @@ ROOT = Path(__file__).resolve().parent.parent
 RUN = ROOT / "runs" / "definitive"
 OUT = ROOT / "docs" / "ns_rad_diagnostics.pdf"
 
-SITES = ["colville", "kuparuk", "sagavanirktok", "canning"]
+# canning excluded for now -- EL=0 (placeholder, no observed estuary length yet --
+# see sites/canning.py), so it is not run by tools/run_sites.sh and has no
+# runs/definitive/canning output for this figure to read. Add it back once it has
+# a real EL and has been run.
+SITES = ["colville", "kuparuk", "sagavanirktok"]
 LABEL = {"colville": "Colville", "kuparuk": "Kuparuk",
          "sagavanirktok": "Sagavanirktok", "canning": "Canning"}
 C = {"colville": "#2a78d6", "kuparuk": "#eb6834",
@@ -47,7 +51,35 @@ _S.apply()
 _S.install_autoscale(1.2)  # embed fonts + presentation-size bump
 MONTH0 = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
 MONTHL = list("JFMAMJJASOND")
-DELXI_KM = 0.2
+
+
+def _site_geometry():
+    """Per-site {DELXI [km], EL [km]}. DELXI/EL are now per-site (sites/<name>.py):
+    all four rivers used to share DELXI=200 m and EL=27175 m, but the estuary-length
+    shortening (Colville 4150/Kuparuk 7156/Sagavanirktok 2170 m) plus the grid
+    refinement (DELXI=100 m) that followed it mean every site now has its own values.
+    A single hardcoded DELXI_KM (the old 0.2) silently mislabels every x-axis distance
+    by whatever ratio the actual DELXI differs by -- 2x, for the current 100 m grids."""
+    import importlib, sys, os
+    p = str(ROOT / "code")
+    if p not in sys.path:
+        sys.path.insert(0, p)
+    out = {}
+    for s in SITES:
+        for m in ("config", "sites"):
+            for mod in list(sys.modules):
+                if mod == m or mod.startswith(m + "."):
+                    del sys.modules[mod]
+        os.environ["CGEM_SITE"] = s
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            import config as _cfg
+        out[s] = {"DELXI_KM": _cfg.DELXI / 1000.0, "EL_KM": _cfg.EL / 1000.0}
+    return out
+
+
+GEOM = _site_geometry()
 
 
 def tidy(ax, both=False):
@@ -277,8 +309,10 @@ def page_profiles(pdf):
     fig = plt.figure(figsize=(11, 8.5))
     fig.suptitle("Longitudinal profiles — mid-summer snapshot (≈ day 210)",
                  x=0.05, ha="left", fontsize=13, weight="bold")
-    fig.text(0.05, 0.935, "Value vs distance from the mouth, down each channel. "
-             "Mouth = 0 km (marine boundary), head ≈ 27 km (riverine boundary).",
+    el_lo, el_hi = min(g["EL_KM"] for g in GEOM.values()), max(g["EL_KM"] for g in GEOM.values())
+    fig.text(0.05, 0.935, "Value vs distance from the mouth, down each channel. Mouth = 0 km "
+             f"(marine boundary); head is PER-RIVER now ({el_lo:.2f}-{el_hi:.2f} km, the "
+             "observed estuary length -- no longer a shared 27 km).",
              color=INK2, fontsize=8.3)
     panels = [("T", "temperature (°C)"), ("S", "salinity (PSU)"),
               ("DIC", "DIC (mmol m⁻³)"), ("O2", "O₂ (mmol m⁻³)"),
@@ -297,12 +331,12 @@ def page_profiles(pdf):
             if len(cand) == 0:
                 continue
             prof = np.nanmean(F[cand], axis=0)
-            x = np.arange(F.shape[1]) * DELXI_KM
+            x = np.arange(F.shape[1]) * GEOM[s]["DELXI_KM"]
             ax.plot(x, prof, color=C[s], lw=1.3, label=LABEL[s])
         tidy(ax, both=True)
         ax.set_ylabel(ylab, fontsize=7.5)
         ax.set_xlabel("distance from mouth (km)", fontsize=7.5)
-        ax.set_xlim(0, 27)
+        ax.set_xlim(0, el_hi * 1.03)
         if k == 0:
             ax.legend(loc="upper right", fontsize=6.3, labelcolor=INK2)
     pdf.savefig(fig)
@@ -340,7 +374,7 @@ def page_hovmoller(pdf):
             # look identical at this figure size
             step = max(1, len(d1) // 730)
             d1, Fm = d1[::step], Fm[::step]
-            x = np.arange(F.shape[1]) * DELXI_KM
+            x = np.arange(F.shape[1]) * GEOM[s]["DELXI_KM"]
             im = ax.pcolormesh(d1, x, Fm.T, cmap=cmap, shading="auto")
             month_axis(ax)
             ax.set_ylabel(f"{LABEL[s]}\nkm", fontsize=7, color=C[s])
@@ -399,7 +433,7 @@ def page_ice(pdf):
         o = np.argsort(d1)
         step = max(1, len(d1) // 730)
         d1, H1 = d1[o][::step], H1[o][::step]
-        x = np.arange(H.shape[1]) * DELXI_KM
+        x = np.arange(H.shape[1]) * GEOM[s]["DELXI_KM"]
         im = ax.pcolormesh(d1, x, H1.T, cmap="Blues", shading="auto", vmin=0)
         month_axis(ax)
         ax.set_ylabel(f"{LABEL[s]}\nkm", fontsize=7, color=C[s])
@@ -460,6 +494,107 @@ def page_rates_qc(pdf):
     plt.close(fig)
 
 
+# ------------------------------------------------------------- page: area-normalized budgets
+# Surface-area normalization. The three rivers now have very different EL (Colville
+# 4.15 / Kuparuk 7.16 / Sagavanirktok 2.17 km) and widths, so a basin-TOTAL comparison is
+# dominated by size, not process intensity. Process rates in this model are volumetric
+# (mmol X m^-3 s^-1 -- see biogeo_module.py, including FCO2: "FCO2[i] = openfac * RCO2 /
+# DEPTH[i]"), so depth-integrating gives the areal (per water-SURFACE-area) flux, the same
+# quantity FCO2 is already reported in elsewhere (CLAUDE.md's "gC m^-2 yr^-1" comparisons)
+# -- generalized here to the other tracked rates so all three rivers become comparable per
+# unit estuary surface area regardless of their now very different absolute size.
+AREA_VARS = [("FCO2", "C", "air-sea CO2 flux (>0 outgassing)"),
+             ("NPP", "C", "net primary production"),
+             ("aer_deg", "C", "aerobic degradation"),
+             ("denit", "C", "denitrification"),
+             ("nit", "N", "nitrification")]
+MOLAR_MASS = {"C": 12.011, "N": 14.007}
+
+
+def estuary_surface_area(site):
+    """Total water-surface area [m^2] over the modelled domain: trapezoidal integral of
+    width(x) (time-invariant -- confirmed via output.nc) from the mouth to EL."""
+    _, W = load(site, "width")
+    if W is None:
+        return None
+    return float(np.trapezoid(W[0], dx=GEOM[site]["DELXI_KM"] * 1000.0))
+
+
+def area_normalized_annual(site, var):
+    """Basin-mean, surface-area-normalized ANNUAL total of a volumetric rate: depth-
+    integrate to an areal rate at each point/time, width-weight-average across the
+    channel at each timestep, then integrate over year 2 (post-warmup, the model's own
+    convention for a clean annual cycle -- see CLAUDE.md's 'year 2' FCO2 comparisons).
+    Returns mmol m^-2 yr^-1, or None if the run/field is unavailable."""
+    t, F = load(site, var)
+    _, D = load(site, "depth")
+    _, W = load(site, "width")
+    if F is None or D is None or W is None:
+        return None
+    yr2 = (t >= 365) & (t < 730)
+    if not yr2.any():
+        return None
+    w0 = W[0]
+    areal = F[yr2] * D[yr2]                              # mmol m^-2 s^-1 at each point/time
+    spatial_mean = np.sum(areal * w0, axis=1) / np.sum(w0)  # width-weighted channel mean
+    tt = t[yr2] * 86400.0                                 # seconds
+    # The row at exactly t=365 (the WARMUP boundary itself) is all-NaN: main.py's gate is
+    # `if t > WARMUP` (strict), so biogeo/Rates haven't run yet for that one instant, and
+    # every t<365 row is likewise NaN (biogeo never runs pre-warmup). A single NaN poisons
+    # np.trapezoid via propagation, so drop any not-finite rows before integrating.
+    finite = np.isfinite(spatial_mean)
+    spatial_mean, tt = spatial_mean[finite], tt[finite]
+    if len(tt) < 2:
+        return None
+    return float(np.trapezoid(spatial_mean, tt))               # mmol m^-2 over the year
+
+
+def page_area_normalized(pdf):
+    fig = plt.figure(figsize=(11, 8.5))
+    fig.suptitle("Area-normalized annual budgets", x=0.05, ha="left",
+                 fontsize=13, weight="bold")
+    areas = {s: estuary_surface_area(s) for s in SITES}
+    fig.text(0.05, 0.935, "Comparable across estuaries of different size: depth-"
+             "integrated, width-weighted, year-2 annual totals per m² of estuary "
+             "surface, not raw basin totals (which would be dominated by size). "
+             "Surface area: " +
+             "  ·  ".join(f"{LABEL[s]} {areas[s]/1e6:.3f} km²" for s in SITES if areas[s]),
+             color=INK2, fontsize=8.0)
+
+    results = {var: {s: area_normalized_annual(s, var) for s in SITES} for var, _, _ in AREA_VARS}
+
+    gs = fig.add_gridspec(2, 3, left=0.07, right=0.97, top=0.86, bottom=0.10,
+                          hspace=0.55, wspace=0.32)
+    for k, (var, element, title) in enumerate(AREA_VARS):
+        ax = fig.add_subplot(gs[k // 3, k % 3])
+        vals = [results[var].get(s) for s in SITES]
+        mass = [v * MOLAR_MASS[element] / 1000.0 if v is not None else 0.0 for v in vals]
+        bars = ax.bar(range(len(SITES)), mass, color=[C[s] for s in SITES], width=0.6)
+        ax.set_xticks(range(len(SITES)))
+        ax.set_xticklabels([LABEL[s] for s in SITES], fontsize=7, rotation=15)
+        ax.set_ylabel(f"g{element} m⁻² yr⁻¹", fontsize=7.5)
+        ax.set_title(title, loc="left", fontsize=8, color=INK)
+        ax.axhline(0, color=GRID, lw=0.8)
+        for sp in ("top", "right"):
+            ax.spines[sp].set_visible(False)
+        ax.grid(True, axis="y", alpha=0.5)
+        ax.set_axisbelow(True)
+        for b, v in zip(bars, mass):
+            ax.text(b.get_x() + b.get_width() / 2, v, f"{v:.1f}", ha="center",
+                    va="bottom" if v >= 0 else "top", fontsize=6.3, color=INK2)
+
+    ax = fig.add_axes([0.07, 0.0, 0.9, 0.06])
+    ax.axis("off")
+    ax.text(0.0, 0.5, "Method: rate x depth (-> areal), width-weighted channel-mean per "
+            "timestep, trapezoidal time-integral over day 365-730 (year 2, post-warmup). "
+            "FCO2 is already volumetric in the model (mmol C m⁻³ s⁻¹ = RCO2/DEPTH), so "
+            "this reproduces its usual gC m⁻² yr⁻¹ reporting and extends the same "
+            "treatment to the other tracked process rates.",
+            transform=ax.transAxes, fontsize=6.8, color=INK2, va="center", wrap=True)
+    pdf.savefig(fig)
+    plt.close(fig)
+
+
 def main():
     OUT.parent.mkdir(exist_ok=True)
     with PdfPages(OUT) as pdf:
@@ -469,7 +604,8 @@ def main():
         page_hovmoller(pdf)
         page_ice(pdf)
         page_rates_qc(pdf)
-    print(f"wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size/1024:.0f} kB, 6 pages)")
+        page_area_normalized(pdf)
+    print(f"wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size/1024:.0f} kB, 7 pages)")
 
 
 if __name__ == "__main__":

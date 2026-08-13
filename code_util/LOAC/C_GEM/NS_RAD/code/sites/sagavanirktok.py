@@ -19,7 +19,49 @@ BOUNDARIES = dict(_BASE_BOUNDARIES)
 for _sp, _cub in [("NO3", 11.0), ("NH4", 1.0), ("PO4", 0.1), ("TOC", 250.0),
                   ("pH", 7.88), ("ALK", 1608.7), ("DIC", 1628.0)]:
     BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
-BOUNDARY_CHEM_SOURCE = "WQP Sagavanirktok mainstem (paired-pCO2 DIC) + Rember 2004 TOC (lit)"
+
+# --- O2 and SPM (cub): USGS Water Quality Portal, same bbox as above -------------------
+# Open-water (Jun-Sep) medians. O2: n=9 discrete DO samples, 11.2 mg/L -> 350.0 mmol/m^3
+# (32 g/mol). SPM: n=9 Suspended Sediment Concentration samples, 9.0 mg/L -> 0.0090 g/L --
+# two orders of magnitude below the shared placeholder (2.0 g/L). Smallest sample size of
+# the four (n=9 each), consistent with this being the least-observed site overall.
+for _sp, _cub in [("O2", 350.00), ("SPM", 0.0090)]:
+    BOUNDARIES[_sp] = (_BASE_BOUNDARIES[_sp][0], _cub)
+
+# --- DIA (cub): epilithic->water-column proxy, NOT a phytoplankton measurement ----------
+# North Slope rivers have essentially no water-column phytoplankton monitoring (checked
+# WQP + literature) -- what IS measured is EPILITHIC chlorophyll (algae attached to the
+# streambed), a different compartment than DIA (this model's transported, advected tracer).
+# Kuparuk reference (unfertilized) reach epilithic chlorophyll = 2.8 mg Chl/m2 on rock (85%
+# of bed cover), Slavik et al. 2004 (Ecology 85:939-954) Table 2, July 1998 -- the only
+# quantitative North Slope epilithic value found, applied here for lack of a site-specific
+# one. Converted to a rough water-column-equivalent by DIVIDING BY THIS SITE'S DEPTH (as if
+# the entire bed stock were resuspended and evenly mixed through the water column -- NOT
+# how these compartments actually behave; a proxy, not a measurement), then to carbon via
+# C:Chl = 75 gC/gChla (user-specified; close to the model's own Chla2CMIN-implied maximum
+# of 1/0.0125 = 80 gC/gChla) and to mmol via /12.011 g/mol:
+#   DIA = (2.8 / 0.98) * 75 / 12.011 = 17.841 mmol C/m^3   (this site's DEPTH_ub = 0.98 m,
+#   set below in the geometry section -- computed here as a literal since DEPTH_ub isn't
+#   defined yet at this point in the file)
+BOUNDARIES["DIA"] = (_BASE_BOUNDARIES["DIA"][0], 17.841)
+
+# --- MARINE (clb): ECCO-Darwin v5, nearest wet LLC270 cell to the delta mouth ---------
+# Cell (70.440N, -148.084E), ~14.5 km offshore of the SWORD mouth point (70.31N, -148.05W).
+# Climatological annual mean over the full archived record (272-292 months depending on
+# variable, native LLC270 monthly output, public NASA data.nas.nasa.gov/ecco portal, no
+# auth). S is SALTanom + 35 (MITgcm's standard salinity-anomaly convention). DIC/ALK/NO3/
+# NH4/PO4/dSi/O2/TOC units match the model's mmol m^-3 directly, no conversion. Built by
+# scratch/ecco_darwin/extract_all_rivers.py (not tracked -- rerun to reproduce or extend).
+# NOT sourced this way: DIA (ECCO-Darwin gives Chl1-5, not carbon biomass -- would need an
+# uncertain C:Chl ratio), pH (not in the archived output; could instead be diagnosed from
+# this DIC/ALK/S pair via the model's own carbonate solve), RDOC/CH4/N2O/SPM (no analog).
+for _sp, _clb in [("S", 30.1374), ("DIC", 2020.7921), ("ALK", 2118.5283), ("NO3", 5.7280),
+                   ("NH4", 0.0341), ("PO4", 0.8657), ("dSi", 8.0537), ("O2", 374.1718),
+                   ("TOC", 31.0798)]:
+    BOUNDARIES[_sp] = (_clb, BOUNDARIES[_sp][1])   # override marine clb, keep river cub
+
+BOUNDARY_CHEM_SOURCE = ("WQP Sagavanirktok mainstem (paired-pCO2 DIC) + Rember 2004 TOC (lit); "
+                        "marine (clb): ECCO-Darwin v5 nearest-cell climatology")
 
 # Observed USGS 00010 (blended to the regression outside the 93-day
 # open-water record). Removes the +2.6 C regression warm bias directly. See
@@ -46,7 +88,14 @@ DISCHARGE_IS_UPSTREAM_PROXY = True
 # the convergence RATIO 0.55 is borrowed from the Canning -- the nearest
 # single-channel Brooks Range river -- and applied to the observed B_lb.
 # Same donor-transfer caveat as the Canning discharge: the shape is assumed.
-EL = 27175
+EL = 2170         # observed estuary length [m] (2.17 km)
+# Grid refined for the shorter EL: the shared default DELXI=200/DELTI=75 collapses this
+# domain to M=10 points -- see config.py's "GRID SPACING & CFL" note (Kuparuk's identical
+# situation produced a transient boundary blow-up under the shared default). DELXI halved
+# (M=22) with DELTI cut to keep dispersion's Crank-Nicolson stability margin (DISP_MAX =
+# 4 DELXI^2/DELTI) well above the ~350-650 m^2/s Seo & Cheong range.
+DELXI = 100       # Delta x [m] (was 200 shared default) -> M=22
+DELTI = 30        # Delta t [s] (was 75 shared default)
 # DELTA-MOUTH WIDTH = distributary SUM (see kuparuk.py / CLAUDE.md "braided vs deltaic").
 # The Sagavanirktok has a heavily braided/deltaic mouth near Prudhoe Bay; the per-channel
 # width with total Q over-flushes salt. INTERIM: per-channel x N_CHAN_MOUTH, pending the

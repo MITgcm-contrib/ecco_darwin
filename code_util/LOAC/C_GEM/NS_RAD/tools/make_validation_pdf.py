@@ -54,7 +54,11 @@ _DEPTH_CQ = {"colville": (0.360, 0.297), "kuparuk": (0.291, 0.309),
              "sagavanirktok": (0.280, 0.259), "canning": (0.224, 0.325)}
 DEPTH_REL = {s: (c, f, _bub(s)) for s, (c, f) in _DEPTH_CQ.items()}
 
-SITES = ["colville", "kuparuk", "sagavanirktok", "canning"]
+# canning excluded for now -- EL=0 (placeholder, no observed estuary length yet --
+# see sites/canning.py), so it is not run by tools/run_sites.sh and has no
+# runs/definitive/canning output for this figure to read. Add it back once it has
+# a real EL and has been run.
+SITES = ["colville", "kuparuk", "sagavanirktok"]
 LABEL = {"colville": "Colville", "kuparuk": "Kuparuk",
          "sagavanirktok": "Sagavanirktok", "canning": "Canning"}
 C = {"colville": "#2a78d6", "kuparuk": "#eb6834",
@@ -122,15 +126,21 @@ def load(rundir, site, var):
     return res
 
 
-def model_doy_series(rundir, site, var, col=68):
-    """Model value at one grid cell vs day-of-year (both model years overlaid)."""
+def model_doy_series(rundir, site, var, col=None):
+    """Model value at one grid cell vs day-of-year (both model years overlaid).
+    col=None picks the mid-channel column dynamically (F.shape[1]//2) -- each site now
+    has its own grid size (M was 137 for all four before the EL/DELXI refinement; now
+    Colville/Kuparuk/Sagavanirktok each have a different, much smaller M), so a single
+    hardcoded index (the old default was 68, valid only for M=137) is no longer safe."""
     t, F = load(rundir, site, var)
     if F is None:
         return None, None
+    if col is None:
+        col = F.shape[1] // 2
     return np.mod(t, 365), F[:, col]
 
 
-def model_daily_mean(rundir, site, var, col=68):
+def model_daily_mean(rundir, site, var, col=None):
     """Map the model's mid-channel series to a day-of-year -> mean-value dict,
     averaging the two model years. Exact zeros are dropped: under the ice model these
     are the under-ice temperatures held at the 0 °C freezing point (no summer

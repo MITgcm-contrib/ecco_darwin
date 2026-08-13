@@ -75,7 +75,8 @@ def main():
     nodes = load_nodes()
     sw = json.load(open(SWJSON)) if SWJSON.exists() else {}
     with PdfPages(OUT) as pdf:
-        for site in ["colville", "kuparuk", "sagavanirktok", "canning"]:
+        # canning excluded for now -- see the SITES comment in make_diagnostics_pdf.py etc.
+        for site in ["colville", "kuparuk", "sagavanirktok"]:
             lon0, lon1, lat0, lat1 = BBOX[site]
             try:
                 img = fetch_imagery(lon0, lon1, lat0, lat1)

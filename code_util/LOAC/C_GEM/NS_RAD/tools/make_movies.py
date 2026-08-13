@@ -34,7 +34,11 @@ ROOT = Path(__file__).resolve().parent.parent
 RUN = ROOT / "runs" / "definitive"
 OUTDIR = ROOT / "docs" / "movies"
 
-SITES = ["colville", "kuparuk", "sagavanirktok", "canning"]
+# canning excluded for now -- EL=0 (placeholder, no observed estuary length yet --
+# see sites/canning.py), so it is not run by tools/run_sites.sh and has no
+# runs/definitive/canning output for this figure to read. Add it back once it has
+# a real EL and has been run.
+SITES = ["colville", "kuparuk", "sagavanirktok"]
 LABEL = {"colville": "Colville", "kuparuk": "Kuparuk",
          "sagavanirktok": "Sagavanirktok", "canning": "Canning",
          "idealized": "Idealized (verification fixture)"}

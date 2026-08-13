@@ -16,26 +16,35 @@ git checkout — there is no upstream remote to pull from.
 
 ## Running
 
-The model is configured for **four North Slope rivers** — Colville, Kuparuk, Sagavanirktok, Canning. Each
-runs as its own process from its own output directory:
+The model is configured for **four North Slope rivers** — Colville, Kuparuk, Sagavanirktok, Canning — but
+**Canning is excluded from the default run set**: it has no observed estuary length yet (`EL = 0` in
+`sites/canning.py`, a deliberate placeholder), which makes its grid degenerate (`M = 0`) and the site
+non-runnable. `tools/run_sites.sh`, `tools/build_all.sh`, and every `tools/make_*.py` report/figure tool
+default to the three runnable rivers; Canning still runs if named explicitly, once it has a real `EL`.
 
 ```bash
-tools/run_sites.sh                    # all four, in parallel -> runs/definitive/<site>/
+tools/run_sites.sh                    # colville+kuparuk+sagavanirktok, in parallel -> runs/definitive/<site>/
 tools/run_sites.sh kuparuk            # one site
+tools/run_sites.sh canning            # canning only runs if named explicitly (and only once EL != 0)
 SERIAL=1 tools/run_sites.sh           # one at a time
 ```
 
-`tools/build_all.sh` is the one-command wrapper around the whole product: run the four rivers, then rebuild
-every figure and stitch `docs/ns_rad_report.pdf`. Use it, not `make_report.py`, to regenerate the report — the
-six section PDFs are throwaway intermediates it creates, stitches and deletes. A failing figure does not abort
-the rest; it prints a PASS/FAIL summary and exits non-zero.
+`tools/build_all.sh` is the one-command wrapper around the whole product: run the three runnable rivers, then
+rebuild every figure and stitch `docs/ns_rad_report.pdf`. Use it, not `make_report.py`, to regenerate the
+report — the six section PDFs are throwaway intermediates it creates, stitches and deletes. A failing figure
+does not abort the rest; it prints a PASS/FAIL summary and exits non-zero.
 
 ```bash
-tools/build_all.sh                    # run 4 rivers + all figures + report + movies (~15 min)
+tools/build_all.sh                    # run 3 rivers + all figures + report + movies
 tools/build_all.sh --figures-only     # rebuild figures from existing runs/
 tools/build_all.sh --with-idealized   # also run + verify + figure the idealized fixture
 tools/build_all.sh --with-regression  # also build runs/regression_bnd (+~20 min; see below)
 ```
+
+The **river-network maps** figure (`tools/make_river_maps.py` → `docs/ns_rad_river_networks.pdf`) needs the
+raw SWORD extraction (`/tmp/sword/netcdf/na_sword_v17b.nc`), which is not vendored and not currently present —
+`build_all.sh` reports it FAIL and the combined report ships with 5 of 6 parts until that file is available
+again. This is independent of the Canning exclusion above.
 
 **The report needs a SECOND set of runs to be complete.** `make_validation_pdf.py` reads
 `runs/regression_bnd/`, which holds Kuparuk and Sagavanirktok rerun with the pure air-temperature regression
@@ -97,20 +106,34 @@ Everything tunable at run time is an environment variable, read in `config.py` a
 | `CGEM_DISTANCE` | per-site | saline grid points; swept and rejected as a salinity lever (see Geometry) |
 | `CGEM_FONT_SCALE` | 1.0 | figure tools only (`tools/nsrad_style.py`) |
 
-`numba` **is installed** (`~/miniforge3`, Python 3.13, numba 0.66.0 / llvmlite 0.48.0, numpy 2.4.3) and is now
-load-bearing: essentially every per-cell hot loop is `@njit` — the hydro kernels (`tridag_module`,
-`uphyd_module`, and the fused `hyd_module._hyd_iterate`), `density`, `biogeo`, `schemes` (`tvd`/`disp_sch`),
-`sed`, `heat`, `ice`, `pH`, and the scalar carbonate/rate/piston/dispersion helpers in `fun_module`. `main.py`
-fails at import if numba is missing.
+`numba` **is installed** (a dedicated conda-forge env — `ns_rad`, Python 3.13, numba 0.66.0 / llvmlite 0.48.0,
+numpy 2.4.6; the exact env path is machine-specific, e.g. this checkout's is
+`/opt/homebrew/anaconda3/envs/ns_rad`, not necessarily `~/miniforge3`) and is now load-bearing: essentially
+every per-cell hot loop is `@njit` — the hydro kernels (`tridag_module`, `uphyd_module`, and the fused
+`hyd_module._hyd_iterate`), `density`, `biogeo`, `schemes` (`tvd`/`disp_sch`), `sed`, `heat`, `ice`, `pH`, and
+the scalar carbonate/rate/piston/dispersion helpers in `fun_module`. `main.py` fails at import if numba is
+missing. `numpy>=2.0` also renamed `np.trapz` → `np.trapezoid`; any new integration code should use the new
+name (`tools/make_diagnostics_pdf.py`'s area-normalization page hit this).
+
+**`DELXI`/`DELTI` are per-site now, not shared constants.** Like `EL`, both are read via
+`getattr(_site, "DELXI"/"DELTI", <shared default>)` in `config.py`, so a site that doesn't override them gets
+the original shared values (`DELXI=200` m, `DELTI=75` s — still what Canning uses). See "Geometry" below for
+why and what the three runnable rivers actually use.
 
 `main.py` deletes every `*.dat` in the **current working directory** at startup and writes outputs there, so
 always run it from the directory you want results in. (The upstream one-variable `plot outputs.py` scratch
 script has been deleted — the `tools/make_*.py` figure generators replaced it and read `output.nc`.)
 
-At the shipped settings (`DELTI=75`, `MAXT=2 years`) this is ~840k timesteps over 136 grid points. Runtime
-has come down in three optimization passes (192 min → hydro/density jit → per-cell jit → Python-orchestration
-jit), each held to bit-identical output; see `docs/performance.md` for the full history, profiles, numbers and
-the verification harness. `docs/performance_metrics.json` holds the latest measured per-site wall times.
+At the *originally shipped* settings (`DELTI=75`, `DELXI=200`, `EL=27175`, `MAXT=2 years`) this was ~840k
+timesteps over 136 grid points, and `docs/performance.md`'s optimization history (192 min → hydro/density jit
+→ per-cell jit → Python-orchestration jit, each held to bit-identical output) was measured at that
+configuration. **The three runnable rivers no longer use it.** `EL` was shortened to each river's own observed
+estuary length (Colville 4150 / Kuparuk 7156 / Sagavanirktok 2170 m, vs. the shipped 27175 m shared by all
+four) and `DELXI`/`DELTI` were refined to 100 m / 30 s (from 200 m / 75 s) — see "Geometry" below for why. That
+leaves each site with a much smaller, site-specific grid (`M` = 42 / 72 / 22) and more timesteps per simulated
+day than before; `docs/performance_metrics.json` predates this change and should not be read as current for
+these three sites. Canning still uses the original shared `EL`/`DELXI`/`DELTI` defaults, but can't run at all
+(`EL=0` placeholder → `M=0`).
 
 **Bit-identity harness caveat (learned the hard way — see `performance.md` §3):** capture the reference with
 `CGEM_OUTPUT=dat` (default output is now NetCDF) **and after `rm -rf __pycache__`**. The jitted kernels are
@@ -179,13 +202,50 @@ recovery is `tools/extract_sword.py` → `docs/sword_widths.json` (see "delta-mo
 `B_lb` is the **seaward-boundary (delta-mouth) width = the raw SWORD v17b distributary SUM**; `B_ub` is the
 per-channel upstream prismatic width; the flare converges `B_lb → B_ub` over `L_FLARE`.
 
-| Site | B_lb (delta sum) | B_ub | L_FLARE | DEPTH | depth from | surveys |
-|---|---|---|---|---|---|---|
-| Colville | 1550 m (1310+240) | 423 m | 5.5 km | 2.25 m | `0.360·Q^0.297` | 208 |
-| Kuparuk | 516 m (335+182) | 58 m | 7.0 km | 1.34 m | `0.291·Q^0.309` | 323 |
-| Sagavanirktok | 553 m (320+233) | 102 m | 7.0 km | 0.98 m | `0.280·Q^0.259` | 189 |
-| Canning | 797 m (562+236) | 64 m | 7.0 km | 1.11 m | `0.224·Q^0.325` | 28 |
-| *shipped* | *1215* | *859* | — | *15.00 m* | — | — |
+| Site | EL (domain) | B_lb (delta sum) | B_ub | L_FLARE | DEPTH | depth from | surveys | DELXI / DELTI |
+|---|---|---|---|---|---|---|---|---|
+| Colville | **4.150 km** | 1550 m (1310+240) | 423 m | 5.5 km | 2.25 m | `0.360·Q^0.297` | 208 | 100 m / 30 s |
+| Kuparuk | **7.156 km** | 516 m (335+182) | 58 m | 7.0 km | 1.34 m | `0.291·Q^0.309` | 323 | 100 m / 30 s |
+| Sagavanirktok | **2.170 km** | 553 m (320+233) | 102 m | 7.0 km | 0.98 m | `0.280·Q^0.259` | 189 | 100 m / 30 s |
+| Canning | **0 km (placeholder)** | 797 m (562+236) | 64 m | 7.0 km | 1.11 m | `0.224·Q^0.325` | 28 | 200 m / 75 s (shared default; moot at `M=0`) |
+| *shipped* | *27.175 km* | *1215* | *859* | — | *15.00 m* | — | — | *200 m / 75 s* |
+
+**`EL` is now each river's own observed estuary length, not a shared 27.175 km modelling choice.** The three
+runnable sites' `EL` was set from user-supplied observed values (Colville 4150 / Kuparuk 7156 / Sagavanirktok
+2170 m); Canning's is left at `0` deliberately, a placeholder pending a real value — `M = int(EL/DELXI)+1`
+forced even gives `M=0` there, a degenerate grid, so Canning cannot currently run (`tools/run_sites.sh`,
+`build_all.sh`, and every report tool exclude it from their default site lists as a result — see "Running").
+
+**`DELXI`/`DELTI` were refined from the shared 200 m / 75 s to a per-site 100 m / 30 s (Colville/Kuparuk/
+Sagavanirktok only).** Shortening `EL` while leaving `DELXI` unchanged collapsed each site's grid to very few
+points (`M` = 20/36/10), and a 200-day run through spring freshet showed Kuparuk's shared-default grid was
+already numerically unstable there — the upstream boundary spiked to `U=3.97 m/s`, depth to `6.3 m` against a
+nominal `1.34 m`, a transient blow-up at the boundary. A naive shallow-water CFL check
+(`(sqrt(g·D)+|U|)·DELTI/DELXI < 1`) is **not** the operative constraint here — the *original* 137-point shipped
+config already exceeds it several-fold and has run for years without a reported hydrodynamic blow-up, so
+`hyd_module`'s implicit solve tolerates it fine in the interior; the more likely failure mode is
+`schemes_module.openbound`'s *explicit* boundary extrapolation being a much larger fraction of a 10–36-point
+grid than a 137-point one. The fix actually applied: halve `DELXI` to 100 m (doubling `M`), and cut `DELTI` to
+30 s so `DISP_MAX = 4·DELXI²/DELTI` (the dispersion Crank–Nicolson stability ceiling — see "Dispersion" below)
+stays well above the ~350–650 m²/s Seo & Cheong range. Verified by rerunning the same 200-day freshet window at
+the refined grid: depth/velocity stay physically bounded for Colville and Sagavanirktok.
+
+**Kuparuk's extreme freshet response is *kept*, not fixed further — it is a real, understood consequence of
+geometry meeting an extreme flood, not a numerics bug.** Its domain (7156 m) is the one of the three that
+extends *past* `L_FLARE` (7000 m) into the fully-converged, narrow (58–60 m) prismatic reach, right where
+Kuparuk's discharge peaks at **23.7× its mean** (day 152, 2022). At the nominal 1.34 m depth that would demand
+a ~19 m/s velocity through that cross-section — physically impossible for the model to satisfy without raising
+the water level instead, which is exactly the observed several-fold depth excursion during the flood. This was
+checked against the model's *actual* boundary width (not the asymptotic `B_ub`, which the width law hasn't
+fully reached for the two shorter sites): Colville and Sagavanirktok's boundaries sit at 1153 m / 417 m — much
+wider than their nominal `B_ub` — so their implied peak velocities (1.68 / 0.55 m/s) are unremarkable, which is
+exactly why only Kuparuk shows the extreme response. `DEPTH_ub` was deliberately **kept** at its at-a-station
+mean-discharge value (1.34 m) rather than re-evaluating the same `D=c·Q^f` relation at peak discharge, because
+there's no spatially-resolved survey data to justify a different value specifically at this narrow boundary —
+see the derivation comment in `sites/kuparuk.py`. **Width, by contrast, needed no change at all**: `B` is
+already a continuous function of distance (`init_module.width_at()`), so it's automatically correct at
+whatever distance a site's (now much shorter) domain ends — confirmed directly against the model's own
+`width` output field, not just the formula.
 
 **Depth replaced 15 m with ~1–2.3 m.** The shipped 15 m was cited to the Sagavanirktok gauge, but that
 gauge's own 189 ADCP surveys span 0.5–1.9 m (median 0.88 m) — the citation did not hold. Depths are now
@@ -237,6 +297,59 @@ R² = −0.65; the fresh v17b per-channel median (102 m) is a direct observation
 `docs/ns_rad_geometry.pdf` width page overlays the full per-channel node scatter + median/IQR against the
 flare, with the delta-sum `B_lb` marked at the mouth — the prismatic `B_ub` now sits inside the SWORD scatter
 for all four.
+
+### Boundary conditions (`BOUNDARIES`, per site)
+
+Each `sites/<name>.py` builds `BOUNDARIES = dict(_BASE_BOUNDARIES)` then overrides individual species as
+`(clb, cub)` — `clb` = downstream/marine, `cub` = upstream/riverine. All four rivers now have most of the
+table sourced from real data (down from mostly-placeholder); what follows is *what changed and from where*,
+not a restatement of the values themselves — read the derivation comment above each override block in the
+site file for the exact numbers and caveats.
+
+**Marine (`clb`) — ECCO-Darwin v5, all four rivers, added this round.** Previously every site's `clb` was the
+unmodified shipped placeholder (`_baseline.py`'s docstring: *"the original single-site values... want
+per-river replacement"*). Now `S`, `DIC`, `ALK`, `NO3`, `NH4`, `PO4`, `dSi`, `O2`, `TOC` are a climatological
+annual-mean at the nearest wet LLC270 grid cell to each river's mouth, from the public
+`data.nas.nasa.gov/ecco/llc_270/ecco_darwin_v5` portal (no auth) — full monthly-mean native-grid fields
+(~279–293 months per variable), not the coarser 1×1° `bin_average` product (which lacks biogeochemistry
+entirely, only SST/SSS/Chl/pCO2). `S` required reconstructing `SALTanom + 35` (MITgcm's standard
+salinity-anomaly convention — cross-checked, gives a physically sane ~30 PSU Beaufort-shelf value). Two real
+server quirks had to be worked around to pull this: every HTTP range response truncates the last byte of the
+declared `Content-Length` by exactly one (`requests`/`urllib3` hard-fail on this; `urllib.request.urlopen(...).
+read(n)` doesn't), and small (~KB) range requests intermittently return empty/wrong data even after that fix,
+so the extraction reads a full horizontal level slice (~3.8 MB) per variable-month rather than point-sized
+byte ranges. Rebuild with `scratch/ecco_darwin/extract_all_rivers.py` (gitignored, not tracked — the script
+and its cached grid files live under `code_util/LOAC/C_GEM/NS_RAD/scratch/`). **Not sourced this way**: `DIA`
+(ECCO-Darwin gives `Chl1-5`, not carbon biomass — converting needs an uncertain C:Chl ratio, not attempted for
+`clb`), `pH` (not in the archived output — could instead be diagnosed from the now-real `DIC`/`ALK`/`S` via the
+model's own carbonate solve), `RDOC`/`CH4`/`N2O`/`SPM` (no ECCO-Darwin analog).
+
+**Riverine (`cub`) — `O2` and `SPM`, all four rivers, added this round.** USGS Water Quality Portal, open-water
+(Jun–Sep) discrete-sample medians, using the *same* gauge/bbox selector each site's carbonate/nutrient `cub`
+already used (so the sourcing is internally consistent per site). `O2`: mg/L → mmol/m³ via ×1000/32. `SPM`:
+mg/L → g/L via ÷1000 — this is the more consequential correction: real values are **0.004–0.0165 g/L**, two
+orders of magnitude below the shared placeholder (`2.0 g/L`), because these are clear, low-sediment tundra
+rivers, not the turbid estuary the shipped C-GEM config was built for.
+
+**Riverine (`cub`) — `DIA`, all four rivers, added this round, heavily caveated.** North Slope rivers have
+**no water-column phytoplankton monitoring** in WQP or the literature — what exists is *epilithic* (rock/moss-
+attached) chlorophyll, a physically different compartment than `DIA` (this model's transported, advected water-
+column tracer). The value used is Kuparuk's own unfertilized-reference-reach epilithic chlorophyll, **2.8 mg
+Chl/m²** on rock (85% of bed cover), from Slavik et al. 2004 (*Ecology* 85:939–954) Table 2 — the only
+quantitative North Slope epilithic measurement found, applied to all four rivers for lack of a site-specific
+one (Kuparuk's own value is not borrowed; the other three are). Converted to a rough water-column-equivalent
+by **dividing by each site's own `DEPTH_ub`** (as if the entire benthic stock were resuspended and evenly mixed
+through the water column — not how these compartments actually behave; a proxy, not a measurement), then to
+carbon via **C:Chl = 75 gC/gChla** (close to the model's own `Chla2CMIN`-implied maximum of `1/0.0125 = 80`
+gC/gChla — see `config.py`'s phytoplankton block) and to mmol via `/12.011`. Result is 7–18× the old flat `1.1`
+placeholder, mostly driven by each site's own depth (shallower → higher pseudo-concentration from the same
+areal stock), not a claim that phytoplankton biomass itself varies that much between rivers.
+
+**Still placeholder, unchanged**: `RDOC`, `CH4`, `N2O` (the Arctic-extension tracers — moot while
+`ARCTIC_BGC=False`), `SPM`'s `clb`, `DIA`'s `clb`, and `pH`'s `clb`. Canning's `NO3`/`NH4`/`PO4`/`TOC` `cub`
+also remain the shared placeholder (no discrete nutrient record of its own, consistent with it already being
+the weakest-constrained site) — but it is the first time Canning's `clb` for those same species, and its
+`O2`/`SPM`/`DIA` `cub`, have any site-specific value at all.
 
 ## Width and dispersion no longer use the Savenije estuary formulation
 
@@ -742,13 +855,18 @@ CO₂, ignoring the air–sea gradient*. With the units reconciled the flux beca
 residual — so `FCO2` is now **genuinely sensitive to the boundary DIC/ALK**, and its sign is set by whether the
 river carries a respiratory CO₂ excess (DIC > carbonate alkalinity). With the *delta-proximal* carbonate
 boundaries now sourced for all four rivers (see `BOUNDARIES` above), the observed water `pCO2` is 580–800 µatm
-(supersaturated) and **all four rivers outgas** (+77 to +176 gC m⁻² yr⁻¹ on the current multi-channel
-geometry; +92 to +178 on the single-channel geometry those boundaries were commissioned against, 100 % of
-open-water cells) — the
-physically expected behaviour for Arctic permafrost rivers. *(Historical note: with the earlier boundaries
-these three read near-equilibrium/uptake and Canning over-outgassed; that was a boundary-chemistry artifact
-of DIC ≈ ALK, not the flux code. Two things had to be right for the sign to be trustworthy — the mol/kg
-saturation term here, and the `_pbar_rho` pressure unit fix in Known defects.)*
+(supersaturated) and **all four rivers outgas** — the physically expected behaviour for Arctic permafrost
+rivers. *(Historical note: with the earlier boundaries these three read near-equilibrium/uptake and Canning
+over-outgassed; that was a boundary-chemistry artifact of DIC ≈ ALK, not the flux code. Two things had to be
+right for the sign to be trustworthy — the mol/kg saturation term here, and the `_pbar_rho` pressure unit fix
+in Known defects.)* The specific per-area numbers quoted in earlier revisions of this file (+77 to +176 / +92
+to +178 gC m⁻² yr⁻¹) predate the `EL` shortening and marine-`clb` resourcing (see "Geometry" and "Boundary
+conditions" above) and are stale — current year-2 values (73.1 / 149.2 / 85.6 gC m⁻² yr⁻¹ for
+Colville/Kuparuk/Sagavanirktok) are in `tools/make_diagnostics_pdf.py`'s **"Area-normalized annual budgets"**
+page (`ns_rad_diagnostics.pdf`, added this round), which also covers NPP, aerobic degradation, denitrification
+and nitrification the same way: depth-integrate the model's volumetric rate to an areal one, width-weight-
+average across the channel, integrate over year 2. This is the right comparison now that the three rivers have
+very different `EL`/width/surface area — a basin-total comparison would just track size.
 
 **Output.** A single self-describing **`output.nc`** per run directory by default
 (`config.OUTPUT_FORMAT`/`CGEM_OUTPUT = nc`), written when `(t / (TS*DELTI)) % 1 == 0`. All the analysis and
@@ -791,9 +909,12 @@ Inherited from upstream, not introduced locally. Left as-is so far.
   agreement with the stored `FCO2`) and by watching `c_pH` drift under the buggy pressure in an instrumented
   run. Because `FCO2` moves slightly, output is **not** bit-identical to pre-fix runs but is physically
   equivalent for the flux. Fixed at `code/fun_module.py` (commit `d825cec`).
-- **`init_module` line 33** hardcodes `50` in the Chezy ramp (`(i - 50) / (M - 50)`) while the surrounding
-  conditional keys off `distance`, which is `1` in the current config. For `1 <= i < 50` the numerator is
-  negative and Chezy exceeds `Chezy_lb`.
+- **`init_module` Chezy ramp hardcoded `50` — FIXED.** This entry is stale as written above: the ramp is now
+  keyed off `distance` (`Chezy[i] = Chezy_lb - (Chezy_lb - Chezy_ub) * (i - distance) / (M - distance)`), with
+  a comment at the call site explaining the old hardcoded-50 was "a leftover from the original 160 km site
+  where `distance` was ~50." Re-checked because the grid refinement (`M` now as low as 22, see "Geometry")
+  would have made the *original* bug active across the *entire* domain instead of a few near-mouth points —
+  it does not, since the fix already landed before that refinement.
 - **`transport_module`** does `names = list(v.keys())` then `for names in names:`, rebinding the list to each
   key mid-loop. Works only because the iterator was already constructed.
 - **`schemes_module.tvd`** sets `cold = co`, aliasing rather than copying, so the "old" values it reads back

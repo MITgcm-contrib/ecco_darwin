@@ -34,7 +34,11 @@ sys.path.insert(0, str(CODE))
 #   worst CVD dE 9.2 (deutan), worst normal-vision dE 16.3, all checks PASS.
 # Aqua sits below 3:1 contrast on the light surface, so the relief rule applies --
 # every series carries a direct label, never colour alone.
-SITES = ["colville", "kuparuk", "sagavanirktok", "canning"]
+# canning excluded for now -- EL=0 (placeholder, no observed estuary length yet --
+# see sites/canning.py), so it is not run by tools/run_sites.sh and has no
+# runs/definitive/canning output for this figure to read. Add it back once it has
+# a real EL and has been run.
+SITES = ["colville", "kuparuk", "sagavanirktok"]
 LABEL = {"colville": "Colville", "kuparuk": "Kuparuk",
          "sagavanirktok": "Sagavanirktok", "canning": "Canning"}
 C = {"colville": "#2a78d6", "kuparuk": "#eb6834",
@@ -194,7 +198,7 @@ def page_geometry(pdf, cfg):
     ax.set_yscale("log")
     ax.set_xlabel("distance upstream from mouth  (km)")
     ax.set_ylabel("channel width  (m, log)")
-    ax.set_xlim(0, 30)
+    ax.set_xlim(0, max(cfg[s]["EL"] for s in SITES) / 1000.0 * 1.15)
     tidy(ax)
     ax.set_title("Width: converges over the flare, then prismatic\n"
                  "(dotted = flare breakpoint L_FLARE)", loc="left", color=INK)
@@ -207,20 +211,27 @@ def page_geometry(pdf, cfg):
     expo = [c["B_lb"] * math.exp(-(i * c["DELXI"]) / LC) for i in range(c["M"] + 1)]
     ax.plot(x, expo, color=MUTED, lw=1.5, ls=(0, (4, 2)))
     ax.plot(x, c["width"], color=C["colville"], lw=2.0)
-    ax.annotate("flare + prismatic\n(AIC-selected)", xy=(18, c["width"][90]),
-                xytext=(13, c["width"][90] * 1.9), color=C["colville"], fontsize=7.5)
-    ax.annotate("old: exponential\nover whole domain", xy=(20, expo[100]),
-                xytext=(9.5, 1010), color=MUTED, fontsize=7.5,
+    # Annotation positions as a FRACTION of the domain (not a hardcoded grid index): the
+    # domain length is now per-site (EL was shortened to the observed estuary length, see
+    # sites/<name>.py), so a fixed index like the old 90/100 (valid only for the original
+    # ~137-point, 27 km domain) can run past the end of a much shorter array.
+    _i1 = min(len(c["width"]) - 1, max(0, round(0.657 * c["M"])))
+    _i2 = min(len(expo) - 1, max(0, round(0.730 * c["M"])))
+    ax.annotate("flare + prismatic\n(AIC-selected)", xy=(x[_i1], c["width"][_i1]),
+                xytext=(x[_i1] - 0.28 * x[-1], c["width"][_i1] * 1.9),
+                color=C["colville"], fontsize=7.5)
+    ax.annotate("old: exponential\nover whole domain", xy=(x[_i2], expo[_i2]),
+                xytext=(0.34 * x[-1], expo[_i2] * 1.4), color=MUTED, fontsize=7.5,
                 arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.7, alpha=0.6))
     ax.set_xlabel("distance upstream from mouth  (km)")
     ax.set_ylabel("channel width  (m)")
-    ax.set_xlim(0, 28)
+    ax.set_xlim(0, x[-1] * 1.05)
     tidy(ax)
     ax.set_title("Colville — the two width laws compared", loc="left", color=INK)
 
     # (c) depth: old vs new
     ax = fig.add_subplot(gs[1, 0])
-    xs = np.arange(4)
+    xs = np.arange(len(SITES))
     ax.bar(xs, [cfg[s]["D"] for s in SITES], width=0.55,
            color=[C[s] for s in SITES], zorder=3)
     ax.axhline(15.0, color=WARN, lw=1.4, ls=(0, (4, 2)), zorder=4)
@@ -319,7 +330,7 @@ def page_dispersion(pdf, cfg, Q):
             color=WARN, fontsize=7)
     ax.set_xlabel("distance upstream from mouth  (km)")
     ax.set_ylabel("dispersion K  (m² s⁻¹, log)")
-    ax.set_xlim(0, 30)
+    ax.set_xlim(0, max(cfg[s]["EL"] for s in SITES) / 1000.0 * 1.15)
     ax.set_yscale("log")
     ax.set_ylim(200, 3000)
     tidy(ax)
@@ -330,6 +341,7 @@ def page_dispersion(pdf, cfg, Q):
     # (b) old dispersion collapse
     ax = fig.add_subplot(gs[0, 1])
     rowtxt = []
+    xmax = max(cfg[s]["EL"] for s in SITES) / 1000.0   # per-site now, not a shared 27 km
     for s in SITES:
         c = cfg[s]
         x = np.arange(c["M"] + 1) * c["DELXI"] / 1000
@@ -338,16 +350,19 @@ def page_dispersion(pdf, cfg, Q):
         nz = sum(1 for v in d if v > 0)
         rowtxt.append((s, nz * c["DELXI"] / 1000))
     ymax = ax.get_ylim()[1]
-    ax.text(9.5, ymax * 0.95, "dispersion reaches zero after:", fontsize=7.5,
+    # legend box position scales with the actual (now much smaller) domain instead of the
+    # old fixed x=9.5-11 data coordinates, which assumed a ~30 km-wide canvas
+    tx0, tx1 = xmax * 0.35, xmax * 0.40
+    ax.text(tx0, ymax * 0.95, "dispersion reaches zero after:", fontsize=7.5,
             color=INK2, va="top")
     for k, (s, km) in enumerate(sorted(rowtxt, key=lambda r: -r[1])):
-        ax.plot([10.1], [ymax * (0.845 - 0.075 * k)], "s", color=C[s], ms=5,
+        ax.plot([tx1], [ymax * (0.845 - 0.075 * k)], "s", color=C[s], ms=5,
                 clip_on=False)
-        ax.text(10.9, ymax * (0.845 - 0.075 * k),
-                f"{LABEL[s]} — {km:.1f} km", fontsize=7.5, color=INK2, va="center")
+        ax.text(tx1 + 0.03 * xmax, ymax * (0.845 - 0.075 * k),
+                f"{LABEL[s]} — {km:.2f} km", fontsize=7.5, color=INK2, va="center")
     ax.set_xlabel("distance upstream from mouth  (km)")
     ax.set_ylabel("dispersion K  (m² s⁻¹)")
-    ax.set_xlim(0, 30)
+    ax.set_xlim(0, xmax * 1.1)
     tidy(ax)
     ax.set_title("OLD — Van der Burgh / Savenije, same geometry\n"
                  "clamped to zero within a few hundred metres", loc="left", color=INK)
@@ -364,7 +379,7 @@ def page_dispersion(pdf, cfg, Q):
         fisch.append(0.011 * U ** 2 * W ** 2 / (H * us))
         seoc.append(seo(W, H, c["chezy"], q))
         wh.append(W / H)
-    xs = np.arange(4)
+    xs = np.arange(len(SITES))
     ax.bar(xs - 0.19, fisch, 0.34, color=MUTED, zorder=3, label=names[0])
     ax.bar(xs + 0.19, seoc, 0.34, color=[C[s] for s in SITES], zorder=3, label=names[1])
     ax.axhline(cfg["colville"]["dispmax"], color=WARN, lw=1.2, ls=(0, (4, 2)))
@@ -459,9 +474,9 @@ def page_provenance(pdf):
                     fontsize=7.5, color="white", weight="bold")
             ax.text(c_ + 0.5, r + 0.32, NOTE[k][s], ha="center", va="center",
                     fontsize=6.2, color="white", alpha=0.95)
-    ax.set_xlim(0, 4)
+    ax.set_xlim(0, len(SITES))
     ax.set_ylim(0, len(rows))
-    ax.set_xticks(np.arange(4) + 0.5)
+    ax.set_xticks(np.arange(len(SITES)) + 0.5)
     ax.set_xticklabels([LABEL[s] for s in SITES], fontsize=9)
     for lbl, s in zip(ax.get_xticklabels(), SITES):
         lbl.set_color(C[s])

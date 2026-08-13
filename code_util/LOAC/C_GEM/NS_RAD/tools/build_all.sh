@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# One command: run C-GEM for all four North Slope rivers, then regenerate every
+# One command: run C-GEM for the three runnable North Slope rivers, then regenerate every
 # figure PDF and the movies from the fresh output.
 #
-#   tools/build_all.sh                   # run the 4 rivers, then all PDFs + movies
+#   tools/build_all.sh                   # run the 3 rivers, then all PDFs + movies
 #   tools/build_all.sh --figures-only    # skip the model run; rebuild figures from existing runs
 #   tools/build_all.sh --with-idealized  # ALSO run + verify + figure the idealized fixture
 #   tools/build_all.sh --with-regression # ALSO build the regression-boundary runs the
@@ -17,7 +17,7 @@
 # rebuilt by default because it doubles the run time and only changes when the temperature
 # forcing does; pass --with-regression, or run tools/run_regression_bnd.sh once.
 #
-# The model run is the slow part (~15 min, all four in parallel). Figures take a
+# The model run is the slow part (~15 min, the three runnable in parallel). Figures take a
 # couple of minutes. A single figure failing does not abort the rest — a PASS/FAIL
 # summary is printed at the end and the exit code is non-zero if anything failed.
 #
@@ -55,11 +55,11 @@ step() {                     # step "label" cmd...
     if "$@"; then RESULTS+=("PASS  $label"); else RESULTS+=("FAIL  $label"); fi
 }
 
-# --- 1. the model (all four rivers) ---
+# --- 1. the model (the three runnable rivers) ---
 if [ "$FIGURES_ONLY" -eq 0 ]; then
-    echo "### running C-GEM for all four rivers (this is the slow part) ###"
-    if tools/run_sites.sh; then RESULTS+=("PASS  model run (4 rivers)")
-    else RESULTS+=("FAIL  model run (4 rivers)"); echo "model run failed — see runs/definitive/*/run.log" >&2; fi
+    echo "### running C-GEM for the three runnable rivers (this is the slow part) ###"
+    if tools/run_sites.sh; then RESULTS+=("PASS  model run (3 rivers)")
+    else RESULTS+=("FAIL  model run (3 rivers)"); echo "model run failed — see runs/definitive/*/run.log" >&2; fi
 else
     echo "### --figures-only: skipping the model run ###"
 fi
@@ -72,7 +72,7 @@ step "river-network maps PDF" "$PY" tools/make_river_maps.py
 
 # --- 3. figures that read runs/definitive ---
 step "diagnostics PDF"        "$PY" tools/make_diagnostics_pdf.py
-step "movies (4 rivers)"      "$PY" tools/make_movies.py
+step "movies (3 rivers)"      "$PY" tools/make_movies.py
 
 # --- 4. validation PDF needs the independent regression-boundary run ---
 # Kuparuk + Sagavanirktok rerun with the air-temperature regression as the upstream T

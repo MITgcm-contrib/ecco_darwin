@@ -242,7 +242,8 @@ def page_dataflow(pdf):
                  boxstyle="round,pad=0.2,rounding_size=1", fc="#eef5ef", ec=GEO, lw=1.0,
                  mutation_aspect=0.5))
     if pm:
-        order = ["colville", "kuparuk", "sagavanirktok", "canning"]
+        # canning excluded for now -- see the SITES comment in make_diagnostics_pdf.py etc.
+        order = ["colville", "kuparuk", "sagavanirktok"]
         ps = pm["per_site_sec"]
         per = "   ".join(f"{LAB.get(s, s)} {ps[s] / 60:.1f}" for s in order if s in ps)
         vals = [ps[s] for s in order if s in ps]
@@ -399,7 +400,8 @@ def _site_cfg():
         sys.path.insert(0, str(CODE))
     import importlib
     out = []
-    for s in ("colville", "kuparuk", "sagavanirktok", "canning"):
+    # canning excluded for now -- see the SITES comment in make_diagnostics_pdf.py etc.
+    for s in ("colville", "kuparuk", "sagavanirktok"):
         m = importlib.import_module(f"sites.{s}")
         q = np.abs(np.genfromtxt(open(FORC / getattr(m, "DISCHARGE_FILE"),
                                       encoding="utf-8-sig"), delimiter=","))
