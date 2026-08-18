@@ -19,3 +19,10 @@ darwin_bling_comparison/     Pilot study comparing Darwin's forward
                               BLING's adjoint sensitivity of the SOCAT
                               pCO2 cost function, at matched grid points.
                               See its README.md.
+
+hybrid_darwin_bling/         Hybrid Darwin(forward)/BLING(adjoint)
+                              surrogate-gradient optimization of DIC/ALK
+                              initial conditions against SOCAT, using
+                              BLING's adjoint as an approximate gradient
+                              for Darwin's own (independently computed)
+                              cost function. See its README.md.

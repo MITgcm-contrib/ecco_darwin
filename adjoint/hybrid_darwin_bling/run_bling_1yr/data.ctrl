@@ -1,0 +1,38 @@
+# *********************
+# ECCO controlvariables
+# *********************
+ &ctrl_nml
+ doSinglePrecTapelev=.TRUE.,
+ ctrlSmoothCorrel2D=.FALSE.,
+ ctrlSmoothCorrel3D=.FALSE.,
+ /
+# *********************
+# names for ctrl_pack/unpack
+# *********************
+ &ctrl_packnames
+ ctrlname='ecco_ctrl',
+ costname='ecco_cost',
+ /
+# *********************
+# names for CTRL_GENARR, CTRL_GENTIM
+# *********************
+# HYBRID DARWIN/BLING PILOT: restricted to DIC + ALK only (theta, salt,
+# O2, NO3, PO4, Fe deliberately left UNREGISTERED here, not just
+# mult_genarr3d=0 -- ctrl_map_ini_genarr.F only maps fields whose
+# xx_genarr3d_file slot is non-blank, so omitting them here freezes them
+# at their prior IC for the whole run, rather than just zeroing their
+# prior/background cost term while still letting the adjoint's data-term
+# gradient move them). This matches the validated pilot finding that
+# BLING's adjoint is a good surrogate for Darwin's own sensitivity only
+# for DIC/ALK (direct carbonate chemistry), not the biology-mediated
+# tracers.
+ &CTRL_NML_GENARR
+ xx_genarr3d_weight(1) = 'wt_DIC.bin',
+ xx_genarr3d_file(1)='xx_ptr1',
+ mult_genarr3d(1) = 1.0,
+#
+ xx_genarr3d_weight(2) = 'wt_ALK.bin',
+ xx_genarr3d_file(2)='xx_ptr2',
+ mult_genarr3d(2) = 1.0,
+#
+ /
