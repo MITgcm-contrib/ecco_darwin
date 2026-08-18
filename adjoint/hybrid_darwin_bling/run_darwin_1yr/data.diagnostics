@@ -1,0 +1,101 @@
+# Diagnostic Package Choices
+#--------------------
+ &DIAGNOSTICS_LIST
+# HYBRID DARWIN/BLING FULL-YEAR PILOT: one-off snapshot of Darwin's own
+# carbonate-chemistry surface pCO2 ('pCO2', the ocean-side value from
+# DARWIN_CALC_PCO2 -- NOT 'surfpCO2', which is the atmospheric forcing
+# field, see darwin_fields_load.F) at each of the 12 SOCAT months' own
+# shared mid-month observation timestamp (read directly from each
+# socat_pco2_clim_month*.nc's prof_YYYYMMDD/prof_HHMMSS, elapsed seconds
+# from the 2007-01-01 00:00 start, converted to the nearest deltaT=900s
+# timestep -- all 12 land exactly on an integer timestep):
+#   month01: 2007-01-15 12:00  ->  1,252,800s  (timestep 1392)
+#   month02: 2007-02-14 12:00  ->  3,844,800s  (timestep 4272)
+#   month03: 2007-03-15 12:00  ->  6,350,400s  (timestep 7056)
+#   month04: 2007-04-14 12:00  ->  8,942,400s  (timestep 9936)
+#   month05: 2007-05-15 12:00  -> 11,620,800s  (timestep 12912)
+#   month06: 2007-06-14 12:00  -> 14,212,800s  (timestep 15792)
+#   month07: 2007-07-14 12:00  -> 16,804,800s  (timestep 18672)
+#   month08: 2007-08-13 12:00  -> 19,396,800s  (timestep 21552)
+#   month09: 2007-09-12 12:00  -> 21,988,800s  (timestep 24432)
+#   month10: 2007-10-12 12:00  -> 24,580,800s  (timestep 27312)
+#   month11: 2007-11-11 12:00  -> 27,172,800s  (timestep 30192)
+#   month12: 2007-12-11 12:00  -> 29,764,800s  (timestep 33072)
+# pkg/profiles matches each obs to whichever instantaneous timestep's
+# interval contains its exact time, no averaging/interpolation across
+# time, so one snapshot per month is sufficient (not a running average).
+  fileName(1)    = 'darwinPCO2Snap01',
+  fields(1,1)    = 'pCO2    ',
+  levels(1,1)    = 1.,
+  frequency(1)   = -1000000000.,
+  timePhase(1)   = 1252800.,
+#
+  fileName(2)    = 'darwinPCO2Snap02',
+  fields(1,2)    = 'pCO2    ',
+  levels(1,2)    = 1.,
+  frequency(2)   = -1000000000.,
+  timePhase(2)   = 3844800.,
+#
+  fileName(3)    = 'darwinPCO2Snap03',
+  fields(1,3)    = 'pCO2    ',
+  levels(1,3)    = 1.,
+  frequency(3)   = -1000000000.,
+  timePhase(3)   = 6350400.,
+#
+  fileName(4)    = 'darwinPCO2Snap04',
+  fields(1,4)    = 'pCO2    ',
+  levels(1,4)    = 1.,
+  frequency(4)   = -1000000000.,
+  timePhase(4)   = 8942400.,
+#
+  fileName(5)    = 'darwinPCO2Snap05',
+  fields(1,5)    = 'pCO2    ',
+  levels(1,5)    = 1.,
+  frequency(5)   = -1000000000.,
+  timePhase(5)   = 11620800.,
+#
+  fileName(6)    = 'darwinPCO2Snap06',
+  fields(1,6)    = 'pCO2    ',
+  levels(1,6)    = 1.,
+  frequency(6)   = -1000000000.,
+  timePhase(6)   = 14212800.,
+#
+  fileName(7)    = 'darwinPCO2Snap07',
+  fields(1,7)    = 'pCO2    ',
+  levels(1,7)    = 1.,
+  frequency(7)   = -1000000000.,
+  timePhase(7)   = 16804800.,
+#
+  fileName(8)    = 'darwinPCO2Snap08',
+  fields(1,8)    = 'pCO2    ',
+  levels(1,8)    = 1.,
+  frequency(8)   = -1000000000.,
+  timePhase(8)   = 19396800.,
+#
+  fileName(9)    = 'darwinPCO2Snap09',
+  fields(1,9)    = 'pCO2    ',
+  levels(1,9)    = 1.,
+  frequency(9)   = -1000000000.,
+  timePhase(9)   = 21988800.,
+#
+  fileName(10)   = 'darwinPCO2Snap10',
+  fields(1,10)   = 'pCO2    ',
+  levels(1,10)   = 1.,
+  frequency(10)  = -1000000000.,
+  timePhase(10)  = 24580800.,
+#
+  fileName(11)   = 'darwinPCO2Snap11',
+  fields(1,11)   = 'pCO2    ',
+  levels(1,11)   = 1.,
+  frequency(11)  = -1000000000.,
+  timePhase(11)  = 27172800.,
+#
+  fileName(12)   = 'darwinPCO2Snap12',
+  fields(1,12)   = 'pCO2    ',
+  levels(1,12)   = 1.,
+  frequency(12)  = -1000000000.,
+  timePhase(12)  = 29764800.,
+ &
+
+ &DIAG_STATIS_PARMS
+ &

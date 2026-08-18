@@ -1,0 +1,19 @@
+# ********************************
+# Off-line optimization parameters
+# ********************************
+# HYBRID DARWIN/BLING FULL-YEAR PILOT: numiter=1 -- mechanical shakeout of
+# the full-year (12-month SOCAT cost) surrogate-gradient loop before
+# committing to a multi-cycle campaign (~2.4 days/cycle: ~7.3h BLING
+# adjoint + ~49h Darwin forward). Fresh-start (optimcycle=0 cold-starts
+# automatically, optim_readparms.F:162).
+&OPTIM
+ optimcycle=1,
+ numiter=1,
+ nfunc=10,
+ dfminFrac = 0.1,
+ iprint=10,
+ nupdate=8,
+/
+
+&M1QN3
+/

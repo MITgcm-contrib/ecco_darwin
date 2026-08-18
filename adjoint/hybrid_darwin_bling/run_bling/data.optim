@@ -1,0 +1,19 @@
+# ********************************
+# Off-line optimization parameters
+# ********************************
+# HYBRID DARWIN/BLING PILOT: small numiter (5) -- mechanical shakeout of
+# the surrogate-gradient loop (does M1QN3 accept a (Darwin cost, BLING
+# gradient) pair sanely, does the cost trajectory look reasonable) before
+# committing to a longer campaign. Fresh-start (optimcycle=0 cold-starts
+# automatically, optim_readparms.F:162).
+&OPTIM
+ optimcycle=5,
+ numiter=5,
+ nfunc=50,
+ dfminFrac = 0.1,
+ iprint=10,
+ nupdate=8,
+/
+
+&M1QN3
+/
