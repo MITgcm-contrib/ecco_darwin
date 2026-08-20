@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
-"""38-point x 6-tracer Darwin FD vs BLING adjoint regression plot, Kay-
-style (slope/correlation reported per tracer, 1:1 reference line), with a
-map of the validation point locations as the first panel.
+"""Darwin FD vs BLING adjoint sensitivity, nutrients + iron only (O2, NO3,
+PO4, FeT) -- companion to plot_multipoint_comparison.py's DIC+ALK headline
+panel, pulled out separately since these four tracers span ~9 orders of
+magnitude and would otherwise wash out on the same axes.
+
+Map panel and marker-shape-by-category convention are identical to
+plot_multipoint_comparison.py (circle=normal, diamond=low DIC sensitivity
+only, square=low ALK sensitivity only, star=low DIC+ALK sensitivity) --
+see that script for the category derivation.
 
 Requires MITgcmutils (ships with MITgcm under utils/python/MITgcmutils --
 add that directory to PYTHONPATH) and cartopy.
@@ -28,20 +34,15 @@ DARWIN = os.environ.get("DARWIN_RUN_DIR", ".")
 OUT_DIR = os.environ.get("FIGURES_OUT_DIR", "../figures")
 rows = list(csv.DictReader(open(f'{DARWIN}/multipoint_comparison_results.csv')))
 
-TRACERS = ['DIC', 'ALK', 'O2', 'NO3', 'PO4', 'FeT']
-# Okabe-Ito colorblind-safe categorical palette (Okabe & Ito 2008), fixed
-# hue order -- each tracer gets a fully distinct color instead of shades
-# within a "blue family"/"red family" that are hard to tell apart.
-COLORS = {'DIC': '#0072B2', 'ALK': '#D55E00', 'O2': '#009E73',
-          'NO3': '#CC79A7', 'PO4': '#E69F00', 'FeT': '#56B4E9'}
+TRACERS = ['O2', 'NO3', 'PO4', 'FeT']
+COLORS = {'O2': '#009E73', 'NO3': '#CC79A7', 'PO4': '#E69F00', 'FeT': '#56B4E9'}
 
-fig = plt.figure(figsize=(17, 5.5))
-gs = gridspec.GridSpec(1, 3, figure=fig, width_ratios=[1.1, 1, 1])
+fig = plt.figure(figsize=(12, 5.5))
+gs = gridspec.GridSpec(1, 2, figure=fig, width_ratios=[1.1, 1])
 ax0 = fig.add_subplot(gs[0], projection=ccrs.Robinson(central_longitude=0))
 ax1 = fig.add_subplot(gs[1])
-ax2 = fig.add_subplot(gs[2])
 
-# --- Panel 0: map of the 38 validation point locations ---
+# --- Panel 0: map of the 38 validation point locations (same as the main figure) ---
 XC = rdmds(f'{DARWIN}/run/XC'); YC = rdmds(f'{DARWIN}/run/YC')
 with open(f'{DARWIN}/run_multi_DIC_plus/perturb_log.json') as fh:
     plog = json.load(fh)
@@ -49,10 +50,6 @@ lons = np.array([XC[p['j'], p['i']] for p in plog['points']])
 lats = np.array([YC[p['j'], p['i']] for p in plog['points']])
 lons_180 = np.where(lons > 180, lons - 360, lons)
 
-# "low sensitivity" sites: bottom quartile of |dJ_darwin/d(tracer)| -- these
-# are the points where both models' actual carbon-chemistry sensitivity is
-# small, so ratio-based agreement metrics get noisy (see readme.txt's
-# outlier discussion) even though the absolute disagreement is trivial.
 dic_mag = {(r['j'], r['i']): abs(float(r['dJ_darwin'])) for r in rows if r['tracer'] == 'DIC'}
 alk_mag = {(r['j'], r['i']): abs(float(r['dJ_darwin'])) for r in rows if r['tracer'] == 'ALK'}
 dic_thresh = np.percentile(list(dic_mag.values()), 25)
@@ -84,8 +81,6 @@ ax0.scatter(lons_180[low_both], lats[low_both], s=90, c='#9b59b6', edgecolor='bl
 ax0.legend(loc='lower left', fontsize=7, frameon=True, framealpha=0.9)
 ax0.set_title(f'{len(plog["points"])} validation grid points\n(bottom quartile |dJ/d(tracer)| highlighted)', fontsize=11)
 
-# Per-point category lookup, reused so panels 1-2 use the SAME marker shapes
-# as panel 0's map (color there still encodes tracer, shape encodes category).
 CAT_STYLE = {
     'normal':        dict(marker='o', s=36, edgecolors='none', linewidths=0),
     'low_dic_only':  dict(marker='D', s=55, edgecolors='black', linewidths=0.7),
@@ -104,7 +99,7 @@ for idx, k in enumerate(keys):
         cat_lookup[k] = 'normal'
 
 
-def scatter_by_category(ax, sub, color, base_label, marker_size_scale=1.0):
+def scatter_by_category(ax, sub, color, base_label, zorder_base=2):
     x = np.array([float(r['dJ_darwin']) for r in sub])
     y = np.array([float(r['dJ_bling']) for r in sub])
     cats = np.array([cat_lookup[(r['j'], r['i'])] for r in sub])
@@ -113,65 +108,53 @@ def scatter_by_category(ax, sub, color, base_label, marker_size_scale=1.0):
         mask = cats == cat
         if not mask.any():
             continue
-        style = dict(style)
-        style['s'] = style['s'] * marker_size_scale
         label = base_label if not labeled else None
-        ax.scatter(x[mask], y[mask], color=color, alpha=0.8, label=label, **style)
+        ax.scatter(x[mask], y[mask], color=color, alpha=0.8, label=label,
+                   zorder=zorder_base, **style)
         labeled = True
     return x, y
 
 
-# --- Panel 1: DIC + ALK, linear scale, the headline result ---
+# --- Panel 1: O2, NO3, PO4, FeT, symlog scale ---
+# O2's dJ values are ~9 orders of magnitude smaller than FeT's, so its points
+# cluster at the origin under everything else -- draw it last / on top
+# (highest zorder) so it stays visible instead of being buried.
+ZORDER = {'O2': 10, 'NO3': 3, 'PO4': 4, 'FeT': 2}
 stats_text = []
-for t in ['DIC', 'ALK']:
-    sub = [r for r in rows if r['tracer'] == t]
-    x, y = scatter_by_category(ax1, sub, COLORS[t], f'{t} (n={len(sub)})')
-    slope, intercept = np.polyfit(x, y, 1)
-    corr = np.corrcoef(x, y)[0, 1]
-    stats_text.append(f'{t}: slope={slope:.2f}, r={corr:.3f}')
-
-all_x = np.concatenate([[float(r['dJ_darwin']) for r in rows if r['tracer'] == t] for t in ['DIC', 'ALK']])
-all_y = np.concatenate([[float(r['dJ_bling']) for r in rows if r['tracer'] == t] for t in ['DIC', 'ALK']])
-lims = [min(all_x.min(), all_y.min()) * 1.15, max(all_x.max(), all_y.max()) * 1.15]
-ax1.plot(lims, lims, 'k--', linewidth=1, zorder=0, label='1:1')
-ax1.axhline(0, color='0.85', linewidth=0.8, zorder=0)
-ax1.axvline(0, color='0.85', linewidth=0.8, zorder=0)
-ax1.set_xlim(lims); ax1.set_ylim(lims)
-ax1.set_aspect('equal', adjustable='box')
-ax1.set_xlabel(r'Darwin forward-FD  $dJ/d(\mathrm{tracer})$  (per mol m$^{-3}$)')
-ax1.set_ylabel(r'BLING adjoint  $dJ/d(\mathrm{tracer})$  (per mol m$^{-3}$)')
-ax1.set_title('DIC + ALK: 38 global points\n(direct carbon-chemistry pathway)')
-ax1.legend(loc='upper left', fontsize=9, frameon=False)
-ax1.text(0.97, 0.03, '\n'.join(stats_text), transform=ax1.transAxes,
-         ha='right', va='bottom', fontsize=9,
-         bbox=dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='0.7'))
-
-# --- Panel 2: all 6 tracers, symlog scale, full context ---
 for t in TRACERS:
     sub = [r for r in rows if r['tracer'] == t]
-    scatter_by_category(ax2, sub, COLORS[t], t, marker_size_scale=26 / 36)
+    x, y = scatter_by_category(ax1, sub, COLORS[t], f'{t} (n={len(sub)})', zorder_base=ZORDER[t])
+    if np.ptp(x) < 1e-6 * max(abs(x).max(), 1):
+        stats_text.append(f'{t}: sensitivity ~0 (both models), slope/r undefined')
+    else:
+        slope, intercept = np.polyfit(x, y, 1)
+        corr = np.corrcoef(x, y)[0, 1]
+        stats_text.append(f'{t}: slope={slope:.2f}, r={corr:.3f}')
 
 lin_thresh = 1.0
-lims2 = 2e6
-ax2.set_xscale('symlog', linthresh=lin_thresh)
-ax2.set_yscale('symlog', linthresh=lin_thresh)
-ax2.plot([-lims2, lims2], [-lims2, lims2], 'k--', linewidth=1, zorder=0, label='1:1')
-ax2.axhline(0, color='0.85', linewidth=0.8, zorder=0)
-ax2.axvline(0, color='0.85', linewidth=0.8, zorder=0)
-ax2.set_xlim(-lims2, lims2); ax2.set_ylim(-lims2, lims2)
-ax2.set_xlabel(r'Darwin forward-FD  $dJ/d(\mathrm{tracer})$  (symlog)')
-ax2.set_ylabel(r'BLING adjoint  $dJ/d(\mathrm{tracer})$  (symlog)')
-ax2.set_title('All 6 tracers, 38 points each\n(228 total point-tracer pairs)')
-ax2.legend(loc='lower right', fontsize=8, frameon=False, ncol=2)
+lims = 6e7
+ax1.set_xscale('symlog', linthresh=lin_thresh)
+ax1.set_yscale('symlog', linthresh=lin_thresh)
+ax1.plot([-lims, lims], [-lims, lims], 'k--', linewidth=1, zorder=0, label='1:1')
+ax1.axhline(0, color='0.85', linewidth=0.8, zorder=0)
+ax1.axvline(0, color='0.85', linewidth=0.8, zorder=0)
+ax1.set_xlim(-lims, lims); ax1.set_ylim(-lims, lims)
+ax1.set_xlabel(r'Darwin forward-FD  $dJ/d(\mathrm{tracer})$  (symlog)')
+ax1.set_ylabel(r'BLING adjoint  $dJ/d(\mathrm{tracer})$  (symlog)')
+ax1.set_title('Nutrients + iron: 38 global points\n(O2, NO3, PO4, FeT)')
+ax1.legend(loc='upper left', fontsize=8, frameon=False)
+ax1.text(0.97, 0.03, '\n'.join(stats_text), transform=ax1.transAxes,
+         ha='right', va='bottom', fontsize=8,
+         bbox=dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='0.7'))
 
 fig.suptitle('Darwin vs BLING: forward-FD vs adjoint sensitivity of SOCAT cost function\n'
-             '38 globally-distributed grid points, matched initial conditions, +/-5% relative perturbation',
+             'nutrients + iron only, 38 globally-distributed grid points, +/-5% relative perturbation',
              fontsize=11)
-fig.text(0.5, 0.01, 'marker shape in panels 2-3 matches the sensitivity category shown on the panel-1 map (circle/diamond/square/star)',
+fig.text(0.5, 0.01, 'marker shape matches the sensitivity category shown on the map (circle/diamond/square/star)',
           ha='center', fontsize=8, style='italic', color='0.3')
 fig.tight_layout(rect=[0, 0.02, 1, 0.90])
 
 os.makedirs(OUT_DIR, exist_ok=True)
-OUT = f'{OUT_DIR}/darwin_vs_bling_multipoint.png'
+OUT = f'{OUT_DIR}/darwin_vs_bling_nutrients.png'
 fig.savefig(OUT, dpi=150)
 print(f"saved to {OUT}")
