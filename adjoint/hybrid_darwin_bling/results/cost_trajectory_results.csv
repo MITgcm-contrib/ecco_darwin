@@ -1,0 +1,9 @@
+run,cycle,bling_fc,darwin_J,cost_scope
+pilot_1month,0,35041.3,40908.9,month01_only
+pilot_1month,1,28365.3,34686.1,month01_only
+pilot_1month,2,15988.2,22281.0,month01_only
+pilot_1month,3,12451.4,18438.7,month01_only
+pilot_1month,4,7874.6,13096.4,month01_only
+pilot_1month,5,3725.4,6321.4,month01_only
+full_1year,0,212372.7,340152.9,all_12_months
+full_1year,1,164280.1,304597.1,all_12_months
