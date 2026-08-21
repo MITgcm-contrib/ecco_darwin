@@ -33,6 +33,7 @@ configs and this documentation cite numbers from them.
 |---|---|---|
 | **`ns_rad_report.pdf`** | **The deliverable — the six section PDFs below, stitched into one document.** The only report PDF kept on disk after a build; not tracked in git. | `tools/make_report.py` |
 | `idealized_verification.pdf` | Idealized-fixture report (kept separate — not part of the combined report) | `tools/make_idealized_verification_pdf.py` |
+| `ns_rad_interannual.pdf` | 1980–2023 PWBM-driven interannual forcing + model carbon-flux response (kept separate — not part of the combined report; reads `runs/interannual/`, not `runs/definitive/`) | `tools/make_interannual_pdf.py` |
 | `NS-RAD_running_instructions.docx` | Step-by-step run guide | `tools/make_run_instructions_docx.py` |
 | `movies/<site>_evolution.mp4`, `movies/<site>_hovmoller.mp4` | Along-channel and distance×time animations | `tools/make_movies.py` |
 | `idealized_forcings_preview.png` | Preview of the idealized forcing series | `tools/build_idealized_forcings.py` |
@@ -51,6 +52,7 @@ deleted. They are gitignored; rebuild the report with `tools/build_all.sh --figu
 | `validation_obs.json` | Observations plotted in the validation PDF | (validation data prep) |
 | `usgs_velocity_obs.json` | USGS velocity observations | (geometry/validation prep) |
 | `sword_widths.json` | SWORD v17 channel-width extraction | (one-off SWORD extraction) |
+| `interannual_discharge_obs.json` | USGS gauge annual-mean discharge, 1980–2023 (3 gauges), for `ns_rad_interannual.pdf`'s discharge-vs-observation page | `tools/fetch_interannual_discharge_obs.py` |
 
 ## Regenerating
 

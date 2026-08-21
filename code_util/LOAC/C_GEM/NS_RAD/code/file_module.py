@@ -147,13 +147,14 @@ def Rates(co, s, t):
 # are bit-for-bit unchanged.
 _FORCING_CACHE = {}
 
-# Fixed 365-point time axis the forcings are interpolated onto. A series of any
-# other length raises ValueError in interp; see CLAUDE.md.
-_TIME_AXIS = linspace(0, 365*86400, 365)
-
 
 def _load(name):
-    """Return (series, rolling_ice_sum) for a forcing file, parsing at most once."""
+    """Return (series, rolling_ice_sum, time_axis) for a forcing file, parsing at
+    most once. The time axis is ONE DAY PER VALUE, `linspace(0, N*86400, N)`, derived
+    from the file's own length N -- not a fixed 365, so a file can be a one-year
+    climatology (N=365, the original/still-typical case) or a genuine multi-year
+    daily series (N=days in the record; see the interannual discharge/TOC forcings,
+    CLAUDE.md -> "Interannual forcing")."""
     cached = _FORCING_CACHE.get(name)
     if cached is None:
         with open(name, 'r', encoding='utf-8-sig') as f:
@@ -162,7 +163,8 @@ def _load(name):
         # temperature, where main.py uses it to drive the ice gate.
         b = data.cumsum()
         b[nbday_ice:] = b[nbday_ice:] - b[:-nbday_ice]
-        cached = (data, b)
+        axis = linspace(0, data.size*86400, data.size)
+        cached = (data, b, axis)
         _FORCING_CACHE[name] = cached
     return cached
 
@@ -170,11 +172,34 @@ def _load(name):
 def exfread(name, t):
     """Interpolate a cached daily forcing series to model time `t` [s]. Returns (value,
     rolling_ice_sum); the second is meaningful only for the water-temperature call (the
-    legacy previousdays gate). Series are parsed once and memoised in _FORCING_CACHE."""
-    data, b = _load(name)
-    if repeatYear == 1 and t > 31536000:
-        t = t - 31536000
-    y = interp(t, _TIME_AXIS, data)
+    legacy previousdays gate). Series are parsed once and memoised in _FORCING_CACHE.
+
+    A one-year (365-value) series repeats annually when repeatYear=1, exactly as
+    before. A longer, genuinely multi-year series (e.g. an interannual discharge/TOC
+    forcing) is NOT wrapped -- t indexes straight into it, and interp clamps to the
+    boundary value if a run's MAXT ever exceeds the record.
+
+    BUG FIXED (found building the interannual report): this used to be a single
+    `if t > 31536000: t -= 31536000`, which only wraps ONE year -- correct for every
+    run that existed before this file's multi-year extension, since MAXT was never
+    more than 2 years (a single subtraction always lands year 2 back in [0, 365)).
+    For a genuine multi-year run (year 3 onward) that left t OUTSIDE the file's
+    [0, 365)-day axis, and interp silently CLAMPS out-of-range lookups to the
+    boundary value -- so every 365-length forcing (air/water temp, wind, solar,
+    humidity, pCO2) froze at its last day's value for the rest of the run.
+
+    Fixed with `t - P*((t-1)//P)` rather than a naive `t % P`: verified to reproduce
+    the old single-subtraction result EXACTLY over the entire previously-exercised
+    [0, 2 years] range, including the exact t=2*P boundary (where a naive modulo
+    would map to day 0/Jan-1 instead of day 365/Dec-31, changing runs/definitive's
+    last timestep and breaking the bit-identity the optimization history was
+    validated against -- see CLAUDE.md's bit-identity harness caveat), while
+    correctly wrapping every year, not just the second one, beyond that range."""
+    data, b, axis = _load(name)
+    P = 31536000
+    if repeatYear == 1 and data.size == 365 and t > P:
+        t = t - P * ((t - 1) // P)
+    y = interp(t, axis, data)
     # for water temperature only
-    y2 = interp(t, _TIME_AXIS, b)
+    y2 = interp(t, axis, b)
     return y, y2

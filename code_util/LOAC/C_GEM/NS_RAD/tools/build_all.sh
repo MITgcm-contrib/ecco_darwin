@@ -7,6 +7,9 @@
 #   tools/build_all.sh --with-idealized  # ALSO run + verify + figure the idealized fixture
 #   tools/build_all.sh --with-regression # ALSO build the regression-boundary runs the
 #                                        #   validation PDF needs (+~20 min; see below)
+#   tools/build_all.sh --with-interannual # ALSO run the 3 rivers' *_interannual site
+#                                         #   variants (real 1980-2023 PWBM discharge/DOC,
+#                                         #   full 44-year record, ~5+ hrs) + figure them
 #   SERIAL=1 tools/build_all.sh          # run the rivers one at a time (passed to run_sites.sh)
 #
 # THE VALIDATION PDF NEEDS A SECOND SET OF RUNS. runs/regression_bnd/ holds Kuparuk and
@@ -26,6 +29,8 @@
 #   docs/ns_rad_report.pdf                            THE deliverable: the six section
 #                                                     PDFs below, stitched into one document
 #   docs/movies/<site>_evolution.mp4 / _hovmoller.mp4 animations
+#   docs/ns_rad_interannual.pdf                       --with-interannual only; SEPARATE from
+#                                                     ns_rad_report.pdf, like idealized_verification.pdf
 #
 # The six section PDFs (diagnostics, validation, geometry, model_schematic,
 # model_summary, river_networks) are built as intermediates, stitched into
@@ -39,11 +44,13 @@ PY="${PYTHON:-python3}"
 FIGURES_ONLY=0
 WITH_IDEALIZED=0
 WITH_REGRESSION=0
+WITH_INTERANNUAL=0
 for a in "$@"; do
     case "$a" in
         --figures-only) FIGURES_ONLY=1 ;;
         --with-idealized) WITH_IDEALIZED=1 ;;
         --with-regression) WITH_REGRESSION=1 ;;
+        --with-interannual) WITH_INTERANNUAL=1 ;;
         *) echo "unknown option: $a" >&2; exit 2 ;;
     esac
 done
@@ -116,6 +123,18 @@ if [ "$WITH_IDEALIZED" -eq 1 ]; then
     step "idealized verify (full seasonal run)" "$PY" tools/verify_idealized.py --full
     step "idealized verification PDF"           "$PY" tools/make_idealized_verification_pdf.py
     step "idealized movies"                     "$PY" tools/make_movies.py --run runs/idealized idealized
+fi
+
+# --- 6. optional: the interannual (1980-2023 PWBM discharge/DOC) site variants ---
+# Separate PDF (docs/ns_rad_interannual.pdf), not stitched into the combined report --
+# same reasoning as the idealized fixture above: an optional, expensive analysis of a
+# different question (44 years of real forcing variability) than the combined report's
+# single-year sections. tools/run_interannual.sh saves daily (not the definitive runs'
+# 6-min cadence) specifically so this fits on disk -- see that script's header.
+if [ "$WITH_INTERANNUAL" -eq 1 ]; then
+    echo; echo "### --with-interannual: running the 3 rivers' interannual variants (full 44-year record, ~5+ hrs) ###"
+    step "interannual runs (3 rivers)" tools/run_interannual.sh
+    step "interannual PDF"             "$PY" tools/make_interannual_pdf.py
 fi
 
 # --- summary ---
