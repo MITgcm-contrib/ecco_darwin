@@ -1,0 +1,178 @@
+# v06 3deg data.ptracers -- 36 tracers (v05/3deg had 31)
+#
+# Tracer layout follows v06 exactly:
+#   1-19  DIC..O2          identical to v05
+#   20    CDOM             NEW in v06 (DARWIN_ALLOW_CDOM)
+#   21-30 c01..c10         6 phyto + 4 zoo  (v05 had 20-26 = c01..c07: 5 phyto + 2 zoo)
+#   31-36 Chl01..Chl06     (v05 had 27-31 = Chl01..Chl05)
+#
+# v06 plankton groups (from data.traits grp_names / grp_nplank):
+#   c01 PicoCyano  c02 PicoEuk  c03 Cocco  c04 Diazo  c05 Diatom  c06 Dino
+#   c07-c10 Zoo (4 size classes)
+#
+# NOTE: v05 and v06 plankton indices are NOT the same organisms. Do not copy
+# v05 c01..c07 into v06 c01..c07. Initial files below are built by
+# matlab/make_v06_3deg_initial_conditions.m -- see that script for the mapping.
+#
+# Chl01..Chl06 are intentionally left blank: darwin_chlInitBalanced=T in
+# data.darwin computes chlorophyll from biomass at darwin_chlIter0.
+#
+ &PTRACERS_PARM01
+ PTRACERS_numInUse= 36,
+ PTRACERS_Iter0= 0,
+#
+ PTRACERS_advScheme(:)= 36*33,
+ PTRACERS_diffKh(:)= 36*0.E3,
+ PTRACERS_diffKr(:)= 36*1.E-5,
+ PTRACERS_useGMRedi(:)= 36*.TRUE.,
+#
+ PTRACERS_EvPrRn(:)= 36*0.E3,
+#
+ PTRACERS_names( 1)= 'DIC',
+ PTRACERS_initialFile( 1)='ptracers_v06_3deg_01.0000000001',
+
+ PTRACERS_names( 2)= 'NO3',
+ PTRACERS_initialFile( 2)='ptracers_v06_3deg_02.0000000001',
+
+ PTRACERS_names( 3)= 'NO2',
+ PTRACERS_initialFile( 3)='ptracers_v06_3deg_03.0000000001',
+
+ PTRACERS_names( 4)= 'NH4',
+ PTRACERS_initialFile( 4)='ptracers_v06_3deg_04.0000000001',
+
+ PTRACERS_names( 5)= 'PO4',
+ PTRACERS_initialFile( 5)='ptracers_v06_3deg_05.0000000001',
+
+ PTRACERS_names( 6)= 'FeT',
+ PTRACERS_initialFile( 6)='ptracers_v06_3deg_06.0000000001',
+
+ PTRACERS_names( 7)= 'SiO2',
+ PTRACERS_initialFile( 7)='ptracers_v06_3deg_07.0000000001',
+
+ PTRACERS_names( 8)= 'DOC',
+ PTRACERS_initialFile( 8)='ptracers_v06_3deg_08.0000000001',
+
+ PTRACERS_names( 9)= 'DON',
+ PTRACERS_initialFile( 9)='ptracers_v06_3deg_09.0000000001',
+
+ PTRACERS_names(10)= 'DOP',
+ PTRACERS_initialFile(10)='ptracers_v06_3deg_10.0000000001',
+
+ PTRACERS_names(11)= 'DOFe',
+ PTRACERS_initialFile(11)='ptracers_v06_3deg_11.0000000001',
+
+ PTRACERS_names(12)= 'POC',
+ PTRACERS_initialFile(12)='ptracers_v06_3deg_12.0000000001',
+
+ PTRACERS_names(13)= 'PON',
+ PTRACERS_initialFile(13)='ptracers_v06_3deg_13.0000000001',
+
+ PTRACERS_names(14)= 'POP',
+ PTRACERS_initialFile(14)='ptracers_v06_3deg_14.0000000001',
+
+ PTRACERS_names(15)= 'POFe',
+ PTRACERS_initialFile(15)='ptracers_v06_3deg_15.0000000001',
+
+ PTRACERS_names(16)= 'POSi',
+ PTRACERS_initialFile(16)='ptracers_v06_3deg_16.0000000001',
+
+ PTRACERS_names(17)= 'PIC',
+ PTRACERS_initialFile(17)='ptracers_v06_3deg_17.0000000001',
+
+ PTRACERS_names(18)= 'ALK',
+ PTRACERS_initialFile(18)='ptracers_v06_3deg_18.0000000001',
+
+ PTRACERS_names(19)= 'O2',
+ PTRACERS_initialFile(19)='ptracers_v06_3deg_19.0000000001',
+
+ PTRACERS_names(20)= 'CDOM',
+ PTRACERS_initialFile(20)='ptracers_v06_3deg_20.0000000001',
+
+ PTRACERS_names(21)= 'c01',   ! PicoCyano
+ PTRACERS_initialFile(21)='ptracers_v06_3deg_21.0000000001',
+
+ PTRACERS_names(22)= 'c02',   ! PicoEuk
+ PTRACERS_initialFile(22)='ptracers_v06_3deg_22.0000000001',
+
+ PTRACERS_names(23)= 'c03',   ! Cocco
+ PTRACERS_initialFile(23)='ptracers_v06_3deg_23.0000000001',
+
+ PTRACERS_names(24)= 'c04',   ! Diazo
+ PTRACERS_initialFile(24)='ptracers_v06_3deg_24.0000000001',
+
+ PTRACERS_names(25)= 'c05',   ! Diatom
+ PTRACERS_initialFile(25)='ptracers_v06_3deg_25.0000000001',
+
+ PTRACERS_names(26)= 'c06',   ! Dino
+ PTRACERS_initialFile(26)='ptracers_v06_3deg_26.0000000001',
+
+ PTRACERS_names(27)= 'c07',   ! Zoo1
+ PTRACERS_initialFile(27)='ptracers_v06_3deg_27.0000000001',
+
+ PTRACERS_names(28)= 'c08',   ! Zoo2
+ PTRACERS_initialFile(28)='ptracers_v06_3deg_28.0000000001',
+
+ PTRACERS_names(29)= 'c09',   ! Zoo3
+ PTRACERS_initialFile(29)='ptracers_v06_3deg_29.0000000001',
+
+ PTRACERS_names(30)= 'c10',   ! Zoo4
+ PTRACERS_initialFile(30)='ptracers_v06_3deg_30.0000000001',
+
+ PTRACERS_names(31)= 'Chl01',
+ PTRACERS_initialFile(31)=' ',
+
+ PTRACERS_names(32)= 'Chl02',
+ PTRACERS_initialFile(32)=' ',
+
+ PTRACERS_names(33)= 'Chl03',
+ PTRACERS_initialFile(33)=' ',
+
+ PTRACERS_names(34)= 'Chl04',
+ PTRACERS_initialFile(34)=' ',
+
+ PTRACERS_names(35)= 'Chl05',
+ PTRACERS_initialFile(35)=' ',
+
+ PTRACERS_names(36)= 'Chl06',
+ PTRACERS_initialFile(36)=' ',
+
+#
+# uM is shorthand for mmol m^-3
+#
+ PTRACERS_units( 1)= 'uM C'
+ PTRACERS_units( 2)= 'uM N'
+ PTRACERS_units( 3)= 'uM N'
+ PTRACERS_units( 4)= 'uM N'
+ PTRACERS_units( 5)= 'uM P'
+ PTRACERS_units( 6)= 'uM Fe'
+ PTRACERS_units( 7)= 'uM Si'
+ PTRACERS_units( 8)= 'uM C'
+ PTRACERS_units( 9)= 'uM N'
+ PTRACERS_units(10)= 'uM P'
+ PTRACERS_units(11)= 'uM Fe'
+ PTRACERS_units(12)= 'uM C'
+ PTRACERS_units(13)= 'uM N'
+ PTRACERS_units(14)= 'uM P'
+ PTRACERS_units(15)= 'uM Fe'
+ PTRACERS_units(16)= 'uM Si'
+ PTRACERS_units(17)= 'uM C'
+ PTRACERS_units(18)= 'meq/m^3'
+ PTRACERS_units(19)= 'uM O'
+ PTRACERS_units(20)= 'uM C'
+ PTRACERS_units(21)= 'uM C'
+ PTRACERS_units(22)= 'uM C'
+ PTRACERS_units(23)= 'uM C'
+ PTRACERS_units(24)= 'uM C'
+ PTRACERS_units(25)= 'uM C'
+ PTRACERS_units(26)= 'uM C'
+ PTRACERS_units(27)= 'uM C'
+ PTRACERS_units(28)= 'uM C'
+ PTRACERS_units(29)= 'uM C'
+ PTRACERS_units(30)= 'uM C'
+ PTRACERS_units(31)= 'mg/m^3'
+ PTRACERS_units(32)= 'mg/m^3'
+ PTRACERS_units(33)= 'mg/m^3'
+ PTRACERS_units(34)= 'mg/m^3'
+ PTRACERS_units(35)= 'mg/m^3'
+ PTRACERS_units(36)= 'mg/m^3'
+ &

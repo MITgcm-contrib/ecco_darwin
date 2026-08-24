@@ -1,0 +1,118 @@
+ &OASIM_FORCING_PARM
+ cldcovFile = 'oasim/C61extrap/R4/ccov',
+ cldlwpFile = 'oasim/C61extrap/R4/rlwp',
+ cldreFile  = 'oasim/C61extrap/R4/cdre',
+#
+ presFile   = 'oasim/C61extrap/R4/slp',
+ OAwindFile = 'oasim/C61extrap/R4/wsm',
+ relhumFile = 'oasim/C61extrap/R4/rh',
+ ozoneFile  = 'oasim/C61extrap/R4/oz',
+ wvFile     = 'oasim/C61extrap/R4/wv',
+#
+ aertauFile = 'oasim/C61extrap/R4/taua',
+ asympFile  = 'oasim/C61extrap/R4/asymp',
+ ssalbFile  = 'oasim/C61extrap/R4/ssalb',
+#
+ cldcovPeriod = -1,
+ cldlwpPeriod = -1,
+ cldrePeriod = -1,
+#
+ presPeriod = -1,
+ OAwindPeriod = -1,
+ relhumPeriod = -1,
+ ozonePeriod = -1,
+ wvPeriod = -1,
+#
+ aertauPeriod = -1,
+ asympPeriod = -1,
+ ssalbPeriod = -1,
+ &
+ &OASIM_INTERP_PARM
+ cldcov_lon0    = -179.5,
+ cldcov_lon_inc = 1.,
+ cldcov_lat0    = -89.5,
+ cldcov_lat_inc = 179*1.,
+ cldcov_nlon    = 360,
+ cldcov_nlat    = 180,
+#
+ cldlwp_lon0    = -179.5,
+ cldlwp_lon_inc = 1.,
+ cldlwp_lat0    = -89.5,
+ cldlwp_lat_inc = 179*1.,
+ cldlwp_nlon    = 360,
+ cldlwp_nlat    = 180,
+#
+ cldre_lon0    = -179.5,
+ cldre_lon_inc = 1.,
+ cldre_lat0    = -89.5,
+ cldre_lat_inc = 179*1.,
+ cldre_nlon    = 360,
+ cldre_nlat    = 180,
+#
+ pres_lon0    = -179.5,
+ pres_lon_inc = 1.,
+ pres_lat0    = -89.5,
+ pres_lat_inc = 179*1.,
+ pres_nlon    = 360,
+ pres_nlat    = 180,
+#
+ OAwind_lon0    = -179.5,
+ OAwind_lon_inc = 1.,
+ OAwind_lat0    = -89.5,
+ OAwind_lat_inc = 179*1.,
+ OAwind_nlon    = 360,
+ OAwind_nlat    = 180,
+#
+ relhum_lon0    = -179.5,
+ relhum_lon_inc = 1.,
+ relhum_lat0    = -89.5,
+ relhum_lat_inc = 179*1.,
+ relhum_nlon    = 360,
+ relhum_nlat    = 180,
+#
+ ozone_lon0    = -179.5,
+ ozone_lon_inc = 1.,
+ ozone_lat0    = -89.5,
+ ozone_lat_inc = 179*1.,
+ ozone_nlon    = 360,
+ ozone_nlat    = 180,
+#
+ wv_lon0    = -179.5,
+ wv_lon_inc = 1.,
+ wv_lat0    = -89.5,
+ wv_lat_inc = 179*1.,
+ wv_nlon    = 360,
+ wv_nlat    = 180,
+#
+ aertau_lon0    = -179.5,
+ aertau_lon_inc = 1.,
+ aertau_lat0    = -89.5,
+ aertau_lat_inc = 179*1.,
+ aertau_nlon    = 360,
+ aertau_nlat    = 180,
+#
+ asymp_lon0    = -179.5,
+ asymp_lon_inc = 1.,
+ asymp_lat0    = -89.5,
+ asymp_lat_inc = 179*1.,
+ asymp_nlon    = 360,
+ asymp_nlat    = 180,
+#
+ ssalb_lon0    = -179.5,
+ ssalb_lon_inc = 1.,
+ ssalb_lat0    = -89.5,
+ ssalb_lat_inc = 179*1.,
+ ssalb_nlon    = 360,
+ ssalb_nlat    = 180,
+#
+ &
+ &OASIM_PARM
+ oasim_atmoFile   = 'oasim/bcs/atmo25b.dat',
+ oasim_waterFile  = 'oasim/bcs/abw25b.dat',
+ oasim_slingoFile = 'oasim/bcs/slingo.dat',
+#
+ oasim_dTsolz = 900.,
+# oasim_monitorfreq = 3600.,
+ &
+ &OASIM_3STREAM_PARM
+ &
