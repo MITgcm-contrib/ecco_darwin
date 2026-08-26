@@ -70,7 +70,7 @@
  darwin_useQsw = .TRUE.,
  darwin_useSEAICE = .TRUE.,
 #
-# Ainjectionfile = 'Ainjection_ECCO_V4r5',
+# Ainjectionfile = 'Ainjection0_ECCO_V4r5',
 # Ainjectionstartdate1 = 20030101,
 # Ainjectionstartdate2 = 120000,
 # Ainjectionperiod     = 86400.0,
