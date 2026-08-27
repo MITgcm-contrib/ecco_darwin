@@ -35,7 +35,7 @@
 # For reference, v05 used llc90_Mahowald_2009_soluble_iron_dust.bin with
 # darwin_inscal_iron=1000 because that file is in mol Fe m^-2 s^-1. The two
 # files are NOT interchangeable at a common scale factor.
- ironFile = 'CESM-MIMI_1980-2015_CAM4-6MEAN_MonthlyDep_Hamiltonetal2020_kgFem2s_clim1980-2015.R4_144x96x12.bin',
+ ironFile = 'CESM-MIMI_1980-2015_CAM4-6MEAN_MonthlyDep_Hamiltonetal2020_clim.R4_144x96x12.bin',
  ironPeriod = -12,
  darwin_inscal_iron = 17906.70606142,
 #

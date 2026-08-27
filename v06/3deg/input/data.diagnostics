@@ -300,7 +300,7 @@
   frequency(82) = 2635200.0,
    fields(1:15,82) = 'TRAC01  ','ADVxTr01','ADVyTr01','ADVrTr01',
         'DFxETr01','DFyETr01','DFrETr01','DFrITr01','gDAR01  ',
-        'cDIC    ','cDIC_PIC','respDIC ','rDIC_DOC','rDIC_POC',
+        'C_DIC   ','C_DICPIC','respDIC ','rDIC_DOC','rDIC_POC',
         'dDIC_PIC',
    filename(82) = 'diags/budget/average_DIC_3d',
 #---
@@ -337,7 +337,7 @@
   frequency(88) = 2635200.0,
    fields(1:13,88) = 'TRAC06  ','ADVxTr06','ADVyTr06','ADVrTr06',
         'DFxETr06','DFyETr06','DFrETr06','DFrITr06','gDAR06  ',
-        'C_Fe    ','S_Fe    ','sedFe   ','freeFe  ',
+        'C_Fe    ','S_Fe    ','sedFe   ','freeFeLs',
    filename(88) = 'diags/budget/average_Fe_3d',
 #---
   frequency(89) = 2635200.0,
