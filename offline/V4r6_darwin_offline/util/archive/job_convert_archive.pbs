@@ -1,0 +1,26 @@
+#PBS -S /bin/csh
+#PBS -l select=1:ncpus=1:model=sky_ele
+#PBS -l walltime=12:00:00
+#PBS -j oe
+#PBS -o ./
+#PBS -m bea
+
+# readme.txt Part 5, run for real against the finished
+# forward-run archive -- not the mds_to_offline.py self-test. Single-rank,
+# I/O-bound Python: no MPI needed, this isn't an MITgcm run. Reads/writes
+# ~2.4 TB across 11 fields x 12418 daily records; walltime is a guess, not
+# a measured estimate -- if the first field (DDtheta, printed first) is
+# still running near the walltime limit, kill and resubmit with more time
+# once its actual per-record throughput is known.
+
+module purge
+module load python3/3.9.12
+module list
+
+# MITgcmutils must be importable -- if this fails, `pip install --user
+# MITgcmutils` first.
+python3 -c "import MITgcmutils" || exit 1
+
+# Set to wherever this repo's offline/util/archive/ has been staged on Pleiades.
+cd $ECCO_DARWIN_OFFLINE/util/archive
+python3 convert_real_archive.py

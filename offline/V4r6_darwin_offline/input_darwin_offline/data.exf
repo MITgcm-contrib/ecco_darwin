@@ -1,0 +1,40 @@
+# *********************
+# External Forcing Data
+# *********************
+#
+# ADDED: same gap as data.ggl90 -- pkg/exf is compiled in
+# (packages.conf) so exf_readparms.F opens 'data.exf' unconditionally,
+# but this LLC90 port had no such file. Based verbatim on Steph's
+# original (Steph's original 1-deg set-up (data.exf); per ECCO/CLAUDE.md,
+# "EXF is on but empty" there too -- no zonalWindFile/heatflux/etc. is
+# ever set in EXF_NML_01-04, since wind/iron/pCO2/OASIM/runoff are all
+# read through pkg/darwin's own generic loader or pkg/offline instead,
+# never through EXF's field-loading mechanism).
+#
+# repeatPeriod=31104000. (Steph's 360-day year, in seconds) is commented
+# out rather than carried over: that value encoded her repeating
+# single-year climatology (TheCalendar='model' in her data.cal), which
+# this run deliberately does NOT use (data.cal here is a real Gregorian
+# calendar over the 1992-2025 record -- see that file's own header).
+# Since no field here is ever loaded through EXF's own periodic-forcing
+# path, repeatPeriod has nothing to apply to either way, but leaving a
+# stale 360-day value in an otherwise-real-calendar run risked exactly
+# the kind of silently-misleading residual this project has repeatedly
+# had to fix elsewhere (see e.g. data's PARM03 AB3 revert).
+ &EXF_NML_01
+ exf_iprec         = 32,
+ exf_yftype        = 'RL',
+# useExfYearlyFields= .TRUE.,
+# twoDigitYear      = .TRUE.,
+ useExfCheckRange  = .FALSE.,
+# repeatPeriod = 31104000.,
+ &
+#
+ &EXF_NML_02
+ &
+#
+ &EXF_NML_03
+ &
+#
+ &EXF_NML_04
+ &

@@ -1,0 +1,72 @@
+#
+# Field paths follow mds_to_offline.py's output naming convention (see
+# readme.txt Part 5): one subdirectory per field, named like
+# Steph's own original DDuvel/DDvvel/.../DFOSflux convention, but reading
+# from wherever the converted V4r6 archive actually lands rather than
+# Steph's ECCO_Iter3.73daily_360days product. GGL90diffKrFile replaces
+# KPP_DiffSFile/KPP_ghatKFile -- see code_offline_ggl90/ for why, and note
+# there is no GGL90 analog for the KPP ghat (non-local flux) term.
+#
+ &OFFLINE_PARM01
+  UvelFile= 'DDuvel/DDuvel',
+  VvelFile= 'DDvvel/DDvvel',
+  WvelFile= 'DDwvel/DDwvel',
+  GMwxFile= 'DGMkwx/DGMkwx',
+  GMwyFile= 'DGMkwy/DGMkwy',
+  GMwzFile= 'DGMkwz/DGMkwz',
+# ConvFile= 'input_off/Convtave',
+  SaltFile= 'DDsalt/DDsalt',
+  ThetFile= 'DDtheta/DDtheta',
+  SFluxFile='DFOSflux/DFOSflux',
+# HFluxFile=' ',
+  GGL90diffKrFile='DGGL90kr/DGGL90kr',
+ &end
+
+ &OFFLINE_PARM02
+#
+# offlineIter0 and offlineForcingCycle are placeholders -- they depend on
+# facts that don't exist until the V4r6 forward run (readme.txt
+# Part 3) has actually produced the archive, and guessing them wrong
+# would silently make the BGC run repeat one year's physics as a
+# climatology instead of experiencing the real 1992-2025 decadal signal
+# (Steph's original setup WAS a repeating single-year climatology --
+# "ECCO_Iter3.73daily_360days" is one 360-day year cycled with
+# offlineForcingCycle=31104000 -- ours is a genuine 34-year unique
+# record and must not be treated the same way).
+#
+# RESOLVED: forward run finished. Real archive on Pleiades
+# (/nobackup/dcarrol2/ECCO_V5r6_offline/MITgcm/ECCOV4/release6/run/diags/
+# archive_theta/) has exactly 12418 daily records, first at iteration
+# 000000024, last at 000000298032 -- a clean 24-iteration (=86400s)
+# spacing throughout, no partial day at either end. 298032 = nIter0(1)
+# + nTimeSteps(298031) of the forward run, confirming the count.
+#
+# offlineIter0=0 is correct as-is: this offline run's own clock starts
+# at nIter0=0 (see data), and the archive's first daily record (the
+# 1992-01-01 average) aligns with that start.
+#
+# FIXED: offlineForcingCycle=1072915200. (12418*86400, treating
+# the archive as a repeating cycle of that length) crashed the first-ever
+# run attempt -- GET_PERIODIC_INTERVAL's periodic branch (eesupp/src/
+# get_periodic_interval.F) computes tRec1 = 1 + INT(MOD(locTime,
+# cycleLength)/recSpacing), and at currentTime=0 (the very start of any
+# run) this lands exactly on the cycle boundary, giving tRec1=nbRec+1
+# (record 12418, one past our last real 0-indexed record 12417) instead
+# of wrapping via MOD -- read as DDuvel.0000298032 (12418*24), which
+# doesn't exist (our last real record is DDuvel.0000298008). This was
+# always the wrong setting regardless of the exact floating-point
+# boundary mechanics: our archive is a genuine unique 34-year record,
+# not a repeating climatology (unlike Steph's original
+# ECCO_Iter3.73daily_360days product, which this parameter's own default
+# of 31104000. -- her 360-day cycle length -- was written for), and even
+# the full run (nenditer=298031) never exceeds one cycle's worth of
+# records either way. cycleLength=0 selects GET_PERIODIC_INTERVAL's
+# purpose-built non-periodic branch instead ("as in pkg/rbcs" per its own
+# docstring) -- the semantically correct choice, not just a crash
+# workaround.
+  offlineIter0=0,
+  deltaToffline=3600.,
+  offlineForcingPeriod=86400.,
+  offlineForcingCycle=0.,
+  offlineLoadPrec=32,
+ &end

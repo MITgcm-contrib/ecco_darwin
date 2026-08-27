@@ -1,0 +1,35 @@
+# Packages
+#
+# Changed vs. Steph's original 1-deg set-up (data.pkg): useKPP replaced
+# by useGGL90 (matches ECCOv4r6's own mixing scheme; see
+# code_offline_ggl90/ for the pkg/offline patch this requires).
+# packages.conf gains exch2 (LLC90 tile connectivity), but there is
+# deliberately NO useEXCH2 line here: checked the real
+# model/src/packages_boot.F NAMELIST /PACKAGES/ declaration and
+# confirmed useEXCH2 does not exist as a runtime flag at all --
+# EXCH2 activates purely from being present in packages.conf
+# (the ALLOW_EXCH2 CPP flag), never via a data.pkg logical. An
+# earlier version of this file incorrectly included useEXCH2=.TRUE.,
+# which would have been an unrecognized namelist variable.
+#
+# useOASIM added: switches spectral surface
+# irradiance from Steph's precomputed RT_EdFile/RT_EsFile binaries to
+# pkg/oasim computing it dynamically at runtime from real atmospheric
+# fields, matching ecco_darwin's own v06/1deg/input_darwin_v4r5_v2/data.pkg
+# convention. See data.oasim (new file) and data.radtrans (RT_EdFile/
+# RT_EsFile removed, RT_useOASIMrmud added). `oasim` and `sun` (already
+# present) both need to be in packages.conf for this -- done in
+# code_darwin_offline/packages.conf.
+ &PACKAGES
+ useGMRedi=.TRUE.
+ usePTRACERS=.TRUE.
+ useGCHEM=.TRUE.,
+ useRADTRANS=.TRUE.,
+ useOASIM=.TRUE.,
+ useGGL90=.TRUE.,
+ useMNC=.TRUE.,
+ useEXF=.TRUE.,
+ useCAL=.TRUE.,
+ useOFFLINE=.TRUE.,
+ useDIAGNOSTICS=.TRUE.,
+ /

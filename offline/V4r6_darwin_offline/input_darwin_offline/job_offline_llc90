@@ -1,0 +1,52 @@
+#PBS -S /bin/csh
+#PBS -l select=3:ncpus=40:model=sky_ele
+#PBS -l walltime=96:00:00
+#PBS -j oe
+#PBS -o ./
+#PBS -m bea
+
+# Written -- readme.txt Part 7 referenced this file by
+# name ("qsub job_offline_llc90") but never actually wrote it; this is that
+# file. Same PBS shape as run_script.csh (Part 3): same node/rank sizing
+# (SIZE.h -- nPx=113 -- is shared with the forward run), same module
+# toolchain (darwin3 needs the same intel/mpi/netcdf stack as stock
+# MITgcm).
+#
+# walltime=96:00:00 -- UPDATED, was 48:00:00 (an unprofiled
+# carry-over from Part 3). Now based on a real measurement: a full 1-year
+# test (nenditer=8760, run directly on Pleiades, NOT via this repo's data --
+# see readme.txt) completed in 0.76 s/step under the OLD
+# useSingleCpuIO=.TRUE. config. At the real nenditer=298031 (298031 steps),
+# that rate projects to ~62.9 hours -- already past the old 48h ceiling, so
+# 48h was never going to be enough even before today's I/O fix.
+# useSingleCpuIO=.FALSE. (see data) should only make this faster (it
+# parallelizes the daily archive-field reads instead of serializing them
+# onto rank 0), so 62.9h is a conservative upper bound, not a target --
+# 96:00:00 leaves ~50% margin on top of it for the 34x increase in
+# checkpoint/diagnostic-write overhead a 1-year test can't fully represent.
+# Re-profile after the next test run (see readme.txt
+# addendum) and tighten this further if the real run's queue wait time ends
+# up mattering.
+
+limit stacksize unlimited
+module purge
+module load comp-intel/2020.4.304
+module load mpi-hpe/mpt
+module load hdf4/4.2.12
+module load hdf5/1.8.18_mpt
+module load netcdf/4.4.1.1_mpt
+module list
+
+setenv FORT_BUFFERED 1
+setenv MPI_BUFS_PER_PROC 128
+setenv MPI_DISPLAY_SETTINGS
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${HOME}/lib
+unsetenv MPI_IB_RECV_MSGS
+unsetenv MPI_UD_RECV_MSGS
+
+set nprocs = 113
+
+# Run from run_offline_llc90/ itself (unlike the forward run, this
+# directory IS the run directory -- Part 7 already symlinks/copies
+# everything needed directly into it, no separate run/ subdirectory).
+mpiexec -np ${nprocs} /u/scicon/tools/bin/mbind.x ./mitgcmuv

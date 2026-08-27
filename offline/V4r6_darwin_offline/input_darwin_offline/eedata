@@ -1,0 +1,17 @@
+# Example "eedata" file
+# Lines beginning "#" are comments
+# nTx - No. threads per process in X
+# nTy - No. threads per process in Y
+#
+# Correction: added useCubedSphereExchange=.TRUE., missing
+# from the version carried over unchanged from Steph's flat lat-lon
+# eedata. Confirmed against the official ECCOv4r6 release's own eedata,
+# which sets it -- LLC90's facet topology has rotated/cross-facet tile
+# connections a simple rectangular-neighbor exchange can't handle.
+ &EEPARMS
+ useCubedSphereExchange=.TRUE.,
+ nTx=1,nTy=1
+ /
+# Note: Some systems use & as the
+# namelist terminator. Other systems
+# use a / character (as shown here).

@@ -1,0 +1,57 @@
+#######################
+ &RADTRANS_FORCING_PARAMS
+# Rewritten: switched from Steph's
+# precomputed RT_EdFile/RT_EsFile (13 wavebands x 2, 1x1-degree binaries)
+# to pkg/oasim computing surface spectral irradiance dynamically at
+# runtime -- see data.oasim (new file) and data.pkg (useOASIM=.TRUE.
+# added). Matches ecco_darwin's own
+# v06/1deg/input_darwin_v4r5_v2/data.radtrans exactly, which has nothing
+# here beyond these two comments once OASIM supplies Ed/Es:
+# use oasim pkg for irradiances
+#
+# ice: RESTORED -- dropping this was a mistake,
+# caught by darwin_exf_readparms.F's hard requirement (line ~843) that
+# DARWIN_haveIce and RT_haveIce match: both must come from a file, or
+# neither may. The assumption that radtrans would transparently reuse
+# darwin's icefile array once RT_icefile was removed was wrong -- there
+# is no such inheritance path in the code. ecco_darwin's own reference
+# config (v06/llc270/input/data.radtrans, checked directly) sets neither,
+# but that's because IT runs pkg/seaice online and radtrans reads ice
+# area from that live state instead ("# use seaice pkg for area") -- a
+# mechanism this offline config can't use since pkg/seaice isn't
+# compiled here. Steph's original config had BOTH icefile (data.darwin)
+# and RT_icefile (data.radtrans) set, pointing at the SAME file with
+# identical icestartdate/iceperiod -- not redundant, but required.
+# Mirrored exactly here, pointing at the same DSIarea archive data.darwin
+# already uses, with the same real dates:
+ RT_icefile = 'DSIarea/DSIarea',
+ RT_icestartdate1 = 19920101,
+ RT_icestartdate2 = 120000,
+ RT_iceperiod     = 86400.0,
+ /
+ &RADTRANS_INTERP_PARAMS
+ /
+########################
+ &RADTRANS_PARAMS
+# RT_useMeanCosSolz=.TRUE. (Steph's original) was a simplified constant-
+# angle approximation, used because she had no real solar-position/
+# refraction data feeding radtrans. RT_useOASIMrmud=.TRUE. replaces it,
+# using OASIM's own computed mean cosine of the solar zenith angle instead
+# -- matches ecco_darwin's convention exactly (mutually exclusive with
+# RT_useMeanCosSolz, which is now .FALSE.).
+ RT_useOASIMrmud=.TRUE.,
+ RT_useMeanCosSolz=.FALSE.,
+# RT_kmax: radtrans_readparms.F defaults this to Nr; Steph explicitly
+# overrode it to 22 when Nr=23 (one level short of full depth, not an
+# arbitrary number). Preserving that Nr-1 choice here rather than
+# either the new Nr=50 default or the stale value 22, which on a
+# 50-level grid would arbitrarily truncate radiative transfer
+# mid-water-column instead of near the bottom.
+ RT_kmax=49,
+ RT_wbEdges=400,412.5,437.5,462.5,487.5,512.5,537.5,562.5,587.5,612.5,637.5,662.5,687.5,700,
+ RT_wbRefWLs=400,425,450,475,500,525,550,575,600,625,650,675,700,
+# RT_oasimWgt: per-waveband weight needed specifically for the OASIM
+# coupling (absent from Steph's file-based config, present in
+# ecco_darwin's) -- copied verbatim.
+ RT_oasimWgt=0.5,12*1.,
+ /

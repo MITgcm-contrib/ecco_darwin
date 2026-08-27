@@ -50,8 +50,8 @@
 
 %% paths and grid
 
-inDir  = '/Users/carrolld/Documents/research/debug/ecco_darwin/v05/3deg/data_darwin/';
-outDir = '/Users/carrolld/Documents/research/debug/v06/3deg/data_darwin/';
+inDir  = '../../../v05/3deg/data_darwin/';
+outDir = '../data_darwin/';
 
 nx = 128;
 ny =  64;

@@ -1,0 +1,293 @@
+# Carried over from Steph's original 1-deg set-up (data.diagnostics),
+# unchanged -- this file was missing entirely from the LLC90 port until now
+# (found while auditing what's still needed before the offline run can
+# actually go). Every entry here is grid-independent (tracer/diagnostic
+# names and record indices, not lon/lat/grid content), so nothing needed
+# adjusting the way data/data.ptracers/etc. did.
+#
+# frequency values (e.g. 31104000.) are in seconds and come from Steph's
+# original 360-day-year convention (31104000/86400 = 360 days) -- they
+# still work fine as plain output-cadence values under our real Gregorian
+# calendar (~a bit short of one real year), since nothing here depends on
+# the calendar being 360-day the way TheCalendar itself would.
+#
+# CORRECTION: this header originally claimed every entry here
+# was grid-independent so "nothing needed adjusting" -- true for grid, but
+# not for which PACKAGES are compiled. KPPhbl (below) is pkg/kpp's own
+# diagnostic and crashed the first-ever run attempt since pkg/kpp isn't
+# compiled in this port (GGL90 replaced it). Worth re-checking this file
+# for any other package-specific diagnostic names before assuming the
+# rest is safe just because the grid checked out.
+#
+# Gud diagnostics
+# ==================
+# PAR                 Photosynthetically active radiation
+# PP                  Primary production
+# Nfix                Nitrogen fixation
+# Rstar01             Rstar^PO4 of Phy01
+# Diver1              # Phy species over absolute threshold'
+# Diver2              # Phy species over threshold for proportion of biomass'
+# Diver3              # Phy species constituting bulk of biomass'
+# Diver4              # Phy species over threshold for ratio to maximum species'
+#
+ &diagnostics_list
+#
+# FIXED: no diagnostic output files were appearing at all -- a full 1-year
+# test run produced zero biomass_c/PP/GROW/etc. files despite crossing
+# frequency(1)=31104000s at iteration 8640.
+# Root cause confirmed against pkg/diagnostics/diagnostics_readparms.F:
+# diag_mnc defaults to useMNC (line "diag_mnc = useMNC", before this
+# namelist is even read) and nothing here ever overrode it. data.pkg's
+# useMNC=.TRUE. (added for the single-file archive/pickup convention) was
+# silently flipping diag_mdsio off too -- "diag_mdsio = (.NOT.diag_mnc) .OR.
+# outputTypesInclusive" -- so every diagnostics_list stream was writing (or
+# attempting to write) NetCDF via MNC instead of the .data/.meta files this
+# project actually reads (see this repo's CLAUDE.md: "Diagnostics are
+# mdsio, not NetCDF"). Pin it explicitly rather than inherit useMNC's value.
+  diag_mnc = .FALSE.,
+#
+  filename( 1) = 'biomass_c',
+# frequency(1) = 2592000.,
+  frequency(1) = 31104000.,
+# frequency(1) = 155520000.,
+  fields( 1,1) = 'TRAC01  ',
+  fields( 2,1) = 'TRAC02  ',
+  fields( 3,1) = 'TRAC03  ',
+  fields( 4,1) = 'TRAC04  ',
+  fields( 5,1) = 'TRAC05  ',
+  fields( 6,1) = 'TRAC06  ',
+  fields( 7,1) = 'TRAC07  ',
+  fields( 8,1) = 'TRAC08  ',
+  fields( 9,1) = 'TRAC09  ',
+  fields(10,1) = 'TRAC10  ',
+  fields(11,1) = 'TRAC11  ',
+  fields(12,1) = 'TRAC12  ',
+  fields(13,1) = 'TRAC13  ',
+  fields(14,1) = 'TRAC14  ',
+  fields(15,1) = 'TRAC15  ',
+  fields(16,1) = 'TRAC16  ',
+  fields(17,1) = 'TRAC17  ',
+  fields(18,1) = 'TRAC18  ',
+  fields(19,1) = 'TRAC19  ',
+  fields(20,1) = 'TRAC20  ',
+  fields(21,1) = 'TRAC21  ',
+  fields(22,1) = 'TRAC22  ',
+  fields(23,1) = 'TRAC23  ',
+  fields(24,1) = 'TRAC24  ',
+  fields(25,1) = 'TRAC25  ',
+  fields(26,1) = 'TRAC26  ',
+  fields(27,1) = 'TRAC27  ',
+  fields(28,1) = 'TRAC28  ',
+  fields(29,1) = 'TRAC29  ',
+  fields(30,1) = 'TRAC30  ',
+  fields(31,1) = 'TRAC31  ',
+  fields(32,1) = 'TRAC32  ',
+  fields(33,1) = 'TRAC33  ',
+  fields(34,1) = 'TRAC34  ',
+  fields(35,1) = 'TRAC35  ',
+  fields(36,1) = 'TRAC36  ',
+
+  filename( 3) = 'General_2d',
+  frequency(3) = 31104000.,
+# frequency(3) = 2592000.,
+  fields(1,3) = 'surfPAR ',
+  fields(2,3) = 'DARice  ',
+  fields(3,3) = 'MXLDEPTH',
+# fields(4,3) = 'KPPhbl  ', ! FIXED: KPPhbl is pkg/kpp's own
+# boundary-layer-depth diagnostic -- pkg/kpp isn't compiled here (GGL90
+# replaced it, see code_darwin_offline/packages.conf), so this crashed
+# with "DIAGNOSTICS_SET_POINTERS: KPPhbl is not a Diagnostic" on the
+# first-ever run attempt. No GGL90 equivalent exists (GGL90 is a
+# TKE-mixing scheme, not a boundary-layer-depth calculation) -- dropped
+# outright rather than guessing a replacement name, matching how
+# PTRACERS_useKPP was already handled. MXLDEPTH above (grid/scheme-
+# independent mixed-layer depth) already covers the same physical role.
+
+ filename(4)='PP',
+ frequency(4) = 31104000.,
+#frequency(4) = 2592000.,
+  fields(  1,4 ) = 'PP0001  ',
+  fields(  2,4 ) = 'PP0002  ',
+  fields(  3,4 ) = 'PP0003  ',
+  fields(  4,4 ) = 'PP0004  ',
+  fields(  5,4 ) = 'PP0005  ',
+  fields(  6,4 ) = 'PP0006  ',
+
+  filename(5)='fnut',
+  frequency(5) = 31104000.,
+# frequency(5) = 2592000.,
+  fields(  1,5 ) = 'fnut0001',
+  fields(  2,5 ) = 'fnut0002',
+  fields(  3,5 ) = 'fnut0003',
+  fields(  4,5 ) = 'fnut0004',
+  fields(  5,5 ) = 'fnut0005',
+  fields(  6,5 ) = 'fnut0006',
+
+  filename(6)='fIph',
+# frequency(6) = 31104000.,
+  frequency(6) = 2592000.,
+  fields(  1,6 ) = 'fIph0001',
+  fields(  2,6 ) = 'fIph0002',
+  fields(  3,6 ) = 'fIph0003',
+  fields(  4,6 ) = 'fIph0004',
+  fields(  5,6 ) = 'fIph0005',
+  fields(  6,6 ) = 'fIph0006',
+
+  filename(7)='fTph',
+  frequency(7) = 31104000.,
+# frequency(7) = 2592000.,
+  fields(  1,7 ) = 'fTph0001',
+  fields(  2,7 ) = 'fTph0002',
+  fields(  3,7 ) = 'fTph0003',
+  fields(  4,7 ) = 'fTph0004',
+  fields(  5,7 ) = 'fTph0005',
+  fields(  6,7 ) = 'fTph0006',
+
+  filename(8)='limN',
+  frequency(8) = 31104000.,
+# frequency(8) = 2592000.,
+  fields(  1,8 ) = 'limN0001',
+  fields(  2,8 ) = 'limN0002',
+  fields(  3,8 ) = 'limN0003',
+  fields(  4,8 ) = 'limN0004',
+  fields(  5,8 ) = 'limN0005',
+  fields(  6,8 ) = 'limN0006',
+
+  filename(9)='limF',
+  frequency(9) = 31104000.,
+# frequency(9) = 2592000.,
+  fields(  1,9 ) = 'limF0001',
+  fields(  2,9 ) = 'limF0002',
+  fields(  3,9 ) = 'limF0003',
+  fields(  4,9 ) = 'limF0004',
+  fields(  5,9 ) = 'limF0005',
+  fields(  6,9 ) = 'limF0006',
+
+  filename(16)='limP',
+  frequency(16) = 31104000.,
+  fields(  1,16 ) = 'limP0001',
+  fields(  2,16 ) = 'limP0002',
+  fields(  3,16 ) = 'limP0003',
+  fields(  4,16 ) = 'limP0004',
+  fields(  5,16 ) = 'limP0005',
+  fields(  6,16 ) = 'limP0006',
+
+  filename(17)='limS',
+  frequency(17) = 31104000.,
+  fields(  1,17 ) = 'limS0001',
+  fields(  2,17 ) = 'limS0002',
+  fields(  3,17 ) = 'limS0003',
+  fields(  4,17 ) = 'limS0004',
+  fields(  5,17 ) = 'limS0005',
+  fields(  6,17 ) = 'limS0006',
+
+
+#
+  filename( 10) = 'General_3d',
+  frequency(10) = 31104000.,
+# frequency(10) = 2592000.,
+  fields(1,10) = 'PP      ',
+  fields(2,10) = 'Nfix    ',
+  fields(3,10) = 'Denit   ',
+  fields(6,10) = 'PAR     ',
+  fields(7,10) = 'Chl     ',
+  fields(8,10) = 'plankC  ',
+  fields(9,10) = 'THETA   ',
+
+#
+# filename( 11) = 'THETA',
+# frequency(11) = 2592000.,
+# fields(1,11) = 'THETA   ',
+
+  filename( 12) = 'GROW',
+  frequency(12) = 31104000.,
+# frequency(12) = 2592000.,
+  fields(  1,12) = 'PC0001  ',
+  fields(  2,12) = 'PC0002  ',
+  fields(  3,12) = 'PC0003  ',
+  fields(  4,12) = 'PC0004  ',
+  fields(  5,12) = 'PC0005  ',
+  fields(  6,12) = 'PC0006  ',
+  fields(  7,12) = 'PC0007  ',
+  fields(  8,12) = 'PC0008  ',
+  fields(  9,12) = 'PC0009  ',
+  fields( 10,12) = 'PC0010  ',
+
+  filename( 13) = 'MORT',
+  frequency(13) = 31104000.,
+# frequency(13) = 2592000.,
+  fields(  1,13) = 'Mort0001  ',
+  fields(  2,13) = 'Mort0002',
+  fields(  3,13) = 'Mort0003',
+  fields(  4,13) = 'Mort0004',
+  fields(  5,13) = 'Mort0005',
+  fields(  6,13) = 'Mort0006',
+  fields(  7,13) = 'Mort0007',
+  fields(  8,13) = 'Mort0008',
+  fields(  9,13) = 'Mort0009',
+  fields( 10,13) = 'Mort0010',
+
+  filename( 14) = 'GR',
+  frequency(14) = 31104000.,
+# frequency(14) = 2592000.,
+  fields(  1,14) = 'GR0001  ',
+  fields(  2,14) = 'GR0002  ',
+  fields(  3,14) = 'GR0003  ',
+  fields(  4,14) = 'GR0004  ',
+  fields(  5,14) = 'GR0005  ',
+  fields(  6,14) = 'GR0006  ',
+  fields(  7,14) = 'GR0007  ',
+  fields(  8,14) = 'GR0008  ',
+  fields(  9,14) = 'GR0009  ',
+  fields( 10,14) = 'GR0010  ',
+
+ filename( 15) = 'nutr_tend',
+  frequency(15) = 31104000.,
+# frequency(15) = 2592000.,
+  fields( 1,15) = 'Tp_gTr01  ',
+ fields( 2,15) = 'Tp_gTr02  ',
+ fields( 3,15) = 'Tp_gTr03  ',
+  fields( 4,15) = 'Tp_gTr04  ',
+  fields( 5,15) = 'Tp_gTr05  ',
+  fields( 6,15) = 'Tp_gTr06  ',
+  fields( 7,15) = 'Tp_gTr07  ',
+  fields( 8,15) = 'gDAR01  ',
+  fields( 9,15) = 'gDAR02  ',
+  fields(10,15) = 'gDAR03  ',
+  fields(11,15) = 'gDAR04  ',
+  fields(12,15) = 'gDAR05  ',
+ fields(13,15) = 'gDAR06  ',
+  fields(14,15) = 'gDAR07  ',
+  fields(15,15) = 'S_DIN   ',
+  fields(16,15) = 'S_PO4   ',
+  fields(17,15) = 'S_Si    ',
+  fields(18,15) = 'S_Fe    ',
+#
+
+&
+
+# Parameter for Diagnostics of per level statistics:
+#-----------------
+# for each output-stream:
+#  stat_fname(n) : prefix of the output file name (only 8.c long) for
+#outp.stream n
+#  stat_freq(n):< 0 : write snap-shot output every |stat_freq| seconds
+#               > 0 : write time-average output every stat_freq seconds
+#  stat_phase(n): write at time = stat_phase + multiple of |stat_freq|
+#  stat_region(:,n) : list of "regions" (default: 1 region only=global)
+#  stat_fields(:,n) : list of diagnostics fields (8.c) (see
+#"available_diagnostics.log"
+#                 file for the list of all available diag. in this particular
+#config)
+#-----------------
+ &DIAG_STATIS_PARMS
+ diagst_mnc=.FALSE.,
+     stat_freq(1:3)= 3*10800.,
+    stat_phase(1:3)= 3*0.,
+ stat_fields(1,1)= 'PP      '
+ stat_fields(1,2)= 'Nfix    '
+ stat_fields(1,3)= 'Denit   '
+    stat_fname(1)= 'statsPP',
+    stat_fname(2)= 'statsNfix',
+    stat_fname(3)= 'statsDenit',
+ &

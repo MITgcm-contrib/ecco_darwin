@@ -1,0 +1,15 @@
+# *******************
+# Calendar Parameters
+# *******************
+#
+# Changed vs. Steph's: TheCalendar='gregorian' (was 'model', a
+# 360-day idealized calendar) and startDate matches ECCOv4r6's real
+# record start (12Z 1992/1/1 -- its own nTimeSteps=298031 at hourly
+# deltaT is computed against real Gregorian leap years, so 'model'
+# would silently misalign the offline forcing calendar against it).
+ &CAL_NML
+ TheCalendar='gregorian',
+ startDate_1=19920101,
+ startDate_2=120000,
+ calendarDumps = .TRUE.
+ &

@@ -1,0 +1,69 @@
+# SUPERSEDED as a standalone file: these exact 10 fields are
+# now merged directly into input_v4r6_forward/data.diagnostics (indices
+# 169-178, appended after the official release's own 168 streams).
+# Left here as a record of the field list on its own; if you need to
+# re-derive or re-merge it, this is the source.
+#
+# Diagnostics list to add to a V4r6 forward-run's own data.diagnostics
+# (not part of input_darwin_offline/ -- that's a separate config, the
+# ECCOv4r6 forward run itself, that generates the archive our offline run
+# consumes). Field names verified against the real
+# bathy/grid/ECCO_V4r5/available_diagnostics.log for this exact model
+# build, not guessed: THETA, SALT, UVEL, VVEL, WVEL, GM_Kwx/Kwy/Kwz,
+# GGL90Kr, SFLUX all exist there with those exact names.
+#
+# This produces one diagnostics "stream" per field, each dumped daily
+# (frequency=86400., matching Steph's original ECCO_Iter3.73daily_360days
+# convention -- the archive our offline run consumes should keep the same
+# daily-mean cadence, now against a real calendar rather than the 360-day
+# one). Append these &diagnostics_list entries into the forward run's
+# existing data.diagnostics (renumbering filename/fields/frequency indices
+# to avoid colliding with whatever streams are already defined there).
+#
+# GGL90Kr is the one genuinely new field vs. Steph's original archive
+# (which saved KPP's DKPPdiffs/DKPPghatK instead) -- see
+# ECCO/offline/code_offline_ggl90/ for why pkg/offline needs a patch to
+# consume it, and note there is no GGL90 analog to save for DKPPghatK
+# (GGL90 has no non-local "ghat" flux term).
+#
+ &diagnostics_list
+  filename( 1) = 'archive_theta',
+  frequency(1) = 86400.,
+  fields( 1,1) = 'THETA   ',
+#
+  filename( 2) = 'archive_salt',
+  frequency(2) = 86400.,
+  fields( 1,2) = 'SALT    ',
+#
+  filename( 3) = 'archive_uvel',
+  frequency(3) = 86400.,
+  fields( 1,3) = 'UVEL    ',
+#
+  filename( 4) = 'archive_vvel',
+  frequency(4) = 86400.,
+  fields( 1,4) = 'VVEL    ',
+#
+  filename( 5) = 'archive_wvel',
+  frequency(5) = 86400.,
+  fields( 1,5) = 'WVEL    ',
+#
+  filename( 6) = 'archive_gmkwx',
+  frequency(6) = 86400.,
+  fields( 1,6) = 'GM_Kwx  ',
+#
+  filename( 7) = 'archive_gmkwy',
+  frequency(7) = 86400.,
+  fields( 1,7) = 'GM_Kwy  ',
+#
+  filename( 8) = 'archive_gmkwz',
+  frequency(8) = 86400.,
+  fields( 1,8) = 'GM_Kwz  ',
+#
+  filename( 9) = 'archive_ggl90kr',
+  frequency(9) = 86400.,
+  fields( 1,9) = 'GGL90Kr ',
+#
+  filename(10) = 'archive_sflux',
+  frequency(10) = 86400.,
+  fields( 1,10) = 'SFLUX   ',
+ /

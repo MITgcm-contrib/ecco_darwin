@@ -1,0 +1,154 @@
+ &PTRACERS_PARM01
+ PTRACERS_numInUse= 36,
+ PTRACERS_Iter0= 0,
+#
+ PTRACERS_advScheme(:)= 36*33,
+ PTRACERS_diffKh(:)= 36*0.0,
+ PTRACERS_diffKr(:)= 36*1D-05,
+ PTRACERS_useGMRedi(:)= 36*.TRUE.,
+# PTRACERS_useKPP dropped: pkg/kpp is no longer compiled (replaced by
+# GGL90 -- see code_darwin_offline/packages.conf). It was declared
+# unconditionally in PTRACERS_PARAMS.h so leaving it wouldn't break
+# the namelist read, but it would be a misleading dead value implying
+# KPP is still active. GGL90's mixing is not gated per-tracer the way
+# KPP's was -- it folds into the same shared KappaRx vertical
+# diffusivity every tracer already receives, unconditionally.
+#
+ PTRACERS_names(  1)= 'DIC',
+ PTRACERS_names(  2)= 'NO3',
+ PTRACERS_names(  3)= 'NO2',
+ PTRACERS_names(  4)= 'NH4',
+ PTRACERS_names(  5)= 'PO4',
+ PTRACERS_names(  6)= 'FeT',
+ PTRACERS_names(  7)= 'SiO2',
+ PTRACERS_names(  8)= 'DOC',
+ PTRACERS_names(  9)= 'DON',
+ PTRACERS_names( 10)= 'DOP',
+ PTRACERS_names( 11)= 'DOFe',
+ PTRACERS_names( 12)= 'POC',
+ PTRACERS_names( 13)= 'PON',
+ PTRACERS_names( 14)= 'POP',
+ PTRACERS_names( 15)= 'POFe',
+ PTRACERS_names( 16)= 'POSi',
+ PTRACERS_names( 17)= 'PIC',
+ PTRACERS_names( 18)= 'ALK',
+ PTRACERS_names( 19)= 'O2',
+ PTRACERS_names( 20)= 'CDOM',
+ PTRACERS_names( 21)= 'c01',
+ PTRACERS_names( 22)= 'c02',
+ PTRACERS_names( 23)= 'c03',
+ PTRACERS_names( 24)= 'c04',
+ PTRACERS_names( 25)= 'c05',
+ PTRACERS_names( 26)= 'c06',
+ PTRACERS_names( 27)= 'c07',
+ PTRACERS_names( 28)= 'c08',
+ PTRACERS_names( 29)= 'c09',
+ PTRACERS_names( 30)= 'c10',
+ PTRACERS_names( 31)= 'Chl01',
+ PTRACERS_names( 32)= 'Chl02',
+ PTRACERS_names( 33)= 'Chl03',
+ PTRACERS_names( 34)= 'Chl04',
+ PTRACERS_names( 35)= 'Chl05',
+ PTRACERS_names( 36)= 'Chl06',
+#
+ PTRACERS_units(  1)= 'mmol C/m^3'
+ PTRACERS_units(  2)= 'mmol N/m^3'
+ PTRACERS_units(  3)= 'mmol N/m^3'
+ PTRACERS_units(  4)= 'mmol N/m^3'
+ PTRACERS_units(  5)= 'mmol P/m^3'
+ PTRACERS_units(  6)= 'mmol Fe/m^3'
+ PTRACERS_units(  7)= 'mmol Si/m^3'
+ PTRACERS_units(  8)= 'mmol C/m^3'
+ PTRACERS_units(  9)= 'mmol N/m^3'
+ PTRACERS_units( 10)= 'mmol P/m^3'
+ PTRACERS_units( 11)= 'mmol Fe/m^3'
+ PTRACERS_units( 12)= 'mmol C/m^3'
+ PTRACERS_units( 13)= 'mmol N/m^3'
+ PTRACERS_units( 14)= 'mmol P/m^3'
+ PTRACERS_units( 15)= 'mmol Fe/m^3'
+ PTRACERS_units( 16)= 'mmol Si/m^3'
+ PTRACERS_units( 17)= 'mmol C/m^3'
+ PTRACERS_units( 18)= 'mmol eq/m^3'
+ PTRACERS_units( 19)= 'mmol O/m^3'
+ PTRACERS_units( 20)= 'mmol C/m^3'
+ PTRACERS_units( 21)= 'mmol C/m^3'
+ PTRACERS_units( 22)= 'mmol C/m^3'
+ PTRACERS_units( 23)= 'mmol C/m^3'
+ PTRACERS_units( 24)= 'mmol C/m^3'
+ PTRACERS_units( 25)= 'mmol C/m^3'
+ PTRACERS_units( 26)= 'mmol C/m^3'
+ PTRACERS_units( 27)= 'mmol C/m^3'
+ PTRACERS_units( 28)= 'mmol C/m^3'
+ PTRACERS_units( 29)= 'mmol C/m^3'
+ PTRACERS_units( 30)= 'mmol C/m^3'
+ PTRACERS_units( 31)= 'mg Chl a/m^3'
+ PTRACERS_units( 32)= 'mg Chl a/m^3'
+ PTRACERS_units( 33)= 'mg Chl a/m^3'
+ PTRACERS_units( 34)= 'mg Chl a/m^3'
+ PTRACERS_units( 35)= 'mg Chl a/m^3'
+ PTRACERS_units( 36)= 'mg Chl a/m^3'
+#
+# Regridded by run_regrid_steph_ics.py (regrid_to_llc90.py's real
+# pipeline, run on Steph's actual delivered files under steph_input/ICs/).
+# Every path below is a bare filename -- readme.txt Part 7 symlinks
+# regridded_llc90/* into the run directory, same convention as the mitgrid
+# files. Trailing comments give the original 1x1-degree source filename for
+# traceability.
+#
+# REVERTED: tracers 21-26 (c01-c06, the 6 photosynthetic groups)
+# briefly had NO PTRACERS_initialFile, cold-
+# starting at PTRACERS_ref=0.0 -- meant to force Chl01-06 (tracers 31-36)
+# to zero too, since darwin_init_chl.F unconditionally recomputes Chl at
+# cold start as chltmp=MAX(carbon*chl2cmin,...) and zeroing carbon was the
+# only lever that reached exactly zero. This had a serious, unintended
+# side effect, only caught by actually running the model: growth/uptake in
+# darwin_plankton.F is purely multiplicative (every term scales with the
+# group's own existing biomass X(j)), so a group cold-started at EXACTLY
+# zero can never grow -- confirmed empirically (still bit-exact zero after
+# 120 real hours of integration in the first test run) and confirmed
+# against source (every uptake term is "...*X(j)"). c01-c06 would have
+# stayed at zero for the entire 34-year run, not just at t=0.
+#
+# Root confusion: Steph's own convention (confirmed directly,)
+# is that Chl starts with NO file (implicit 0 in the namelist), but the
+# ACTUAL runtime cold-start value is never literally zero -- it's
+# immediately "instant-acclimated" via that same chltmp formula, using
+# REAL nonzero biomass. Her own data.ptracers uses the SAME
+# biomass_run33_4_28800.bin restart for ALL 10 plankton tracers (21-30),
+# not just the 4 Zoo ones -- zeroing c01-c06's carbon was never her
+# practice. Reverted to match: c01-c06 get the same real biomass restart
+# c07-c10 already used, Chl01-06 keep no initial file (matching Steph's
+# convention exactly -- their real cold-start value now comes from
+# genuine acclimation against nonzero biomass, not a forced zero).
+#
+# Tracers 1 and 18 (DIC, ALK) SWITCHED from
+# 1-degree GLODAP climatologies to real LLC270-native fields
+# (steph_input/v06/ICs/), regridded via regrid_llc270_to_llc90
+# (nearest-wet-neighbor on the native cube-sphere grid -- see
+# regrid_to_llc90.py's LLC270 section and run_regrid_v06_llc270_ics.py).
+# Only these two come from that directory: NO3/PO4/FeT/SiO2/O2 were also
+# briefly switched to LLC270 sources from it, then reverted. Those five
+# stay on Steph's
+# 1-degree files below, unchanged from the original port.
+ PTRACERS_initialFile(  1)= 'DIC_llc270_to_llc90.bin',                 ! steph_input/v06/ICs/DIC.R4_270x3510x50.bin
+ PTRACERS_initialFile(  2)= 'lev01_nitrate_ann-3d_llc90.bin',           ! lev01_nitrate_ann-3d.bin
+ PTRACERS_initialFile(  3)= 'ptr03_run33_4_28800_llc90.bin',           ! ptr03_run33_4_28800.bin
+ PTRACERS_initialFile(  4)= 'ptr04_run33_4_28800_llc90.bin',           ! ptr04_run33_4_28800.bin
+ PTRACERS_initialFile(  5)= 'lev01_phosphate_ann-3d_llc90.bin',        ! lev01_phosphate_ann-3d.bin
+ PTRACERS_initialFile(  6)= 'ptr06_run33_4_28800_llc90.bin',           ! ptr06_run33_4_28800.bin
+ PTRACERS_initialFile(  7)= 'lev01_silicate_ann-3d_llc90.bin',         ! lev01_silicate_ann-3d.bin
+ PTRACERS_initialFile(  8)= 'ptr08_run33_4_28800_llc90.bin',           ! ptr08_run33_4_28800.bin
+ PTRACERS_initialFile(  9)= 'ptr09_run33_4_28800_llc90.bin',           ! ptr09_run33_4_28800.bin
+ PTRACERS_initialFile( 10)= 'ptr10_run33_4_28800_llc90.bin',           ! ptr10_run33_4_28800.bin
+ PTRACERS_initialFile( 11)= 'ptr11_run33_4_28800_llc90.bin',           ! ptr11_run33_4_28800.bin
+ PTRACERS_initialFile( 12)= 'ptr12_run33_4_28800_llc90.bin',           ! ptr12_run33_4_28800.bin
+ PTRACERS_initialFile( 13)= 'ptr13_run33_4_28800_llc90.bin',           ! ptr13_run33_4_28800.bin
+ PTRACERS_initialFile( 14)= 'ptr14_run33_4_28800_llc90.bin',           ! ptr14_run33_4_28800.bin
+ PTRACERS_initialFile( 15)= 'ptr15_run33_4_28800_llc90.bin',           ! ptr15_run33_4_28800.bin
+ PTRACERS_initialFile( 16)= 'ptr16_run33_4_28800_llc90.bin',           ! ptr16_run33_4_28800.bin
+ PTRACERS_initialFile( 17)= 'ptr17_run33_4_28800_llc90.bin',           ! ptr17_run33_4_28800.bin
+ PTRACERS_initialFile( 18)= 'ALK_llc270_to_llc90.bin',                 ! steph_input/v06/ICs/ALK.R4_270x3510x50.bin
+ PTRACERS_initialFile( 19)= 'lev01_oxygen_micromolar_ann-3d_llc90.bin',! lev01_oxygen_micromolar_ann-3d.bin
+ PTRACERS_initialFile( 20)= 'ptr20_run33_4_28800_llc90.bin',           ! ptr20_run33_4_28800.bin
+ PTRACERS_initialFile( 21: 30)= 10*'biomass_run33_4_28800_llc90.bin',  ! biomass_run33_4_28800.bin
+ /

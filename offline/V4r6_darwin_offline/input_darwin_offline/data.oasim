@@ -1,0 +1,175 @@
+#
+# Added: copied verbatim from ecco_darwin's
+# v06/1deg/input_darwin_v4r5_v2/data.oasim -- Steph's original config had no
+# data.oasim at all (she used precomputed RT_EdFile/RT_EsFile in
+# data.radtrans instead; see that file's own header for what changed there).
+#
+# None of these 11 atmospheric fields need Python pre-regridding: pkg/oasim's
+# own reader interpolates at runtime from each field's native grid (given
+# the _lon0/_lat0/_nlon/_nlat/_lat_inc block below) onto this run's own
+# xC/yC -- same mechanism already used for iron (data.darwin) and pCO2File.
+# Every field below is a full-globe 1x1-degree grid (-179.5..179.5,
+# -89.5..89.5), the SAME convention across all 11 fields (unlike iron/pCO2,
+# which each have their own distinct native grid).
+#
+# Filenames are bare (oasim/C61extrap/R4/<name>) -- these are all real
+# files at that relative path under run_offline_llc90/, built by
+# readme.txt Part 7's util/archive/build_oasim_mds.py
+# (not a symlink to the shared source at /nobackup/ojahn/forcing/oasim,
+# which is read-only and organized as one file per calendar year --
+# aertauFile/asympFile/ssalbFile also one file per waveband, per
+# OASIM_SIZE.h's nltaer=33 -- see that script's own docstring).
+# oasim_atmoFile/oasim_waterFile/oasim_slingoFile (oasim/bcs/*.dat) are
+# wavelength-indexed optical lookup tables, not lon/lat fields -- symlinked
+# individually by the same script (not time-varying, no concatenation
+# needed), same as darwin_waterabsorbFile/etc. in data.darwin.
+#
+ &OASIM_FORCING_PARM
+ cldcovFile = 'oasim/C61extrap/R4/ccov',
+ cldlwpFile = 'oasim/C61extrap/R4/rlwp',
+ cldreFile  = 'oasim/C61extrap/R4/cdre',
+#
+ presFile   = 'oasim/C61extrap/R4/slp',
+ OAwindFile = 'oasim/C61extrap/R4/wsm',
+ relhumFile = 'oasim/C61extrap/R4/rh',
+ ozoneFile  = 'oasim/C61extrap/R4/oz',
+ wvFile     = 'oasim/C61extrap/R4/wv',
+#
+ aertauFile = 'oasim/C61extrap/R4/taua',
+ asympFile  = 'oasim/C61extrap/R4/asymp',
+ ssalbFile  = 'oasim/C61extrap/R4/ssalb',
+#
+# FIXED: none of these 11 fields had a startdate1/startdate2,
+# discovered on the first-ever run attempt -- EXF_GETFFIELD_START (the
+# shared pkg/exf routine OASIM_EXF_INIT_FIXED calls for every field)
+# calls CAL_FULLDATE(fld_startdate1, fld_startdate2, ...) whenever
+# fld_period.EQ.-1 .AND. .NOT.useYearlyFields -- true for every field
+# here, since Period=-1 and useOasimYearlyFields is (correctly) unset.
+# That is NOT "no date needed": period=-1 without useYearlyFields still
+# needs a real reference date as an anchor for the annual cycle, it just
+# doesn't need one PER file the way a real multi-year record would.
+# (useOasimYearlyFields itself is unrelated -- it means "one file per
+# calendar year, named <file>_YYYY", like the BGC runoff files; our
+# OASIM files are single perpetual files with no _YYYY suffix, so that
+# flag would be the wrong fix.) With no startdate ever set, fld_startdate1
+# defaulted to 0, and CAL_CHECKDATE rejected it ("Invalid month in
+# date(1)=0") -- a hard crash on the very first run, not a silent bug.
+# Anchor date matches this source's own real first record (1991-01-01,
+# confirmed via build_oasim_mds.py's output -- same real start year as
+# the BGC runoff source, coincidentally, but NOT the same as
+# icestartdate1/RT_icestartdate1/pCO2startdate1, which each match their
+# OWN different source's real first record, not each other's). Always
+# match the actual source data's own first record, not another file's.
+ cldcovPeriod = -1,
+ cldcovstartdate1 = 19910101, cldcovstartdate2 = 120000,
+ cldlwpPeriod = -1,
+ cldlwpstartdate1 = 19910101, cldlwpstartdate2 = 120000,
+ cldrePeriod = -1,
+ cldrestartdate1 = 19910101, cldrestartdate2 = 120000,
+#
+ presPeriod = -1,
+ presstartdate1 = 19910101, presstartdate2 = 120000,
+ OAwindPeriod = -1,
+ oawindstartdate1 = 19910101, oawindstartdate2 = 120000,
+ relhumPeriod = -1,
+ relhumstartdate1 = 19910101, relhumstartdate2 = 120000,
+ ozonePeriod = -1,
+ ozonestartdate1 = 19910101, ozonestartdate2 = 120000,
+ wvPeriod = -1,
+ wvstartdate1 = 19910101, wvstartdate2 = 120000,
+#
+ aertauPeriod = -1,
+ aerTaustartdate1 = 19910101, aerTaustartdate2 = 120000,
+ asympPeriod = -1,
+ asympstartdate1 = 19910101, asympstartdate2 = 120000,
+ ssalbPeriod = -1,
+ ssalbstartdate1 = 19910101, ssalbstartdate2 = 120000,
+ &
+ &OASIM_INTERP_PARM
+ cldcov_lon0    = -179.5,
+ cldcov_lon_inc = 1.,
+ cldcov_lat0    = -89.5,
+ cldcov_lat_inc = 179*1.,
+ cldcov_nlon    = 360,
+ cldcov_nlat    = 180,
+#
+ cldlwp_lon0    = -179.5,
+ cldlwp_lon_inc = 1.,
+ cldlwp_lat0    = -89.5,
+ cldlwp_lat_inc = 179*1.,
+ cldlwp_nlon    = 360,
+ cldlwp_nlat    = 180,
+#
+ cldre_lon0    = -179.5,
+ cldre_lon_inc = 1.,
+ cldre_lat0    = -89.5,
+ cldre_lat_inc = 179*1.,
+ cldre_nlon    = 360,
+ cldre_nlat    = 180,
+#
+ pres_lon0    = -179.5,
+ pres_lon_inc = 1.,
+ pres_lat0    = -89.5,
+ pres_lat_inc = 179*1.,
+ pres_nlon    = 360,
+ pres_nlat    = 180,
+#
+ OAwind_lon0    = -179.5,
+ OAwind_lon_inc = 1.,
+ OAwind_lat0    = -89.5,
+ OAwind_lat_inc = 179*1.,
+ OAwind_nlon    = 360,
+ OAwind_nlat    = 180,
+#
+ relhum_lon0    = -179.5,
+ relhum_lon_inc = 1.,
+ relhum_lat0    = -89.5,
+ relhum_lat_inc = 179*1.,
+ relhum_nlon    = 360,
+ relhum_nlat    = 180,
+#
+ ozone_lon0    = -179.5,
+ ozone_lon_inc = 1.,
+ ozone_lat0    = -89.5,
+ ozone_lat_inc = 179*1.,
+ ozone_nlon    = 360,
+ ozone_nlat    = 180,
+#
+ wv_lon0    = -179.5,
+ wv_lon_inc = 1.,
+ wv_lat0    = -89.5,
+ wv_lat_inc = 179*1.,
+ wv_nlon    = 360,
+ wv_nlat    = 180,
+#
+ aertau_lon0    = -179.5,
+ aertau_lon_inc = 1.,
+ aertau_lat0    = -89.5,
+ aertau_lat_inc = 179*1.,
+ aertau_nlon    = 360,
+ aertau_nlat    = 180,
+#
+ asymp_lon0    = -179.5,
+ asymp_lon_inc = 1.,
+ asymp_lat0    = -89.5,
+ asymp_lat_inc = 179*1.,
+ asymp_nlon    = 360,
+ asymp_nlat    = 180,
+#
+ ssalb_lon0    = -179.5,
+ ssalb_lon_inc = 1.,
+ ssalb_lat0    = -89.5,
+ ssalb_lat_inc = 179*1.,
+ ssalb_nlon    = 360,
+ ssalb_nlat    = 180,
+#
+ &
+ &OASIM_PARM
+ oasim_atmoFile   = 'oasim/bcs/atmo25b.dat',
+ oasim_waterFile  = 'oasim/bcs/abw25b.dat',
+ oasim_slingoFile = 'oasim/bcs/slingo.dat',
+#
+ oasim_dTsolz = 900.,
+ &
+ &OASIM_3STREAM_PARM
+ &

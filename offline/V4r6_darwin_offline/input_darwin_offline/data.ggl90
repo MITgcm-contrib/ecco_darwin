@@ -1,0 +1,34 @@
+# =====================================================================
+# | Parameters for Gaspar et al. (1990)'s TKE vertical mixing scheme  |
+# =====================================================================
+#
+# ADDED: pkg/ggl90 is compiled in (packages.conf) and
+# useGGL90=.TRUE. (data.pkg), but this repo had no data.ggl90 -- a
+# genuine gap, not a deliberate omission: ggl90_readparms.F opens
+# 'data.ggl90' with STATUS='OLD' unconditionally whenever the package is
+# compiled in, regardless of whether its own computed diffusivity ends
+# up used, so its absence would be a fatal file-not-found at runtime.
+#
+# Fetched verbatim from ECCO-GROUP/ECCO-v4-Configurations's own
+# "ECCOv4 Release 6"/namelist/data.ggl90 -- the same source
+# already used for delR/tRef/sRef in input_darwin_offline/data,
+# rather than invented. Note this offline run's own GGL90diffKrFile
+# (data.off) overwrites GGL90diffKr from the converted V4r6 archive every
+# timestep (see code_offline_ggl90/offline_get_diffus.F), the same
+# pattern Steph's original setup used for KPP -- so these TKE-scheme
+# parameters govern pkg/ggl90's own online calculation, which is
+# superseded by that offline-loaded value; they are needed for
+# ggl90_readparms.F to succeed, not because the online TKE scheme
+# actually determines the mixing used here.
+ &GGL90_PARM01
+# GGL90taveFreq = 345600000.,
+# GGL90dumpFreq = 86400.,
+# GGL90writeState=.FALSE.,
+# GGL90diffTKEh=3.e3,
+ GGL90alpha=30.,
+# GGL90TKEFile = 'TKE_init.bin',
+ GGL90TKEmin  = 1.e-7,
+ GGL90TKEbottom = 1.e-6,
+ mxlMaxFlag =2,
+ mxlSurfFlag=.TRUE.,
+ /
