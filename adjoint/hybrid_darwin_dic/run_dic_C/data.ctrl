@@ -1,0 +1,18 @@
+ &ctrl_nml
+ doSinglePrecTapelev=.TRUE.,
+ ctrlSmoothCorrel2D=.FALSE.,
+ ctrlSmoothCorrel3D=.FALSE.,
+ /
+ &ctrl_packnames
+ ctrlname='ecco_ctrl',
+ costname='ecco_cost',
+ /
+ &CTRL_NML_GENARR
+# PO4 only, registered as a single control in slot 1. Run as an
+# independent cross-check of the 7-control extraction's PO4 gradient;
+# the two agree bit-for-bit, so either may be used.
+ xx_genarr3d_weight(1) = 'wt_PO4.bin',
+ xx_genarr3d_file(1)='xx_ptr3',
+ mult_genarr3d(1) = 1.0,
+#
+ /

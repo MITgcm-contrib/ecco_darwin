@@ -1,0 +1,68 @@
+# *********************
+# ECCO controlvariables
+# *********************
+ &ctrl_nml
+ doSinglePrecTapelev=.TRUE.,
+ ctrlSmoothCorrel2D=.FALSE.,
+ ctrlSmoothCorrel3D=.FALSE.,
+ /
+# *********************
+# names for ctrl_pack/unpack
+# *********************
+ &ctrl_packnames
+ ctrlname='ecco_ctrl',
+ costname='ecco_cost',
+ /
+# *********************
+# names for CTRL_GENARR, CTRL_GENTIM
+# *********************
+ &CTRL_NML_GENARR
+# HYBRID DARWIN/DIC-PKG PILOT: all 7 fields registered, matching
+# global_oce_biogeo_dic_SOCAT's original config.
+#
+# SLOT ORDER MATTERS. In this configuration the gradient returned for
+# genarr3d slot 2 is not usable, so slot 2 must be occupied by a field
+# whose gradient is not needed -- here salt, whose adxx_salt output is
+# ignored. DIC and ALK are read from slots 3 and 4. Verified: DIC in
+# slot 3 and ALK in slot 4 agree BIT-FOR-BIT with the same fields run
+# as the sole registered control (slot 1) in run_dic_A / run_dic_B, so
+# a single 7-control run yields both gradients and the two separate
+# single-control runs are not required.
+#
+# Do not close the gap by leaving slot 2 blank: an interior blank slot
+# aborts the run in MDS_READ_FIELD on an empty filename.
+#
+# The DIC+ALK-only SCOPE is enforced downstream: pkg/dic optimizes all
+# 7 fields internally (its own trajectory sees theta/salt/PO4/DOP/O2
+# perturbations too), but apply_control_to_darwin_ic_dic.py only ever
+# reads xx_ptr1 (DIC) and xx_ptr2 (ALK) -- Darwin's IC for every other
+# tracer stays frozen at its prior value regardless.
+ xx_genarr3d_weight(1) = 'wt_theta.bin',
+ xx_genarr3d_file(1)='xx_theta',
+ mult_genarr3d(1) = 1.0,
+#
+ xx_genarr3d_weight(2) = 'wt_salt.bin',
+ xx_genarr3d_file(2)='xx_salt',
+ mult_genarr3d(2) = 1.0,
+#
+ xx_genarr3d_weight(3) = 'wt_DIC.bin',
+ xx_genarr3d_file(3)='xx_ptr1',
+ mult_genarr3d(3) = 1.0,
+#
+ xx_genarr3d_weight(4) = 'wt_ALK.bin',
+ xx_genarr3d_file(4)='xx_ptr2',
+ mult_genarr3d(4) = 1.0,
+#
+ xx_genarr3d_weight(5) = 'wt_PO4.bin',
+ xx_genarr3d_file(5)='xx_ptr3',
+ mult_genarr3d(5) = 1.0,
+#
+ xx_genarr3d_weight(6) = 'wt_DOP.bin',
+ xx_genarr3d_file(6)='xx_ptr4',
+ mult_genarr3d(6) = 1.0,
+#
+ xx_genarr3d_weight(7) = 'wt_O2.bin',
+ xx_genarr3d_file(7)='xx_ptr5',
+ mult_genarr3d(7) = 1.0,
+#
+ /

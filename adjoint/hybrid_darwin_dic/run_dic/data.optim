@@ -1,0 +1,20 @@
+# ********************************
+# Off-line optimization parameters
+# ********************************
+# HYBRID DARWIN/DIC-PKG PILOT: small numiter (5) -- mechanical shakeout of
+# the surrogate-gradient loop (does M1QN3 accept a (Darwin cost, pkg/dic
+# gradient) pair sanely, does the cost trajectory look reasonable) before
+# committing to a longer campaign, mirroring hybrid_darwin_bling's own
+# 1-month pilot. Fresh-start (optimcycle=0 cold-starts automatically,
+# optim_readparms.F:162).
+&OPTIM
+ optimcycle=2,
+ numiter=5,
+ nfunc=50,
+ dfminFrac = 0.1,
+ iprint=10,
+ nupdate=8,
+/
+
+&M1QN3
+/

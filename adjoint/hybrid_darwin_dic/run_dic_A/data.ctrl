@@ -1,0 +1,19 @@
+ &ctrl_nml
+ doSinglePrecTapelev=.TRUE.,
+ ctrlSmoothCorrel2D=.FALSE.,
+ ctrlSmoothCorrel3D=.FALSE.,
+ /
+ &ctrl_packnames
+ ctrlname='ecco_ctrl',
+ costname='ecco_cost',
+ /
+ &CTRL_NML_GENARR
+# HAND-ROLLED GRADIENT DESCENT: single control (DIC only, slot 1),
+# empirically confirmed clean (0 outliers) in every test so far. See
+# hybrid_darwin_dic/README.md for the slot-position bug this works
+# around -- we bypass M1QN3/optim.x entirely and read adxx_ptr1 directly.
+ xx_genarr3d_weight(1) = 'wt_DIC.bin',
+ xx_genarr3d_file(1)='xx_ptr1',
+ mult_genarr3d(1) = 1.0,
+#
+ /

@@ -1,0 +1,17 @@
+ &ctrl_nml
+ doSinglePrecTapelev=.TRUE.,
+ ctrlSmoothCorrel2D=.FALSE.,
+ ctrlSmoothCorrel3D=.FALSE.,
+ /
+ &ctrl_packnames
+ ctrlname='ecco_ctrl',
+ costname='ecco_cost',
+ /
+ &CTRL_NML_GENARR
+# HAND-ROLLED GRADIENT DESCENT: single control (ALK only, slot 1),
+# empirically confirmed clean (0 outliers) in every test so far.
+ xx_genarr3d_weight(1) = 'wt_ALK.bin',
+ xx_genarr3d_file(1)='xx_ptr2',
+ mult_genarr3d(1) = 1.0,
+#
+ /
