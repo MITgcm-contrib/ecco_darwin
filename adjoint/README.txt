@@ -26,3 +26,11 @@ hybrid_darwin_bling/         Hybrid Darwin(forward)/BLING(adjoint)
                               BLING's adjoint as an approximate gradient
                               for Darwin's own (independently computed)
                               cost function. See its README.md.
+
+hybrid_darwin_dic/           The same hybrid experiment driven by
+                              pkg/dic's adjoint in place of BLING's, on
+                              the 1-month SOCAT cost. Records both the
+                              M1QN3-driven loop, which stalled, and the
+                              manual steepest-descent loop that replaced
+                              it, along with the genarr3d slot-order
+                              constraint on data.ctrl. See its README.md.
