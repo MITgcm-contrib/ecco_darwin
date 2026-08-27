@@ -20,6 +20,13 @@ darwin_bling_comparison/     Pilot study comparing Darwin's forward
                               pCO2 cost function, at matched grid points.
                               See its README.md.
 
+darwin_dic_comparison/       The same 38-point comparison against
+                              pkg/dic's adjoint instead of BLING's, over
+                              all 5 of its prognostic tracers. Includes a
+                              retraction of an earlier PO4/DOP
+                              "corruption" finding that was an artifact of
+                              the diagnostic. See its README.md.
+
 hybrid_darwin_bling/         Hybrid Darwin(forward)/BLING(adjoint)
                               surrogate-gradient optimization of DIC/ALK
                               initial conditions against SOCAT, using
