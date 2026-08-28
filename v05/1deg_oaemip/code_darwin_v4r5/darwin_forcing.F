@@ -82,7 +82,7 @@ C  k                    :: vertical level
       _RL gDICsurfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL gNO3surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL gNO2surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL gNH4surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL gNH4surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)  
       _RL gPO4surfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL gFeTsurfForc(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL gSiO2surfForc(1-OLx:sNx+OLx, 1-OLy:sNy+OLy)
