@@ -84,7 +84,7 @@ def gen_surf_hFacC(bathy, delR, hFacMin, hFacMinDr):
 
 def gen_connected_mask(start_row, start_col, wet_grid):
 
-    if wet_grid[start_row,start_col]==0:
+    if wet_grid[start_col,start_row]==0:
         raise ValueError(' The start row/col location is  dry')
 
     rows = np.arange(np.shape(wet_grid)[0])
@@ -92,7 +92,7 @@ def gen_connected_mask(start_row, start_col, wet_grid):
     Cols,Rows = np.meshgrid(cols,rows)
 
     mask_grid = 1-np.copy(wet_grid)
-    mask_grid[start_row,start_col] = 2
+    mask_grid[start_col,start_row] = 2
     # in the mask: 0 = unverified; 1 = dry; 2 = wet
 
     is_remaining = np.logical_and(mask_grid==0,wet_grid==1)
