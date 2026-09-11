@@ -332,11 +332,13 @@ C         [CO3] = mol/kg
 C         [Ksp_TP_Calc] = mol^2/kg^2
           omegaC(i,j,k,bi,bj) = MAX(0 _d 0, calcium * CO3(i,j)) /
      &                          Ksp_TP_Calc(i,j,bi,bj)
-
+          omegaArag(i,j,k,bi,bj) = MAX(0 _d 0, calcium * CO3(i,j)) /
+     &                          Ksp_TP_Arag(i,j,bi,bj)
          ELSE
           pCO2(i,j)=0. _d 0
           CO3(i,j) = 0. _d 0
           omegaC(i,j,k,bi,bj) = 0 _d 0
+          omegaArag(i,j,k,bi,bj) = 0 _d 0
          ENDIF
 
 C      enddo i,j
@@ -433,6 +435,8 @@ C update tendency
          CALL DIAGNOSTICS_FILL(fugCO2,   'fCO2    ',0,1,2,bi,bj,myThid)
          CALL DIAGNOSTICS_FILL(FluxO2,   'fluxO2  ',0,1,2,bi,bj,myThid)
          CALL DIAGNOSTICS_FILL(FluxCO2,  'fluxCO2 ',0,1,2,bi,bj,myThid)
+         CALL DIAGNOSTICS_FILL(Kwexch,   'Kw      ',0,1,2,bi,bj,myThid)
+         CALL DIAGNOSTICS_FILL(ak0,      'alphaCO2',0,1,2,bi,bj,myThid)
 #ifdef ALLOW_OLD_VIRTUALFLUX
          CALL DIAGNOSTICS_FILL(VFluxCO2,'VfluxCO2',0,1,2,bi,bj,myThid)
          CALL DIAGNOSTICS_FILL(VFluxAlk,'VfluxAlk',0,1,2,bi,bj,myThid)
@@ -448,6 +452,7 @@ C      k is at surface
         CALL DIAGNOSTICS_FILL(pCO2,       'pCO2    ',k,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(CO3,        'CO3     ',k,1,2,bi,bj,myThid)
         CALL DIAGNOSTICS_FILL(Ksp_TP_Calc,'KspTPClc',k,1,1,bi,bj,myThid)
+        CALL DIAGNOSTICS_FILL(Ksp_TP_Arag,'KspTPArg',k,1,1,bi,bj,myThid)
        ENDIF
 #endif
 
@@ -459,6 +464,7 @@ C ======================================================================
       IF (useDiagnostics) THEN
        CALL DIAGNOSTICS_FILL(pH,    'pH      ',0,Nr,1,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(omegaC,'OmegaC  ',0,Nr,1,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(omegaArag,'OmegaAr ',0,Nr,1,bi,bj,myThid)
       ENDIF
 #endif
 
