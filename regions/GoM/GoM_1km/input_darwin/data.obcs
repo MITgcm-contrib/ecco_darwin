@@ -7,7 +7,7 @@
  OB_Ieast  =   1840*-1,
 #
  useOBCSprescribe=.TRUE.,
- useOBCSbalance  =.FALSE.,
+ useOBCSbalance  =.TRUE.,
 #
  OBNsFile='SALT_north.bin',
  OBNtFile='THETA_north.bin',
