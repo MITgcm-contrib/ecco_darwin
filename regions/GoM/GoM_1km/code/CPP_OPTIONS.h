@@ -47,7 +47,7 @@ C o Include/exclude balancing surface forcing relaxation code
 #define ALLOW_BALANCE_RELAX
 
 C o Include/exclude checking for negative salinity
-#define CHECK_SALINITY_FOR_NEGATIVE_VALUES
+C #define CHECK_SALINITY_FOR_NEGATIVE_VALUES
 
 C-- Options to discard parts of the main code:
 

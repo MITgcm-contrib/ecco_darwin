@@ -17,7 +17,7 @@
 #PBS -l site=needed=/home3+/nobackupp27
 
 module purge
-module load comp-intel mpi-hpe hdf4 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module load comp-intel mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
 module list
 
 umask 022
