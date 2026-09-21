@@ -364,41 +364,59 @@ boundary, ice forcing inputs — is **not** multi-year and still repeats a singl
 2022-typical year: interannual variability in this phase is deliberately isolated to
 river discharge + upstream DOC loading, not the whole forcing stack.
 
-**Source: PWBM** (Pan-Arctic Water Balance Model), Michael's monthly per-river output at
-`/Users/rsavelli/Documents/FORTE/Michael/river_timeseries_output/` — `runoff_monthly_timeseries_by_river.csv`
-and `DOC_monthly_timeseries_by_river.csv`, each a monthly SUM over all grid cells in a
-river's watershed (`watershed_cell_counts.csv` gives the cell count), 1980–2023, for
-exactly these four rivers. This directory is outside the repo and not vendored — `tools/build_interannual_forcings.py`
-reads it directly at build time and writes only the derived per-river daily series into
-`forcing/`.
-
-**Unit conversion (validated, not assumed).** PWBM's cell area is not documented in the
-delivered files, so it was inferred and cross-checked three independent ways before use:
-`n_cells × 1 km²` reproduces each river's known basin area almost exactly (Colville
-59,647 cells ≈ the "~60,000 km²" already cited in `sites/colville.py`'s own docstring);
-converting 2022 PWBM runoff to discharge with that cell area gives annual means (Colville
-395, Kuparuk 72.6, Sagavanirktok 197, Canning 68 m³/s) that track the *known bias
-direction* of the existing USGS gauges exactly — Kuparuk (near-tidewater, "best-constrained"
-— see Discharge above) lands closest to its gauge (63.8), while Colville/Sagavanirktok
-(gauged far upstream, documented as understating mouth flow) come out 1.4–4× higher, and
-Canning (no gauge, previously an ad-hoc Hulahula-proxy reconstruction) gets a real
-whole-basin PWBM discharge instead; and the resulting DOC concentrations land in the same
-order of magnitude and seasonal shape as the existing WQP-based `TOC` cub values. With
-that cell area:
+**Source: PWBM** (Pan-Arctic Water Balance Model), Michael's per-river output. **Upgraded
+this round from a monthly aggregate to a genuine DAILY per-river product** — one row per
+calendar day, 1980–2023, columns `date,freshwater_m3_d,DOC_g_d[,...per-sub-basin
+breakdown]`:
 
 ```
-Q(month)     [m3/s]    = runoff_sum[mm] * 1000 / (days_in_month * 86400)
-C_DOC(month) [mg/L]    = DOC_sum[kg] / runoff_sum[mm]        (the 1 km² factor cancels)
-TOC_cub      [mmol/m3] = C_DOC[mg/L] * 83.3                  (the same DOC->TOC factor
-                                                                every sites/<name>.py
-                                                                site already uses)
+/Users/rsavelli/Documents/FORTE/Michael/Colville/derived_daily_annual_csv/Colville_daily_1980_2023.csv
+/Users/rsavelli/Documents/FORTE/Michael/Colville/derived_daily_annual_csv/Canning_daily_1980_2023_fromMichael.csv
+/Users/rsavelli/Documents/FORTE/Michael/Kuparuk_daily_1980_2023.csv
+/Users/rsavelli/Documents/FORTE/Michael/Sagavanirktok_daily_1980_2023.csv
 ```
 
-Winter months where `runoff_sum == 0` (frozen, no PWBM signal) leave `C_DOC` undefined
-(0/0); since discharge is genuinely ~0 those months the exact value barely matters
-physically, but it must still be finite and smooth for the daily interpolation, so each
-river's open-water DOC values are linearly gap-filled (`np.interp`, the same technique
-`tools/build_river_temp.py` uses) across the zero-flow gap before conversion.
+(Canning's file lives under the `Colville/` subdirectory — a quirk of Michael's delivery
+layout, not a data-provenance issue.) Colville and Sagavanirktok also carry a per-sub-basin
+/ per-branch breakdown (mainstem/basin134/Kupigruak; EastBranch/WestBranch/mouth) whose sum
+equals the total columns, checked directly against the files — only the totals are read.
+These directories are outside the repo and not vendored — `tools/build_interannual_forcings.py`
+reads them directly at build time and writes only the derived per-river daily series into
+`forcing/`. The retired monthly product
+(`river_timeseries_output/{runoff,DOC}_monthly_timeseries_by_river.csv`) is the same
+underlying PWBM run at coarser output resolution — the 2022 annual-mean discharge and DOC
+concentration range this script now prints reproduce the old monthly-derived numbers to
+within ~1 m³/s, which is the check that this is a resolution upgrade, not a different
+dataset.
+
+**Unit conversion — simpler now than the monthly version.** `freshwater_m3_d` and
+`DOC_g_d` are already daily PWBM whole-basin fluxes, so no cell-area/days-in-month
+bookkeeping is needed (that machinery only existed to convert the old monthly
+runoff-depth/DOC-mass product — see git history for the retired derivation and the
+cell-area cross-checks that validated it, still valid since it's the same underlying run):
+
+```
+Q(day)     [m3/s]  = freshwater_m3_d / 86400
+C_DOC(day) [mg/L]  = DOC_g_d / freshwater_m3_d      (g/m3 == mg/L numerically, so the
+                                                      m3<->L conversion cancels exactly the
+                                                      same way the old 1 km²/cell factor did)
+TOC_cub    [mmol/m3] = C_DOC[mg/L] * 83.3            (the same DOC->TOC factor every
+                                                       sites/<name>.py site already uses)
+```
+
+2022 annual-mean check (Colville 394 / Kuparuk 72 / Sagavanirktok 198 / Canning 68 m³/s)
+reproduces the monthly-product numbers above almost exactly, so the known-bias-direction
+argument against the USGS gauges (Kuparuk best-constrained and closest to its gauge;
+Colville/Sagavanirktok gauged upstream and understating mouth flow; Canning previously an
+ad-hoc Hulahula-proxy) still applies unchanged.
+
+Winter days where `freshwater_m3_d == 0` (frozen, no PWBM signal) leave `C_DOC` undefined
+(0/0); since discharge is genuinely ~0 those days the exact value barely matters
+physically, but it must still be finite for the model to read, so each river's open-water
+DOC days are linearly gap-filled (`np.interp`, the same technique `tools/build_river_temp.py`
+uses) across each winter's zero-flow gap — the same technique as before, now applied at
+daily instead of monthly resolution (thousands of gap-filled days per river instead of
+~200–300 gap-filled months, but the same interpolation logic).
 
 **This is DOC only, not POC, and that is deliberate, not an oversight.** Reading
 `biogeo_module.py`/`sed_module.py` confirms NS-RAD's `TOC` species is *purely dissolved*
@@ -410,14 +428,18 @@ else on this machine either. So PWBM DOC is fed directly into `TOC_cub` with no
 particulate addition — the same way the model already documents its missing prognostic
 POC-fed sediment-OM pool as future work (`docs/arctic_biogeochemistry.md`).
 
-**Real single-year extremes are much larger than the smoothed multi-year climatological
-mean** used to validate the methodology above — e.g. Kuparuk's climatological April mean
-is ~12 mg/L, but individual months in the 44-year record (checked: real, not a
-conversion artifact — legitimate months with substantial nonzero flow, not a near-zero-flow
-division glitch) reach ~90–100 mg/L during anomalous early-season flush events. This is a
-genuine feature of a real interannual product, not a bug; be aware that specific simulated
-years can carry carbon loading far above what the single-year 2022 climatology ever
-represented.
+**Real single-day extremes are much larger than the old monthly-mean figures, because
+daily resolution no longer smooths them away.** At monthly resolution Kuparuk's
+climatological April mean was ~12 mg/L, individual anomalous months up to ~90–100 mg/L; at
+daily resolution single-day spring-flush DOC concentrations reach into the hundreds of
+mg/L (e.g. Colville 2001-05-31: 273 mg/L, at a substantial nonzero flow of 50,021 m³/d —
+checked directly against the raw file, not a near-zero-flow division artifact; the highest
+daily concentrations occur across a wide range of flows, not clustered at tiny Q, which is
+what a divide-by-near-zero artifact would look like). This is a genuine, expected feature
+of moving from monthly to daily resolution — sharper, shorter-lived flush peaks are exactly
+what daily data is for — not a bug; be aware that specific simulated days can carry carbon
+loading far above what either the single-year 2022 climatology or the old monthly product
+ever represented.
 
 **`file_module.py`'s forcing time axis is now per-file, not a hardcoded 365.** `_load`
 derives `linspace(0, N*86400, N)` from each parsed series' own length `N`, and the
@@ -471,20 +493,32 @@ cause was the frozen air-temperature forcing starving `heat_module`'s summer mel
 — the hydraulic mechanism and/or ordinary summer warming clears the cover every year once
 the atmospheric forcing is actually seasonal again.
 
-**Calendar.** Monthly PWBM values are placed at each real calendar month's midpoint
-(true days-in-month, including real Feb 29 in leap years, for the unit conversion itself)
-and then interpolated onto NS-RAD's own simplified daily calendar, which — like every
-other forcing — treats every year as exactly 365 days.
+**Calendar.** The daily source already carries one row per real calendar day, including
+Feb 29 in leap years (16,071 rows/river, 1980–2023). NS-RAD's own daily forcings all treat
+every year as exactly 365 days (`repeatYear`'s annual wrap in `file_module.exfread`, and
+`tools/fetch_discharge.py`), so that a genuinely multi-year series stays in phase, year
+over year, with the single repeating 2022-typical seasonal cycle every *other* forcing
+(met, tides, temperature) still uses. Feb 29 is therefore dropped outright (that one row
+per leap year discarded, not interpolated) rather than interpolated onto a compressed axis
+as the old monthly version did — same output length either way (44×365 = 16,060 days/river).
 
 **Regenerate the forcing:** `python tools/build_interannual_forcings.py` (`--plot` for a
 preview PNG). Prints each river's 2022 annual-mean discharge and TOC/DOC range as a
 self-check against the numbers above.
 
+**Rerun after regenerating:** `tools/run_interannual.sh colville kuparuk sagavanirktok`
+(Canning excluded — still `EL=0`, non-runnable, same as every other run target; its
+forcing files are still built "for consistency"). This is a real compute commitment
+(~5+ hours per river; see the "full 44-year run" note above) and **overwrites**
+`runs/interannual/<site>/` in place — the pre-daily-forcing (monthly-forcing) runs from
+the previous round were moved to `runs/interannual_monthlyforcing_archive/` before
+rerunning, rather than deleted, so the daily-vs-monthly-forcing comparison stays available.
+
 **Report: `docs/ns_rad_interannual.pdf`, a SEPARATE PDF, not stitched into
 `ns_rad_report.pdf`** — same reasoning as `idealized_verification.pdf`: an optional,
 expensive analysis of a different question (how the model responds across 44 years of
 real forcing variability) than the combined report's single-year "current state of the
-model" sections. Ten pages (`tools/make_interannual_pdf.py`, paginated automatically
+model" sections. Twelve pages (`tools/make_interannual_pdf.py`, paginated automatically
 by `_paginated_grid` as the variable/rate lists grow): (1) the forcing itself — discharge
 + TOC, straight from the CSVs, no run needed; (2) **discharge vs. observation** — the
 PWBM-derived forcing against the real USGS gauge annual mean, 1980–2023, same three
@@ -508,7 +542,28 @@ generalized to every year) — `rdoc_ox`/`photo`/`ch4_ox`/`ch4_ex`/`n2o_prod`/`n
 `sod` are flat zero on these sites since `config.ARCTIC_BGC` is off by default (noted on
 the page itself, not missing data); (9) ice variability — annual ice-covered duration
 and peak thickness; (10) annual FCO2 vs. annual mean discharge, and ice-covered days vs.
-annual mean discharge, to see whether the model's response actually tracks the forcing.
+annual mean discharge, to see whether the model's response actually tracks the forcing;
+(11–12) **FORTE-motivated freshet analysis**, added when the discharge/TOC forcing was
+upgraded from monthly to daily (see above) — spring-freshet timing (peak day-of-year),
+intensity ("flashiness" = peak Q / annual mean Q), duration (days > `BREAKUP_Q_FACTOR`
+× that year's mean — the SAME threshold and multiplier the model's own hydraulic
+ice-breakup gate uses, so this is not an arbitrary definition), and delivered
+organic-carbon load, each with an OLS trend over 1980–2023 (numpy-only linear
+regression, `_linregress_np` — no scipy dependency; its p-value is a normal
+approximation to the t-distribution, accurate at this report's n≈40+ but not a rigorous
+test for small samples) — testing FORTE Hypothesis 2 ("land-to-ocean fluxes... have
+intensified... over three decades"); then freshet peak day vs. that year's ice-breakup
+day, and freshet duration vs. that year's FCO2 budget — testing FORTE Hypothesis 1
+("freshet timing and intensity modulate... sea-ice cover and the sign/magnitude of
+air–sea CO2 flux"). **These two pages are deliberately scoped to what NS-RAD's
+river/estuary domain can actually test**: freshet peak day tracks ice-breakup day almost
+1:1 (the hydraulic-breakup mechanism working as designed), but freshet DURATION shows no
+significant correlation with the annual FCO2 budget on any of the three rivers (r=-0.04
+to 0.27, all p>0.05) — a genuine null result, not a missing analysis. Neither page
+touches phytoplankton community composition or coastal-ocean/plume physics — NS-RAD has
+no multi-functional-type phytoplankton (one bulk `DIA` tracer) and no domain past the
+river mouth, so the rest of both FORTE hypotheses is out of scope for this model as
+built; see the module docstring for the exact boundary.
 
 **The discharge- and temperature-vs-observation pages are the two genuine skill tests
 this report has.** Discharge: Kuparuk (near-tidewater, the well-constrained gauge) shows

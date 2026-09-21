@@ -23,13 +23,22 @@ written to output.nc (AREA_VARS below -- 2 pages) as an area-normalized annual b
 same method as ns_rad_diagnostics.pdf's single-year "Area-normalized annual budgets"
 page generalized to every year; ice variability (annual ice-covered duration and peak
 thickness -- the freshet-breakup mechanism, config.BREAKUP_Q_FACTOR, makes ice timing
-itself downstream of the interannual discharge signal); and a closing synthesis page
-(annual FCO2 vs. annual mean discharge, ice-covered days vs. annual mean discharge) --
-does the model's response actually track the interannual forcing, and how.
+itself downstream of the interannual discharge signal); a synthesis page (annual FCO2 vs.
+annual mean discharge, ice-covered days vs. annual mean discharge) -- does the model's
+response actually track the interannual forcing, and how; and two FORTE-motivated
+closing pages: spring-freshet characteristics (peak timing, intensity/"flashiness",
+duration, and delivered organic-carbon load, each with an OLS trend over 1980-2023 --
+testing the "land-to-ocean fluxes have intensified over three decades" hypothesis), and
+freshet timing/intensity vs. downstream ice-breakup timing and carbon flux (testing the
+"freshet timing/intensity modulates ... sea-ice cover and air-sea CO2 flux" hypothesis).
+Both stop at what NS-RAD's river/estuary domain actually simulates -- neither the
+coastal-ocean plume nor phytoplankton community composition are represented in this
+model, so those parts of the FORTE hypotheses are out of scope here; see CLAUDE.md.
 
 Usage:  python tools/make_interannual_pdf.py
 """
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -67,6 +76,11 @@ SITES = ["colville", "kuparuk", "sagavanirktok"]
 
 YEAR_START = 1980          # forcing record start (tools/build_interannual_forcings.py)
 WARMUP_DAYS = 365          # matches CGEM_WARMUP_DAYS default for these runs
+BREAKUP_Q_FACTOR = 3.0     # matches config.py / main.py's hydraulic-breakup multiplier
+                           # (see CLAUDE.md -> "Prognostic ice model") -- reused here as
+                           # this report's own definition of "freshet" (Q > FACTOR x that
+                           # year's mean), so the freshet-duration metric below and the
+                           # model's own breakup trigger use the same threshold
 
 S.apply()
 S.install_autoscale(1.2)
@@ -621,6 +635,255 @@ def annual_ice_stats(site):
     return np.array(years), np.array(duration), np.array(peak)
 
 
+def annual_ice_breakup_doy(site, thresh=0.1):
+    """Per-calendar-year spring ice-breakup day-of-year (0-based, Jan 1 = 0) -- the
+    first day domain-mean ice_frac drops below `thresh` (same 0.1 threshold
+    annual_ice_stats' "ice-covered" duration uses, for a consistent definition).
+    Requires the year to OPEN ice-covered (frac_mean[0] >= thresh); a year that never
+    drops back below thresh (the fixed-q_ref-threshold artifact page_ice documents) or
+    that opens already ice-free gets NaN. Returns (calendar_years, doy)."""
+    t, FR = load(site, "ice_frac")
+    if FR is None:
+        return np.array([]), np.array([])
+    frac_mean_all = np.nanmean(FR, axis=1)
+    n_years = int((t.max() - WARMUP_DAYS) // 365)
+    years, doy_out = [], []
+    for i in range(n_years):
+        lo, hi = WARMUP_DAYS + i * 365, WARMUP_DAYS + (i + 1) * 365
+        mask = (t >= lo) & (t < hi)
+        if not mask.any():
+            continue
+        fm = frac_mean_all[mask]
+        years.append(YEAR_START + 1 + i)
+        if fm[0] < thresh:
+            doy_out.append(np.nan)
+            continue
+        below = np.flatnonzero(fm < thresh)
+        doy_out.append(float(below[0]) if below.size else np.nan)
+    return np.array(years), np.array(doy_out)
+
+
+def freshet_metrics(site):
+    """Per-calendar-year spring-freshet characteristics straight from the daily
+    discharge/TOC forcing (no model run needed -- unlike the ice/FCO2 series below,
+    this covers the FULL 1980-2023 record, 44 years, not just the 43 post-warmup
+    years). 'Freshet' here is operationally defined as Q > BREAKUP_Q_FACTOR x that
+    year's own mean -- the SAME multiplier and the same per-year (not whole-record)
+    mean the model's own hydraulic ice-breakup gate uses for the definitive runs (see
+    CLAUDE.md), so 'duration' below is directly comparable to that trigger, not an
+    arbitrary threshold invented for this report.
+
+    Returns a dict of 1-D arrays, one point per calendar year:
+        year          calendar year
+        peak_doy      day-of-year (0-based) of that year's peak discharge
+        peak_q        peak discharge [m3/s]
+        flashiness    peak_q / annual mean Q (dimensionless) -- freshet INTENSITY
+        duration      days with Q > BREAKUP_Q_FACTOR x annual mean Q -- freshet DURATION
+        doc_load_tC   that year's TOTAL riverine organic-carbon delivery, integral of
+                      Q[m3/s] x TOC[mmol C/m3] over the year, converted mmol->tonnes C
+                      (x12.011 g/mol /1e6 g/t) -- the land-to-ocean carbon FLUX this
+                      freshet actually carried, not just its peak concentration
+    """
+    q_yrs, q = _forcing_daily(site, "discharge")
+    _, toc = _forcing_daily(site, "toc")
+    if q_yrs is None:
+        return {}
+    year, peak_doy, peak_q, flashiness, duration, doc_load = [], [], [], [], [], []
+    for y in range(YEAR_START, YEAR_START + 44):
+        m = (q_yrs >= y) & (q_yrs < y + 1)
+        if not m.any():
+            continue
+        qy = q[m]
+        mean_q = qy.mean()
+        i_peak = int(np.argmax(qy))
+        year.append(y)
+        peak_doy.append(i_peak)
+        peak_q.append(float(qy[i_peak]))
+        flashiness.append(float(qy[i_peak] / mean_q) if mean_q > 0 else np.nan)
+        duration.append(float(np.sum(qy > BREAKUP_Q_FACTOR * mean_q)))
+        if toc is not None:
+            tocy = toc[m]
+            mass_mmolC = np.trapezoid(qy * tocy, dx=86400.0)   # m3/s * mmolC/m3 * s = mmolC
+            doc_load.append(mass_mmolC * 12.011 / 1e9)          # mmolC -> tonnes C
+        else:
+            doc_load.append(np.nan)
+    return dict(year=np.array(year), peak_doy=np.array(peak_doy, float),
+                peak_q=np.array(peak_q), flashiness=np.array(flashiness),
+                duration=np.array(duration), doc_load_tC=np.array(doc_load))
+
+
+def _linregress_np(x, y):
+    """OLS slope/intercept/r/two-sided-p for the slope, numpy-only (no scipy -- this
+    project's dependencies stop at numpy/numba/netCDF4/matplotlib, see README). The
+    p-value uses a normal approximation to the t-distribution
+    (p = 2*(1-Phi(|t|)), via math.erf), which is accurate to ~1% at the degrees of
+    freedom this report actually has (n~40+ years, dof>=30) but should NOT be trusted
+    for small samples. Returns (slope, intercept, r, p, n); all NaN if n<3."""
+    x = np.asarray(x, float)
+    y = np.asarray(y, float)
+    ok = np.isfinite(x) & np.isfinite(y)
+    x, y = x[ok], y[ok]
+    n = x.size
+    if n < 3:
+        return np.nan, np.nan, np.nan, np.nan, n
+    xm, ym = x.mean(), y.mean()
+    sxx = np.sum((x - xm) ** 2)
+    syy = np.sum((y - ym) ** 2)
+    sxy = np.sum((x - xm) * (y - ym))
+    if sxx == 0 or syy == 0:
+        return np.nan, np.nan, np.nan, np.nan, n
+    slope = sxy / sxx
+    intercept = ym - slope * xm
+    dof = n - 2
+    resid = y - (slope * x + intercept)
+    s2 = np.sum(resid ** 2) / dof if dof > 0 else np.nan
+    se_slope = np.sqrt(s2 / sxx) if s2 == s2 else np.nan
+    tstat = slope / se_slope if se_slope and se_slope > 0 else np.nan
+    p = 2.0 * (1.0 - 0.5 * (1.0 + math.erf(abs(tstat) / math.sqrt(2.0)))) if tstat == tstat else np.nan
+    r = sxy / np.sqrt(sxx * syy)
+    return slope, intercept, r, p, n
+
+
+def _trend_annotation(ax, x, y, unit_per_decade, color, row, fmt="{:+.2f}"):
+    """Fit `_linregress_np`, draw a colored trend line, and annotate slope/decade + p +
+    n at vertical position `row` (0=bottom-most of a stack, incrementing upward) so
+    multiple sites' annotations on the same axes don't overlap. Returns the fit tuple."""
+    slope, intercept, r, p, n = _linregress_np(x, y)
+    if n >= 3 and np.isfinite(slope):
+        xs = np.array([min(x), max(x)])
+        ax.plot(xs, slope * xs + intercept, "--", color=color, lw=1.0, alpha=0.8)
+        sig = "*" if p < 0.05 else ""
+        ax.text(0.02, 0.03 + 0.075 * row,
+                f"{fmt.format(slope * 10)} {unit_per_decade}/decade{sig}  "
+                f"(r={r:.2f}, p={p:.2f}, n={n})",
+                transform=ax.transAxes, fontsize=6.0, color=color, va="bottom")
+    return slope, intercept, r, p, n
+
+
+def page_freshet(pdf):
+    fig = plt.figure(figsize=(11, 8.5))
+    fig.suptitle("Spring freshet characteristics, 1980–2023", x=0.05, ha="left",
+                 fontsize=13, weight="bold")
+    fig.text(0.05, 0.935, "Straight from the daily discharge/TOC forcing (all 44 years, "
+              "no model run needed). 'Freshet' = Q > BREAKUP_Q_FACTOR (3x) that year's "
+              "own mean, the SAME threshold the model's hydraulic ice-breakup gate uses "
+              "(CLAUDE.md → \"Prognostic ice model\") — testing FORTE Hypothesis 2's "
+              "claim that land-to-ocean forcing has intensified over three decades. "
+              "Trend line + OLS slope shown per site; * marks p<0.05 (normal "
+              "approximation, see code).", color=S.INK2, fontsize=7.4)
+
+    gs = fig.add_gridspec(2, 2, left=0.08, right=0.97, top=0.85, bottom=0.07,
+                          hspace=0.45, wspace=0.28)
+    axDoy = fig.add_subplot(gs[0, 0])
+    axFlash = fig.add_subplot(gs[0, 1])
+    axDur = fig.add_subplot(gs[1, 0])
+    axLoad = fig.add_subplot(gs[1, 1])
+
+    for row, site in enumerate(SITES):
+        m = freshet_metrics(site)
+        if not m:
+            continue
+        yrs = m["year"]
+        c = S.RIVC[site]
+        axDoy.plot(yrs, m["peak_doy"], "o-", ms=2.5, lw=0.9, color=c, label=S.LABEL[site])
+        _trend_annotation(axDoy, yrs, m["peak_doy"], "days", c, row)
+        axFlash.plot(yrs, m["flashiness"], "o-", ms=2.5, lw=0.9, color=c)
+        _trend_annotation(axFlash, yrs, m["flashiness"], "×", c, row, fmt="{:+.3f}")
+        axDur.plot(yrs, m["duration"], "o-", ms=2.5, lw=0.9, color=c)
+        _trend_annotation(axDur, yrs, m["duration"], "days", c, row)
+        axLoad.plot(yrs, m["doc_load_tC"], "o-", ms=2.5, lw=0.9, color=c)
+        _trend_annotation(axLoad, yrs, m["doc_load_tC"], "tC/yr", c, row, fmt="{:+.0f}")
+
+    axDoy.set_ylabel("peak day-of-year", fontsize=7.5)
+    # Fixed y-range (not autoscaled to the data, which clusters ~day 130-260): setting
+    # yticks at values outside the autoscaled data range would otherwise silently
+    # stretch the axis out to include them (matplotlib expands limits to cover any
+    # explicit tick), squashing the real spring-freshet spread into a sliver near the
+    # bottom of a near-full-year axis. Fixing ylim AFTER the ticks pins it back down.
+    axDoy.set_yticks([90, 181, 273])
+    axDoy.set_yticklabels(["A", "J", "O"])
+    axDoy.set_ylim(90, 290)
+    axDoy.set_title("Freshet timing", loc="left", fontsize=8.5, color=S.INK)
+    axFlash.set_ylabel("peak Q / annual mean Q", fontsize=7.5)
+    axFlash.set_title("Freshet intensity (flashiness)", loc="left", fontsize=8.5, color=S.INK)
+    axDur.set_ylabel(f"days > {BREAKUP_Q_FACTOR:.0f}× mean Q", fontsize=7.5)
+    axDur.set_title("Freshet duration", loc="left", fontsize=8.5, color=S.INK)
+    axLoad.set_ylabel("riverine organic C delivered [tC/yr]", fontsize=7.5)
+    axLoad.set_title("Annual DOC/TOC-equivalent load", loc="left", fontsize=8.5, color=S.INK)
+    for ax in (axDoy, axFlash, axDur, axLoad):
+        ax.set_xlabel("year", fontsize=7.5)
+        S.tidy(ax)
+    axDoy.legend(loc="upper right", fontsize=6.5)
+    S.brand(fig)
+    pdf.savefig(fig)
+    plt.close(fig)
+
+
+def page_freshet_response(pdf):
+    fig, (axIce, axCO2) = plt.subplots(1, 2, figsize=(11, 5.5))
+    fig.suptitle("Does freshet timing/intensity shape downstream ice and carbon flux?",
+                 x=0.05, ha="left", fontsize=13, weight="bold")
+    fig.text(0.05, 0.945, "FORTE Hypothesis 1: spring-freshet timing and intensity "
+              "modulate ... sea-ice cover and the sign/magnitude of air–sea CO₂ flux. "
+              "Left: freshet peak day vs. that year's ice-breakup day (both 0-based "
+              "day-of-year). Right: freshet duration (this year's 3×-mean-Q days) vs. "
+              "that year's area-normalized FCO₂ budget. One point per site-year, "
+              "1981–2023 (the 43 post-warmup years common to both the forcing and the "
+              "model's ice/FCO₂ output).", color=S.INK2, fontsize=7.6)
+
+    for site in SITES:
+        fm = freshet_metrics(site)
+        if not fm:
+            continue
+        fyear_to_i = {y: i for i, y in enumerate(fm["year"])}
+
+        byrs, bdoy = annual_ice_breakup_doy(site)
+        px, py = [], []
+        for y, d in zip(byrs, bdoy):
+            if y in fyear_to_i and np.isfinite(d):
+                px.append(fm["peak_doy"][fyear_to_i[y]])
+                py.append(d)
+        if px:
+            axIce.scatter(px, py, color=S.RIVC[site], s=22, alpha=0.85,
+                          label=S.LABEL[site])
+
+        cyrs, fco2 = area_normalized_annual_series(site, "FCO2")
+        qx, qy2 = [], []
+        for y, f in zip(cyrs, fco2):
+            if y in fyear_to_i:
+                qx.append(fm["duration"][fyear_to_i[y]])
+                qy2.append(f * MOLAR_MASS["C"] / 1000.0)
+        if qx:
+            axCO2.scatter(qx, qy2, color=S.RIVC[site], s=22, alpha=0.85)
+            _, _, r, p, n = _linregress_np(qx, qy2)
+            if n >= 3:
+                axCO2.text(0.02, 0.02 + 0.08 * SITES.index(site),
+                           f"{S.LABEL[site]}: r={r:.2f} (p={p:.2f}, n={n})",
+                           transform=axCO2.transAxes, fontsize=6.2, color=S.RIVC[site])
+
+    axIce.set_xlabel("freshet peak day-of-year", fontsize=7.5)
+    axIce.set_ylabel("ice-breakup day-of-year", fontsize=7.5)
+    # Same fixed-range fix as page_freshet's axDoy: both metrics cluster ~day 120-260
+    # (spring), so lock the view there rather than let explicit tick values pull the
+    # axis out to the full 0-364 year (see that page's comment for the mechanism).
+    axIce.set_xticks([90, 181, 273]); axIce.set_xticklabels(["A", "J", "O"])
+    axIce.set_yticks([90, 181, 273]); axIce.set_yticklabels(["A", "J", "O"])
+    axIce.set_xlim(90, 290); axIce.set_ylim(90, 290)
+    axIce.plot([90, 290], [90, 290], "--", color=S.GRID, lw=1.0, zorder=0)
+    axIce.set_title("Freshet timing vs. ice breakup", loc="left", fontsize=9, color=S.INK)
+    axIce.legend(loc="upper left", fontsize=6.5)
+
+    axCO2.axhline(0, color=S.GRID, lw=0.8)
+    axCO2.set_xlabel(f"freshet duration [days > {BREAKUP_Q_FACTOR:.0f}× mean Q]", fontsize=7.5)
+    axCO2.set_ylabel("annual FCO₂ [gC m⁻² yr⁻¹]", fontsize=7.5)
+    axCO2.set_title("Freshet duration vs. carbon flux", loc="left", fontsize=9, color=S.INK)
+    for ax in (axIce, axCO2):
+        S.tidy(ax)
+    S.brand(fig)
+    pdf.savefig(fig)
+    plt.close(fig)
+
+
 def page_ice(pdf):
     fig, (axD, axP) = plt.subplots(1, 2, figsize=(11, 5.2))
     fig.suptitle("Ice variability, 1981–2023", x=0.05, ha="left", fontsize=13,
@@ -729,6 +992,8 @@ def main():
         page_annual_response(pdf)
         page_ice(pdf)
         page_forcing_vs_response(pdf)
+        page_freshet(pdf)
+        page_freshet_response(pdf)
         n_pages = pdf.get_pagecount()
     print(f"wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size/1024:.0f} kB, {n_pages} pages)")
 
