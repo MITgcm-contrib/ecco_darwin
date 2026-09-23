@@ -1,5 +1,7 @@
-C $Header: /u/gcmpack/MITgcm_contrib/llc_hires/llc_4320/code/EXF_OPTIONS.h,v 1.3 2016/04/14 03:51:44 dimitri Exp $
-C $Name:  $
+#ifndef EXF_OPTIONS_H
+#define EXF_OPTIONS_H
+#include "PACKAGES_CONFIG.h"
+#include "CPP_OPTIONS.h"
 
 CBOP
 C !ROUTINE: EXF_OPTIONS.h
@@ -12,11 +14,6 @@ C | CPP options file for EXternal Forcing (EXF) package:
 C | Control which optional features to compile in this package code.
 C *==================================================================*
 CEOP
-
-#ifndef EXF_OPTIONS_H
-#define EXF_OPTIONS_H
-#include "PACKAGES_CONFIG.h"
-#include "CPP_OPTIONS.h"
 
 #ifdef ALLOW_EXF
 #ifdef ECCO_CPPOPTIONS_H
@@ -156,7 +153,7 @@ C   Bulk formulae related flags.
 #define  ALLOW_ATM_WIND
 #define  ALLOW_DOWNWARD_RADIATION
 #define  ALLOW_RUNOFF
-#undef   ALLOW_RUNOFTEMP
+#define  ALLOW_RUNOFTEMP
 #if (defined (ALLOW_ATM_TEMP) || defined (ALLOW_ATM_WIND))
 # define ALLOW_BULKFORMULAE
 # undef  ALLOW_BULK_LARGEYEAGER04

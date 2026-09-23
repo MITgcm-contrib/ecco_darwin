@@ -44,7 +44,8 @@
  precipstartdate2  = 003000,
  precipperiod      = 3600.0,
 #
- runofffile        = 'jra55_do_runoff_GoM_1km',
+ runofffile        = 'GloFas_GoM',
+ runoftempfile     = 'GloFas_temp_GoM',
  runoffstartdate1  = 19920101,
  runoffstartdate2  = 120000,
  runoffperiod      = 86400.0,
@@ -165,8 +166,13 @@
  lwdown_nlon        = 1280,
  lwdown_nlat        = 640,
 #
- runoff_interpMethod = 0,
- &
+ runoff_lon0    = -98.5250000D0,
+ runoff_lon_inc = 0.0500000D0,
+ runoff_lat0    = 16.2250000D0,
+ runoff_lat_inc = 352*0.0500000D0,
+ runoff_nlon    = 422,
+ runoff_nlat    = 353,
+&
  &EXF_NML_OBCS
   obcsNstartdate1   = 19921231,
   obcsNstartdate2   = 002000,
