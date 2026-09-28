@@ -53,8 +53,11 @@ cp $MOD/input_darwin/* .
 mkdir diags/3hourly diags/daily diags/monthly diags/budget
 
 ==============
-# copy AOE forcing files
-ln -sf /nobackup/rsavelli/OAEMIP/forcings/test/LLC_270/zero/* .
-ln -sf /nobackup/rsavelli/OAEMIP/forcings/test/LLC_270/nonzero/Ainjection_LLC_270_2003 .
-mv Ainjection_LLC_270_2003 Ainjection0_LLC_270_2003
+# copy AOE forcing files (change <site> and <year> for corresponding experiment)
+# sites: kuroshio, tasmania, labrador, california and oman
+# years: 1997, 1999, 2003 (change Ainjectionstartdate1 in data.darwin accordingly)
+ln -sf /nobackup/rsavelli/OAEMIP/forcings/<site>_<year>/run_forcing/* .
+
+==============
+# run simulation
 # qsub job_v5r1
