@@ -1,0 +1,12 @@
+#
+# *******************
+# Calendar Parameters
+# *******************
+ &CAL_NML
+ TheCalendar='gregorian',
+# Kerguelen's regional run has its own clock (nIter0=0), starting from the
+# parent's 2020-01-01 pickup -- matches the locked 3yr (2020-2023) window.
+ startDate_1=20200101,
+ startDate_2=000000,
+ calendarDumps = .TRUE.,
+ &

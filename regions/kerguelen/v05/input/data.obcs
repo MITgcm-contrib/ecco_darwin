@@ -1,0 +1,73 @@
+# ***************
+# Open boundaries
+# ***************
+# Kerguelen: all 4 boundaries open (island in open ocean, locked decision)
+# -- unlike GoM_1km (land-bounded to the west, no OB_Iwest/OBW*File).
+# OB_Jnorth/OB_Jsouth length = Nx = 1170; OB_Ieast/OB_Iwest length = Ny =
+# 1008 (this project's locked SIZE.h tiling).
+# OBCS filenames follow gen_obcs.py's own {VAR}_{bnd}.bin output
+# convention; produced by STEP3's gen_obcs_fast.py (job 24944861) +
+# gen_obcs_transport_correction.py (job 24945670).
+ &OBCS_PARM01
+ OB_Jnorth =  1170*-1,
+ OB_Jsouth =   1170*1,
+ OB_Ieast  =   1008*-1,
+ OB_Iwest  =   1008*1,
+#
+ useOBCSprescribe=.TRUE.,
+ useOBCSbalance  =.FALSE.,
+#
+ OBNsFile='SALT_north.bin',
+ OBNtFile='THETA_north.bin',
+ OBNuFile='UVEL_north.bin',
+ OBNvFile='VVEL_north.bin',
+#
+ OBSsFile='SALT_south.bin',
+ OBStFile='THETA_south.bin',
+ OBSuFile='UVEL_south.bin',
+ OBSvFile='VVEL_south.bin',
+#
+ OBEsFile='SALT_east.bin',
+ OBEtFile='THETA_east.bin',
+ OBEuFile='UVEL_east.bin',
+ OBEvFile='VVEL_east.bin',
+#
+ OBWsFile='SALT_west.bin',
+ OBWtFile='THETA_west.bin',
+ OBWuFile='UVEL_west.bin',
+ OBWvFile='VVEL_west.bin',
+#
+# Sea-ice OBCS (SEAICEuseDYNAMICS=.TRUE. in data.seaice + useOBCS above
+# means pkg/obcs's seaice boundary code is active, so these must be set
+# even though the extracted fields are all-zero for this domain/period
+# -- confirmed real physics via raw dv_diag inspection, not a bug, see
+# DECISIONS.md). HSALT/OB[N,S,E,W]slFile intentionally omitted: STEP2's
+# data.diagnostics_vec never extracted HSALT (pre-existing, locked scope
+# decision, not a new gap).
+ OBNaFile='SIarea_north.bin',
+ OBNhFile='SIheff_north.bin',
+ OBNsnFile='SIhsnow_north.bin',
+ OBNuiceFile='SIuice_north.bin',
+ OBNviceFile='SIvice_north.bin',
+#
+ OBSaFile='SIarea_south.bin',
+ OBShFile='SIheff_south.bin',
+ OBSsnFile='SIhsnow_south.bin',
+ OBSuiceFile='SIuice_south.bin',
+ OBSviceFile='SIvice_south.bin',
+#
+ OBEaFile='SIarea_east.bin',
+ OBEhFile='SIheff_east.bin',
+ OBEsnFile='SIhsnow_east.bin',
+ OBEuiceFile='SIuice_east.bin',
+ OBEviceFile='SIvice_east.bin',
+#
+ OBWaFile='SIarea_west.bin',
+ OBWhFile='SIheff_west.bin',
+ OBWsnFile='SIhsnow_west.bin',
+ OBWuiceFile='SIuice_west.bin',
+ OBWviceFile='SIvice_west.bin',
+#
+ useOBCStides = .FALSE.,
+#
+ &
