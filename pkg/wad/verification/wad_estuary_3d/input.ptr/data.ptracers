@@ -1,0 +1,15 @@
+# wad_estuary_3d, input.ptr: passive tracers (1: uniform, must stay 1 ;
+# 2: dye patch) and diagnostics (incl. the WAD fields)
+ &PTRACERS_PARM01
+ PTRACERS_numInUse=2,
+ PTRACERS_Iter0=0,
+ PTRACERS_advScheme(1:2)=2*33,
+ PTRACERS_diffKh(1:2)=2*0.,
+ PTRACERS_diffKr(1:2)=2*0.,
+ PTRACERS_useGMRedi(1:2)=2*.FALSE.,
+ PTRACERS_useKPP(1:2)=2*.TRUE.,
+ PTRACERS_initialFile(1)='ptr1.bin',
+ PTRACERS_initialFile(2)='ptr2.bin',
+ PTRACERS_names(1)='one',
+ PTRACERS_names(2)='dye',
+ &

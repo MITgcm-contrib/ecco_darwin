@@ -1,0 +1,6 @@
+# Packages
+ &PACKAGES
+ useOBCS=.TRUE.,
+ useWAD=.TRUE.,
+ useDiagnostics=.FALSE.,
+ &

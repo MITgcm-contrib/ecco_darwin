@@ -1,0 +1,473 @@
+diff --git a/model/inc/PARAMS.h b/model/inc/PARAMS.h
+index 60dee2a2b..06b596812 100644
+--- a/model/inc/PARAMS.h
++++ b/model/inc/PARAMS.h
+@@ -1090,6 +1090,7 @@ C-- Logical flags for selecting packages
+       LOGICAL useMNC
+       LOGICAL useRunClock
+       LOGICAL useEMBED_FILES
++      LOGICAL useWAD
+       LOGICAL useMYPACKAGE
+       COMMON /PARM_PACKAGES/
+      &        useGAD, useOBCS, useSHAP_FILT, useZONAL_FILT,
+@@ -1104,7 +1105,7 @@ C-- Logical flags for selecting packages
+      &        useStreamIce, useICEFRONT, useThSIce, useLand,
+      &        useATM2d, useAIM, useAtm_Phys, useFizhi, useGridAlt,
+      &        useDiagnostics, useREGRID, useLayers, useMNC,
+-     &        useRunClock, useEMBED_FILES,
++     &        useRunClock, useEMBED_FILES, useWAD,
+      &        useMYPACKAGE
+ 
+ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+diff --git a/model/src/calc_r_star.F b/model/src/calc_r_star.F
+index ceaa55417..c19b12bf4 100644
+--- a/model/src/calc_r_star.F
++++ b/model/src/calc_r_star.F
+@@ -175,7 +175,8 @@ C-     Simple average
+ #endif /* ALLOW_OBCS */
+ 
+ C-    Needs to do something when r* ratio is too small ;
+-C     for now, just stop
++C     for now, just stop (except with pkg/wad, which keeps a thin film
++C     in dry columns and closes the faces around them)
+         icntc1 = 0
+         icntc2 = 0
+         icntw  = 0
+@@ -198,7 +199,7 @@ C     for now, just stop
+          ENDDO
+         ENDDO
+ 
+-        IF ( icntc1+icnts+icntw .GT. 0 ) THEN
++        IF ( icntc1+icnts+icntw .GT. 0 .AND. .NOT.useWAD ) THEN
+ C-    Print an error msg and then stop:
+          DO j=1,sNy+1
+           DO i=1,sNx+1
+diff --git a/model/src/external_forcing_surf.F b/model/src/external_forcing_surf.F
+index 27f6002b0..5a0c38506 100644
+--- a/model/src/external_forcing_surf.F
++++ b/model/src/external_forcing_surf.F
+@@ -399,6 +399,11 @@ c         ENDDO
+         ENDIF
+ #endif /* ALLOW_SHELFICE */
+ 
++#ifdef ALLOW_WAD
++C--   wetting-drying: no surface forcing on dry columns
++        IF ( useWAD ) CALL WAD_DRY_FORCING( bi, bj, myThid )
++#endif /* ALLOW_WAD */
++
+ C--   end bi,bj loops.
+        ENDDO
+       ENDDO
+diff --git a/model/src/forward_step.F b/model/src/forward_step.F
+index 114d19a13..a647b98d2 100644
+--- a/model/src/forward_step.F
++++ b/model/src/forward_step.F
+@@ -835,6 +835,14 @@ C-    update hfacC,W,S and recip_hFac according to etaH(n+1) :
+ CADJ STORE rStarFacC, rStarFacS, rStarFacW =
+ CADJ &     comlev1, key = ikey_dynamics, kind = isbyte
+ # endif
++#ifdef ALLOW_WAD
++C-    wetting-drying: open/close faces according to etaH(n)
++        IF ( useWAD ) THEN
++          CALL TIMER_START('WAD_UPDATE_MASKS    [FORWARD_STEP]',myThid)
++          CALL WAD_UPDATE_MASKS( .TRUE., myTime, myIter, myThid )
++          CALL TIMER_STOP ('WAD_UPDATE_MASKS    [FORWARD_STEP]',myThid)
++        ENDIF
++#endif /* ALLOW_WAD */
+         CALL TIMER_START('UPDATE_R_STAR       [FORWARD_STEP]',myThid)
+         CALL UPDATE_R_STAR( .TRUE., myTime, myIter, myThid )
+         CALL TIMER_STOP ('UPDATE_R_STAR       [FORWARD_STEP]',myThid)
+@@ -848,6 +856,13 @@ CADJ &     comlev1, key = ikey_dynamics, kind = isbyte
+ CADJ STORE hFac_surfC, hFac_surfS, hFac_surfW
+ CADJ &     = comlev1, key = ikey_dynamics, kind = isbyte
+ # endif
++#ifdef ALLOW_WAD
++        IF ( useWAD ) THEN
++          CALL TIMER_START('WAD_UPDATE_MASKS    [FORWARD_STEP]',myThid)
++          CALL WAD_UPDATE_MASKS( .TRUE., myTime, myIter, myThid )
++          CALL TIMER_STOP ('WAD_UPDATE_MASKS    [FORWARD_STEP]',myThid)
++        ENDIF
++#endif /* ALLOW_WAD */
+         CALL TIMER_START('UPDATE_SURF_DR      [FORWARD_STEP]',myThid)
+         CALL UPDATE_SURF_DR( .TRUE., myTime, myIter, myThid )
+         CALL TIMER_STOP ('UPDATE_SURF_DR      [FORWARD_STEP]',myThid)
+@@ -921,6 +936,16 @@ C--   Correct divergence in flow field and cycle time-stepping momentum
+ CADJ STORE uVel, vVel = comlev1, key = ikey_dynamics, kind = isbyte
+ #endif
+ 
++#ifdef ALLOW_WAD
++C--   wetting-drying: limit outflow so that no column drains below the film
++      IF ( useWAD .AND. momStepping ) THEN
++        CALL TIMER_START('WAD_LIMIT_OUTFLOW   [FORWARD_STEP]',myThid)
++        CALL WAD_LIMIT_OUTFLOW( myTime, myIter, myThid )
++        CALL WAD_CHECK_SPEED( myTime, myIter, myThid )
++        CALL TIMER_STOP ('WAD_LIMIT_OUTFLOW   [FORWARD_STEP]',myThid)
++      ENDIF
++#endif /* ALLOW_WAD */
++
+       IF ( calc_wVelocity ) THEN
+ C--     Integrate continuity vertically for vertical velocity
+ C       (+ update "etaN" & "etaH", exact volume conservation):
+@@ -928,6 +953,14 @@ C       (+ update "etaN" & "etaH", exact volume conservation):
+         CALL INTEGR_CONTINUITY( uVel, vVel, myTime, myIter, myThid)
+         CALL TIMER_STOP ('INTEGR_CONTINUITY   [FORWARD_STEP]',myThid)
+       ENDIF
++#ifdef ALLOW_WAD
++C--   wetting-drying: keep a film of wadMinDepth in every column
++      IF ( useWAD ) THEN
++        CALL TIMER_START('WAD_APPLY_FLOOR     [FORWARD_STEP]',myThid)
++        CALL WAD_APPLY_FLOOR( .TRUE., myTime, myIter, myThid )
++        CALL TIMER_STOP ('WAD_APPLY_FLOOR     [FORWARD_STEP]',myThid)
++      ENDIF
++#endif /* ALLOW_WAD */
+ #ifdef ALLOW_AUTODIFF_TAMC
+ C--   These store directives avoid an (expensive) extra
+ C     "call solve_for_pressure" in forward_step_ad
+diff --git a/model/src/initialise_varia.F b/model/src/initialise_varia.F
+index 32d3c23d4..36bb71cdb 100644
+--- a/model/src/initialise_varia.F
++++ b/model/src/initialise_varia.F
+@@ -304,6 +304,10 @@ C     and modify hFac(C,W,S) accordingly :
+       IF ( nonlinFreeSurf.GT.0 ) THEN
+        IF ( select_rStar.GT.0 ) THEN
+ # ifndef DISABLE_RSTAR_CODE
++#  ifdef ALLOW_WAD
++        IF ( useWAD )
++     &   CALL WAD_UPDATE_MASKS( .FALSE., startTime, nIter0, myThid )
++#  endif
+         CALL UPDATE_R_STAR( .TRUE., startTime, nIter0, myThid )
+ # endif /* DISABLE_RSTAR_CODE */
+        ELSEIF ( selectSigmaCoord.NE.0 ) THEN
+@@ -318,6 +322,10 @@ C     confused about it so that their contribution is not always added
+ C     to the hfac*_ad lateron. This directive fixes that.
+ CADJ INCOMPLETE recip_hFacC, recip_hFacW, recip_hFacS
+ #endif /* ALLOW_AUTODIFF_TAMC */
++#ifdef ALLOW_WAD
++        IF ( useWAD )
++     &   CALL WAD_UPDATE_MASKS( .FALSE., startTime, nIter0, myThid )
++#endif
+         CALL UPDATE_SURF_DR( .TRUE., startTime, nIter0, myThid )
+        ENDIF
+       ENDIF
+diff --git a/model/src/packages_boot.F b/model/src/packages_boot.F
+index 4ec2a4968..570e5bf4b 100644
+--- a/model/src/packages_boot.F
++++ b/model/src/packages_boot.F
+@@ -95,6 +95,7 @@ C     data.pkg namelists
+      &          useMNC,
+      &          useRunClock,
+      &          useEMBED_FILES,
++     &          useWAD,
+      &          useMYPACKAGE
+ 
+       _BEGIN_MASTER(myThid)
+@@ -161,6 +162,7 @@ c     useGAD          =.FALSE.
+       useMNC          =.FALSE.
+       useRunClock     =.FALSE.
+       useEMBED_FILES  =.FALSE.
++      useWAD          =.FALSE.
+       useMYPACKAGE    =.FALSE.
+ 
+ C-    Adjust default to account for pkgs without run-time On/Off switch
+@@ -427,6 +429,9 @@ C----- pkgs with a standard "usePKG" On/Off switch in "data.pkg":
+ #ifdef ALLOW_EMBED_FILES
+       CALL PACKAGES_PRINT_MSG( useEMBED_FILES,'EMBED_FILES', ' ' )
+ #endif
++#ifdef ALLOW_WAD
++      CALL PACKAGES_PRINT_MSG( useWAD,        'WAD',         ' ' )
++#endif
+ #ifdef ALLOW_MYPACKAGE
+       CALL PACKAGES_PRINT_MSG( useMYPACKAGE,  'MYPACKAGE',   ' ' )
+ #endif
+diff --git a/model/src/packages_check.F b/model/src/packages_check.F
+index 7e3e7271a..60c7859f9 100644
+--- a/model/src/packages_check.F
++++ b/model/src/packages_check.F
+@@ -504,6 +504,12 @@ C---  Continue with standard packages (with standard usePKG flag)
+      &                  'EMBED_FILES', ' ', myThid )
+ #endif
+ 
++#ifdef ALLOW_WAD
++      IF ( useWAD ) CALL WAD_CHECK( myThid )
++#else
++      IF ( useWAD ) CALL PACKAGES_ERROR_MSG( 'WAD', ' ', myThid )
++#endif
++
+ #ifdef ALLOW_MYPACKAGE
+       IF ( useMYPACKAGE ) CALL MYPACKAGE_CHECK( myThid )
+ #else
+diff --git a/model/src/packages_init_fixed.F b/model/src/packages_init_fixed.F
+index c65218047..837844fed 100644
+--- a/model/src/packages_init_fixed.F
++++ b/model/src/packages_init_fixed.F
+@@ -638,6 +638,15 @@ C--   needs to be called after the OASIS_INIT
+       ENDIF
+ #endif
+ 
++#ifdef ALLOW_WAD
++      IF (useWAD) THEN
++# ifdef ALLOW_DEBUG
++        IF (debugMode) CALL DEBUG_CALL('WAD_INIT_FIXED',myThid)
++# endif
++        CALL WAD_INIT_FIXED(myThid)
++      ENDIF
++#endif
++
+ #ifdef ALLOW_MYPACKAGE
+       IF (useMYPACKAGE) THEN
+ # ifdef ALLOW_DEBUG
+diff --git a/model/src/packages_init_variables.F b/model/src/packages_init_variables.F
+index 8aaa8004f..d8a6e9718 100644
+--- a/model/src/packages_init_variables.F
++++ b/model/src/packages_init_variables.F
+@@ -545,6 +545,12 @@ C--   Initialise the 2-Way Nesting packages variables
+       ENDIF
+ #endif /* COMPONENT_MODULE */
+ 
++#ifdef ALLOW_WAD
++      IF ( useWAD ) THEN
++        CALL WAD_INIT_VARIA( myThid )
++      ENDIF
++#endif /* ALLOW_WAD */
++
+ #ifdef ALLOW_MYPACKAGE
+       IF ( useMYPACKAGE ) THEN
+         CALL MYPACKAGE_INIT_VARIA( myThid )
+diff --git a/model/src/packages_readparms.F b/model/src/packages_readparms.F
+index 587d17279..043e6c6f2 100644
+--- a/model/src/packages_readparms.F
++++ b/model/src/packages_readparms.F
+@@ -418,6 +418,11 @@ C--   if useRunClock=T, set RUNCLOCK parameters; otherwise just return
+       CALL RUNCLOCK_READPARMS( myThid )
+ #endif
+ 
++#ifdef ALLOW_WAD
++C--   if useWAD=T, set wetting-drying parameters; otherwise just return
++      CALL WAD_READPARMS( myThid )
++#endif
++
+ #ifdef ALLOW_MYPACKAGE
+ C--   if useMYPACKAGE=T, set mypackage parameters; otherwise just return
+       CALL MYPACKAGE_READPARMS( myThid )
+diff --git a/model/src/packages_write_pickup.F b/model/src/packages_write_pickup.F
+index 5edbbeb32..2f955f442 100644
+--- a/model/src/packages_write_pickup.F
++++ b/model/src/packages_write_pickup.F
+@@ -240,6 +240,13 @@ C     Write pickup file for diagnostics package
+       ENDIF
+ #endif /* ALLOW_ECCO */
+ 
++#ifdef ALLOW_WAD
++      IF (useWAD) THEN
++        CALL WAD_WRITE_PICKUP( permPickup,
++     I                      suffix, myTime, myIter, myThid )
++      ENDIF
++#endif /* ALLOW_WAD */
++
+ #ifdef ALLOW_MYPACKAGE
+       IF (useMYPACKAGE) THEN
+         CALL MYPACKAGE_WRITE_PICKUP( permPickup,
+diff --git a/model/src/update_r_star.F b/model/src/update_r_star.F
+index 14a018e77..c3a93b826 100644
+--- a/model/src/update_r_star.F
++++ b/model/src/update_r_star.F
+@@ -1,3 +1,4 @@
++#include "PACKAGES_CONFIG.h"
+ #include "CPP_OPTIONS.h"
+ 
+ CBOP
+@@ -21,6 +22,9 @@ C     == Global variables
+ #include "PARAMS.h"
+ #include "GRID.h"
+ #include "SURFACE.h"
++#ifdef ALLOW_WAD
++# include "WAD.h"
++#endif
+ 
+ C     !INPUT/OUTPUT PARAMETERS:
+ C     == Routine arguments ==
+@@ -116,6 +120,25 @@ C
+ 
+        ENDIF
+ 
++#ifdef ALLOW_WAD
++C-- Wetting-drying: close the faces shut by pkg/wad (maskW/S already
++C   updated in WAD_UPDATE_MASKS, so recip_hFacW/S only needs zeroing)
++       IF ( useWAD ) THEN
++        DO k=1,Nr
++         DO j=1-OLy,sNy+OLy
++          DO i=1-OLx,sNx+OLx
++            hFacW(i,j,k,bi,bj) = hFacW(i,j,k,bi,bj)*wadMaskW(i,j,bi,bj)
++            hFacS(i,j,k,bi,bj) = hFacS(i,j,k,bi,bj)*wadMaskS(i,j,bi,bj)
++            recip_hFacW(i,j,k,bi,bj) = recip_hFacW(i,j,k,bi,bj)
++     &                               * wadMaskW(i,j,bi,bj)
++            recip_hFacS(i,j,k,bi,bj) = recip_hFacS(i,j,k,bi,bj)
++     &                               * wadMaskS(i,j,bi,bj)
++          ENDDO
++         ENDDO
++        ENDDO
++       ENDIF
++#endif /* ALLOW_WAD */
++
+ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
+ 
+ C- end bi,bj loop
+diff --git a/model/src/update_surf_dr.F b/model/src/update_surf_dr.F
+index 8edfd5f70..f694ef3e7 100644
+--- a/model/src/update_surf_dr.F
++++ b/model/src/update_surf_dr.F
+@@ -1,3 +1,4 @@
++#include "PACKAGES_CONFIG.h"
+ #include "CPP_OPTIONS.h"
+ 
+ CBOP
+@@ -21,6 +22,9 @@ C     == Global variables
+ #include "PARAMS.h"
+ #include "GRID.h"
+ #include "SURFACE.h"
++#ifdef ALLOW_WAD
++# include "WAD.h"
++#endif
+ 
+ C     !INPUT/OUTPUT PARAMETERS:
+ C     == Routine arguments ==
+@@ -134,6 +138,40 @@ C-- Update fractional thickness "hFacW" & "hFacS" (at U and V points)
+ 
+        ENDIF
+ 
++#ifdef ALLOW_WAD
++C-- Wetting-drying: close the faces shut by pkg/wad (maskW/S already
++C   updated in WAD_UPDATE_MASKS, so recip_hFacW/S only needs zeroing).
++C   Only level kSurfW/S is rebuilt above: restore the other levels to
++C   their resting value first, or a face that closed and reopened would
++C   stay shut below the surface level
++       IF ( useWAD .AND. nonlinFreeSurf.GT.0 ) THEN
++        DO k=1,Nr
++         DO j=1-OLy,sNy+OLy
++          DO i=1-OLx,sNx+OLx
++           IF ( k.NE.kSurfW(i,j,bi,bj) ) THEN
++            hFacW(i,j,k,bi,bj) = h0FacW(i,j,k,bi,bj)
++            recip_hFacW(i,j,k,bi,bj) = 0. _d 0
++            IF ( h0FacW(i,j,k,bi,bj).GT.zeroRS )
++     &        recip_hFacW(i,j,k,bi,bj) = 1. _d 0 / h0FacW(i,j,k,bi,bj)
++           ENDIF
++           IF ( k.NE.kSurfS(i,j,bi,bj) ) THEN
++            hFacS(i,j,k,bi,bj) = h0FacS(i,j,k,bi,bj)
++            recip_hFacS(i,j,k,bi,bj) = 0. _d 0
++            IF ( h0FacS(i,j,k,bi,bj).GT.zeroRS )
++     &        recip_hFacS(i,j,k,bi,bj) = 1. _d 0 / h0FacS(i,j,k,bi,bj)
++           ENDIF
++            hFacW(i,j,k,bi,bj) = hFacW(i,j,k,bi,bj)*wadMaskW(i,j,bi,bj)
++            hFacS(i,j,k,bi,bj) = hFacS(i,j,k,bi,bj)*wadMaskS(i,j,bi,bj)
++            recip_hFacW(i,j,k,bi,bj) = recip_hFacW(i,j,k,bi,bj)
++     &                               * wadMaskW(i,j,bi,bj)
++            recip_hFacS(i,j,k,bi,bj) = recip_hFacS(i,j,k,bi,bj)
++     &                               * wadMaskS(i,j,bi,bj)
++          ENDDO
++         ENDDO
++        ENDDO
++       ENDIF
++#endif /* ALLOW_WAD */
++
+ C- end bi,bj loop
+        ENDDO
+       ENDDO
+diff --git a/pkg/gmredi/gmredi_calc_tensor.F b/pkg/gmredi/gmredi_calc_tensor.F
+index 8f628ccc9..2f98ca374 100644
+--- a/pkg/gmredi/gmredi_calc_tensor.F
++++ b/pkg/gmredi/gmredi_calc_tensor.F
+@@ -1117,6 +1117,11 @@ C     for backeard compatibility + for trying to generate a simpler adjoint code
+       ENDDO
+ #endif /* ndef GM_NON_UNITY_DIAGONAL */
+ 
++#ifdef ALLOW_WAD
++C--   wetting-drying: no GM/Redi in thin-water columns
++      IF ( useWAD ) CALL WAD_GMREDI_TAPER( bi, bj, myThid )
++#endif
++
+ #ifdef ALLOW_DIAGNOSTICS
+       IF ( useDiagnostics ) THEN
+         CALL GMREDI_DIAGNOSTICS_FILL( bi, bj, myThid )
+diff --git a/pkg/kpp/kpp_calc.F b/pkg/kpp/kpp_calc.F
+index 692c6630d..8261db3de 100644
+--- a/pkg/kpp/kpp_calc.F
++++ b/pkg/kpp/kpp_calc.F
+@@ -586,6 +586,11 @@ c-----------------------------------------------------------------------
+         ENDDO
+        ENDDO
+       ENDDO
++#ifdef ALLOW_WAD
++C--   wetting-drying: cap the non-local flux fraction at 1 (and
++C     optionally taper it off in thin-water columns)
++      IF ( useWAD ) CALL WAD_KPP_TAPER( bi, bj, myThid )
++#endif
+       kSurf = 1
+       DO j = jMin, jMax
+        DO i = iMin, iMax
+diff --git a/pkg/mom_vecinv/mom_vecinv.F b/pkg/mom_vecinv/mom_vecinv.F
+index c76e7d50a..233e2748c 100644
+--- a/pkg/mom_vecinv/mom_vecinv.F
++++ b/pkg/mom_vecinv/mom_vecinv.F
+@@ -40,6 +40,9 @@ C     == Global variables ==
+ #include "DYNVARS.h"
+ #include "FFIELDS.h"
+ #include "MOM_VISC.h"
++#ifdef ALLOW_WAD
++# include "WAD.h"
++#endif
+ #if ( defined ALLOW_GGL90 && defined ALLOW_GGL90_LANGMUIR )
+ # include "GGL90.h"
+ #endif
+@@ -98,6 +101,12 @@ C     i,j      :: Loop counters
+       _RL      vrF(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL      uCf(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RL      vCf(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
++#ifdef ALLOW_WAD
++C     wadGu,wadGv :: tendency before the advection terms (pkg/wad scales
++C                    the advective part down on thin-water faces)
++      _RL    wadGu(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
++      _RL    wadGv(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
++#endif
+       _RS hFacZ   (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RS h0FacZ  (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+       _RS r_hFacZ (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+@@ -739,6 +748,17 @@ CADJ STORE ucf(:,:) = comlev1_bibj_k, key = kkey, byte = isbyte
+ CADJ STORE vcf(:,:) = comlev1_bibj_k, key = kkey, byte = isbyte
+ #endif
+ 
++#ifdef ALLOW_WAD
++      IF ( useWAD .AND. momAdvection ) THEN
++       DO j=jMin,jMax
++        DO i=iMin,iMax
++         wadGu(i,j) = gU(i,j,k,bi,bj)
++         wadGv(i,j) = gV(i,j,k,bi,bj)
++        ENDDO
++       ENDDO
++      ENDIF
++#endif /* ALLOW_WAD */
++
+       IF (momAdvection) THEN
+ C--   Horizontal advection of relative (or absolute) vorticity
+        IF ( (highOrderVorticity.OR.upwindVorticity)
+@@ -874,6 +894,21 @@ C--   Bernoulli term
+ C--   end if momAdvection
+       ENDIF
+ 
++#ifdef ALLOW_WAD
++C--   Wetting-drying: momentum advection is unstable in thin water ;
++C     keep only the fraction wadAdvFacW/S (0 in shallow water) of it
++      IF ( useWAD .AND. momAdvection ) THEN
++       DO j=jMin,jMax
++        DO i=iMin,iMax
++         gU(i,j,k,bi,bj) = wadGu(i,j) + wadAdvFacW(i,j,bi,bj)
++     &                   *( gU(i,j,k,bi,bj) - wadGu(i,j) )
++         gV(i,j,k,bi,bj) = wadGv(i,j) + wadAdvFacS(i,j,bi,bj)
++     &                   *( gV(i,j,k,bi,bj) - wadGv(i,j) )
++        ENDDO
++       ENDDO
++      ENDIF
++#endif /* ALLOW_WAD */
++
+ C--   3.D Coriolis term (horizontal momentum, Eastward component: -fprime*w)
+       IF ( select3dCoriScheme.GE.1 ) THEN
+         CALL MOM_U_CORIOLIS_NH(bi,bj,k,wVel,uCf,myThid)

@@ -1,0 +1,8 @@
+# pkg/wad parameters
+ &WAD_PARM01
+ wadMinDepth   = 0.05,
+ wadCritDepth  = 0.10,
+ wadDragDepth  = 0.,
+ wadConserveVol= .TRUE.,
+ wadMonFreq    = 168.2138050,
+ &

@@ -1,0 +1,30 @@
+# wad_flat_xz: stratified ocean at rest over a shelf and a partly dry
+# beach (see gendata.py); 1 day. Any velocity is spurious.
+ &PARM01
+ debugLevel=-1,
+ eosType='LINEAR', tAlpha=2.E-4, sBeta=0., tRef=10*15., sRef=10*35.,
+ rhoConst=1000., gravity=9.81, f0=0., beta=0.,
+ viscAh=1.E-2, viscAr=1.E-4, diffKhT=0., diffKrT=0.,
+ no_slip_sides=.FALSE., no_slip_bottom=.FALSE.,
+ bottomDragQuadratic=2.5E-3, implicitViscosity=.TRUE.,
+ rigidLid=.FALSE., implicitFreeSurface=.TRUE., exactConserv=.TRUE.,
+ nonlinFreeSurf=4, select_rStar=2,
+ hFacMin=0.01, hFacMinDr=0.1, hFacInf=0.001, hFacSup=2.0,
+ momStepping=.TRUE., vectorInvariantMomentum=.TRUE., upwindShear=.TRUE.,
+ tempStepping=.TRUE., tempAdvScheme=33, saltStepping=.FALSE.,
+ implicitDiffusion=.TRUE., staggerTimeStep=.TRUE.,
+ readBinaryPrec=64, writeBinaryPrec=64, globalFiles=.TRUE.,
+ &
+ &PARM02
+ cg2dMaxIters=500, cg2dTargetResidual=1.E-13,
+ &
+ &PARM03
+ nIter0=0, nTimeSteps=2880, deltaT=30., abEps=0.1,
+ dumpFreq=0., monitorSelect=2, monitorFreq=10800.,
+ &
+ &PARM04
+ usingCartesianGrid=.TRUE., delR=10*2.5, dXspacing=100., dYspacing=100.,
+ &
+ &PARM05
+ bathyFile='bathy.bin', pSurfInitFile='eta.bin', hydrogThetaFile='T.bin',
+ &

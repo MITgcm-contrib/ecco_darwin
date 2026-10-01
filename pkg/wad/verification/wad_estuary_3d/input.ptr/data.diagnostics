@@ -1,0 +1,10 @@
+ &DIAGNOSTICS_LIST
+ fields(1:4,1)='WADmaskW','WADmaskS','WADdryC ','WADdepth',
+ fileName(1)='wadDiag',
+ frequency(1)=5589.,
+ fields(1:3,2)='ETAN    ','UVEL    ','TRAC02  ',
+ fileName(2)='stateDiag',
+ frequency(2)=5589.,
+ &
+ &DIAG_STATIS_PARMS
+ &

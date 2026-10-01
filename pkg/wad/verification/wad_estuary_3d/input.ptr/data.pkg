@@ -1,0 +1,8 @@
+ &PACKAGES
+ useOBCS=.TRUE.,
+ useKPP=.TRUE.,
+ useGMRedi=.TRUE.,
+ usePTRACERS=.TRUE.,
+ useDiagnostics=.TRUE.,
+ useWAD=.TRUE.,
+ &

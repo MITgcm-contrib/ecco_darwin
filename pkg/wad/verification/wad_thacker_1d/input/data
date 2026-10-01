@@ -1,0 +1,88 @@
+# ====================
+# | Model parameters |
+# ====================
+#
+# wad_thacker_1d: Thacker (1981) planar surface oscillating in a
+# frictionless parabolic basin, with pkg/wad wetting and drying.
+# The model rest level (z=0) is Thacker's mean level + 10 m, so that
+# every cell that ever gets wet is an ocean cell (see analytic.py).
+#
+# Continuous equation parameters
+ &PARM01
+ debugLevel=-1,
+ eosType='LINEAR',
+ tAlpha=0.,
+ sBeta =0.,
+ tRef=20.,
+ sRef=35.,
+ rhoConst=1000.,
+ gravity=9.81,
+ f0=0.,
+ beta=0.,
+ viscAh=0.,
+ viscAr=0.,
+ no_slip_sides=.FALSE.,
+ no_slip_bottom=.FALSE.,
+ bottomDragLinear=0.,
+ bottomDragQuadratic=0.,
+ rigidLid=.FALSE.,
+ implicitFreeSurface=.TRUE.,
+ exactConserv=.TRUE.,
+ nonlinFreeSurf=4,
+ select_rStar=2,
+ hFacMin=0.01,
+ hFacMinDr=0.1,
+ hFacInf=0.2,
+ hFacSup=2.0,
+ implicSurfPress=1.,
+ implicDiv2DFlow=1.,
+ momStepping=.TRUE.,
+# flux-form momentum advection (1/hFacW) blows up at the drying front
+ vectorInvariantMomentum=.TRUE.,
+# centred vertical shear is unstable in thin columns (matters for Nr>1)
+ upwindShear=.TRUE.,
+ tempStepping=.FALSE.,
+ saltStepping=.TRUE.,
+ saltAdvScheme=33,
+ diffKhS=0.,
+ diffKrS=0.,
+ implicitDiffusion=.TRUE.,
+ staggerTimeStep=.TRUE.,
+ readBinaryPrec=64,
+ writeBinaryPrec=64,
+ globalFiles=.TRUE.,
+ &
+
+# Elliptic solver parameters
+ &PARM02
+ cg2dMaxIters=500,
+ cg2dTargetResidual=1.E-13,
+ &
+
+# Time stepping parameters
+# T = 2*pi*a/sqrt(2*g*h0) = 1345.7104 s ; deltaT = T/272 ; 5 periods
+ &PARM03
+ nIter0=0,
+ nTimeSteps=1360,
+ deltaT=4.947464852,
+ abEps=0.1,
+ pChkptFreq=0.,
+ chkptFreq=0.,
+ dumpFreq=168.2138050,
+ monitorSelect=2,
+ monitorFreq=168.2138050,
+ &
+
+# Gridding parameters
+ &PARM04
+ usingCartesianGrid=.TRUE.,
+ delR=20.,
+ dXspacing=40.,
+ dYspacing=40.,
+ &
+
+# Input datasets
+ &PARM05
+ bathyFile='bathy_thacker.bin',
+ pSurfInitFile='eta_thacker.bin',
+ &

@@ -1,0 +1,5 @@
+ &WAD_PARM01
+ wadMinDepth=0.05,
+ wadCritDepth=0.10,
+ wadMonFreq=21600.,
+ &

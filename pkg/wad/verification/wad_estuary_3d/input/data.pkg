@@ -1,0 +1,6 @@
+ &PACKAGES
+ useOBCS=.TRUE.,
+ useKPP=.TRUE.,
+ useGMRedi=.TRUE.,
+ useWAD=.TRUE.,
+ &

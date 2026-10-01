@@ -1,0 +1,38 @@
+# wad_mudflat: idealized macrotidal mudflat with a tidal-creek network,
+# 2 m M2 tide (Flather, code/obcs_calc.F), 20 m3/s river at the head of the
+# main creek, passive tracers; 1 M2 cycle. See gendata.py.
+ &PARM01
+ debugLevel=-1,
+ eosType='LINEAR', tAlpha=0., sBeta=7.4E-4, tRef=5*10., sRef=5*32.,
+ rhoConst=1000., gravity=9.81, f0=1.E-4, beta=0.,
+ viscAh=1., viscAr=1.E-4, diffKhS=0.1, diffKrS=1.E-5,
+ no_slip_sides=.FALSE., no_slip_bottom=.FALSE.,
+ bottomDragQuadratic=2.5E-3, selectImplicitDrag=2, implicitViscosity=.TRUE.,
+ rigidLid=.FALSE., implicitFreeSurface=.TRUE., exactConserv=.TRUE.,
+ nonlinFreeSurf=4, select_rStar=2,
+# thin partial cells are stable with the implicit bottom drag
+# (selectImplicitDrag=2; before it they blew up at dt=6 s and needed
+# hFacMin=0.3)
+# hFacMinDr=0.01 m: with 0.1 m the bottom partial cell was rounded to a
+# 0.1 m terrace and step at every level interface of the sloping flat,
+# which ponded water on the ebb and left cross-shore lines of deposit
+ hFacMin=0.01, hFacMinDr=0.01, hFacInf=0.001, hFacSup=2.0,
+ momStepping=.TRUE., vectorInvariantMomentum=.TRUE., upwindShear=.TRUE.,
+ tempStepping=.FALSE., saltStepping=.TRUE., saltAdvScheme=33,
+ implicitDiffusion=.TRUE., staggerTimeStep=.TRUE.,
+ selectAddFluid=1, salt_addMass=0.,
+ readBinaryPrec=64, writeBinaryPrec=64, globalFiles=.TRUE.,
+ &
+ &PARM02
+ cg2dMaxIters=500, cg2dTargetResidual=1.E-13,
+ &
+ &PARM03
+ nIter0=0, nTimeSteps=7452, deltaT=6., abEps=0.1,
+ dumpFreq=0., monitorSelect=2, monitorFreq=11178.,
+ &
+ &PARM04
+ usingCartesianGrid=.TRUE., delR=5*2.5, dXspacing=100., dYspacing=100.,
+ &
+ &PARM05
+ bathyFile='bathy.bin', pSurfInitFile='eta.bin', addMassFile='addMass.bin',
+ &

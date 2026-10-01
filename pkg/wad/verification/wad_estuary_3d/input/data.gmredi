@@ -1,0 +1,5 @@
+ &GM_PARM01
+ GM_background_K=10.,
+ GM_taper_scheme='clipping',
+ GM_maxSlope=1.E-2,
+ &

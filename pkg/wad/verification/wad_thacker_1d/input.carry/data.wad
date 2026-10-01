@@ -1,0 +1,13 @@
+# pkg/wad parameters (input.carry: opened faces take the upstream depth-mean u*)
+# A face opening onto a near-empty column gets transient speeds of ~40 m/s
+# in the film (harmless: the outflow limiter keeps the transport tiny), so
+# the runaway check (default 30 m/s) is raised here.
+ &WAD_PARM01
+ wadMinDepth   = 0.05,
+ wadCritDepth  = 0.10,
+ wadDragDepth  = 0.,
+ wadConserveVol= .TRUE.,
+ wadCarryVel   = .TRUE.,
+ wadMonFreq    = 168.2138050,
+ wadMaxSpeed   = 100.,
+ &

@@ -1,0 +1,89 @@
+# input.zstar: surface-level non-linear free surface (select_rStar=0),
+# which needs hFacInf*drF(1) <= wadMinDepth. Only single-level columns
+# can dry with it.
+# ====================
+# | Model parameters |
+# ====================
+#
+# wad_balzano: Balzano (1998)-style tidal wetting and drying on a
+# 13.8 km beach (bed 5 m below mean sea level at the open boundary,
+# at mean sea level at the landward wall), 2 m / 12 h tide imposed at
+# the western open boundary by a Flather condition (code/obcs_calc.F).
+# The model rest level is 2.5 m above mean sea level (tideDatum), so
+# that every cell is an ocean cell. See input/gendata.py.
+#
+# Continuous equation parameters
+ &PARM01
+ debugLevel=-1,
+ eosType='LINEAR',
+ tAlpha=0.,
+ sBeta =0.,
+ tRef=20.,
+ sRef=35.,
+ rhoConst=1000.,
+ gravity=9.81,
+ f0=0.,
+ beta=0.,
+ viscAh=0.,
+ viscAr=0.,
+ no_slip_sides=.FALSE.,
+ no_slip_bottom=.FALSE.,
+ bottomDragQuadratic=2.5E-3,
+ rigidLid=.FALSE.,
+ implicitFreeSurface=.TRUE.,
+ exactConserv=.TRUE.,
+ nonlinFreeSurf=4,
+ select_rStar=0,
+ hFacMin=0.01,
+ hFacMinDr=0.1,
+ hFacInf=0.005,
+ hFacSup=2.0,
+ implicSurfPress=1.,
+ implicDiv2DFlow=1.,
+ momStepping=.TRUE.,
+ vectorInvariantMomentum=.TRUE.,
+ upwindShear=.TRUE.,
+ tempStepping=.FALSE.,
+ saltStepping=.TRUE.,
+ saltAdvScheme=33,
+ diffKhS=0.,
+ diffKrS=0.,
+ implicitDiffusion=.TRUE.,
+ staggerTimeStep=.TRUE.,
+ readBinaryPrec=64,
+ writeBinaryPrec=64,
+ globalFiles=.TRUE.,
+ &
+
+# Elliptic solver parameters
+ &PARM02
+ cg2dMaxIters=500,
+ cg2dTargetResidual=1.E-13,
+ &
+
+# Time stepping parameters: 3 tidal cycles of 12 h
+ &PARM03
+ nIter0=0,
+ nTimeSteps=12960,
+ deltaT=10.,
+ abEps=0.1,
+ pChkptFreq=0.,
+ chkptFreq=0.,
+ dumpFreq=1800.,
+ monitorSelect=2,
+ monitorFreq=21600.,
+ &
+
+# Gridding parameters
+ &PARM04
+ usingCartesianGrid=.TRUE.,
+ delR=8.,
+ dXspacing=100.,
+ dYspacing=100.,
+ &
+
+# Input datasets
+ &PARM05
+ bathyFile='bathy.bin',
+ pSurfInitFile='eta_init.bin',
+ &

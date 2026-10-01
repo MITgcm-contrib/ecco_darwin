@@ -1,0 +1,10 @@
+# river-water tracer: relaxed to 1 at the river cell (60 s time scale)
+ &RBCS_PARM01
+ useRBCptracers=.TRUE.,
+ relaxMaskFile(3)='rbcs_mask.bin',
+ &
+ &RBCS_PARM02
+ useRBCptrnum(1)=.TRUE.,
+ tauRelaxPTR(1)=60.,
+ relaxPtracerFile(1)='rbcs_ptr1.bin',
+ &

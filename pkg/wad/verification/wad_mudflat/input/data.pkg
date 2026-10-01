@@ -1,0 +1,7 @@
+ &PACKAGES
+ useOBCS=.TRUE.,
+ useKPP=.TRUE.,
+ usePTRACERS=.TRUE.,
+ useRBCS=.TRUE.,
+ useWAD=.TRUE.,
+ &

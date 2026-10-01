@@ -1,0 +1,4 @@
+# Open boundary: western edge (M2 tide imposed in code/obcs_calc.F)
+ &OBCS_PARM01
+ OB_Iwest=60*1,
+ &
