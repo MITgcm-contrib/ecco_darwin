@@ -41,3 +41,9 @@ __pycache__/
 # Scratch
 *.tmp
 scratch/
+
+# Raw download caches for the interannual forcing builders (tools/build_interannual_*.py)
+# -- large (multi-GB), fully reproducible by rerunning the script; only the derived
+# forcing/*.csv outputs are tracked. Wildcarded (not listed one-by-one) since each new
+# source this project adds gets its own forcing/_<source>_cache/ directory.
+forcing/_*_cache/

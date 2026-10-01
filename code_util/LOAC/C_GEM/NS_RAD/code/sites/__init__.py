@@ -22,4 +22,11 @@ SITES = ("colville", "kuparuk", "sagavanirktok", "canning", "idealized",
          # inherited unchanged. See sites/colville_interannual.py and CLAUDE.md ->
          # "Interannual forcing". canning_interannual still can't run (EL=0).
          "colville_interannual", "kuparuk_interannual", "sagavanirktok_interannual",
-         "canning_interannual")
+         "canning_interannual",
+         # FULL-FORCING INTERANNUAL variants: EVERY forcing category (not just
+         # discharge/DOC) is genuinely multi-year, over the shorter 2005-2023 common
+         # window every source actually covers. See sites/colville_interannual_full.py
+         # and CLAUDE.md -> "Interannual forcing" -> "Full-forcing interannual
+         # (2005-2023)". No canning_full variant (canning_interannual already can't run).
+         "colville_interannual_full", "kuparuk_interannual_full",
+         "sagavanirktok_interannual_full")

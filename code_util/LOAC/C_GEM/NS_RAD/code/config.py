@@ -66,6 +66,19 @@ WIND_FILE = getattr(_site, "WIND_FILE", "windspeed.csv")
 SOLAR_FILE = getattr(_site, "SOLAR_FILE", "solarradiation.csv")
 AIRTEMP_FILE = getattr(_site, "AIRTEMP_FILE", "airtemp_2022_degC.csv")
 RELHUM_FILE = getattr(_site, "RELHUM_FILE", "relhum_2022_frac.csv")
+# Seconds per row in WIND_FILE/SOLAR_FILE/AIRTEMP_FILE/RELHUM_FILE -- 86400 (one row
+# per day, no diurnal cycle at all) for every existing site/run. A site may override
+# any of these to 3600 (hourly) to resolve the diurnal cycle -- see
+# sites/<name>_interannual_full.py and CLAUDE.md -> "Interannual forcing" ->
+# "Sub-daily (diurnal) forcing". Storm surge (SURGE_FILE) deliberately does NOT get
+# this option: its raw source is tide-INCLUDED water level, and the daily mean is
+# what cancels the ~12 h tidal oscillation out -- going hourly without first
+# subtracting the harmonic tide would double-count it against the model's own
+# harmonic Tide() formula, so it stays daily-only.
+WIND_FREQ_SEC = getattr(_site, "WIND_FREQ_SEC", 86400)
+SOLAR_FREQ_SEC = getattr(_site, "SOLAR_FREQ_SEC", 86400)
+AIRTEMP_FREQ_SEC = getattr(_site, "AIRTEMP_FREQ_SEC", 86400)
+RELHUM_FREQ_SEC = getattr(_site, "RELHUM_FREQ_SEC", 86400)
 PCO2_FILE = getattr(_site, "PCO2_FILE", "pCO2_Barrow_2022.csv")
 SEATEMP_FILE = getattr(_site, "SEATEMP_FILE", "watertemp.csv")
 # Optional wind-driven storm-surge forcing at the marine boundary (daily sea-level
@@ -114,7 +127,12 @@ B_ub = _site.B_ub          # PRISMATIC width upstream of the flare [m]
 L_FLARE = _site.L_FLARE    # Flare length [m] -- see WIDTH_MODEL below
 distance = int(os.environ.get("CGEM_DISTANCE", _site.distance))  # Grid points in saline
 # zone (downstream plateau of the Chezy/sediment ramps). Env-overridable for sensitivity
-# sweeps -- see the distance-vs-salinity test in docs. Default per site (1 for all four).
+# sweeps -- see the distance-vs-salinity test in docs. PER-SITE, re-derived from each
+# river's own simulated 1-psu isohaline (colville 35, kuparuk 59, sagavanirktok 12; all
+# three currently sit at 55-97% of their domain) -- see sites/<name>.py and CLAUDE.md ->
+# "Known defects" -> "distance" for the citation trail. Was 1 for all four (a stale
+# "negligible saline intrusion" assumption); canning is still 1 (EL=0 placeholder, can't
+# run, so nothing to derive it from yet).
 
 # WIDTH MODEL
 # -----------
@@ -134,10 +152,12 @@ distance = int(os.environ.get("CGEM_DISTANCE", _site.distance))  # Grid points i
 #   apparent preference for the exponential is not trustworthy; it uses borrowed
 #   flare parameters instead (see sites/sagavanirktok.py).
 #
-# Physically: these are rivers with small deltas, not tide-dominated funnel
-# estuaries (observed microtidal range ~0.3-0.4 m, distance = 1, negligible saline
-# intrusion). The exponential convergence law comes from Savenije's alluvial-estuary
-# theory and is being applied outside its regime. Set 'expo' to recover the original.
+# Physically: these are rivers with small deltas, not tide-dominated funnel estuaries
+# by CHANNEL SHAPE (observed microtidal range ~0.3-0.4 m at the astronomical tide alone) --
+# even though, per `distance` above, salt itself actually intrudes most of the domain
+# once the dominant non-tidal surge residual is included. The exponential convergence
+# law comes from Savenije's alluvial-estuary theory and is being applied outside its
+# regime. Set 'expo' to recover the original.
 WIDTH_MODEL = "flare"
 
 # MULTI-CHANNEL GEOMETRY  (ON by default; CGEM_MULTICHANNEL=off reverts)
@@ -251,11 +271,18 @@ Chezy_ub = 40  # Chezy coefficient (upstream) [m^-1/2 s^-1] Panchenko and Alabya
 kISS = 51.0e-3  # Inorganic sinking velocity half saturation concentration [g L^-1] - Clark et al 2022 https://doi.org/10.1029/2022JG007139
 wMAX = 2.0 / 86400  #	Maximum inorganic suspended sediment sinking velocity [m s^−1] - Clark et al 2022 https://doi.org/10.1029/2022JG007139
 tau_ero_lb = 0.005  # Erosion shear stress (downstream) [N/m^2] - Clark et al 2022 https://doi.org/10.1029/2022JG007139
-tau_dep_lb = 0.4  # Deposition shear stress (downstream) [N/m^2]
 tau_ero_ub = 0.005  # Erosion shear stress (upstream) [N/m^2] - Clark et al 2022 https://doi.org/10.1029/2022JG007139
-tau_dep_ub = 1.0  # Deposition shear stress (upstream) [N/m^2]
-Mero_lb = 5.787037037037037e-05  # Erosion coefficient (downstream) [mg/m^2 s] - Clark et al 2020 https://doi.org/10.1029/2019JG005442
-Mero_ub = 5.787037037037037e-05  # Erosion coefficient (upstream) [mg/m^2 s] - Clark et al 2020 https://doi.org/10.1029/2019JG005442
+# Mero: implied by Clark et al 2022's own Eq. 4 (M_tau=1.0e-5 g/m^2/s/Pa, Table 1) is
+# M_tau*tau_ero_lb/ub = 5.0e-5 mg/m^2/s -- this value is ~16% higher, i.e. essentially
+# the same value, NOT a wrong-system value transplanted from elsewhere as an earlier
+# revision of this comment mistakenly suggested (it cited "Clark et al 2020", a
+# Chesapeake Bay marsh-estuary paper, as the source -- a mislabeled year, not a wrong
+# number; see CLAUDE.md -> "Known defects" -> "tau_dep" for the full citation trail).
+# Deposition is NOT shear-stress-gated -- see sed_module.py; removing an uncited
+# tau_dep gate that used to be here (with no basis in the cited formulation) is what
+# brought modeled SPM back down to the observed 0.0075-0.0165 g/L range.
+Mero_lb = 5.787037037037037e-05  # Erosion coefficient (downstream) [mg/m^2 s] - Clark et al 2022 https://doi.org/10.1029/2022JG007139
+Mero_ub = 5.787037037037037e-05  # Erosion coefficient (upstream) [mg/m^2 s] - Clark et al 2022 https://doi.org/10.1029/2022JG007139
 
 # BIOGEOCHEMICAL PARAMETERS
 Pbmax = 1.3888888888888888e-05  # Max photosynthetic rate [s^-1] - Le Fouest 2013 www.biogeosciences.net/10/4785/2013/
@@ -480,6 +507,24 @@ else:
 M1 = M - 1  # Max odd grid points
 M2 = M - 2  # Last even grid point
 M3 = M - 3  # Last odd grid point
+
+# Numerical safety floor on the MOUTH boundary depth [m], applied in uphyd_module.new_bc
+# to H[1]/D[1]/DEPTH[1] only. Discovered necessary 2026-10: with the full-forcing
+# interannual variant's real 2005-2023 NOAA surge record (surge_prudhoe_interannual_
+# 2005-2023_m.csv), the single most extreme event in the 19-yr record (-1.0445 m,
+# 2013-03-04) combines with the ordinary tidal trough to put the total mouth water
+# level ~1.14 m below datum. Sagavanirktok's mouth reference cross-section (ZZ[1]/B[1]
+# = 0.98 m, the shallowest of the 3 rivers -- Colville 2.25 m, Kuparuk 1.34 m both have
+# enough margin and are unaffected by this floor) is too shallow to absorb that without
+# D[1]=H[1]+ZZ[1] going NEGATIVE, which silently destabilizes the tridiagonal transport
+# solve: S/T overflow to ~1e25 (still "finite", easy to miss) and every reacting species
+# (DIC/TOC/NO3/O2, which hit sqrt/log/Monod terms on the corrupted concentrations)
+# collapses to NaN for the rest of the run -- no exception, no warning, verified via
+# runs/interannual_full/sagavanirktok/output.nc (NaN for 3953/6936 days from that point
+# on). Per-site overridable in principle (getattr, matching DELTI/DELXI above) but 0.05 m
+# is a purely numerical wetting floor, not a physical parameter -- no site needs to
+# override it; it is inert for every timestep at every site except this one real event.
+MOUTH_MIN_DEPTH = float(getattr(_site, "MOUTH_MIN_DEPTH", 0.05))
 MAXV = 13  # Max species in the registry (DIA,dSi,NO3,NH4,PO4,O2,TOC,S,SPM,DIC,ALK,pH,T).
            # Informational only -- the species live in the `variables.v` dict, keyed by
            # name; nothing sizes an array from MAXV. Was 12 before T was added.
