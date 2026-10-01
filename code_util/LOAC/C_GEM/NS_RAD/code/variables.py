@@ -59,7 +59,6 @@ ice_frac = _z()             # areal ice cover fraction [0-1], diagnosed from thi
 # Sediment Variables
 Mero = _z()                 # Erosion coefficient [mg/m^2/s]
 tau_ero = _z()              # Critical shear stress for erosion [N/m^2]
-tau_dep = _z()              # Critical shear stress for deposition [N/m^2]
 tau_b = _z()                # Bottom shear stress [N/m^2]
 erosion = _z()              # Sediment erosion rate [mg/m^2/s]
 deposition = _z()           # Sediment deposition rate [mg/m^2/s]

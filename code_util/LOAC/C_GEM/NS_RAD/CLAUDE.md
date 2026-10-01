@@ -283,9 +283,13 @@ saltwater-intrusion driver this coast actually has — wind-driven storm surge �
 and still does not close the gap (see "Wind-driven storm surge" below), confirming the mismatch is event-timing /
 year-specific, not geometric. **Three levers have now been tested and all fail**: mouth width (SWORD sums),
 storm surge, and the `distance` / Chezy-dispersion gradient — a `CGEM_DISTANCE` sweep from 1 to 68 moves the
-Kuparuk summer mouth salinity by <2 PSU (median stays 0 against observed 19), so `distance = 1` is kept. The
-salinity is forcing-limited (microtidal + summer flushing + seaward-lagoon sampling), not tunable in the
-channel. `SWORD_MOUTH_SUM` in each `sites/<name>.py` holds the mouth width; the network is mapped on Sentinel-2
+Kuparuk summer mouth salinity by <2 PSU (median stays 0 against observed 19). The salinity-validation gap is
+forcing-limited (microtidal + summer flushing + seaward-lagoon sampling), not tunable in the channel, for
+*any* `distance` value — that finding still holds. (`distance` itself was later changed from the shared 1 for
+a different, unrelated reason — see "Known defects" → "`distance`" below — but that was a documentation/
+parameter-meaning fix, re-deriving it from the model's own simulated salt-intrusion length, not a second
+attempt at closing this summer-salinity gap; it does not change the conclusion in this paragraph.)
+`SWORD_MOUTH_SUM` in each `sites/<name>.py` holds the mouth width; the network is mapped on Sentinel-2
 imagery in `docs/ns_rad_river_networks.pdf`.
 
 **`B_ub` is now the SWORD per-channel median in the prismatic reach** (>7 km, main stem, braided total /
@@ -613,6 +617,177 @@ learned by first launching one at the default 6-minute cadence and having to kil
 after checking disk space mid-run (63 GB free, ~94 GB projected across 3 rivers at that
 cadence).** `tools/run_interannual.sh` accepts `CGEM_MAXT_DAYS` for a shorter test run
 before committing to the full record.
+
+### Full-forcing interannual (2005-2023)
+
+A second interannual mode, added 2026-09-30 at the project owner's request: instead of
+only discharge/DOC, **every** forcing category is genuinely multi-year at once (met,
+tides/surge, marine boundary, ice — ice has no separate source, see below). New site
+variants `sites/<name>_interannual_full.py`, `tools/run_interannual_full.sh` (writes
+`runs/interannual_full/<site>/`), builders `tools/build_interannual_{met,humidity,solar,
+surge,marine,river_temp}.py`. `colville.py`/`colville_interannual.py`/`runs/definitive`/
+`runs/interannual` and every existing report/validation tool are completely unaffected.
+
+**Why 2005-2023, not 1980-2023.** This is the shortest common window across every
+forcing source that has a real (non-repeating) multi-year record — checked directly
+against each source's own API/archive, not assumed from documentation:
+
+| category | source | real coverage | notes |
+|---|---|---|---|
+| discharge + riverine TOC | PWBM | 1980–2023 | sliced down to match, not left longer |
+| humidity | Deadhorse Airport (NOAA ISD) | 1980–2023 (checked) | ~98% real days |
+| storm surge | NOAA CO-OPS 9497645, Prudhoe Bay | 1995–2023 | ~99.4% real days |
+| marine boundary (S/DIC/ALK/NO3/NH4/PO4/dSi/O2/TOC/sea-T) | ECCO-Darwin v5 (extended) | 1995–2023 | 100% real months, zero gaps |
+| wind, air temperature | NDBC PRDA2 | **2005–2023** | the binding constraint; station didn't exist before 2005 |
+| solar radiation | NOAA GML Barrow BSRN (see "Sub-daily" below) | 1998–present | not the binding constraint |
+| tides (harmonic) | — | unlimited | see below, no new data needed at all |
+
+**PRDA2 is the bottleneck.** Wind/air-temp at this station simply don't exist before
+2005 — not a processing limitation, the sensor wasn't there. This was decided explicitly
+(project owner) over three alternatives: switching the whole met stack to ERA5
+reanalysis (would extend the window to 1995, bounded then by ECCO-Darwin/surge, but adds
+a Copernicus CDS credential requirement this project has otherwise avoided — declined),
+accepting mismatched per-source windows (declined, in favor of one common window
+everything shares), or restricting the ENTIRE run (including discharge, otherwise
+1980-2023) to whichever period every source overlaps.
+
+**Tides need no new data at all.** `fun_module.Tide()` computes the harmonic elevation
+directly from continuous elapsed model time, not from a repeating forcing file — so the
+interannual runs (both variants) already get genuine multi-year tidal variation
+(real spring-neap/nodal progression) for free. This was confirmed while investigating
+the request, not assumed.
+
+**Sea temperature moved from PRDA2 to ECCO-Darwin, not extended in place.** PRDA2's
+WTMP sensor has severe historical gaps (2006 and 2007 are 100% missing; 59% of
+2005-2023 would have been climatology-filled). `SEATEMP_FILE`/`watertemp.csv` is only
+the *marine boundary end-member* for the transported temperature field
+(`v['T']['clb']` in `main.py` — NOT the interior river temperature, which stays
+prognostic via `heat_module.py`'s heat budget regardless of which variant runs), so
+sourcing it from the same ECCO-Darwin extraction as the rest of the marine boundary
+(real, continuous, and covering 1995-2023, a longer real record than PRDA2's own) was a
+strictly better fit than trying to rescue the PRDA2 sensor record.
+
+**Riverine temperature has no independent source in either variant** — it never did,
+even for the single-year forcing (`build_river_temp.py`'s docstring: a regional
+air→water regression fitted against sparse USGS data, not itself an observation). The
+full-forcing variant applies the SAME formula (`T_river = max(0, 1.432*(T_air_10day +
+4.0))`) to the new multi-year air temperature instead of the single 2022 year
+(`tools/build_interannual_river_temp.py`) — one difference: the 10-day smoothing here is
+edge-padded at the whole record's start/end, not wrapped circularly at every Dec31→Jan1
+the way the single-year climatology's smoothing wraps (there is no real discontinuity at
+a calendar-year boundary in a genuine multi-year series, so wrapping there would be
+wrong).
+
+**Solar radiation's original source could not be identified or reproduced.**
+`solarradiation.csv`/`windspeed.csv`/`airtemp_2022_degC.csv`/`watertemp.csv` have no
+surviving build script (unlike discharge/surge/tides/humidity) — added as static files
+in the initial commit. Wind/air-temp/(now-retired-for-this-purpose) sea-temp could still
+be reconstructed directly from PRDA2's raw archive, but PRDA2 has no solar/radiation
+column at all, so whatever built the original solar file used a source not in this repo.
+The replacement actually used is a real observation (Barrow BSRN), not a reanalysis —
+see "Sub-daily (diurnal) forcing" below for the full trail (NSRDB ruled out, NARR tried
+and superseded, Barrow adopted).
+
+**Ice-model forcing was not extended because there is nothing to extend** — checked
+`ice_module.py`/`heat_module.py` directly: every input they take (`T_air`, `U_wind`,
+`I_sw`, discharge for hydraulic breakup) is already covered by the met/discharge
+pipelines above. Nothing else in this model reads a forcing file at all.
+
+**Verified**, full 2-year Kuparuk-scale smoke test before each full 6935-day (19-year)
+production build (once at daily resolution, once more after the sub-daily upgrade
+below): clean 5-day and 400-day (50 days post-warmup) runs at all three rivers, no
+warnings/errors/NaN, and physically sane output ranges (S 0-33 PSU, DIC/ALK 800-2300
+mmol/m³, T -1.8 to 20.4°C) matching the existing `runs/definitive` production runs' own
+characteristics — including the small negative NO3 excursions (down to ~-1 mmol/m³,
+~20% of cells/times), confirmed to already be present in unmodified
+`runs/definitive/kuparuk` at the same magnitude, i.e. a pre-existing model
+characteristic (likely TVD undershoot), not something this work introduced.
+
+### Sub-daily (diurnal) forcing
+
+Added the same day (2026-09-30), on the project owner's observation that a daily-mean
+forcing has no day/night structure at all — true of every run in this project's
+history, not just the full-forcing variant: `file_module._load`/`exfread` only ever
+read one value per calendar day and linearly interpolate between those points,
+regardless of the model's own sub-minute timestep.
+
+**Generalized, not special-cased.** `file_module.py`'s forcing reader now takes an
+explicit `row_interval_sec` (default 86400, i.e. daily, for every existing call site —
+bit-identical, verified against `runs/definitive/kuparuk`), instead of hard-coding one
+day per row. `config.py` adds a `<VAR>_FREQ_SEC` per forcing (`WIND_FREQ_SEC`,
+`AIRTEMP_FREQ_SEC`, `RELHUM_FREQ_SEC`, `SOLAR_FREQ_SEC`), each `getattr`-overridable
+per site exactly like the filename it pairs with; `main.py`'s `repeatYear` wrap
+condition was generalized from a hard-coded `data.size == 365` to
+`data.size == 31536000 // row_interval_sec` so a one-year *hourly* file (8760 rows)
+still repeats correctly too.
+
+**Which variables, and why.** Air temperature and solar radiation were the initial
+scope (where the diurnal cycle plausibly matters most for the heat budget). Wind and
+humidity were added when the project owner asked why not all of them — checked
+directly: PRDA2's raw wind record and Deadhorse's raw ISD humidity record are BOTH
+already hourly/sub-hourly (the ORIGINAL daily builders just averaged it away), so
+extending them cost nothing — no new download, same already-cached raw files, just a
+different aggregation bucket. **Storm surge deliberately stayed daily** — its raw
+source (`hourly_height`) is tide-INCLUDED water level, and the daily mean is
+specifically what cancels the ~12 h tidal oscillation out, leaving the true non-tidal
+residual; reading it hourly without first subtracting the harmonic tide would
+double-count the tide against the model's own harmonic `Tide()` formula. This is a
+real methodological step, not a free upgrade, and storm surges themselves evolve over
+many hours to days, not diurnally, so it was left as-is.
+
+**Solar radiation's source changed twice before landing.** (1) NSRDB (satellite solar)
+doesn't reach this latitude in its standard product and its polar product only starts
+in 2013 (ruled out, see above). (2) NOAA NARR reanalysis (`Datasets/NARR/monolevel/`,
+distinct from the daily-mean `Dailies/monolevel` version) was tried next: free, no
+auth, 3-HOURLY (confirmed directly — 2920 records/year, exact 3-hour spacing; NARR has
+no truly hourly radiation product at all), covers northern Alaska. Built and partially
+downloaded (`tools/build_interannual_solar_subdaily.py`, kept for reference, not
+deleted) — but each year is a ~300 MB single-file download, and the server's
+connection reliably drops every ~9-11 MB, requiring dozens of resume attempts per
+year; one download was also found SILENTLY CORRUPT despite matching the server's
+declared Content-Length exactly (a resume/proxy byte-alignment glitch), which the
+retry logic did not originally check for (fixed: validate by actually opening the file
+with netCDF4, not just comparing byte counts) — and a second bug was found where a
+partial file left over from a killed run was mistaken for a complete one (fixed:
+`_fetch_year` now validates before skipping a download, not just checking existence).
+(3) **NOAA GML's Barrow (Utqiagvik) Atmospheric Baseline Observatory `qcrad_v3`
+product** was found instead, at the project owner's suggestion to look for a real
+observation rather than fight the reanalysis download: one small (~150-475 KB),
+clean, HEADER-LABELED file per day (`GSW` = global shortwave, plus `Ta`/`RH`/`Prs`/
+`WindSp`/`WindDr` in the same file, unused here — see below), genuine 1-minute
+pyranometer observations, 1998-present, covering 2005-2023 with only 121/6935 days
+(1.7%) missing entirely and 2904/166440 hours (1.7%) needing climatology fill after
+aggregating to hourly. Downloaded with 10-way parallel requests (small files, no
+resume drama) in a few minutes total, vs. the NARR path's hours-long single-threaded
+struggle. `tools/build_interannual_solar_barrow.py` is what is actually wired into the
+site variants; the NARR script is superseded, not deleted.
+
+**Verified the Barrow data itself before trusting it**, since its annual mean (54
+W/m²) is notably lower than NARR's Prudhoe Bay estimate (116 W/m²) for the same years:
+(a) the monthly seasonal cycle for 2022 is textbook-correct (nearly 0 in Dec/Jan/Feb
+polar night, rising through spring, peaking ~150 W/m² in June, declining through fall),
+(b) all 19 annual means cluster tightly (50-62 W/m², no wild outliers), (c) isolated
+single-hour anomalies (a reading <20% of both neighbors, both neighbors >150 W/m²) are
+rare (0.166% of hours) and far too few to explain a 2x mean difference by themselves.
+Concluded the gap is a genuine difference between a real point observation (likely
+reflecting Barrow's own foggy coastal climate) and a modeled reanalysis estimate
+(Arctic cloud-radiation interaction is a known weak point for NWP-family models) —
+trusted the real observation.
+
+**Barrow was NOT also used for wind/air-temp/humidity**, despite its `qcrad_v3` file
+conveniently containing all three: checked the geography directly — Barrow is ~330 km
+WEST of Prudhoe Bay, i.e. FARTHER from all three rivers than Prudhoe Bay (PRDA2/
+Deadhorse) already is. Prudhoe Bay remains the closer, and therefore better, regional
+proxy for those three variables; Barrow is used for solar ONLY because Prudhoe Bay has
+no solar-measuring instrument at all, and Barrow's BSRN status is specifically why it
+has one.
+
+**Final verification**: full 400-day (50 post-warmup) smoke test at all three rivers
+with all four hourly forcings live, no warnings/errors/NaN, output ranges unchanged
+from the daily-forcing version (S 0-33 PSU, DIC 800-2300 mmol/m³, O2 210-395 mmol/m³, T
+-1.8 to 20.4°C) — confirms the diurnal forcing upgrade changes sub-daily structure
+without destabilizing anything. `runs/interannual_full` rebuilt with all-hourly
+met/solar as the final production state (2026-09-30).
 
 ## Width and dispersion no longer use the Savenije estuary formulation
 
@@ -1178,15 +1353,169 @@ Inherited from upstream, not introduced locally. Left as-is so far.
   where `distance` was ~50." Re-checked because the grid refinement (`M` now as low as 22, see "Geometry")
   would have made the *original* bug active across the *entire* domain instead of a few near-mouth points —
   it does not, since the fix already landed before that refinement.
-- **`transport_module`** does `names = list(v.keys())` then `for names in names:`, rebinding the list to each
-  key mid-loop. Works only because the iterator was already constructed.
-- **`schemes_module.tvd`** sets `cold = co`, aliasing rather than copying, so the "old" values it reads back
-  are partly updated. It also shadows the `cold` imported from `variables`.
+- **`sed_module` deposition was gated by an uncited `tau_dep` shear-stress threshold — FIXED (removed).**
+  Found while investigating why the estuarine filtering mass-balance figure showed SPM increasing 900–8000%
+  from upstream to the mouth. The model's SPM equilibrated at **3.6–18.5 g/L domain-mean (Kuparuk's mouth
+  peaked at 25.6 g/L)** — two to three orders of magnitude above the real USGS river SPM these sites'
+  `cub` boundaries use (0.0075–0.0165 g/L; see "Boundary conditions" above).
+
+  **Citation trail (verified against the actual papers, not just the code comments).** `tau_ero_lb/ub = 0.005`
+  N/m² and `wMAX`/`kISS` all check out exactly against Clark et al. 2022's Table 1
+  (https://doi.org/10.1029/2022JG007139 — the actual Yukon-delta paper: `τ_crit = 0.005 Pa`,
+  `w_max = 2.0 m/d`, `k_ISS = 51.0 g/m³`). `Mero_lb/ub` was labeled "Clark et al 2020" (a *Chesapeake Bay
+  Rhode River tidal-marsh* paper, https://doi.org/10.1029/2019JG005442 — a different system entirely) — but
+  turns out to be a mislabeled *year*, not a wrong *number*: Clark et al. 2022's own erosion equation (Eq. 4,
+  `M_τ·(τ_b − τ_crit)`) is algebraically identical to this model's `Mero·(τ_b/τ_ero − 1)` once
+  `M_τ = Mero/τ_ero`, and `M_τ·τ_ero` from the paper's own `M_τ = 1.0×10⁻⁵ g m⁻² s⁻¹ Pa⁻¹` gives an implied
+  `Mero` of `5.0×10⁻⁵ mg m⁻² s⁻¹` — this config's `5.787×10⁻⁵` is only ~16% higher, i.e. essentially the same
+  value. **But `tau_dep_lb/ub = 0.4/1.0` N/m² had no citation in config.py at all, and Clark et al. 2022's own
+  model has no deposition shear-stress threshold** — its deposition is governed purely by the concentration-
+  dependent settling velocity (`w_s = w_max·c/(c+k_ISS)`), unthrottled by shear stress. The extra
+  `(1 − τ_b/τ_dep)` factor previously in `sed_module.py` had no counterpart in the cited source.
+
+  **Why it ran away.** Erosion (`Mero·(τ_b/τ_ero − 1)`) is *independent* of the existing SPM concentration;
+  deposition depends on concentration only through `w_s`. Gating deposition by `τ_dep` (0.4–1.0 N/m², ~100×
+  the erosion threshold) suppressed the depositional brake during exactly the moderate-to-high-flow
+  conditions when erosion was most active (`τ_b > τ_ero` at ~30–43% of timesteps at these rivers' actual
+  flow/Chezy, checked directly against `runs/interannual` output), breaking the negative feedback that should
+  keep the two in balance. Solving the *unthrottled* equilibrium (`Mero·(τ_b/τ_ero−1) = w_max·c²/(c+k_ISS)`)
+  analytically across the realistic bed-shear range (0.01–1.0 N/m²) gives **0.0004–0.0053 g/L** — the same
+  order of magnitude as the real observations, confirming the throttle (not the erosion terms) was the fault.
+
+  **Fix (1 of 2)**: `tau_dep`/`tau_dep_lb`/`tau_dep_ub` removed entirely (not just disabled) from
+  `sed_module.py`, `variables.py`, `config.py` — deposition is now `w_s·c_SPM` unconditionally, matching Clark
+  et al. 2022's actual formulation. A 10-day smoke run looked fixed (SPM settled into 0.002–0.15 g/L), **but
+  that was incomplete verification, not a false fix** — a full 2-year rerun still spiked to **232 g/L** at
+  Kuparuk's mouth around day ~518, exactly at the documented extreme-freshet event (see "Geometry" →
+  "Kuparuk's extreme freshet response" — the ~2 m/s velocity spike that section already flags as a real,
+  understood consequence of geometry, not a numerics bug). The short smoke run never reached that event, so
+  it couldn't have caught what turned out to be a second, independent defect.
+
+  **Defect 2: `erosion[i]` was missing an mg→g unit conversion — FIXED (`MG_TO_G` in `sed_module.py`).**
+  `Mero` is documented and cited in mg m⁻² s⁻¹ (matching Clark et al. 2022's Table 1), but it feeds directly
+  into `c_SPM`, which is in **g/L** (`variables.py`, `config.py`'s own unit comments, every
+  `sites/<name>.py` `BOUNDARIES` value) — `deposition[i] = w_s·c_SPM[i]` is correctly scaled (both true SI),
+  but `erosion[i]` was combined with it unconverted, a clean **1000× mismatch** between the two terms of the
+  same subtraction. Confirmed, not assumed: reproducing the exact per-cell arithmetic at Kuparuk's day-518
+  bed shear stress converges to a true equilibrium of **~5440 g/L as literally coded** vs. **~5.5 g/L** with
+  the mg→g factor applied — a clean factor of 1000, not a further physics gap. (5.5 g/L at this one
+  documented-extreme event is still elevated relative to the ~0.01 g/L baseline, which is expected — erosion
+  scales with velocity squared, and this is already the same extreme event flagged elsewhere as a real
+  consequence of geometry, not a new problem.) Git history for this vendored file shows only the single
+  "Add NS-RAD" commit, so it can't be dated further, but the defect class (mixing two different mass units
+  across one physics equation) matches this file's other already-documented "inherited, not introduced
+  locally" fixes (the pH args-swap, the carbonate mol/kg mixing, `_pbar_rho`'s Pa→bar error).
+
+  **Both fixes verified together**: a full 2-year rerun of all three rivers now gives SPM
+  0.0002–0.24 g/L, zero negative values, 99th percentile 0.10–0.15 g/L (the residual pull toward the high end
+  near the mouth is the **still-placeholder marine `clb` = 0.15 g/L** — a separate, already-documented gap,
+  see "Boundary conditions" → "Still placeholder, unchanged" above, not touched by either fix here).
+
+  **This is a first-order correction, not confined to SPM.** `c_SPM` feeds `biogeo_module`'s light attenuation
+  directly (`KD = KD1 + KD2·(1000·c_SPM + 100)`), so the pre-fix runaway SPM (reaching thousands of mg/L) was
+  driving `KD` into the hundreds of m⁻¹ — light gone within centimeters — which would have suppressed `NPP`/
+  `DIA` far below what clear tundra rivers should support. **Every existing run (`runs/definitive`,
+  `runs/regression_bnd`, `runs/interannual`) and every report/figure built from them predates this fix and
+  needs rebuilding** — this is not confined to the SPM panels.
+- **`schemes_module.tvd` `cold = co` aliasing — FIXED (stale entry corrected).** This entry used to describe
+  a live defect; it no longer does. The jitted `_tvd` kernel now does `cold = co.copy()` (with an inline
+  comment explaining the original aliased assignment was replaced by a real copy, verified bit-identical
+  since the two loops' access patterns are disjoint) — found to already be fixed while investigating an
+  unrelated Hovmöller-figure artifact (see below), at which point this entry was caught as describing code
+  that no longer exists and corrected rather than left stale.
+- **`openbound` upstream boundary shows real, small day-scale variability even at ~zero local velocity —
+  investigated at length, nothing adopted; the code is unchanged from its original form.** Surfaced as a
+  visual "glitch" in the publication-figure DIC Hovmöller, right at the upstream-most grid rows (`M`/`M1`/
+  `M2`/`M3`). Root cause: a genuine spring-neap tidal signal (M2/S2 beat, ~14.8 days — confirmed present in
+  Kuparuk's own tidal constituents, `forcing/tidal_constituents.json`) reaches this far upstream via a
+  combination of dispersion and real (if very weak, cm/s-scale) tidal advection during low-flow periods.
+  Those upstream cells sit in an unusually narrow absolute concentration range (`co[M]` ~1097–1531 across
+  44 years, vs. the interior's ~500–2000+ swing), so a small real wobble reads as high-contrast "glitch"
+  texture against a whole-dataset colorbar even though it's the *smoothest* row in the plot by raw variance.
+
+  Five different fixes were implemented and fully tested (each on a full 2-year Kuparuk run, verified against
+  `runs/definitive/kuparuk` for zero regression) across two rounds of investigation: (1) a rigid-Dirichlet
+  upstream boundary, (2) a low-flow variant of the same (`RIGID_UPSTREAM_LOWFLOW`) combined with a Seo &
+  Cheong (1998) dispersion-formula velocity floor (`SEO_CHEONG_FLOOR`) — the strongest result, cutting `DIC`'s
+  worst jumps at `M1`/`M2` by 70–90%, but which produced a dangerous on/off square wave in `TOC` (~275-unit
+  jumps) because that species' boundary forcing constant is a stale placeholder unrelated to the model's own
+  locally simulated value, (3) a "hold/freeze" fallback that made every species measurably *worse*, and
+  (4) a boundary branch-smoothing scheme (EMA-based) that was safe but added no improvement beyond (2) alone.
+  A direct diagnostic — killing tidal advection outright below a small velocity threshold — caused the model
+  to blow up (DIC reaching ~100x its physical range), which is decisive: that weak tidal current is
+  load-bearing transport, not noise, and removing it breaks the model's mass balance.
+
+  **Net conclusion: this is very likely genuine, small-amplitude tidal-pumping physics correctly resolved by
+  the model, not a numerics bug — and no fix found is both safe (doesn't corrupt other species/sites) and
+  actually resolves `M2`/`M3`.** Per the project owner's decision (2026-09-28), every one of these experimental
+  code paths was reverted; the model code (`config.py`, `schemes_module.py`, `fun_module.py`,
+  `transport_module.py`, `variables.py`) carries no trace of this investigation and is bit-identical to its
+  pre-investigation form apart from the unrelated SPM fix below. If the visual artifact needs addressing, the
+  defensible path is presentation (e.g. a clipped/perceptually-uniform color scale on the Hovmöller, or
+  annotating the affected rows) rather than further changes to the transport physics.
+- **`distance` (grid points in the "saline zone") — FIXED, was stale by 10-40x.** `distance` sets
+  `init_module.py`'s Chezy ramp anchor (`Chezy_lb` at `i=distance` down to `Chezy_ub` at `i=M`) and, if ever
+  given distinct `lb`/`ub`, `sed_module.py`'s erosion-threshold step. It was `1` grid point (~0.1 km) for all
+  three runnable rivers, documented as "negligible saline intrusion" — but the model's OWN simulated salinity
+  field (from `runs/definitive/`, post-SPM-fix) puts the 1-psu isohaline at 55-84% of the domain on a
+  time-mean basis (91-97% at peak surge/spring tide) for all three: Colville 3.48/4.15 km, Kuparuk 5.93/7.16
+  km, Sagavanirktok 1.20/2.17 km. Investigated further (2026-09-30) before concluding this was purely
+  cosmetic: `Chezy` is a continuous ramp across the WHOLE domain (not a step gated by `distance`), and
+  `Mero`/`tau_ero`'s `lb`/`ub` are identical at all three sites, and `piston_velocity`'s `Uw_sal`/`Uw_tid`
+  branch reads the same wind file twice — so `distance=1` was numerically inert everywhere it's used, not
+  silently wrong. Fixed anyway (re-deriving `distance` from each river's own time-mean 1-psu isohaline:
+  Colville 35, Kuparuk 59, Sagavanirktok 12 grid points — see `sites/<name>.py`) both because the inertness
+  was coincidental (any future site with distinct `Mero_lb`/`ub` would silently apply the wrong one to 85%+
+  of its domain) and because an accurate saline-zone extent is itself useful documentation. **Verified
+  self-consistent**: a full 2-yr rerun with the new `distance` shows the salt-intrusion length barely moves
+  (Colville 3.480→3.522 km, Kuparuk 5.931→5.931 km, Sagavanirktok 1.201→1.231 km — no runaway feedback
+  through the Chezy→velocity→intrusion loop) and velocity changes modestly (≤5%, Kuparuk largest). Does
+  **not** reopen the summer-mouth-salinity validation gap above — that section's own `CGEM_DISTANCE` sweep
+  already showed the effect on that specific metric is <2 PSU across the full 1-68 range. `runs/definitive`
+  and `runs/interannual` rebuilt with the new values (2026-09-30).
 - **`fun_module.I0`** is dead. `biogeo` takes `I0` as a forcing argument from `main`, and never imports the
   function of the same name — so the synthetic diurnal light curve it computes is unused.
 - **`transport_module`** rebinds `v[name]["c"] = [0.0] * (M + 1)` when ice-gated rather than zeroing in
   place. Access through the `v` dict stays correct, but any module holding a direct reference to the old
   list would detach — the general hazard called out under *Global mutable state*.
+- **`uphyd_module.new_bc` had no floor on the mouth boundary depth — FIXED (`MOUTH_MIN_DEPTH`).** Latent
+  since the original model (`H[1] = B[1]*Tide(t)`, `D[1] = H[1] + ZZ[1]`, unconditionally — nothing stopped
+  an extreme-enough low water level from making `D[1]` negative), never triggered before because every
+  forcing dataset ever run here happened to stay inside each river's margin. Surfaced 2026-10-01 while
+  building a manuscript figure sourced from the full-forcing interannual record:
+  `runs/interannual_full/sagavanirktok`
+  silently went to NaN in `DIC`/`TOC`/`NO3`/`O2` (not `S`/`T`/`velocity`/`depth`/`width`, which only
+  overflowed to ~±1e25 — still "finite", easy to miss) for 3953 of 6936 days (57% of the record), starting
+  **exactly** 2013-03-04 and never recovering, with no exception/warning anywhere in `run.log`.
+
+  **Root cause, confirmed not assumed.** `surge_prudhoe_interannual_2005-2023_m.csv`'s single most extreme
+  value in the entire 19-year record (−1.0445 m) falls on 2013-03-04; combined with that day's ordinary
+  tidal trough (harmonic-only min ≈ −0.10 m), the mouth water level `Tide(t)` bottoms out at ≈−1.144 m
+  (reproduced directly: `fun_module.set_surge(-1.0445)` then scanning `Tide(t)` hourly over that day).
+  Checking each river's own mouth reference cross-section (`ZZ[1]/B[1]`, the "depth at `Tide=0`"): Colville
+  2.25 m and Kuparuk 1.34 m both have enough margin (`DEPTH[1]` bottoms at 1.11 m and 0.20 m respectively,
+  never crashed), but Sagavanirktok's is only 0.98 m — `DEPTH[1]` goes to **−0.16 m**, a non-physical
+  negative cross-section at the boundary. That single bad value corrupts the transport solve's tridiagonal
+  coefficients (`schemes_module.py`'s `D[i-1]/D[i]`-type ratios) for *every* species simultaneously (day
+  2982 is completely normal in all fields; day 2983 is already NaN/overflowing domain-wide) — `S`/`T` are
+  purely advected so they "only" overflow to astronomical finite garbage, while `DIC`/`TOC`/`NO3`/`O2`'s own
+  reaction terms (sqrt/log/Monod forms) turn that garbage into `NaN`, which then propagates forward forever.
+  This is new-exposure, not a new scenario: the original 44-yr `runs/interannual/sagavanirktok` reuses
+  `sagavanirktok.py`'s single repeated-2022-climatology surge file and never sees a surge this extreme, so
+  it has zero NaN days (checked directly, not assumed) over the same real calendar window.
+
+  **Fix**: `config.MOUTH_MIN_DEPTH` (0.05 m, per-site `getattr`-overridable like `DELTI`/`DELXI` but no site
+  needs to) is a pure numerical wetting floor, not a physical parameter. `uphyd_module.new_bc` now clamps
+  `eta = Tide(t)` to `eta_min = (MOUTH_MIN_DEPTH·B[1] − ZZ[1]) / B[1]` — computed fresh every call (not
+  cached at import time: `B`/`ZZ` are still placeholder-zero when this module is first imported, before
+  `init_module.init()` runs) — before deriving `H[1]`/`D[1]`/`DEPTH[1]` from it, so all three stay mutually
+  consistent. Inert for every timestep at every site except this one real event (`eta_min` is deeply
+  negative — e.g. −2.2 m at Colville — everywhere the floor isn't needed). **Verified**: a targeted 2990-day
+  Sagavanirktok rerun spanning the event shows zero NaN days post-fix (`DEPTH` bottoms at exactly the 0.05 m
+  floor on 2013-03-04, as designed); the full 19-year rerun confirms zero NaN days across all 6935 days for
+  every field, with physically sane magnitudes throughout (`runs/interannual_full/sagavanirktok` rebuilt
+  2026-10-01). `runs/interannual_full/colville`/`kuparuk` and every other site are unaffected (their
+  `eta_min` margins were never approached) and were not rerun.
 
 ## Configuration provenance
 

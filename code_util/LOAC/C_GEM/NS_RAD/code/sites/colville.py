@@ -130,5 +130,13 @@ B_UB_TOTAL = 1052.0     # SWORD v17b raw prismatic median [m]; IQR 792-1354
 DEPTH_lb = 2.25
 DEPTH_ub = 2.25
 
-distance = 1      # grid points in saline zone -- almost no saline intrusion
+# Grid points in the saline zone (sets the Chezy_lb/Chezy_ub ramp anchor -- see
+# init_module.py -- and, if ever given distinct lb/ub, the sed_module erosion-
+# threshold split). Was 1 (~0.1 km, "almost no saline intrusion") -- stale: the
+# model's OWN 2-yr definitive run puts the 1-psu isohaline at 3.48 km (84% of the
+# 4.15 km domain) on a time-mean basis, 3.95 km (95%) at peak surge/spring tide.
+# distance=35 (3.5 km) matches the time-mean intrusion length; re-derive if the
+# geometry, tidal/surge forcing, or DELXI/M change. See CLAUDE.md -> "Known
+# defects" -> "distance" for the full citation trail and verification.
+distance = 35
 GEOMETRY_IS_PLACEHOLDER = False

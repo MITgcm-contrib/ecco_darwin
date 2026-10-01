@@ -148,33 +148,45 @@ def Rates(co, s, t):
 _FORCING_CACHE = {}
 
 
-def _load(name):
+def _load(name, row_interval_sec=86400):
     """Return (series, rolling_ice_sum, time_axis) for a forcing file, parsing at
-    most once. The time axis is ONE DAY PER VALUE, `linspace(0, N*86400, N)`, derived
-    from the file's own length N -- not a fixed 365, so a file can be a one-year
-    climatology (N=365, the original/still-typical case) or a genuine multi-year
-    daily series (N=days in the record; see the interannual discharge/TOC forcings,
-    CLAUDE.md -> "Interannual forcing")."""
-    cached = _FORCING_CACHE.get(name)
+    most once. The time axis is ONE ROW PER `row_interval_sec` SECONDS,
+    `linspace(0, N*row_interval_sec, N)`, derived from the file's own length N -- not
+    a fixed 365, so a file can be a one-year daily climatology (N=365, the original/
+    still-typical case, row_interval_sec=86400 default), a genuine multi-year daily
+    series (N=days in the record; see the interannual discharge/TOC forcings,
+    CLAUDE.md -> "Interannual forcing"), or -- for the diurnal-cycle-resolving
+    variant, air temperature/solar only so far -- a hourly series
+    (row_interval_sec=3600, N=hours in the record; see CLAUDE.md -> "Interannual
+    forcing" -> "Sub-daily (diurnal) forcing"). Cached separately per (name,
+    row_interval_sec) pair since the same filename could in principle be read at two
+    resolutions in different contexts (not currently exercised, but cheap to allow)."""
+    cache_key = (name, row_interval_sec)
+    cached = _FORCING_CACHE.get(cache_key)
     if cached is None:
         with open(name, 'r', encoding='utf-8-sig') as f:
             data = genfromtxt(f, delimiter=',', dtype=float)
         # Rolling nbday_ice-day cumulative sum. Only meaningful for water
-        # temperature, where main.py uses it to drive the ice gate.
+        # temperature, where main.py uses it to drive the ice gate -- `nbday_ice` is a
+        # count of ROWS here, so it means "days" only at the default daily resolution;
+        # harmless at hourly resolution because no hourly-resolution call site reads
+        # this second return value (only the daily water-temperature call does).
         b = data.cumsum()
         b[nbday_ice:] = b[nbday_ice:] - b[:-nbday_ice]
-        axis = linspace(0, data.size*86400, data.size)
+        axis = linspace(0, data.size*row_interval_sec, data.size)
         cached = (data, b, axis)
-        _FORCING_CACHE[name] = cached
+        _FORCING_CACHE[cache_key] = cached
     return cached
 
 
-def exfread(name, t):
-    """Interpolate a cached daily forcing series to model time `t` [s]. Returns (value,
+def exfread(name, t, row_interval_sec=86400):
+    """Interpolate a cached forcing series (one row per `row_interval_sec` seconds,
+    86400 i.e. daily by default) to model time `t` [s]. Returns (value,
     rolling_ice_sum); the second is meaningful only for the water-temperature call (the
     legacy previousdays gate). Series are parsed once and memoised in _FORCING_CACHE.
 
-    A one-year (365-value) series repeats annually when repeatYear=1, exactly as
+    A one-year series (N == 31536000/row_interval_sec -- 365 rows daily, 8760 rows
+    hourly) repeats annually when repeatYear=1, exactly as
     before. A longer, genuinely multi-year series (e.g. an interannual discharge/TOC
     forcing) is NOT wrapped -- t indexes straight into it, and interp clamps to the
     boundary value if a run's MAXT ever exceeds the record.
@@ -195,9 +207,10 @@ def exfread(name, t):
     last timestep and breaking the bit-identity the optimization history was
     validated against -- see CLAUDE.md's bit-identity harness caveat), while
     correctly wrapping every year, not just the second one, beyond that range."""
-    data, b, axis = _load(name)
+    data, b, axis = _load(name, row_interval_sec)
     P = 31536000
-    if repeatYear == 1 and data.size == 365 and t > P:
+    n_per_year = P // row_interval_sec
+    if repeatYear == 1 and data.size == n_per_year and t > P:
         t = t - P * ((t - 1) // P)
     y = interp(t, axis, data)
     # for water temperature only

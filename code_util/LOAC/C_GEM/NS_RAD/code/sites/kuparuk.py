@@ -171,5 +171,13 @@ B_UB_TOTAL = 60.0      # SWORD v17b raw prismatic median [m]; IQR 42-78, 127 nod
                         # median n_chan_mod = 1.0. This site's flare is REAL convergence,
                         # not a definition change -- the control for the experiment.
 
-distance = 1
+# Grid points in the saline zone (sets the Chezy_lb/Chezy_ub ramp anchor -- see
+# init_module.py -- and, if ever given distinct lb/ub, the sed_module erosion-
+# threshold split). Was 1 (~0.1 km, "almost no saline intrusion") -- stale: the
+# model's OWN 2-yr definitive run puts the 1-psu isohaline at 5.93 km (83% of the
+# 7.16 km domain) on a time-mean basis, 6.94 km (97%) at peak surge/spring tide.
+# distance=59 (5.9 km) matches the time-mean intrusion length; re-derive if the
+# geometry, tidal/surge forcing, or DELXI/M change. See CLAUDE.md -> "Known
+# defects" -> "distance" for the full citation trail and verification.
+distance = 59
 GEOMETRY_IS_PLACEHOLDER = False

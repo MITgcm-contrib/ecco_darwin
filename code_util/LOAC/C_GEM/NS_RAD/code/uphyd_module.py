@@ -10,14 +10,24 @@ ordering are unchanged, so results are bit-identical to the pure-Python version.
 import numpy as np
 from numba import njit
 
-from config import M, M1, M2, M3
+from config import M, M1, M2, M3, MOUTH_MIN_DEPTH
 from variables import B, H, TH, D, ZZ, DEPTH, U, TU, Dold
 from fun_module import Tide
 
 
 def new_bc(t, Qr):
     """Set new boundary conditions."""
-    H[1] = B[1] * Tide(t)
+    eta = Tide(t)
+    # Minimum water level (relative to the ZZ[1] datum) that keeps DEPTH[1] >=
+    # MOUTH_MIN_DEPTH -- see config.py's MOUTH_MIN_DEPTH docstring for why this floor
+    # exists (an extreme real negative-surge event can otherwise drive D[1] negative
+    # for a shallow-mouth river). Recomputed each call (not cached at import time):
+    # B/ZZ are placeholder-zero until init_module.init() runs, which happens after
+    # this module is imported.
+    eta_min = (MOUTH_MIN_DEPTH * B[1] - ZZ[1]) / B[1]
+    if eta < eta_min:
+        eta = eta_min
+    H[1] = B[1] * eta
     TH[1] = H[1]
     D[1] = H[1] + ZZ[1]
     DEPTH[1] = D[1] / B[1]

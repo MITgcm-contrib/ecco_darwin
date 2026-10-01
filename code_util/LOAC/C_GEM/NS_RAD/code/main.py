@@ -19,6 +19,7 @@ from lateral_module import lateral
 from config import (M, MAXT, DELTI, WARMUP, TS, DEPTH_lb, B_lb, PI, G, EL, B_ub,
                     DELXI, SITE, SITE_LABEL, DISCHARGE_FILE, WATERTEMP_FILE, ICE_MODEL,
                     WIND_FILE, SOLAR_FILE, AIRTEMP_FILE, RELHUM_FILE, PCO2_FILE,
+                    WIND_FREQ_SEC, SOLAR_FREQ_SEC, AIRTEMP_FREQ_SEC, RELHUM_FREQ_SEC,
                     SEATEMP_FILE, BOUNDARY_FORCING, SURGE_FILE, Q_FRACTION)
 from variables import dispersion, v
 
@@ -105,16 +106,16 @@ def main():
         # Wind. Both the saline-zone and tidal-river wind read the same series --
         # there is only one regional record (NDBC PRDA2), so the split in
         # fun_module.piston_velocity is currently fed identical values.
-        Uw_sal, previousdays = exfread(P_WIND, t)
-        Uw_tid, previousdays = exfread(P_WIND, t)
+        Uw_sal, previousdays = exfread(P_WIND, t, WIND_FREQ_SEC)
+        Uw_tid, previousdays = exfread(P_WIND, t, WIND_FREQ_SEC)
 
         # Solar radiation
-        I0, previousdays = exfread(P_SOLAR, t)
+        I0, previousdays = exfread(P_SOLAR, t, SOLAR_FREQ_SEC)
         # Air Temperature -- drives the surface heat budget (heat_module)
-        air_temp, previousdays = exfread(P_AIRTEMP, t)
+        air_temp, previousdays = exfread(P_AIRTEMP, t, AIRTEMP_FREQ_SEC)
         # Relative humidity for the latent-heat term, OBSERVED at Deadhorse Airport
         # (colocated with PRDA2), replacing the assumed constant. See tools/build_humidity.py.
-        rel_hum, previousdays = exfread(P_RELHUM, t)
+        rel_hum, previousdays = exfread(P_RELHUM, t, RELHUM_FREQ_SEC)
         # pCO2  (note the capital B -- the file is pCO2_Barrow_2022.csv, which the
         # original lowercase spelling only resolved on case-insensitive filesystems)
         pCO2, previousdays = exfread(P_PCO2, t)  #microatm
