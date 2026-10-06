@@ -32,6 +32,9 @@ C     === Global variables ===
 #include "DYNVARS.h"
 #include "GRID.h"
 #include "SURFACE.h"
+#ifdef ALLOW_WAD
+# include "WAD.h"
+#endif
 #ifdef ALLOW_AUTODIFF_TAMC
 # include "tamc.h"
 #endif
@@ -372,6 +375,19 @@ C   (requires time varying dP(Nr) like dP(k-bottom) with NonLin FS).
      &                            )*recip_rhoConst
            ENDDO
           ENDDO
+#ifdef ALLOW_WAD
+C-    pkg/wad (wadLoadDepth): the bed carries grounded ice; pass only the
+C     fraction wadLoadFac of the ice load to the ocean
+          IF ( useWAD ) THEN
+           DO j = jMin, jMax
+            DO i = iMin, iMax
+             phi0surf(i,j,bi,bj) = phi0surf(i,j,bi,bj)
+     &         - ( oneRL - wadLoadFac(i,j,bi,bj) )
+     &           *sIceLoad(i,j,bi,bj)*gravity*sIceLoadFac*recip_rhoConst
+            ENDDO
+           ENDDO
+          ENDIF
+#endif /* ALLOW_WAD */
          ELSE
           DO j = jMin, jMax
            DO i = iMin, iMax

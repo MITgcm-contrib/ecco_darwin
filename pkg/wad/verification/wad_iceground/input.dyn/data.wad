@@ -1,0 +1,8 @@
+# wad_iceground.dyn: ramped ice load (wadLoadDepth), see input/gendata.py
+ &WAD_PARM01
+ wadMinDepth=0.05,
+ wadCritDepth=0.10,
+ wadMonFreq=86400.,
+ wadIceTopMelt=.TRUE.,
+ wadLoadDepth=0.3,
+ &

@@ -2,6 +2,9 @@
 #ifdef ALLOW_PTRACERS
 # include "PTRACERS_OPTIONS.h"
 #endif
+#ifdef ALLOW_SALT_PLUME
+# include "SALT_PLUME_OPTIONS.h"
+#endif
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 CBOP
@@ -20,6 +23,11 @@ C     (0 on dry columns, 1 once D >= 2*wadCritDepth). On a dry flat these
 C     fluxes would otherwise act on the few cm of the film (salinity,
 C     heat or brine spikes); physically they go into the exposed bed.
 C     EmPmR is not changed (it moves volume with useRealFreshWaterFlux).
+C     With a non-linear free surface and useRealFreshWaterFlux, the
+C     tracer content of that volume, PmEpR*(xx_EvPrRn - surface tracer),
+C     is part of surfaceForcingT/S/PTr; it is left unscaled, as the volume
+C     it belongs to (scaled, the fresh water would bring in the surface
+C     salinity: a salt source wherever fD < 1).
 C     Called at the end of S/R EXTERNAL_FORCING_SURF.
 
 C !USES:
@@ -30,10 +38,15 @@ C !USES:
 #include "GRID.h"
 #include "DYNVARS.h"
 #include "FFIELDS.h"
+#include "SURFACE.h"
 #include "WAD.h"
+#ifdef ALLOW_SALT_PLUME
+# include "SALT_PLUME.h"
+#endif
 #ifdef ALLOW_PTRACERS
 # include "PTRACERS_SIZE.h"
 # include "PTRACERS_PARAMS.h"
+# include "PTRACERS_START.h"
 # include "PTRACERS_FIELDS.h"
 #endif
 
@@ -44,21 +57,52 @@ CEOP
 
 #ifdef ALLOW_WAD
 C !LOCAL VARIABLES:
-      INTEGER i, j
+      INTEGER i, j, ks
 #ifdef ALLOW_PTRACERS
       INTEGER iTr
 #endif
+      LOGICAL realFW
+      _RL fwT, fwS
       _RL fD(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
 
       IF ( .NOT.( useWAD .AND. wadDryForcing ) ) RETURN
+
+      IF ( usingPCoords ) THEN
+       ks = Nr
+      ELSE
+       ks = 1
+      ENDIF
+C-    as in EXTERNAL_FORCING_SURF: the fresh-water tracer-content term
+      realFW = ( nonlinFreeSurf.GT.0 .OR. usingPCoords )
+     &         .AND. useRealFreshWaterFlux
+      fwT = 0. _d 0
+      fwS = 0. _d 0
 
       DO j=1-OLy,sNy+OLy
        DO i=1-OLx,sNx+OLx
         fD(i,j) = MIN( oneRL, MAX( zeroRL,
      &     ( etaH(i,j,bi,bj) + Ro_surf(i,j,bi,bj) - R_low(i,j,bi,bj)
      &       - wadCritDepth )/wadCritDepth ) )
-        surfaceForcingT(i,j,bi,bj) = surfaceForcingT(i,j,bi,bj)*fD(i,j)
-        surfaceForcingS(i,j,bi,bj) = surfaceForcingS(i,j,bi,bj)*fD(i,j)
+        IF ( realFW ) THEN
+         IF ( temp_EvPrRn.NE.UNSET_RL ) fwT = PmEpR(i,j,bi,bj)
+     &      *( temp_EvPrRn - theta(i,j,ks,bi,bj) )*mass2rUnit
+         IF ( salt_EvPrRn.NE.UNSET_RL ) fwS = PmEpR(i,j,bi,bj)
+     &      *( salt_EvPrRn - salt(i,j,ks,bi,bj) )*mass2rUnit
+        ENDIF
+        surfaceForcingT(i,j,bi,bj) =
+     &     ( surfaceForcingT(i,j,bi,bj) - fwT )*fD(i,j) + fwT
+        surfaceForcingS(i,j,bi,bj) =
+     &     ( surfaceForcingS(i,j,bi,bj) - fwS )*fD(i,j) + fwS
+#ifdef ALLOW_SALT_PLUME
+C-    The brine flux leaves the surface in SALT_PLUME_FORCING_SURF (already
+C     inside surfaceForcingS, scaled just above) and re-enters at depth in
+C     SALT_PLUME_TENDENCY_APPLY_S from saltPlumeFlux. Scale saltPlumeFlux by
+C     the same factor so both halves vanish together on a drying column and
+C     the net salt input stays fD*(surface flux): conservative.
+C     (SALT_PLUME_VOLUME is rejected in WAD_CHECK)
+        IF ( useSALT_PLUME ) saltPlumeFlux(i,j,bi,bj) =
+     &       saltPlumeFlux(i,j,bi,bj)*fD(i,j)
+#endif
 C-    Qsw is not reloaded every step (only with EXF or periodic forcing):
 C     if it still holds our last output, scale the last input again
         IF ( Qsw(i,j,bi,bj).NE.wadQswOut(i,j,bi,bj) )
@@ -72,8 +116,13 @@ C     if it still holds our last output, scale the last input again
        DO iTr=1,PTRACERS_numInUse
         DO j=1-OLy,sNy+OLy
          DO i=1-OLx,sNx+OLx
+          fwS = 0. _d 0
+          IF ( realFW .AND. PTRACERS_StepFwd(iTr) .AND.
+     &         PTRACERS_EvPrRn(iTr).NE.UNSET_RL ) fwS = PmEpR(i,j,bi,bj)
+     &      *( PTRACERS_EvPrRn(iTr) - pTracer(i,j,ks,bi,bj,iTr) )
+     &      *mass2rUnit
           surfaceForcingPTr(i,j,bi,bj,iTr) =
-     &       surfaceForcingPTr(i,j,bi,bj,iTr)*fD(i,j)
+     &       ( surfaceForcingPTr(i,j,bi,bj,iTr) - fwS )*fD(i,j) + fwS
          ENDDO
         ENDDO
        ENDDO

@@ -1,4 +1,7 @@
 #include "WAD_OPTIONS.h"
+#ifdef ALLOW_SEAICE
+# include "SEAICE_OPTIONS.h"
+#endif
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 CBOP
@@ -19,6 +22,10 @@ C     == Global variables ===
 #include "PARAMS.h"
 #include "GRID.h"
 #include "WAD.h"
+#ifdef ALLOW_SEAICE
+# include "SEAICE_SIZE.h"
+# include "SEAICE_GRID.h"
+#endif
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     myThid ::  my Thread Id number
@@ -56,6 +63,24 @@ C-    extra Manning roughness (river ice, ice jams)
         CALL READ_FLD_XY_RS( wadManningFile, ' ', wadManEx, 0, myThid )
         CALL EXCH_XY_RS( wadManEx, myThid )
       ENDIF
+
+#ifdef ALLOW_SEAICE
+C-    static sea-ice velocity masks (SEAICE_INIT_FIXED is called before)
+      DO bj=myByLo(myThid), myByHi(myThid)
+       DO bi=myBxLo(myThid), myBxHi(myThid)
+        DO j=1-OLy,sNy+OLy
+         DO i=1-OLx,sNx+OLx
+          wadSIMaskU0(i,j,bi,bj) = oneRS
+          wadSIMaskV0(i,j,bi,bj) = oneRS
+          IF ( useSEAICE ) THEN
+           wadSIMaskU0(i,j,bi,bj) = SIMaskU(i,j,bi,bj)
+           wadSIMaskV0(i,j,bi,bj) = SIMaskV(i,j,bi,bj)
+          ENDIF
+         ENDDO
+        ENDDO
+       ENDDO
+      ENDDO
+#endif /* ALLOW_SEAICE */
 
 #ifdef ALLOW_DIAGNOSTICS
       IF ( useDiagnostics ) THEN

@@ -1,0 +1,6 @@
+ &DIAGNOSTICS_LIST
+ fields(1:6,1)='ETAN    ','WADdepth','WADdryC ','SIheff  ','SIarea  ','WADEVLIM',
+ fileName(1)='sfc', frequency(1)=-21600., timePhase(1)=0.,
+ &
+ &DIAG_STATIS_PARMS
+ &

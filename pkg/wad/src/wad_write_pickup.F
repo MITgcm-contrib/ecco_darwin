@@ -49,6 +49,12 @@ C-    upwind side of each face (wadUpwindFace), for an exact restart
      &                      myIter, myThid )
       CALL WRITE_REC_3D_RL( fn, precFloat64, 1, wadUpS, 2,
      &                      myIter, myThid )
+C-    relaxed sea-ice load factor (wadLoadDepth)
+      IF ( wadLoadDepth.GT.wadCritDepth ) THEN
+       WRITE(fn,'(A,A)') 'pickup_wadload.', suff
+       CALL WRITE_REC_3D_RL( fn, precFloat64, 1, wadLoadFac, 1,
+     &                       myIter, myThid )
+      ENDIF
 #endif /* ALLOW_WAD */
 
       RETURN

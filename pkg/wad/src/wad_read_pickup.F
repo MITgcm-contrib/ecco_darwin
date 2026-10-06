@@ -70,6 +70,22 @@ C     keep the side from the pickup velocity (restart not bit-exact)
      &                      SQUEEZE_RIGHT, myThid )
         _END_MASTER(myThid)
       ENDIF
+C-    relaxed sea-ice load factor (wadLoadDepth); without the file it is
+C     reset to its depth ramp (restart not bit-exact)
+      IF ( wadLoadDepth.GT.wadCritDepth ) THEN
+       WRITE(fn,'(A,A)') 'pickup_wadload.', suff
+       CALL MDS_CHECK4FILE( fn, '.data', 'WAD_READ_PICKUP',
+     &                      filNam, fileExist, .TRUE., myThid )
+       IF ( fileExist ) THEN
+        CALL READ_REC_3D_RL( fn, precFloat64, 1, wadLoadFac, 1,
+     &                       myIter, myThid )
+        CALL EXCH_XY_RL( wadLoadFac, myThid )
+        _BEGIN_MASTER(myThid)
+        wadLoadRead = .TRUE.
+        _END_MASTER(myThid)
+        _BARRIER
+       ENDIF
+      ENDIF
 #endif /* ALLOW_WAD */
 
       RETURN

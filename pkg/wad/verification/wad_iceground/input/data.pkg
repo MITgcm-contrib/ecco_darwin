@@ -1,0 +1,7 @@
+ &PACKAGES
+ useWAD=.TRUE.,
+ useSEAICE=.TRUE.,
+ useEXF=.TRUE.,
+ useCAL=.TRUE.,
+ useDiagnostics=.TRUE.,
+ &

@@ -31,13 +31,15 @@ C     iUnit      :: Work variable for IO unit number
 
       NAMELIST /WAD_PARM01/
      &       wadMinDepth, wadCritDepth, wadDragDepth, wadAdvDepth,
-     &       wadGMDepth,
+     &       wadGMDepth, wadIceDepth, wadLoadDepth, wadLoadTau,
+     &       wadIceMinHeff,
      &       wadKPPDepth, wadKPPCapDepth,
      &       wadSmoothWidth, wadMonFreq, wadMaxSpeed,
      &       wadManningN, wadDragMax, wadMaxFroude,
      &       wadManningFile, wadManningT1, wadManningT2,
      &       wadConserveVol, wadCarryVel,
-     &       wadUpwindFace, wadDryForcing
+     &       wadIceGround, wadUpwindFace, wadDryForcing, wadIceTopMelt,
+     &       wadIceSeal, wadIceOBpack
 
       IF ( .NOT.useWAD ) THEN
 C-    pkg WAD is not used
@@ -60,6 +62,16 @@ C-    momentum advection is unstable in thin water on 2-D flats
       wadAdvDepth    = 0.5 _d 0
 C-    GM/Redi makes large tracer extrema in thin r* layers
       wadGMDepth     = 2. _d 0
+C-    sea ice would slide down film-covered flats faster than the water
+      wadIceDepth    = 2. _d 0
+C-    off by default (full ice load on grounded columns, as before)
+      wadLoadDepth   = 0. _d 0
+      wadLoadTau     = 3600. _d 0
+      wadIceSeal     = .FALSE.
+      wadIceOBpack   = .TRUE.
+      wadIceMinHeff  = 0. _d 0
+C-    set to .TRUE. by WAD_READ_PICKUP when it reads wadLoadFac
+      wadLoadRead    = .FALSE.
 C-    optional: the KPP non-local flux fraction is capped at 1 in any
 C     case (WAD_KPP_TAPER), which removes the T/S extrema it made in
 C     thin r* columns
@@ -79,7 +91,9 @@ C     reach ~10 m/s); a thin-water instability passes it within steps
       wadMaxSpeed    = 30. _d 0
       wadConserveVol = .TRUE.
       wadCarryVel    = .FALSE.
+      wadIceGround   = .TRUE.
       wadDryForcing  = .TRUE.
+      wadIceTopMelt  = .FALSE.
 C-    the minimum (NLFS) or mean (r*) surface throttles the shoreline flux
       wadUpwindFace  = .TRUE.
 

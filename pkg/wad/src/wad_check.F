@@ -1,5 +1,11 @@
 #include "WAD_OPTIONS.h"
+#ifdef ALLOW_SALT_PLUME
+# include "SALT_PLUME_OPTIONS.h"
+#endif
 #include "MOM_COMMON_OPTIONS.h"
+#ifdef ALLOW_SEAICE
+# include "SEAICE_OPTIONS.h"
+#endif
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 CBOP
@@ -25,6 +31,10 @@ C     == Global variables ===
 #ifdef ALLOW_PTRACERS
 # include "PTRACERS_SIZE.h"
 # include "PTRACERS_PARAMS.h"
+#endif
+#ifdef ALLOW_SEAICE
+# include "SEAICE_SIZE.h"
+# include "SEAICE_PARAMS.h"
 #endif
 #include "WAD.h"
 
@@ -77,6 +87,14 @@ C--  Print out some key parameters :
      &  ' /* momentum advection ramped off below this depth (m) */')
       CALL WRITE_0D_RL( wadGMDepth, INDEX_NONE, 'wadGMDepth =',
      &  ' /* GM/Redi tapered off below this depth (m) */')
+      CALL WRITE_0D_RL( wadIceDepth, INDEX_NONE, 'wadIceDepth =',
+     &  ' /* sea-ice tilt force ramped off below this depth (m) */')
+      CALL WRITE_0D_RL( wadLoadDepth, INDEX_NONE, 'wadLoadDepth =',
+     &  ' /* sea-ice load ramped on from wadCritDepth to this (m) */')
+      CALL WRITE_0D_RL( wadLoadTau, INDEX_NONE, 'wadLoadTau =',
+     &  ' /* relaxation time of the sea-ice load factor (s) */')
+      CALL WRITE_0D_RL( wadIceMinHeff, INDEX_NONE, 'wadIceMinHeff =',
+     &  ' /* ice faces with less ice than this left out (m) */')
       CALL WRITE_0D_RL( wadKPPDepth, INDEX_NONE, 'wadKPPDepth =',
      &  ' /* KPP non-local flux ramped off below this depth (m) */')
       CALL WRITE_0D_RL( wadKPPCapDepth, INDEX_NONE, 'wadKPPCapDepth =',
@@ -101,6 +119,14 @@ C--  Print out some key parameters :
      &  ' /* NLFS face thickness from upwind surface */')
       CALL WRITE_0D_L( wadDryForcing, INDEX_NONE, 'wadDryForcing =',
      &  ' /* no surface forcing on dry columns */')
+      CALL WRITE_0D_L( wadIceTopMelt, INDEX_NONE, 'wadIceTopMelt =',
+     &  ' /* grounded ice (dry column) may still melt */')
+      CALL WRITE_0D_L( wadIceOBpack, INDEX_NONE, 'wadIceOBpack =',
+     &  ' /* ice-free faces near open boundaries stay in solver */')
+      CALL WRITE_0D_L( wadIceSeal, INDEX_NONE, 'wadIceSeal =',
+     &  ' /* bottom-fast (grounded loaded) ice seals the bed */')
+      CALL WRITE_0D_L( wadIceGround, INDEX_NONE, 'wadIceGround =',
+     &  ' /* sea ice grounded where draft > flow depth */')
       CALL WRITE_0D_C( wadManningFile, -1, INDEX_NONE,
      &  'wadManningFile =', ' /* extra Manning roughness map */')
       CALL WRITE_0D_RL( wadManningT1, INDEX_NONE, 'wadManningT1 =',
@@ -191,8 +217,17 @@ C     advection of momentum blows up
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
       ENDIF
-C-    Combinations that pkg/wad does not handle
-C-    useRealFreshWaterFlux: supported (evaporation in
+#ifdef ALLOW_SEAICE
+      IF ( useSEAICE .AND. SEAICE_maskRHS ) THEN
+C-    SEAICE_maskRHS recomputes seaiceMaskU/V each step, undoing WAD
+        WRITE(msgBuf,'(A)')
+     &  'WAD_CHECK: pkg/wad does not work with SEAICE_maskRHS=.TRUE.'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+#endif
+C-    Combinations that pkg/wad does not handle (see audit_2026-09-27.md)
+C-    useRealFreshWaterFlux: supported since 2026-09-30 (evaporation in
 C     the outflow limiter and the dry-column ramp, EmPmR in the budget)
       IF ( useRealFreshWaterFlux ) THEN
         WRITE(msgBuf,'(2A)') 'WAD_CHECK: useRealFreshWaterFlux:',
@@ -228,18 +263,33 @@ C-    uVel halos would miss the outflow limiter
         errCount = errCount + 1
       ENDIF
       IF ( useSALT_PLUME ) THEN
-        WRITE(msgBuf,'(A)') 'WAD_CHECK: pkg/salt_plume is not supported'
-     &   //' (brine bypasses the dry-column ramp)'
+#ifdef SALT_PLUME_VOLUME
+        WRITE(msgBuf,'(A)') 'WAD_CHECK: pkg/salt_plume with'
+     &   //' SALT_PLUME_VOLUME is not supported'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
+#else
+C-    WAD_DRY_FORCING scales saltPlumeFlux with the
+C     surface salt flux, so the brine follows the dry-column ramp
+        IF ( .NOT.wadDryForcing ) THEN
+         WRITE(msgBuf,'(2A)') '** WARNING ** WAD_CHECK: salt_plume ',
+     &    'without wadDryForcing: brine still enters dry-column films'
+         CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
+     &                       SQUEEZE_RIGHT, myThid )
+        ENDIF
+#endif
       ENDIF
+#ifdef ALLOW_SEAICE
+# if (defined SEAICE_ITD) || (defined SEAICE_USE_GROWTH_ADX)
       IF ( useSEAICE ) THEN
-C-    sea ice on drying flats (masks, grounding, dry-column growth) is
-C     not part of this version of pkg/wad
-        WRITE(msgBuf,'(A)') 'WAD_CHECK: pkg/seaice is not supported'
+C-    WAD_SEAICE_DRY blends HEFF/AREA/HSNOW around SEAICE_GROWTH only
+        WRITE(msgBuf,'(A)') 'WAD_CHECK: pkg/seaice with SEAICE_ITD or'
+     &   //' SEAICE_USE_GROWTH_ADX is not supported'
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
       ENDIF
+# endif
+#endif
       IF ( useGCHEM ) THEN
         WRITE(msgBuf,'(2A)') '** WARNING ** WAD_CHECK: pkg/gchem ',
      &   'air-sea fluxes are not ramped off on dry columns'
@@ -336,6 +386,15 @@ C    not stay uniform (and can blow up with films of a few mm).
 #endif
 #ifdef ALLOW_PTRACERS
       IF ( usePTRACERS ) THEN
+        IF ( wadDryForcing .AND. PTRACERS_addSrelax2EmP ) THEN
+C-    WAD_DRY_FORCING keeps PmEpR*(EvPrRn - pTracer) unscaled, but the
+C     add2EmP part of that term is scaled with the other fluxes
+          WRITE(msgBuf,'(3A)') '** WARNING ** WAD_CHECK: ',
+     &     'PTRACERS_addSrelax2EmP: its pTracer term',
+     &     ' follows the dry ramp'
+          CALL PRINT_MESSAGE( msgBuf, errorMessageUnit,
+     &                        SQUEEZE_RIGHT, myThid )
+        ENDIF
         nTrAB = 0
         DO iTr=1,PTRACERS_numInUse
           IF ( PTRACERS_AdamsBashGtr(iTr) .OR.

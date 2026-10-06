@@ -1,0 +1,14 @@
+ &EXF_NML_01
+ useExfCheckRange=.FALSE.,
+ &
+ &EXF_NML_02
+ &
+ &EXF_NML_03
+ atempconst=278.15,
+ aqhconst=0.008,
+ uwindconst=-10.,
+ vwindconst=0.,
+ swdownconst=300.,
+ lwdownconst=300.,
+ precipconst=0.,
+ &

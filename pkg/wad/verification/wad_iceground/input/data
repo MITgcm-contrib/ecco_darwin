@@ -1,0 +1,30 @@
+# wad_iceground: grounded sea ice melts and floats. See gendata.py.
+ &PARM01
+ eosType='LINEAR', tAlpha=2.E-4, sBeta=7.4E-4, tRef=5*-1.5, sRef=5*30.,
+ rhoConst=1025., gravity=9.81, f0=0., beta=0.,
+ viscAh=1., viscAr=1.E-4, diffKhT=0.1, diffKrT=1.E-5, diffKhS=0.1, diffKrS=1.E-5,
+ no_slip_sides=.FALSE., no_slip_bottom=.FALSE.,
+ bottomDragQuadratic=2.5E-3, selectImplicitDrag=2, implicitViscosity=.TRUE.,
+ rigidLid=.FALSE., implicitFreeSurface=.TRUE., exactConserv=.TRUE.,
+ nonlinFreeSurf=4, select_rStar=2,
+ hFacMin=0.01, hFacMinDr=0.01, hFacInf=0.001, hFacSup=2.0,
+ momStepping=.TRUE., vectorInvariantMomentum=.TRUE., upwindShear=.TRUE.,
+ tempStepping=.TRUE., saltStepping=.TRUE., tempAdvScheme=77, saltAdvScheme=77,
+ implicitDiffusion=.TRUE., staggerTimeStep=.TRUE.,
+ useRealFreshWaterFlux=.TRUE.,
+ readBinaryPrec=64, writeBinaryPrec=64, globalFiles=.TRUE.,
+ &
+ &PARM02
+ cg2dMaxIters=500, cg2dTargetResidual=1.E-13,
+ &
+ &PARM03
+ nIter0=0, nTimeSteps=14400, deltaT=60., abEps=0.1, tracForcingOutAB=1,
+ dumpFreq=0., monitorSelect=2, monitorFreq=86400.,
+ pChkptFreq=432000.,
+ &
+ &PARM04
+ usingCartesianGrid=.TRUE., delR=5*0.6, dXspacing=50., dYspacing=50.,
+ &
+ &PARM05
+ bathyFile='bathy.bin', pSurfInitFile='eta.bin',
+ &

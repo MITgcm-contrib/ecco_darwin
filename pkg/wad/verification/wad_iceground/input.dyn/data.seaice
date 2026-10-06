@@ -1,0 +1,14 @@
+ &SEAICE_PARM01
+ SEAICEuseDYNAMICS=.TRUE.,
+ SEAICE_strength=2750.,
+ LSR_mixIniGuess=1,
+ SEAICEnonLinIterMax=10,
+ SEAICEbasalDragK2=15.,
+ SEAICEbasalDragK1=1.13,
+ SEAICEadvScheme=77,
+ HeffFile='heff_part.bin',
+ AreaFile='area_part.bin',
+ HsnowFile='hsnow_part.bin',
+ SEAICE_Olx=0,
+ SEAICE_Oly=0,
+ &

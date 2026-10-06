@@ -1,4 +1,7 @@
 #include "WAD_OPTIONS.h"
+#ifdef ALLOW_SEAICE
+# include "SEAICE_OPTIONS.h"
+#endif
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 CBOP
@@ -23,6 +26,10 @@ C     == Global variables ===
 #include "SURFACE.h"
 #include "DYNVARS.h"
 #include "WAD.h"
+#ifdef ALLOW_SEAICE
+# include "SEAICE_SIZE.h"
+# include "SEAICE_GRID.h"
+#endif
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     myThid ::  my Thread Id number
@@ -47,6 +54,17 @@ C-    no Qsw seen yet: the first WAD_DRY_FORCING call takes Qsw as is
           wadRelaxS(i,j,bi,bj) = oneRL
           wadAdvFacW(i,j,bi,bj) = oneRL
           wadAdvFacS(i,j,bi,bj) = oneRL
+          wadIceFacW(i,j,bi,bj) = oneRL
+          wadIceFacS(i,j,bi,bj) = oneRL
+          wadSIsolU0(i,j,bi,bj) = oneRS
+          wadSIsolV0(i,j,bi,bj) = oneRS
+#if (defined ALLOW_SEAICE) && (defined SEAICE_CGRID)
+C-    static ice-solver masks (set in SEAICE_INIT_VARIA, called before)
+          IF ( useSEAICE ) THEN
+           wadSIsolU0(i,j,bi,bj) = seaiceMaskU(i,j,bi,bj)
+           wadSIsolV0(i,j,bi,bj) = seaiceMaskV(i,j,bi,bj)
+          ENDIF
+#endif
           wadOutFac(i,j,bi,bj) = oneRL
          ENDDO
         ENDDO

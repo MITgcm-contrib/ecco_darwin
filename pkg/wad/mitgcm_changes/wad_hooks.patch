@@ -43,10 +43,40 @@ index ceaa55417..c19b12bf4 100644
           DO j=1,sNy+1
            DO i=1,sNx+1
 diff --git a/model/src/external_forcing_surf.F b/model/src/external_forcing_surf.F
-index 27f6002b0..5a0c38506 100644
+index 27f6002b0..c7960d75c 100644
 --- a/model/src/external_forcing_surf.F
 +++ b/model/src/external_forcing_surf.F
-@@ -399,6 +399,11 @@ c         ENDDO
+@@ -32,6 +32,9 @@ C     === Global variables ===
+ #include "DYNVARS.h"
+ #include "GRID.h"
+ #include "SURFACE.h"
++#ifdef ALLOW_WAD
++# include "WAD.h"
++#endif
+ #ifdef ALLOW_AUTODIFF_TAMC
+ # include "tamc.h"
+ #endif
+@@ -372,6 +375,19 @@ C   (requires time varying dP(Nr) like dP(k-bottom) with NonLin FS).
+      &                            )*recip_rhoConst
+            ENDDO
+           ENDDO
++#ifdef ALLOW_WAD
++C-    pkg/wad (wadLoadDepth): the bed carries grounded ice; pass only the
++C     fraction wadLoadFac of the ice load to the ocean
++          IF ( useWAD ) THEN
++           DO j = jMin, jMax
++            DO i = iMin, iMax
++             phi0surf(i,j,bi,bj) = phi0surf(i,j,bi,bj)
++     &         - ( oneRL - wadLoadFac(i,j,bi,bj) )
++     &           *sIceLoad(i,j,bi,bj)*gravity*sIceLoadFac*recip_rhoConst
++            ENDDO
++           ENDDO
++          ENDIF
++#endif /* ALLOW_WAD */
+          ELSE
+           DO j = jMin, jMax
+            DO i = iMin, iMax
+@@ -399,6 +415,11 @@ c         ENDDO
          ENDIF
  #endif /* ALLOW_SHELFICE */
  
@@ -471,3 +501,246 @@ index c76e7d50a..233e2748c 100644
  C--   3.D Coriolis term (horizontal momentum, Eastward component: -fprime*w)
        IF ( select3dCoriScheme.GE.1 ) THEN
          CALL MOM_U_CORIOLIS_NH(bi,bj,k,wVel,uCf,myThid)
+diff --git a/pkg/seaice/SEAICE_PARAMS.h b/pkg/seaice/SEAICE_PARAMS.h
+index d6d7c8442..ad3cfb94f 100644
+--- a/pkg/seaice/SEAICE_PARAMS.h
++++ b/pkg/seaice/SEAICE_PARAMS.h
+@@ -66,6 +66,11 @@ C                          layer to define surface stresses on ocean
+ C                          following Hibler and Bryan (1987, JPO)
+ C     SEAICEupdateOceanStress :: If TRUE, update ocean surface stress
+ C                                accounting for seaice cover (default= T)
++C     SEAICEimmobileDrag :: with SEAICEuseDYNAMICS = F, still apply the
++C                          ice-ocean drag of the (motionless) ice to the
++C                          ocean, e.g. for landfast ice (default= F: the
++C                          drag coefficient is only set by the solvers,
++C                          so motionless ice is a frictionless lid)
+ C     SEAICEuseBDF2     :: use 2nd-order backward difference approach
+ C                          for momentum equations as described in
+ C                          Lemieux et al. 2014, JCP
+@@ -144,6 +149,7 @@ C     SEAICE_mon_mnc    :: write monitor to netcdf file
+      &     SEAICE_maskRHS, SEAICEscaleSurfStress,
+      &     SEAICE_clipVelocities, SEAICEaddSnowMass,
+      &     useHB87stressCoupling, SEAICEupdateOceanStress,
++     &     SEAICEimmobileDrag,
+      &     SEAICEuseFluxForm, SEAICEadvHeff, SEAICEadvArea,
+      &     SEAICEmultiDimAdvection,
+      &     SEAICEadvSnow, SEAICEadvSalt, SEAICEmomAdvection,
+@@ -174,6 +180,7 @@ C     SEAICE_mon_mnc    :: write monitor to netcdf file
+      &     SEAICE_maskRHS, SEAICEscaleSurfStress,
+      &     SEAICE_clipVelocities, SEAICEaddSnowMass,
+      &     useHB87stressCoupling, SEAICEupdateOceanStress,
++     &     SEAICEimmobileDrag,
+      &     SEAICEuseFluxForm, SEAICEadvHeff, SEAICEadvArea,
+      &     SEAICEadvSnow, SEAICEadvSalt, SEAICEmomAdvection,
+      &     SEAICEmultiDimAdvection,
+diff --git a/pkg/seaice/seaice_bottomdrag_coeffs.F b/pkg/seaice/seaice_bottomdrag_coeffs.F
+index 9385d3efc..26f54df70 100644
+--- a/pkg/seaice/seaice_bottomdrag_coeffs.F
++++ b/pkg/seaice/seaice_bottomdrag_coeffs.F
+@@ -37,6 +37,7 @@ C     === Global variables ===
+ #include "PARAMS.h"
+ #include "GRID.h"
+ #include "DYNVARS.h"
++#include "SURFACE.h"
+ #include "SEAICE_SIZE.h"
+ #include "SEAICE_PARAMS.h"
+ 
+@@ -138,6 +139,19 @@ C     here we do not need recip_k1, because we resolve the very thick ice
+ #else
+             hActual = HEFFLoc(i,j,bi,bj)
+             hCrit   = ABS(R_low(i,j,bi,bj))*AREALoc(i,j,bi,bj)*recip_k1
++#ifdef ALLOW_WAD
++C-    pkg/wad: R_low is measured from the model rest level (often above
++C     MSL) and ignores the tide; use the water depth the ice floats in,
++C     the column depth plus the draft when the ice loads the surface
++C     (useRealFreshWaterFlux: the surface is then the ice bottom)
++            IF ( useWAD ) THEN
++             tmp = Ro_surf(i,j,bi,bj) + etaN(i,j,bi,bj)
++     &           - R_low(i,j,bi,bj)
++             IF ( useRealFreshWaterFlux ) tmp = tmp
++     &          + HEFFLoc(i,j,bi,bj)*SEAICE_rhoIce*recip_rhoConst
++             hCrit = MAX( tmp, 0. _d 0 )*AREALoc(i,j,bi,bj)*recip_k1
++            ENDIF
++#endif /* ALLOW_WAD */
+ #endif /* SEAICE_ITD */
+ C     we want to have some soft maximum for better differentiability:
+ C     max(a,b;k) = ln(exp(k*a)+exp(k*b))/k
+diff --git a/pkg/seaice/seaice_dynsolver.F b/pkg/seaice/seaice_dynsolver.F
+index 1100ba92a..2096b22cf 100644
+--- a/pkg/seaice/seaice_dynsolver.F
++++ b/pkg/seaice/seaice_dynsolver.F
+@@ -33,6 +33,9 @@ C     === Global variables ===
+ #include "SEAICE_PARAMS.h"
+ #include "SEAICE_GRID.h"
+ #include "SEAICE.h"
++#ifdef ALLOW_WAD
++# include "WAD.h"
++#endif
+ 
+ #ifdef ALLOW_AUTODIFF_TAMC
+ # include "tamc.h"
+@@ -66,6 +69,8 @@ C     bi,bj  :: tile counters
+ # endif
+ C     phiSurf :: geopotential height at sea surface (including pressure load)
+       _RL phiSurf(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
++C     tiltFacU/V :: factor on the tilt force (pkg/wad: 0 in thin water)
++      _RL tiltFacU, tiltFacV
+ #endif
+ C     TAUX    :: zonal      wind stress over seaice at U point
+ C     TAUY    :: meridional wind stress over seaice at V point
+@@ -250,6 +255,19 @@ C--   in S/R external_forcing_surf
+      &                      )*recip_rhoConst
+             ENDDO
+            ENDDO
++#ifdef ALLOW_WAD
++C-    as phi0surf (EXTERNAL_FORCING_SURF): only the fraction wadLoadFac of
++C     the load where the bed carries grounded ice
++           IF ( useWAD ) THEN
++            DO j=1-OLy,sNy+OLy
++             DO i=1-OLx,sNx+OLx
++              phiSurf(i,j) = phiSurf(i,j)
++     &          - ( 1. _d 0 - wadLoadFac(i,j,bi,bj) )*sIceLoadFac
++     &            *sIceLoad(i,j,bi,bj)*gravity*recip_rhoConst
++             ENDDO
++            ENDDO
++           ENDIF
++#endif /* ALLOW_WAD */
+           ELSE
+            DO j=1-OLy,sNy+OLy
+             DO i=1-OLx,sNx+OLx
+@@ -285,13 +303,23 @@ C--   basic forcing by wind stress
+          IF ( SEAICEuseTILT ) THEN
+           DO j=1-OLy+1,sNy+OLy
+            DO i=1-OLx+1,sNx+OLx
++            tiltFacU = 1. _d 0
++            tiltFacV = 1. _d 0
++#ifdef ALLOW_WAD
++C-    wetting-drying: no tilt force in thin water (ice would run down the
++C     film-covered bed much faster than the water, which feels bottom drag)
++            IF ( useWAD ) THEN
++             tiltFacU = wadIceFacW(i,j,bi,bj)
++             tiltFacV = wadIceFacS(i,j,bi,bj)
++            ENDIF
++#endif
+ C--   now add in tilt
+             FORCEX0(i,j,bi,bj)=FORCEX0(i,j,bi,bj)
+      &           -seaiceMassU(i,j,bi,bj)*_recip_dxC(i,j,bi,bj)
+-     &           *( phiSurf(i,j)-phiSurf(i-1,j) )
++     &           *( phiSurf(i,j)-phiSurf(i-1,j) )*tiltFacU
+             FORCEY0(i,j,bi,bj)=FORCEY0(i,j,bi,bj)
+      &           -seaiceMassV(i,j,bi,bj)* _recip_dyC(i,j,bi,bj)
+-     &           *( phiSurf(i,j)-phiSurf(i,j-1) )
++     &           *( phiSurf(i,j)-phiSurf(i,j-1) )*tiltFacV
+            ENDDO
+           ENDDO
+          ENDIF
+@@ -372,6 +400,17 @@ C End of IF (SEAICEuseDYNAMICS and DIFFERENT_MULTIPLE ...
+       ENDIF
+ #endif /* SEAICE_CGRID */
+ 
++#ifdef SEAICE_CGRID
++C     Motionless ice (no dynamics, e.g. landfast ice): the solvers, which
++C     otherwise set the ice-ocean drag coefficient, are not called
++      IF ( SEAICEimmobileDrag .AND. .NOT.SEAICEuseDYNAMICS ) THEN
++        CALL SEAICE_OCEANDRAG_COEFFS(
++     I       uIce, vIce, HEFFM,
++     O       DWATN,
++     I       0, myTime, myIter, myThid )
++      ENDIF
++#endif /* SEAICE_CGRID */
++
+ C Update ocean surface stress
+       IF ( SEAICEupdateOceanStress ) THEN
+ #ifdef ALLOW_AUTODIFF_TAMC
+diff --git a/pkg/seaice/seaice_model.F b/pkg/seaice/seaice_model.F
+index eec8dc8d4..26c49d8ec 100644
+--- a/pkg/seaice/seaice_model.F
++++ b/pkg/seaice/seaice_model.F
+@@ -273,8 +273,15 @@ C     because of ugly time level business
+ # else /* SEAICE_USE_GROWTH_ADX */
+ #  ifdef ALLOW_DEBUG
+         IF (debugMode) CALL DEBUG_CALL( 'SEAICE_GROWTH', myThid )
++#  endif
++#  ifdef ALLOW_WAD
++C-    wetting-drying: no ice thermodynamics on dry columns
++        IF ( useWAD ) CALL WAD_SEAICE_DRY( .FALSE., myThid )
+ #  endif
+         CALL SEAICE_GROWTH( myTime, myIter, myThid )
++#  ifdef ALLOW_WAD
++        IF ( useWAD ) CALL WAD_SEAICE_DRY( .TRUE., myThid )
++#  endif
+ # endif /* SEAICE_USE_GROWTH_ADX */
+        ELSE
+ #endif /* DISABLE_SEAICE_GROWTH */
+diff --git a/pkg/seaice/seaice_ocean_stress.F b/pkg/seaice/seaice_ocean_stress.F
+index 2480649fb..ee0ed7820 100644
+--- a/pkg/seaice/seaice_ocean_stress.F
++++ b/pkg/seaice/seaice_ocean_stress.F
+@@ -27,6 +27,9 @@ C     === Global variables ===
+ #include "SEAICE_SIZE.h"
+ #include "SEAICE_PARAMS.h"
+ #include "SEAICE.h"
++#ifdef ALLOW_WAD
++# include "WAD.h"
++#endif
+ 
+ C     !INPUT/OUTPUT PARAMETERS:
+ C     windTauX :: X-direction wind stress over seaice at U point
+@@ -139,6 +142,24 @@ C     ice cover
+        ENDDO
+       ENDDO
+       ENDIF
++
++#ifdef ALLOW_WAD
++C--   wetting-drying: no surface stress (ice-ocean drag or wind) into thin
++C     water; applied to a few cm of water it feeds back on the ice and
++C     blows up (same ramp as the tilt force: wadIceFacW/S)
++      IF ( useWAD ) THEN
++       DO bj=myByLo(myThid),myByHi(myThid)
++        DO bi=myBxLo(myThid),myBxHi(myThid)
++         DO j=1,sNy
++          DO i=1,sNx
++           fu(i,j,bi,bj) = fu(i,j,bi,bj)*wadIceFacW(i,j,bi,bj)
++           fv(i,j,bi,bj) = fv(i,j,bi,bj)*wadIceFacS(i,j,bi,bj)
++          ENDDO
++         ENDDO
++        ENDDO
++       ENDDO
++      ENDIF
++#endif /* ALLOW_WAD */
+       CALL EXCH_UV_XY_RS(fu, fv, .TRUE., myThid)
+ 
+       RETURN
+diff --git a/pkg/seaice/seaice_readparms.F b/pkg/seaice/seaice_readparms.F
+index 519bea957..70d0a3942 100644
+--- a/pkg/seaice/seaice_readparms.F
++++ b/pkg/seaice/seaice_readparms.F
+@@ -117,6 +117,7 @@ C--   SEAICE parameters
+      & SEAICEuseTEM, SEAICEuseTilt,
+      & SEAICEuseMetricTerms, SEAICEselectMetricTerms,
+      & useHB87stressCoupling, SEAICEupdateOceanStress,
++     & SEAICEimmobileDrag,
+      & usePW79thermodynamics, useMaykutSatVapPoly, SEAICEuseFlooding,
+      & SEAICErestoreUnderIce, SEAICE_growMeltByConv,
+      & SEAICE_salinityTracer, SEAICE_ageTracer,
+@@ -267,6 +268,7 @@ C--   set default sea ice parameters
+       SEAICE_ageTracer      = .FALSE.
+       useHB87stressCoupling = .FALSE.
+       SEAICEupdateOceanStress = .TRUE.
++      SEAICEimmobileDrag    = .FALSE.
+       SEAICEscaleSurfStress = .TRUE.
+       SEAICEaddSnowMass     = .TRUE.
+       usePW79thermodynamics = .TRUE.
+diff --git a/pkg/seaice/seaice_summary.F b/pkg/seaice/seaice_summary.F
+index 02db47a00..32f49034f 100644
+--- a/pkg/seaice/seaice_summary.F
++++ b/pkg/seaice/seaice_summary.F
+@@ -86,6 +86,8 @@ C--  Time-stepping related param.
+      & 'SEAICEuseBDF2  =',' /* use backw. differencing for mom. eq. */')
+       CALL WRITE_0D_L ( SEAICEupdateOceanStress, INDEX_NONE,
+      & 'SEAICEupdateOceanStress=', ' /* update Ocean surf. stress */')
++      CALL WRITE_0D_L ( SEAICEimmobileDrag, INDEX_NONE,
++     & 'SEAICEimmobileDrag =', ' /* drag of motionless ice on ocean */')
+       CALL WRITE_0D_L ( SEAICErestoreUnderIce, INDEX_NONE,
+      & 'SEAICErestoreUnderIce  =', ' /* restore T and S under ice */')
+ 

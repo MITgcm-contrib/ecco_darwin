@@ -1,0 +1,7 @@
+ &SEAICE_PARM01
+ SEAICEuseDYNAMICS=.FALSE.,
+ HeffFile='heff.bin',
+ AreaFile='area.bin',
+ SEAICE_Olx=0,
+ SEAICE_Oly=0,
+ &

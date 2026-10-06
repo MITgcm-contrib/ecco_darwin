@@ -1,0 +1,4 @@
+ &SALT_PLUME_PARM01
+ SaltPlumeCriterion = 0.4,
+ SPsalFRAC = 1.0,
+ &
