@@ -1,0 +1,181 @@
+# pkg/debug
+
+Debug utilities (debugMode, debugLevel, field stats printing, DEBUG_ENTER/LEAVE).
+
+**in groups:** gfd
+**always-on utility package** (no data.pkg switch)
+**manual:** `doc/getting_started/getting_started.rst`
+
+## Headers
+- `DEBUG_OPTIONS.h` — Package-specific Options & Macros go here
+
+## Routines (13)
+`chksum_tiled.F`, `debug_call.F`, `debug_cs_corner_uv.F`, `debug_enter.F`, `debug_fld_stats_rl.F`, `debug_fld_stats_rs.F`, `debug_leave.F`, `debug_msg.F`, `debug_stats_rl.F`, `debug_stats_rs.F`, `fill_in_corners_rl.F`, `write_fullarray_rl.F`, `write_fullarray_rs.F`
+
+## Called from outside the package
+- `DEBUG_ENTER` ← `model/src/calc_r_star.F:73`
+- `DEBUG_LEAVE` ← `model/src/calc_r_star.F:336`
+- `DEBUG_CALL` ← `model/src/do_atmospheric_phys.F:143`
+- `DEBUG_ENTER` ← `model/src/do_atmospheric_phys.F:66`
+- `DEBUG_LEAVE` ← `model/src/do_atmospheric_phys.F:152`
+- `DEBUG_CALL` ← `model/src/do_oceanic_phys.F:320,397,450,481`
+- `DEBUG_ENTER` ← `model/src/do_oceanic_phys.F:251`
+- `DEBUG_LEAVE` ← `model/src/do_oceanic_phys.F:1132`
+- `DEBUG_MSG` ← `model/src/do_oceanic_phys.F:798`
+- `DEBUG_CALL` ← `model/src/dynamics.F:642`
+- `DEBUG_ENTER` ← `model/src/dynamics.F:250`
+- `DEBUG_LEAVE` ← `model/src/dynamics.F:735`
+- `DEBUG_STATS_RL` ← `model/src/dynamics.F:708,709,710,711`
+- `DEBUG_CALL` ← `model/src/forward_step.F:530,547,560,605`
+- `DEBUG_ENTER` ← `model/src/forward_step.F:424`
+- `DEBUG_LEAVE` ← `model/src/forward_step.F:1218`
+- `DEBUG_ENTER` ← `model/src/ini_nlfs_vars.F:47`
+- `DEBUG_LEAVE` ← `model/src/ini_nlfs_vars.F:186`
+- `DEBUG_CALL` ← `model/src/initialise_fixed.F:109,115,123,131`
+- `DEBUG_ENTER` ← `model/src/initialise_fixed.F:93`
+- `DEBUG_LEAVE` ← `model/src/initialise_fixed.F:298`
+- `DEBUG_CALL` ← `model/src/initialise_varia.F:203,220,229,240`
+- `DEBUG_ENTER` ← `model/src/initialise_varia.F:180`
+- `DEBUG_LEAVE` ← `model/src/initialise_varia.F:393`
+- `DEBUG_CALL` ← `model/src/integr_continuity.F:329`
+- `DEBUG_CALL` ← `model/src/load_fields_driver.F:189,199,211,223`
+- `DEBUG_ENTER` ← `model/src/load_fields_driver.F:105`
+- `DEBUG_LEAVE` ← `model/src/load_fields_driver.F:268`
+- `DEBUG_CALL` ← `model/src/main_do_loop.F:211`
+- `DEBUG_ENTER` ← `model/src/main_do_loop.F:197`
+- `DEBUG_LEAVE` ← `model/src/main_do_loop.F:245`
+- `DEBUG_CALL` ← `model/src/packages_init_fixed.F:150,160,170,174`
+- `DEBUG_ENTER` ← `model/src/packages_init_fixed.F:144`
+- `DEBUG_LEAVE` ← `model/src/packages_init_fixed.F:682`
+- `DEBUG_CALL` ← `model/src/packages_init_variables.F:194,206,216,226`
+- `DEBUG_ENTER` ← `model/src/packages_init_variables.F:169`
+- `DEBUG_LEAVE` ← `model/src/packages_init_variables.F:637`
+- `DEBUG_CALL` ← `model/src/salt_integrate.F:259,273`
+- `DEBUG_STATS_RL` ← `model/src/solve_for_pressure.F:264,326,407`
+- `DEBUG_CALL` ← `model/src/temp_integrate.F:261,275`
+- `DEBUG_CALL` ← `model/src/the_main_loop.F:382,666,678,690`
+- `DEBUG_ENTER` ← `model/src/the_main_loop.F:292`
+- `DEBUG_LEAVE` ← `model/src/the_main_loop.F:792`
+- `DEBUG_CALL` ← `model/src/the_model_main.F:616,658,675,685`
+- `DEBUG_ENTER` ← `model/src/the_model_main.F:606`
+- `DEBUG_LEAVE` ← `model/src/the_model_main.F:794`
+- `DEBUG_CALL` ← `model/src/thermodynamics.F:319,330,346`
+- `DEBUG_ENTER` ← `model/src/thermodynamics.F:127`
+- `DEBUG_LEAVE` ← `model/src/thermodynamics.F:413`
+- `DEBUG_STATS_RL` ← `model/src/thermodynamics.F:395,396,397,398`
+- `DEBUG_ENTER` ← `pkg/admtlm/admtlm_driver.F:44`
+- `DEBUG_LEAVE` ← `pkg/admtlm/admtlm_driver.F:87`
+- `DEBUG_ENTER` ← `pkg/autodiff/adread_adwrite.F:145,341`
+- `DEBUG_LEAVE` ← `pkg/autodiff/adread_adwrite.F:250,465`
+- `DEBUG_ENTER` ← `pkg/autodiff/adread_adwrite_i.F:116,211`
+- `DEBUG_LEAVE` ← `pkg/autodiff/adread_adwrite_i.F:143,242`
+- `DEBUG_ENTER` ← `pkg/autodiff/autodiff_restore.F:83`
+- `DEBUG_LEAVE` ← `pkg/autodiff/autodiff_restore.F:452`
+- `DEBUG_ENTER` ← `pkg/autodiff/autodiff_store.F:84`
+- `DEBUG_LEAVE` ← `pkg/autodiff/autodiff_store.F:538`
+- `DEBUG_CALL` ← `pkg/bling/bling_airseaflux.F:150,157,194,207`
+- `DEBUG_CALL` ← `pkg/bling/bling_carbonate_init.F:203,216,235,248`
+- `DEBUG_CALL` ← `pkg/bling/bling_carbonate_sys.F:112,129,177,187`
+- `DEBUG_CALL` ← `pkg/bling/bling_solvesaphe.F:302,311,320,1539`
+- `DEBUG_LEAVE` ← `pkg/bling/bling_solvesaphe.F:1723`
+- `DEBUG_ENTER` ← `pkg/cal/cal_init_fixed.F:28`
+- `DEBUG_LEAVE` ← `pkg/cal/cal_init_fixed.F:42`
+- `DEBUG_ENTER` ← `pkg/cal/cal_readparms.F:65`
+- `DEBUG_LEAVE` ← `pkg/cal/cal_readparms.F:114`
+- `DEBUG_CALL` ← `pkg/cost/cost_driver.F:35,48,59`
+- `DEBUG_CALL` ← `pkg/ctrl/ctrl_init_variables.F:104,110`
+- `DEBUG_ENTER` ← `pkg/ctrl/ctrl_init_variables.F:81`
+- `DEBUG_LEAVE` ← `pkg/ctrl/ctrl_init_variables.F:149`
+- `DEBUG_ENTER` ← `pkg/ctrl/ctrl_map_genarr.F:71,272`
+- `DEBUG_LEAVE` ← `pkg/ctrl/ctrl_map_genarr.F:199,411`
+- `DEBUG_ENTER` ← `pkg/ctrl/ctrl_map_ini_genarr.F:128`
+- `DEBUG_LEAVE` ← `pkg/ctrl/ctrl_map_ini_genarr.F:434`
+- `DEBUG_ENTER` ← `pkg/ctrl/ctrl_map_ini_gentim2d.F:87`
+- `DEBUG_LEAVE` ← `pkg/ctrl/ctrl_map_ini_gentim2d.F:501`
+- `DEBUG_ENTER` ← `pkg/diagnostics/diag_calc_psivel.F:77`
+- `DEBUG_LEAVE` ← `pkg/diagnostics/diag_calc_psivel.F:272`
+- `DEBUG_ENTER` ← `pkg/diagnostics/diag_cg2d.F:104`
+- `DEBUG_LEAVE` ← `pkg/diagnostics/diag_cg2d.F:366`
+- `DEBUG_ENTER` ← `pkg/diagnostics/diagnostics_calc_phivel.F:87`
+- `DEBUG_LEAVE` ← `pkg/diagnostics/diagnostics_calc_phivel.F:329`
+- `DEBUG_CALL` ← `pkg/dic/calcite_saturation.F:86,100,133,143`
+- `DEBUG_CALL` ← `pkg/dic/dic_biotic_forcing.F:129,170,184,195`
+- `DEBUG_ENTER` ← `pkg/dic/dic_biotic_forcing.F:121`
+- `DEBUG_LEAVE` ← `pkg/dic/dic_biotic_forcing.F:423`
+- `DEBUG_CALL` ← `pkg/dic/dic_solvesaphe.F:302,311,320,1607`
+- `DEBUG_LEAVE` ← `pkg/dic/dic_solvesaphe.F:1791`
+- `DEBUG_CALL` ← `pkg/dic/dic_surfforcing.F:129,136,180,194`
+- `DEBUG_CALL` ← `pkg/dic/dic_surfforcing_init.F:130,137,168,183`
+- `DEBUG_MSG` ← `pkg/dic/dic_surfforcing_init.F:152`
+- `DEBUG_CALL` ← `pkg/ecco/cost_averagesfields.F:74`
+- `DEBUG_LEAVE` ← `pkg/ecco/cost_averagesfields.F:127`
+- `DEBUG_CALL` ← `pkg/ecco/ecco_init_fixed.F:31`
+- `DEBUG_CALL` ← `pkg/exf/exf_init_fixed.F:127,137,149,162`
+- `DEBUG_ENTER` ← `pkg/exf/exf_init_fixed.F:44`
+- `DEBUG_LEAVE` ← `pkg/exf/exf_init_fixed.F:624`
+- `DEBUG_CALL` ← `pkg/flt/flt_main.F:105,124,139,147`
+- `DEBUG_ENTER` ← `pkg/flt/flt_main.F:100`
+- `DEBUG_LEAVE` ← `pkg/flt/flt_main.F:170`
+- `DEBUG_CALL` ← `pkg/gchem/gchem_forcing_sep.F:147,238,257,272`
+- `DEBUG_ENTER` ← `pkg/gchem/gchem_forcing_sep.F:71`
+- `DEBUG_LEAVE` ← `pkg/gchem/gchem_forcing_sep.F:317`
+- `DEBUG_CS_CORNER_UV` ← `pkg/generic_advdiff/gad_advection.F:865`
+- `DEBUG_CS_CORNER_UV` ← `pkg/generic_advdiff/gad_calc_rhs.F:792`
+- `DEBUG_CS_CORNER_UV` ← `pkg/generic_advdiff/gad_som_advect.F:483`
+- `DEBUG_CALL` ← `pkg/gmredi/gmredi_do_exch.F:52`
+- `DEBUG_CALL` ← `pkg/icefront/icefront_init_fixed.F:48`
+- `DEBUG_CALL` ← `pkg/longstep/longstep_thermodynamics.F:187`
+- `DEBUG_ENTER` ← `pkg/longstep/longstep_thermodynamics.F:73`
+- `DEBUG_LEAVE` ← `pkg/longstep/longstep_thermodynamics.F:221`
+- `DEBUG_STATS_RL` ← `pkg/longstep/longstep_thermodynamics.F:203,204,205,206`
+- `DEBUG_CS_CORNER_UV` ← `pkg/mom_vecinv/mom_vecinv.F:931`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_add_tides.F:50`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_add_tides.F:152`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_adjust.F:39`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_adjust.F:55`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_balance_flow.F:89`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_balance_flow.F:467`
+- `DEBUG_CALL` ← `pkg/obcs/obcs_calc.F:411,446`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_calc.F:76`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_calc.F:453`
+- `DEBUG_MSG` ← `pkg/obcs/obcs_calc.F:95,145,195,229`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_calc_stevens.F:135`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_calc_stevens.F:673`
+- `DEBUG_MSG` ← `pkg/obcs/obcs_calc_stevens.F:179,304,414,524`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_diag_balance.F:81`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_diag_balance.F:296`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_init_fixed.F:59`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_init_fixed.F:596`
+- `DEBUG_CALL` ← `pkg/obcs/obcs_init_variables.F:347,366,396,410`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_init_variables.F:53`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_init_variables.F:474`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_monitor.F:60`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_monitor.F:192`
+- `DEBUG_ENTER` ← `pkg/obcs/obcs_set_connect.F:51`
+- `DEBUG_LEAVE` ← `pkg/obcs/obcs_set_connect.F:331`
+- `DEBUG_CALL` ← `pkg/openad/inner_do_loop.F:138`
+- `DEBUG_ENTER` ← `pkg/openad/inner_do_loop.F:130`
+- `DEBUG_LEAVE` ← `pkg/openad/inner_do_loop.F:148`
+- `DEBUG_CALL` ← `pkg/openad/the_model_main.F:145,187,200,208`
+- `DEBUG_ENTER` ← `pkg/openad/the_model_main.F:135`
+- `DEBUG_LEAVE` ← `pkg/openad/the_model_main.F:352`
+- `WRITE_FULLARRAY_RS` ← `pkg/profiles/profiles_init_fixed.F:1170,1178`
+- `DEBUG_STATS_RL` ← `pkg/ptracers/ptracers_debug.F:41,44`
+- `DEBUG_CALL` ← `pkg/ptracers/ptracers_integrate.F:237,254`
+- `DEBUG_STATS_RL` ← `pkg/seaice/lsr.F:657,660`
+- `DEBUG_CS_CORNER_UV` ← `pkg/seaice/seaice_advection.F:789`
+- `DEBUG_STATS_RL` ← `pkg/seaice/seaice_lsr.F:598,601,1041,1044`
+- `DEBUG_CALL` ← `pkg/seaice/seaice_model.F:178,211,224,270`
+- `DEBUG_ENTER` ← `pkg/seaice/seaice_model.F:82`
+- `DEBUG_LEAVE` ← `pkg/seaice/seaice_model.F:411`
+- `DEBUG_STATS_RL` ← `pkg/seaice/seaice_preconditioner.F:221,225,408,412`
+- `DEBUG_ENTER` ← `pkg/showflops/showflops_init.F:42`
+- `DEBUG_LEAVE` ← `pkg/showflops/showflops_init.F:88`
+- `DEBUG_ENTER` ← `pkg/showflops/showflops_inloop.F:47`
+- `DEBUG_LEAVE` ← `pkg/showflops/showflops_inloop.F:106`
+- `DEBUG_ENTER` ← `pkg/showflops/showflops_insolve.F:47`
+- `DEBUG_LEAVE` ← `pkg/showflops/showflops_insolve.F:103`
+- `DEBUG_CS_CORNER_UV` ← `pkg/thsice/thsice_advection.F:765`
+
+## Verification experiments compiling it (58)
+`1D_ocean_ice_column` `MLAdjust` `adjustment.cs-32x32x1` `advect_cs` `advect_xz` `aim.5l_Equatorial_Channel` `aim.5l_LatLon` `aim.5l_cs` `atm_gray` `bottom_ctrl_5x5` `cfc_example` `cheapAML_box` `cpl_aim+ocn` `deep_anelastic` `dome` `exp2` `exp4` `fizhi-cs-32x32x40` `fizhi-cs-aqualev20` `fizhi-gridalt-hs` `front_relax` `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.90x40x15` `global_ocean.cs32x15` `halfpipe_streamice` `hs94.128x64x5` `hs94.1x64x5` `hs94.cs-32x32x5` `ideal_2D_oce` `internal_wave` `inverted_barometer` `isomip` `lab_sea` `matrix_example` `obcs_ctrl` `offline_exf_seaice` `seaice_itd` `seaice_obcs` `shelfice_2d_remesh` `short_surf_wave` `so_box_biogeo` `solid-body.cs-32x32x1` `tutorial_advection_in_gyre` `tutorial_baroclinic_gyre` `tutorial_cfc_offline` `tutorial_deep_convection` `tutorial_dic_adjoffline` `tutorial_global_oce_biogeo` `tutorial_global_oce_in_p` `tutorial_global_oce_latlon` `tutorial_global_oce_optim` `tutorial_held_suarez_cs` `tutorial_plume_on_slope` `tutorial_reentrant_channel` `tutorial_rotating_tank` `tutorial_tracer_adjsens` `vermix`

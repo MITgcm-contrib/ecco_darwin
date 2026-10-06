@@ -1,0 +1,342 @@
+# pkg/ctrl
+
+Control-vector handling for adjoint/optimisation: generic 2-D/3-D/time-varying controls, packing/unpacking, preconditioning, smoothing hooks.
+
+**pkg_depend:** +mdsio  (`+` requires, `-` excludes)
+**in groups:** adjoint
+**runtime switch:** `useCTRL`-style flag in `data.pkg` (check exact name in packages_boot.F)
+**reads:** `data.ctrl`, `data.optim`
+**manual:** `doc/autodiff/autodiff.rst`, `doc/examples/global_oce_optim/global_oce_optim.rst`, `doc/examples/tracer_adjsens/tracer_adjsens.rst`, `doc/ocean_state_est/ocean_state_est.rst`
+**adjoint support files:** ctrl_ad_check_lev1_dir.h, ctrl_ad_check_lev2_dir.h, ctrl_ad_check_lev3_dir.h, ctrl_ad_check_lev4_dir.h, ctrl_ad_diff.list
+
+## Namelist parameters
+### CTRL_NML
+- `xx_theta_file`
+- `xx_salt_file`
+- `xx_hflux_file`
+- `xx_hflux_remo_intercept`
+- `xx_hflux_remo_slope`
+- `xx_hfluxstartdate1`
+- `xx_hfluxstartdate2`
+- `xx_hfluxperiod`
+- `xx_sflux_file`
+- `xx_sflux_remo_intercept`
+- `xx_sflux_remo_slope`
+- `xx_sfluxstartdate1`
+- `xx_sfluxstartdate2`
+- `xx_sfluxperiod`
+- `xx_tauu_file`
+- `xx_tauu_remo_intercept`
+- `xx_tauu_remo_slope`
+- `xx_tauustartdate1`
+- `xx_tauustartdate2`
+- `xx_tauuperiod`
+- `xx_tauv_file`
+- `xx_tauv_remo_intercept`
+- `xx_tauv_remo_slope`
+- `xx_tauvstartdate1`
+- `xx_tauvstartdate2`
+- `xx_tauvperiod`
+- `xx_atemp_file`
+- `xx_atemp_remo_intercept`
+- `xx_atemp_remo_slope`
+- `xx_atempstartdate1`
+- `xx_atempstartdate2`
+- `xx_atempperiod`
+- `xx_aqh_file`
+- `xx_aqh_remo_intercept`
+- `xx_aqh_remo_slope`
+- `xx_aqhstartdate1`
+- `xx_aqhstartdate2`
+- `xx_aqhperiod`
+- `xx_precip_file`
+- `xx_precip_remo_intercept`
+- `xx_precip_remo_slope`
+- `xx_precipstartdate1`
+- `xx_precipstartdate2`
+- `xx_precipperiod`
+- `xx_swflux_file`
+- `xx_swflux_remo_intercept`
+- `xx_swflux_remo_slope`
+- `xx_swfluxstartdate1`
+- `xx_swfluxstartdate2`
+- `xx_swfluxperiod`
+- `xx_swdown_file`
+- `xx_swdown_remo_intercept`
+- `xx_swdown_remo_slope`
+- `xx_swdownstartdate1`
+- `xx_swdownstartdate2`
+- `xx_swdownperiod`
+- `xx_lwflux_file`
+- `xx_lwflux_remo_intercept`
+- `xx_lwflux_remo_slope`
+- `xx_lwfluxstartdate1`
+- `xx_lwfluxstartdate2`
+- `xx_lwfluxperiod`
+- `xx_lwdown_file`
+- `xx_lwdown_remo_intercept`
+- `xx_lwdown_remo_slope`
+- `xx_lwdownstartdate1`
+- `xx_lwdownstartdate2`
+- `xx_lwdownperiod`
+- `xx_evap_file`
+- `xx_evap_remo_intercept`
+- `xx_evap_remo_slope`
+- `xx_evapstartdate1`
+- `xx_evapstartdate2`
+- `xx_evapperiod`
+- `xx_snowprecip_file`
+- `xx_snowprecip_remo_intercept`
+- `xx_snowprecip_remo_slope`
+- `xx_snowprecipperiod`
+- `xx_snowprecipstartdate1`
+- `xx_snowprecipstartdate2`
+- `xx_apressure_file`
+- `xx_apressure_remo_intercept`
+- `xx_apressure_remo_slope`
+- `xx_apressureperiod`
+- `xx_apressurestartdate1`
+- `xx_apressurestartdate2`
+- `xx_runoff_file`
+- `xx_runoff_remo_intercept`
+- `xx_runoff_remo_slope`
+- `xx_runoffstartdate1`
+- `xx_runoffstartdate2`
+- `xx_runoffperiod`
+- `xx_uwind_file`
+- `xx_uwind_remo_intercept`
+- `xx_uwind_remo_slope`
+- `xx_uwindstartdate1`
+- `xx_uwindstartdate2`
+- `xx_uwindperiod`
+- `xx_vwind_file`
+- `xx_vwind_remo_intercept`
+- `xx_vwind_remo_slope`
+- `xx_vwindstartdate1`
+- `xx_vwindstartdate2`
+- `xx_vwindperiod`
+- `xx_aqh_mean_file`
+- `xx_atemp_mean_file`
+- `xx_precip_mean_file`
+- `xx_swdown_mean_file`
+- `xx_uwind_mean_file`
+- `xx_vwind_mean_file`
+- `xx_obcsN_file`
+- `xx_obcsNstartdate1`
+- `xx_obcsNstartdate2`
+- `xx_obcsNperiod`
+- `xx_obcsS_file`
+- `xx_obcsSstartdate1`
+- `xx_obcsSstartdate2`
+- `xx_obcsSperiod`
+- `xx_obcsE_file`
+- `xx_obcsEstartdate1`
+- `xx_obcsEstartdate2`
+- `xx_obcsEperiod`
+- `xx_obcsW_file`
+- `xx_obcsWstartdate1`
+- `xx_obcsWstartdate2`
+- `xx_obcsWperiod`
+- `xx_diffkr_file`
+- `xx_kapgm_file`
+- `xx_kapredi_file`
+- `xx_tr1_file`
+- `xx_sst_file`
+- `xx_sst_remo_intercept`
+- `xx_sst_remo_slope`
+- `xx_sss_file`
+- `xx_sss_remo_intercept`
+- `xx_sss_remo_slope`
+- `xx_sststartdate1`
+- `xx_sststartdate2`
+- `xx_sstperiod`
+- `xx_sssstartdate1`
+- `xx_sssstartdate2`
+- `xx_sssperiod`
+- `xx_depth_file`
+- `xx_gen2d_file`
+- `xx_gen3d_file`
+- `xx_efluxy_file`
+- `xx_efluxp_file`
+- `xx_bottomdrag_file`
+- `xx_edtaux_file`
+- `xx_edtauy_file`
+- `xx_uvel_file`
+- `xx_vvel_file`
+- `xx_etan_file`
+- `xx_siarea_file`
+- `xx_siheff_file`
+- `xx_sihsnow_file`
+- `xx_shifwflx_file`
+- `xx_shifwflx_remo_intercept`
+- `xx_shifwflx_remo_slope`
+- `xx_shifwflxstartdate1`
+- `xx_shifwflxstartdate2`
+- `xx_shifwflxperiod`
+- `mult_obcsN`
+- `mult_obcsS`
+- `mult_obcsE`
+- `mult_obcsW`
+- `mult_obcsvol`
+- `mult_ageos`
+- `obcs_data_errfile`
+- `doInitXX` — at iter 0 only, set ctrls to 0 and write to xx*000.data
+- `ctrlSmoothCorrel3D`
+- `ctrlSmoothCorrel2D`
+- `ctrlUseGen`
+- `doPackDiag` — output diag_pack*/diag_unpack* files during ctrl_pack/ctrl_unpack
+- `doZscaleUnpack` — compute norm based on delta Z, both flags
+- `doZscalePack` — have currently no effect and could be removed
+- `doMainUnpack` — unpack ecco_ctrl_* file (usually from optim.x) into xx_*data files
+- `doMainPack` — pack adxx*data files into ecco_cost_* file (usually for optim.x)
+- `doSinglePrecTapelev` — reduce precision of ad tape files to float32 (only used in pkg/autodiff ...)
+- `doAdmtlmBypassAD` — package pkg/admtlm (needs work)
+- `delZexp`
+- `forcingPrecond`
+- `ctrlprec`
+- `ctrlDir`
+- `xx_hfluxm_file`
+### CTRL_PACKNAMES
+- `yadmark`
+- `yctrlid`
+- `yctrlposunpack`
+- `yctrlpospack`
+- `ctrlname`
+- `costname`
+- `scalname`
+- `maskname`
+- `metaname`
+### CTRL_NML_GENARR
+- `xx_genarr2d_file`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr3d_file`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_file`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr2d_weight`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr3d_weight`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_weight`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr2d_bounds`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr3d_bounds`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_bounds`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `genarr2dPrecond`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `genarr3dPrecond`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `gentim2dPrecond`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `mult_gentim2d`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `mult_genarr2d`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `mult_genarr3d`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr2d_preproc`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr2d_preproc_i`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr2d_preproc_r`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr2d_preproc_c`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr3d_preproc`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr3d_preproc_i`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr3d_preproc_r`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_genarr3d_preproc_c`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_preproc`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_preproc_i`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_preproc_r`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_preproc_c`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_period`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_startdate1`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_startdate2`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_cumsum`  _[ifdef ALLOW_GENARR_CONTROL]_
+- `xx_gentim2d_glosum`  _[ifdef ALLOW_GENARR_CONTROL]_
+### OPTIM
+- `optimcycle` — cycle number of the off-line optimization.
+- `nvars`
+- `nondimcontrol`
+- `numiter`
+- `nfunc`
+- `fmin`
+- `dfminFrac`
+- `iprint`
+- `epsf`
+- `epsx`
+- `epsg`
+- `nupdate`
+- `eps`
+
+## CPP options (defaults as shipped)
+- `CTRL_SET_PREC_32` (undef, CTRL_OPTIONS.h) — o I/O and pack settings
+- `ALLOW_NONDIMENSIONAL_CONTROL_IO` (undef, CTRL_OPTIONS.h) — This option is only relevant (for pack/unpack) with OBCS_CONTROL:
+- `EXCLUDE_CTRL_PACK` (undef, CTRL_OPTIONS.h)
+- `ALLOW_PACKUNPACK_METHOD2` (undef, CTRL_OPTIONS.h)
+- `CTRL_DO_PACK_UNPACK_ONLY` (undef, CTRL_OPTIONS.h)
+- `CTRL_PACK_PRECISE` (undef, CTRL_OPTIONS.h)
+- `CTRL_UNPACK_PRECISE` (undef, CTRL_OPTIONS.h)
+- `CTRL_DELZNORM` (undef, CTRL_OPTIONS.h)
+- `READ_OLD_CTRL_PACK_FILE` (undef, CTRL_OPTIONS.h) — To read-in old (prior to PR #796) packed-ctrl file (specially the header)
+- `ALLOW_KAPGM_CONTROL` (undef, CTRL_OPTIONS.h) — >>> Other Control. Allows for GMREDI controls
+- `ALLOW_KAPREDI_CONTROL` (undef, CTRL_OPTIONS.h)
+- `ALLOW_DIFFKR_CONTROL` (undef, CTRL_OPTIONS.h) — Allows for Vertical Diffusivity controls
+- `ALLOW_BOTTOMDRAG_CONTROL` (undef, CTRL_OPTIONS.h)
+- `ALLOW_DIC_CONTROL` (undef, CTRL_OPTIONS.h)
+- `ALLOW_DEPTH_CONTROL` (undef, CTRL_OPTIONS.h) — Allows bathymetry as a control vector Note: keep this Option separated from generic control since this control involves many new dependencies that we would like to avoid in general.
+- `USE_SMOOTH_MIN` (define, CTRL_OPTIONS.h) — Only relevant within DEPTH_CONTROL code:
+- `ALLOW_GENARR2D_CONTROL` (define, CTRL_OPTIONS.h) — >>> Generic Control.
+- `ALLOW_GENARR3D_CONTROL` (define, CTRL_OPTIONS.h)
+- `ALLOW_GENTIM2D_CONTROL` (define, CTRL_OPTIONS.h)
+- `ALLOW_UVEL0_CONTROL` (undef, CTRL_OPTIONS.h)
+- `ALLOW_VVEL0_CONTROL` (undef, CTRL_OPTIONS.h)
+- `ALLOW_OBCSN_CONTROL` (define, CTRL_OPTIONS.h) — >>> Open boundaries Control of Open-Boundaries is meaningless without compiling pkg/obcs Note: Make sure that corresponding OBCS N/S/E/W Option is defined
+- `ALLOW_OBCSS_CONTROL` (define, CTRL_OPTIONS.h)
+- `ALLOW_OBCSE_CONTROL` (define, CTRL_OPTIONS.h)
+- `ALLOW_OBCSW_CONTROL` (define, CTRL_OPTIONS.h)
+- `ALLOW_OBCS_CONTROL` (define, CTRL_OPTIONS.h) — o Set ALLOW_OBCS_CONTROL (Do not edit/modify):
+- `ALLOW_OBCS_CONTROL_MODES` (undef, CTRL_OPTIONS.h) — Untested code:
+- `ALLOW_OBCS_WEIGHTS2D` (undef, CTRL_OPTIONS.h) — Enable code for 2D (horizontal,vertical) weights for obcs; this code is incomplete (fields are defined but not used anywhere)
+- `ALLOW_ADCTRLBOUND` (undef, CTRL_OPTIONS.h) — o Impose bounds on controls
+- `ALLOW_ROTATE_UV_CONTROLS` (undef, CTRL_OPTIONS.h) — o Rotation of wind/stress controls adjustments from Eastward/Northward to model grid directions
+- `CTRL_SKIP_FIRST_TWO_ATM_REC_ALL` (undef, CTRL_OPTIONS.h) — variable tau u and tau v were skipped. The CTRL_SKIP_FIRST_TWO_ATM_REC_ALL option extends this to the other the time variable atmospheric controls.
+- `ALLOW_SMOOTH_CTRL2D` (undef, CTRL_OPTIONS.h) — to deprecated code that is now removed. At some point we will remove this flag and associated code as well. o apply pkg/smooth/smooth_diff2d.F to 2D controls (outside of Smooth_Correl2D)
+- `ALLOW_CTRL_DEBUG` (undef, CTRL_OPTIONS.h) — o Print more debug info to STDOUT
+
+## Headers
+- `CTRL.h` — BOP
+- `CTRL_DUMMY.h` — BOP
+- `CTRL_FIELDS.h` — BOP
+- `CTRL_GENARR.h` — 
+- `CTRL_OBCS.h` — BOP
+- `CTRL_OPTIONS.h` — BOP
+- `CTRL_SIZE.h` — BOP
+- `OPTIMCYCLE.h` — BOP
+- `ctrl_ad_check_lev1_dir.h` — ADJ STORE xx_gentim2d     = comlev1, key=ikey_dynamics, kind=isbyte ADJ STORE xx_gentim2d0    = comlev1, key=ikey_dynamics, kind=isbyte ADJ STORE xx_g
+- `ctrl_ad_check_lev2_dir.h` — ADJ STORE xx_gentim2d  = tapelev2, key = ilev_2 ADJ STORE xx_gentim2d0 = tapelev2, key = ilev_2 ADJ STORE xx_gentim2d1 = tapelev2, key = ilev_2
+- `ctrl_ad_check_lev3_dir.h` — ADJ STORE xx_gentim2d  = tapelev3, key = ilev_3 ADJ STORE xx_gentim2d0 = tapelev3, key = ilev_3 ADJ STORE xx_gentim2d1 = tapelev3, key = ilev_3
+- `ctrl_ad_check_lev4_dir.h` — ADJ STORE xx_gentim2d  = tapelev4, key = ilev_4 ADJ STORE xx_gentim2d0 = tapelev4, key = ilev_4 ADJ STORE xx_gentim2d1 = tapelev4, key = ilev_4
+- `ctrl_local_params.h` — HEADER CTRL_legacy
+
+## Routines (71)
+`adctrl_bound.F`, `ctrl_bound.F`, `ctrl_bound_tl.F`, `ctrl_check.F`, `ctrl_convert_header.F`, `ctrl_cost_driver.F`, `ctrl_cost_final.F`, `ctrl_cost_gen.F`, `ctrl_depth_ini.F`, `ctrl_get_gen.F`, `ctrl_get_gen_rec.F`, `ctrl_get_mask.F`, `ctrl_getobcse.F`, `ctrl_getobcsn.F`, `ctrl_getobcss.F`, `ctrl_getobcsw.F`, `ctrl_getrec.F`, `ctrl_hfacc_ini.F`, `ctrl_init.F`, `ctrl_init_ctrlvar.F`, `ctrl_init_fixed.F`, `ctrl_init_obcs_variables.F`, `ctrl_init_rec.F`, `ctrl_init_variables.F`, `ctrl_init_wet.F`, `ctrl_map_forcing.F`, `ctrl_map_genarr.F`, `ctrl_map_gentim2d.F`, `ctrl_map_ini.F`, `ctrl_map_ini_ecco.F`, `ctrl_map_ini_gen.F`, `ctrl_map_ini_genarr.F`, `ctrl_map_ini_gentim2d.F`, `ctrl_mask_set_xz.F`, `ctrl_mask_set_yz.F`, `ctrl_pack.F`, `ctrl_readparms.F`, `ctrl_set_fname.F`, `ctrl_set_globfld_xy.F`, `ctrl_set_globfld_xyz.F`, `ctrl_set_globfld_xz.F`, `ctrl_set_globfld_yz.F`, `ctrl_set_pack_xy.F`, `ctrl_set_pack_xyz.F`, `ctrl_set_pack_xz.F`, `ctrl_set_pack_yz.F`, `ctrl_set_unpack_xy.F`, `ctrl_set_unpack_xyz.F`, `ctrl_set_unpack_xz.F`, `ctrl_set_unpack_yz.F`, `ctrl_smooth.F`, `ctrl_summary.F`, `ctrl_swapffields.F`, `ctrl_toolbox.F`, `ctrl_unpack.F`, `optim_readparms.F`
+
+## Called from outside the package
+- `CTRL_MAP_FORCING` ← `model/src/forward_step.F:573`
+- `CTRL_DEPTH_INI` ← `model/src/initialise_varia.F:191`
+- `CTRL_MAP_GENTIM2D` ← `model/src/load_fields_driver.F:191`
+- `CTRL_CHECK` ← `model/src/packages_check.F:420`
+- `CTRL_INIT_FIXED` ← `model/src/packages_init_fixed.F:657`
+- `CTRL_INIT_VARIABLES` ← `model/src/packages_init_variables.F:619`
+- `CTRL_READPARMS` ← `model/src/packages_readparms.F:323`
+- `OPTIM_READPARMS` ← `model/src/packages_readparms.F:321`
+- `CTRL_PACK` ← `model/src/the_model_main.F:720,725`
+- `CTRL_UNPACK` ← `model/src/the_model_main.F:640`
+- `CTRL_INIT` ← `pkg/admtlm/admtlm_driver.F:53,63`
+- `CTRL_SET_FNAME` ← `pkg/admtlm/admtlm_dsvd2model.F:101,102,103,104`
+- `CTRL_SET_UNPACK_XY` ← `pkg/admtlm/admtlm_dsvd2model.F:327,336,345,354`
+- `CTRL_SET_UNPACK_XYZ` ← `pkg/admtlm/admtlm_dsvd2model.F:309,318,435,444`
+- `CTRL_SET_UNPACK_XZ` ← `pkg/admtlm/admtlm_dsvd2model.F:399,408`
+- `CTRL_SET_UNPACK_YZ` ← `pkg/admtlm/admtlm_dsvd2model.F:417,426`
+- `CTRL_SET_FNAME` ← `pkg/admtlm/admtlm_model2dsvd.F:96,97,98,99`
+- `CTRL_SET_PACK_XY` ← `pkg/admtlm/admtlm_model2dsvd.F:241,250,259,268`
+- `CTRL_SET_PACK_XYZ` ← `pkg/admtlm/admtlm_model2dsvd.F:223,232,349,358`
+- `CTRL_SET_PACK_XZ` ← `pkg/admtlm/admtlm_model2dsvd.F:313,322`
+- `CTRL_SET_PACK_YZ` ← `pkg/admtlm/admtlm_model2dsvd.F:331,340`
+- `CTRL_COST_DRIVER` ← `pkg/cost/cost_driver.F:62`
+- `CTRL_COST_FINAL` ← `pkg/cost/cost_final.F:102`
+- `CTRL_GETOBCSE` ← `pkg/obcs/obcs_calc.F:432`
+- `CTRL_GETOBCSN` ← `pkg/obcs/obcs_calc.F:423`
+- `CTRL_GETOBCSS` ← `pkg/obcs/obcs_calc.F:426`
+- `CTRL_GETOBCSW` ← `pkg/obcs/obcs_calc.F:429`
+- `CTRL_PACK` ← `pkg/openad/the_model_main.F:294,299`
+- `CTRL_UNPACK` ← `pkg/openad/the_model_main.F:172`
+
+## Verification experiments compiling it (16)
+`1D_ocean_ice_column` `bottom_ctrl_5x5` `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.90x40x15` `global_ocean.cs32x15` `halfpipe_streamice` `hs94.1x64x5` `isomip` `lab_sea` `obcs_ctrl` `offline_exf_seaice` `tutorial_dic_adjoffline` `tutorial_global_oce_biogeo` `tutorial_global_oce_optim` `tutorial_tracer_adjsens`

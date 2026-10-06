@@ -1,0 +1,448 @@
+# Core namelists
+
+Descriptions come from `::` comments in model/inc and eesupp/inc headers (PARAMS.h etc.). Guards in _[italics]_ are the CPP conditions around the namelist entry.
+
+## model/src/ini_parms.F  (reads data)
+### PARM01
+- `gravitySign` — indicates the direction of gravity relative to R direction (= -1 for R=Z (Z increases upward, -gravity direction  ) (= +1 for R=P (P increases downward, +gravity direction)
+- `nh_Am2` — scales non-hydrostatic terms and changes internal scales (i.e. allows convection at different Rayleigh numbers)
+- `gravity` — Acceleration due to constant gravity ( m/s^2 )
+- `gBaro` — Accel. due to gravity used in barotropic equation ( m/s^2 )
+- `gravityFile` — File containing gravity vertical profile (1.D)
+- `rhonil` — Reference density for the linear equation of state
+- `tAlpha` — Linear EOS thermal expansion coefficient ( 1/degree ).
+- `sBeta` — Linear EOS haline contraction coefficient.
+- `selectCoriMap` — select setting of Coriolis parameter map: =0 f-Plane (Constant Coriolis, = f0) =1 Beta-Plane Coriolis (= f0 + beta.y) =2 Spherical Coriolis (= 2.omega.sin(phi)) =3 Read Coriolis 2-d fields from files.
+- `f0` — Reference coriolis parameter ( 1/s ) ( Southern edge f for beta plane )
+- `beta` — df/dy ( s^-1.m^-1 )
+- `fPrime` — Second Coriolis parameter ( 1/s ), related to Y-component of rotation (reference value = 2.Omega.Cos(Phi))
+- `omega` — Angular velocity ( rad/s )
+- `rotationPeriod` — Rotation period (s) (= 2.pi/omega)
+- `viscAh` — Eddy viscosity coeff. for mixing of momentum laterally ( m^2/s )
+- `viscAhW` — Eddy viscosity coeff. for mixing of vertical momentum laterally, no effect for hydrostatic model, defaults to viscAhD if unset ( m^2/s ) Not used if variable horiz. viscosity is used.
+- `viscAhMax` — Maximum eddy viscosity coeff. for mixing of momentum laterally ( m^2/s )
+- `viscAhGrid` — non-dimensional grid-size dependent viscosity
+- `viscAhGridMax` — maximum and minimum harmonic viscosity coefficients ...
+- `viscAhGridMin` — in terms of non-dimensional grid-size dependent visc.
+- `viscC2leith` — Leith non-dimensional viscosity factor (grad(vort))
+- `viscC4leith` — Leith non-dimensional viscosity factor (grad(vort))
+- `smag3D_coeff` — Isotropic 3-D Smagorinsky viscosity coefficient (-)
+- `useSmag3D` — Use isotropic 3-D Smagorinsky
+- `useFullLeith` — Set to true to use full Leith viscosity(may be unstable on irregular grids)
+- `useAnisotropicViscAgridMax`
+- `useStrainTensionVisc` — Set to true to use Strain-Tension viscous terms
+- `useAreaViscLength` — Set to true to use old scaling for viscous lengths, e.g., L2=Raz.  May be preferable for cube sphere.
+- `viscC2leithD` — Modified Leith non-dimensional visc. factor (grad(div))
+- `viscC4leithD` — Modified Leith non-dimensional viscosity factor (grad(div))
+- `viscC2LeithQG` — QG Leith non-dimensional viscosity factor
+- `viscC2smag` — Smagorinsky non-dimensional viscosity factor (harmonic)
+- `viscC4smag` — Smagorinsky non-dimensional viscosity factor (biharmonic)
+- `viscAhD` — Eddy viscosity coeff. for mixing of momentum laterally (act on Divergence part) ( m^2/s )
+- `viscAhZ` — Eddy viscosity coeff. for mixing of momentum laterally (act on Vorticity  part) ( m^2/s )
+- `viscA4D` — Biharmonic viscosity coeff. for mixing of momentum laterally (act on Divergence part) ( m^4/s )
+- `viscA4Z` — Biharmonic viscosity coeff. for mixing of momentum laterally (act on Vorticity  part) ( m^4/s )
+- `viscA4` — Biharmonic viscosity coeff. for mixing of momentum laterally ( m^4/s )
+- `viscA4W` — Biharmonic viscosity coeff. for mixing of vertical momentum laterally, no effect for hydrostatic model, defaults to viscA4D if unset ( m^2/s ) Not used if variable horiz. viscosity is used.
+- `viscA4Max` — Maximum biharmonic viscosity coeff. for mixing of momentum laterally ( m^4/s )
+- `viscA4Grid` — non-dimensional grid-size dependent bi-harmonic viscosity
+- `viscA4GridMax` — maximum and minimum biharmonic viscosity coefficients ...
+- `viscA4GridMin` — in terms of non-dimensional grid-size dependent viscosity
+- `viscA4ReMax` — Maximum Gridscale Reynolds number for biharmonic viscosity coeff. momentum laterally (non-dim)
+- `viscAhReMax` — Maximum gridscale Reynolds number for eddy viscosity coeff. for mixing of momentum laterally (non-dim)
+- `cosPower` — Power of cosine of latitude to multiply viscosity
+- `viscAstrain`
+- `viscAtension`
+- `viscAz`
+- `diffKzT`
+- `diffKzS`
+- `viscAp`
+- `diffKpT`
+- `diffKpS`
+- `viscAr`
+- `diffKrT`
+- `diffKrS`
+- `viscArNr` — vertical profile of Eddy viscosity coeff. for vertical mixing of momentum ( units of r^2/s )
+- `diffKrNrT` — vertical profile of Laplacian diffusion coeff. for mixing of heat vertically ( units of r^2/s )
+- `diffKrNrS` — vertical profile of Laplacian diffusion coeff. for mixing of salt vertically ( units of r^2/s ),
+- `diffKhT` — Laplacian diffusion coeff. for mixing of heat laterally ( m^2/s )
+- `diffK4T` — Biharmonic diffusion coeff. for mixing of heat laterally ( m^4/s )
+- `diffKhS` — Laplacian diffusion coeff. for mixing of salt laterally ( m^2/s )
+- `diffK4S` — Biharmonic diffusion coeff. for mixing of salt laterally ( m^4/s )
+- `smag3D_diffCoeff` — Isotropic 3-D Smagorinsky diffusivity coefficient (-)
+- `diffKr4T` — vertical profile of Biharmonic diffusion coeff. for mixing of heat vertically ( units of r^4/s )
+- `diffKr4S` — vertical profile of Biharmonic diffusion coeff. for mixing of salt vertically ( units of r^4/s )
+- `BL79LatVary` — polarwise of this latitude diffKrBL79 is applied with gradual transition to diffKrBLEQ towards Equator
+- `diffKrBL79surf` — T/S surface diffusivity (m^2/s) Bryan and Lewis, 1979
+- `diffKrBL79deep` — T/S deep diffusivity (m^2/s) Bryan and Lewis, 1979
+- `diffKrBL79scl` — depth scale for arctan fn (m) Bryan and Lewis, 1979
+- `diffKrBL79Ho` — depth offset for arctan fn (m) Bryan and Lewis, 1979
+- `diffKrBLEQsurf` — same as diffKrBL79surf but at Equator
+- `diffKrBLEQdeep` — same as diffKrBL79deep but at Equator
+- `diffKrBLEQscl` — same as diffKrBL79scl but at Equator
+- `diffKrBLEQHo` — same as diffKrBL79Ho but at Equator
+- `surf_pRef` — surface reference pressure ( Pa )
+- `tRef` — reference vertical profile for potential temperature
+- `sRef` — reference vertical profile for salinity/specific humidity
+- `tRefFile` — File containing reference Potential Temperat.  tRef (1.D)
+- `sRefFile` — File containing reference salinity/spec.humid. sRef (1.D)
+- `rhoRefFile` — File containing reference density profile rhoRef (1.D)
+- `eosType` — choose the equation of state: LINEAR, POLY3, UNESCO, JMD95Z, JMD95P, MDJWF, IDEALGAS
+- `selectP_inEOS_Zc` — select which pressure to use in EOS (for z-coords) =0: simply: -g*rhoConst*z =1: use pRef = integral{-g*rho(Tref,Sref,pRef)*dz} =2: use hydrostatic dynamical pressure =3: use full (Hyd+NH) dynamical pressure
+- `integr_GeoPot` — option to select the way we integrate the geopotential (still a subject of discussions ...)
+- `selectFindRoSurf` — select the way surf. ref. pressure (=Ro_surf) is derived from the orography. Implemented: 0,1 (see INI_P_GROUND)
+- `HeatCapacity_Cp`
+- `celsius2K` — convert centigrade (Celsius) degree to Kelvin
+- `atm_Cp` — specific heat (Cp) of the (dry) air at constant pressure
+- `atm_Rd` — gas constant for dry air
+- `atm_Rq` — water vapour specific volume anomaly relative to dry air (e.g. typical value = (29/18 -1) 10^-3 with q [g/kg])
+- `atm_Po` — standard reference pressure
+- `no_slip_sides` — Impose "no-slip" at lateral boundaries.
+- `sideDragFactor` — side-drag scaling factor (used only if no_slip_sides) (default=2: full drag ; =1: gives half-slip BC)
+- `no_slip_bottom` — Impose "no-slip" at bottom boundary.
+- `bottomVisc_pCell` — account for partial-cell in bottom visc. (no-slip BC)
+- `bottomDragLinear` — Linear    bottom-drag coefficient (units of [r]/s)
+- `bottomDragQuadratic` — Quadratic bottom-drag coefficient (units of [r]/m) (if using zcoordinate, units becomes linear: m/s, quadratic: [-])
+- `zRoughBot` — roughness length for quadratic bottom friction coefficient (in m, typical values are order 0.01 m)
+- `selectBotDragQuadr` — quadratic bottom drag discretisation option: =0: average KE from grid center to U & V location =1: use local velocity norm @ U & V location =2: same with wet-point averaging of other component
+- `momPressureForcing` — Flag which turns pressure term in momentum equation on and off.
+- `momForcing` — Flag which turns external forcing of momentum on and off.
+- `momTidalForcing` — Flag which turns tidal forcing on and off.
+- `momViscosity` — Flag which turns momentum friction terms on and off.
+- `momAdvection` — Flag which turns advection of momentum on and off.
+- `vectorInvariantMomentum` — use Vector-Invariant form (mom_vecinv package) (default = F = use mom_fluxform package)
+- `useConstantF`
+- `useBetaPlaneF`
+- `useSphereF`
+- `useCoriolis` — Flag which turns the coriolis terms on and off.
+- `use3dCoriolis`
+- `select3dCoriScheme` — Scheme selector for 3-D Coriolis (in Omega.cos Phi)
+- `selectCoriScheme` — Scheme selector for Coriolis term
+- `useCDscheme` — use CD-scheme to calculate Coriolis terms.
+- `useJamartWetPoints`
+- `useEnergyConservingCoriolis`
+- `useAbsVorticity` — work with f+zeta in Coriolis terms
+- `selectVortScheme` — Scheme selector for Vorticity term (Vector Inv.)
+- `SadournyCoriolis`
+- `useJamartMomAdv` — Use wet-point method for V.I. non-linear term
+- `upwindVorticity` — bias interpolation of vorticity in the Coriolis term
+- `highOrderVorticity` — use 3rd/4th order interp. of vorticity (V.I., advection)
+- `upwindShear` — use 1rst order upwind interp. (V.I., vertical advection)
+- `selectKEscheme` — Kinetic Energy scheme selector (Vector Inv.)
+- `selectMetricTerms` — Scheme selector for Metric terms (Flux-Form)
+- `metricTerms`
+- `useNHMTerms` — If TRUE use non-hydrostatic metric terms.
+- `addFrictionHeating` — account for frictional heating
+- `tempDiffusion`
+- `tempAdvection` — Flag which turns advection of temperature on and off.
+- `tempForcing` — Flag which turns external forcing of temperature on/off
+- `temp_stayPositive` — use Smolarkiewicz Hack to ensure Temp stays positive
+- `saltDiffusion`
+- `saltAdvection` — Flag which turns advection of salinity on and off.
+- `saltForcing` — Flag which turns external forcing of salinity on/off
+- `salt_stayPositive` — use Smolarkiewicz Hack to ensure Salt stays positive
+- `implicSurfPress` — parameter of the Crank-Nickelson time stepping : Implicit part of Surface Pressure Gradient ( 0-1 )
+- `implicDiv2DFlow` — parameter of the Crank-Nickelson time stepping : Implicit part of barotropic flow Divergence ( 0-1 )
+- `implicitNHPress` — parameter of the Crank-Nickelson time stepping : Implicit part of Non-Hydrostatic Pressure Gradient ( 0-1 )
+- `implicitFreeSurface` — Set to true to use implicit free surface
+- `rigidLid` — Set to true to use rigid lid
+- `freeSurfFac` — Parameter to turn implicit free surface term on or off freeSurFac = 1. uses implicit free surface freeSurFac = 0. uses rigid lid
+- `hFacMin` — Minimum fraction size of a cell (affects hFacC etc...)
+- `hFacMinDz` — Minimum dimensional size of a cell (affects hFacC etc..., m)
+- `hFacMinDp` — Minimum dimensional size of a cell (affects hFacC etc..., Pa)
+- `hFacMinDr` — Minimum dimensional size of a cell (-> hFacC etc..., r units)
+- `exactConserv` — Set to true to conserve exactly the total Volume
+- `linFSConserveTr` — Set to true to correct source/sink of tracer at the surface due to Linear Free Surface
+- `uniformLin_PhiSurf` — Set to true to use a uniform Bo_surf in the linear relation Phi_surf = Bo_surf*eta
+- `nonlinFreeSurf` — option related to non-linear free surface =0 Linear free surface ; >0 Non-linear
+- `hFacInf` — Threshold (inf and sup) for fraction size of surface cell
+- `hFacSup`
+- `select_rStar` — option related to r* vertical coordinate =0 (default) use r coord. ; > 0 use r*
+- `nonHydrostatic` — Using non-hydrostatic algorithm
+- `selectNHfreeSurf` — option for Non-Hydrostatic (free-)Surface formulation: =0 (default) hydrostatic surf. ; > 0 add NH effects.
+- `quasiHydrostatic` — Using non-hydrostatic terms in hydrostatic algorithm
+- `implicitIntGravWave` — treat Internal Gravity Wave implicitly
+- `staggerTimeStep` — enable a Stagger time stepping U,V (& W) then T,S
+- `doResetHFactors` — Do reset thickness factors @ beginning of each time-step
+- `tempStepping` — Turns temperature equation time-stepping on/off
+- `saltStepping` — Turns salinity equation time-stepping on/off
+- `momStepping` — Turns momentum equation time-stepping off
+- `implicitDiffusion` — Turns implicit vertical diffusion on
+- `implicitViscosity` — Turns implicit vertical viscosity on
+- `selectImplicitDrag` — select Implicit treatment of bottom/top drag = 0: fully explicit = 1: implicit on provisional velocity (i.e., before grad.Eta increment) = 2: fully implicit (combined with Impl Surf.Press)
+- `tempImplVertAdv` — Turns on implicit vertical advection for Temperature
+- `saltImplVertAdv` — Turns on implicit vertical advection for Salinity
+- `momImplVertAdv` — Turns on implicit vertical advection for Momentum
+- `rhoConst` — Vertically constant reference density (Boussinesq)
+- `thetaConst` — Constant reference for potential temperature
+- `rhoConstFresh` — Constant reference density for fresh water (rain)
+- `buoyancyRelation` — Flag used to indicate which relation to use to get buoyancy.
+- `allowFreezing` — Allows surface water to freeze and form ice
+- `allowInteriorFreezing`
+- `useOldFreezing`
+- `ivdc_kappa` — implicit vertical diffusivity for convection [m^2/s]
+- `hMixCriteria` — criteria for mixed-layer diagnostic
+- `dRhoSmall` — parameter for mixed-layer diagnostic
+- `hMixSmooth` — Smoothing parameter for mixed-layer diag (default=0: no smoothing)
+- `tempAdvScheme` — Temp. Horiz.Advection scheme selector
+- `tempVertAdvScheme` — Temp. Vert. Advection scheme selector
+- `tracerAdvScheme`
+- `saltAdvScheme` — Salt. Horiz.advection scheme selector
+- `saltVertAdvScheme` — Salt. Vert. Advection scheme selector
+- `multiDimAdvection` — Flag that enable multi-dimension advection
+- `selectAddFluid` — option to add mass source/sink of fluid in the interior (3-D generalisation of oceanic real-fresh water flux) =0 off ; =1 add fluid ; =-1 virtual flux (no mass added)
+- `useRealFreshWaterFlux` — if True (=Natural BCS), treats P+R-E flux as a real Fresh Water (=> changes the Sea Level) if F, converts P+R-E to salt flux (no SL effect)
+- `convertFW2Salt` — salinity, used to convert Fresh-Water Flux to Salt Flux (use model surface (local) value if set to -1)
+- `temp_EvPrRn` — temperature of Rain & Evap.
+- `salt_EvPrRn` — salinity of Rain & Evap.
+- `trac_EvPrRn`
+- `temp_addMass` — temperature of addMass field
+- `salt_addMass` — salinity of addMass field (notes: a) tracer content of Rain/Evap only used if both NonLin_FrSurf & useRealFreshWater are set. b) use model surface (local) value if set to UNSET_RL)
+- `zonal_filt_lat`
+- `smoothAbsFuncRange` — 1/2 of interval around zero, for which FORTRAN ABS is to be replace by a smoother function (affects myabs, mymin, mymax)
+- `sIceLoadFac` — factor to scale (and turn off) sIceLoad (sea-ice loading) default = 1
+- `selectPenetratingSW` — select treatment of penetrating shortwave radiation (requires to define SHORTWAVE_HEATING): = 0: no shortwave penetration = 1: constant in time and horizontally uniform fraction of shortwave penetration (default) = 2: constant in time, but non-uniform fraction of
+- `selectBalanceEmPmR` — option to balance net surface fresh-water flux: =0 off ; =1 uniform correction ; = 2 weighted correction
+- `balanceEmPmR`
+- `balanceQnet` — substract global mean of Qnet at every time step
+- `balancePrintMean` — print substracted global means to STDOUT
+- `balanceThetaClimRelax` — substract global mean effect at every time step
+- `balanceSaltClimRelax` — substract global mean effect at every time step
+- `readBinaryPrec` — Precision used for reading binary files
+- `writeBinaryPrec` — Precision used for writing binary files
+- `writeStatePrec`
+- `globalFiles` — Selects between "global" and "tiled" files. On some platforms with MPI, option globalFiles is either slow or does not work. Use useSingleCpuIO instead.
+- `useSingleCpuIO` — moved to EEPARAMS.h
+- `useSingleCpuInput` — When useSingleCpuInput is set, EXF_INTERP_READ reads forcing files from master MPI process only. -- NOTE: read from main parameter file "data" and defaults to useSingleCpuInput = useSingleCpuIO
+- `usePickupBeforeC54` — start from old-pickup files, generated with code from before checkpoint-54a, Jul 06, 2004.
+- `usePickupBeforeC35`
+- `debugMode` — controls printing of debug msg (sequence of S/R calls).
+- `debugLevel`
+- `plotLevel`
+### PARM02
+- `cg2dMaxIters` — Maximum number of iterations in the two-dimensional con. grad solver.
+- `cg2dMinItersNSA` — Minimum number of iterations in the not-self-adjoint version (cg2d_nsa.F) of the two-dimensional con. grad solver (default = 0).
+- `cg2dChkResFreq`
+- `cg2dUseMinResSol` — =0 : use last-iteration/converged solution =1 : use solver minimum-residual solution
+- `cg2dTargetResidual`
+- `cg2dTargetResWunit`
+- `cg2dpcOffDFac` — Averaging weight for preconditioner off-diagonal.
+- `cg2dPreCondFreq` — Frequency for updating cg2d preconditioner (non-linear free-surf.)
+- `cg3dMaxIters` — Maximum number of iterations in the three-dimensional con. grad solver.
+- `cg3dChkResFreq`
+- `cg3dTargetResidual`
+- `cg3dTargetResWunit`
+- `useNSACGSolver` — Set to true to use "not self-adjoint" conjugate gradient solver that stores the iteration history for an iterative adjoint as accuate as possible
+- `useSRCGSolver` — Set to true to use conjugate gradient solver with single reduction (only one call of s/r mpi_allreduce), default is false
+- `printResidualFreq` — Frequency for printing residual in CG iterations
+### PARM03
+- `nIter0` — Start time-step number of for this run
+- `nTimeSteps` — Number of timesteps to execute
+- `nTimeSteps_l2` — Number of inner timesteps to execute per timestep
+- `nEndIter`
+- `baseTime` — model base time (time origin) = time @ iteration zero
+- `startTime` — Starting time for this integration ( s ).
+- `endTime` — Ending time for this integration ( s ).
+- `deltaT` — Default timestep ( s )
+- `deltaTClock` — Timestep used as model "clock". This determines the IO frequencies and is used in tagging output. It can be totally different to the dynamical time. Typically it will be the deep-water timestep for accelerated runs. Frequency of checkpointing and dumping of the model state
+- `deltaTMom` — Timestep for momemtum equations ( s )
+- `deltaTtracer`
+- `dTtracerLev` — Timestep for tracer equations ( s ), function of level k
+- `deltaTFreeSurf` — Timestep for free-surface equation ( s )
+- `forcing_In_AB`
+- `momForcingOutAB` — =1: take momentum forcing contribution out of (=0: in) Adams-Bashforth time stepping.
+- `tracForcingOutAB` — =1: take tracer (Temp,Salt,pTracers) forcing contribution out of (=0: in) Adams-Bashforth time stepping.
+- `momDissip_In_AB` — if False, put Dissipation tendency contribution out off Adams-Bashforth time stepping.
+- `doAB_onGtGs` — if the Adams-Bashforth time stepping is used, always apply AB on tracer tendencies (rather than on Tracer)
+- `abEps` — Adams-Bashforth-2 stabilizing weight
+- `alph_AB` — Adams-Bashforth-3 primary factor
+- `beta_AB` — Adams-Bashforth-3 secondary factor
+- `startFromPickupAB2` — with AB-3 code, start from an AB-2 pickup
+- `applyExchUV_early` — Apply EXCH to U,V earlier, just before integr_continuity
+- `tauCD` — CD scheme coupling timescale ( s )
+- `rCD` — CD scheme normalised coupling parameter (= 1 - deltaT/tauCD)
+- `epsAB_CD` — Adams-Bashforth-2 stabilizing weight used in CD scheme
+- `cAdjFreq` — Frequency of convective adjustment
+- `chkPtFreq` — Frequency of rolling check pointing ( s ).
+- `pChkPtFreq` — Frequency of permanent check pointing ( s ).
+- `pickupSuff` — force to start from pickup files (even if nIter0=0) and read pickup files with this suffix (max 10 Char.)
+- `pickupStrictlyMatch` — check and stop if pickup-file do not stricly match
+- `writePickupAtEnd` — write pickup at the last timestep
+- `dumpFreq` — Frequency with which model state is written to post-processing files ( s ).
+- `dumpInitAndLast` — dumps model state to files at Initial (nIter0) & Last iteration, in addition multiple of dumpFreq iter.
+- `adjDumpFreq`
+- `taveFreq`
+- `tave_lastIter`
+- `diagFreq` — Frequency with which model writes diagnostic output of intermediate quantities.
+- `monitorFreq`
+- `adjMonitorFreq`
+- `monitorSelect` — select group of variables to monitor =1 : dynvars ; =2 : + vort ; =3 : + surface
+- `outputTypesInclusive`
+- `rwSuffixType` — controls the format of the mds file suffix. =0 (default): use iteration number (myIter, I10.10); =1: 100*myTime (100th sec); =2: myTime (seconds); =3: myTime/360 (10th of hr); =4: myTime/3600 (hours).
+- `tauThetaClimRelax` — Relaxation to climatology time scale ( s ).
+- `tauSaltClimRelax` — Relaxation to climatology time scale ( s ).
+- `latBandClimRelax` — latitude band where Relaxation to Clim. is applied, i.e. where |yC| <= latBandClimRelax
+- `tauThetaClimRelax3Dim`
+- `tauSaltClimRelax3Dim`
+- `periodicExternalForcing` — Set true if forcing is time-dependant
+- `externForcingPeriod` — Is the period of which forcing varies (eg. 1 month)
+- `externForcingCycle` — Is the repeat time of the forcing (eg. 1 year) (note: externForcingCycle must be an integer number times externForcingPeriod)
+- `calendarDumps`
+### PARM04
+- `usingCartesianGrid` — If TRUE grid generation will be in a cartesian coordinate frame.
+- `usingCylindricalGrid` — If TRUE grid generation will be Cylindrical
+- `usingSphericalPolarGrid` — If TRUE grid generation will be in a spherical polar frame.
+- `usingCurvilinearGrid` — If TRUE, use a curvilinear grid (to be provided)
+- `xgOrigin` — Origin of the X-axis (Cartesian Grid) / Longitude of Western
+- `ygOrigin` — Origin of the Y-axis (Cartesian Grid) / Latitude of Southern
+- `dxSpacing`
+- `dySpacing`
+- `delX` — Separation between cell faces (m) or (deg), depending
+- `delY`
+- `delXFile` — File containing X-spacing grid definition (1.D array)
+- `delYFile` — File containing Y-spacing grid definition (1.D array)
+- `horizGridFile` — File containing horizontal-grid definition (only when using curvilinear_grid)
+- `phiEuler` — Euler angle, rotation about original z-axis
+- `thetaEuler` — Euler angle, rotation about new x-axis
+- `psiEuler` — Euler angle, rotation about new z-axis
+- `rSphere` — Radius of sphere for a spherical polar grid ( m ).
+- `radius_fromHorizGrid` — sphere Radius of input horiz. grid (Curvilinear Grid)
+- `deepAtmosphere` — deep model (drop the shallow-atmosphere approximation)
+- `seaLev_Z` — the reference height of sea-level (usually zero)
+- `top_Pres` — pressure (P-Coords) or reference pressure (Z-Coords) at the top
+- `delZ`
+- `delP`
+- `delR` — Vertical grid spacing ( units of r ).
+- `delRc` — Vertical grid spacing between cell centers (r unit).
+- `delRFile` — File containing vertical grid spacing delR  (1.D array)
+- `delRcFile` — File containing vertical grid spacing delRc (1.D array)
+- `useMin4hFacEdges` — set hFacW,hFacS as minimum of adjacent hFacC factor
+- `interViscAr_pCell` — account for partial-cell in interior vert. viscosity
+- `interDiffKr_pCell` — account for partial-cell in interior vert. diffusion
+- `pCellMix_select` — select option to enhance mixing near surface & bottom unit digit: near bottom ; tens digit: near surface with digit =0 : disable ; = 1 : increases mixing linearly with recip_hFac = 2,3,4 : increases mixing by recip_hFac^(2,3,4)
+- `pCellMix_maxFac` — maximum enhanced mixing factor for thin partial-cell
+- `pCellMix_delR` — thickness criteria   for too thin partial-cell
+- `pCellMix_viscAr` — vertical viscosity   for too thin partial-cell
+- `pCellMix_diffKr` — vertical diffusivity for too thin partial-cell
+- `selectSigmaCoord` — option related to sigma vertical coordinate
+- `rSigmaBnd` — vertical position (in r-unit) of r/sigma transition (Hybrid-Sigma)
+- `hybSigmFile` — File containing hybrid-sigma vertical coord. coeff. (2x 1.D)
+- `Ro_SeaLevel`
+- `rkFac`
+- `groundAtK1`
+- `thetaMin`
+- `phiMin`
+### PARM05
+- `bathyFile` — File containing bathymetry. If not defined bathymetry is taken from inline function.
+- `topoFile` — File containing the topography of the surface (unit=m) (mainly used for the atmosphere = ground height).
+- `addWwallFile` — File containing 2-D additional Western  cell-edge wall
+- `addSwallFile` — File containing 2-D additional Southern cell-edge wall (e.g., to add "thin-wall" where it is =1)
+- `shelfIceFile`
+- `diffKrFile` — File containing 3D specification of vertical diffusivity
+- `viscAhDfile` — File containing 3D specification of horizontal viscosity
+- `viscAhZfile` — File containing 3D specification of horizontal viscosity
+- `viscA4Dfile` — File containing 3D specification of horizontal viscosity
+- `viscA4Zfile` — File containing 3D specification of horizontal viscosity
+- `hydrogThetaFile` — File containing initial hydrographic data (3-D) for potential temperature.
+- `hydrogSaltFile` — File containing initial hydrographic data (3-D) for salinity.
+- `maskIniTemp` — apply mask to initial Pot.Temp.
+- `maskIniSalt` — apply mask to initial salinity
+- `checkIniTemp` — check for points with identically zero initial Pot.Temp.
+- `checkIniSalt` — check for points with identically zero initial salinity
+- `zonalWindFile` — File containing zonal wind data
+- `meridWindFile` — File containing meridional wind data
+- `thetaClimFile` — File containing surface theta climataology used in relaxation term -lambda(theta-theta*)
+- `saltClimFile` — File containing surface salt climataology used in relaxation term -lambda(salt-salt*)
+- `surfQfile` — File containing surface heat flux, excluding SW (old version, kept for backward compatibility)
+- `surfQnetFile` — File containing surface net heat flux
+- `surfQswFile` — File containing surface shortwave radiation
+- `EmPmRfile` — File containing surface fresh water flux NOTE: for backward compatibility EmPmRfile is specified in m/s when using external_fields_load.F.  It is converted to kg/m2/s by multiplying by rhoConstFresh.
+- `saltFluxFile` — File containing surface salt flux
+- `uVelInitFile`
+- `vVelInitFile`
+- `pSurfInitFile`
+- `dQdTFile`
+- `ploadFile` — File containing pressure loading
+- `geoPotAnomFile` — File containing constant geopotential anomaly due to density structure
+- `addMassFile` — File containing source/sink of fluid in the interior
+- `tCylIn` — Temperature of the cylinder inner boundary
+- `tCylOut` — Temperature of the cylinder outer boundary
+- `eddyPsiXFile` — File containing zonal Eddy streamfunction data
+- `eddyPsiYFile` — File containing meridional Eddy streamfunction data
+- `geothermalFile` — File containing geothermal heat flux
+- `lambdaThetaFile` — File containing SST relaxation coefficient
+- `lambdaSaltFile` — File containing SSS relaxation coefficient
+- `wghtBalanceFile` — File containing weight used in balancing net EmPmR
+- `mdsioLocalDir` — read-write tiled file from/to this directory name (+ 4 digits Processor-Rank) instead of current dir.
+- `adTapeDir` — read-write checkpointing tape files from/to this directory name instead of current dir. Conflicts mdsioLocalDir, so only one of the two can be set.
+- `the_run_name` — string identifying the name of the model "run"
+## model/src/packages_boot.F  (reads data.pkg)
+### PACKAGES
+- `useOBCS`
+- `useSHAP_FILT`
+- `useZONAL_FILT`
+- `useOPPS`
+- `usePP81`
+- `useKL10`
+- `useMY82`
+- `useGGL90`
+- `useKPP`
+- `useGMRedi`
+- `useDOWN_SLOPE`
+- `useBBL`
+- `useCAL`
+- `useEXF`
+- `useBulkForce`
+- `useEBM`
+- `useCheapAML`
+- `useAUTODIFF`
+- `useGrdchk`
+- `useSMOOTH`
+- `usePROFILES`
+- `useOBSFIT`
+- `useECCO`
+- `useCTRL`
+- `useSBO`
+- `useFLT`
+- `usePTRACERS`
+- `useGCHEM`
+- `useRBCS`
+- `useOffLine`
+- `useMATRIX`
+- `useFRAZIL`
+- `useSEAICE`
+- `useSALT_PLUME`
+- `useShelfIce`
+- `useSTIC`
+- `useStreamIce`
+- `useICEFRONT`
+- `useThSIce`
+- `useLand`
+- `useATM2d`
+- `useAIM`
+- `useAtm_Phys`
+- `useFizhi`
+- `useGridAlt`
+- `useDiagnostics`
+- `useREGRID`
+- `useLayers`
+- `useMNC`
+- `useRunClock`
+- `useEMBED_FILES`
+- `useMYPACKAGE`
+## eesupp/src/eeset_parms.F  (reads ?)
+### EEPARMS
+- `nTx` — No. of threads in X and in Y This assumes a simple cartesian gridding of the threads which is not required elsewhere but that makes it easier
+- `nTy` — No. of threads in X and in Y This assumes a simple cartesian gridding of the threads which is not required elsewhere but that makes it easier
+- `usingMPI`
+- `useCubedSphereExchange` — use Cubed-Sphere topology domain.
+- `useCoupler` — use Coupler for a multi-components set-up.
+- `useNEST_PARENT` — use Parent Nesting interface (pkg/nest_parent)
+- `useNEST_CHILD` — use Child  Nesting interface (pkg/nest_child)
+- `useNest2W_parent` — use Parent 2-W Nesting interface (pkg/nest2w_parent)
+- `useNest2W_child` — use Child  2-W Nesting interface (pkg/nest2w_child)
+- `useOASIS` — use OASIS-coupler for a multi-components set-up.
+- `useSETRLSTK`
+- `useSIGREG`
+- `debugMode` — controls printing of debug msg (sequence of S/R calls).
+- `printMapIncludesZeros` — Flag that controls whether character constant map code ignores exact zero values.
+- `maxLengthPrt1D` — maximum length for printing (to Std-Msg-Unit) 1-D array

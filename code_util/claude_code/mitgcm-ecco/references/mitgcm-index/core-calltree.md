@@ -1,0 +1,849 @@
+# Core call tree (static)
+
+Static CALL graph from `THE_MODEL_MAIN`, expanded through routines in model/src (depth ≤ 7). Package routines are leaves tagged `[pkg/x]`. `{ALLOW_X}` = enclosing #ifdef. Timers, exchanges, I/O and debug calls are omitted. A routine expanded earlier is marked "(↑)". Runtime IF tests (e.g. `IF (useKPP)`) are not shown — read the source for those.
+
+```
+THE_MODEL_MAIN
+  TIMER_CONTROL
+  INITIALISE_FIXED
+    BAR_CHECK
+    INI_PARMS
+      SET_DEFAULTS
+    PACKAGES_BOOT
+    CPL_IMPORT_CPLPARMS [pkg/ocn_compon_interf]
+    PACKAGES_READPARMS
+      MNC_READPARMS [pkg/mnc] {ALLOW_MNC}
+      CAL_READPARMS [pkg/cal] {ALLOW_CAL}
+      EXF_READPARMS [pkg/exf] {ALLOW_EXF}
+      OBCS_READPARMS [pkg/obcs] {ALLOW_OBCS}
+      SHAP_FILT_READPARMS [pkg/shap_filt] {ALLOW_SHAP_FILT}
+      ZONAL_FILT_READPARMS [pkg/zonal_filt] {ALLOW_ZONAL_FILT}
+      OPPS_READPARMS [pkg/opps] {ALLOW_OPPS}
+      PP81_READPARMS [pkg/pp81] {ALLOW_PP81}
+      KL10_READPARMS [pkg/kl10] {ALLOW_KL10}
+      MY82_READPARMS [pkg/my82] {ALLOW_MY82}
+      GGL90_READPARMS [pkg/ggl90] {ALLOW_GGL90}
+      KPP_READPARMS [pkg/kpp] {ALLOW_KPP}
+      GMREDI_READPARMS [pkg/gmredi] {ALLOW_GMREDI}
+      BBL_READPARMS [pkg/bbl] {ALLOW_BBL}
+      DWNSLP_READPARMS [pkg/down_slope] {ALLOW_DOWN_SLOPE}
+      BULKF_READPARMS [pkg/bulk_force] {ALLOW_BULK_FORCE}
+      EBM_READPARMS [pkg/ebm] {ALLOW_EBM}
+      CHEAPAML_READPARMS [pkg/cheapaml] {ALLOW_CHEAPAML}
+      FLT_READPARMS [pkg/flt] {ALLOW_FLT}
+      LONGSTEP_READPARMS [pkg/longstep] {ALLOW_LONGSTEP}
+      PTRACERS_READPARMS [pkg/ptracers] {ALLOW_PTRACERS}
+      GCHEM_READPARMS [pkg/gchem] {ALLOW_GCHEM}
+      RBCS_READPARMS [pkg/rbcs] {ALLOW_RBCS}
+      OFFLINE_READPARMS [pkg/offline] {ALLOW_OFFLINE}
+      MATRIX_READPARMS [pkg/matrix] {ALLOW_MATRIX}
+      STREAMICE_READPARMS [pkg/streamice] {ALLOW_STREAMICE}
+      SHELFICE_READPARMS [pkg/shelfice] {ALLOW_SHELFICE}
+      STIC_READPARMS [pkg/steep_icecavity] {ALLOW_STEEP_ICECAVITY}
+      ICEFRONT_READPARMS [pkg/icefront] {ALLOW_ICEFRONT}
+      SEAICE_READPARMS [pkg/seaice] {ALLOW_SEAICE}
+      SALT_PLUME_READPARMS [pkg/salt_plume] {ALLOW_SALT_PLUME}
+      THSICE_READPARMS [pkg/thsice] {ALLOW_THSICE}
+      LAND_READPARMS [pkg/land] {ALLOW_LAND}
+      AUTODIFF_READPARMS [pkg/autodiff] {ALLOW_AUTODIFF}
+      OPTIM_READPARMS [pkg/ctrl] {ALLOW_CTRL}
+      CTRL_READPARMS [pkg/ctrl] {ALLOW_CTRL}
+      COST_READPARMS [pkg/cost] {ALLOW_COST}
+      GRDCHK_READPARMS [pkg/grdchk] {ALLOW_GRDCHK}
+      SMOOTH_READPARMS [pkg/smooth] {ALLOW_SMOOTH}
+      ECCO_READPARMS [pkg/ecco] {ALLOW_ECCO}
+      PROFILES_READPARMS [pkg/profiles] {ALLOW_PROFILES}
+      OBSFIT_READPARMS [pkg/obsfit] {ALLOW_OBSFIT}
+      SBO_READPARMS [pkg/sbo] {ALLOW_SBO}
+      ATM_PHYS_READPARMS [pkg/atm_phys] {ALLOW_ATM_PHYS}
+      FIZHI_READPARMS [pkg/fizhi] {ALLOW_FIZHI}
+      DIAGNOSTICS_READPARMS [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+      REGRID_READPARMS [pkg/regrid] {ALLOW_REGRID}
+      LAYERS_READPARMS [pkg/layers] {ALLOW_LAYERS}
+      NEST_CHILD_READPARMS [?] {ALLOW_NEST_CHILD}
+      NEST_PARENT_READPARMS [?] {ALLOW_NEST_PARENT}
+      NEST2W_C_READPARMS [?] {ALLOW_NEST2W_CHILD}
+      NEST2W_P_READPARMS [?] {ALLOW_NEST2W_PARENT}
+      CPL_READPARMS [pkg/ocn_compon_interf]
+      OASIS_READPARMS [?] {ALLOW_OASIS}
+      RUNCLOCK_READPARMS [pkg/runclock] {ALLOW_RUNCLOCK}
+      MYPACKAGE_READPARMS [pkg/mypackage] {ALLOW_MYPACKAGE}
+    SET_PARMS
+      OFFLINE_RESET_PARMS [pkg/offline] {ALLOW_OFFLINE}
+      LONGSTEP_CHECK_ITERS [pkg/longstep] {ALLOW_LONGSTEP}
+    INI_MODEL_IO
+      SYSTEM [?]
+      MISSING [?]
+      READ_MFLDS_INIT [pkg/rw]
+      SET_WRITE_GLOBAL_FLD [pkg/rw]
+      SET_WRITE_GLOBAL_REC [pkg/rw]
+      SET_WRITE_GLOBAL_SEC [pkg/rw]
+      MNC_INIT [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_INIT [pkg/mnc] {ALLOW_MNC}
+      INI_MNC_VARS {ALLOW_MNC}
+        MNC_CW_ADD_VNAME [pkg/mnc] {ALLOW_MNC}
+        MNC_CW_ADD_VATTR_TEXT [pkg/mnc] {ALLOW_MNC}
+        CAL_GETDATE [pkg/cal] {ALLOW_MNC,ALLOW_CAL}
+      AUTODIFF_INI_MODEL_IO [pkg/autodiff] {ALLOW_AUTODIFF}
+      PROFILES_INI_IO [pkg/profiles] {ALLOW_PROFILES}
+      OBSFIT_INI_IO [pkg/obsfit] {ALLOW_OBSFIT}
+      DIAGNOSTICS_INI_IO [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+      MON_INIT [pkg/monitor] {ALLOW_MONITOR}
+    OPENAD_INI_GRID [?] {ALLOW_OPENAD}
+    INI_GRID {NOT(ALLOW_OPENAD)}
+      LOAD_GRID_SPACING
+        READ_GLVEC_RL [pkg/rw]
+        READ_GLVEC_RS [pkg/rw]
+      INI_VERTICAL_GRID
+      INI_CARTESIAN_GRID
+        INI_LOCAL_GRID
+      INI_SPHERICAL_POLAR_GRID
+        INI_LOCAL_GRID (↑)
+        ROTATE_SPHERICAL_POLAR_GRID
+        CALC_GRID_ANGLES
+      INI_CURVILINEAR_GRID
+        READ_REC_3D_RS [pkg/rw] {ALLOW_MDSIO}
+        EXCH_UV_AGRID_3D_RS {ALLOW_MDSIO}
+        EXCH_Z_3D_RS {ALLOW_MDSIO}
+        EXCH_UV_BGRID_3D_RS {ALLOW_MDSIO}
+        MNC_FILE_CLOSE_ALL_MATCHING [pkg/mnc] {ALLOW_MNC}
+        MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+        MNC_CW_SET_CITER [pkg/mnc] {ALLOW_MNC}
+        MNC_CW_RS_R [pkg/mnc] {ALLOW_MNC}
+        MDS_FACEF_READ_RS [pkg/mdsio] {ALLOW_MDSIO}
+        CALC_GRID_ANGLES (↑)
+      INI_CYLINDER_GRID
+        INI_LOCAL_GRID (↑)
+      MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MONITOR,ALLOW_MNC}
+      MON_PRINTSTATS_RS [pkg/monitor] {ALLOW_MONITOR}
+    LOAD_REF_FILES
+      READ_GLVEC_RL [pkg/rw]
+    INI_EOS
+      EOS_CHECK
+        FIND_RHO_2D
+          LOOK_FOR_NEG_SALINITY
+          PRESSURE_FOR_EOS
+          FIND_RHOP0
+          FIND_BULKMOD
+          FIND_RHONUM
+          FIND_RHODEN
+          FIND_RHOTEOS
+        FIND_BULKMOD (↑)
+        FIND_RHO_SCALAR
+    SET_REF_STATE
+      FIND_RHO_SCALAR (↑)
+      FIND_HYD_PRESS_1D
+        FIND_RHO_SCALAR (↑)
+      WRITE_GLVEC_RL [pkg/rw]
+    SET_GRID_FACTORS
+    OPENAD_INI_DEPTHS [?] {ALLOW_OPENAD}
+    INI_DEPTHS {NOT(ALLOW_OPENAD)}
+      MNC_CW_ADD_VNAME [pkg/mnc] {ALLOW_MNC}
+      MNC_FILE_CLOSE_ALL_MATCHING [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_SET_CITER [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_RS_R [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_DEL_VNAME [pkg/mnc] {ALLOW_MNC}
+      READ_REC_XY_RS [pkg/rw]
+      INI_P_GROUND
+        ANALYLIC_THETA
+      OBCS_CHECK_DEPTHS [pkg/obcs] {ALLOW_OBCS}
+      EXCH2_CHECK_DEPTHS [pkg/exch2] {ALLOW_EXCH2}
+    OPENAD_INI_MASKS_ETC [?] {ALLOW_OPENAD}
+    INI_MASKS_ETC {NOT(ALLOW_OPENAD)}
+      SHELFICE_INIT_DEPTHS [pkg/shelfice] {ALLOW_SHELFICE}
+      STIC_INIT_DEPTHS [pkg/steep_icecavity] {ALLOW_STEEP_ICECAVITY}
+      EXCH_UV_XYZ_RS
+      ADD_WALLS2MASKS
+        READ_FLD_XY_RS [pkg/rw]
+      INI_SIGMA_HFAC {!DISABLE_SIGMA_CODE}
+        ADD_WALLS2MASKS (↑)
+    PACKAGES_INIT_FIXED
+      RUNCLOCK_INIT [pkg/runclock] {ALLOW_RUNCLOCK}
+      CAL_INIT_FIXED [pkg/cal] {ALLOW_CAL}
+      DIAGNOSTICS_INIT_EARLY [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+      DIAGNOSTICS_MAIN_INIT [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+      NEST2W_INIT_FIXED [?] {ALLOW_NEST2W_COMMON}
+      GAD_INIT_FIXED [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF}
+      MOM_INIT_FIXED [pkg/mom_common] {ALLOW_MOM_COMMON}
+      CD_CODE_INIT_FIXED [pkg/cd_code] {ALLOW_CD_CODE}
+      OBCS_INIT_FIXED [pkg/obcs] {ALLOW_OBCS}
+      SHAP_FILT_INIT_FIXED [pkg/shap_filt] {ALLOW_SHAP_FILT}
+      ZONAL_FILT_INIT [pkg/zonal_filt] {ALLOW_ZONAL_FILT}
+      EXF_INIT_FIXED [pkg/exf] {ALLOW_EXF}
+      CHEAPAML_INIT_FIXED [pkg/cheapaml] {ALLOW_CHEAPAML}
+      OPPS_INIT [pkg/opps] {ALLOW_OPPS}
+      PP81_INIT_FIXED [pkg/pp81] {ALLOW_PP81}
+      KL10_INIT_FIXED [pkg/kl10] {ALLOW_KL10}
+      MY82_INIT_FIXED [pkg/my82] {ALLOW_MY82}
+      GGL90_INIT_FIXED [pkg/ggl90] {ALLOW_GGL90}
+      KPP_INIT_FIXED [pkg/kpp] {ALLOW_KPP}
+      GMREDI_INIT_FIXED [pkg/gmredi] {ALLOW_GMREDI}
+      BBL_INIT_FIXED [pkg/bbl] {ALLOW_BBL}
+      DWNSLP_INIT_FIXED [pkg/down_slope] {ALLOW_DOWN_SLOPE}
+      COST_INIT_FIXED [pkg/cost] {ALLOW_COST}
+      SEAICE_COST_INIT_FIXED [pkg/seaice] {ALLOW_SEAICE}
+      ECCO_INIT_FIXED [pkg/ecco] {ALLOW_ECCO}
+      PROFILES_INIT_FIXED [pkg/profiles] {ALLOW_PROFILES}
+      OBSFIT_INIT_FIXED [pkg/obsfit] {ALLOW_OBSFIT}
+      FLT_INIT_FIXED [pkg/flt] {ALLOW_FLT}
+      LONGSTEP_INIT_FIXED [pkg/longstep] {ALLOW_LONGSTEP}
+      PTRACERS_INIT_FIXED [pkg/ptracers] {ALLOW_PTRACERS}
+      GCHEM_INIT_FIXED [pkg/gchem] {ALLOW_GCHEM}
+      RBCS_INIT_FIXED [pkg/rbcs] {ALLOW_RBCS}
+      STREAMICE_INIT_FIXED [pkg/streamice] {ALLOW_STREAMICE,!ALLOW_OPENAD}
+      OPENAD_STREAMICE_INIT_FIXED [?] {ALLOW_STREAMICE,NOT(!ALLOW_OPENAD)}
+      SHELFICE_INIT_FIXED [pkg/shelfice] {ALLOW_SHELFICE}
+      STIC_INIT_FIXED [pkg/steep_icecavity] {ALLOW_STEEP_ICECAVITY}
+      SMOOTH_INIT_FIXED [pkg/smooth] {ALLOW_SMOOTH}
+      ICEFRONT_INIT_FIXED [pkg/icefront] {ALLOW_ICEFRONT}
+      FRAZIL_INIT_FIXED [pkg/frazil] {ALLOW_FRAZIL}
+      SEAICE_INIT_FIXED [pkg/seaice] {ALLOW_SEAICE}
+      SALT_PLUME_INIT_FIXED [pkg/salt_plume] {ALLOW_SALT_PLUME}
+      THSICE_INIT_FIXED [pkg/thsice] {ALLOW_THSICE}
+      LAND_INIT_FIXED [pkg/land] {ALLOW_LAND}
+      ATM2D_INIT_FIXED [pkg/atm2d] {ALLOW_ATM2D}
+      AIM_INITIALISE [pkg/aim_v23] {ALLOW_AIM}
+      ATM_PHYS_INIT_FIXED [pkg/atm_phys] {ALLOW_ATM_PHYS}
+      FIZHI_INIT_FIXED [pkg/fizhi] {ALLOW_FIZHI}
+      GRIDALT_INITIALISE [pkg/gridalt] {ALLOW_GRIDALT}
+      REGRID_INIT_FIXED [pkg/regrid] {ALLOW_REGRID}
+      LAYERS_INIT_FIXED [pkg/layers] {ALLOW_LAYERS}
+      CPL_INIT_FIXED [pkg/ocn_compon_interf]
+      OASIS_INIT_FIXED [?] {ALLOW_OASIS}
+      EMBED_FILES_INIT [pkg/embed_files] {ALLOW_EMBED_FILES}
+      MYPACKAGE_INIT_FIXED [pkg/mypackage] {ALLOW_MYPACKAGE}
+      CTRL_INIT_FIXED [pkg/ctrl] {ALLOW_CTRL}
+      CTRL_ADMTLM [?] {ALLOW_CTRL,ALLOW_ADMTLM}
+      DIAGNOSTICS_INIT_FIXED [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+    INI_GLOBAL_DOMAIN
+      GLOBAL_SUM_INT
+    OPENAD_INI_LINEAR_PHISURF [?] {ALLOW_OPENAD}
+    INI_LINEAR_PHISURF {NOT(ALLOW_OPENAD)}
+      FIND_RHO_SCALAR {ALLOW_OPENAD} (↑)
+      READ_FLD_XY_RS [pkg/rw]
+      INI_P_GROUND {NOT(ALLOW_AUTODIFF)} (↑)
+    OPENAD_INI_CORI [?] {ALLOW_OPENAD}
+    INI_CORI {NOT(ALLOW_OPENAD)}
+      READ_REC_XY_RS [pkg/rw]
+      MDS_FACEF_READ_RS [pkg/mdsio] {ALLOW_MDSIO}
+      EXCH_Z_3D_RS
+      MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MONITOR,ALLOW_MNC}
+      MON_SET_PREF [pkg/monitor] {ALLOW_MONITOR}
+      MON_PRINTSTATS_RS [pkg/monitor] {ALLOW_MONITOR}
+    OPENAD_INI_CG2D [?] {ALLOW_OPENAD}
+    INI_CG2D {NOT(ALLOW_OPENAD)}
+    INI_CG3D {ALLOW_NONHYDROSTATIC}
+      EXCH_UV_XYZ_RS {ALLOW_NONHYDROSTATIC}
+    CONFIG_SUMMARY
+      PRINT_LIST_I
+    PACKAGES_CHECK
+      OBCS_CHECK [pkg/obcs] {ALLOW_OBCS}
+      OPPS_CHECK [pkg/opps] {ALLOW_OPPS}
+      PP81_CHECK [pkg/pp81] {ALLOW_PP81}
+      KL10_CHECK [pkg/kl10] {ALLOW_KL10}
+      MY82_CHECK [pkg/my82] {ALLOW_MY82}
+      GGL90_CHECK [pkg/ggl90] {ALLOW_GGL90}
+      KPP_CHECK [pkg/kpp] {ALLOW_KPP}
+      GMREDI_CHECK [pkg/gmredi] {ALLOW_GMREDI}
+      BBL_CHECK [pkg/bbl] {ALLOW_BBL}
+      EXF_CHECK [pkg/exf] {ALLOW_EXF}
+      LONGSTEP_CHECK [pkg/longstep] {ALLOW_LONGSTEP}
+      PTRACERS_CHECK [pkg/ptracers] {ALLOW_PTRACERS}
+      GCHEM_CHECK [pkg/gchem] {ALLOW_GCHEM}
+      OFFLINE_CHECK [pkg/offline] {ALLOW_OFFLINE}
+      SEAICE_CHECK [pkg/seaice] {ALLOW_SEAICE}
+      SALT_PLUME_CHECK [pkg/salt_plume] {ALLOW_SALT_PLUME}
+      SHELFICE_CHECK [pkg/shelfice] {ALLOW_SHELFICE}
+      STIC_CHECK [pkg/steep_icecavity] {ALLOW_STEEP_ICECAVITY}
+      SMOOTH_CHECK [pkg/smooth] {ALLOW_SMOOTH}
+      STREAMICE_CHECK [pkg/streamice] {ALLOW_STREAMICE}
+      ICEFRONT_CHECK [pkg/icefront] {ALLOW_ICEFRONT}
+      THSICE_CHECK [pkg/thsice] {ALLOW_THSICE}
+      LAND_CHECK [pkg/land] {ALLOW_LAND}
+      ATM_PHYS_CHECK [pkg/atm_phys] {ALLOW_ATM_PHYS}
+      AUTODIFF_CHECK [pkg/autodiff] {ALLOW_AUTODIFF}
+      CTRL_CHECK [pkg/ctrl] {ALLOW_CTRL}
+      COST_CHECK [pkg/cost] {ALLOW_COST}
+      ECCO_CHECK [pkg/ecco] {ALLOW_ECCO}
+      GRDCHK_CHECK [pkg/grdchk] {ALLOW_GRDCHK}
+      SBO_CHECK [pkg/sbo] {ALLOW_SBO}
+      DIAGNOSTICS_CHECK [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+      REGRID_CHECK [pkg/regrid] {ALLOW_REGRID}
+      LAYERS_CHECK [pkg/layers] {ALLOW_LAYERS}
+      NEST_CHILD_CHECK [?] {ALLOW_NEST_CHILD}
+      NEST_PARENT_CHECK [?] {ALLOW_NEST_PARENT}
+      OASIS_CHECK [?] {ALLOW_OASIS}
+      RUNCLOCK_CHECK [pkg/runclock] {ALLOW_RUNCLOCK}
+      MYPACKAGE_CHECK [pkg/mypackage] {ALLOW_MYPACKAGE}
+      GAD_CHECK [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF}
+    CONFIG_CHECK
+    WRITE_GRID
+      WRITE_GLVEC_RS [pkg/rw]
+      MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_SET_CITER [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_RS_W [pkg/mnc] {ALLOW_MNC}
+      MNC_CW_WRITE_GRID_COORD [pkg/mnc] {ALLOW_MNC}
+    CPL_EXCH_CONFIGS [pkg/ocn_compon_interf]
+  CTRL_UNPACK [pkg/ctrl] {ALLOW_ADMTLM,ALLOW_CTRL,!EXCLUDE_CTRL_PACK}
+  COST_DEPENDENT_INIT [pkg/cost] {ALLOW_ADMTLM,ALLOW_COST}
+  G_THE_MAIN_LOOP [?] {ALLOW_ADMTLM,if ( defined ALLOW_TANGENTLINEAR_RUN ),!ALLOW_TAPENADE}
+  THE_MAIN_LOOP_B [?] {ALLOW_ADMTLM,if ( defined ALLOW_TANGENTLINEAR_RUN ),ALLOW_TAPENADE}
+  MDTHE_MAIN_LOOP [?] {ALLOW_ADMTLM,if ( defined ALLOW_TANGENTLINEAR_RUN ),NOT(ALLOW_TAPENADE),ALLOW_DIVIDED_ADJOINT}
+  COST_FINAL_STORE [pkg/cost] {ALLOW_ADMTLM,if ( defined ALLOW_TANGENTLINEAR_RUN ),NOT(ALLOW_TAPENADE),ALLOW_DIVIDED_ADJOINT}
+  TURNOFF_MODEL_IO {ALLOW_ADMTLM,if ( defined ALLOW_TANGENTLINEAR_RUN ),NOT(ALLOW_TAPENADE),ALLOW_DIVIDED_ADJOINT}
+    SEAICE_TURNOFF_IO [pkg/seaice] {ALLOW_SEAICE}
+    THSICE_TURNOFF_IO [pkg/thsice] {ALLOW_THSICE}
+    PTRACERS_TURNOFF_IO [pkg/ptracers] {ALLOW_PTRACERS}
+  ADTHE_MAIN_LOOP [?] {ALLOW_ADMTLM,if ( defined ALLOW_TANGENTLINEAR_RUN ),NOT(ALLOW_TAPENADE),ALLOW_DIVIDED_ADJOINT}
+  COST_FINAL_RESTORE [pkg/cost] {ALLOW_ADMTLM,if ( defined ALLOW_TANGENTLINEAR_RUN ),NOT(ALLOW_TAPENADE),ALLOW_DIVIDED_ADJOINT}
+  THE_MAIN_LOOP {ALLOW_ADMTLM,NOT(if ( defined ALLOW_TANGENTLINEAR_RUN ))}
+    AUTODIFF_WHTAPEIO_SYNC [pkg/autodiff] {ALLOW_AUTODIFF_TAMC,if ( defined ALLOW_AUTODIFF_WHTAPEIO && defined ALLOW_DIVIDED_ADJOINT )}
+    INITIALISE_VARIA
+      INI_DEPTHS {ALLOW_DEPTH_CONTROL} (↑)
+      CTRL_DEPTH_INI [pkg/ctrl] {ALLOW_DEPTH_CONTROL}
+      UPDATE_MASKS_ETC {ALLOW_DEPTH_CONTROL}
+        EXCH_UV_XYZ_RS {ALLOW_DEPTH_CONTROL}
+      UPDATE_CG2D {ALLOW_DEPTH_CONTROL}
+      INI_NLFS_VARS
+      INI_DYNVARS
+      INI_NH_VARS {ALLOW_NONHYDROSTATIC}
+      INI_FFIELDS
+      INI_FIELDS
+        INI_VEL
+          READ_FLD_XYZ_RL [pkg/rw]
+        INI_THETA
+          MNC_FILE_CLOSE_ALL_MATCHING [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_SET_CITER [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_RL_R [pkg/mnc] {ALLOW_MNC}
+          READ_FLD_XYZ_RL [pkg/rw]
+        INI_SALT
+          MNC_FILE_CLOSE_ALL_MATCHING [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_SET_CITER [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_RL_R [pkg/mnc] {ALLOW_MNC}
+          READ_FLD_XYZ_RL [pkg/rw]
+        INI_PSURF
+          READ_FLD_XY_RL [pkg/rw]
+        INI_PRESSURE
+          CALC_PHI_HYD {!ALLOW_AUTODIFF}
+            FIND_RHO_2D (↑)
+            MOM_QUASIHYDROSTATIC [pkg/mom_common] {ALLOW_MOM_COMMON}
+            CALC_GRAD_PHI_HYD
+            CALC_GRAD_PHI_FV {!DISABLE_SIGMA_CODE}
+            DIAGS_PHI_RLOW
+            DIAGS_PHI_HYD
+        INI_EP [?]
+        READ_PICKUP
+          RW_GET_SUFFIX [pkg/rw]
+          READ_MFLDS_SET [pkg/rw]
+          READ_REC_3D_RL [pkg/rw] {!ALLOW_ADAMSBASHFORTH_3}
+          READ_MFLDS_3D_RL [pkg/rw]
+          READ_MFLDS_LEV_RS [pkg/rw] {ALLOW_FRICTION_HEATING}
+          READ_MFLDS_CHECK [pkg/rw]
+          CHECK_PICKUP
+          MNC_FILE_CLOSE_ALL_MATCHING [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_SET_CITER [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_RL_R [pkg/mnc] {ALLOW_MNC}
+          EXCH_UV_3D_RL
+        INI_NH_FIELDS {ALLOW_NONHYDROSTATIC}
+        UPDATE_ETAWS {!DISABLE_SIGMA_CODE}
+      INI_MIXING
+        READ_FLD_XYZ_RL [pkg/rw] {ALLOW_3D_DIFFKR}
+      TAUEDDY_INIT_VARIA {ALLOW_EDDYPSI}
+        READ_FLD_XYZ_RS [pkg/rw] {ALLOW_EDDYPSI}
+        EXCH_UV_XYZ_RS {ALLOW_EDDYPSI}
+      INI_FORCING
+        READ_FLD_XY_RS [pkg/rw]
+        SWFRAC
+        READ_FLD_XYZ_RL [pkg/rw] {ALLOW_ADDFLUID}
+        MON_PRINTSTATS_RS [pkg/monitor] {ALLOW_GEOTHERMAL_FLUX,ALLOW_MONITOR}
+      AUTODIFF_INIT_VARIA [pkg/autodiff] {ALLOW_AUTODIFF}
+      PACKAGES_INIT_VARIABLES
+        DIAGNOSTICS_INIT_VARIA [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+        OFFLINE_INIT_VARIA [pkg/offline] {ALLOW_OFFLINE}
+        GAD_INIT_VARIA [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF}
+        CD_CODE_INI_VARS [pkg/cd_code] {ALLOW_CD_CODE}
+        PP81_INIT_VARIA [pkg/pp81] {ALLOW_PP81}
+        KL10_INIT_VARIA [pkg/kl10] {ALLOW_KL10}
+        MY82_INIT_VARIA [pkg/my82] {ALLOW_MY82}
+        GGL90_INIT_VARIA [pkg/ggl90] {ALLOW_GGL90}
+        KPP_INIT_VARIA [pkg/kpp] {ALLOW_KPP}
+        GMREDI_INIT_VARIA [pkg/gmredi] {ALLOW_GMREDI}
+        BBL_INIT_VARIA [pkg/bbl] {ALLOW_BBL}
+        DWNSLP_INIT_VARIA [pkg/down_slope] {ALLOW_DOWN_SLOPE}
+        EXF_INIT_VARIA [pkg/exf] {ALLOW_EXF}
+        BULKF_INIT_VARIA [pkg/bulk_force] {ALLOW_BULK_FORCE}
+        EBM_INI_VARS [pkg/ebm] {ALLOW_EBM}
+        CHEAPAML_INIT_VARIA [pkg/cheapaml] {ALLOW_CHEAPAML}
+        FLT_INIT_VARIA [pkg/flt] {ALLOW_FLT}
+        PTRACERS_INIT_VARIA [pkg/ptracers] {ALLOW_PTRACERS}
+        LONGSTEP_INIT_VARIA [pkg/longstep] {ALLOW_PTRACERS,ALLOW_LONGSTEP}
+        GCHEM_INIT_VARI [pkg/gchem] {ALLOW_GCHEM}
+        RBCS_INIT_VARIA [pkg/rbcs] {ALLOW_RBCS}
+        MATRIX_INIT_VARIA [pkg/matrix] {ALLOW_MATRIX}
+        STREAMICE_INIT_VARIA [pkg/streamice] {ALLOW_STREAMICE}
+        SHELFICE_INIT_VARIA [pkg/shelfice] {ALLOW_SHELFICE}
+        STIC_INIT_VARIA [pkg/steep_icecavity] {ALLOW_STEEP_ICECAVITY}
+        ICEFRONT_INIT_VARIA [pkg/icefront] {ALLOW_ICEFRONT}
+        FRAZIL_INIT_VARIA [pkg/frazil] {ALLOW_FRAZIL}
+        SEAICE_INIT_VARIA [pkg/seaice] {ALLOW_SEAICE}
+        SALT_PLUME_INIT_VARIA [pkg/salt_plume] {ALLOW_SALT_PLUME}
+        THSICE_INI_VARS [pkg/thsice] {ALLOW_THSICE}
+        LAND_INI_VARS [pkg/land] {ALLOW_LAND}
+        ATM2D_INIT_VARS [pkg/atm2d] {ALLOW_ATM2D}
+        ATM_PHYS_INIT_VARIA [pkg/atm_phys] {ALLOW_ATM_PHYS}
+        FIZHI_INIT_VARS [pkg/fizhi] {ALLOW_FIZHI}
+        REGRID_INIT_VARIA [pkg/regrid] {ALLOW_REGRID}
+        LAYERS_INIT_VARIA [pkg/layers] {ALLOW_LAYERS}
+        NEST_CHILD_INIT_VARIA [?] {ALLOW_NEST_CHILD}
+        NEST_PARENT_INIT_VARIA [?] {ALLOW_NEST_PARENT}
+        NEST2W_INIT_VARIA [?] {ALLOW_NEST2W_COMMON}
+        CPL_INI_VARS [pkg/ocn_compon_interf]
+        MYPACKAGE_INIT_VARIA [pkg/mypackage] {ALLOW_MYPACKAGE}
+        SMOOTH_INIT_VARIA [pkg/smooth] {ALLOW_SMOOTH}
+        PROFILES_INIT_VARIA [pkg/profiles] {ALLOW_PROFILES}
+        OBSFIT_INIT_VARIA [pkg/obsfit] {ALLOW_OBSFIT}
+        ECCO_INIT_VARIA [pkg/ecco] {ALLOW_ECCO}
+        CTRL_INIT_VARIABLES [pkg/ctrl] {ALLOW_CTRL}
+        OBCS_INIT_VARIABLES [pkg/obcs] {ALLOW_OBCS}
+      COST_INIT_VARIA [pkg/cost] {ALLOW_COST}
+      CONVECTIVE_ADJUSTMENT_INI
+        FIND_RHO_2D (↑)
+        CONVECTIVE_WEIGHTS
+        CONVECTIVELY_MIXTRACER
+        PTRACERS_CONVECT [pkg/ptracers] {ALLOW_PTRACERS}
+      CALC_R_STAR {!DISABLE_RSTAR_CODE}
+        OBCS_APPLY_R_STAR [pkg/obcs] {ALLOW_OBCS}
+      UPDATE_R_STAR {!DISABLE_RSTAR_CODE}
+      UPDATE_SIGMA {!DISABLE_SIGMA_CODE}
+      CALC_SURF_DR
+        OBCS_APPLY_SURF_DR [pkg/obcs] {ALLOW_OBCS}
+      UPDATE_SURF_DR
+      INTEGR_CONTINUITY
+        INTEGRATE_FOR_W
+        OBCS_APPLY_W [pkg/obcs] {ALLOW_OBCS}
+        DUMMY_FOR_ETAN [pkg/autodiff] {ALLOW_AUTODIFF_MONITOR}
+        UPDATE_ETAH
+          OBCS_APPLY_ETA [pkg/obcs] {ALLOW_OBCS}
+        UPDATE_ETAWS {!DISABLE_SIGMA_CODE} (↑)
+      GRIDALT_UPDATE [pkg/gridalt] {ALLOW_GRIDALT}
+      STATE_SUMMARY
+      DO_THE_MODEL_IO
+        WRITE_STATE
+          WRITE_REC_XYZ_RL [pkg/rw]
+          WRITE_REC_XY_RL [pkg/rw]
+          RW_GET_SUFFIX [pkg/rw]
+          MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_RL_W_S [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_I_W_S [pkg/mnc] {ALLOW_MNC}
+          MNC_CW_RL_W [pkg/mnc] {ALLOW_MNC}
+        FIZHI_WRITE_STATE [pkg/fizhi] {ALLOW_FIZHI}
+        LAND_OUTPUT [pkg/land] {ALLOW_LAND}
+        OBCS_OUTPUT [pkg/obcs] {ALLOW_OBCS}
+        GMREDI_OUTPUT [pkg/gmredi] {ALLOW_GMREDI}
+        KPP_OUTPUT [pkg/kpp] {ALLOW_KPP}
+        PP81_OUTPUT [pkg/pp81] {ALLOW_PP81}
+        KL10_OUTPUT [pkg/kl10] {ALLOW_KL10}
+        MY82_OUTPUT [pkg/my82] {ALLOW_MY82}
+        GGL90_OUTPUT [pkg/ggl90] {ALLOW_GGL90}
+        SBO_CALC [pkg/sbo] {ALLOW_SBO}
+        SBO_OUTPUT [pkg/sbo] {ALLOW_SBO}
+        STERGLOH_OUTPUT [pkg/ecco] {ALLOW_ECCO}
+        SEAICE_OUTPUT [pkg/seaice] { ALLOW_SEAICE}
+        SHELFICE_OUTPUT [pkg/shelfice] { ALLOW_SHELFICE}
+        THSICE_OUTPUT [pkg/thsice] {ALLOW_THSICE}
+        PTRACERS_OUTPUT [pkg/ptracers] {ALLOW_PTRACERS}
+        MATRIX_OUTPUT [pkg/matrix] {ALLOW_MATRIX}
+        GCHEM_OUTPUT [pkg/gchem] {ALLOW_GCHEM}
+        LAYERS_CALC [pkg/layers] {ALLOW_LAYERS}
+        DIAGNOSTICS_WRITE [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+      BAR_CHECK
+    SHOWFLOPS_INIT [pkg/showflops] {ALLOW_SHOWFLOPS}
+    INIT_PDAF [?]
+    AUTODIFF_STORE [pkg/autodiff] {!ALLOW_OPENAD,ALLOW_AUTODIFF,ALLOW_TAMC_CHECKPOINTING}
+    AUTODIFF_RESTORE [pkg/autodiff] {!ALLOW_OPENAD,ALLOW_AUTODIFF,ALLOW_TAMC_CHECKPOINTING}
+    COST_AVERAGESFIELDS [pkg/ecco] {ALLOW_ECCO}
+    PROFILES_INLOOP [pkg/profiles] {ALLOW_PROFILES}
+    OBSFIT_INLOOP [pkg/obsfit] {ALLOW_OBSFIT}
+    MAIN_DO_LOOP
+      FORWARD_STEP_ATM2D [pkg/atm2d] {!ALLOW_OPENAD,ALLOW_ATM2D}
+      FORWARD_STEP {!ALLOW_OPENAD,NOT(ALLOW_ATM2D)}
+        AUTODIFF_INADMODE_UNSET [pkg/autodiff] {ALLOW_AUTODIFF}
+        SHELFICE_REMESHING [pkg/shelfice] {ALLOW_SHELFICE_REMESHING}
+        RESET_NLFS_VARS
+        UPDATE_R_STAR {!DISABLE_RSTAR_CODE} (↑)
+        UPDATE_SURF_DR (↑)
+        PTRACERS_SWITCH_ONOFF [pkg/ptracers] {ALLOW_PTRACERS}
+        DIAGNOSTICS_SWITCH_ONOFF [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+        DO_STATEVARS_DIAGS {ALLOW_DIAGNOSTICS}
+          DIAGNOSTICS_FILL_STATE [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+          GAD_DIAGNOSTICS_STATE [pkg/generic_advdiff] {ALLOW_DIAGNOSTICS,ALLOW_GENERIC_ADVDIFF}
+          PTRACERS_DIAGNOSTICS_STATE [pkg/ptracers] {ALLOW_DIAGNOSTICS,ALLOW_PTRACERS}
+          GMREDI_DIAGNOSTICS_IMPL [pkg/gmredi] {ALLOW_DIAGNOSTICS,ALLOW_GMREDI}
+          BBL_DIAGNOSTICS_STATE [pkg/bbl] {ALLOW_DIAGNOSTICS,ALLOW_BBL}
+          SEAICE_DIAGNOSTICS_STATE [pkg/seaice] {ALLOW_DIAGNOSTICS,ALLOW_SEAICE}
+          THSICE_DIAGNOSTICS_STATE [pkg/thsice] {ALLOW_DIAGNOSTICS,ALLOW_THSICE}
+          STREAMICE_DIAGNOSTICS_STATE [pkg/streamice] {ALLOW_DIAGNOSTICS,ALLOW_STREAMICE}
+          LAND_DIAGNOSTICS_STATE [pkg/land] {ALLOW_DIAGNOSTICS,ALLOW_LAND}
+          MYPACKAGE_DIAGNOSTICS_STATE [pkg/mypackage] {ALLOW_DIAGNOSTICS,ALLOW_MYPACKAGE}
+        NEST_CHILD_SETMEMO [?] {ALLOW_NEST_CHILD}
+        NEST_PARENT_IO_1 [?] {ALLOW_NEST_PARENT}
+        LOAD_FIELDS_DRIVER
+          CONVERT_CT2PT
+            CONVERT_PT2CT
+          CTRL_MAP_GENTIM2D [pkg/ctrl] {ALLOW_CTRL}
+          BULKF_FIELDS_LOAD [pkg/bulk_force] {ALLOW_BULK_FORCE}
+          EXF_GETFORCING [pkg/exf] {ALLOW_EXF}
+          CHEAPAML_FIELDS_LOAD [pkg/cheapaml] {ALLOW_CHEAPAML}
+          EXTERNAL_FIELDS_LOAD
+            GET_PERIODIC_INTERVAL {!EXCLUDE_FFIELDS_LOAD}
+            READ_REC_XY_RS [pkg/rw] {!EXCLUDE_FFIELDS_LOAD}
+          GCHEM_FIELDS_LOAD [pkg/gchem] {ALLOW_GCHEM}
+          RBCS_FIELDS_LOAD [pkg/rbcs] {ALLOW_RBCS}
+          AIM_FIELDS_LOAD [pkg/aim_v23] {ALLOW_AIM}
+        BULKF_FORCING [pkg/bulk_force] {ALLOW_BULK_FORCE}
+        CHEAPAML [pkg/cheapaml] {ALLOW_CHEAPAML}
+        CTRL_MAP_FORCING [pkg/ctrl] {ALLOW_CTRL}
+        DUMMY_IN_STEPPING [pkg/autodiff] {ALLOW_AUTODIFF_MONITOR}
+        CPL_EXPORT_IMPORT_DATA [pkg/ocn_compon_interf]
+        OASIS_PUT [?] {ALLOW_OASIS}
+        OASIS_GET [?] {ALLOW_OASIS}
+        EBM_DRIVER [pkg/ebm] {ALLOW_EBM}
+        DO_ATMOSPHERIC_PHYS
+          UPDATE_OCEAN_EXPORTS [pkg/fizhi] {ALLOW_FIZHI}
+          UPDATE_EARTH_EXPORTS [pkg/fizhi] {ALLOW_FIZHI}
+          UPDATE_CHEMISTRY_EXPORTS [pkg/fizhi] {ALLOW_FIZHI}
+          FIZHI_WRAPPER [pkg/fizhi] {ALLOW_FIZHI}
+          STEP_FIZHI_FG [pkg/fizhi] {ALLOW_FIZHI}
+          FIZHI_UPDATE_TIME [pkg/fizhi] {ALLOW_FIZHI}
+          ATM_PHYS_DRIVER [pkg/atm_phys] {ALLOW_ATM_PHYS}
+          AIM_DO_PHYSICS [pkg/aim_v23] {ALLOW_AIM}
+        DO_OCEANIC_PHYS
+          OBCS_CALC [pkg/obcs] { ALLOW_OBCS}
+          OCN_APPLY_IMPORT [pkg/ocn_compon_interf] {ALLOW_OCN_COMPON_INTERF}
+          FRAZIL_CALC_RHS [pkg/frazil] {ALLOW_FRAZIL}
+          THSICE_MAIN [pkg/thsice] {if (defined ALLOW_THSICE) && !(defined ALLOW_ATM2D)}
+          SEAICE_MODEL [pkg/seaice] {ALLOW_SEAICE}
+          SEAICE_COST_SENSI [pkg/seaice] {ALLOW_SEAICE,ALLOW_COST}
+          SEAICE_FAKE [pkg/seaice] {ALLOW_SEAICE,ALLOW_AUTODIFF}
+          OCN_EXPORT_DATA [pkg/ocn_compon_interf] {if (defined ALLOW_OCN_COMPON_INTERF) && (defined ALLOW_THSICE)}
+          STIC_THERMODYNAMICS [pkg/steep_icecavity] {ALLOW_SHELFICE,ALLOW_STEEP_ICECAVITY}
+          SHELFICE_THERMODYNAMICS [pkg/shelfice] {ALLOW_SHELFICE}
+          ICEFRONT_THERMODYNAMICS [pkg/icefront] {ALLOW_ICEFRONT}
+          SALT_PLUME_DO_EXCH [pkg/salt_plume] {ALLOW_SALT_PLUME}
+          FREEZE_SURFACE
+          EXTERNAL_FORCING_SURF
+            REMOVE_MEAN_RS {ALLOW_BALANCE_FLUXES}
+            RESET_HALO_RS
+            FORCING_SURF_RELAX
+            PTRACERS_FORCING_SURF [pkg/ptracers] {ALLOW_PTRACERS}
+            SALT_PLUME_FORCING_SURF [pkg/salt_plume] {ALLOW_SALT_PLUME,!SALT_PLUME_VOLUME}
+            SHELFICE_FORCING_SURF [pkg/shelfice] {ALLOW_SHELFICE}
+          OBCS_ADJUST [pkg/obcs] { ALLOW_OBCS}
+          DWNSLP_CALC_RHO [pkg/down_slope] {ALLOW_DOWN_SLOPE}
+          BBL_CALC_RHO [pkg/bbl] {ALLOW_BBL}
+          FIND_RHO_2D (↑)
+          GRAD_SIGMA
+            FILL_CS_CORNER_TR_RL
+          ZERO_ADJ_LOC [pkg/autodiff] {ALLOW_AUTODIFF}
+          CALC_IVDC
+          DIAGS_RHO_L {ALLOW_DIAGNOSTICS}
+            DIAGNOSTICS_COUNT [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+          CALC_OCE_MXLAYER
+            FIND_ALPHA
+              PRESSURE_FOR_EOS (↑)
+              FIND_RHOP0 (↑)
+              FIND_BULKMOD (↑)
+              FIND_RHONUM (↑)
+              FIND_RHODEN (↑)
+              FIND_RHOTEOS (↑)
+            FIND_RHO_2D (↑)
+          SALT_PLUME_CALC_DEPTH [pkg/salt_plume] {ALLOW_SALT_PLUME}
+          SALT_PLUME_VOLFRAC [pkg/salt_plume] {ALLOW_SALT_PLUME}
+          SALT_PLUME_APPLY [pkg/salt_plume] {ALLOW_SALT_PLUME}
+          SALT_PLUME_FORCING_SURF [pkg/salt_plume] {ALLOW_SALT_PLUME}
+          KPP_CALC [pkg/kpp] { ALLOW_KPP}
+          KPP_CALC_DUMMY [pkg/kpp] { ALLOW_KPP,if (defined ALLOW_AUTODIFF) && !(defined ALLOW_OFFLINE)}
+          PP81_CALC [pkg/pp81] { ALLOW_PP81}
+          KL10_CALC [pkg/kl10] { ALLOW_KL10}
+          MY82_CALC [pkg/my82] { ALLOW_MY82}
+          GGL90_CALC [pkg/ggl90] { ALLOW_GGL90}
+          GMREDI_CALC_TENSOR [pkg/gmredi] {ALLOW_GMREDI}
+          GMREDI_CALC_TENSOR_DUMMY [pkg/gmredi] {ALLOW_GMREDI,if (defined ALLOW_AUTODIFF) && !(defined ALLOW_OFFLINE)}
+          DWNSLP_CALC_FLOW [pkg/down_slope] {ALLOW_DOWN_SLOPE}
+          OFFLINE_GET_DIFFUS [pkg/offline] {ALLOW_OFFLINE}
+          BBL_CALC_RHS [pkg/bbl] {ALLOW_BBL}
+          MYPACKAGE_CALC_RHS [pkg/mypackage] {ALLOW_MYPACKAGE}
+          GMREDI_DO_EXCH [pkg/gmredi] {ALLOW_GMREDI}
+          KPP_DO_EXCH [pkg/kpp] {ALLOW_KPP}
+          GGL90_EXCHANGES [pkg/ggl90] {ALLOW_GGL90}
+          DIAGS_RHO_G {ALLOW_DIAGNOSTICS}
+          DIAGS_OCEANIC_SURF_FLUX {ALLOW_DIAGNOSTICS}
+            DIAGNOSTICS_SCALE_FILL_RS [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+            DIAGNOSTICS_FILL_RS [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+            LAYERS_FILL [pkg/layers] {ALLOW_DIAGNOSTICS,ALLOW_LAYERS}
+          SALT_PLUME_DIAGNOSTICS_FILL [pkg/salt_plume] {ALLOW_DIAGNOSTICS,ALLOW_SALT_PLUME}
+        STREAMICE_TIMESTEP [pkg/streamice] {ALLOW_STREAMICE}
+        GCHEM_CALC_TENDENCY [pkg/gchem]
+        LONGSTEP_AVERAGE [pkg/longstep] {ALLOW_LONGSTEP}
+        LONGSTEP_THERMODYNAMICS [pkg/longstep] {ALLOW_LONGSTEP}
+        THERMODYNAMICS
+          CALC_WSURF_TR {ALLOW_GENERIC_ADVDIFF}
+          LAYERS_WSURF_TR [pkg/layers] {ALLOW_GENERIC_ADVDIFF,ALLOW_LAYERS}
+          PTRACERS_CALC_WSURF_TR [pkg/ptracers] {ALLOW_GENERIC_ADVDIFF}
+          GMREDI_RESIDUAL_FLOW [pkg/gmredi] {ALLOW_GENERIC_ADVDIFF,ALLOW_GMREDI}
+          MON_CALC_ADVCFL_TILE [pkg/monitor] {ALLOW_GENERIC_ADVDIFF,ALLOW_MONITOR}
+          TEMP_INTEGRATE {ALLOW_GENERIC_ADVDIFF}
+            ADAMS_BASHFORTH3 {ALLOW_GENERIC_ADVDIFF,ALLOW_ADAMSBASHFORTH_3}
+            ADAMS_BASHFORTH2 {ALLOW_GENERIC_ADVDIFF,NOT(ALLOW_ADAMSBASHFORTH_3)}
+            CALC_3D_DIFFUSIVITY {ALLOW_GENERIC_ADVDIFF}
+              KPP_CALC_DIFF_T [pkg/kpp] {ALLOW_GENERIC_ADVDIFF,ALLOW_KPP}
+              KPP_CALC_DIFF_S [pkg/kpp] {ALLOW_GENERIC_ADVDIFF,ALLOW_KPP}
+              KPP_CALC_DIFF_PTR [pkg/kpp] {ALLOW_GENERIC_ADVDIFF,ALLOW_KPP,ALLOW_PTRACERS}
+              GMREDI_CALC_DIFF [pkg/gmredi] {ALLOW_GENERIC_ADVDIFF,ALLOW_GMREDI}
+              PP81_CALC_DIFF [pkg/pp81] {ALLOW_GENERIC_ADVDIFF,ALLOW_PP81}
+              KL10_CALC_DIFF [pkg/kl10] {ALLOW_GENERIC_ADVDIFF,ALLOW_KL10}
+              MY82_CALC_DIFF [pkg/my82] {ALLOW_GENERIC_ADVDIFF,ALLOW_MY82}
+              GGL90_CALC_DIFF [pkg/ggl90] {ALLOW_GENERIC_ADVDIFF,ALLOW_GGL90}
+            GAD_SOM_ADVECT [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF,!DISABLE_MULTIDIM_ADVECTION,GAD_ALLOW_TS_SOM_ADV}
+            GAD_ADVECTION [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF,!DISABLE_MULTIDIM_ADVECTION}
+            CALC_ADV_FLOW {ALLOW_GENERIC_ADVDIFF}
+            APPLY_FORCING_T {ALLOW_GENERIC_ADVDIFF}
+              EXTERNAL_FORCING_T
+              AIM_TENDENCY_APPLY_T [pkg/aim_v23] {ALLOW_AIM}
+              ATM_PHYS_TENDENCY_APPLY_T [pkg/atm_phys] {ALLOW_ATM_PHYS}
+              FIZHI_TENDENCY_APPLY_T [pkg/fizhi] {ALLOW_FIZHI}
+              FRAZIL_TENDENCY_APPLY_T [pkg/frazil] {ALLOW_FRAZIL}
+              SHELFICE_FORCING_T [pkg/shelfice] {ALLOW_SHELFICE}
+              ICEFRONT_TENDENCY_APPLY_T [pkg/icefront] {ALLOW_ICEFRONT}
+              SALT_PLUME_TENDENCY_APPLY_T [pkg/salt_plume] {ALLOW_SALT_PLUME}
+              RBCS_ADD_TENDENCY [pkg/rbcs] {ALLOW_RBCS}
+              OBCS_SPONGE_T [pkg/obcs] {ALLOW_OBCS}
+              BBL_TENDENCY_APPLY_T [pkg/bbl] {ALLOW_BBL}
+              MYPACKAGE_TENDENCY_APPLY_T [pkg/mypackage] {ALLOW_MYPACKAGE}
+            GAD_CALC_RHS [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF,ALLOW_ADAMSBASHFORTH_3}
+            FREESURF_RESCALE_G {ALLOW_GENERIC_ADVDIFF}
+            DWNSLP_APPLY [pkg/down_slope] {ALLOW_GENERIC_ADVDIFF,ALLOW_DOWN_SLOPE}
+            TIMESTEP_TRACER {ALLOW_GENERIC_ADVDIFF}
+            GAD_IMPLICIT_R [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF}
+            IMPLDIFF {ALLOW_GENERIC_ADVDIFF}
+              LAYERS_FILL [pkg/layers] {ALLOW_DIAGNOSTICS,ALLOW_LAYERS}
+            CYCLE_AB_TRACER {ALLOW_GENERIC_ADVDIFF,ALLOW_ADAMSBASHFORTH_3}
+            CYCLE_TRACER {ALLOW_GENERIC_ADVDIFF}
+          SALT_INTEGRATE {ALLOW_GENERIC_ADVDIFF}
+            ADAMS_BASHFORTH3 {ALLOW_GENERIC_ADVDIFF,ALLOW_ADAMSBASHFORTH_3} (↑)
+            ADAMS_BASHFORTH2 {ALLOW_GENERIC_ADVDIFF,NOT(ALLOW_ADAMSBASHFORTH_3)} (↑)
+            CALC_3D_DIFFUSIVITY {ALLOW_GENERIC_ADVDIFF} (↑)
+            GAD_SOM_ADVECT [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF,!DISABLE_MULTIDIM_ADVECTION,GAD_ALLOW_TS_SOM_ADV}
+            GAD_ADVECTION [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF,!DISABLE_MULTIDIM_ADVECTION}
+            CALC_ADV_FLOW {ALLOW_GENERIC_ADVDIFF} (↑)
+            APPLY_FORCING_S {ALLOW_GENERIC_ADVDIFF}
+              EXTERNAL_FORCING_S
+              AIM_TENDENCY_APPLY_S [pkg/aim_v23] {ALLOW_AIM}
+              ATM_PHYS_TENDENCY_APPLY_S [pkg/atm_phys] {ALLOW_ATM_PHYS}
+              FIZHI_TENDENCY_APPLY_S [pkg/fizhi] {ALLOW_FIZHI}
+              SHELFICE_FORCING_S [pkg/shelfice] {ALLOW_SHELFICE}
+              ICEFRONT_TENDENCY_APPLY_S [pkg/icefront] {ALLOW_ICEFRONT}
+              SALT_PLUME_TENDENCY_APPLY_S [pkg/salt_plume] {ALLOW_SALT_PLUME}
+              RBCS_ADD_TENDENCY [pkg/rbcs] {ALLOW_RBCS}
+              OBCS_SPONGE_S [pkg/obcs] {ALLOW_OBCS}
+              BBL_TENDENCY_APPLY_S [pkg/bbl] {ALLOW_BBL}
+              MYPACKAGE_TENDENCY_APPLY_S [pkg/mypackage] {ALLOW_MYPACKAGE}
+            GAD_CALC_RHS [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF,ALLOW_ADAMSBASHFORTH_3}
+            FREESURF_RESCALE_G {ALLOW_GENERIC_ADVDIFF} (↑)
+            DWNSLP_APPLY [pkg/down_slope] {ALLOW_GENERIC_ADVDIFF,ALLOW_DOWN_SLOPE}
+            TIMESTEP_TRACER {ALLOW_GENERIC_ADVDIFF} (↑)
+            GAD_IMPLICIT_R [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF}
+            IMPLDIFF {ALLOW_GENERIC_ADVDIFF} (↑)
+            CYCLE_AB_TRACER {ALLOW_GENERIC_ADVDIFF,ALLOW_ADAMSBASHFORTH_3} (↑)
+            CYCLE_TRACER {ALLOW_GENERIC_ADVDIFF} (↑)
+          PTRACERS_INTEGRATE [pkg/ptracers] {ALLOW_GENERIC_ADVDIFF}
+          OBCS_APPLY_TS [pkg/obcs] {ALLOW_GENERIC_ADVDIFF,  ALLOW_OBCS}
+          DIAGNOSTICS_FILL_RS [pkg/diagnostics] {ALLOW_GENERIC_ADVDIFF,ALLOW_FRICTION_HEATING,ALLOW_DIAGNOSTICS}
+          MON_CALC_ADVCFL_GLOB [pkg/monitor] {ALLOW_GENERIC_ADVDIFF,ALLOW_MONITOR}
+          PTRACERS_DEBUG [pkg/ptracers] {ALLOW_GENERIC_ADVDIFF,ALLOW_DEBUG}
+        DO_STAGGER_FIELDS_EXCHANGES
+          EXCH_UV_3D_RL
+        DYNAMICS {ALLOW_MOM_STEPPING}
+          CALC_EP_FORCING [?]
+          DUMMY_IN_DYNAMICS [pkg/autodiff] {ALLOW_AUTODIFF_MONITOR_DIAG}
+          CALC_GRAD_PHI_SURF
+          CALC_VISCOSITY
+            KPP_CALC_VISC [pkg/kpp] {ALLOW_KPP}
+            PP81_CALC_VISC [pkg/pp81] {ALLOW_PP81}
+            KL10_CALC_VISC [pkg/kl10] {ALLOW_KL10}
+            MY82_CALC_VISC [pkg/my82] {ALLOW_MY82}
+            GGL90_CALC_VISC [pkg/ggl90] {ALLOW_GGL90}
+          MOM_CALC_3D_STRAIN [pkg/mom_common] {ALLOW_SMAG_3D}
+          OBCS_COPY_UV_N [pkg/obcs] {ALLOW_OBCS}
+          CALC_EDDY_STRESS {ALLOW_EDDYPSI}
+          CALC_PHI_HYD (↑)
+          MOM_FLUXFORM [pkg/mom_fluxform] {ALLOW_MOM_FLUXFORM}
+          MOM_VECINV [pkg/mom_vecinv] {ALLOW_MOM_VECINV}
+          MOM_CALC_SMAG_3D [pkg/mom_common] {ALLOW_SMAG_3D}
+          MOM_UV_SMAG_3D [pkg/mom_common] {ALLOW_SMAG_3D}
+          TIMESTEP
+            APPLY_FORCING_U
+              EXTERNAL_FORCING_U
+              AIM_TENDENCY_APPLY_U [pkg/aim_v23] {ALLOW_AIM}
+              ATM_PHYS_TENDENCY_APPLY_U [pkg/atm_phys] {ALLOW_ATM_PHYS}
+              FIZHI_TENDENCY_APPLY_U [pkg/fizhi] {ALLOW_FIZHI}
+              TAUEDDY_TENDENCY_APPLY_U {ALLOW_EDDYPSI}
+              RBCS_ADD_TENDENCY [pkg/rbcs] {ALLOW_RBCS}
+              OBCS_SPONGE_U [pkg/obcs] {ALLOW_OBCS}
+              MYPACKAGE_TENDENCY_APPLY_U [pkg/mypackage] {ALLOW_MYPACKAGE}
+            APPLY_FORCING_V
+              EXTERNAL_FORCING_V
+              AIM_TENDENCY_APPLY_V [pkg/aim_v23] {ALLOW_AIM}
+              ATM_PHYS_TENDENCY_APPLY_V [pkg/atm_phys] {ALLOW_ATM_PHYS}
+              FIZHI_TENDENCY_APPLY_V [pkg/fizhi] {ALLOW_FIZHI}
+              TAUEDDY_TENDENCY_APPLY_V {ALLOW_EDDYPSI}
+              RBCS_ADD_TENDENCY [pkg/rbcs] {ALLOW_RBCS}
+              OBCS_SPONGE_V [pkg/obcs] {ALLOW_OBCS}
+              MYPACKAGE_TENDENCY_APPLY_V [pkg/mypackage] {ALLOW_MYPACKAGE}
+            ADAMS_BASHFORTH3 {ALLOW_ADAMSBASHFORTH_3} (↑)
+            ADAMS_BASHFORTH2 {NOT(ALLOW_ADAMSBASHFORTH_3)} (↑)
+            CD_CODE_SCHEME [pkg/cd_code] {ALLOW_CD_CODE}
+          MOM_U_IMPLICIT_R [pkg/mom_common]
+          MOM_V_IMPLICIT_R [pkg/mom_common]
+          IMPLDIFF (↑)
+          OBCS_SAVE_UV_N [pkg/obcs] {ALLOW_OBCS}
+          OBCS_APPLY_UV [pkg/obcs] {ALLOW_OBCS}
+          CALC_GW {ALLOW_NONHYDROSTATIC}
+            FILL_CS_CORNER_TR_RL {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON}
+            MOM_W_SIDEDRAG [pkg/mom_common] {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON}
+            MOM_W_SMAG_3D [pkg/mom_common] {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON,ALLOW_SMAG_3D}
+            MOM_W_METRIC_NH [pkg/mom_common] {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON}
+            DIAGNOSTICS_COUNT [pkg/diagnostics] {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON,ALLOW_DIAGNOSTICS}
+            MOM_W_CORIOLIS_NH [pkg/mom_common] {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON}
+            ADAMS_BASHFORTH3 {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON,ALLOW_ADAMSBASHFORTH_3} (↑)
+            ADAMS_BASHFORTH2 {ALLOW_NONHYDROSTATIC,ALLOW_MOM_COMMON,NOT(ALLOW_ADAMSBASHFORTH_3)} (↑)
+          TIMESTEP_WVEL {ALLOW_NONHYDROSTATIC}
+          OBCS_EXCHANGES [pkg/obcs] {ALLOW_OBCS}
+          DIAGS_SOUND_SPEED
+          DIAGNOSTICS_FILL_RS [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+        MNC_UPDATE_TIME [pkg/mnc] {ALLOW_MNC}
+        OFFLINE_FIELDS_LOAD [pkg/offline] {ALLOW_OFFLINE}
+        UPDATE_SIGMA {!DISABLE_SIGMA_CODE} (↑)
+        UPDATE_CG2D {if ( defined NONLIN_FRSURF || defined ALLOW_SOLVE4_PS_AND_DRAG || \} (↑)
+        SHAP_FILT_APPLY_UV [pkg/shap_filt] {ALLOW_SHAP_FILT}
+        ZONAL_FILT_APPLY_UV [pkg/zonal_filt] {ALLOW_ZONAL_FILT}
+        SOLVE_FOR_PRESSURE
+          CALC_DIV_GHAT
+          CG2D_EX0
+            EXCH_S3D_RL
+            FILL_HALO_LOCAL_RL
+          CG2D_SR {ALLOW_SRCG}
+            EXCH_S3D_RL {ALLOW_SRCG}
+            GLOBAL_SUM_VECTOR_RL {ALLOW_SRCG}
+          CG2D_NSA {ALLOW_CG2D_NSA}
+          CG2D
+            EXCH_S3D_RL
+            GLOBAL_SUM_SINGLECPU_RL
+          CG2D_STORE [pkg/autodiff] {ALLOW_AUTODIFF,!ALLOW_TAPENADE}
+          PRE_CG3D {ALLOW_NONHYDROSTATIC}
+          CG3D_EX0 {ALLOW_NONHYDROSTATIC}
+            EXCH_S3D_RL {ALLOW_NONHYDROSTATIC}
+            WRITE_FLD_S3D_RL [pkg/rw] {ALLOW_NONHYDROSTATIC}
+            FILL_HALO_LOCAL_RL {ALLOW_NONHYDROSTATIC}
+          CG3D {ALLOW_NONHYDROSTATIC}
+            EXCH_S3D_RL {ALLOW_NONHYDROSTATIC}
+            WRITE_FLD_S3D_RL [pkg/rw] {ALLOW_NONHYDROSTATIC}
+          POST_CG3D {ALLOW_NONHYDROSTATIC}
+          SHOWFLOPS_INSOLVE [pkg/showflops] {ALLOW_SHOWFLOPS}
+        MOMENTUM_CORRECTION_STEP {ALLOW_MOM_STEPPING}
+          CALC_GRAD_PHI_SURF (↑)
+          CORRECTION_STEP
+            DIAGNOSTICS_FILL_RS [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+            SHELFICE_DIAGNOSTICS_DRAG [pkg/shelfice] {ALLOW_DIAGNOSTICS,ALLOW_SHELFICE}
+          OBCS_APPLY_UV [pkg/obcs] {ALLOW_OBCS}
+          SHAP_FILT_APPLY_UV [pkg/shap_filt] {ALLOW_SHAP_FILT}
+          ZONAL_FILT_APPLY_UV [pkg/zonal_filt] {ALLOW_ZONAL_FILT}
+          EXCH_UV_3D_RL
+        INTEGR_CONTINUITY (↑)
+        CALC_R_STAR {!DISABLE_RSTAR_CODE} (↑)
+        CALC_SURF_DR (↑)
+        TRACERS_CORRECTION_STEP
+          TRACERS_IIGW_CORRECTION {ALLOW_GENERIC_ADVDIFF,ALLOW_NONHYDROSTATIC}
+          SHAP_FILT_APPLY_TS [pkg/shap_filt] {ALLOW_GENERIC_ADVDIFF,ALLOW_SHAP_FILT}
+          ZONAL_FILT_APPLY_TS [pkg/zonal_filt] {ALLOW_GENERIC_ADVDIFF,ALLOW_ZONAL_FILT}
+          PTRACERS_ZONAL_FILT_APPLY [pkg/ptracers] {ALLOW_GENERIC_ADVDIFF,ALLOW_ZONAL_FILT,ALLOW_PTRACERS}
+          SALT_FILL [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF,ALLOW_FIZHI}
+          OPPS_INTERFACE [pkg/opps] {ALLOW_GENERIC_ADVDIFF,ALLOW_OPPS}
+          CONVECTIVE_ADJUSTMENT {ALLOW_GENERIC_ADVDIFF}
+            FIND_RHO_2D (↑)
+            CONVECTIVE_WEIGHTS (↑)
+            CONVECTIVELY_MIXTRACER (↑)
+            PTRACERS_CONVECT [pkg/ptracers] {ALLOW_PTRACERS}
+          MATRIX_STORE_TENDENCY_IMP [pkg/matrix] {ALLOW_GENERIC_ADVDIFF,ALLOW_MATRIX}
+        GCHEM_FORCING_SEP [pkg/gchem] {ALLOW_GCHEM}
+        DO_FIELDS_BLOCKING_EXCHANGES
+          GAD_SOM_EXCHANGES [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF}
+          PTRACERS_FIELDS_BLOCKING_EXCH [pkg/ptracers] {ALLOW_PTRACERS}
+        GRIDALT_UPDATE [pkg/gridalt] {ALLOW_GRIDALT}
+        STEP_FIZHI_CORR [pkg/fizhi] {ALLOW_FIZHI}
+        FLT_MAIN [pkg/flt] {ALLOW_FLT}
+        NEST_PARENT_IO_2 [?] {ALLOW_NEST_PARENT}
+        NEST_CHILD_TRANSP [?] {ALLOW_NEST_CHILD}
+        COST_TILE [pkg/cost] {ALLOW_COST}
+        ECCO_PHYS [pkg/ecco] {ALLOW_ECCO}
+        DO_THE_MODEL_IO (↑)
+        PTRACERS_RESET [pkg/ptracers] {ALLOW_PTRACERS}
+        DO_WRITE_PICKUP
+          CAL_TIME2DUMP [pkg/cal] {ALLOW_CAL}
+          RW_GET_SUFFIX [pkg/rw]
+          PACKAGES_WRITE_PICKUP
+            GAD_WRITE_PICKUP [pkg/generic_advdiff] {ALLOW_GENERIC_ADVDIFF}
+            CD_CODE_WRITE_PICKUP [pkg/cd_code] {ALLOW_CD_CODE}
+            OBCS_WRITE_PICKUP [pkg/obcs] { ALLOW_OBCS}
+            GGL90_WRITE_PICKUP [pkg/ggl90] { ALLOW_GGL90}
+            GMREDI_WRITE_PICKUP [pkg/gmredi] {ALLOW_GMREDI}
+            BBL_WRITE_PICKUP [pkg/bbl] {ALLOW_BBL}
+            CHEAPAML_WRITE_PICKUP [pkg/cheapaml] {ALLOW_CHEAPAML}
+            FLT_WRITE_PICKUP [pkg/flt] {ALLOW_FLT}
+            PTRACERS_WRITE_PICKUP [pkg/ptracers] {ALLOW_PTRACERS}
+            GCHEM_WRITE_PICKUP [pkg/gchem] {ALLOW_GCHEM}
+            STREAMICE_WRITE_PICKUP [pkg/streamice] {ALLOW_STREAMICE}
+            SHELFICE_WRITE_PICKUP [pkg/shelfice] {ALLOW_SHELFICE}
+            SEAICE_WRITE_PICKUP [pkg/seaice] { ALLOW_SEAICE}
+            THSICE_WRITE_PICKUP [pkg/thsice] {ALLOW_THSICE}
+            LAND_WRITE_PICKUP [pkg/land] {ALLOW_LAND}
+            ATM_PHYS_WRITE_PICKUP [pkg/atm_phys] {ALLOW_ATM_PHYS}
+            FIZHI_WRITE_PICKUP [pkg/fizhi] {ALLOW_FIZHI}
+            FIZHI_WRITE_VEGTILES [pkg/fizhi] {ALLOW_FIZHI}
+            FIZHI_WRITE_DATETIME [pkg/fizhi] {ALLOW_FIZHI}
+            DIAGNOSTICS_WRITE_PICKUP [pkg/diagnostics] {ALLOW_DIAGNOSTICS}
+            CPL_WRITE_PICKUP [pkg/ocn_compon_interf]
+            ECCO_WRITE_PICKUP [pkg/ecco] {ALLOW_ECCO}
+            MYPACKAGE_WRITE_PICKUP [pkg/mypackage] {ALLOW_MYPACKAGE}
+          WRITE_PICKUP
+            WRITE_REC_3D_RL [pkg/rw]
+            WRITE_REC_3D_RS [pkg/rw] {ALLOW_FRICTION_HEATING}
+            MDS_WR_METAFILES [pkg/mdsio] {ALLOW_MDSIO}
+            MNC_CW_SET_UDIM [pkg/mnc] {ALLOW_MNC}
+            MNC_CW_SET_CITER [pkg/mnc] {ALLOW_MNC}
+            MNC_CW_RL_W_S [pkg/mnc] {ALLOW_MNC}
+            MNC_CW_I_W_S [pkg/mnc] {ALLOW_MNC}
+            MNC_CW_RL_W [pkg/mnc] {ALLOW_MNC}
+            MNC_FILE_CLOSE_ALL_MATCHING [pkg/mnc] {ALLOW_MNC}
+        AUTODIFF_INADMODE_SET [pkg/autodiff] {ALLOW_AUTODIFF}
+        SHOWFLOPS_INLOOP [pkg/showflops] {ALLOW_SHOWFLOPS}
+      INNER_DO_LOOP [pkg/openad] {NOT(!ALLOW_OPENAD),ALLOW_OPENAD_DIVA}
+    ASSIMILATE_PDAF [?]
+    PROFILES_COST [pkg/profiles] {ALLOW_PROFILES}
+    OBSFIT_COST [pkg/obsfit] {ALLOW_OBSFIT}
+    COST_DRIVER [pkg/cost] {ALLOW_COST}
+    COST_FINAL [pkg/cost] {ALLOW_COST}
+    FINALIZE_PDAF [?]
+  CTRL_PACK [pkg/ctrl] {ALLOW_ADMTLM,ALLOW_CTRL,!EXCLUDE_CTRL_PACK}
+  GRDCHK_MAIN [pkg/grdchk] {ALLOW_ADMTLM,ALLOW_GRDCHK}
+  STREAMICE_FINALIZE_PETSC [pkg/streamice] {ALLOW_STREAMICE}
+  MNC_FILE_CLOSE_ALL [pkg/mnc] {ALLOW_MNC}
+  PROFILES_NC_CLOSE [pkg/profiles] {ALLOW_PROFILES}
+  OBSFIT_NC_CLOSE [pkg/obsfit] {ALLOW_OBSFIT}
+  COMM_STATS
+  BAR_CHECK
+```

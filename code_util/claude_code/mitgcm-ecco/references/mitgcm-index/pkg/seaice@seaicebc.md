@@ -1,0 +1,386 @@
+# pkg/seaice  (seaicebc: ~/Documents/research/ECCO/sea_ice_BCs/MITgcm)
+
+Basic parameter header for sea ice model.
+
+**vs its upstream base (merge-base, see README):** changed: seaice_calc_strainrates.F, seaice_calc_viscosities.F, seaice_lsr.F
+
+**runtime switch:** `useSEAICE`-style flag in `data.pkg` (check exact name in packages_boot.F)
+**reads:** `data.seaice`
+**manual:** `doc/phys_pkgs/seaice.rst`, `doc/examples/examples.rst`, `doc/getting_started/getting_started.rst`, `doc/ocean_state_est/ocean_state_est.rst`, `doc/outp_pkgs/outp_pkgs.rst`
+**adjoint support files:** seaice_ad_check_lev1_dir.h, seaice_ad_check_lev2_dir.h, seaice_ad_check_lev3_dir.h, seaice_ad_check_lev4_dir.h, seaice_ad_diff.list
+
+## Namelist parameters
+### SEAICE_PARM01
+- `SEAICEuseDYNAMICS` — If false, do not use dynamics; default is to use dynamics.
+- `SEAICEuseFREEDRIFT` — If True use free drift velocity instead of EVP or LSR
+- `SEAICEuseStrImpCpl` — If true use strongly implicit coupling formulation for LSR solver (Hutchings et al 2004, Ocean Modelling, eq.44)
+- `SEAICEuseMCS` — to use the Mohr-Coulomb yield curve with a shear only flow rule (Ip et al 1991), set this parameter to true, default is false
+- `SEAICEuseMCE` — to use the Mohr-Coulomb yield curve with elliptical plastic potential (similarly to Hibler and Schulson 2000 without the elliptical cap) set this parameter to true, default is false
+- `SEAICEuseTD` — to use the teardrop yield curve (Zhang and Rothrock, 2005) set this parameter to true, default is false
+- `SEAICEusePL` — to use the parabolic lens yield curve (Zhang and Rothrock, 2005) set this parameter to true, default is false
+- `SEAICEuseTEM` — to use the truncated ellipse method (see Geiger et al. 1998) set this parameter to true, default is false
+- `SEAICEuseTilt` — If true then include surface tilt term in dynamics
+- `SEAICEuseMetricTerms`
+- `SEAICEselectMetricTerms` — selector for metric terms in stress divergence 0 = none, (only implicit metric terms in FV discretisation of stress divergence) 1 = in addition use metric terms in strain rates 2 = use all metric terms (default)
+- `useHB87stressCoupling` — use an intergral over ice and ocean surface layer to define surface stresses on ocean following Hibler and Bryan (1987, JPO)
+- `SEAICEupdateOceanStress` — If TRUE, update ocean surface stress accounting for seaice cover (default= T)
+- `usePW79thermodynamics` — use "0-layer" thermodynamics as described in Parkinson and Washington (1979) and Hibler (1979)
+- `useMaykutSatVapPoly` — use Maykut Polynomial for saturation vapor pressure instead of extended temp-range exponential law; def=F.
+- `SEAICEuseFlooding` — turn on scheme to convert submerged snow into ice
+- `SEAICErestoreUnderIce` — restore surface T/S also underneath ice ( default is false )
+- `SEAICE_growMeltByConv` — grow/melt according to convergence of turbulence and conduction, rather than in two steps (default)
+- `SEAICE_salinityTracer` — use SItracer to exchange and trace ocean salt in ice
+- `SEAICE_ageTracer` — use SItracer to trace the age of ice
+- `SEAICEadvHeff` — turn on advection of effective thickness (default = .true.)
+- `SEAICEadvArea` — turn on advection of fraction area (default = .true.)
+- `SEAICEadvSnow` — turn on advection of snow (does not work with non-default Leap-frog scheme for advection)
+- `SEAICEadvSalt` — turn on advection of salt (does not work with non-default Leap-frog scheme for advection)
+- `SEAICEadvAge`
+- `SEAICEaddSnowMass` — in computing seaiceMass, add snow contribution default is .TRUE.
+- `SEAICEmomAdvection` — turn on advection of momentum (default = .false.)
+- `SEAICEselectKEscheme` — momentum advection parameters analogous
+- `SEAICEselectVortScheme` — to selectKEscheme and selectVortScheme
+- `SEAICEhighOrderVorticity` — momentum advection parameters analogous to
+- `SEAICEupwindVorticity` — highOrderVorticity, upwindVorticity,
+- `SEAICEuseAbsVorticity` — useAbsVorticity, useJamartMomAdv for vector
+- `SEAICEuseJamartMomAdv` — invariant momentum in the ocean
+- `SEAICE_clipVelocities` — clip velocities to +/- 40cm/s
+- `SEAICE_maskRHS` — mask the RHS of the solver where there is no ice
+- `SEAICE_no_slip` — apply no slip boundary conditions to seaice velocity
+- `SEAICE_2ndOrderBC` — apply 2nd order no slip boundary conditions (works only with EVP, JFNK or KRYLOV solver, default=F)
+- `SEAICEetaZmethod` — determines how shear-viscosity eta is computed at Z-points 0=simple averaging from C-points (default and old) 3=weighted averaging of squares of strain rates (recommended for energy conservation)
+- `LAD`
+- `IMAX_TICE` — number of iterations for ice surface temp (default=10)
+- `postSolvTempIter` — select flux calculation after surf. temp solver iteration 0 = none, i.e., from last iter 1 = use linearized approx (consistent with tsurf finding) 2 = full non-lin form
+- `SEAICEuseFluxForm` — use flux form for advection and diffusion of seaice
+- `SEAICEadvScheme` — sets the advection scheme for thickness and area (default = 77)
+- `SEAICEadvSchArea` — sets the advection scheme for area
+- `SEAICEadvSchHeff` — sets the advection scheme for effective thickness (=volume), snow thickness, and salt if available
+- `SEAICEadvSchSnow` — sets the advection scheme for snow on sea-ice
+- `SEAICEadvSchSalt` — sets the advection scheme for sea ice salinity
+- `SEAICEadvSchAge`
+- `SEAICEdiffKhHeff` — sets the diffusivity for effective thickness (m^2/s)
+- `SEAICEdiffKhSnow` — sets the diffusivity for snow on sea-ice (m^2/s)
+- `SEAICEdiffKhArea` — sets the diffusivity for area (m^2/s)
+- `SEAICEdiffKhSalt` — sets the diffusivity for sea ice salinity (m^2/s)
+- `SEAICEdiffKhAge`
+- `DIFF1` — parameter used in advect.F
+- `SEAICE_deltaTtherm` — Seaice timestep for thermodynamic equations (s)
+- `SEAICE_deltaTdyn` — Seaice timestep for dynamic solver          (s)
+- `SEAICE_LSRrelaxU`
+- `SEAICE_LSRrelaxV`
+- `SOLV_MAX_ITERS`
+- `SOLV_NCHECK` — iteration interval for LSR-solver convergence test
+- `NPSEUDOTIMESTEPS`
+- `LSR_ERROR` — sets accuracy of LSR solver
+- `LSR_mixIniGuess` — control mixing of free-drift sol. into LSR initial guess
+- `SEAICEuseMultiTileSolver` — in LSR, use full domain tri-diagonal solver
+- `SEAICE_deltaTevp` — Seaice timestep for EVP solver              (s)
+- `SEAICE_elasticParm` — parameter that sets relaxation timescale tau = SEAICE_elasticParm * SEAICE_deltaTdyn
+- `SEAICE_evpTauRelax` — relaxation timescale tau                    (s)
+- `SEAICE_evpDampC` — evp damping constant (Hunke,JCP,2001)       (kg/m^2)
+- `SEAICEnEVPstarSteps` — number of evp*-steps
+- `SEAICE_evpAlpha` — dimensionless parameter 2*evpTauRelax/deltaTevp
+- `SEAICE_evpBeta` — dimensionless parameter deltaTdyn/deltaTevp
+- `SEAICEaEVPcoeff` — main coefficent for adaptive EVP (largest stabilized frequency)
+- `SEAICEaEVPcStar` — multiple of stabilty factor: alpha*beta=cstar*gamma
+- `SEAICEaEVPalphaMin` — lower limit of alpha and beta, regularisation to prevent singularities of system matrix, e.g. when ice concentration is too low.
+- `SEAICE_evpAreaReg` — Specifies a minimun ice fraction for the purposes of regularizations in the calculation of denomU/V, to enhance the stability of EVP; off by default, turn on with a sensible value, e.g. 1e-5
+- `SEAICE_zetaMin` — lower bound for viscosity (default = 0)    (N s/m^2)
+- `SEAICE_zetaMaxFac` — factor determining the maximum viscosity    (s) (default = 5.e+12/2.e4 = 2.5e8)
+- `SEAICEusePicardAsPrecon` — If true, allow SEAICEuseLSR = .TRUE. as a preconditioner for non-linear JFNK problem (def. = F)
+- `SEAICEuseLSRflex` — If true, use default Picard solver with Line- Successive(-over)-Relaxation, but determine the number of non-linear iterations depends on the residual resduction, similar to the Krylov and JFNK solvers
+- `SEAICEuseKrylov` — If true, use matrix-free Krylov solver with Picard solver instead of LSR (default: false)
+- `SEAICEuseJFNK` — If true, use Jacobi-free Newton-Krylov solver instead of LSR (default: false)
+- `SEAICEnonLinIterMax` — number of allowed non-linear solver iterations for implicit solvers (JFNK and Picard) (>= 2)
+- `SEAICElinearIterMax` — number of allowed linear solver iterations for for implicit solvers (JFNK and Picard) C
+- `SEAICEnonLinTol` — non-linear tolerance parameter for implicit solvers
+- `SEAICEnewtonIterMax`
+- `SEAICEkrylovIterMax`
+- `JFNKgamma_nonlin`
+- `SEAICEpreconNL_Iter` — number non-linear iterations in preconditioner
+- `SEAICEpreconLinIter` — number linear iterations in preconditioner
+- `SEAICE_JFNK_lsIter` — number of Newton iterations after which the line search is started
+- `SEAICE_JFNK_lsLmax` — max. number line search iterations (default = 4)
+- `SEAICE_JFNK_lsGamma` — reduction factor for line search (default 0.5)
+- `SEAICE_JFNK_tolIter` — number of Newton iterations after which the the tolerance is relaxed again (default = 100)
+- `JFNKres_t` — tolerance parameter for FGMRES residual
+- `JFNKres_tFac` — if set, JFNKres_t=JFNKres_tFac*(initial residual)
+- `JFNKgamma_lin_min`
+- `JFNKgamma_lin_max`
+- `SEAICE_JFNKepsilon` — step size for the FD-gradient in s/r seaice_jacvec
+- `SEAICE_OLx`
+- `SEAICE_OLy`
+- `SEAICE_JFNKphi` — [0,1] parameter for inexact Newton Method (def = 1)
+- `SEAICE_JFNKalpha` — (1,2] parameter for inexact Newton Method (def = 1)
+- `SEAICEuseIMEX` — use IMplicit/EXplicit scheme with JFNK
+- `SEAICEuseBDF2` — use 2nd-order backward difference approach for momentum equations as described in Lemieux et al. 2014, JCP so far only implemented for JFNK-solver
+- `SEAICEuseLinRemapITD` — use linear remapping (Lipscomb et al. 2001) .TRUE. by default
+- `useHibler79IceStrength` — if true original ice strength parameterization other use Rothrock (1975) parameterization based on energetics and an ice thickness distribution (default = .true.)
+- `SEAICEpartFunc` — =0 use Thorndyke et al (1975) participation function
+- `SEAICEredistFunc` — =0 assume ridged ice is uniformly distributed (Hibler, 1980) =1 Following Lipscomb et al. (2007), ridged ice is distributed following an exponentially decaying function
+- `SEAICEridgingIterMax` — maximum number of ridging iterations
+- `SEAICEsimpleRidging` — use Hibler(1979) ridging (default=.true.)
+- `SEAICEsnowFracRidge` — fraction of snow that remains on ridged
+- `SEAICEgStar` — maximum ice concentration that participates in ridging
+- `SEAICEhStar` — empirical thickness (ridging parameter)
+- `SEAICEaStar` — ice concentration parameter similar to gStar for exponential distribution (Lipscomb et al 2007)
+- `SEAICEshearParm` — <=1 reduces amount of energy lost to ridge building
+- `SEAICEmuRidging` — tuning parameter similar to hStar for Lipcomb et al (2007)-scheme
+- `SEAICEmaxRaft` — regularization parameter (default=1)
+- `SEAICE_cf` — ratio of total energy sinks to gravitational sink (scales ice strength, suggested values: 2 to 17)
+- `SEAICEuseAB2`
+- `SEAICE_abEps`
+- `SEAICEpresH0` — HEFF threshold for ice strength            (m)
+- `SEAICEpresPow0` — HEFF exponent for ice strength below SEAICEpresH0
+- `SEAICEpresPow1` — HEFF exponent for ice strength above SEAICEpresH0
+- `SEAICE_initialHEFF` — initial sea-ice thickness                   (m)
+- `SEAICEturbFluxFormula`
+- `SEAICE_areaGainFormula` — selects formula for ice cover gain from open water growth
+- `SEAICE_areaLossFormula` — selects formula for ice cover loss from melt
+- `SEAICE_doOpenWaterGrowth` — use open water heat flux directly to grow ice (when false cool ocean, and grow later if needed)
+- `SEAICE_doOpenWaterMelt` — use open water heat flux directly to melt ice (when false warm ocean, and melt later if needed)
+- `SEAICE_rhoAir` — density of air                              (kg/m^3)
+- `SEAICE_rhoIce` — density of sea ice                          (kg/m^3)
+- `SEAICE_rhoSnow` — density of snow                             (kg/m^3)
+- `ICE2WATR` — ratio of sea ice density to water density
+- `SEAICE_cpAir` — specific heat of air                        (J/kg/K)
+- `SEAICEscaleSurfStress` — if TRUE, scale ice-ocean and ice-atmosphere stress on ice by concenration (AREA) following Connolley et al. (2004), JPO. (default = .TRUE.)
+- `SEAICE_drag` — unitless air-ice drag coefficient   (default 0.001)
+- `SEAICE_waterDrag` — unitless water-ice drag coefficient (default 0.0055)
+- `SEAICEdWatMin` — minimum linear water-ice drag applied to DWATN (default 0.25 m/s)
+- `SEAICE_dryIceAlb` — winter albedo
+- `SEAICE_wetIceAlb` — summer albedo
+- `SEAICE_drySnowAlb` — dry snow albedo
+- `SEAICE_wetSnowAlb` — wet snow albedo
+- `HO` — AKA "lead closing parameter", demarcation thickness between thin and thick ice. Alternatively, HO (in meters) can be interpreted as the thickness of ice formed in open water. HO is a key ice-growth parameter that determines
+- `SEAICE_drag_south` — Southern Ocean SEAICE_drag
+- `SEAICE_waterDrag_south` — Southern Ocean SEAICE_waterDrag
+- `SEAICE_dryIceAlb_south` — Southern Ocean SEAICE_dryIceAlb
+- `SEAICE_wetIceAlb_south` — Southern Ocean SEAICE_wetIceAlb
+- `SEAICE_drySnowAlb_south` — Southern Ocean SEAICE_drySnowAlb
+- `SEAICE_wetSnowAlb_south` — Southern Ocean SEAICE_wetSnowAlb
+- `HO_south` — Southern Ocean HO
+- `SEAICEsideDrag` — if > 0, turns on lateral static drag if < 0, turns on lateral quadratic drag both are different landfast ice parameterisations (Liu et al 2022 use 2e-4, the default = 0 turns off the parameterisations)
+- `uCoastLineFile` — File containing the some measure of coastline roughness length (in m) at the U-points in the X-direction (i.e. for the U-equation).
+- `vCoastLineFile` — Files containing the some measure of coastline roughness length (in m) at the V-points in the Y-direction (i.e. for the V-equation).
+- `SEAICE_cBasalStar`
+- `SEAICEbasalDragU0`
+- `SEAICEbasalDragK1`
+- `SEAICEbasalDragK2` — if > 0, turns on basal drag (default = 0, Lemieux suggests 15)
+- `SEAICE_wetAlbTemp` — Temp (deg.C) above which wet-albedo values are used
+- `SEAICE_waterAlbedo` — water albedo
+- `SEAICE_strength` — sea-ice strength Pstar
+- `SEAICE_cStar` — sea-ice strength paramter C* (def: 20)
+- `SEAICE_eccen` — sea-ice eccentricity of the elliptical yield curve
+- `SEAICE_eccfr` — sea-ice eccentricity of the elliptical flow rule
+- `SEAICEtdMU` — slope parameter for the teardrop and parabolic lens yield curves
+- `SEAICEmcMu` — parameter for MC yield curve for useMCE, useMCS and useTEM options, default is one
+- `SEAICEpressReplFac` — interpolator between PRESS0 and regularized PRESS 1. (default): pure pressure replace method (PRESS) 0.          : pure Hibler (1979) method (PRESS0)
+- `SEAICE_tensilFac` — sea-ice tensile strength factor, values in [0,1]
+- `SEAICE_tensilDepth` — crtical depth for sea-ice tensile strength (def 0.)
+- `SEAICE_lhFusion` — latent heat of fusion for ice and snow (J/kg)
+- `SEAICE_lhEvap` — latent heat of evaporation for water (J/kg)
+- `SEAICE_dalton` — Dalton number (= sensible heat transfer coefficient)
+- `SEAICE_sensHeat`
+- `SEAICE_latentWater`
+- `SEAICE_latentIce`
+- `SEAICE_salinity`
+- `SIsalFRAC`
+- `SIsal0`
+- `areaMin`
+- `areaMax`
+- `A22`
+- `hiceMin`
+- `SEAICE_iceConduct` — sea-ice conductivity
+- `SEAICE_snowConduct` — snow conductivity
+- `SEAICE_emissivity` — longwave ocean-surface emissivity (-)
+- `SEAICE_ice_emiss` — longwave ice-surface emissivity (-)
+- `SEAICE_snow_emiss` — longwave snow-surface emissivity (-)
+- `SEAICE_snowThick` — cutoff snow thickness (for snow-albedo)
+- `SEAICE_shortwave` — ice penetration shortwave radiation factor
+- `SEAICE_freeze`
+- `OCEAN_drag` — unitless air-ocean drag coefficient (default 0.001)
+- `SEAICE_tempFrz0` — sea water freezing point is
+- `SEAICE_dTempFrz_dS` — tempFrz = SEAICE_tempFrz0 + salt*SEAICE_dTempFrz_dS
+- `SEAICE_salt0` — prescribed salinity of seaice (in g/kg).
+- `SEAICE_saltFrac` — salinity of newly formed seaice defined as a fraction of the ocean surface salinity at the time of freezing
+- `SEAICEstressFactor` — factor by which ice affects wind stress (default=1)
+- `SEAICE_availHeatTaper`
+- `SEAICE_mcPheePiston` — ocean-ice turbulent flux "piston velocity" (m/s) that sets melt efficiency.
+- `SEAICE_frazilFrac` — Fraction of surface level negative heat content anomalies (relative to the local freezing point) may contribute as frazil over one time step.
+- `SEAICE_mcPheeTaper` — tapering down of turbulent flux term with ice concentration. The 100% cover turb. flux is multiplied by 1.-SEAICE_mcPheeTaper
+- `SEAICE_mcPheeStepFunc` — use step function (not linear tapering) in ocean-ice turbulent flux
+- `SEAICE_gamma_t`
+- `SEAICE_gamma_t_frz`
+- `SEAICE_availHeatFrac`
+- `SEAICE_availHeatFracFrz`
+- `SEAICE_PDF` — prescribed sea-ice distribution within grid box
+- `AreaFile` — File containing initial sea-ice concentration
+- `HeffFile` — File containing initial sea-ice thickness
+- `uIceFile` — File containing initial sea-ice U comp. velocity
+- `vIceFile` — File containing initial sea-ice V comp. velocity
+- `HsnowFile` — File containing initial snow thickness
+- `HsaltFile` — File containing initial sea ice salt content
+- `SEAICEheatConsFix` — If true then fix ocn<->seaice advective heat flux.
+- `SEAICE_multDim` — number of ice categories
+- `SEAICE_useMultDimSnow` — use same fixed pdf for snow as for multi-thickness-category ice (default=.TRUE.)
+- `SEAICE_deltaMin` — small number used to reduce singularities of Delta
+- `SEAICE_area_reg` — usually set to 1x10^-5. Specifies a minimun ice fraction for the purposes of regularization
+- `SEAICE_hice_reg` — usually set to 5 cm. Specifies a minimun ice thickness for the purposes of regularization
+- `SEAICE_area_floor` — usually set to 1x10^-5. Specifies a minimun ice fraction in the ice pack.
+- `SEAICE_area_max` — usually set to 1. Seeting areaMax below 1 specifies the minimun amount of leads (1-areaMax) in the ice pack.
+- `SEAICE_tauAreaObsRelax` — Timescale of relaxation to observed sea ice concentration (s), default=unset
+- `SEAICE_airTurnAngle` — turning angles of air-ice interfacial stress
+- `SEAICE_waterTurnAngle` — and ice-water interfacial stress (in degrees)
+- `MAX_HEFF`
+- `MIN_ATEMP` — minimum air temperature   (deg C)
+- `MIN_LWDOWN` — minimum downward longwave (W/m^2)
+- `MAX_TICE`
+- `MIN_TICE` — minimum ice temperature   (deg C)
+- `SEAICE_EPS` — small number
+- `SEAICE_EPS_SQ` — small number square
+- `SEAICEwriteState` — If true, write sea ice state to file; default is false.
+- `SEAICEuseEVPpickup` — Set to false in order to start EVP solver with non-EVP pickup files.  Default is true. Applied only if SEAICEuseEVP=.TRUE.
+- `SEAICEuseEVPstar` — If true use modified elastic viscous plastic solver (EVP*) by Lemieux et al (2012)
+- `SEAICEuseEVPrev` — If true use "revisited" elastic viscous plastic solver following Bouillon et al. (2013), very similar to EVP*, but uses fewer implicit terms and drops one 1/e^2 in equations for sigma2 and sigma12
+- `SEAICE_monFreq` — SEAICE monitor frequency.                   (s)
+- `SEAICE_dumpFreq` — SEAICE dump frequency.                      (s)
+- `SEAICE_taveFreq`
+- `SEAICE_tave_mnc`
+- `SEAICE_dump_mnc` — write snap-shot output   using MNC
+- `SEAICE_mon_mnc` — write monitor to netcdf file
+- `Hlimit_c1` — coefficients set in seaice_readparams.F to calculate Hlimit in seaice_init_fixed.F  _[ifdef SEAICE_ITD]_
+- `Hlimit_c2`  _[ifdef SEAICE_ITD]_
+- `Hlimit_c3`  _[ifdef SEAICE_ITD]_
+- `Hlimit` — ice thickness category limits (m), array of size nITD+1  _[ifdef SEAICE_ITD]_
+- `SEAICE_debugPointI` — I,J index for seaice-specific debuggin
+- `SEAICE_debugPointJ`
+- `SINegFac` — SIADV over/undershoot factor in FW/Adjoint
+### SEAICE_PARM02
+- `mult_ice_export`  _[ifdef ALLOW_COST]_
+- `mult_ice`  _[ifdef ALLOW_COST]_
+- `cost_ice_flag` — cost_ice flag (see seaice_cost_test.F)  _[ifdef ALLOW_COST]_
+- `costIceStart1`  _[ifdef ALLOW_COST]_
+- `costIceStart2`  _[ifdef ALLOW_COST]_
+- `costIceEnd1`  _[ifdef ALLOW_COST]_
+- `costIceEnd2`  _[ifdef ALLOW_COST]_
+- `SEAICE_cutoff_area`  _[ifdef ALLOW_COST]_
+- `SEAICE_cutoff_heff`  _[ifdef ALLOW_COST]_
+- `SEAICE_clamp_salt`  _[ifdef ALLOW_COST]_
+- `SEAICE_clamp_theta`  _[ifdef ALLOW_COST]_
+- `mult_smrsst`  _[ifdef ALLOW_COST]_
+- `smrsstbarfile`  _[ifdef ALLOW_COST]_
+- `mult_smrsss`  _[ifdef ALLOW_COST]_
+- `smrsssbarfile`  _[ifdef ALLOW_COST]_
+- `mult_smrarea`  _[ifdef ALLOW_COST]_
+- `smrareabarfile`  _[ifdef ALLOW_COST]_
+- `smrareadatfile`  _[ifdef ALLOW_COST]_
+- `wsmrarea0`  _[ifdef ALLOW_COST]_
+- `wmean_smrarea`  _[ifdef ALLOW_COST]_
+- `smrarea_errfile`  _[ifdef ALLOW_COST]_
+- `smrareastartdate1`  _[ifdef ALLOW_COST]_
+- `smrareastartdate2`  _[ifdef ALLOW_COST]_
+- `smrareaperiod`  _[ifdef ALLOW_COST]_
+### SEAICE_PARM03
+- `SItrFile`  _[ifdef ALLOW_SITRACER]_
+- `SItrName`  _[ifdef ALLOW_SITRACER]_
+- `SItrNameLong`  _[ifdef ALLOW_SITRACER]_
+- `SItrUnit`  _[ifdef ALLOW_SITRACER]_
+- `SItrMate`  _[ifdef ALLOW_SITRACER]_
+- `SItrFromOcean0`  _[ifdef ALLOW_SITRACER]_
+- `SItrFromOceanFrac`  _[ifdef ALLOW_SITRACER]_
+- `SItrFromFlood0`  _[ifdef ALLOW_SITRACER]_
+- `SItrFromFloodFrac`  _[ifdef ALLOW_SITRACER]_
+- `SItrExpand0`  _[ifdef ALLOW_SITRACER]_
+- `IceAgeTrFile`  _[ifdef ALLOW_SITRACER]_
+- `SItrNumInUse`  _[ifdef ALLOW_SITRACER]_
+
+## CPP options (defaults as shipped)
+- `SEAICE_DEBUG` (undef, SEAICE_OPTIONS.h) — --   Write "text-plots" of certain fields in STDOUT for debugging.
+- `SEAICE_EXTERNAL_FLUXES` (define, SEAICE_OPTIONS.h) — open-ocean.  When this flag is set, these variables are computed in a separate external package, for example, pkg/exf, and then modified for sea-ice effects by pkg/seaice.
+- `SEAICE_ITD` (undef, SEAICE_OPTIONS.h) — --   run with sea Ice Thickness Distribution (ITD); set number of categories (nITD) in SEAICE_SIZE.h
+- `SEAICE_DISABLE_SUBLIM` (undef, SEAICE_OPTIONS.h) — --   Since the missing sublimation term is now included this flag is needed for backward compatibility
+- `SEAICE_DISABLE_HEATCONSFIX` (undef, SEAICE_OPTIONS.h) — --   Suspected missing term in coupled ocn-ice heat budget (to be confirmed)
+- `SEAICE_VARIABLE_SALINITY` (undef, SEAICE_OPTIONS.h) — flag to consider (space & time) variable salinity: advected and forming seaice with a fraction (=SEAICE_saltFrac) of freezing seawater salinity. - Note: SItracer also offers an alternative way to handle variable salinity
+- `SEAICE_GREASE` (undef, SEAICE_OPTIONS.h) — with SItrUnit(1) = '[0-1]', which needs to be multiplied by SIheff to yield grease ice volume. Additionally, the actual grease ice layer thickness (diagnostic SIgrsLT) can be saved.
+- `ALLOW_SITRACER` (define, SEAICE_OPTIONS.h) — --   Tracers of ice and/or ice cover. SEAICE_GREASE code requires to define ALLOW_SITRACER
+- `ALLOW_SITRACER` (undef, SEAICE_OPTIONS.h)
+- `ALLOW_SITRACER_ADVCAP` (define, SEAICE_OPTIONS.h) — -    To try avoid 'spontaneous generation' of tracer maxima by advdiff.
+- `ALLOW_SITRACER_DEBUG_DIAG` (undef, SEAICE_OPTIONS.h) — -    Include code to diagnose sea ice tracer budgets in seaice_advdiff.F and seaice_tracer_phys.F. Diagnostics are computed the "call diagnostics_fill" statement is commented out.
+- `SEAICE_BGRID_DYNAMICS` (undef, SEAICE_OPTIONS.h) — discretization should still work but it is no longer actively tested and supported. Define this flag to compile it. It cannot be defined together with SEAICE_CGRID
+- `SEAICE_CGRID` (define, SEAICE_OPTIONS.h) — --   The following flag should always be set in order to use C the --   operational C-grid discretization.
+- `SEAICE_ALLOW_MOM_ADVECTION` (undef, SEAICE_OPTIONS.h) — enable advection of sea ice momentum
+- `SEAICE_ALLOW_BOTTOMDRAG` (undef, SEAICE_OPTIONS.h) — Use parameterisation of grounding ice for a better representation of fastice in shallow seas
+- `SEAICE_ALLOW_SIDEDRAG` (undef, SEAICE_OPTIONS.h) — Use parameterisation of explicit lateral drag for a better representation of fastice along coast lines and islands
+- `SEAICE_ALLOW_JFNK` (define, SEAICE_OPTIONS.h) — enable JFNK code by defining the following flag
+- `SEAICE_ALLOW_KRYLOV` (define, SEAICE_OPTIONS.h) — enable Krylov code by defining the following flag
+- `SEAICE_JFNK_MAP_REORDER` (undef, SEAICE_OPTIONS.h) — --   Use a different order when mapping 2D velocity arrays to 1D vector before passing it to FGMRES.
+- `SEAICE_PRECOND_EXTRA_EXCHANGE` (undef, SEAICE_OPTIONS.h) — to reproduce old verification results for JFNK
+- `SEAICE_GLOBAL_3DIAG_SOLVER` (undef, SEAICE_OPTIONS.h) — enable LSR to use global (multi-tile) tri-diagonal solver
+- `SEAICE_ALLOW_EVP` (define, SEAICE_OPTIONS.h) — enable EVP code by defining the following flag
+- `SEAICE_ALLOW_CLIPZETA` (undef, SEAICE_OPTIONS.h) — -    When set use SEAICE_zetaMin and SEAICE_evpDampC to limit viscosities from below and above in seaice_evp: not necessary, and not recommended
+- `SEAICE_EVP_ELIMINATE_UNDERFLOWS` (undef, SEAICE_OPTIONS.h) — Include code to avoid underflows in EVP-code (copied from CICE). Many compilers can handle this more efficiently with the help of a flag.
+- `ALLOW_SEAICE_EVP_RESIDUAL` (undef, SEAICE_OPTIONS.h) — Include code to print residual of EVP iteration for debugging/diagnostics
+- `SEAICE_DELTA_SMOOTHREG` (undef, SEAICE_OPTIONS.h) — smooth regularization (without max-function) of delta for better differentiability
+- `SEAICE_ZETA_SMOOTHREG` (define, SEAICE_OPTIONS.h) — regularize zeta to zmax with a smooth tanh-function instead of a min(zeta,zmax). This improves convergence of iterative solvers (Lemieux and Tremblay 2009, JGR). No effect on EVP
+- `SEAICE_ALLOW_TEM` (undef, SEAICE_OPTIONS.h) — --   Different yield curves within the VP rheology framework allow the truncated ellipse rheology (runtime flag SEAICEuseTEM)
+- `SEAICE_ALLOW_MCS` (undef, SEAICE_OPTIONS.h) — allow the use of the Mohr Coulomb rheology (runtime flag SEAICEuseMCS) as defined in (Ip 1991) /!\ This is known to give unstable results, use with caution
+- `SEAICE_ALLOW_MCE` (undef, SEAICE_OPTIONS.h) — allow the use of Mohr Coulomb with elliptical plastic potential (runtime flag SEAICEuseMCE)
+- `SEAICE_ALLOW_TEARDROP` (undef, SEAICE_OPTIONS.h) — allow the teardrop and parabolic lens  rheology (runtime flag SEAICEuseTD and SEAICEusePL)
+- `SEAICE_VECTORIZE_LSR` (undef, SEAICE_OPTIONS.h) — the only regularly test vector machine these flags a specified in the build options file SUPER-UX_SX-8_sxf90_awi, so that we comment them out here.
+- `SEAICE_LSR_ZEBRA` (undef, SEAICE_OPTIONS.h) — This modification improves the convergence of the vector code dramatically, so that is may actually be useful in general, but that needs to be tested. Can be used without vectorization options.
+- `SEAICE_ALLOW_CHECK_LSR_CONVERGENCE` (undef, SEAICE_OPTIONS.h) — Include code to print residual of nonlinear outer loop of LSR
+- `SEAICE_LSR_ADJOINT_ITER` (undef, SEAICE_OPTIONS.h) — This flag is also required for an actual adjoint of seaice_lsr; increases memory requirements a lot.
+- `SEAICE_ALLOW_LSR_FLEX` (undef, SEAICE_OPTIONS.h) — Allow using the flexible LSR solver, where the number of non-linear iteration depends on the residual. Good for when a non-linear convergence criterion must be satified
+- `SEAICE_BICE_STRESS` (define, SEAICE_OPTIONS.h) — -    By default for B-grid dynamics solver wind stress under sea-ice is set to the same value as it would be if there was no sea-ice. Define following CPP flag for B-grid ice-ocean stress coupling.
+- `EXPLICIT_SSH_SLOPE` (define, SEAICE_OPTIONS.h) — -    By default for B-grid dynamics solver surface tilt is obtained indirectly via geostrophic velocities. Define following CPP in order to use ETAN instead.
+- `SEAICE_LSRBNEW` (undef, SEAICE_OPTIONS.h) — -    Defining this flag turns on FV-discretization of the B-grid LSOR solver. It is smoother and includes all metric terms, similar to C-grid solvers. It is here for completeness, but its usefulness is unclear.
+- `SEAICE_CAP_ICELOAD` (undef, SEAICE_OPTIONS.h) — --   Some regularisations -    When set limit the Ice-Loading to mass of 1/5 of Surface ocean grid-box
+- `SEAICE_ALLOW_CLIPVELS` (undef, SEAICE_OPTIONS.h) — -    When set use SEAICE_clipVelocties = .true., to clip U/VICE at 40cm/s, not recommended
+- `SEAICE_CAP_SUBLIM` (undef, SEAICE_OPTIONS.h) — like all of the others -- residuals heat and fw stocks are passed to the ocean at the end of seaice_growth in a conservative manner. SEAICE_CAP_SUBLIM is not needed as of now, but kept just in case.
+- `AUTODIFF_SOMETIMES_NEEDED` (undef, SEAICE_OPTIONS.h) — --   AD flags -    TAF related flag, currently only used in seaice_ad_check_lev[1-4]_dir.h; it is unclear if this is ever needed.
+- `SEAICE_DYN_STABLE_ADJOINT` (undef, SEAICE_OPTIONS.h) — -    Reset fields to zero to stabilise AD code of dynamics solver (resulting in wrong gradients)
+- `SEAICE_MODIFY_GROWTH_ADJ` (undef, SEAICE_OPTIONS.h) — -    Another flag to simplify dependencies for TAF-generated AD-code the thermodynamic part, mostly by resetting variables to zero
+- `SEAICE_EXCLUDE_FOR_EXACT_AD_TESTING` (undef, SEAICE_OPTIONS.h) — -    Special seaice flag for AD testing
+- `SEAICE_USE_GROWTH_ADX` (undef, SEAICE_OPTIONS.h) — in seaice_growth_adx.F instead of seaice_growth.F This options excludes more complex physics such as sublimation, ITD, and frazil.
+- `DISABLE_AREA_FLOOR` (undef, SEAICE_OPTIONS.h) — -    Do not compile code that resets AREA (or AREAITD) to a mininum value of SEAICE_area_floor (=SIeps with default of 1e-5) if there is some finite sea ice thickness
+- `DISABLE_SEAICE_GROWTH` (undef, SEAICE_OPTIONS.h) — -    Do not compile growth/thermodynamics code (avoiding this code can also be done by setting runtime parameter usePWthermodynamics=F)
+- `DISABLE_SEAICE_OBCS` (undef, SEAICE_OPTIONS.h) — -    Do not compile/use seaice-related obcs code when using obcs.
+- `SEAICE_ALLOW_FREEDRIFT` (undef, SEAICE_OPTIONS.h) — --   Enable free drift code
+- `ALLOW_COST_ICE` (undef, SEAICE_OPTIONS.h) — --   pkg/seaice cost functions compile flags -    Sea-ice volume (requires pkg/cost)
+- `ALLOW_SEAICE_COST_EXPORT` (undef, SEAICE_OPTIONS.h) — -    Enable template for sea-ice volume export in seaice_cost_export.F (requires pkg/cost & ALLOW_COST_ICE defined)
+
+## Headers
+- `SEAICE.h` — BOP
+- `SEAICE_COST.h` — Sea ice cost terms.
+- `SEAICE_GRID.h` — BOP
+- `SEAICE_OPTIONS.h` — CPP options file for sea ice package. Use this file for selecting options within the sea ice package.
+- `SEAICE_PARAMS.h` — Basic parameter header for sea ice model.
+- `SEAICE_SIZE.h` — BOP
+- `SEAICE_TRACER.h` — BOP
+- `seaice_ad_check_lev1_dir.h` — ADJ STORE hsnow = comlev1, key=ikey_dynamics, kind=isbyte ADJ STORE tices = comlev1, key=ikey_dynamics, kind=isbyte
+- `seaice_ad_check_lev2_dir.h` — ADJ STORE StoreSEAICE       = tapelev2, key = ilev_2 ADJ STORE area  = tapelev2, key = ilev_2 ADJ STORE heff  = tapelev2, key = ilev_2 ADJ STORE uice 
+- `seaice_ad_check_lev3_dir.h` — ADJ STORE StoreSEAICE       = tapelev3, key = ilev_3 ADJ STORE area  = tapelev3, key = ilev_3 ADJ STORE heff  = tapelev3, key = ilev_3 ADJ STORE uice 
+- `seaice_ad_check_lev4_dir.h` — ADJ STORE StoreSEAICE       = tapelev4, key = ilev_4 ADJ STORE area  = tapelev4, key = ilev_4 ADJ STORE heff  = tapelev4, key = ilev_4 ADJ STORE uice 
+
+## Routines (84)
+`advect.F`, `diffus.F`, `dynsolver.F`, `lsr.F`, `ostres.F`, `seaice_ad_dump.F`, `seaice_advdiff.F`, `seaice_advection.F`, `seaice_bottomdrag_coeffs.F`, `seaice_budget_ocean.F`, `seaice_calc_ice_strength.F`, `seaice_calc_lhs.F`, `seaice_calc_residual.F`, `seaice_calc_rhs.F`, `seaice_calc_strainrates.F`, `seaice_calc_stressdiv.F`, `seaice_calc_viscosities.F`, `seaice_check.F`, `seaice_check_pickup.F`, `seaice_cost_accumulate_mean.F`, `seaice_cost_export.F`, `seaice_cost_final.F`, `seaice_cost_init_fixed.F`, `seaice_cost_init_varia.F`, `seaice_cost_sensi.F`, `seaice_cost_test.F`, `seaice_diagnostics_init.F`, `seaice_diagnostics_state.F`, `seaice_diffusion.F`, `seaice_do_ridging.F`, `seaice_dynsolver.F`, `seaice_evp.F`, `seaice_fake.F`, `seaice_fgmres.F`, `seaice_freedrift.F`, `seaice_get_dynforcing.F`, `seaice_growth.F`, `seaice_growth_adx.F`, `seaice_init_fixed.F`, `seaice_init_varia.F`, `seaice_itd_pickup.F`, `seaice_itd_redist.F`, `seaice_itd_remap.F`, `seaice_itd_sum.F`, `seaice_jacvec.F`, `seaice_jfnk.F`, `seaice_krylov.F`, `seaice_lsr.F`, `seaice_map_thsice.F`, `seaice_mnc_init.F`, `seaice_model.F`, `seaice_mom_advection.F`, `seaice_monitor.F`, `seaice_monitor_ad.F`, `seaice_obcs_output.F`, `seaice_ocean_stress.F`, `seaice_oceandrag_coeffs.F`, `seaice_output.F`, `seaice_preconditioner.F`, `seaice_prepare_ridging.F`, `seaice_read_pickup.F`, `seaice_readparms.F`, `seaice_reg_ridge.F`, `seaice_sidedrag_stress.F`, `seaice_solve4temp.F`, `seaice_summary.F`, `seaice_tracer_phys.F`, `seaice_turnoff_io.F`, `seaice_write_pickup.F`
+
+## Called from outside the package
+- `SEAICE_COST_SENSI` ← `model/src/do_oceanic_phys.F:464`
+- `SEAICE_FAKE` ← `model/src/do_oceanic_phys.F:471`
+- `SEAICE_MODEL` ← `model/src/do_oceanic_phys.F:453`
+- `SEAICE_DIAGNOSTICS_STATE` ← `model/src/do_statevars_diags.F:96`
+- `SEAICE_OUTPUT` ← `model/src/do_the_model_io.F:194`
+- `SEAICE_CHECK` ← `model/src/packages_check.F:333`
+- `SEAICE_COST_INIT_FIXED` ← `model/src/packages_init_fixed.F:369`
+- `SEAICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:514`
+- `SEAICE_INIT_VARIA` ← `model/src/packages_init_variables.F:437`
+- `SEAICE_READPARMS` ← `model/src/packages_readparms.F:296`
+- `SEAICE_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:185`
+- `SEAICE_TURNOFF_IO` ← `model/src/turnoff_model_io.F:107`
+- `SEAICE_AD_DUMP` ← `pkg/autodiff/addummy_in_stepping.F:558`
+- `SEAICE_COST_FINAL` ← `pkg/cost/cost_final.F:113`
+- `SEAICE_COST_INIT_VARIA` ← `pkg/cost/cost_init_varia.F:81`
+- `ADSEAICE_MONITOR` ← `pkg/monitor/monitor_ad.F:249`

@@ -1,0 +1,335 @@
+# pkg/ecco
+
+ECCO state-estimation package: model-data misfit cost terms, generic cost (gencost), averaging, ECCO-specific I/O.
+
+**pkg_depend:** +mdsio +cal  (`+` requires, `-` excludes)
+**runtime switch:** `useECCO`-style flag in `data.pkg` (check exact name in packages_boot.F)
+**reads:** `data.ecco`
+**manual:** `doc/examples/examples.rst`, `doc/ocean_state_est/ocean_state_est.rst`
+**adjoint support files:** ecco_ad_diff.list
+
+## Namelist parameters
+### ECCO_COST_NML
+- `data_errfile`
+- `tbarfile`
+- `sbarfile`
+- `sstbarfile`
+- `psbarfile`
+- `bpbarfile`
+- `iestaubarfile`
+- `ubarfile`
+- `vbarfile`
+- `wbarfile`
+- `tauxbarfile`
+- `tauybarfile`
+- `hfluxmeanbarfile`
+- `sfluxmeanbarfile`
+- `costTranspDataFile`
+- `mdtdatfile`
+- `mdtstartdate1`
+- `mdtstartdate2`
+- `mdtenddate1`
+- `mdtenddate2`
+- `using_cost_altim`
+- `using_cost_bp`
+- `using_cost_scat`
+- `using_cost_sst`
+- `using_cost_seaice`
+- `using_cost_transp`
+- `using_mdt`
+- `using_tpj`
+- `using_ers` — flag that indicates the use of ERS data
+- `using_gfo`
+- `using_topex`
+- `topexstartdate1`
+- `topexstartdate2`
+- `topexperiod`
+- `topexfile`
+- `tpTimeMaskFile`
+- `topexintercept`
+- `topexslope`
+- `ersTimeMaskFile`
+- `ersstartdate1`
+- `ersstartdate2`
+- `gfoTimeMaskFile`
+- `ersperiod`
+- `ersfile`
+- `ersintercept`
+- `ersslope`
+- `gfostartdate1`
+- `gfostartdate2`
+- `gfoperiod`
+- `gfofile`
+- `gfointercept`
+- `gfoslope`
+- `scatstartdate1`
+- `scatstartdate2`
+- `scatperiod`
+- `scatxdatfile`
+- `scatydatfile`
+- `scatx_errfile`
+- `scaty_errfile`
+- `ssh_errfile`
+- `sshv4cost_scalefile`
+- `sshv4cost_errfile`
+- `sshv4cost_errfactor`
+- `tp_errfile`
+- `ers_errfile`
+- `gfo_errfile`
+- `tmistartdate1`
+- `tmistartdate2`
+- `tmidatfile`
+- `sststartdate1`
+- `sststartdate2`
+- `sstdatfile`
+- `sssstartdate1`
+- `sssstartdate2`
+- `sssdatfile`
+- `bpstartdate1`
+- `bpstartdate2`
+- `bpdatfile`
+- `iesstartdate1`
+- `iesstartdate2`
+- `iesdatfile`
+- `tdatfile`
+- `sdatfile`
+- `ctdtfile`
+- `ctdsfile`
+- `ctdtclimfile`
+- `ctdsclimfile`
+- `xbtfile`
+- `argotstartdate1`
+- `argotstartdate2`
+- `argotfile`
+- `argosstartdate1`
+- `argosstartdate2`
+- `argosfile`
+- `udriftfile`
+- `vdriftfile`
+- `udrifterrfile`
+- `vdrifterrfile`
+- `curmtrufile`
+- `curmtrvfile`
+- `salterrfile`
+- `temperrfile`
+- `velerrfile`
+- `salt0errfile`
+- `temp0errfile`
+- `vel0errfile`
+- `etan0errfile`
+- `uvel0errfile`
+- `vvel0errfile`
+- `ssterrfile`
+- `ssserrfile`
+- `bperrfile`
+- `ieserrfile`
+- `hflux_errfile`
+- `sflux_errfile`
+- `tauu_errfile`
+- `tauv_errfile`
+- `atemp_errfile`
+- `aqh_errfile`
+- `precip_errfile`
+- `swflux_errfile`
+- `swdown_errfile`
+- `lwflux_errfile`
+- `lwdown_errfile`
+- `evap_errfile`
+- `snowprecip_errfile`
+- `apressure_errfile`
+- `uwind_errfile`
+- `vwind_errfile`
+- `geoid_errfile`
+- `geoid_covariancefile`
+- `bottomdrag_errfile`
+- `edtau_errfile`
+- `kapgm_errfile`
+- `kapredi_errfile`
+- `diffkr_errfile`
+- `usercost_datafile`
+- `usercost_errfile`
+- `mult_hflux`
+- `mult_sflux`
+- `mult_tauu`
+- `mult_tauv`
+- `mult_hfluxmm`
+- `mult_sfluxmm`
+- `mult_atemp`
+- `mult_aqh`
+- `mult_precip`
+- `mult_swflux`
+- `mult_swdown`
+- `mult_lwflux`
+- `mult_lwdown`
+- `mult_evap`
+- `mult_snowprecip`
+- `mult_apressure`
+- `mult_uwind`
+- `mult_vwind`
+- `mult_hmean`
+- `mult_h`
+- `mult_sshv4cost`
+- `mult_tp`
+- `mult_ers`
+- `mult_gfo`
+- `mult_temp`
+- `mult_salt`
+- `mult_tmi`
+- `mult_sst`
+- `mult_sss`
+- `mult_bp`
+- `mult_ctdt`
+- `mult_ctds`
+- `mult_ies`
+- `mult_ctdtclim`
+- `mult_ctdsclim`
+- `mult_xbt`
+- `mult_drift`
+- `mult_argot`
+- `mult_argos`
+- `mult_scatx`
+- `mult_scaty`
+- `mult_sdrift`
+- `mult_tdrift`
+- `mult_wdrift`
+- `mult_temp0`
+- `mult_salt0`
+- `mult_etan0`
+- `mult_uvel0`
+- `mult_vvel0`
+- `mult_obcsn`
+- `mult_obcss`
+- `mult_obcsw`
+- `mult_obcse`
+- `mult_obcsvol`
+- `mult_ageos`
+- `mult_curmtr`
+- `mult_kapgm`
+- `mult_kapredi`
+- `mult_diffkr`
+- `mult_edtau`
+- `mult_bottomdrag`
+- `mult_usercost`
+- `mult_transp`
+- `mult_smooth_ic`
+- `mult_smooth_bc`
+- `whflux0`
+- `wsflux0`
+- `wtau0`
+- `wbottomdrag0`
+- `watemp0`
+- `waqh0`
+- `wprecip0`
+- `wswflux0`
+- `wswdown0`
+- `wwind0`
+- `wsnowprecip0`
+- `wlwflux0`
+- `wlwdown0`
+- `wevap0`
+- `wapressure0`
+- `wdiffkr0`
+- `wkapgm0`
+- `wedtau0`
+- `wkapredi0`
+- `wmean_hflux`
+- `wmean_sflux`
+- `wmean_tau`
+- `wmean_atemp`
+- `wmean_aqh`
+- `wmean_precip`
+- `wmean_swflux`
+- `wmean_swdown`
+- `wmean_wind`
+- `wmean_lwflux`
+- `wmean_lwdown`
+- `wmean_evap`
+- `wmean_snowprecip`
+- `wmean_apressure`
+- `cost_iprec`
+- `ecco_output_sterGloH` — output sterGloH at each time step if true
+- `ecco_keepTSeriesOutp_open` — keep the sterGloH file open if true
+- `cost_yftype`
+- `topexmeanfile`
+### ECCO_GENCOST_NML
+- `using_gencost`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_barfile`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_datafile`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_name`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_scalefile`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_errfile`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_itracer`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_kLev_select` — selected vertical level of a 3D model field to use to compute a cost term contribution (default = 1). Note: currently only used in drifter velocity cost  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_preproc`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_preproc_c`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_preproc_i`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_preproc_r`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_posproc`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_posproc_c`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_posproc_i`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_posproc_r`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_outputlevel`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_mask`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_spmin`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_spmax`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_spzero`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_wei1d`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_avgperiod`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_nrecperiod`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_startdate1`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_startdate2`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_enddate1`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_enddate2`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_smooth2Ddiffnbt`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_is1d`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_is3d`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_msk_is3d`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_useDensityMask`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_refPressure`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_sigmaLow`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_sigmaHigh`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_tanhScale`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `gencost_timevaryweight`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+- `mult_gencost`  _[ifdef ALLOW_GENCOST_CONTRIBUTION]_
+
+## CPP options (defaults as shipped)
+- `ALLOW_GENCOST_CONTRIBUTION` (define, ECCO_OPTIONS.h) — o Allow for generic cost function and integral terms with pkg/ecco:
+- `ALLOW_GENCOST3D` (define, ECCO_OPTIONS.h) — o Allow for 3 dimensional generic cost terms with pkg/ecco:
+- `ALLOW_GENCOST_1D` (undef, ECCO_OPTIONS.h) — > In addition, adding such cost terms requires editing ECCO_SIZE.h to increase NGENCOST/NGENCOST3D, and editing cost_gencost_customize.F to implement the actual model average (i.e. the bar file content).
+- `ALLOW_GENCOST_SSTV4_OUTPUT` (undef, ECCO_OPTIONS.h)
+- `ECCO_VARIABLE_AREAVOLGLOB` (undef, ECCO_OPTIONS.h) — o Use total time-varying volume to weight contributions, if defined
+- `ALLOW_PSBAR_STERIC` (undef, ECCO_OPTIONS.h) — o Include global mean steric sea level correction
+- `ALLOW_IB_CORR` (undef, ECCO_OPTIONS.h) — Apply inverse barometer correction (coded within ATMOSPHERIC_LOADING)
+- `ALLOW_SHALLOW_ALTIMETRY` (undef, ECCO_OPTIONS.h) — o Allow for near-shore and high-latitude altimetry
+- `ALLOW_HIGHLAT_ALTIMETRY` (undef, ECCO_OPTIONS.h)
+- `ALLOW_ECCO_OLD_FC_PRINT` (undef, ECCO_OPTIONS.h) — o Cost function output format
+- `ECCO_VERBOSE` (undef, ECCO_OPTIONS.h) — o Generate more text in STDOUT
+- `ALLOW_ECCO_DEBUG` (undef, ECCO_OPTIONS.h)
+- `ALLOW_SSH_COST_CONTRIBUTION` (undef, ECCO_OPTIONS.h) — -- partially retired options (i.e., only used to set default switch):
+- `ALLOW_SST_COST_CONTRIBUTION` (undef, ECCO_OPTIONS.h)
+- `ALLOW_SEAICE_COST_CONTRIBUTION` (undef, ECCO_OPTIONS.h)
+
+## Headers
+- `ECCO.h` — BOP
+- `ECCO_OPTIONS.h` — BOP
+- `ECCO_SIZE.h` — BOP
+- `ecco_cost.h` — HEADER AVERAGES Header for averaged temperature, salinity, and surface pressure fields and counters associated with the averaging. started: Christian 
+- `ecco_local_params.h` — HEADER ECCO_legacy
+
+## Routines (69)
+`cost_averagesfields.F`, `cost_averagesflags.F`, `cost_averagesgeneric.F`, `cost_averagesinit.F`, `cost_bp_read.F`, `cost_forcing.F`, `cost_gencal.F`, `cost_gencost_all.F`, `cost_gencost_assignperiod.F`, `cost_gencost_boxmean.F`, `cost_gencost_bpv4.F`, `cost_gencost_customize.F`, `cost_gencost_glbmean.F`, `cost_gencost_moc.F`, `cost_gencost_seaicev4.F`, `cost_gencost_sshv4.F`, `cost_gencost_sstv4.F`, `cost_gencost_transp.F`, `cost_generic.F`, `cost_genread.F`, `cost_hyd.F`, `cost_internal_params.F`, `cost_obcs.F`, `cost_obcs_ageos.F`, `cost_obcse.F`, `cost_obcsn.F`, `cost_obcss.F`, `cost_obcsvol.F`, `cost_obcsw.F`, `cost_sla_read.F`, `cost_sla_read_yd.F`, `cost_ssh.F`, `ecco_check.F`, `ecco_cost_driver.F`, `ecco_cost_final.F`, `ecco_cost_init_barfiles.F`, `ecco_cost_init_fixed.F`, `ecco_cost_init_varia.F`, `ecco_cost_summary.F`, `ecco_cost_weights.F`, `ecco_diagnostics_init.F`, `ecco_init_fixed.F`, `ecco_init_varia.F`, `ecco_phys.F`, `ecco_read_pickup.F`, `ecco_readparms.F`, `ecco_summary.F`, `ecco_toolbox.F`, `ecco_write_pickup.F`, `stergloh_output.F`
+
+## Called from outside the package
+- `STERGLOH_OUTPUT` ← `model/src/do_the_model_io.F:188`
+- `ECCO_PHYS` ← `model/src/forward_step.F:1169`
+- `ECCO_CHECK` ← `model/src/packages_check.F:428`
+- `ECCO_INIT_FIXED` ← `model/src/packages_init_fixed.F:381`
+- `ECCO_INIT_VARIA` ← `model/src/packages_init_variables.F:601`
+- `ECCO_READPARMS` ← `model/src/packages_readparms.F:343`
+- `ECCO_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:238`
+- `COST_AVERAGESFIELDS` ← `model/src/the_main_loop.F:670,740`
+- `COST_GENCOST_ALL` ← `pkg/cost/cost_driver.F:51`
+- `ECCO_COST_FINAL` ← `pkg/cost/cost_final.F:97`
+
+## Verification experiments compiling it (4)
+`1D_ocean_ice_column` `global_oce_biogeo_bling` `lab_sea` `obcs_ctrl`

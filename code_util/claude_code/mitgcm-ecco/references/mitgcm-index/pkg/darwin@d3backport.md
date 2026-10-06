@@ -1,0 +1,1034 @@
+# pkg/darwin  (d3backport: ~/Documents/research/debug/darwin3)
+
+--  File darwin_carbon_chem.F: --   Contents --   o DARWIN_CALC_PCO2 --   o DARWIN_CALC_PCO2_APPROX --   o DARWIN_CARBON_COEFFS
+
+**vs its upstream base (merge-base, see README):** new (not in its upstream base)
+
+**runtime switch:** `useDARWIN`-style flag in `data.pkg` (check exact name in packages_boot.F)
+**reads:** `data.darwin`, `data.traits`
+
+## Namelist parameters
+### DARWIN_INDICES
+- `i_DIC`
+- `i_NO3`
+- `i_NO2`
+- `i_NH4`
+- `i_PO4`
+- `i_FeT`
+- `i_SiO2`
+- `i_DOC`
+- `i_DON`
+- `i_DOP`
+- `i_DOFe`
+- `i_POC`
+- `i_PON`
+- `i_POP`
+- `i_POFe`
+- `i_POSi`
+- `i_PIC`
+- `i_ALK`  _[ifdef DARWIN_ALLOW_CARBON]_
+- `i_O2`  _[ifdef DARWIN_ALLOW_CARBON]_
+- `i_CDOM`  _[ifdef DARWIN_ALLOW_CDOM]_
+- `e_CDOM`  _[ifdef DARWIN_ALLOW_CDOM]_
+- `i_c`
+- `e_c`
+- `i_n`  _[ifdef DARWIN_ALLOW_NQUOTA]_
+- `e_n`  _[ifdef DARWIN_ALLOW_NQUOTA]_
+- `i_p`  _[ifdef DARWIN_ALLOW_PQUOTA]_
+- `e_p`  _[ifdef DARWIN_ALLOW_PQUOTA]_
+- `i_fe`  _[ifdef DARWIN_ALLOW_FEQUOTA]_
+- `e_fe`  _[ifdef DARWIN_ALLOW_FEQUOTA]_
+- `i_si`  _[ifdef DARWIN_ALLOW_SIQUOTA]_
+- `e_si`  _[ifdef DARWIN_ALLOW_SIQUOTA]_
+- `i_Chl`  _[ifdef DARWIN_ALLOW_CHLQUOTA]_
+- `e_Chl`  _[ifdef DARWIN_ALLOW_CHLQUOTA]_
+- `i_ch`  _[ifdef DARWIN_ALLOW_CSTORE]_
+- `e_ch`  _[ifdef DARWIN_ALLOW_CSTORE]_
+- `n_DARWIN`
+### DARWIN_FORCING_PARAMS
+- `darwin_useEXFwind` — whether to use wind speed from exf package
+- `darwin_useQsw` — whether to use model shortwave radiation
+- `darwin_useSEAICE` — whether to use ice area from seaice pkg
+- `R_DOFe_DOP_runoff` — [mol Fe/mol P] Fe:P ratio for dissolved organic matter in runoff
+- `R_NO3_DIN_runoff` — [mol N/mol N]  NO3 fraction of DIN in runoff
+- `R_NO2_DIN_runoff` — [mol N/mol N]  NO2 fraction of DIN in runoff
+- `R_NH4_DIN_runoff` — [mol N/mol N]  NH4 fraction of DIN in runoff
+- `R_DFe_DIP_runoff` — [mol Fe/mol P] Fe:P ratio for inorganic P in runoff
+- `R_DIP_IP_runoff` — [mol P/mol P]  ratio of dissolved to total inorganic P in runoff
+- `R_POFe_POP_runoff` — [mol Fe/mol P] Fe:P ratio for particulate organic matter in runoff
+- `R_ALK_DIC_runoff` — [eq/mol C]     ALK:DIC ratio in runoff
+- `PARfile`
+- `PARperiod`
+- `PARRepCycle`
+- `PARStartTime`
+- `PARstartdate1`
+- `PARstartdate2`
+- `PARconst`
+- `PAR_exfremo_intercept`
+- `PAR_exfremo_slope`
+- `PARmask`
+- `darwin_inscal_PAR`
+- `ironfile`
+- `ironperiod`
+- `ironRepCycle`
+- `ironStartTime`
+- `ironstartdate1`
+- `ironstartdate2`
+- `ironconst`
+- `iron_exfremo_intercept`
+- `iron_exfremo_slope`
+- `ironmask`
+- `darwin_inscal_iron`
+- `icefile`
+- `iceperiod`
+- `iceRepCycle`
+- `iceStartTime`
+- `icestartdate1`
+- `icestartdate2`
+- `iceconst`
+- `ice_exfremo_intercept`
+- `ice_exfremo_slope`
+- `icemask`
+- `darwin_inscal_ice`
+- `windfile`
+- `windperiod`
+- `windRepCycle`
+- `windStartTime`
+- `windstartdate1`
+- `windstartdate2`
+- `windconst`
+- `wind_exfremo_intercept`
+- `wind_exfremo_slope`
+- `windmask`
+- `darwin_inscal_wind`
+- `pCO2file`
+- `pCO2period`
+- `pCO2RepCycle`
+- `pCO2StartTime`
+- `pCO2startdate1`
+- `pCO2startdate2`
+- `pCO2const`
+- `pCO2_exfremo_intercept`
+- `pCO2_exfremo_slope`
+- `pCO2mask`
+- `darwin_inscal_pCO2`
+- `ventHe3file` — file with He3 flux from hydrothermal vents (mmol He/m2/s)
+- `ventHe3period`
+- `ventHe3RepCycle`
+- `ventHe3StartTime`
+- `ventHe3startdate1`
+- `ventHe3startdate2`
+- `ventHe3const`
+- `ventHe3_exfremo_intercept`
+- `ventHe3_exfremo_slope`
+- `ventHe3mask`
+- `darwin_inscal_ventHe3`
+- `DOCrunofffile`
+- `DOCrunoffperiod`
+- `DOCrunoffRepCycle`
+- `DOCrunoffStartTime`
+- `DOCrunoffstartdate1`
+- `DOCrunoffstartdate2`
+- `DOCrunoffconst`
+- `DOCrunoff_exfremo_intercept`
+- `DOCrunoff_exfremo_slope`
+- `DOCrunoffmask`
+- `darwin_inscal_DOCrunoff`
+- `DONrunofffile`
+- `DONrunoffperiod`
+- `DONrunoffRepCycle`
+- `DONrunoffStartTime`
+- `DONrunoffstartdate1`
+- `DONrunoffstartdate2`
+- `DONrunoffconst`
+- `DONrunoff_exfremo_intercept`
+- `DONrunoff_exfremo_slope`
+- `DONrunoffmask`
+- `darwin_inscal_DONrunoff`
+- `DOPrunofffile`
+- `DOPrunoffperiod`
+- `DOPrunoffRepCycle`
+- `DOPrunoffStartTime`
+- `DOPrunoffstartdate1`
+- `DOPrunoffstartdate2`
+- `DOPrunoffconst`
+- `DOPrunoff_exfremo_intercept`
+- `DOPrunoff_exfremo_slope`
+- `DOPrunoffmask`
+- `darwin_inscal_DOPrunoff`
+- `DINrunofffile`
+- `DINrunoffperiod`
+- `DINrunoffRepCycle`
+- `DINrunoffStartTime`
+- `DINrunoffstartdate1`
+- `DINrunoffstartdate2`
+- `DINrunoffconst`
+- `DINrunoff_exfremo_intercept`
+- `DINrunoff_exfremo_slope`
+- `DINrunoffmask`
+- `darwin_inscal_DINrunoff`
+- `IPrunofffile`
+- `IPrunoffperiod`
+- `IPrunoffRepCycle`
+- `IPrunoffStartTime`
+- `IPrunoffstartdate1`
+- `IPrunoffstartdate2`
+- `IPrunoffconst`
+- `IPrunoff_exfremo_intercept`
+- `IPrunoff_exfremo_slope`
+- `IPrunoffmask`
+- `darwin_inscal_IPrunoff`
+- `DSirunofffile`
+- `DSirunoffperiod`
+- `DSirunoffRepCycle`
+- `DSirunoffStartTime`
+- `DSirunoffstartdate1`
+- `DSirunoffstartdate2`
+- `DSirunoffconst`
+- `DSirunoff_exfremo_intercept`
+- `DSirunoff_exfremo_slope`
+- `DSirunoffmask`
+- `darwin_inscal_DSirunoff`
+- `POCrunofffile`
+- `POCrunoffperiod`
+- `POCrunoffRepCycle`
+- `POCrunoffStartTime`
+- `POCrunoffstartdate1`
+- `POCrunoffstartdate2`
+- `POCrunoffconst`
+- `POCrunoff_exfremo_intercept`
+- `POCrunoff_exfremo_slope`
+- `POCrunoffmask`
+- `darwin_inscal_POCrunoff`
+- `POPrunofffile`
+- `POPrunoffperiod`
+- `POPrunoffRepCycle`
+- `POPrunoffStartTime`
+- `POPrunoffstartdate1`
+- `POPrunoffstartdate2`
+- `POPrunoffconst`
+- `POPrunoff_exfremo_intercept`
+- `POPrunoff_exfremo_slope`
+- `POPrunoffmask`
+- `darwin_inscal_POPrunoff`
+- `PONrunofffile`
+- `PONrunoffperiod`
+- `PONrunoffRepCycle`
+- `PONrunoffStartTime`
+- `PONrunoffstartdate1`
+- `PONrunoffstartdate2`
+- `PONrunoffconst`
+- `PONrunoff_exfremo_intercept`
+- `PONrunoff_exfremo_slope`
+- `PONrunoffmask`
+- `darwin_inscal_PONrunoff`
+- `DICrunofffile`
+- `DICrunoffperiod`
+- `DICrunoffRepCycle`
+- `DICrunoffStartTime`
+- `DICrunoffstartdate1`
+- `DICrunoffstartdate2`
+- `DICrunoffconst`
+- `DICrunoff_exfremo_intercept`
+- `DICrunoff_exfremo_slope`
+- `DICrunoffmask`
+- `darwin_inscal_DICrunoff`
+### DARWIN_INTERP_PARAMS
+- `PAR_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PAR_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PAR_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PAR_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PAR_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PAR_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PAR_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `iron_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `iron_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `iron_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `iron_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `iron_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `iron_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `iron_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ice_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ice_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ice_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ice_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ice_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ice_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ice_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wind_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wind_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wind_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wind_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wind_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wind_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wind_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `pCO2_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `pCO2_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `pCO2_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `pCO2_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `pCO2_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `pCO2_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `pCO2_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ventHe3_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ventHe3_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ventHe3_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ventHe3_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ventHe3_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ventHe3_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ventHe3_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOCrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOCrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOCrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOCrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOCrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOCrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOCrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DONrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DONrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DONrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DONrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DONrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DONrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DONrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOPrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOPrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOPrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOPrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOPrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOPrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DOPrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DINrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DINrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DINrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DINrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DINrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DINrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DINrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `IPrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `IPrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `IPrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `IPrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `IPrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `IPrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `IPrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DSirunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DSirunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DSirunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DSirunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DSirunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DSirunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DSirunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POCrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POCrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POCrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POCrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POCrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POCrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POCrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POPrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POPrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POPrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POPrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POPrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POPrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `POPrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PONrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PONrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PONrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PONrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PONrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PONrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `PONrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DICrunoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DICrunoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DICrunoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DICrunoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DICrunoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DICrunoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `DICrunoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+### DARWIN_CONSTANTS
+- `rad2deg`
+### CARBON_CONSTANTS
+- `Pa2Atm` — Convert pressure in Pascal to atm  _[ifdef DARWIN_ALLOW_CARBON]_
+- `ptr2mol` — convert ptracers (in mmol/m3) to mol/m3  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sca1` — Schmidt no. coefficient for CO2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sca2` — Schmidt no. coefficient for CO2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sca3` — Schmidt no. coefficient for CO2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sca4` — Schmidt no. coefficient for CO2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sox1` — [] Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141, (1998)]  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sox2` — [] Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141, (1998)]  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sox3` — [] Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141, (1998)]  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sox4` — [] Schmidt no. coefficient for O2 [Keeling et al, GBC, 12, 141, (1998)]  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oA0` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oA1` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oA2` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oA3` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oA4` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oA5` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oB0` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oB1` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oB2` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oB3` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+- `oC0` — Coefficient for determining saturation O2  _[ifdef DARWIN_ALLOW_CARBON]_
+### DARWIN_PARAMS
+- `darwin_seed` — seed for random number generator (for DARWIN_RANDOM_TRAITS)
+- `darwin_strict_check` — stop instead of issuing warnings
+- `iDEBUG` — index in x dimension for debug prints
+- `jDEBUG` — index in y dimension for debug prints
+- `kDEBUG` — index in z dimension for debug prints
+- `darwin_pickupSuff` — pickup suffix for darwin; set to ' ' to disable reading at PTRACERS_Iter0
+- `darwin_linFSConserve` — correct non-conservation due to linear free surface (globally)
+- `darwin_read_phos` — initial conditions for plankton biomass are in mmol P/m3
+- `darwin_chlInitBalanced` — Initialize Chlorophyll to a balanced value following Geider
+- `darwin_chlIter0` — Iteration number when to initialize Chlorophyll
+- `katten_w` — [1/m]            atten coefficient water
+- `katten_chl` — [m2/mg Chl]      atten coefficient chl
+- `parfrac` — []               fraction Qsw that is PAR
+- `parconv` — [uEin/s/W]       conversion from W/m2 to uEin/m2/s
+- `tempnorm` — []               set temperature function (was 1.0)
+- `TempAeArr` — [K]              slope for pseudo-Arrhenius (TEMP_VERSION 2)
+- `TemprefArr` — [K]              reference temp for pseudo-Arrhenius (TEMP_VERSION 2)
+- `TempCoeffArr` — []               pre-factor for pseudo-Arrhenius (TEMP_VERSION 2)
+- `reminTempAe` — [1/K]            temperature coefficient for remineralization (TEMP_VERSION 4)
+- `mortTempAe` — [1/K]            temperature coefficient for linear mortality (TEMP_VERSION 4)
+- `mort2TempAe` — [1/K]            temperature coefficient for quadr. mortality (TEMP_VERSION 4)
+- `uptakeTempAe` — [1/K]            temperature coefficient for uptake (TEMP_VERSION 4)
+- `alpfe` — []                  solubility of Fe dust
+- `ligand_tot` — [mol/m3]            total ligand concentration
+- `ligand_stab` — [m3/mol]            ligand stability rate ratio
+- `freefemax` — [mol/m3]            max concentration of free iron
+- `scav_rat` — [1]                 factor Th to iron for DARWIN_PART_SCAV_POP  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_inter` — [L^e mg^-e s^-1]    intercept of scavenging power law (e=scav_exp)  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_exp` — [1]                 exponent of scavenging power law  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_R_POPPOC` — [mmol P / g C]      POP:POC ratio for DARWIN_PART_SCAV_POP  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_tau` — [1]                 factor to go from Th scavenging rate to iron  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_POC_wgt` — [g / mmol C]        weight POC contributes to POM for scavenging  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_PSi_wgt` — [g / mmol Si]       weight PSi contributes to POM for scavenging  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_PIC_wgt` — [g / mmol C]        weight PIC contributes to POM for scavenging  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav_degrPOM` — [g/m3]              concentration of non-labile POM for scavenging  _[ifdef DARWIN_PART_SCAV_POP]_
+- `scav` — [1/s]               fixed iron scavenging rate (#undef DARWIN_PART_SCAV)  _[NOT(ifdef DARWIN_PART_SCAV_POP)]_
+- `depthfesed` — [m]                 depth above which to add sediment source (was -1000)
+- `fesedflux` — [mmol Fe /m2/s]     fixed iron flux from sediment
+- `fesedflux_pcm` — [mmol Fe / mmol C]  iron input per POC sinking into bottom for DARWIN_IRON_SED_SOURCE_VARIABLE
+- `fesedflux_min` — [mmol Fe /s]        min iron input rate subtracted from fesedflux_pcm*wc_sink*POC
+- `R_CP_fesed` — [mmol C / mmol P]   POC:POP conversion for DARWIN_IRON_SED_SOURCE_POP
+- `depthFeVent` — [m]                 depth below which iron from hydrothermal vents is added
+- `solFeVent` — []                  solubility of iron from hydrothermal vents
+- `R_FeHe3_vent` — [mmol Fe / mmol He3]  Fe:He3 ratio for hydrothermal vents
+- `Knita` — [1/s]               ammonia oxidation rate
+- `Knitb` — [1/s]               nitrite oxidation rate
+- `PAR_oxi` — [uEin/m2/s]         critical light level after which oxidation starts
+- `Kdoc` — [1/s]  DOC remineralization rate
+- `Kdop` — [1/s]  DON remineralization rate
+- `Kdon` — [1/s]  DOP remineralization rate
+- `KdoFe` — [1/s]  DOFe remineralization rate
+- `KPOC` — [1/s]  POC remineralization rate
+- `KPOP` — [1/s]  POP remineralization rate
+- `KPON` — [1/s]  PON remineralization rate
+- `KPOFe` — [1/s]  POFe remineralization rate
+- `KPOSi` — [1/s]  POSi remineralization rate
+- `wC_sink` — [m/s]  sinking velocity for POC
+- `wP_sink` — [m/s]  sinking velocity for POP
+- `wN_sink` — [m/s]  sinking velocity for PON
+- `wFe_sink` — [m/s]  sinking velocity for POFe
+- `wSi_sink` — [m/s]  sinking velocity for POSi
+- `wPIC_sink` — [m/s]  sinking velocity for PIC
+- `darwin_disscSelect` — Switch for PIC dissolution rate formulation
+- `Kdissc` — [1/s]  dissolution rate for PIC
+- `darwin_KeirCoeff` — [1/s]  Keir PIC dissolution rate coefficient
+- `darwin_KeirExp` — [1]    Keir PIC dissolution rate exponent
+- `R_OP` — [mmol O2 / mmol P]  O:P ratio for respiration and consumption  _[ifdef DARWIN_ALLOW_CARBON]_
+- `R_OC` — [mmol O2 / mmol C]  NOT USED  _[ifdef DARWIN_ALLOW_CARBON]_
+- `m3perkg` — [m3/kg]         constant for converting per kg to per m^3  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSaltMinInit` — [ppt]           minimum salt for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSaltMaxInit` — [ppt]           maximum salt for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfTempMinInit` — [degrees C]     minimum temp for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfTempMaxInit` — [degrees C]     maximum temp for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfDICMinInit` — [mmol C m^-3]   minimum DIC for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfDICMaxInit` — [mmol C m^-3]   maximum DIC for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfALKMinInit` — [meq m^-3]      minimum alkalinity for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfALKMaxInit` — [meq m^-3]      maximum alkalinity for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfPO4MinInit` — [mmol P m^-3]   minimum PO4 for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfPO4MaxInit` — [mmol P m^-3]   maximum PO4 for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSiMinInit` — [mmol Si m^-3]  minimum SiO2 for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSiMaxInit` — [mmol Si m^-3]  maximum SiO2 for carbon solver at initialization  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSaltMin` — [ppt]           minimum salt for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSaltMax` — [ppt]           maximum salt for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfTempMin` — [degrees C]     minimum temp for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfTempMax` — [degrees C]     maximum temp for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfDICMin` — [mmol C m^-3]   minimum DIC for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfDICMax` — [mmol C m^-3]   maximum DIC for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfALKMin` — [meq m^-3]      minimum alkalinity for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfALKMax` — [meq m^-3]      maximum alkalinity for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfPO4Min` — [mmol P m^-3]   minimum PO4 for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfPO4Max` — [mmol P m^-3]   maximum PO4 for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSiMin` — [mmol Si m^-3]  minimum SiO2 for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `surfSiMax` — [mmol Si m^-3]  maximum SiO2 for carbon solver during run  _[ifdef DARWIN_ALLOW_CARBON]_
+- `selectBTconst` — estimates borate concentration from salinity:  _[ifdef DARWIN_ALLOW_CARBON]_
+- `selectFTconst` — estimates fluoride concentration from salinity:  _[ifdef DARWIN_ALLOW_CARBON]_
+- `selectHFconst` — sets the first dissociation constant for hydrogen fluoride:  _[ifdef DARWIN_ALLOW_CARBON]_
+- `selectK1K2const` — sets the 1rst & 2nd dissociation constants of carbonic acid:  _[ifdef DARWIN_ALLOW_CARBON]_
+- `selectPHsolver` — sets the pH solver to use:  _[ifdef DARWIN_ALLOW_CARBON]_
+- `sed_globala1` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalb1` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalc1` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globald1` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globale1` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globala2` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalb2` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalc2` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globald2` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globale2` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globala3` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalb3` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalc3` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globald3` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globale3` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globala4` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalb4` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalc4` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globald4` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globale4` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalf4` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalg4` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globala5` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalb5` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalc5` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globald5` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globale5` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globala6` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalb6` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globalc6` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globald6` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `sed_globale6` — coefficient for sediment model  _[ifdef DARWIN_ALLOW_CARBON & ifdef DARWIN_ALLOW_RADIv2]_
+- `diaz_ini_fac` — reduce tracer concentrations by this factor on initialization
+- `O2crit` — [mmol O2 m-3]      critical oxygen for O2/NO3 remineralization
+- `denit_NP` — [mmol N / mmol P]  ratio of n to p in denitrification process
+- `denit_NO3` — [mmol N / mmol P]  ratio of NO3 uptake to phos remineralization in denitrification
+- `NO3crit` — [mmol N m-3]       critical nitrate below which no denit (or remin) happens
+- `PARmin` — [uEin/m2/s]        minimum light for photosynthesis; for non-Geider: 1.0
+- `aphy_chl_ave` — [m2/mg Chl]        Chl-specific absorption coefficient
+- `Chl2Nmax` — [mg Chl / mmol N]  max Chl:N ratio for Chl synthesis following Moore 2002
+- `synthcost` — [mmol C / mmol N]  cost of biosynthesis
+- `inhib_graz` — [(mmol C m-3)-1]   inverse decay scale for grazing inhibition
+- `inhib_graz_exp` — []                 exponent for grazing inhibition (0 to turn off inhibition)
+- `hillnumUptake` — []                 exponent for limiting quota uptake in nutrient uptake
+- `hillnumGraz` — []                 exponent for limiting quota uptake in grazing
+- `hollexp` — []                 grazing exponential 1= "Holling 2", 2= "Holling 3"
+- `phygrazmin` — [mmol C m-3]       minimum total prey conc for grazing to occur
+- `pmaxDIN` — [1/s]           max DIN uptake rate for denitrifying bacteria
+- `pcoefO2` — [m3/mmol O2/s]  max O2-specific O2 uptake rate for aerobic bacteria
+- `ksatDIN` — [mmol N m-3]    half-saturation conc of dissolved inorganic nitrogen
+- `alpha_hydrol` — []              increase in POM needed due to hydrolysis
+- `yod` — []              organic matter yield of aerobic bacteria
+- `yoe` — []              energy yield of aerobic bacteria
+- `ynd` — []              organic matter yield of denitrifying bacteria
+- `yne` — []              energy yield of denitrifying bacteria
+- `depthdenit` — [m]             not implemented (depth for denitrification relaxation to start)
+### DARWIN_CDOM_PARAMS
+- `fracCDOM` — []                  fraction of remineralized POP contributing to CDOM  _[ifdef DARWIN_ALLOW_CDOM]_
+- `CDOMdegrd` — [1/s]               CDOM degradation rate  _[ifdef DARWIN_ALLOW_CDOM]_
+- `CDOMbleach` — [1/s]               CDOM bleaching rate  _[ifdef DARWIN_ALLOW_CDOM]_
+- `PARCDOM` — [uEin/m2/s]         PAR where CDOM bleaching becomes maximal  _[ifdef DARWIN_ALLOW_CDOM]_
+- `R_NC_CDOM` — [mmol N / mmol C]   CDOM N:C ratio  _[ifdef DARWIN_ALLOW_CDOM & ifdef DARWIN_CDOM_UNITS_CARBON]_
+- `R_FeC_CDOM` — [mmol Fe / mmol C]  CDOM Fe:C ratio  _[ifdef DARWIN_ALLOW_CDOM & ifdef DARWIN_CDOM_UNITS_CARBON]_
+- `R_PC_CDOM` — [mmol P / mmol C]   CDOM P:C ratio  _[ifdef DARWIN_ALLOW_CDOM & ifdef DARWIN_CDOM_UNITS_CARBON]_
+- `R_NP_CDOM` — [mmol N / mmol P]   CDOM N:P ratio  _[ifdef DARWIN_ALLOW_CDOM & NOT(ifdef DARWIN_CDOM_UNITS_CARBON)]_
+- `R_FeP_CDOM` — [mmol Fe / mmol P]  CDOM Fe:P ratio  _[ifdef DARWIN_ALLOW_CDOM & NOT(ifdef DARWIN_CDOM_UNITS_CARBON)]_
+- `R_CP_CDOM` — [mmol C / mmol P]   CDOM C:P ratio  _[ifdef DARWIN_ALLOW_CDOM & NOT(ifdef DARWIN_CDOM_UNITS_CARBON)]_
+- `CDOMcoeff` — [m2 / mmol C]       C-specific absorption coefficient of CDOM (with #define DARWIN_CDOM_UNITS_CARBON)  _[ifdef DARWIN_ALLOW_CDOM]_
+### DARWIN_DEPENDENT_PARAMS
+- `laCDOM` — index of reference waveband for CDOM absorption spectrum  _[ifdef ALLOW_RADTRANS & NOT(ifdef DARWIN_ALLOW_CDOM)]_
+- `darwin_dependent_i_dummy`
+### DARWIN_RADTRANS_PARAMS
+- `darwin_waterAbsorbFile` — filename for reading water absorption and scattering spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_phytoAbsorbFile` — filename for reading plankton absorption and scattering spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_particleAbsorbFile` — filename for reading particle absorption and scattering spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_part_size_P` — [mmol P/particle]  conversion factor for particle absorption and scattering spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_bbmin` — [1/m]        minimum backscattering ratio  _[ifdef ALLOW_RADTRANS]_
+- `darwin_bbw` — []           backscattering ratio of water  _[ifdef ALLOW_RADTRANS]_
+- `darwin_lambda_aCDOM` — [nm]         reference wavelength for CDOM absorption spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_Sdom` — [1/nm]       coefficient for CDOM absorption spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_aCDOM_fac` — []           factor for computing aCDOM from water+Chlorophyll absorption  _[ifdef ALLOW_RADTRANS]_
+- `darwin_rCDOM` — [mmol C/m3]  recalcitrant CDOM concentration (with #define DARWIN_CDOM_UNITS_CARBON)  _[ifdef ALLOW_RADTRANS]_
+- `darwin_RPOC` — [mmol C/m3]  recalcitrant POC concentration  _[ifdef ALLOW_RADTRANS]_
+- `darwin_allomSpectra` — enable/disable allometric scaling of plankton absorption and scattering spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_aCarCell` — [mg C/cell]  coefficient coefficient for scaling plankton spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_bCarCell` — []           coefficient coefficient for scaling plankton spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_absorpSlope` — []           slope for scaled absorption spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_bbbSlope` — []           slope for scaled backscattering ratio spectra  _[ifdef ALLOW_RADTRANS]_
+- `darwin_scatSwitchSizeLog` — [log10(um)]  log of size for switching slopes  _[ifdef ALLOW_RADTRANS]_
+- `darwin_scatSlopeSmall` — []           slope for small plankton  _[ifdef ALLOW_RADTRANS]_
+- `darwin_scatSlopeLarge` — []           slope for large plankton  _[ifdef ALLOW_RADTRANS]_
+### DARWIN_RT_DEPPARAMS
+- `aw` — [m^-1]             absorption coefficient for water  _[ifdef ALLOW_RADTRANS]_
+- `bw` — [m^-1]             total scattering coefficient for water  _[ifdef ALLOW_RADTRANS]_
+- `aphy_chl_type` — [m^2 (mg Chl)^-1]  phytoplankton Chl-specific absorption coefficient by optical type  _[ifdef ALLOW_RADTRANS]_
+- `aphy_chl_ps_type` — [m^2 (mg Chl)^-1]  part of aphy_chl_type that is available for phtosynthesis  _[ifdef ALLOW_RADTRANS]_
+- `aphy_mgC_type` — [m^2 (mg C)^-1]    plankton carbon-specific absorption coefficient by optical type  _[ifdef ALLOW_RADTRANS]_
+- `bphy_mgC_type` — [m^2 (mg C)^-1]    carbon-specific total scttering coefficient by optical type  _[ifdef ALLOW_RADTRANS]_
+- `bbphy_mgC_type` — [m^2 (mg C)^-1]    carbon-specific backscattering coefficient by optical type  _[ifdef ALLOW_RADTRANS]_
+- `asize` — [um]               reference cell diameter for aphy_chl_type  _[ifdef ALLOW_RADTRANS]_
+- `apsize` — [um]               reference cell diameter for aphy_chl_ps_type  _[ifdef ALLOW_RADTRANS]_
+- `asize_mgC` — [um]               reference cell diameter for aphy_mgC_type  _[ifdef ALLOW_RADTRANS]_
+- `bsize` — [um]               reference cell diameter for bphy_mgC_type  _[ifdef ALLOW_RADTRANS]_
+- `bbsize` — [um]               reference cell diameter for bbphy_mgC_type  _[ifdef ALLOW_RADTRANS]_
+- `apart` — [m^-1]             absorption coefficient for detritus read in from file  _[ifdef ALLOW_RADTRANS]_
+- `bpart` — [m^-1]             total scattering coefficient for detritus read in from file  _[ifdef ALLOW_RADTRANS]_
+- `bbpart` — [m^-1]             backscattering coefficient for detritus read in from file  _[ifdef ALLOW_RADTRANS]_
+- `apart_P` — [m^2 (mmol P)^-1]  P-specific absorption coefficient for detritus  _[ifdef ALLOW_RADTRANS]_
+- `bpart_P` — [m^2 (mmol P)^-1]  P-specific total scattering coefficient for detritus  _[ifdef ALLOW_RADTRANS]_
+- `bbpart_P` — [m^2 (mmol P)^-1]  P-specific backscattering coefficient for detritus  _[ifdef ALLOW_RADTRANS]_
+- `exCDOM` — [ ]                wavelength-dependent part of CDOM absorption spectrum  _[ifdef ALLOW_RADTRANS]_
+### DARWIN_RANDOM_PARAMS
+- `phymin`
+- `Smallgrow`
+- `Biggrow`
+- `Smallgrowrange`
+- `Biggrowrange`
+- `diaz_growfac`
+- `cocco_growfac`
+- `diatom_growfac`
+- `Smallmort`
+- `Bigmort`
+- `Smallmortrange`
+- `Bigmortrange`
+- `Smallexport`
+- `Bigexport`
+- `tempcoeff1`
+- `tempcoeff2_small`
+- `tempcoeff2_big`
+- `tempcoeff3`
+- `tempmax`
+- `temprange`
+- `tempdecay`
+- `val_R_NC`
+- `val_R_NC_diaz`
+- `val_R_PC`
+- `val_R_SiC_diatom`
+- `val_R_FeC`
+- `val_R_FeC_diaz`
+- `val_R_PICPOC`
+- `val_R_ChlC`
+- `val_R_NC_zoo`
+- `val_R_PC_zoo`
+- `val_R_SiC_zoo`
+- `val_R_FeC_zoo`
+- `val_R_PICPOC_zoo`
+- `val_R_ChlC_zoo`
+- `SmallSink`
+- `BigSink`
+- `SmallPsat`
+- `BigPsat`
+- `ProcPsat`
+- `UniDzPsat`
+- `CoccoPsat`
+- `SmallPsatrange`
+- `BigPsatrange`
+- `ProcPsatrange`
+- `UniDzPsatrange`
+- `CoccoPsatrange`
+- `ksatNH4fac`
+- `ksatNO2fac`
+- `val_amminhib`
+- `val_ksatsio2`
+- `smallksatpar`
+- `smallksatparstd`
+- `smallkinhpar`
+- `smallkinhparstd`
+- `Bigksatpar`
+- `Bigksatparstd`
+- `Bigkinhpar`
+- `Bigkinhparstd`
+- `LLProkinhpar`
+- `Coccokinhpar`
+- `inhibcoef_geid_val`
+- `smallmQyield`
+- `smallmQyieldrange`
+- `BigmQyield`
+- `BigmQyieldrange`
+- `smallchl2cmax`
+- `smallchl2cmaxrange`
+- `Bigchl2cmax`
+- `Bigchl2cmaxrange`
+- `val_acclimtimescl`
+- `oldTwoGrazers` — old defaults for 2 grazers
+- `GrazeFast`
+- `GrazeSlow`
+- `ZooexfacSmall`
+- `ZooexfacBig`
+- `ZoomortSmall`
+- `ZoomortBig`
+- `ZoomortSmall2`
+- `ZoomortBig2`
+- `ExGrazfracbig`
+- `ExGrazfracsmall`
+- `palathi`
+- `palatlo`
+- `diatomgraz`
+- `coccograz`
+- `olargegraz`
+- `GrazeEfflow`
+- `GrazeEffmod`
+- `GrazeEffhi`
+- `GrazeRate`
+- `ExGrazfrac`
+- `val_palat`
+- `val_ass_eff`
+- `kgrazesat_val`
+- `Zoomort`
+- `Zoomort2`
+- `Zooexfac`
+- `ZooDM`
+### DARWIN_TRAIT_PARAMS
+- `darwin_sort_biovol` — whether to sort type by volume rather than group first
+- `darwin_effective_ksat` — compute effective half-saturation for non-quota elements
+- `darwin_select_kn_allom` — 1: use Ward et al formulation, 2: use Follett et al
+- `logvolbase` — []    log-10 base for list of volumes
+- `logvolinc` — []    log-10 increment for list of volumes
+- `biovol0` — [um3] volume of smallest type in group
+- `biovolfac` — []    factor by which each type is bigger than previous
+- `logvol0ind` — first index in volume list used by this group
+- `grp_logvolind` — []    indices into volume list for type in this group
+- `grp_biovol` — [um3] volumes of types in each group
+- `grp_names` — names of functional groups
+- `grp_nplank` — number of plankton types in this group
+- `grp_photo` — -> isPhoto
+- `grp_bacttype` — -> bactType
+- `grp_aerobic` — -> isAerobic
+- `grp_denit` — -> isDenit
+- `grp_pred` — -> isPred
+- `grp_prey` — -> isPrey
+- `grp_hasSi` — -> hasSi
+- `grp_hasPIC` — -> hasPIC
+- `grp_diazo` — -> diazo
+- `grp_useNH4` — -> useNH4
+- `grp_useNO2` — -> useNO2
+- `grp_useNO3` — -> useNO3
+- `grp_combNO` — -> combNO
+- `grp_aptype` — -> aptype
+- `grp_tempMort` — -> tempMort
+- `grp_tempMort2` — -> tempMort2
+- `grp_tempGraz` — -> tempGraz
+- `a_Xmin`
+- `a_R_NC`
+- `a_R_PC`
+- `a_R_SiC`
+- `a_R_FeC`
+- `a_R_ChlC`
+- `a_R_PICPOC`
+- `a_ExportFracMort`
+- `a_ExportFracMort2`
+- `a_ExportFracExude`
+- `a_FracExudeC`
+- `a_mort`
+- `a_mort2`
+- `a_phytoTempCoeff`
+- `a_phytoTempExp1`
+- `a_phytoTempAe`
+- `a_phytoTempExp2`
+- `a_phytoTempOptimum`
+- `a_phytoDecayPower`
+- `a_hetTempAe`
+- `a_hetTempExp2`
+- `a_hetTempOptimum`
+- `a_hetDecayPower`
+- `a_grazTempAe`
+- `a_grazTempExp2`
+- `a_grazTempOptimum`
+- `a_grazDecayPower`
+- `a_mQyield`  _[ifdef DARWIN_ALLOW_GEIDER]_
+- `a_chl2cmax`  _[ifdef DARWIN_ALLOW_GEIDER]_
+- `a_inhibGeider`  _[ifdef DARWIN_ALLOW_GEIDER]_
+- `a_ksatPAR`  _[NOT(ifdef DARWIN_ALLOW_GEIDER)]_
+- `a_kinhPAR`  _[NOT(ifdef DARWIN_ALLOW_GEIDER)]_
+- `a_amminhib`
+- `a_acclimtimescl`
+- `a_acclimtimescl_denom`
+- `a_ksatPON`
+- `a_ksatDON`
+- `a_grazemax`
+- `a_grazemax_denom`
+- `b_grazemax`
+- `a_kgrazesat`
+- `b_kgrazesat`
+- `a_biosink`
+- `a_biosink_denom`
+- `b_biosink`
+- `a_bioswim`
+- `a_bioswim_denom`
+- `b_bioswim`
+- `a_ppSig`
+- `a_ppOpt`
+- `b_ppOpt`
+- `palat_min` — min non-zero palatability, smaller palat are set to 0 (was 1D-4 in quota)
+- `a_PCmax`
+- `a_PCmax_denom`
+- `b_PCmax`
+- `a_qcarbon`
+- `b_qcarbon`
+- `a_respRate_c` — Note function of cellular C --> aC^b
+- `a_respRate_c_denom` — Note function of cellular C --> aC^b
+- `b_respRate_c` — Note function of cellular C --> aC^b
+- `a_kexcC`
+- `b_kexcC`
+- `a_vmaxNO3`
+- `a_vmaxNO3_denom`
+- `b_vmaxNO3`
+- `a_ksatNO3`
+- `b_ksatNO3`
+- `a_Qnmin`
+- `b_Qnmin`
+- `a_Qnmax`
+- `b_Qnmax`
+- `a_kexcN`
+- `b_kexcN`
+- `a_vmaxNO2`
+- `a_vmaxNO2_denom`
+- `b_vmaxNO2`
+- `a_ksatNO2`
+- `b_ksatNO2`
+- `a_ksatNO2fac` — only used for darwin_effective_ksat
+- `a_vmaxNH4`
+- `a_vmaxNH4_denom`
+- `b_vmaxNH4`
+- `a_ksatNH4`
+- `b_ksatNH4`
+- `a_ksatNH4fac` — only used for darwin_effective_ksat
+- `a_vmaxN`
+- `a_vmaxN_denom`
+- `b_vmaxN`
+- `a_vmaxPO4`
+- `a_vmaxPO4_denom`
+- `b_vmaxPO4`
+- `a_ksatPO4`
+- `b_ksatPO4`
+- `a_Qpmin`
+- `b_Qpmin`
+- `a_Qpmax`
+- `b_Qpmax`
+- `a_kexcP`
+- `b_kexcP`
+- `a_vmaxSiO2`
+- `a_vmaxSiO2_denom`
+- `b_vmaxSiO2`
+- `a_ksatSiO2`
+- `b_ksatSiO2`
+- `a_Qsimin`
+- `b_Qsimin`
+- `a_Qsimax`
+- `b_Qsimax`
+- `a_kexcSi`
+- `b_kexcSi`
+- `a_vmaxFeT`
+- `a_vmaxFeT_denom`
+- `b_vmaxFeT`
+- `a_ksatFeT`
+- `b_ksatFeT`
+- `a_Qfemin`
+- `b_Qfemin`
+- `a_Qfemax`
+- `b_Qfemax`
+- `a_kexcFe`
+- `b_kexcFe`
+- `grp_ExportFracPreyPred`
+- `grp_ass_eff`
+### DARWIN_TRAITS
+- `isPhoto` — 1: does photosynthesis, 0: not
+- `bactType` — 1: particle associated, 2: free living bacteria, 0: not bacteria
+- `isAerobic` — 1: is aerobic bacteria (also set bactType), 0: not
+- `isDenit` — 1: is dentrifying bacteria (also set (bactType), 0: not
+- `hasSi` — 1: uses silica (Diatom), 0: not
+- `hasPIC` — 1: calcifying, 0: set R_PICPOC to zero
+- `diazo` — 1: use molecular instead of mineral nitrogen, 0: not
+- `useNH4` — 1: can use ammonia, 0: not
+- `useNO2` — 1: can use nitrite, 0: not
+- `useNO3` — 1: can use nitrate, 0: not
+- `combNO` — 1: combined nitrite/nitrate limitation, 0: not
+- `isPrey` — 1: can be grazed, 0: not
+- `isPred` — 1: can graze, 0: not
+- `tempMort` — 1: mortality is temperature dependent, 0: turn dependence off
+- `tempMort2` — 1: quadratic mortality is temperature dependent, 0: turn dependence off
+- `tempGraz` — 1: grazing is temperature dependent, 0: turn dependence off
+- `Xmin` — [mmol C m^-3]              minimum abundance for mortality, respiration and exudation
+- `amminhib` — [(mmol N m^-3)^-1]         coefficient for NH4 inhibition of NO uptake
+- `acclimtimescl` — [s^-1]                     rate of chlorophyll acclimation
+- `mort` — [s^-1]                     linear mortality rate
+- `mort2` — [(mmol C m^-3)^-1 s^-1]    quadratic mortality coefficient
+- `ExportFracMort` — []                         fraction of linear mortality to POM
+- `ExportFracMort2` — []                         fraction of quadratic mortality to POM
+- `ExportFracExude` — []                         fraction of exudation to POM
+- `FracExudeC` — []                         fraction of excess C exuded
+- `phytoTempCoeff` — []                         see :numref:`pkg_darwin_temperature_params`
+- `phytoTempExp1` — [exp(1/degrees C)]         see :numref:`pkg_darwin_temperature_params`
+- `phytoTempAe` — [1/degrees C]              see :numref:`pkg_darwin_temperature_params`
+- `phytoTempExp2` — []                         see :numref:`pkg_darwin_temperature_params`
+- `phytoTempOptimum` — [degrees C]                see :numref:`pkg_darwin_temperature_params`
+- `phytoDecayPower` — []                         see :numref:`pkg_darwin_temperature_params`
+- `hetTempAe` — [1/degrees C]              see :numref:`pkg_darwin_temperature_params`
+- `hetTempExp2` — []                         see :numref:`pkg_darwin_temperature_params`
+- `hetTempOptimum` — [degrees C]                see :numref:`pkg_darwin_temperature_params`
+- `hetDecayPower` — []                         see :numref:`pkg_darwin_temperature_params`
+- `grazTempAe` — [1/degrees C]              see :numref:`pkg_darwin_temperature_params`
+- `grazTempExp2` — []                         see :numref:`pkg_darwin_temperature_params`
+- `grazTempOptimum` — [degrees C]                see :numref:`pkg_darwin_temperature_params`
+- `grazDecayPower` — []                         see :numref:`pkg_darwin_temperature_params`
+- `R_NC` — [mmol N (mmol C)^-1]       nitrogen-carbon ratio (not used with DARWIN_ALLOW_NQUOTA)
+- `R_PC` — [mmol P (mmol C)^-1]       phosphorus-carbon ratio (not used with DARWIN_ALLOW_PQUOTA)
+- `R_SiC` — [mmol Si (mmol C)^-1]      silica-carbon ratio (not used with DARWIN_ALLOW_SIQUOTA)
+- `R_FeC` — [mmol Fe (mmol C)^-1]      iron-carbon ratio (not used with DARWIN_ALLOW_FEQUOTA)
+- `R_ChlC` — [mg Chl (mmol C)^-1]       chlorophyll-carbon ratio (not used with DARWIN_ALLOW_CHLQUOTA)
+- `R_PICPOC` — [mmol PIC (mmol POC)^-1]   inorganic-organic carbon ratio
+- `biosink` — [m s^-1]                   sinking velocity (positive downwards)
+- `bioswim` — [m s^-1]                   upward swimming velocity (positive upwards)
+- `respRate` — [s^-1]                     respiration rate
+- `PCmax` — [s^-1]                     maximum carbon-specific growth rate
+- `Qnmax` — [mmol N (mmol C)^-1]       maximum nitrogen quota (only with DARWIN_ALLOW_NQUOTA)
+- `Qnmin` — [mmol N (mmol C)^-1]       minimum nitrogen quota (only with DARWIN_ALLOW_NQUOTA)
+- `Qpmax` — [mmol P (mmol C)^-1]       maximum phosphorus quota (only with DARWIN_ALLOW_PQUOTA)
+- `Qpmin` — [mmol P (mmol C)^-1]       minimum phosphorus quota (only with DARWIN_ALLOW_PQUOTA)
+- `Qsimax` — [mmol Si (mmol C)^-1]      maximum silica quota (only with DARWIN_ALLOW_SIQUOTA)
+- `Qsimin` — [mmol Si (mmol C)^-1]      minimum silica quota (only with DARWIN_ALLOW_SIQUOTA)
+- `Qfemax` — [mmol Fe (mmol C)^-1]      maximum iron quota (only with DARWIN_ALLOW_FEQUOTA)
+- `Qfemin` — [mmol Fe (mmol C)^-1]      minimum iron quota (only with DARWIN_ALLOW_FEQUOTA)
+- `VmaxNH4` — [mmol N (mmol C)^-1 s^-1]  maximum ammonia uptake rate (only with DARWIN_ALLOW_NQUOTA)
+- `VmaxNO2` — [mmol N (mmol C)^-1 s^-1]  maximum nitrite uptake rate (only with DARWIN_ALLOW_NQUOTA)
+- `VmaxNO3` — [mmol N (mmol C)^-1 s^-1]  maximum nitrate uptake rate (only with DARWIN_ALLOW_NQUOTA)
+- `VmaxN` — [mmol N (mmol C)^-1 s^-1]  maximum nitrogen uptake rate for diazotrophs (only with DARWIN_ALLOW_NQUOTA)
+- `VmaxPO4` — [mmol P (mmol C)^-1 s^-1]  maximum phosphate uptake rate (only with DARWIN_ALLOW_PQUOTA)
+- `VmaxSiO2` — [mmol Si (mmol C)^-1 s^-1] maximum silica uptake rate (only with DARWIN_ALLOW_SIQUOTA)
+- `VmaxFeT` — [mmol Fe (mmol C)^-1 s^-1] maximum iron uptake rate (only with DARWIN_ALLOW_FEQUOTA)
+- `ksatNH4` — [mmol N m^-3]              half-saturation conc. for ammonia uptake/limitation
+- `ksatNO2` — [mmol N m^-3]              half-saturation conc. for nitrite uptake/limitation
+- `ksatNO3` — [mmol N m^-3]              half-saturation conc. for nitrate uptake/limitation
+- `ksatPO4` — [mmol P m^-3]              half-saturation conc. for phosphate uptake/limitation
+- `ksatSiO2` — [mmol Si m^-3]             half-saturation conc. for silica uptake/limitation
+- `ksatFeT` — [mmol Fe m^-3]             half-saturation conc. for iron uptake/limitation
+- `kexcc` — [s^-1]                 exudation rate for carbon
+- `kexcn` — [s^-1]                 exudation rate for nitrogen
+- `kexcp` — [s^-1]                 exudation rate for phosphorus
+- `kexcsi` — [s^-1]                 exudation rate for silica
+- `kexcfe` — [s^-1]                 exudation rate for iron
+- `inhibGeider` — []                     photo-inhibition coefficient for Geider growth  _[ifdef DARWIN_ALLOW_GEIDER]_
+- `ksatPAR` — [(uEin m^-2 s^-1)^-1]  saturation coefficient for PAR (w/o GEIDER)  _[NOT(ifdef DARWIN_ALLOW_GEIDER)]_
+- `kinhPAR` — [(uEin m^-2 s^-1)^-1]  inhibition coefficient for PAR (w/o GEIDER)  _[NOT(ifdef DARWIN_ALLOW_GEIDER)]_
+- `mQyield` — [mmol C (uEin)^-1]     maximum quantum yield
+- `chl2cmax` — [mg Chl (mmol C)^-1]   maximum Chlorophyll-carbon ratio
+- `grazemax` — [s^-1]          maximum grazing rate
+- `kgrazesat` — [mmol C m^-3]   grazing half-saturation concentration
+- `palat` — []              palatability matrix
+- `asseff` — []              assimilation efficiency matrix
+- `ExportFracPreyPred` — []              fraction of unassimilated prey becoming particulate organic matter
+- `yield` — []              bacterial growth yield for all organic matter
+- `yieldO2` — []              bacterial growth yield for oxygen
+- `yieldNO3` — []              bacterial growth yield for nitrate
+- `ksatPON` — [mmol N m^-3]   half-saturation of PON for bacterial growth
+- `ksatPOC` — [mmol C m^-3]   half-saturation of POC for bacterial growth
+- `ksatPOP` — [mmol P m^-3]   half-saturation of POP for bacterial growth
+- `ksatPOFe` — [mmol Fe m^-3]  half-saturation of POFe for bacterial growth
+- `ksatDON` — [mmol N m^-3]   half-saturation of DON for bacterial growth
+- `ksatDOC` — [mmol C m^-3]   half-saturation of DOC for bacterial growth
+- `ksatDOP` — [mmol P m^-3]   half-saturation of DOP for bacterial growth
+- `ksatDOFe` — [mmol Fe m^-3]  half-saturation of DOFe for bacterial growth
+### DARWIN_DEPENDENT_TRAITS
+- `normI` — []                    normalization factor for non-Geider light curve  _[ifndef DARWIN_ALLOW_GEIDER]_
+- `aptype` — optical type (for absorption/scattering spectra)  _[ifdef ALLOW_RADTRANS]_
+- `biovol` — [um^3]                volume
+- `group` — which group this type belongs to
+- `igroup` — index within group
+- `qcarbon` — [mmol C/cell]         cellular carbon content
+- `biovol_bygroup` — [um^3]                volume of types in each group
+- `alpha_mean` — [mmol C s-1 (uEin m^-2 s^-1)^-1 (mg Chl)^-1]  mean initial slope of light curve (over wavebands)
+- `chl2cmin` — [mg Chl (mmol C)^-1]  minimum Chl:C ratio (function of chl2cmax and alpha_mean)
+### DARWIN_RADTRANS_TRAITS
+- `aphy_chl` — [m^2 (mg Chl)^-1]  phytoplankton Chl-specific absorption coefficient  _[ifdef ALLOW_RADTRANS]_
+- `aphy_chl_ps` — [m^2 (mg Chl)^-1]  part of aphy_chl that is used in photosynthesis  _[ifdef ALLOW_RADTRANS]_
+- `aphy_mgC` — [m^2 (mg C)^-1]    plankton carbon-specific absorption coefficient  _[ifdef ALLOW_RADTRANS]_
+- `bphy_mgC` — [m^2 (mg C)^-1]    carbon-specific total scattering coefficient  _[ifdef ALLOW_RADTRANS]_
+- `bbphy_mgC` — [m^2 (mg C)^-1]    carbon-specific backscattering coefficient  _[ifdef ALLOW_RADTRANS]_
+### DARWIN_RT_DEPTRAITS
+- `alphachl` — [mmol C m^2 (uEin mg Chl)^-1]  Chlorophyll-specific initial slope for photosynthesis
+
+## CPP options (defaults as shipped)
+- `DARWIN_ALLOW_NQUOTA` (undef, DARWIN_OPTIONS.h) — enable nitrogen quotas for all plankton
+- `DARWIN_ALLOW_PQUOTA` (undef, DARWIN_OPTIONS.h) — enable phosphorus quotas for all plankton
+- `DARWIN_ALLOW_FEQUOTA` (undef, DARWIN_OPTIONS.h) — enable iron quotas for all plankton
+- `DARWIN_ALLOW_SIQUOTA` (undef, DARWIN_OPTIONS.h) — enable silica quotas for all plankton
+- `DARWIN_ALLOW_CHLQUOTA` (undef, DARWIN_OPTIONS.h) — enable chlorophyll quotas for all phototrophs
+- `DARWIN_ALLOW_CSTORE` (undef, DARWIN_OPTIONS.h) — enable internal c store for all phototrophs; also enables exudation
+- `DARWIN_ALLOW_CSTORE_DIAGS` (undef, DARWIN_OPTIONS.h)
+- `DARWIN_ALLOW_CDOM` (undef, DARWIN_OPTIONS.h) — enable a dynamic CDOM tracer
+- `DARWIN_ALLOW_CARBON` (undef, DARWIN_OPTIONS.h) — enable air-sea carbon exchange and Alk and O2 tracers
+- `DARWIN_TOTALPHSCALE` (undef, DARWIN_OPTIONS.h) — consistently use the total pH scale for carbon chemistry coefficients
+- `DARWIN_SOLVESAPHE` (undef, DARWIN_OPTIONS.h) — Compile Munhoven (2013) "Solvesaphe" package for pH/pCO2 can still select Follows et al (2006) solver in data.darwin, but will use solvesaphe dissociation coefficient options.
+- `DARWIN_USE_PLOAD` (undef, DARWIN_OPTIONS.h) — this needs to be defined for coupling to atmospheric model:
+- `DARWIN_ALLOW_RADIv1` (undef, DARWIN_OPTIONS.h) — enable RADI sediment metamodel v1
+- `DARWIN_ALLOW_RADIv2` (undef, DARWIN_OPTIONS.h) — enable RADI sediment metamodel v2
+- `DARWIN_ALLOW_DENIT` (undef, DARWIN_OPTIONS.h) — enable denitrification code
+- `DARWIN_ALLOW_EXUDE` (undef, DARWIN_OPTIONS.h) — enable separate exudation of individual elements
+- `ALLOW_OLD_VIRTUALFLUX` (undef, DARWIN_OPTIONS.h) — enable old virtualflux code for DIC and Alk
+- `DARWIN_NITRATE_FELIMIT` (undef, DARWIN_OPTIONS.h) — only effective with both nitrogen and iron quota this option was used pre-2015 in the quota model, together with Geider, so the iron limitation factor is also applied to alpha_I
+- `DARWIN_BOTTOM_SINK` (undef, DARWIN_OPTIONS.h) — allow organic matter to sink into bottom (sedimentize)
+- `DARWIN_CDOM_UNITS_CARBON` (define, DARWIN_OPTIONS.h) — CDOM is in carbon units and follows POC
+- `DARWIN_NUTRIENT_RUNOFF` (undef, DARWIN_OPTIONS.h) — include code for reading nutrient runoff from files
+- `DARWIN_AVPAR` (undef, DARWIN_OPTIONS.h) — compute average PAR in layer, assuming exponential decay (ignored when radtrans package is used)
+- `DARWIN_ALLOW_GEIDER` (undef, DARWIN_OPTIONS.h) — enable GEIDER light code
+- `DARWIN_GEIDER_RHO_SYNTH` (undef, DARWIN_OPTIONS.h) — use rho instead of acclimated Chl:C for chlorophyll synthesis
+- `DARWIN_CHL_INIT_LEGACY` (undef, DARWIN_OPTIONS.h) — initialize chl as in darwin2 (with radtrans package)
+- `DARWIN_SCATTER_CHL` (undef, DARWIN_OPTIONS.h) — scattering coefficients are per Chlorophyll (with radtrans package)
+- `DARWIN_DIAG_IOP` (undef, DARWIN_OPTIONS.h) — make diagnostics for instrinsic optical properties available
+- `DARWIN_GRAZING_SWITCH` (undef, DARWIN_OPTIONS.h) — for quadratic grazing as in darwin2+quota
+- `DARWIN_ALLOMETRIC_PALAT` (undef, DARWIN_OPTIONS.h) — compute palat from size ratios
+- `DARWIN_NOZOOTEMP` (undef, DARWIN_OPTIONS.h) — turn off grazing temperature dependence
+- `DARWIN_NOTEMP` (undef, DARWIN_OPTIONS.h) — turn off all temperature dependence
+- `DARWIN_TEMP_VERSION` (define, DARWIN_OPTIONS.h) — select temperature version: 1, 2 or 3
+- `DARWIN_TEMP_RANGE` (undef, DARWIN_OPTIONS.h) — restrict phytoplankton growth to a temperature range
+- `DARWIN_MINFE` (define, DARWIN_OPTIONS.h) — restrict maximum free iron
+- `DARWIN_PART_SCAV` (undef, DARWIN_OPTIONS.h) — enable particle scavenging code
+- `DARWIN_IRON_SED_SOURCE_VARIABLE` (undef, DARWIN_OPTIONS.h) — enable variable iron sediment source
+- `DARWIN_IRON_SED_SOURCE_POP` (undef, DARWIN_OPTIONS.h) — revert to old variable iron sediment source in terms of POP
+- `DARWIN_ALLOW_HYDROTHERMAL_VENTS` (undef, DARWIN_OPTIONS.h) — add iron source from hydrothermal vents
+- `DARWIN_DIAG_PERTYPE` (undef, DARWIN_OPTIONS.h) — include code for per-type diagnostics
+- `DARWIN_DEBUG` (undef, DARWIN_OPTIONS.h) — turn on debugging output
+- `DARWIN_ALLOW_CONS` (define, DARWIN_OPTIONS.h) — compute and print global element totals
+- `DARWIN_UNUSED` (define, DARWIN_OPTIONS.h) — value for unused traits
+- `DARWIN_DIAG_TENDENCIES` (undef, DARWIN_OPTIONS.h) — fill diagnostics for most tendency terms
+- `DARWIN_PART_SCAV_POP` (undef, DARWIN_OPTIONS.h) — base particle scavenging on POP as in darwin2
+- `DARWIN_RANDOM_TRAITS` (undef, DARWIN_OPTIONS.h) — assign traits based on random numbers as in darwin2
+- `DARWIN_TWO_SPECIES_SETUP` (undef, DARWIN_OPTIONS.h) — set traits for darwin2 2-species setup (requires DARWIN_RANDOM_TRAITS)
+- `DARWIN_NINE_SPECIES_SETUP` (undef, DARWIN_OPTIONS.h) — set traits for darwin2 9-species setup (requires DARWIN_RANDOM_TRAITS)
+- `DARWIN_ALLOW_DIAZ` (undef, DARWIN_OPTIONS.h) — enable diazotrophy when using (requires DARWIN_RANDOM_TRAITS)
+
+## Headers
+- `DARWIN_DIAGS.h` — BOP
+- `DARWIN_EXF_FIELDS.h` — BOP
+- `DARWIN_EXF_PARAMS.h` — BOP
+- `DARWIN_FIELDS.h` — BOP
+- `DARWIN_FLUX.h` — BOP
+- `DARWIN_INDICES.h` — BOP
+- `DARWIN_OPTIONS.h` — BOP
+- `DARWIN_PARAMS.h` — BOP
+- `DARWIN_RADTRANS.h` — BOP
+- `DARWIN_SIZE.h` — BOP
+- `DARWIN_TRAITPARAMS.h` — BOP
+- `DARWIN_TRAITS.h` — BOP
+
+## Routines (47)
+`darwin_add_botforc.F`, `darwin_add_surfforc.F`, `darwin_atmos.F`, `darwin_carbon_chem.F`, `darwin_check.F`, `darwin_cons.F`, `darwin_cons_reset.F`, `darwin_conserve_surface.F`, `darwin_diagnostics_init.F`, `darwin_diags.F`, `darwin_exf_init_fixed.F`, `darwin_exf_init_varia.F`, `darwin_exf_load.F`, `darwin_exf_readparms.F`, `darwin_fe_chem.F`, `darwin_fields_load.F`, `darwin_forcing.F`, `darwin_generate_allometric.F`, `darwin_generate_random.F`, `darwin_init_chl.F`, `darwin_init_fixed.F`, `darwin_init_varia.F`, `darwin_insol.F`, `darwin_light.F`, `darwin_light_radtrans.F`, `darwin_monitor.F`, `darwin_nut_supply.F`, `darwin_plankton.F`, `darwin_random.F`, `darwin_read_params.F`, `darwin_read_pickup.F`, `darwin_read_traitparams.F`, `darwin_read_traits.F`, `darwin_readparms.F`, `darwin_sinking.F`, `darwin_solvesaphe.F`, `darwin_surfforcing.F`, `darwin_surfforcing_init.F`, `darwin_tempfunc.F`, `darwin_tr_register.F`, `darwin_write_pickup.F`
+
+## Called from outside the package
+- `DARWIN_CHECK` ← `pkg/gchem/gchem_check.F:162`
+- `DARWIN_CONS` ← `pkg/gchem/gchem_cons.F:42`
+- `DARWIN_FIELDS_LOAD` ← `pkg/gchem/gchem_fields_load.F:53`
+- `DARWIN_ATMOS` ← `pkg/gchem/gchem_forcing_sep.F:297`
+- `DARWIN_CONS` ← `pkg/gchem/gchem_forcing_sep.F:93,296`
+- `DARWIN_CONSERVE_SURFACE` ← `pkg/gchem/gchem_forcing_sep.F:92`
+- `DARWIN_CONS_RESET` ← `pkg/gchem/gchem_forcing_sep.F:94`
+- `DARWIN_FORCING` ← `pkg/gchem/gchem_forcing_sep.F:264`
+- `DARWIN_NUT_SUPPLY` ← `pkg/gchem/gchem_forcing_sep.F:244,247,250,253`
+- `DARWIN_INIT_FIXED` ← `pkg/gchem/gchem_init_fixed.F:56`
+- `DARWIN_INIT_VARIA` ← `pkg/gchem/gchem_init_vari.F:95`
+- `DARWIN_DIAGS` ← `pkg/gchem/gchem_output.F:43`
+- `DARWIN_READPARMS` ← `pkg/gchem/gchem_readparms.F:161`
+- `DARWIN_TR_REGISTER` ← `pkg/gchem/gchem_tr_register.F:67`
+- `DARWIN_WRITE_PICKUP` ← `pkg/gchem/gchem_write_pickup.F:57`

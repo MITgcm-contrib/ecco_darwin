@@ -1,0 +1,663 @@
+# pkg/exf
+
+External forcing: reads/interpolates/time-interpolates atmospheric state or fluxes, bulk formulae (Large & Yeager), runoff, open-boundary-friendly interpolation; standard ECCO forcing path.
+
+**pkg_depend:** =cal  (`+` requires, `-` excludes)
+**runtime switch:** `useEXF`-style flag in `data.pkg` (check exact name in packages_boot.F)
+**reads:** `data.exf`
+**manual:** `doc/autodiff/autodiff.rst`, `doc/examples/examples.rst`, `doc/getting_started/getting_started.rst`, `doc/ocean_state_est/ocean_state_est.rst`, `doc/outp_pkgs/outp_pkgs.rst`
+**adjoint support files:** exf_ad_check_lev1_dir.h, exf_ad_check_lev2_dir.h, exf_ad_check_lev3_dir.h, exf_ad_check_lev4_dir.h, exf_ad_diff.list
+
+## Namelist parameters
+### EXF_NML_01
+- `windstressmax`
+- `repeatPeriod`
+- `exf_albedo` — Sea-water albedo
+- `ocean_emissivity` — longwave ocean-surface emissivity [-]
+- `ice_emissivity` — longwave seaice emissivity [-] (with pkg thsice/seaice)
+- `snow_emissivity` — longwave  snow  emissivity [-] (with pkg thsice/seaice)
+- `exf_iceCd` — drag coefficient over sea-ice (fixed)
+- `exf_iceCe` — transfert coeff. over sea-ice, for Evaporation (fixed)
+- `exf_iceCh` — transfert coeff. over sea-ice, for Sens.Heating (fixed)
+- `exf_scal_BulkCdn`
+- `climtempfreeze`
+- `useExfCheckRange` — check range of input/output field values
+- `exf_iprec`
+- `exf_iprec_obcs`
+- `exf_yftype`
+- `exf_verbose`
+- `exf_debugLev` — select message printing to STDOUT (e.g., when read rec)
+- `exf_monFreq` — Monitor Frequency (s) for EXF
+- `exf_adjMonFreq` — Monitor Frequency (s) for AD exf variables
+- `exf_adjMonSelect` — select group of exf AD-variables to monitor =0 : none =1 : ocean forcing fu, fv, qnet, empmr (default) =2 : + atmospheric forcing fields (u/vwind, atemp, lwdown, precip, etc.) =3 : + derived forcing fields (u/vstress, h/sflux, wspeed)
+- `useExfYearlyFields` — when set, automatically add extension _YEAR to input file names; the yearly files need to contain all the records that pertain to a particular year, including day 1, hour zero
+- `twoDigitYear` — when set, use 2-digit year extension YR instead of _YEAR for useExfYearlyFields
+- `readStressOnAgrid` — read wind-streess located on model-grid, A-grid position
+- `rotateStressOnAgrid` — rotate from zonal/meridional components to U/V components
+- `readStressOnCgrid` — read wind-streess located on model-grid, C-grid position
+- `useAtmWind` — use wind vector (uwind/vwind) to compute the wind stress (ustress/vstress)
+- `useRelativeWind` — Subtract U/VVEL or U/VICE from U/VWIND before computing U/VSTRESS
+- `noNegativeEvap` — prevent negative evap (= sea-surface condensation)
+- `useStabilityFct_overIce` — over sea-ice, compute turbulent transfert coeff. function of stability (like over open ocean) rather than using fixed Coeff.
+- `diags_opOceWeighted` — weight surface flux diagnostics with open-ocean fraction
+- `select_ZenAlbedo` — switch to different methods to compute albedo (direct part)
+- `useExfZenIncoming` — compute incoming solar radiation along with zenith angle
+- `hu` — height of mean wind
+- `ht` — height of mean temperature
+- `umin` — minimum absolute wind speed used to evaluate drag coefficient [m/s]
+- `atmrho` — mean atmospheric density [kg/m^3]
+- `atmcp` — mean atmospheric specific heat [J/kg/K]
+- `cen2kel` — conversion of deg. Centigrade to Kelvin
+- `gravity_mks` — gravitational acceleration [m/s^2]
+- `cdrag_1`
+- `cdrag_2`
+- `cdrag_3`
+- `cdrag_8`
+- `cdragMax` — maximum drag coefficient ...
+- `umax` — ... at maximum wind
+- `cstanton_1`
+- `cstanton_2`
+- `cdalton` — coefficient used to evaluate the Dalton number
+- `flamb` — latent heat of evaporation [J/kg]
+- `flami` — latent heat of melting of pure ice [J/kg]
+- `zolmin` — minimum stability parameter
+- `zref` — reference height
+- `cvapor_fac`
+- `cvapor_exp`
+- `cvapor_fac_ice`
+- `cvapor_exp_ice`
+- `humid_fac` — constant entering the evaluation of the virtual temperature
+- `gamma_blk` — adiabatic lapse rate
+- `saltsat` — reduction of saturation vapor pressure over salt water
+- `sstExtrapol` — extrapolation coeff from 1rst 2 levels up to surface
+- `psim_fac` — coef used in turbulent fluxes calculation [-]
+### EXF_NML_02
+- `hfluxfile`
+- `hfluxstartdate1`
+- `hfluxstartdate2`
+- `hfluxRepCycle`
+- `hfluxperiod`
+- `hfluxStartTime`
+- `atempfile`
+- `atempstartdate1`
+- `atempstartdate2`
+- `atempRepCycle`
+- `atempperiod`
+- `atempStartTime`
+- `aqhfile`
+- `aqhstartdate1`
+- `aqhstartdate2`
+- `aqhRepCycle`
+- `aqhperiod`
+- `aqhStartTime`
+- `hs_file`
+- `hs_startdate1`
+- `hs_startdate2`
+- `hs_RepCycle`
+- `hs_period`
+- `hs_StartTime`
+- `hl_file`
+- `hl_startdate1`
+- `hl_startdate2`
+- `hl_RepCycle`
+- `hl_period`
+- `hl_StartTime`
+- `sfluxfile`
+- `sfluxstartdate1`
+- `sfluxstartdate2`
+- `sfluxRepCycle`
+- `sfluxperiod`
+- `sfluxStartTime`
+- `evapfile`
+- `evapstartdate1`
+- `evapstartdate2`
+- `evapRepCycle`
+- `evapperiod`
+- `evapStartTime`
+- `precipfile`
+- `precipstartdate1`
+- `precipstartdate2`
+- `precipRepCycle`
+- `precipperiod`
+- `precipStartTime`
+- `snowprecipfile`
+- `snowprecipstartdate1`
+- `snowprecipstartdate2`
+- `snowprecipRepCycle`
+- `snowprecipperiod`
+- `snowprecipStartTime`
+- `runofffile`
+- `runoffstartdate1`
+- `runoffstartdate2`
+- `runoffRepCycle`
+- `runoffperiod`
+- `runoffStartTime`
+- `runoftempfile`
+- `saltflxfile`
+- `saltflxstartdate1`
+- `saltflxstartdate2`
+- `saltflxRepCycle`
+- `saltflxperiod`
+- `saltflxStartTime`
+- `ustressfile`
+- `ustressstartdate1`
+- `ustressstartdate2`
+- `ustressRepCycle`
+- `ustressperiod`
+- `ustressStartTime`
+- `vstressfile`
+- `vstressstartdate1`
+- `vstressstartdate2`
+- `vstressRepCycle`
+- `vstressperiod`
+- `vstressStartTime`
+- `uwindfile`
+- `uwindstartdate1`
+- `uwindstartdate2`
+- `uwindRepCycle`
+- `uwindperiod`
+- `uwindStartTime`
+- `vwindfile`
+- `vwindstartdate1`
+- `vwindstartdate2`
+- `vwindRepCycle`
+- `vwindperiod`
+- `vwindStartTime`
+- `wspeedfile`
+- `wspeedstartdate1`
+- `wspeedstartdate2`
+- `wspeedRepCycle`
+- `wspeedperiod`
+- `wspeedStartTime`
+- `swfluxfile`
+- `swfluxstartdate1`
+- `swfluxstartdate2`
+- `swfluxRepCycle`
+- `swfluxperiod`
+- `swfluxStartTime`
+- `lwfluxfile`
+- `lwfluxstartdate1`
+- `lwfluxstartdate2`
+- `lwfluxRepCycle`
+- `lwfluxperiod`
+- `lwfluxStartTime`
+- `swdownfile`
+- `swdownstartdate1`
+- `swdownstartdate2`
+- `swdownRepCycle`
+- `swdownperiod`
+- `swdownStartTime`
+- `lwdownfile`
+- `lwdownstartdate1`
+- `lwdownstartdate2`
+- `lwdownRepCycle`
+- `lwdownperiod`
+- `lwdownStartTime`
+- `apressurefile`
+- `apressurestartdate1`
+- `apressurestartdate2`
+- `apressureRepCycle`
+- `apressureperiod`
+- `apressureStartTime`
+- `tidePotFile`
+- `tidePotStartdate1`
+- `tidePotStartdate2`
+- `tidePotRepCycle`
+- `tidePotPeriod`
+- `tidePotStartTime`
+- `areamaskfile`
+- `areamaskstartdate1`
+- `areamaskstartdate2`
+- `areamaskRepCycle`
+- `areamaskperiod`
+- `areamaskStartTime`
+- `climsstfile`
+- `climsststartdate1`
+- `climsststartdate2`
+- `climsstRepCycle`
+- `climsstperiod`
+- `climsstStartTime`
+- `climsssfile`
+- `climsssstartdate1`
+- `climsssstartdate2`
+- `climsssRepCycle`
+- `climsssperiod`
+- `climsssStartTime`
+- `climustrfile`
+- `climustrstartdate1`
+- `climustrstartdate2`
+- `climustrRepCycle`
+- `climustrperiod`
+- `climustrStartTime`
+- `climvstrfile`
+- `climvstrstartdate1`
+- `climvstrstartdate2`
+- `climvstrRepCycle`
+- `climvstrperiod`
+- `climvstrStartTime`
+- `areamaskTauRelax`
+- `climsstTauRelax`
+- `climsssTauRelax`
+- `climustrTauRelax`
+- `climvstrTauRelax`
+### EXF_NML_03
+- `exf_inscal_hflux`
+- `exf_inscal_sflux`
+- `exf_inscal_evap`
+- `exf_inscal_ustress`
+- `exf_inscal_vstress`
+- `exf_inscal_uwind`
+- `exf_inscal_vwind`
+- `exf_inscal_wspeed`
+- `exf_inscal_atemp`
+- `exf_offset_atemp` — input air temperature offset
+- `exf_inscal_aqh`
+- `exf_inscal_hs`
+- `exf_inscal_hl`
+- `exf_inscal_sst`
+- `exf_inscal_sss`
+- `exf_inscal_swflux`
+- `exf_inscal_lwflux`
+- `exf_inscal_precip`
+- `exf_inscal_runoff`
+- `exf_inscal_apressure`
+- `exf_inscal_snowprecip`
+- `exf_inscal_runoftemp`
+- `exf_inscal_saltflx`
+- `exf_inscal_swdown`
+- `exf_inscal_lwdown`
+- `exf_inscal_climsst`
+- `exf_inscal_climsss`
+- `exf_inscal_climustr`
+- `exf_inscal_climvstr`
+- `exf_outscal_hflux`
+- `exf_outscal_ustress`
+- `exf_outscal_vstress`
+- `exf_outscal_swflux`
+- `exf_outscal_sst`
+- `exf_outscal_sss`
+- `exf_outscal_sflux`
+- `exf_outscal_apressure`
+- `exf_inscal_tidePot`
+- `exf_outscal_tidePot`
+- `exf_inscal_areamask`
+- `exf_outscal_areamask`
+- `hfluxconst`
+- `atempconst`
+- `aqhconst`
+- `hs_const`
+- `hl_const`
+- `sfluxconst`
+- `evapconst`
+- `precipconst`
+- `snowprecipconst`
+- `runoffconst`
+- `runoftempconst`
+- `saltflxconst`
+- `ustressconst`
+- `vstressconst`
+- `uwindconst`
+- `vwindconst`
+- `wspeedconst`
+- `swfluxconst`
+- `lwfluxconst`
+- `swdownconst`
+- `lwdownconst`
+- `apressureconst`
+- `tidePotConst`
+- `areamaskconst`
+- `climsstconst`
+- `climsssconst`
+- `climustrconst`
+- `climvstrconst`
+- `hflux_exfremo_intercept`
+- `hflux_exfremo_slope`
+- `atemp_exfremo_intercept`
+- `atemp_exfremo_slope`
+- `aqh_exfremo_intercept`
+- `aqh_exfremo_slope`
+- `hs_exfremo_intercept`
+- `hs_exfremo_slope`
+- `hl_exfremo_intercept`
+- `hl_exfremo_slope`
+- `sflux_exfremo_intercept`
+- `sflux_exfremo_slope`
+- `evap_exfremo_intercept`
+- `evap_exfremo_slope`
+- `precip_exfremo_intercept`
+- `precip_exfremo_slope`
+- `snowprecip_exfremo_intercept`
+- `snowprecip_exfremo_slope`
+- `runoff_exfremo_intercept`
+- `runoff_exfremo_slope`
+- `runoftemp_exfremo_intercept`
+- `runoftemp_exfremo_slope`
+- `saltflx_exfremo_intercept`
+- `saltflx_exfremo_slope`
+- `ustress_exfremo_intercept`
+- `ustress_exfremo_slope`
+- `vstress_exfremo_intercept`
+- `vstress_exfremo_slope`
+- `uwind_exfremo_intercept`
+- `uwind_exfremo_slope`
+- `vwind_exfremo_intercept`
+- `vwind_exfremo_slope`
+- `wspeed_exfremo_intercept`
+- `wspeed_exfremo_slope`
+- `swflux_exfremo_intercept`
+- `swflux_exfremo_slope`
+- `lwflux_exfremo_intercept`
+- `lwflux_exfremo_slope`
+- `swdown_exfremo_intercept`
+- `swdown_exfremo_slope`
+- `lwdown_exfremo_intercept`
+- `lwdown_exfremo_slope`
+- `apressure_exfremo_intercept`
+- `apressure_exfremo_slope`
+- `tidePot_exfremo_intercept`
+- `tidePot_exfremo_slope`
+- `areamask_exfremo_intercept`
+- `areamask_exfremo_slope`
+- `climsst_exfremo_intercept`
+- `climsst_exfremo_slope`
+- `climsss_exfremo_intercept`
+- `climsss_exfremo_slope`
+- `climustr_exfremo_intercept`
+- `climustr_exfremo_slope`
+- `climvstr_exfremo_intercept`
+- `climvstr_exfremo_slope`
+### EXF_NML_04
+- `ustress_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ustress_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ustress_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ustress_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ustress_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ustress_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `ustress_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vstress_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vstress_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vstress_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vstress_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vstress_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vstress_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vstress_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hflux_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hflux_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hflux_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hflux_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hflux_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hflux_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hflux_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `sflux_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `sflux_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `sflux_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `sflux_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `sflux_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `sflux_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `sflux_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swflux_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swflux_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swflux_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swflux_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swflux_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swflux_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swflux_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwflux_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwflux_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwflux_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwflux_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwflux_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwflux_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwflux_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `atemp_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `atemp_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `atemp_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `atemp_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `atemp_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `atemp_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `atemp_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `aqh_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `aqh_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `aqh_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `aqh_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `aqh_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `aqh_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `aqh_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hs_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hs_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hs_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hs_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hs_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hs_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hs_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hl_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hl_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hl_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hl_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hl_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hl_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `hl_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `evap_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `evap_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `evap_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `evap_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `evap_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `evap_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `evap_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `precip_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `precip_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `precip_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `precip_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `precip_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `precip_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `precip_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `runoff_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `runoff_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `runoff_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `runoff_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `runoff_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `runoff_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `runoff_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `saltflx_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `saltflx_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `saltflx_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `saltflx_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `saltflx_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `saltflx_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `saltflx_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `snowprecip_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `snowprecip_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `snowprecip_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `snowprecip_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `snowprecip_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `snowprecip_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `snowprecip_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `uwind_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `uwind_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `uwind_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `uwind_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `uwind_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `uwind_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `uwind_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vwind_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vwind_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vwind_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vwind_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vwind_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vwind_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `vwind_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wspeed_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wspeed_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wspeed_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wspeed_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wspeed_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wspeed_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `wspeed_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swdown_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swdown_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swdown_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swdown_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swdown_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swdown_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `swdown_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwdown_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwdown_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwdown_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwdown_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwdown_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwdown_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `lwdown_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `apressure_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `apressure_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `apressure_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `apressure_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `apressure_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `apressure_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `apressure_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `tidePot_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `tidePot_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `tidePot_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `tidePot_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `tidePot_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `tidePot_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `tidePot_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `areamask_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `areamask_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `areamask_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `areamask_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `areamask_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `areamask_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `areamask_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsst_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsst_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsst_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsst_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsst_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsst_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsst_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsss_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsss_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsss_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsss_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsss_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsss_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climsss_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climustr_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climustr_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climustr_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climustr_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climustr_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climustr_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climustr_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climvstr_lon0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climvstr_lon_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climvstr_lat0`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climvstr_lat_inc`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climvstr_nlon`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climvstr_nlat`  _[ifdef USE_EXF_INTERPOLATION]_
+- `climvstr_interpMethod`  _[ifdef USE_EXF_INTERPOLATION]_
+- `exf_output_interp` — output directly interpolation result (before rescaling, rotation or time-interp)  _[ifdef USE_EXF_INTERPOLATION]_
+### EXF_NML_OBCS
+- `useOBCSYearlyFields` — when reading Open-Boundary values, assume yearly climatology (def=false)  _[ifdef ALLOW_OBCS]_
+- `obcsNstartdate1`  _[ifdef ALLOW_OBCS]_
+- `obcsNstartdate2`  _[ifdef ALLOW_OBCS]_
+- `obcsNstartTime`  _[ifdef ALLOW_OBCS]_
+- `obcsNperiod`  _[ifdef ALLOW_OBCS]_
+- `obcsNrepCycle`  _[ifdef ALLOW_OBCS]_
+- `obcsSstartdate1`  _[ifdef ALLOW_OBCS]_
+- `obcsSstartdate2`  _[ifdef ALLOW_OBCS]_
+- `obcsSstartTime`  _[ifdef ALLOW_OBCS]_
+- `obcsSperiod`  _[ifdef ALLOW_OBCS]_
+- `obcsSrepCycle`  _[ifdef ALLOW_OBCS]_
+- `obcsEstartdate1`  _[ifdef ALLOW_OBCS]_
+- `obcsEstartdate2`  _[ifdef ALLOW_OBCS]_
+- `obcsEstartTime`  _[ifdef ALLOW_OBCS]_
+- `obcsEperiod`  _[ifdef ALLOW_OBCS]_
+- `obcsErepCycle`  _[ifdef ALLOW_OBCS]_
+- `obcsWstartdate1`  _[ifdef ALLOW_OBCS]_
+- `obcsWstartdate2`  _[ifdef ALLOW_OBCS]_
+- `obcsWstartTime`  _[ifdef ALLOW_OBCS]_
+- `obcsWperiod`  _[ifdef ALLOW_OBCS]_
+- `obcsWrepCycle`  _[ifdef ALLOW_OBCS]_
+- `siobNstartdate1`  _[ifdef ALLOW_OBCS]_
+- `siobNstartdate2`  _[ifdef ALLOW_OBCS]_
+- `siobNstartTime`  _[ifdef ALLOW_OBCS]_
+- `siobNperiod`  _[ifdef ALLOW_OBCS]_
+- `siobNrepCycle`  _[ifdef ALLOW_OBCS]_
+- `siobSstartdate1`  _[ifdef ALLOW_OBCS]_
+- `siobSstartdate2`  _[ifdef ALLOW_OBCS]_
+- `siobSstartTime`  _[ifdef ALLOW_OBCS]_
+- `siobSperiod`  _[ifdef ALLOW_OBCS]_
+- `siobSrepCycle`  _[ifdef ALLOW_OBCS]_
+- `siobEstartdate1`  _[ifdef ALLOW_OBCS]_
+- `siobEstartdate2`  _[ifdef ALLOW_OBCS]_
+- `siobEstartTime`  _[ifdef ALLOW_OBCS]_
+- `siobEperiod`  _[ifdef ALLOW_OBCS]_
+- `siobErepCycle`  _[ifdef ALLOW_OBCS]_
+- `siobWstartdate1`  _[ifdef ALLOW_OBCS]_
+- `siobWstartdate2`  _[ifdef ALLOW_OBCS]_
+- `siobWstartTime`  _[ifdef ALLOW_OBCS]_
+- `siobWperiod`  _[ifdef ALLOW_OBCS]_
+- `siobWrepCycle`  _[ifdef ALLOW_OBCS]_
+
+## CPP options (defaults as shipped)
+- `ALLOW_ATM_TEMP` (define, EXF_OPTIONS.h) — -  Bulk formulae related flags.
+- `ALLOW_ATM_WIND` (define, EXF_OPTIONS.h)
+- `ALLOW_DOWNWARD_RADIATION` (define, EXF_OPTIONS.h)
+- `ALLOW_BULKFORMULAE` (define, EXF_OPTIONS.h) — Note: To use ALLOW_BULKFORMULAE or EXF_READ_EVAP, needs #define ALLOW_ATM_TEMP
+- `ALLOW_BULK_LARGEYEAGER04` (undef, EXF_OPTIONS.h) — use Large and Yeager (2004) modification to Large and Pond bulk formulae
+- `ALLOW_DRAG_LARGEYEAGER09` (undef, EXF_OPTIONS.h) — use drag formulation of Large and Yeager (2009), Climate Dyn., 33, pp 341-364
+- `EXF_READ_EVAP` (undef, EXF_OPTIONS.h)
+- `ALLOW_READ_TURBFLUXES` (define, EXF_OPTIONS.h) — Note: To use ALLOW_READ_TURBFLUXES, ALLOW_ATM_TEMP needs to be defined but ALLOW_BULKFORMULAE needs to be undef
+- `ALLOW_RUNOFF` (define, EXF_OPTIONS.h) — -  Other forcing fields
+- `ALLOW_RUNOFTEMP` (undef, EXF_OPTIONS.h)
+- `ALLOW_SALTFLX` (define, EXF_OPTIONS.h)
+- `EXF_CALC_ATMRHO` (undef, EXF_OPTIONS.h) — Note: To use EXF_CALC_ATMRHO, both ALLOW_BULKFORMULAE and ATMOSPHERIC_LOADING need to be defined
+- `ALLOW_ZENITHANGLE` (undef, EXF_OPTIONS.h) — -  Zenith Angle/Albedo related flags.
+- `EXF_LWDOWN_WITH_EMISSIVITY` (define, EXF_OPTIONS.h) — -  Use ocean_emissivity*lwdown in lwFlux. This flag should be defined unless to reproduce old results (obtained with inconsistent old code)
+- `ALLOW_CLIMSST_RELAXATION` (define, EXF_OPTIONS.h) — -  Surface level relaxation to prescribed fields (e.g., climatologies)
+- `ALLOW_CLIMSSS_RELAXATION` (define, EXF_OPTIONS.h)
+- `EXF_ALLOW_TIDES` (undef, EXF_OPTIONS.h) — -  Allows to read-in (2-d) tidal geopotential forcing
+- `EXF_SEAICE_FRACTION` (undef, EXF_OPTIONS.h) — -  Allows to read-in seaice fraction from files (areaMaskFile)
+- `USE_EXF_INTERPOLATION` (undef, EXF_OPTIONS.h) — -  Use spatial interpolation to interpolate forcing files from input grid to model grid.
+- `EXF_USE_OLD_VEC_ROTATION` (undef, EXF_OPTIONS.h) — for interpolated vector fields, rotate towards model-grid axis using old rotation formulae (instead of grid-angles)
+- `EXF_USE_OLD_INTERP_POLE` (undef, EXF_OPTIONS.h) — for interpolation around N & S pole, use the old formulation (no pole symmetry, single vector-comp interp, reset to 0 zonal-comp @ N.pole)
+- `EXF_INTERP_USE_DYNALLOC` (define, EXF_OPTIONS.h)
+- `EXF_IREAD_USE_GLOBAL_POINTER` (define, EXF_OPTIONS.h)
+- `ALLOW_BULK_OFFLINE` (undef, EXF_OPTIONS.h) — -  Not recommended (not tested nor maintained) and un-documented Options:
+- `ALLOW_CLIMSTRESS_RELAXATION` (undef, EXF_OPTIONS.h)
+
+## Headers
+- `EXF_CONSTANTS.h` — HEADER exf_constants Header file for constants. These include  - numbers (e.g. 1, 2, 1/2, ...) - physical constants (e.g. gravitational const.) - empi
+- `EXF_FIELDS.h` — HEADER exf_fields Header file for the surface flux data. started: Ralf.Giering@FastOpt.de 25-Mai-2000 changed: field swap in adj. mode; heimbach@mit.e
+- `EXF_INTERP_PARAM.h` — BOP
+- `EXF_INTERP_SIZE.h` — BOP
+- `EXF_OPTIONS.h` — BOP
+- `EXF_PARAM.h` — HEADER EXF_PARAM.h Header file for the surface flux data. Used by the external forcing package. started: Christian Eckert eckert@mit.edu  30-Jun-1999 
+- `exf_ad_check_lev1_dir.h` — store directives for checkpoint level 1 created: heimbach@mit.edu 10-Jan-2002 most of these fields are here for safety only, because it should always 
+- `exf_ad_check_lev2_dir.h` — ADJ STORE areamask0    = tapelev2, key = ilev_2 ADJ STORE areamask1    = tapelev2, key = ilev_2
+- `exf_ad_check_lev3_dir.h` — ADJ STORE areamask0    = tapelev3, key = ilev_3 ADJ STORE areamask1    = tapelev3, key = ilev_3
+- `exf_ad_check_lev4_dir.h` — ADJ STORE areamask0    = tapelev4, key = ilev_4 ADJ STORE areamask1    = tapelev4, key = ilev_4
+
+## Routines (52)
+`exf_adjoint_snapshots.F`, `exf_adjoint_snapshots__g.F`, `exf_adjoint_snapshots_ad.F`, `exf_bulkformulae.F`, `exf_check.F`, `exf_check_range.F`, `exf_diagnostics_fill.F`, `exf_diagnostics_init.F`, `exf_filter_rl.F`, `exf_getclim.F`, `exf_getffield_start.F`, `exf_getffieldrec.F`, `exf_getffields.F`, `exf_getfield_start.F`, `exf_getforcing.F`, `exf_getmonthsrec.F`, `exf_getsurfacefluxes.F`, `exf_getyearlyfieldname.F`, `exf_init_fixed.F`, `exf_init_fld.F`, `exf_init_interp.F`, `exf_init_varia.F`, `exf_interp.F`, `exf_interp_read.F`, `exf_interp_uv.F`, `exf_interpolate.F`, `exf_mapfields.F`, `exf_monitor.F`, `exf_monitor_ad.F`, `exf_radiation.F`, `exf_readparms.F`, `exf_set_fld.F`, `exf_set_gen.F`, `exf_set_obcs.F`, `exf_set_uv.F`, `exf_summary.F`, `exf_swapffields.F`, `exf_weight_sfx_diags.F`, `exf_wind.F`, `exf_zenithangle.F`, `exf_zenithangle_table.F`
+
+## Called from outside the package
+- `EXF_GETFORCING` ← `model/src/load_fields_driver.F:214`
+- `EXF_CHECK` ← `model/src/packages_check.F:273`
+- `EXF_INIT_FIXED` ← `model/src/packages_init_fixed.F:253`
+- `EXF_INIT_VARIA` ← `model/src/packages_init_variables.F:295`
+- `EXF_READPARMS` ← `model/src/packages_readparms.F:161`
+- `EXF_SET_FLD` ← `pkg/bling/bling_fields_load.F:278`
+- `EXF_INIT_FLD` ← `pkg/bling/bling_ini_forcing.F:101`
+- `EXF_GETFFIELD_START` ← `pkg/icefront/icefront_init_fixed.F:50`
+- `EXF_GETFFIELDREC` ← `pkg/obcs/obcs_exf_load.F:314,406,613,705`
+- `EXF_GETMONTHSREC` ← `pkg/obcs/obcs_exf_load.F:299,391,598,690`
+- `EXF_SET_OBCS_XZ` ← `pkg/obcs/obcs_exf_load.F:338,342,346,350`
+- `EXF_SET_OBCS_YZ` ← `pkg/obcs/obcs_exf_load.F:637,641,645,649`
+- `EXF_ADJOINT_SNAPSHOTS` ← `pkg/seaice/seaice_model.F:405`
+- `EXF_WEIGHT_SFX_DIAGS` ← `pkg/seaice/seaice_model.F:132,256`
+- `EXF_WEIGHT_SFX_DIAGS` ← `pkg/thsice/thsice_main.F:88,90`
+
+## Verification experiments compiling it (8)
+`1D_ocean_ice_column` `global_oce_latlon` `global_ocean.cs32x15` `lab_sea` `obcs_ctrl` `offline_exf_seaice` `seaice_itd` `seaice_obcs`

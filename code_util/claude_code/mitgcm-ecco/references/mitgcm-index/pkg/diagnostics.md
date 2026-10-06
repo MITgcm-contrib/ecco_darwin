@@ -1,0 +1,297 @@
+# pkg/diagnostics
+
+Diagnostics framework: data.diagnostics output streams (time averages/snapshots, levels, frequencies) and statistics-diagnostics; packages register fields via DIAGNOSTICS_ADDTOLIST and fill with DIAGNOSTICS_FILL.
+
+**runtime switch:** `useDIAGNOSTICS`-style flag in `data.pkg` (check exact name in packages_boot.F)
+**reads:** `data.diagnostics`
+**manual:** `doc/contributing/contributing.rst`, `doc/examples/baroclinic_gyre/baroclinic_gyre.rst`, `doc/examples/held_suarez_cs/held_suarez_cs.rst`, `doc/examples/reentrant_channel/reentrant_channel.rst`, `doc/ocean_state_est/ocean_state_est.rst`
+**adjoint support files:** diagnostics_ad_diff.list
+
+## Namelist parameters
+### DIAGNOSTICS_LIST
+- `frequency`
+- `timePhase`
+- `averagingFreq`
+- `averagingPhase`
+- `repeatCycle`
+- `missing_value`
+- `missing_value_int`
+- `levels`
+- `fields`
+- `fileName`
+- `fileFlags`
+- `dumpAtLast` — always write time-ave (freq>0) diagnostics at end of the run
+- `diag_dBugLevel` — control debug print to STDOUT or log file, higher -> more
+- `diag_mnc`
+- `useMissingValue` — put MissingValue where mask = 0 (NetCDF output only)
+- `diagCG_maxIters` — max number of iterations in diag_cg2d solver
+- `diagCG_resTarget` — residual target for diag_cg2d solver (no units)
+- `diagCG_pcOffDFac` — diag_cg2d preconditioner off-diagonal factor
+- `diagCG_prtResFrq` — frequency for printing residual in CG iterations
+- `xPsi0` — grid-point coordinate where Psi == 0
+- `yPsi0` — grid-point coordinate where Psi == 0
+- `diag_pickup_read`
+- `diag_pickup_write`
+- `diag_pickup_read_mnc`
+- `diag_pickup_write_mnc`
+- `diagMdsDir` — directory where diagnostics will be written when using mds
+- `diagMdsDirCreate` — system call to mkdir to create diagMdsDir
+### DIAG_STATIS_PARMS
+- `stat_freq`
+- `stat_phase`
+- `stat_region`
+- `stat_fields`
+- `stat_fName`
+- `diagSt_mnc`
+- `set_regMask`
+- `val_regMask`
+- `diagSt_regMaskFile`
+- `nSetRegMskFile`
+
+## CPP options (defaults as shipped)
+- `DIAGSTATS_REGION_MASK` (undef, DIAG_OPTIONS.h) — allow to define specific regions and the corresponding mask ; used to perform regional statistics over a limited area
+- `DIAGNOSTICS_HAS_PICKUP` (undef, DIAG_OPTIONS.h) — from pickup file. Note: Use with cautious since it does not work for all restart cases (e.g., changing data.diagnostics).
+
+## Headers
+- `DIAGNOSTICS.h` — Common blocks for diagnostics package. - DIAG_DEFINE contains the definition of all available diagnostics ndiagt :: total number of available diagnost
+- `DIAGNOSTICS_CALC.h` — BOP
+- `DIAGNOSTICS_P2SHARE.h` — BOP
+- `DIAGNOSTICS_SIZE.h` — Diagnostics Array Dimension ndiagMax   :: maximum total number of available diagnostics numlists   :: maximum number of diagnostics list (in data.diag
+- `DIAGSTATS_REGIONS.h` — BOP
+- `DIAG_OPTIONS.h` — Package-specific Options & Macros go here
+
+## Routines (65)
+`diag_calc_psivel.F`, `diag_cg2d.F`, `diag_vegtile_fill.F`, `diagnostics_addtolist.F`, `diagnostics_calc_phivel.F`, `diagnostics_check.F`, `diagnostics_clear.F`, `diagnostics_fill.F`, `diagnostics_fill_field.F`, `diagnostics_fill_rs.F`, `diagnostics_fill_state.F`, `diagnostics_fract_fill.F`, `diagnostics_ini_io.F`, `diagnostics_init_early.F`, `diagnostics_init_fixed.F`, `diagnostics_init_varia.F`, `diagnostics_interp_p2p.F`, `diagnostics_interp_vert.F`, `diagnostics_is_on.F`, `diagnostics_list_check.F`, `diagnostics_main_init.F`, `diagnostics_mnc_out.F`, `diagnostics_out.F`, `diagnostics_read_pickup.F`, `diagnostics_readparms.F`, `diagnostics_scale_fill.F`, `diagnostics_scale_fill_rs.F`, `diagnostics_set_calc.F`, `diagnostics_set_levels.F`, `diagnostics_set_pointers.F`, `diagnostics_setdiag.F`, `diagnostics_status_error.F`, `diagnostics_sum_levels.F`, `diagnostics_summary.F`, `diagnostics_switch_onoff.F`, `diagnostics_utils.F`, `diagnostics_write.F`, `diagnostics_write_adj.F`, `diagnostics_write_pickup.F`, `diagstats_ascii_out.F`, `diagstats_calc.F`, `diagstats_clear.F`, `diagstats_close_io.F`, `diagstats_fill.F`, `diagstats_global.F`, `diagstats_ini_io.F`, `diagstats_local.F`, `diagstats_mnc_out.F`, `diagstats_others_calc.F`, `diagstats_output.F`, `diagstats_set_pointers.F`, `diagstats_set_regions.F`, `diagstats_setdiag.F`
+
+## Called from outside the package
+- `DIAGNOSTICS_SCALE_FILL` ← `model/src/apply_forcing.F:611`
+- `DIAGNOSTICS_FILL` ← `model/src/calc_eddy_stress.F:95,97`
+- `DIAGNOSTICS_COUNT` ← `model/src/calc_gw.F:624`
+- `DIAGNOSTICS_FILL` ← `model/src/calc_gw.F:620,645,650,683`
+- `DIAGNOSTICS_FILL` ← `model/src/calc_oce_mxlayer.F:250`
+- `DIAGNOSTICS_FILL` ← `model/src/convective_adjustment.F:173`
+- `DIAGNOSTICS_FILL` ← `model/src/correction_step.F:104,106,120,122`
+- `DIAGNOSTICS_FILL_RS` ← `model/src/correction_step.F:261,284`
+- `DIAGNOSTICS_FILL` ← `model/src/diags_oceanic_surf_flux.F:152,190`
+- `DIAGNOSTICS_FILL_RS` ← `model/src/diags_oceanic_surf_flux.F:92,96`
+- `DIAGNOSTICS_SCALE_FILL` ← `model/src/diags_oceanic_surf_flux.F:100,105,110`
+- `DIAGNOSTICS_SCALE_FILL_RS` ← `model/src/diags_oceanic_surf_flux.F:63,68,73,78`
+- `DIAGNOSTICS_FILL` ← `model/src/diags_phi_hyd.F:122`
+- `DIAGNOSTICS_COUNT` ← `model/src/diags_rho.F:75,88`
+- `DIAGNOSTICS_FILL` ← `model/src/diags_rho.F:74,87,154,171`
+- `DIAGNOSTICS_SCALE_FILL` ← `model/src/diags_rho.F:157`
+- `DIAGNOSTICS_FILL` ← `model/src/diags_sound_speed.F:128`
+- `DIAGNOSTICS_FILL` ← `model/src/do_oceanic_phys.F:933,1122`
+- `DIAGNOSTICS_FILL_STATE` ← `model/src/do_statevars_diags.F:67`
+- `DIAGNOSTICS_WRITE` ← `model/src/do_the_model_io.F:242`
+- `DIAGNOSTICS_FILL` ← `model/src/dynamics.F:684,685`
+- `DIAGNOSTICS_FILL_RS` ← `model/src/dynamics.F:697,699`
+- `DIAGNOSTICS_SCALE_FILL` ← `model/src/dynamics.F:687,690`
+- `DIAGNOSTICS_SCALE_FILL` ← `model/src/external_forcing.F:489`
+- `DIAGNOSTICS_SCALE_FILL` ← `model/src/forcing_surf_relax.F:246,251`
+- `DIAGNOSTICS_SWITCH_ONOFF` ← `model/src/forward_step.F:508`
+- `DIAGNOSTICS_FILL` ← `model/src/impldiff.F:298,382`
+- `DIAGNOSTICS_INI_IO` ← `model/src/ini_model_io.F:244`
+- `DIAGNOSTICS_FILL` ← `model/src/load_fields_driver.F:262`
+- `DIAGNOSTICS_CHECK` ← `model/src/packages_check.F:457`
+- `DIAGNOSTICS_INIT_EARLY` ← `model/src/packages_init_fixed.F:172`
+- `DIAGNOSTICS_INIT_FIXED` ← `model/src/packages_init_fixed.F:677`
+- `DIAGNOSTICS_MAIN_INIT` ← `model/src/packages_init_fixed.F:176`
+- `DIAGNOSTICS_INIT_VARIA` ← `model/src/packages_init_variables.F:174`
+- `DIAGNOSTICS_READPARMS` ← `model/src/packages_readparms.F:374`
+- `DIAGNOSTICS_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:224`
+- `DIAGNOSTICS_FILL` ← `model/src/salt_integrate.F:326,390`
+- `DIAGNOSTICS_FILL` ← `model/src/solve_for_pressure.F:366,371`
+- `DIAGNOSTICS_FILL` ← `model/src/temp_integrate.F:328,392`
+- `DIAGNOSTICS_FILL_RS` ← `model/src/thermodynamics.F:366`
+- `DIAGNOSTICS_FILL` ← `model/src/timestep.F:189,190,409,410`
+- `DIAGNOSTICS_FILL` ← `pkg/aim_v23/aim_aim2dyn.F:136,138`
+- `DIAGNOSTICS_FILL` ← `pkg/aim_v23/aim_diagnostics.F:308,310,312,314`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/aim_v23/aim_diagnostics_init.F:51,59,67,75`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/aim_v23/aim_surf_bc.F:369`
+- `DIAGNOSTICS_FILL` ← `pkg/aim_v23/aim_tendency_apply.F:178,180,359,361`
+- `DIAGNOSTICS_FILL` ← `pkg/aim_v23/phy_driver.F:265,363,401`
+- `DIAGNOSTICS_FILL` ← `pkg/aim_v23/phy_radiat.F:140,490`
+- `DIAGNOSTICS_FILL` ← `pkg/atm_compon_interf/cpl_diagnostics_fill.F:47,49,51,53`
+- `DIAGNOSTICS_FRACT_FILL` ← `pkg/atm_compon_interf/cpl_diagnostics_fill.F:67,71,88,92`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/atm_compon_interf/cpl_diagnostics_init.F:53,60,67,75`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/atm_phys/atm_phys_diagnostics_init.F:49,56,63,71`
+- `DIAGNOSTICS_SETKLEV` ← `pkg/atm_phys/atm_phys_diagnostics_init.F:127,134,141,148`
+- `DIAGNOSTICS_FILL` ← `pkg/atm_phys/atm_phys_driver.F:169,235,237,239`
+- `DIAGNOSTICS_SWITCH_ONOFF` ← `pkg/autodiff/autodiff_inadmode_set_ad.F:60`
+- `DIAGNOSTICS_WRITE_ADJ` ← `pkg/autodiff/autodiff_inadmode_unset_ad.F:51`
+- `DIAGNOSTICS_FILL` ← `pkg/autodiff/dump_adj_xy.F:124,127`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/autodiff/dump_adj_xy.F:130`
+- `DIAGNOSTICS_FILL` ← `pkg/autodiff/dump_adj_xy_uv.F:149,150,153,155`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/autodiff/dump_adj_xy_uv.F:158,160`
+- `DIAGNOSTICS_FILL` ← `pkg/autodiff/dump_adj_xyz.F:125,128`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/autodiff/dump_adj_xyz.F:131`
+- `DIAGNOSTICS_FILL` ← `pkg/autodiff/dump_adj_xyz_uv.F:149,150,153,155`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/autodiff/dump_adj_xyz_uv.F:158,160`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/bbl/bbl_diagnostics_init.F:47,54,61,68`
+- `DIAGNOSTICS_FILL` ← `pkg/bbl/bbl_diagnostics_state.F:35,37,39,41`
+- `DIAGNOSTICS_FILL` ← `pkg/bling/bling_airseaflux.F:357`
+- `DIAGNOSTICS_FILL` ← `pkg/bling/bling_bio.F:902,903,904,906`
+- `DIAGNOSTICS_FILL` ← `pkg/bling/bling_bio_nitrogen.F:1846,1847,1848,1850`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/bling/bling_diagnostics_init.F:38,45,53,61`
+- `DIAGNOSTICS_FILL` ← `pkg/bling/bling_light.F:391`
+- `DIAGNOSTICS_FILL` ← `pkg/bling/bling_main.F:290,291,292,293`
+- `DIAGNOSTICS_FILL` ← `pkg/cheapaml/cheapaml.F:105,107,553,554`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/cheapaml/cheapaml.F:674,676`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/cheapaml/cheapaml_diagnostics_init.F:52,59,66,73`
+- `DIAGNOSTICS_FILL` ← `pkg/dic/calcite_saturation.F:218,219,229,230`
+- `DIAGNOSTICS_FILL` ← `pkg/dic/dic_biotic_forcing.F:410,411,412,413`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/dic/dic_diagnostics_init.F:36,43,50,57`
+- `DIAGNOSTICS_FILL` ← `pkg/down_slope/dwnslp_apply.F:191`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/down_slope/dwnslp_apply.F:121`
+- `DIAGNOSTICS_FILL` ← `pkg/down_slope/dwnslp_calc_flow.F:163,164`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/down_slope/dwnslp_diagnostics_init.F:69,77,88,98`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/ecco/ecco_diagnostics_init.F:57,65,73,80`
+- `DIAGNOSTICS_FILL` ← `pkg/ecco/ecco_phys.F:292,297,299,301`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/ecco/ecco_phys.F:293,303`
+- `DIAGNOSTICS_FILL` ← `pkg/exf/exf_diagnostics_fill.F:42,43,44,45`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/exf/exf_diagnostics_init.F:52,59,66,73`
+- `DIAGNOSTICS_FILL` ← `pkg/exf/exf_weight_sfx_diags.F:55,56,80,104`
+- `DIAGNOSTICS_FILL` ← `pkg/exf/exf_wind.F:114,115`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/fizhi/fizhi_diagnostics_init.F:50,57,65,73`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_gwdrag.F:209,218,227,235`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_lwrad.F:279,290,299,308`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_moist.F:844,845,857,871`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_step_diag.F:57,61,72,83`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_swrad.F:232,242,253,258`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_tendency_apply.F:70,80,153,163`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_turb.F:430,1181,1197,1198`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/fizhi/fizhi_turb.F:312,1182,1213,1215`
+- `DIAG_VEGTILE_FILL` ← `pkg/fizhi/fizhi_turb.F:536,586,676,683`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/fizhi_wrapper.F:217,251`
+- `DIAGNOSTICS_FILL` ← `pkg/fizhi/step_fizhi_corr.F:268,269,270,271`
+- `DIAGNOSTICS_FILL` ← `pkg/frazil/frazil_calc_rhs.F:107`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/frazil/frazil_diagnostics_init.F:42`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/gchem/gchem_diagnostics_init.F:70`
+- `DIAGNOSTICS_FILL` ← `pkg/gchem/gchem_forcing_sep.F:80`
+- `DIAGNOSTICS_FILL` ← `pkg/generic_advdiff/gad_advection.F:845,849,1082`
+- `DIAGNOSTICS_COUNT` ← `pkg/generic_advdiff/gad_calc_rhs.F:592,700`
+- `DIAGNOSTICS_FILL` ← `pkg/generic_advdiff/gad_calc_rhs.F:316,366,445,495`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/generic_advdiff/gad_diagnostics_init.F:71,77,83,90`
+- `DIAGNOSTICS_FILL` ← `pkg/generic_advdiff/gad_diagnostics_state.F:58,92,103,136`
+- `DIAGNOSTICS_COUNT` ← `pkg/generic_advdiff/gad_implicit_r.F:341`
+- `DIAGNOSTICS_FILL` ← `pkg/generic_advdiff/gad_implicit_r.F:340,439`
+- `DIAGNOSTICS_FILL` ← `pkg/generic_advdiff/gad_som_advect.F:463,467,661`
+- `DIAGNOSTICS_FILL` ← `pkg/generic_advdiff/salt_fill.F:110`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/generic_advdiff/salt_fill.F:73`
+- `DIAGNOSTICS_COUNT` ← `pkg/ggl90/ggl90_calc.F:231`
+- `DIAGNOSTICS_FILL` ← `pkg/ggl90/ggl90_calc.F:985,1078,1080,1082`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/ggl90/ggl90_diagnostics_init.F:51,58,65,72`
+- `DIAGNOSTICS_FILL` ← `pkg/ggl90/ggl90_idemix.F:555,558,559,560`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_calc_bates_k.F:1102,1104,1105,1106`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_calc_eigs.F:392,393,394`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_calc_geom.F:585,587,589,592`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/gmredi/gmredi_calc_psi_bvp.F:247,249`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_calc_qgleith.F:267`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_calc_tensor.F:689,690,691,886`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_diagnostics_fill.F:56,61,62,65`
+- `DIAGNOSTICS_COUNT` ← `pkg/gmredi/gmredi_diagnostics_impl.F:53`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_diagnostics_impl.F:64`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/gmredi/gmredi_diagnostics_init.F:55,62,70,78`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_residual_flow.F:133,134`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_xtransport.F:255`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/gmredi_ytransport.F:255`
+- `DIAGNOSTICS_FILL` ← `pkg/gmredi/submeso_calc_psi.F:179,181,222`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/gridalt/gridalt_diagnostics_init.F:48`
+- `DIAGNOSTICS_FILL` ← `pkg/gridalt/gridalt_update.F:79`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/icefront/icefront_diagnostics_init.F:45,52`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/icefront/icefront_thermodynamics.F:188,190`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/kl10/kl10_diagnostics_init.F:47,54,61`
+- `DIAGNOSTICS_FILL` ← `pkg/kl10/kl10_output.F:98,99,100`
+- `DIAGNOSTICS_FILL` ← `pkg/kpp/kpp_calc.F:496`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/kpp/kpp_diagnostics_init.F:62,69,76,84`
+- `DIAGNOSTICS_FILL` ← `pkg/kpp/kpp_forcing_surf.F:282,283,285,508`
+- `DIAGNOSTICS_FILL` ← `pkg/kpp/kpp_output.F:192,193,194,220`
+- `DIAGNOSTICS_FILL` ← `pkg/kpp/kpp_routines.F:640,641,1950,1951`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/land/land_diagnostics_init.F:54,61,68,76`
+- `DIAGNOSTICS_FILL` ← `pkg/land/land_diagnostics_state.F:50,51,53,55`
+- `DIAGNOSTICS_FILL` ← `pkg/land/land_do_diags.F:52,54,56,58`
+- `DIAGNOSTICS_FILL` ← `pkg/layers/layers_calc.F:334,341,345,348`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/layers/layers_diagnostics_init.F:77,90,99,111`
+- `DIAGNOSTICS_SETKLEV` ← `pkg/layers/layers_diagnostics_init.F:92,101,113,122`
+- `DIAGNOSTICS_FILL` ← `pkg/longstep/longstep_average.F:227,228,229,230`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/longstep/longstep_diagnostics_init.F:43,51,59,66`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_common/mom_calc_visc.F:736,737,738,739`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/mom_common/mom_diagnostics_init.F:48,55,62,69`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_common/mom_u_implicit_r.F:365,393`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_common/mom_u_sidedrag.F:149`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_common/mom_v_implicit_r.F:365,393`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_common/mom_v_sidedrag.F:136`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_common/mom_w_sidedrag.F:133`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_fluxform/mom_fluxform.F:356,357,358,359`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_vecinv/mom_vecinv.F:512,543,622,653`
+- `DIAGNOSTICS_FILL` ← `pkg/mom_vecinv/mom_vi_hdissip.F:100,101,231,232`
+- `DIAGNOSTICS_FILL` ← `pkg/my82/my82_calc.F:183,184,185`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/my82/my82_diagnostics_init.F:48,55,62`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/mypackage/mypackage_diagnostics_init.F:50,57,66,75`
+- `DIAGNOSTICS_SETKLEV` ← `pkg/mypackage/mypackage_diagnostics_init.F:131`
+- `DIAGNOSTICS_FILL` ← `pkg/mypackage/mypackage_diagnostics_state.F:41,43,45,47`
+- `DIAGNOSTICS_FILL` ← `pkg/ocn_compon_interf/cpl_diagnostics_fill.F:47,49,51,53`
+- `DIAGNOSTICS_FRACT_FILL` ← `pkg/ocn_compon_interf/cpl_diagnostics_fill.F:92,96,113,117`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/ocn_compon_interf/cpl_diagnostics_init.F:53,60,67,75`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/opps/opps_init.F:52`
+- `DIAGNOSTICS_FILL` ← `pkg/opps/opps_interface.F:195`
+- `DIAGNOSTICS_FILL` ← `pkg/pp81/pp81_calc.F:121,122`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/pp81/pp81_diagnostics_init.F:47,54`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/ptracers/ptracers_diagnostics_init.F:98,107,115,123`
+- `DIAGNOSTICS_FILL` ← `pkg/ptracers/ptracers_diagnostics_state.F:67,100,133,165`
+- `DIAGNOSTICS_FILL` ← `pkg/ptracers/ptracers_forcing_surf.F:102`
+- `DIAGNOSTICS_FILL` ← `pkg/ptracers/ptracers_integrate.F:309,362,491`
+- `DIAGNOSTICS_FILL` ← `pkg/salt_plume/salt_plume_apply.F:232`
+- `DIAGNOSTICS_FILL` ← `pkg/salt_plume/salt_plume_diagnostics_fill.F:31,35,38,40`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/salt_plume/salt_plume_diagnostics_init.F:41,49,59,66`
+- `DIAGNOSTICS_FILL` ← `pkg/salt_plume/salt_plume_tendency_apply_s.F:158,160`
+- `DIAGNOSTICS_FILL` ← `pkg/salt_plume/salt_plume_tendency_apply_t.F:68`
+- `DIAGNOSTICS_FILL` ← `pkg/salt_plume/salt_plume_volfrac.F:177`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/dynsolver.F:294,295,296`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_advection.F:777,779`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/seaice/seaice_diagnostics_init.F:77,85,92,100`
+- `DIAGNOSTICS_SETKLEV` ← `pkg/seaice/seaice_diagnostics_init.F:857,866,874`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_diagnostics_state.F:54,55,56,57`
+- `DIAGNOSTICS_FRACT_FILL` ← `pkg/seaice/seaice_diagnostics_state.F:85,102,106`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_diffusion.F:96,98`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_dynsolver.F:415,416,417,418`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_get_dynforcing.F:245,246,258,273`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_growth.F:568,569,570,900`
+- `DIAGNOSTICS_FRACT_FILL` ← `pkg/seaice/seaice_growth.F:575,579`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/seaice/seaice_growth.F:2484,2486,2488,2490`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_growth_adx.F:467,468,469,1482`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/seaice/seaice_growth_adx.F:1265,1487`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_lsr.F:1133`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_model.F:390`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/seaice/seaice_model.F:369,370,371`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_mom_advection.F:165,166,185,186`
+- `DIAGNOSTICS_FILL` ← `pkg/seaice/seaice_reg_ridge.F:394`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/seaice/seaice_tracer_phys.F:198`
+- `DIAGNOSTICS_FILL` ← `pkg/shap_filt/shap_filt_apply_ts.F:123,172`
+- `DIAGNOSTICS_FILL` ← `pkg/shap_filt/shap_filt_apply_uv.F:134,136,176`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/shap_filt/shap_filt_diagnostics_init.F:61,70,78,86`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/shelfice/shelfice_diagnostics_drag.F:62,64`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/shelfice/shelfice_init_fixed.F:255,262,271,280`
+- `DIAGNOSTICS_FILL` ← `pkg/shelfice/shelfice_step_icemass.F:121`
+- `DIAGNOSTICS_FILL` ← `pkg/shelfice/shelfice_thermodynamics.F:729,731,737,738`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/shelfice/shelfice_thermodynamics.F:716,718,743`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/shelfice/shelfice_thermodynamics.F:722,726`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/steep_icecavity/stic_init_fixed.F:309,316,324,331`
+- `DIAGNOSTICS_FILL` ← `pkg/steep_icecavity/stic_thermodynamics.F:679,693,695,705`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/steep_icecavity/stic_thermodynamics.F:699,701`
+- `DIAGNOSTICS_SCALE_FILL` ← `pkg/steep_icecavity/stic_thermodynamics.F:718,722,727,731`
+- `DIAGNOSTICS_FILL` ← `pkg/streamice/streamice_diagnostics_state.F:91,93,95,97`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/streamice/streamice_diagnostics_state.F:133`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/streamice/streamice_init_diagnostics.F:41,48,55,62`
+- `DIAGNOSTICS_FILL` ← `pkg/thsice/thsice_advdiff.F:150,322,324,328`
+- `DIAGNOSTICS_FRACT_FILL` ← `pkg/thsice/thsice_advdiff.F:153,156,167,171`
+- `DIAGNOSTICS_FILL` ← `pkg/thsice/thsice_ave.F:66,67`
+- `DIAGNOSTICS_FILL_RS` ← `pkg/thsice/thsice_ave.F:72,73,74`
+- `DIAGNOSTICS_ADDTOLIST` ← `pkg/thsice/thsice_diagnostics_init.F:62,71,79,86`
+- `DIAGNOSTICS_FILL` ← `pkg/thsice/thsice_diagnostics_state.F:51,52,102,103`
+- `DIAGNOSTICS_FRACT_FILL` ← `pkg/thsice/thsice_diagnostics_state.F:56,59,62,65`
+- `DIAGNOSTICS_FRACT_FILL` ← `pkg/thsice/thsice_step_fwd.F:176,179`
+
+## Verification experiments compiling it (41)
+`MLAdjust` `adjustment.cs-32x32x1` `advect_cs` `advect_xz` `aim.5l_cs` `atm_gray` `cfc_example` `cheapAML_box` `cpl_aim+ocn` `deep_anelastic` `dome` `fizhi-cs-32x32x40` `fizhi-cs-aqualev20` `fizhi-gridalt-hs` `front_relax` `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.90x40x15` `global_ocean.cs32x15` `halfpipe_streamice` `hs94.1x64x5` `hs94.cs-32x32x5` `ideal_2D_oce` `inverted_barometer` `isomip` `lab_sea` `obcs_ctrl` `offline_exf_seaice` `seaice_itd` `shelfice_2d_remesh` `short_surf_wave` `so_box_biogeo` `solid-body.cs-32x32x1` `tutorial_advection_in_gyre` `tutorial_baroclinic_gyre` `tutorial_deep_convection` `tutorial_global_oce_biogeo` `tutorial_held_suarez_cs` `tutorial_reentrant_channel` `tutorial_rotating_tank` `vermix`
