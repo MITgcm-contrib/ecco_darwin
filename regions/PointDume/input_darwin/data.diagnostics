@@ -1,0 +1,83 @@
+# Diagnostic Package Choices
+#
+ &diagnostics_list
+     dumpAtLast = .TRUE.,
+#--
+  fields(1,1) = 'ETAN    ',
+  fileName(1) = 'diags/EtaN_day_snap/EtaN_day_snap',
+  frequency(1) =  -86400.,
+#--
+  fields(1,2) = 'ETAN    ',
+  fileName(2) = 'diags/EtaN_mon_mean/EtaN_mon_mean',
+  frequency(2) =  2592000.,
+#
+#  fields(1:5,3) = 'SIarea  ','SIheff  ','SIhsnow ','SIuice ','SIvice ',
+#  fileName(3) = 'diags/SI_daily_snap/SI_daily_snap',
+#  frequency(3) = -86400.,
+#
+  fields(1:2,4) = 'THETA   ','SALT    ',
+  fileName(4) = 'diags/TS_surf_daily_snap/TS_surf_daily_snap',
+  frequency(4) = -86400.,
+  levels(:,4) = 1,
+#
+  fields(1:2,5) = 'UVEL    ','VVEL    ',
+  fileName(5) = 'diags/vel_surf_daily_snap/vel_surf_daily_snap',
+  frequency(5) = -86400.,
+  levels(:,5) = 1,
+#
+  fields(1:2,6) = 'THETA   ','SALT    ',
+  fileName(6) = 'diags/TS_AW_daily_snap/TS_AW_daily_snap',
+  frequency(6) = -86400.,
+  levels(:,6) = 19,
+#
+  fields(1:2,7) = 'THETA   ','SALT    ',
+  fileName(7) = 'diags/state_3D_mon_snap/state_3D_mon_snap',
+  frequency(7) = -2592000.,
+#
+  fields(1:2,8) = 'UVEL    ','VVEL    ',
+  fileName(8) = 'diags/vel_3D_mon_snap/vel_3D_mon_snap',
+  frequency(8) = -2592000.,
+#
+  fields(1:2,9) = 'THETA   ','SALT    ',
+  fileName(9) = 'diags/state_3D_mon_mean/state_3D_mon_mean',
+  frequency(9) = 2592000.,
+#
+  fields(1:2,10) = 'THETA   ','SALT    ',
+  fileName(10) = 'diags/vel_3D_mon_mean/vel_3D_mon_mean',
+  frequency(10) = 2592000.,
+#
+  fields(1:7,11) = 'TRAC01  ','TRAC02  ','TRAC03  ','TRAC04  ','TRAC05  ','TRAC06  ','TRAC07  ',
+  fileName(11) = 'diags/BGC_daily_consts/BGC_daily_consts',
+  frequency(11) = -86400.,
+  levels(:,11) = 1,
+#
+  fields(1:4,12) = 'TRAC08  ','TRAC09  ','TRAC10  ','TRAC11  ',
+  fileName(12) = 'diags/BGC_daily_DO/BGC_daily_DO',
+  frequency(12) = -86400.,
+  levels(:,12) = 1,
+#
+  fields(1:5,13) = 'TRAC12  ','TRAC13  ','TRAC14  ','TRAC15  ','TRAC16  ',
+  fileName(13) = 'diags/BGC_daily_PO/BGC_daily_PO',
+  frequency(13) = -86400.,
+  levels(:,13) = 1, 
+#
+  fields(1:3,14) = 'TRAC17  ','TRAC18  ','TRAC19  ',
+  fileName(14) = 'diags/BGC_daily_misc/BGC_daily_misc',
+  frequency(14) = -86400.,
+  levels(:,14) = 1,
+#
+  fields(1:7,15) = 'TRAC20  ','TRAC21  ','TRAC22  ','TRAC23  ','TRAC24  ','TRAC25  ','TRAC26  ',
+  fileName(15) = 'diags/BGC_daily_cx/BGC_daily_cx',
+  frequency(15) = -86400.,
+  levels(:,15) = 1,
+#
+  fields(1:5,16) = 'TRAC27  ','TRAC28  ','TRAC29  ','TRAC30  ','TRAC31  ',
+  fileName(16) = 'diags/BGC_daily_Chl/BGC_daily_Chl',
+  frequency(16) = -86400.,
+  levels(:,16) = 1,
+#
+ &
+
+# Parameter for Diagnostics of per level statistics:
+ &DIAG_STATIS_PARMS
+ &

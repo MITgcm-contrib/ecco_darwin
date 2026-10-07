@@ -1,0 +1,30 @@
+# ***************
+# Open boundaries
+# ***************
+ &OBCS_PARM01
+ OB_Jsouth =   2248*1,
+ OB_Ieast  =   1089*-1,
+ OB_Iwest  =   1089*1,
+#
+ useOBCSprescribe=.TRUE.,
+ useOBCSbalance  =.TRUE.,
+#
+ OBWsFile='SALT_west.bin',
+ OBWtFile='THETA_west.bin',
+ OBWuFile='UVEL_west.bin',
+ OBWvFile='VVEL_west.bin',
+ OBWetaFile='ETAN_west.bin',
+#
+ OBSsFile='SALT_south.bin',
+ OBStFile='THETA_south.bin',
+ OBSuFile='UVEL_south.bin',
+ OBSvFile='VVEL_south.bin',
+ OBSetaFile='ETAN_south.bin',
+#
+ OBEsFile='SALT_east.bin',
+ OBEtFile='THETA_east.bin',
+ OBEuFile='UVEL_east.bin',
+ OBEvFile='VVEL_east.bin',
+ OBEetaFile='ETAN_east.bin',
+#
+ &

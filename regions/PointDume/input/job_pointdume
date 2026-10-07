@@ -1,0 +1,28 @@
+#!/bin/csh
+#PBS -l select=8:ncpus=11:model=sky_ele
+#PBS -W group_list=g26113
+
+#PBS -l walltime=120:00:00
+#PBS -q long
+
+##PBS -l walltime=2:00:00
+##PBS -q debug
+
+##PBS -j oe
+#PBS -m abe
+
+#PBS -N PointDume
+#PBS -o output
+#PBS -e error
+#PBS -l site=needed=/home3+/nobackupp27
+
+module purge
+module load comp-intel mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
+module list
+
+umask 022
+cd $PBS_O_WORKDIR
+limit stacksize unlimited
+setenv MPI_LAUNCH_TIMEOUT 40
+mpiexec -np 88 ./mitgcmuv
+
