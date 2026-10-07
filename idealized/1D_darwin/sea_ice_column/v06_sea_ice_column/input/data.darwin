@@ -66,6 +66,9 @@
 #  R_FeP_CDOM = 1.e-3,
 #  R_CP_CDOM  = 120.,
 #  CDOMcoeff = 21.,
+# v06 value (as v06/1deg, 3deg, llc270). Without it darwin3's default CDOMcoeff=100
+# applies: with CDOM ~0.8 uM C that is aCDOM(450) ~80 /m and light is gone in ~2 m.
+   CDOMcoeff = 0.1750000,
  /
  &DARWIN_RADTRANS_PARAMS
  darwin_waterabsorbFile='OPTICS_COEFF2/optics_water.txt',

@@ -103,6 +103,10 @@
  PTRACERS_initialFile(17)= 'ptracer17_ini',
  PTRACERS_initialFile(18)= 'ptracer18_ini',
  PTRACERS_initialFile(19)= 'ptracer19_ini',
+# The ptracer*_ini files come from the v05 column (31 tracers, no CDOM):
+# ptracer20-26 = c01-c07, ptracer27-31 = Chl01-05. v06 has no CDOM file, so
+# CDOM borrows the c01 profile (~0.8 uM C; with CDOMcoeff=0.175 in data.darwin
+# that is aCDOM(450) ~0.14 /m), and all c and Chl start from c01 and Chl01.
  PTRACERS_initialFile(20)= 'ptracer20_ini',
  PTRACERS_initialFile(21)= 'ptracer20_ini',
  PTRACERS_initialFile(22)= 'ptracer20_ini',
