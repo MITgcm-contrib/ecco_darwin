@@ -349,7 +349,7 @@ C      will be over-written at first time-step when calling EXF_SET_UV.
 #endif
      I     myThid )
 #endif /* ALLOW_WAVE_FORCING */
-
+      
 #ifdef EXF_ALLOW_TIDES
       CALL EXF_INIT_FLD(
      I     'tidePot', tidePotFile, tidePotMask,

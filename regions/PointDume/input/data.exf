@@ -44,37 +44,37 @@
  lwdownfile      = 'exf_L2/L1_exf_LWDOWN',
 #
  atempstartdate1 = 19920101,
- atempstartdate2 = 030000,
+ atempstartdate2 = 000000,
  atempperiod = 21600.0,
 #
  aqhstartdate1 = 19920101,
- aqhstartdate2 = 030000,
+ aqhstartdate2 = 000000,
  aqhperiod = 21600.0,
 #
  precipstartdate1 = 19920101,
- precipstartdate2 = 030000,
+ precipstartdate2 = 000000,
  precipperiod = 21600.0,
 #
- runofffile        = 'GloFas_PointDume',
- runoftempfile     = 'GloFas_temp_PointDume',
+ runofffile        = 'GloFas_PointDume_20m',
+ runoftempfile     = 'GloFas_temp_PointDume_20m',
  runoffstartdate1 = 19920101,
  runoffstartdate2 = 120000,
  runoffperiod = 86400.0,
 #
  uwindstartdate1 = 19920101,
- uwindstartdate2 = 030000,
+ uwindstartdate2 = 000000,
  uwindperiod = 21600.0,
 #
  vwindstartdate1 = 19920101,
- vwindstartdate2 = 030000,
+ vwindstartdate2 = 000000,
  vwindperiod = 21600.0,
 #
  swdownstartdate1 = 19920101,
- swdownstartdate2 = 030000,
+ swdownstartdate2 = 000000,
  swdownperiod = 21600.0,
 #
  lwdownstartdate1 = 19920101,
- lwdownstartdate2 = 030000,
+ lwdownstartdate2 = 000000,
  lwdownperiod = 21600.0,
 #
  WvHeightfile = 'L2_wave/PointDume_WvHeight',
@@ -97,6 +97,7 @@
 # (EXF's default for the winds is bicubic, 12 / 22; bilinear is used here because these fields have
 # land/sea steps and must stay non-negative -- precip, swdown, lwdown, runoff)
 #
+ exf_output_interp = .TRUE.,
  uwind_interpMethod = 11,
  vwind_interpMethod = 21,
  atemp_interpMethod = 1,
@@ -587,15 +588,15 @@
 
  &EXF_NML_OBCS
 #
- obcsSstartdate1     = 19920101,
+ obcsSstartdate1     = 20141231,
  obcsSstartdate2     = 120000,
  obcsSperiod         = 86400.0,
 #
- obcsWstartdate1     = 19920101,
+ obcsWstartdate1     = 20141231,
  obcsWstartdate2     = 120000,
  obcsWperiod         = 86400.0,
 #
- obcsEstartdate1     = 19920101,
+ obcsEstartdate1     = 20141231,
  obcsEstartdate2     = 120000,
  obcsEperiod         = 86400.0,
 #

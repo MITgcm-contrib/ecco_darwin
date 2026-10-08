@@ -5,6 +5,7 @@
  OB_Jsouth =   2248*1,
  OB_Ieast  =   1089*-1,
  OB_Iwest  =   1089*1,
+ useOBCSsponge = .TRUE.,
 #
  useOBCSprescribe=.TRUE.,
  useOBCSbalance  =.TRUE.,
@@ -159,4 +160,11 @@
  OBEptrFile(31) = 'TRAC31_east.bin',
  OBSptrFile(31) = 'TRAC31_south.bin',
 #
+ &
+ &OBCS_PARM03
+ spongeThickness = 100,
+ Urelaxobcsinner = 21600.E0,
+ Vrelaxobcsinner = 21600.E0,
+ Urelaxobcsbound = 600.E0,
+ Vrelaxobcsbound = 600.E0,
  &

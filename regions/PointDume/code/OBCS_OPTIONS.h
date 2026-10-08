@@ -13,10 +13,10 @@ C Use this file for selecting options within the OBCS package
 C Package-specific Options & Macros go here
 
 C Enable individual open boundaries
-#define ALLOW_OBCS_NORTH
+#undef ALLOW_OBCS_NORTH
 #define ALLOW_OBCS_SOUTH
 #define ALLOW_OBCS_EAST
-#undef ALLOW_OBCS_WEST
+#define ALLOW_OBCS_WEST
 
 C This include hooks to the Orlanski Open Boundary Radiation code
 #undef ALLOW_ORLANSKI

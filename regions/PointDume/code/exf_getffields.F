@@ -758,6 +758,15 @@ cdm #endif
      &       areamask(i,j,bi,bj)=areamask(i,j,bi,bj)+
      &                         xx_gentim2d(i,j,bi,bj,iarr)
 #endif
+#ifdef ALLOW_WAVE_FORCING
+C-    wave forcing
+           IF (xx_gentim2d_file(iarr)(1:11).EQ.'xx_WvHeight')
+     &       WvHeight(i,j,bi,bj)=WvHeight(i,j,bi,bj)+
+     &                         xx_gentim2d(i,j,bi,bj,iarr)
+           IF (xx_gentim2d_file(iarr)(1:11).EQ.'xx_WvPeriod')
+     &       WvPeriod(i,j,bi,bj)=WvPeriod(i,j,bi,bj)+
+     &                         xx_gentim2d(i,j,bi,bj,iarr)
+#endif           
 #ifndef ALLOW_ROTATE_UV_CONTROLS
            IF (xx_gentim2d_file(iarr)(1:8).EQ.'xx_uwind')
      &       uwind(i,j,bi,bj)=uwind(i,j,bi,bj)+

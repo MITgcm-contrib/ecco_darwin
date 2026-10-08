@@ -485,12 +485,6 @@ C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
       CALL EXF_CHECK_INTERP( 'apressure', apressurefile,
      &         apressure_interpMethod, apressure_nlat,
      &         apressure_nlon, apressure_lon_inc, errCount, myThid )
-      CALL EXF_CHECK_INTERP( 'WvHeight', WvHeightfile,
-     &         WvHeight_interpMethod, WvHeight_nlat,
-     &         WvHeight_nlon, WvHeight_lon_inc, errCount, myThid )
-      CALL EXF_CHECK_INTERP( 'WvPeriod', WvPeriodfile,
-     &         WvPeriod_interpMethod, WvPeriod_nlat,
-     &         WvPeriod_nlon, WvPeriod_lon_inc, errCount, myThid )
       CALL EXF_CHECK_INTERP( 'tidePot', tidePotFile,
      &         tidePot_interpMethod, tidePot_nlat,
      &         tidePot_nlon, tidePot_lon_inc, errCount, myThid )

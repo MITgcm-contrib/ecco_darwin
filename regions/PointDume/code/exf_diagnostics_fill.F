@@ -72,7 +72,7 @@ CEOP
 #ifdef ALLOW_WAVE_FORCING
         CALL DIAGNOSTICS_FILL( WvHeight, 'EXFwvht ',0,1,0,1,1,myThid )
         CALL DIAGNOSTICS_FILL( WvPeriod, 'EXFwvpd ',0,1,0,1,1,myThid )
-#endif
+#endif        
 #ifdef ALLOW_RUNOFF
         CALL DIAGNOSTICS_FILL( runoff,    'EXFroff ',0,1,0,1,1,myThid )
 #endif

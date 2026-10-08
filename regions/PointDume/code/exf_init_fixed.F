@@ -75,8 +75,6 @@ C     ' ' = no masking; 'c' = centered mask; 'w' = western mask; 's' = southern
       swdownmask   = 'c'
       lwdownmask   = 'c'
       apressuremask= 'c'
-      WvHeightmask= 'c'
-      WvPeriodmask= 'c'
       tidePotmask  = 'c'
       areamaskmask = 'c'
       climsstmask  = 'c'
@@ -108,8 +106,6 @@ c      saltflxmask  = ' '
 c      lwfluxmask   = ' '
 c      lwdownmask   = ' '
        apressuremask= ' '
-       WvHeightmask= ' '
-       WvPeriodmask= ' '
 c      tidePotmask  = ' '
 c      areamaskmask = ' '
 c      climsstmask  = ' '
@@ -395,7 +391,7 @@ C     from the beginning of the year.
      I                    myThid )
       ENDIF
 #endif /* ALLOW_WAVE_FORCING */
-
+      
 #ifdef EXF_ALLOW_TIDES
       IF ( tidePotFile .NE. ' ' ) THEN
 # ifdef ALLOW_DEBUG

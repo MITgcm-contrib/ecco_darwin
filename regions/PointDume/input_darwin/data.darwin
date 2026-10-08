@@ -1,12 +1,12 @@
 &DARWIN_FORCING_PARAMS
  ironfile = 'exf_L2/L1_exf_IRONDUST',
  ironstartdate1 = 19920101,
- ironstartdate2 = 030000,
+ ironstartdate2 = 000000,
  ironperiod = 21600.0,
 #
  pCO2file = 'exf_L2/L1_exf_ATMOSCO2',
  pCO2startdate1 = 19920101,
- pCO2startdate2 = 030000,
+ pCO2startdate2 = 000000,
  pCO2period     = 21600.0,
 #
 # DOCrunofffile = 'DOC_GoM_1km',
@@ -95,7 +95,7 @@
 # PONrunoff_interpMethod = 0,
 # DICrunoff_interpMethod = 0,
 #
- # L1 input grid: 480 x 360, regular in longitude (1/12 deg), NON-uniform in latitude (dlat 0.0719
+# L1 input grid: 480 x 360, regular in longitude (1/12 deg), NON-uniform in latitude (dlat 0.0719
 # deg at the south edge to 0.0564 deg at the north edge, hence 359 increments). lon0/lat0 = the first
 # (south-west) input point = centre of L1 cell (1,1); lat_inc(j) = spacing between rows j and j+1.
 # interpMethod 1 = bilinear (also the package default).
