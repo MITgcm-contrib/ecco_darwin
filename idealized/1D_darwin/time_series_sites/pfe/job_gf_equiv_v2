@@ -1,0 +1,16 @@
+#!/bin/csh
+#PBS -l select=1:ncpus=40:model=sky_ele
+#PBS -q devel
+#PBS -l walltime=0:30:00
+#PBS -N 1D_gf_equiv2
+#PBS -j oe
+# Model equivalents on the updated bins (gf_results/bins_v2, 2026-10-08: HOT gap-fill + BODC PAP bottles)
+# for the ensemble-2 control + 19 GF runs, HOT and PAP only (BATS/HydroS/PAPA bins unchanged).
+# Writes gf_results/cache_v2/<SITE>_mG.npz.
+umask 022
+cd /nobackup/dcarrol2/1-D
+source /usr/share/modules/init/csh
+module purge
+module load python3/3.9.12
+python3 scripts/gf_bins.py equiv gf_results/bins_v2 runs/ctrl runs/gf gf_results/cache_v2 HOT PAP
+ls -la gf_results/cache_v2

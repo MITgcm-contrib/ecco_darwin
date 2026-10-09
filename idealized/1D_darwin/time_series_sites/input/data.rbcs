@@ -1,0 +1,34 @@
+# Relax T/S toward ECCO-Darwin v5r1 monthly-mean profiles at this site, as a
+# stand-in for the 3-D advection/eddy fluxes a 1-D column cannot represent.
+# Records: Jan1992 (pad), Jan1992 ... Dec2025, Dec2025 (pad) = 410 records.
+# For rbcsForcingCycle=0, record k is centered at rbcsForcingOffset + (k-0.5)*rbcsForcingPeriod
+# (eesupp/src/get_periodic_interval.F), so offset = -1 period puts record 2 (Jan 1992) at
+# mid-January and the run end (31 Dec 2025) needs records 409-410 only.
+# tauRelaxT/S = 30 d over the whole column (relax_mask = 1); tune as needed.
+# Deep BGC supply: NO3, PO4, FeT, SiO2, DIC, ALK, O2 relaxed to v5r1 monthly
+# profiles with tau = 1 yr and mask 3 (all ptracers use mask 3): 0 above 150 m,
+# linear ramp to 1 at 250 m, so the euphotic zone evolves freely.
+ &RBCS_PARM01
+ useRBCtemp=.TRUE.,
+ useRBCsalt=.TRUE.,
+ useRBCptracers=.TRUE.,
+ tauRelaxT=2592000.,
+ tauRelaxS=2592000.,
+ relaxMaskFile(1)='relax_mask_1x1x50',
+ relaxMaskFile(2)='relax_mask_1x1x50',
+ relaxMaskFile(3)='relax_mask_bgc_1x1x50',
+ relaxTFile='relax_T_1x1x50_mon',
+ relaxSFile='relax_S_1x1x50_mon',
+ rbcsForcingPeriod=2629746.,
+ rbcsForcingCycle=0.,
+ rbcsForcingOffset=-2629746.,
+ /
+ &RBCS_PARM02
+ useRBCpTrNum(1)=.TRUE., tauRelaxPTR(1)=31536000., relaxPtracerFile(1)='relax_ptr01_1x1x50_mon',
+ useRBCpTrNum(2)=.TRUE., tauRelaxPTR(2)=31536000., relaxPtracerFile(2)='relax_ptr02_1x1x50_mon',
+ useRBCpTrNum(5)=.TRUE., tauRelaxPTR(5)=31536000., relaxPtracerFile(5)='relax_ptr05_1x1x50_mon',
+ useRBCpTrNum(6)=.TRUE., tauRelaxPTR(6)=31536000., relaxPtracerFile(6)='relax_ptr06_1x1x50_mon',
+ useRBCpTrNum(7)=.TRUE., tauRelaxPTR(7)=31536000., relaxPtracerFile(7)='relax_ptr07_1x1x50_mon',
+ useRBCpTrNum(18)=.TRUE., tauRelaxPTR(18)=31536000., relaxPtracerFile(18)='relax_ptr18_1x1x50_mon',
+ useRBCpTrNum(19)=.TRUE., tauRelaxPTR(19)=31536000., relaxPtracerFile(19)='relax_ptr19_1x1x50_mon',
+ /

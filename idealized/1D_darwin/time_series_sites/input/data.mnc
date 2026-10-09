@@ -1,0 +1,12 @@
+# NetCDF output for diagnostics only (one file per list, time appended)
+ &MNC_01
+ mnc_use_outdir=.TRUE.,
+ mnc_outdir_str='mnc_out',
+ mnc_outdir_date=.FALSE.,
+ mnc_outdir_num=.FALSE.,
+ monitor_mnc=.FALSE.,
+ snapshot_mnc=.FALSE.,
+ timeave_mnc=.FALSE.,
+ pickup_read_mnc=.FALSE.,
+ pickup_write_mnc=.FALSE.,
+ /

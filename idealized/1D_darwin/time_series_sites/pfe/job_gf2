@@ -1,0 +1,36 @@
+#!/bin/csh
+#PBS -l select=3:ncpus=40:model=sky_ele
+#PBS -q normal
+#PBS -l walltime=6:00:00
+#PBS -N 1D_gf2
+#PBS -j oe
+# Green's-function ensemble 2: corrected rbcs timing (offset = -1 period), KPOM x2, 4 new
+# gyre-bias controls. 5 controls + 19 controls x 5 sites = 100 serial runs, <=40 per node.
+# Then model equivalents of the binned obs -> gf_results/cache/<SITE>_mG.npz.
+umask 022
+cd /nobackup/dcarrol2/1-D
+source /usr/share/modules/init/csh
+module purge
+module load comp-intel/2020.4.304 hdf4/4.2.12 hdf5/1.8.18_serial netcdf/4.4.1.1_serial python3/3.9.12
+if (-d runs && ! -d runs_v1) mv runs runs_v1
+rm -rf runs gf_results/cache
+python3 scripts/make_relax.py sites/* > make_relax.log || exit 1
+python3 scripts/make_runs.py sites input runs/ctrl build/mitgcmuv HOT BATS HydroS PAPA PAP || exit 1
+python3 scripts/gf_make_runs.py runs/ctrl runs/gf || exit 1
+ls -d runs/ctrl/* runs/gf/*/* | grep -v mitgcmuv > pfe/runlist_all
+echo "runs: `wc -l < pfe/runlist_all`"
+split -l 40 -d pfe/runlist_all pfe/runlist_part_
+set nodes = (`sort -u $PBS_NODEFILE`)
+set i = 1
+foreach f (pfe/runlist_part_*)
+  if ($i == 1) then
+    bash pfe/run_list.sh $f > $f.log &
+  else
+    ssh $nodes[$i] "bash /nobackup/dcarrol2/1-D/pfe/run_list.sh /nobackup/dcarrol2/1-D/$f" > $f.log &
+  endif
+  @ i++
+end
+wait
+cat pfe/runlist_part_*.log | grep -c " 1 NORMAL END"
+python3 scripts/gf_bins.py equiv gf_results/bins runs/ctrl runs/gf gf_results/cache
+ls -la gf_results/cache

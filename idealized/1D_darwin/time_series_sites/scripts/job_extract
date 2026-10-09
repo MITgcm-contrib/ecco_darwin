@@ -1,0 +1,16 @@
+#!/bin/csh
+#PBS -l select=1:ncpus=40:model=sky_ele
+#PBS -q normal
+#PBS -l walltime=4:00:00
+#PBS -N extract_1D
+#PBS -j oe
+#PBS -m abe
+
+# Extract 1-D column inputs + validation series at HOT, BATS, HydroS, PAPA, PAP
+# from ECCO-Darwin v05 llc270 v5r1 (read-only on v5r1 files).
+umask 022
+cd $PBS_O_WORKDIR
+setenv NPROC 32
+source /usr/share/modules/init/csh
+module load python3/3.9.12
+python3 extract_v5r1_sites.py /nobackup/dcarrol2/1-D/sites

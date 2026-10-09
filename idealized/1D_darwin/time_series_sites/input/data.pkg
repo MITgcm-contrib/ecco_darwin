@@ -1,0 +1,12 @@
+# Packages (1-D column; v5r1 minus GMRedi/salt_plume/shelfice, plus rbcs for T/S relaxation)
+ &PACKAGES
+ useEXF        = .TRUE.,
+ useCAL        = .TRUE.,
+ useSeaice     = .TRUE.,
+ useGGL90      = .TRUE.,
+ useRBCS       = .TRUE.,
+ useDiagnostics= .TRUE.,
+ useMNC        = .TRUE.,
+ usePTRACERS   = .TRUE.,
+ useGCHEM      = .TRUE.,
+ /

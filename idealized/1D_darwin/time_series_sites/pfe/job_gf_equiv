@@ -1,0 +1,15 @@
+#!/bin/csh
+#PBS -l select=1:ncpus=40:model=sky_ele
+#PBS -q devel
+#PBS -l walltime=1:00:00
+#PBS -N 1D_gf_equiv
+#PBS -j oe
+# Model equivalents of the binned observations for the 5 controls + 75 GF runs
+# (scripts/gf_bins.py equiv), one process per site. Writes gf_results/cache/<SITE>_mG.npz.
+umask 022
+cd /nobackup/dcarrol2/1-D
+source /usr/share/modules/init/csh
+module purge
+module load python3/3.9.12
+python3 scripts/gf_bins.py equiv gf_results/bins runs/ctrl runs/gf gf_results/cache
+ls -la gf_results/cache
