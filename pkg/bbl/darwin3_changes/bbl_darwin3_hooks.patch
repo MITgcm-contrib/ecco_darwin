@@ -1,0 +1,45 @@
+--- a/model/src/packages_init_variables.F
++++ b/model/src/packages_init_variables.F
+@@ -279,10 +279,4 @@
+ # endif
+ #endif /* ALLOW_GMREDI */
+-
+-#ifdef ALLOW_BBL
+-      IF ( useBBL ) THEN
+-        CALL BBL_INIT_VARIA( myThid )
+-      ENDIF
+-#endif /* ALLOW_BBL */
+ 
+ #ifdef ALLOW_DOWN_SLOPE
+@@ -621,4 +615,15 @@
+ #endif /* ALLOW_CTRL */
+ 
++#ifdef ALLOW_BBL
++C--   after pkg/ptracers and pkg/ctrl: the BBL starts from the bottom-cell
++C     T, S and passive tracers including initial-condition controls
++      IF ( useBBL ) THEN
++# ifdef ALLOW_DEBUG
++        IF (debugMode) CALL DEBUG_CALL('BBL_INIT_VARIA',myThid)
++# endif
++        CALL BBL_INIT_VARIA( myThid )
++      ENDIF
++#endif /* ALLOW_BBL */
++
+ #ifdef ALLOW_OBCS
+ C--   put this call in last position (needs to come after few {PKG}_init_varia)
+--- a/pkg/ptracers/ptracers_apply_forcing.F
++++ b/pkg/ptracers/ptracers_apply_forcing.F
+@@ -112,4 +112,13 @@
+       ENDIF
+ 
++#ifdef ALLOW_BBL
++      IF ( useBBL ) THEN
++         CALL BBL_TENDENCY_APPLY_PTR(
++     U                 gPtracer,
++     I                 iMin,iMax,jMin,jMax, k, bi, bj,
++     I                 iTracer, myTime, myIter, myThid )
++      ENDIF
++#endif /* ALLOW_BBL */
++
+ #ifdef ALLOW_RBCS
+       IF ( useRBCS ) THEN

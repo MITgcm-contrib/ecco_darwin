@@ -1,0 +1,11 @@
+# BBL runtime parameters: Nof-type lateral speed and Turner (1986)
+# entrainment (compare with input.yearly, constant speed, no entrainment)
+ &BBL_PARM01
+ bbl_wvel      = 1.D-5,
+ bbl_hvel      = 1.D0,
+ bbl_initEta   = 20.D0,
+ bbl_useNofSpeed = .TRUE.,
+ bbl_nofCoeff  = 1.D0,
+ bbl_fMin      = 1.D-5,
+ bbl_selectEntrain = 1,
+ &

@@ -1,0 +1,149 @@
+diff --git a/model/src/forward_step.F b/model/src/forward_step.F
+index e4a79a4c3..956dadef3 100644
+--- a/model/src/forward_step.F
++++ b/model/src/forward_step.F
+@@ -304,6 +304,12 @@ C     == Global variables ==
+ #  include "PTRACERS_SIZE.h"
+ #  include "PTRACERS_FIELDS.h"
+ # endif
++# ifdef ALLOW_BBL
++#  include "BBL.h"
++#  ifdef ALLOW_PTRACERS
++#   include "BBL_PTR.h"
++#  endif
++# endif
+ # ifdef ALLOW_GCHEM
+ #  include "GCHEM_SIZE.h"
+ #  include "GCHEM_FIELDS.h"
+diff --git a/model/src/packages_init_variables.F b/model/src/packages_init_variables.F
+index 3e36807cb..2695c06e5 100644
+--- a/model/src/packages_init_variables.F
++++ b/model/src/packages_init_variables.F
+@@ -229,12 +229,6 @@ C--   Initialize GM/Redi parameterization
+       ENDIF
+ #endif /* ALLOW_GMREDI */
+ 
+-#ifdef ALLOW_BBL
+-      IF ( useBBL ) THEN
+-        CALL BBL_INIT_VARIA( myThid )
+-      ENDIF
+-#endif /* ALLOW_BBL */
+-
+ #ifdef ALLOW_DOWN_SLOPE
+       IF ( useDOWN_SLOPE ) THEN
+         CALL DWNSLP_INIT_VARIA( myThid )
+@@ -518,6 +512,17 @@ C--   Initialise pkg/ctl (and related pkgs components)
+       ENDIF
+ #endif /* ALLOW_CTRL */
+ 
++#ifdef ALLOW_BBL
++C--   after pkg/ptracers and pkg/ctrl: the BBL starts from the bottom-cell
++C     T, S and passive tracers including initial-condition controls
++      IF ( useBBL ) THEN
++# ifdef ALLOW_DEBUG
++        IF (debugMode) CALL DEBUG_CALL('BBL_INIT_VARIA',myThid)
++# endif
++        CALL BBL_INIT_VARIA( myThid )
++      ENDIF
++#endif /* ALLOW_BBL */
++
+ #ifdef ALLOW_OBCS
+ C--   put this call in last position (needs to come after few {PKG}_init_varia)
+       IF (useOBCS) THEN
+diff --git a/model/src/the_main_loop.F b/model/src/the_main_loop.F
+index 1f736da7b..3dc857486 100644
+--- a/model/src/the_main_loop.F
++++ b/model/src/the_main_loop.F
+@@ -107,6 +107,12 @@ c They provide the fields to be stored.
+ #   include "PTRACERS_FIELDS.h"
+ #   include "PTRACERS_START.h"
+ #  endif
++#  ifdef ALLOW_BBL
++#   include "BBL.h"
++#   ifdef ALLOW_PTRACERS
++#    include "BBL_PTR.h"
++#   endif
++#  endif
+ #  ifdef ALLOW_GCHEM
+ #   include "GCHEM_SIZE.h"
+ #   include "GCHEM_FIELDS.h"
+diff --git a/pkg/autodiff/checkpoint_lev1_directives.h b/pkg/autodiff/checkpoint_lev1_directives.h
+index 10c4f5c6a..2f0fede41 100644
+--- a/pkg/autodiff/checkpoint_lev1_directives.h
++++ b/pkg/autodiff/checkpoint_lev1_directives.h
+@@ -146,6 +146,10 @@ CADJ STORE phiHydLow = comlev1, key = ikey_dynamics, kind = isbyte
+ # include "ptracers_ad_check_lev1_dir.h"
+ #endif
+ 
++#ifdef ALLOW_BBL
++# include "bbl_ad_check_lev1_dir.h"
++#endif
++
+ #ifdef ALLOW_CFC
+ # include "cfc_ad_check_lev1_dir.h"
+ #endif
+diff --git a/pkg/autodiff/checkpoint_lev2_directives.h b/pkg/autodiff/checkpoint_lev2_directives.h
+index 32ba8a5eb..b58984ffe 100644
+--- a/pkg/autodiff/checkpoint_lev2_directives.h
++++ b/pkg/autodiff/checkpoint_lev2_directives.h
+@@ -123,6 +123,10 @@ CADJ STORE pc, ps, pw       = tapelev2, key = ilev_2
+ # include "ptracers_ad_check_lev2_dir.h"
+ #endif
+ 
++#ifdef ALLOW_BBL
++# include "bbl_ad_check_lev2_dir.h"
++#endif
++
+ #ifdef ALLOW_OBCS
+ # include "obcs_ad_check_lev2_dir.h"
+ #endif  /* ALLOW_OBCS */
+diff --git a/pkg/autodiff/checkpoint_lev3_directives.h b/pkg/autodiff/checkpoint_lev3_directives.h
+index 09256c406..02b317292 100644
+--- a/pkg/autodiff/checkpoint_lev3_directives.h
++++ b/pkg/autodiff/checkpoint_lev3_directives.h
+@@ -123,6 +123,10 @@ CADJ STORE pc, ps, pw       = tapelev3, key = ilev_3
+ # include "ptracers_ad_check_lev3_dir.h"
+ #endif
+ 
++#ifdef ALLOW_BBL
++# include "bbl_ad_check_lev3_dir.h"
++#endif
++
+ #ifdef ALLOW_OBCS
+ # include "obcs_ad_check_lev3_dir.h"
+ #endif  /* ALLOW_OBCS */
+diff --git a/pkg/autodiff/checkpoint_lev4_directives.h b/pkg/autodiff/checkpoint_lev4_directives.h
+index 04af653ec..493948ff5 100644
+--- a/pkg/autodiff/checkpoint_lev4_directives.h
++++ b/pkg/autodiff/checkpoint_lev4_directives.h
+@@ -123,6 +123,10 @@ CADJ STORE pc, ps, pw       = tapelev4, key = ilev_4
+ # include "ptracers_ad_check_lev4_dir.h"
+ #endif
+ 
++#ifdef ALLOW_BBL
++# include "bbl_ad_check_lev4_dir.h"
++#endif
++
+ #ifdef ALLOW_OBCS
+ # include "obcs_ad_check_lev4_dir.h"
+ #endif  /* ALLOW_OBCS */
+diff --git a/pkg/ptracers/ptracers_apply_forcing.F b/pkg/ptracers/ptracers_apply_forcing.F
+index 7aecdc829..8fc28b667 100644
+--- a/pkg/ptracers/ptracers_apply_forcing.F
++++ b/pkg/ptracers/ptracers_apply_forcing.F
+@@ -111,6 +111,15 @@ c       DO i=iMin,iMax
+        ENDDO
+       ENDIF
+ 
++#ifdef ALLOW_BBL
++      IF ( useBBL ) THEN
++         CALL BBL_TENDENCY_APPLY_PTR(
++     U                 gPtracer,
++     I                 iMin,iMax,jMin,jMax, k, bi, bj,
++     I                 iTracer, myTime, myIter, myThid )
++      ENDIF
++#endif /* ALLOW_BBL */
++
+ #ifdef ALLOW_RBCS
+       IF ( useRBCS ) THEN
+          CALL RBCS_ADD_TENDENCY(
