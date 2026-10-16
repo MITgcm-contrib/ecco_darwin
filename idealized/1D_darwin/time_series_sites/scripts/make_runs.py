@@ -71,7 +71,13 @@ def main():
             dst = os.path.join(rd, f)
             if os.path.lexists(dst):
                 os.remove(dst)
-            os.symlink(os.path.join(sd, f), dst)
+            if f.startswith(('ptracer', 'relax_ptr')):
+                # 2026-10-12: the extracted v5r1 tracer ICs/relaxation fields have small negatives (BATS + HydroS
+                # PO4 to -0.013, PAPA c02/Chl02 to -0.065, ...), which kept BATS surface PP at 0 for ~25 days;
+                # write non-negative copies (as ECCO-Darwin v06 *_nonneg ICs) and leave sites/ unchanged
+                np.maximum(np.fromfile(os.path.join(sd, f), '>f4'), 0.).astype('>f4').tofile(dst)
+            else:
+                os.symlink(os.path.join(sd, f), dst)
         dst = os.path.join(rd, 'mitgcmuv')
         if os.path.lexists(dst):
             os.remove(dst)

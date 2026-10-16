@@ -1,0 +1,57 @@
+ &DARWIN_FORCING_PARAMS
+ ironfile = 'iron_dust_1x1_mon',
+ ironperiod = -12,
+ darwin_inscal_iron= 1000.,
+#
+ pCO2File = 'apCO2/apCO2',
+ pCO2startdate1 = 19920101,
+ pCO2startdate2 = 000000,
+ pCO2period     = 86400.0,
+#
+ darwin_useEXFwind = .TRUE.,
+ darwin_useQsw = .TRUE.,
+ darwin_useSEAICE = .TRUE.,
+ /
+ &DARWIN_INTERP_PARAMS
+ iron_interpMethod = 0,
+ pCO2_interpMethod = 0,
+ /
+ &DARWIN_PARAMS
+ katten_w = 3.089031552089018E-02,
+ Kdissc = 3.859023170341099E-08,
+ KDOC = 1.505404679553378E-07,
+ KPOC = 4.457871870643799E-07,
+ wSi_sink = 8.183804370424187E-05,
+ wFe_sink = 8.183804370424187E-05,
+ wP_sink = 8.183804370424187E-05,
+ wN_sink = 8.183804370424187E-05,
+ wC_sink = 8.183804370424187E-05,
+# do not read darwin pickup
+ darwin_pickupSuff= ' ',
+ darwin_chlInitBalanced= .FALSE.,
+ darwin_chlIter0= -1,
+ darwin_seed= 56,
+ ALPFE   =  0.92831,
+ FREEFEMAX       =  1E-4,
+ SCAV_RAT        =   6.02502315E-7,
+ DEPTHFESED      =   7000.0,
+# KDOC    =  1.157407407407407E-7,
+ KDOP    =  3.010809359106758E-07,
+ KDON    =  3.010809359106758E-07,
+ KDOFE   =  3.010809359106758E-07,
+# KPOC    =  2.314814814814815E-7,
+ KPOP    =  8.915743741287598E-07,
+ KPON    =  8.915743741287598E-07,
+ KPOFE   =  8.915743741287598E-07,
+ KPOSI   =  7.716049382716049E-8,
+ SURFDICMIN  =   100.0,
+ SURFALKMIN  =   100.0,
+ /
+ &DARWIN_RANDOM_PARAMS
+ smallgrow=0.66098,
+ biggrow=0.43148,
+ diatomgraz=0.83003,
+ val_R_PICPOC=0.04245,
+ /
+ &DARWIN_TRAIT_PARAMS
+ /

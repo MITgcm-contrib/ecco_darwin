@@ -4,6 +4,7 @@ Extract 1-D column inputs and validation fields at ocean time-series sites
 from the ECCO-Darwin v05 llc270 v5r1 solution (Pleiades).
 
 Read-only on the v5r1 inputs/run; writes to OUT/<site>/.
+  python3 extract_v5r1_sites.py <OUT> [site ...]   (default: all SITES)
 Python 3.6 + numpy 1.14 compatible (pfe system python).
 
 Per site it writes (big-endian float32, 1x1 horizontal):
@@ -27,6 +28,7 @@ from multiprocessing import Pool
 RUN = '/nobackup/dcarrol2/v05_V5r1/darwin3/run2'
 INP = '/nobackup/hzhang1/pub/llc270_FWD/v5r1'
 OUT = sys.argv[1] if len(sys.argv) > 1 else '/nobackup/dcarrol2/1-D/sites'
+ONLY = sys.argv[2:]                     # optional subset of site names (default: all SITES)
 NPROC = int(os.environ.get('NPROC', '24'))
 
 SITES = [  # name, lat, lon (deg E, -180..180), nominal depth (m) for sanity check
@@ -35,6 +37,13 @@ SITES = [  # name, lat, lon (deg E, -180..180), nominal depth (m) for sanity che
     ('HydroS', 32.17,  -64.50, 3200.),
     ('PAPA',   50.10, -144.90, 4200.),
     ('PAP',    49.00,  -16.50, 4800.),
+    # added 2026-10-09 (other biomes); positions from program pages / Shadwick et al. 2025 (SOTS)
+    ('SOTS',  -46.94,  142.28, 4500.),   # Southern Ocean Time Series (Pulse mooring position)
+    ('K2',     47.00,  160.00, 5200.),   # JAMSTEC K2, W subarctic Pacific (HNLC)
+    ('CARIACO', 10.50, -64.67, 1400.),   # Cariaco Basin, anoxic below ~250 m, 1995-2017
+    ('DYFAMED', 43.4167, 7.8667, 2350.), # Ligurian Sea (MOOSE)
+    ('MUNIDA', -45.83, 171.53, 1180.),   # Munida offshore subantarctic station (SPOTS median cast position)
+    ('OWSM',   66.00,    2.00, 2100.),   # Ocean Weather Station M (Mike), Norwegian Sea
 ]
 
 NX = 270
@@ -85,7 +94,7 @@ def flat2face(p):
 def find_sites(xc, yc, depth):
     out = []
     lat0 = np.radians(yc); lon0 = np.radians(xc)
-    for name, lat, lon, zn in SITES:
+    for name, lat, lon, zn in [s for s in SITES if not ONLY or s[0] in ONLY]:
         la, lo = math.radians(lat), math.radians(lon)
         d = np.arccos(np.clip(np.sin(la) * np.sin(lat0) +
                               np.cos(la) * np.cos(lat0) * np.cos(lon0 - lo), -1, 1))

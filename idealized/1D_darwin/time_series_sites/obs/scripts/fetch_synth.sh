@@ -9,7 +9,10 @@ SITES=${@:-HOT BATS HydroS Papa PAP}
 
 latlon() { case $1 in
   HOT) echo "22.75 -158.0";; BATS) echo "31.67 -64.17";; HydroS) echo "32.17 -64.5";;
-  Papa) echo "50.1 -144.9";; PAP) echo "49.0 -16.5";; esac; }
+  Papa) echo "50.1 -144.9";; PAP) echo "49.0 -16.5";;
+  SOTS) echo "-46.94 142.28";; K2) echo "47.0 160.0";; CARIACO) echo "10.50 -64.67";;
+  DYFAMED) echo "43.4167 7.8667";;
+  MUNIDA) echo "-45.83 171.53";; OWSM) echo "66.0 2.0";; esac; }
 
 # fetch URL OUT -> 0 ok (data), 2 no-data, 1 failed
 fetch() {

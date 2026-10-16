@@ -3,7 +3,7 @@
 Green's-function perturbation runs for a 20th control, KZ_BG: background vertical diffusivity
 x(1 + delta) at 75-250 m (the band of the runs/exp kz3 experiments), one run per site.
 
-  python3 scripts/gf_kz_runs.py            -> runs/gf_kz/KZ_BG/<SITE>
+  python3 scripts/gf_kz_runs.py [SITE ...]   -> runs/gf_kz/KZ_BG/<SITE>   (default: the 5 original sites)
 
 Each run is a copy of runs/baseline/<SITE> (Mac build, corrected rbcs timing, control parameters),
 so the sensitivity is equiv(KZ_BG run) - equiv(baseline run) with the same compiler (gf_kz_cache.py).
@@ -20,7 +20,7 @@ NAME, DELTA, (ZTOP, ZBOT) = KZ_CONTROL[0], KZ_CONTROL[1], KZ_CONTROL[2]
 SITES = ['HOT', 'BATS', 'HydroS', 'PAPA', 'PAP']
 
 if __name__ == '__main__':
-    for s in SITES:
+    for s in sys.argv[1:] or SITES:
         d = 'runs/gf_kz/%s/%s' % (NAME, s)
         os.makedirs(os.path.dirname(d), exist_ok=True)
         copy_run(os.path.realpath('runs/baseline/%s' % s), d)

@@ -25,6 +25,11 @@ def _to_model_units(var, units, v):
             out[ml] *= 44.66                            # mL/L -> umol/L
     elif var == 'Chl':
         out[u.str.contains('kg')] *= RHO
+    elif var == 'POC':
+        # ug C per kg or L -> mmol/m3 (fixed 2026-10-09: BATS ug/kg was compared unconverted, ~12x too high)
+        ug = u.str.startswith('ug')
+        out[ug] = out[ug] / 12.011 * np.where(u[ug].str.contains('kg'), RHO, 1.)
+        out[u.str.contains('umol/kg')] *= RHO
     elif var == 'POC_flux':
         out[u.str.contains('mmol')] *= 12.011
         y = u.str.contains('mol/m2/yr') & ~u.str.contains('mmol')

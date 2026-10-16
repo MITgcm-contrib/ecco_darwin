@@ -49,6 +49,26 @@ CONTROLS = [
     ('PALAT_pico', -0.3, [('data.traits', 'PALAT', [38, 39, 40])], 'palatability of Syn + Pro to small grazer'),
 ]
 
+# Closure control set (2026-10-14; master watch D117; gf_results/zoo/README.md). Selected with env GF_CONTROLS=closure,
+# for ensembles whose control runs carry the zooplankton + diazotroph closure (scripts/make_closure_runs.py: zoo MORT = 0
+# w/ quadratic MORT2; type 2 = slow diazotroph). Two v05 controls break under it and are replaced, keeping 20 controls:
+#   MORT_zoo (scales MORT(6:7), now 0 -> no-op)  ->  MORT2_zoo, x1.5 on MORT2(6:7)
+#   PCMAX_LgEukSyn (types 2 + 3; type 2 is now the diazotroph)  ->  PCMAX_Syn (type 3) + PCMAX_diazo (type 2), x1.2 each
+import os as _os
+if _os.environ.get('GF_CONTROLS', '') == 'closure':
+    _v05 = CONTROLS
+    CONTROLS = []
+    for _c in _v05:
+        if _c[0] == 'PCMAX_LgEukSyn':
+            CONTROLS += [('PCMAX_Syn', 0.2, [('data.traits', 'PCMAX', [3])], 'max growth, Synechococcus'),
+                         ('PCMAX_diazo', 0.2, [('data.traits', 'PCMAX', [2])], 'max growth, diazotroph (type 2)')]
+        elif _c[0] == 'MORT_zoo':
+            CONTROLS.append(('MORT2_zoo', 0.5, [('data.traits', 'MORT2', [6, 7])], 'quadratic mortality, zooplankton'))
+        else:
+            CONTROLS.append(_c)
+elif _os.environ.get('GF_CONTROLS', ''):
+    raise ValueError('unknown GF_CONTROLS=%r' % _os.environ['GF_CONTROLS'])
+
 # Run-directory aliases. Ensemble 1 (PBS 25239309, runs_v1) used PCMAX_cocco/PCMAX_small for
 # PCMAX_LgEukSyn/PCMAX_Pro; ensemble 2 (PBS 25241021) uses the control names directly.
 RUNDIR_V1 = {'PCMAX_LgEukSyn': 'PCMAX_cocco', 'PCMAX_Pro': 'PCMAX_small'}
@@ -59,3 +79,14 @@ RUNDIR = {}
 # perturbation runs come from scripts/gf_kz_runs.py (Mac, vs runs/baseline) and its sensitivity column
 # from scripts/gf_kz_cache.py. (name, delta, (z_top, z_bottom) in m, description)
 KZ_CONTROL = ('KZ_BG', 1.0, (75., 250.), 'background diffusivity at 75-250 m')
+
+# Optional 21st control (added 2026-10-10, gf_solve.py --fe): Fe half-saturation of all phytoplankton, separate from
+# KSAT_phyto (which scales all nutrients together); targets the too-strong surface NO3/PO4 drawdown at the high-latitude
+# sites (MUNIDA, OWS M, K2). Namelist control, but run like KZ_BG on the Mac vs runs/baseline (scripts/gf_extra_runs.py),
+# column appended by scripts/gf_extra_cache.py.
+FE_CONTROL = ('KSAT_FE', 1.0, [('data.traits', 'KSATFET', [1, 2, 3, 4, 5])], 'Fe half-saturation, all phyto')
+
+# Optional lateral-supply control (added 2026-10-11, gf_solve.py --lat): strength of the closed-loop V5r1 horizontal-
+# advection nutrient supply at 75-130 m (scripts/make_closedloop_runs.py, NO3/PO4/SiO2/FeT); perturbation = supply x2.
+# Only meaningful with a cache whose control runs already carry the x1 supply (gf_results/cache_lat, gyre sites).
+LAT_CONTROL = ('LAT_SUP', 1.0, (75., 130.), 'lateral nutrient supply (V5r1 horizontal advection, 75-130 m)')

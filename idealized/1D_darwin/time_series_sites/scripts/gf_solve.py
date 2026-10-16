@@ -28,7 +28,7 @@ import pandas as pd
 import netCDF4
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from gf_controls import CONTROLS, RUNDIR, KZ_CONTROL
+from gf_controls import CONTROLS, RUNDIR, KZ_CONTROL, FE_CONTROL, LAT_CONTROL
 from obs_utils import load_obs
 
 T0 = dt.datetime(1992, 1, 1)
@@ -74,6 +74,17 @@ class Model:
             t = np.array(ds['T'][:])
             freq = np.median(np.diff(t)) if len(t) > 1 else 86400.
             self.d[lst] = (ds, t, freq)
+        # deepest depth w/ a model equivalent (m): the sea floor, or the deepest wet cell's nominal center ZC when a
+        # partial bottom cell puts the floor above it (obs in between interpolate between wet levels). Obs deeper than
+        # this are skipped (2026-10-15, D141: before, np.interp onto the dry, zero-filled levels compared them with ~0,
+        # e.g. HydroS bottles to 4719 m, floor 3630 m)
+        self.zbot = np.inf
+        gf = os.path.join(run, 'mnc_out', 'grid.t001.nc')
+        if os.path.exists(gf):
+            g = netCDF4.Dataset(gf)
+            h = np.array(g['HFacC'][:]).ravel(); drf = np.array(g['drF'][:]).ravel()
+            kb = np.where(h > 0)[0][-1]
+            self.zbot = max(drf[:kb].sum() + drf[kb] * h[kb], ZC[kb])
 
     def series(self, name, avg_to=None):
         """Return (t_center_days, array[ntime, nlev]) for diag `name`."""
@@ -123,11 +134,14 @@ def equivalents(model, bins, avg3d):
             cache[name] = model.series(name, avg_to=avg3d)
         tc, a = cache[name]
         vals = []
+        zbot = getattr(model, 'zbot', np.inf)
         for day, z in zip(r.days, r.depths):
+            if z > zbot:
+                continue                                  # below the column's sea floor (D141)
             it = int(np.argmin(np.abs(tc - day)))
             prof = a[it]
             vals.append(prof[0] if prof.size == 1 else np.interp(z, ZC, prof))
-        out[j] = np.mean(vals) * scale
+        out[j] = np.mean(vals) * scale if vals else np.nan
     return out
 
 
@@ -144,10 +158,13 @@ def main():
                     help='min bins per (site, variable, layer) cell: its error variance comes from those bins')
     ap.add_argument('--avg3d', type=float, default=432000.)
     ap.add_argument('--kz', action='store_true', help='add the KZ_BG control (needs --cache from gf_kz_cache.py)')
+    ap.add_argument('--lat', action='store_true', help='add the LAT_SUP control after KZ_BG/KSAT_FE (cache_lat)')
+    ap.add_argument('--fe', action='store_true', help='add the KSAT_FE control after KZ_BG (needs --kz + a cache from gf_extra_cache.py)')
     A = ap.parse_args()
     os.makedirs(A.out, exist_ok=True)
     sites = sorted(d for d in os.listdir(A.ctrl) if os.path.isfile(os.path.join(A.ctrl, d, 'data')))
-    ctrls = list(CONTROLS) + ([(KZ_CONTROL[0], KZ_CONTROL[1], [], KZ_CONTROL[3])] if A.kz else [])
+    ctrls = list(CONTROLS) + ([(KZ_CONTROL[0], KZ_CONTROL[1], [], KZ_CONTROL[3])] if A.kz else []) + \
+        ([FE_CONTROL] if A.fe else []) + ([(LAT_CONTROL[0], LAT_CONTROL[1], [], LAT_CONTROL[3])] if A.lat else [])
     names = [c[0] for c in ctrls]
 
     D, M0, Gc, rows = [], [], [], []

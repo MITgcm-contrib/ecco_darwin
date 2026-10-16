@@ -12,7 +12,7 @@ import os, sys, shutil
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from gf_controls import CONTROLS, KZ_CONTROL
+from gf_controls import CONTROLS, KZ_CONTROL, FE_CONTROL
 import numpy as np
 from gf_solve import ZC
 from gf_make_runs import NAMELISTS, scale_vector, scale_scalar, darwin_defaults
@@ -39,7 +39,7 @@ def main():
         defaults = darwin_defaults(os.path.join(here, 'darwin_params_default.txt'))
         texts = {f: open(os.path.join(dst, f)).read() for f in NAMELISTS}
         log = ['optimized set %s from %s; fixed at control: %s' % (tag, pcsv, fix or 'none')]
-        for name, delta, entries, desc in CONTROLS:
+        for name, delta, entries, desc in CONTROLS + ([FE_CONTROL] if FE_CONTROL[0] in tab.index else []):
             fac = 1. if name in fix else float(tab.loc[name, 'factor'])
             if abs(fac - 1.) < 1e-6:
                 continue

@@ -43,7 +43,7 @@ import pandas as pd
 
 COLUMNS = ["time", "depth_m", "variable", "value", "units", "source", "qc", "lat", "lon"]
 
-SITES = ["HOT", "BATS", "HydroS", "Papa", "PAP"]
+SITES = ["HOT", "BATS", "HydroS", "Papa", "PAP", "SOTS", "K2", "CARIACO", "DYFAMED", "MUNIDA", "OWSM"]
 
 # Reader modules run for each site (each decides whether it applies to that site).
 READERS = {
@@ -52,6 +52,12 @@ READERS = {
     "HydroS": ["std_bios", "std_synth", "std_geotraces"],
     "Papa": ["std_papa", "std_synth", "std_geotraces"],
     "PAP": ["std_pap", "std_synth", "std_geotraces", "std_bodc"],
+    "SOTS": ["std_sots", "std_synth", "std_geotraces"],
+    "K2": ["std_k2", "std_synth", "std_geotraces"],
+    "CARIACO": ["std_cariaco", "std_synth", "std_geotraces"],
+    "DYFAMED": ["std_dyfamed", "std_synth", "std_geotraces"],
+    "MUNIDA": ["std_munida", "std_synth", "std_geotraces"],
+    "OWSM": ["std_owsm", "std_synth", "std_geotraces"],
 }
 
 # Standard variable names. Core list from the request + extensions.

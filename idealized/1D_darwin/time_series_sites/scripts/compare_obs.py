@@ -14,7 +14,7 @@ import os, sys, argparse, datetime as dt
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # nature_style.py ships alongside
+sys.path.insert(0, os.path.expanduser('~/.claude/skills/nature-figures'))
 from nature_style import *          # noqa: F401,F403
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from obs_utils import load_obs
@@ -65,7 +65,7 @@ def main():
             tv, b = v5r1(A.site_dir, vv)
             if b is not None:
                 sc5 = 12.011 * 86400. if ov == 'PP' else 1.
-                ax.plot(b[:, :kmax].mean(0) * sc5, ZC[:kmax], '--', color=GRAY, lw=1.0, label='v5r1')
+                ax.plot(b[:, :kmax].mean(0) * sc5, ZC[:kmax], '--', color=GRAY, lw=1.0, label='V5r1')
         try:
             tc, a = M.series(mv)
             ax.plot(a[:, :kmax].mean(0) * sc, ZC[:kmax], color=MOD, lw=1.0, label=A.label)
@@ -87,7 +87,7 @@ def main():
             if b is not None:
                 kk = [0] if (b.shape[1] == 1 or v5freq == 'daily') else (ZC >= kz[0]) & (ZC <= kz[1])
                 yv = pd.Series(b[:, kk].mean(1) * v5sc, index=tv).resample('MS').mean()
-                ax.plot(yv.index, yv.values, '--', color=GRAY, lw=0.7, label='v5r1')
+                ax.plot(yv.index, yv.values, '--', color=GRAY, lw=0.7, label='V5r1')
         tc, a = M.series(mv)
         k = (ZC >= kz[0]) & (ZC <= kz[1]) if a.shape[1] > 1 else [0]
         y = pd.Series(a[:, k].mean(1) * sc, index=[T0 + dt.timedelta(days=float(x)) for x in tc])

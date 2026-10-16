@@ -1,0 +1,5 @@
+CARIACO: optimized 1-D set-up (scripts/make_optimized_runs.py)
+# step 1: v05 set-up from the site inputs (make_runs.py; negative ICs + relaxation values clipped to 0)
+# step 2: none (no regional set; v05 parameters)
+# step 3: closure
+closure q01+d2+s2 (scripts/make_closure_runs.py, from CARIACO (in place)): q01: MORT(6:7)=0, MORT2(6:7)=3.858e-06, 3.858e-06; s2: PCMAX(2) 2.630e-05 -> 4.700e-06; d2: type 2 diazotroph, c02 IC surface 0.00564 -> 0.00564

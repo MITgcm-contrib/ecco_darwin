@@ -2,6 +2,7 @@
 """Subset GLODAPv2.2023 per-ocean CSV zips to within RADIUS deg of each site.
 
 Usage: python3 -I subset_glodap.py OBS_ROOT ZIP [ZIP ...]
+       OBS_SITES="SOTS K2" python3 -I subset_glodap.py ...   # only these sites (default: all)
 Writes OBS_ROOT/<SITE>/raw/glodap/GLODAPv2.2023_<ocean>_within1deg.csv
 (all original columns, unmodified rows).
 """
@@ -15,7 +16,12 @@ import pandas as pd
 
 RADIUS = 1.0
 SITES = {"HOT": (22.75, -158.0), "BATS": (31.67, -64.17), "HydroS": (32.17, -64.5),
-         "Papa": (50.1, -144.9), "PAP": (49.0, -16.5)}
+         "Papa": (50.1, -144.9), "PAP": (49.0, -16.5),
+         "SOTS": (-46.94, 142.28), "K2": (47.0, 160.0), "CARIACO": (10.50, -64.67),
+         "DYFAMED": (43.4167, 7.8667), "MUNIDA": (-45.83, 171.53), "OWSM": (66.0, 2.0)}
+
+if os.environ.get("OBS_SITES"):  # restrict to some sites so other sites' subsets are not rewritten
+    SITES = {k: SITES[k] for k in os.environ["OBS_SITES"].split()}
 
 root = sys.argv[1]
 for zp in sys.argv[2:]:

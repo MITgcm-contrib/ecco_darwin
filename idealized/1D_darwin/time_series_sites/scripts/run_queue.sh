@@ -13,5 +13,5 @@ for s in "$@"; do
 done
 wait
 for s in "$@"; do
-  echo "$s: $(grep -c 'NORMAL END' $s/output.txt) NORMAL END, $(grep -c -i error $s/STDERR.0000) STDERR errors"
+  echo "$s: $(grep -v ABNORMAL $s/output.txt | grep -c 'NORMAL END') NORMAL END, $(grep -c -i error $s/STDERR.0000) STDERR errors"
 done

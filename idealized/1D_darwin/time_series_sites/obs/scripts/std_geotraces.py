@@ -14,6 +14,7 @@ Variable: Fe (dissolved Fe, Fe_D_CONC), nmol/kg as reported. Flags: SeaDataNet Q
 and 2 (probably good).
 
   python3 -I std_geotraces.py split <raw_extract.txt> <obs_root>     # write per-site subsets
+  OBS_SITES="SOTS K2" python3 -I std_geotraces.py split ...         # only these sites (default: all)
 """
 import glob
 import os
@@ -24,7 +25,9 @@ import pandas as pd
 
 COLS = ["time", "depth_m", "variable", "value", "units", "source", "qc", "lat", "lon"]
 SITE_LL = {"HOT": (22.75, -158.0), "BATS": (31.67, -64.17), "HydroS": (32.17, -64.5),
-           "Papa": (50.1, -144.9), "PAP": (49.0, -16.5)}
+           "Papa": (50.1, -144.9), "PAP": (49.0, -16.5),
+           "SOTS": (-46.94, 142.28), "K2": (47.0, 160.0), "CARIACO": (10.50, -64.67),
+           "DYFAMED": (43.4167, 7.8667), "MUNIDA": (-45.83, 171.53), "OWSM": (66.0, 2.0)}
 RADIUS_KM = 120.
 SUB = "geotraces_idp2025"
 SKIP_CRUISES = {"GApr13"}
@@ -52,7 +55,9 @@ def split(raw, obs_root):
     lat = d["Latitude [degrees_north]"].astype(float)
     lon = d["Longitude [degrees_east]"].astype(float)
     lon = np.where(lon > 180, lon - 360, lon)
-    for site, (la, lo) in SITE_LL.items():
+    sites = os.environ.get("OBS_SITES", "").split() or list(SITE_LL)
+    for site in sites:
+        la, lo = SITE_LL[site]
         k = _dist_km(lat, lon, la, lo) <= RADIUS_KM
         out = os.path.join(obs_root, site, "raw", SUB)
         os.makedirs(out, exist_ok=True)

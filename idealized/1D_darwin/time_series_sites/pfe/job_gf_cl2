@@ -1,0 +1,42 @@
+#!/bin/csh
+#PBS -l select=6:ncpus=40:model=sky_ele
+#PBS -q normal
+#PBS -l walltime=6:00:00
+#PBS -N 1D_gf_cl2
+#PBS -j oe
+#PBS -m abe
+# Iteration-2 closure GF ensemble, all 11 sites (2026-10-15; D118/D121 = A; gf_results/zoo/README.md). As job_gf_cl
+# (PBS 25264789) but each site's control = its v11_nn regional set + closure (pfe/setup_cl2.csh; == Mac runs/closure +
+# runs/diazo/s2_*), so the GF step is taken around the current best configuration. 231 runs in runs_cl2/;
+# equivalents -> cache_cl2_v3 + cache_cl2_new. KZ_BG on the Mac (runs/base_cl2 vs runs/gf_kz_cl2).
+umask 022
+cd /nobackup/dcarrol2/1-D
+source /usr/share/modules/init/csh
+module purge
+module load comp-intel/2020.4.304 hdf4/4.2.12 hdf5/1.8.18_serial netcdf/4.4.1.1_serial python3/3.9.12
+set OLD = "HOT BATS HydroS PAPA PAP"
+set NEW = "SOTS K2 CARIACO DYFAMED MUNIDA OWSM"
+rm -rf gf_results/cache_cl2_v3 gf_results/cache_cl2_new
+set R = runs_cl2
+set SITES = "$OLD $NEW"
+source pfe/setup_cl2.csh
+python3 scripts/gf_make_runs.py runs_cl2/ctrl runs_cl2/gf || exit 1
+ls -d runs_cl2/ctrl/* runs_cl2/gf/*/* | grep -v mitgcmuv > pfe/runlist_cl2_all
+echo "runs: `wc -l < pfe/runlist_cl2_all`"
+rm -f pfe/runlist_cl2_part_*
+split -l 40 -d pfe/runlist_cl2_all pfe/runlist_cl2_part_
+set nodes = (`sort -u $PBS_NODEFILE`)
+set i = 1
+foreach f (pfe/runlist_cl2_part_??)
+  if ($i == 1) then
+    bash pfe/run_list.sh $f > $f.log &
+  else
+    ssh $nodes[$i] "bash /nobackup/dcarrol2/1-D/pfe/run_list.sh /nobackup/dcarrol2/1-D/$f" > $f.log &
+  endif
+  @ i++
+end
+wait
+cat pfe/runlist_cl2_part_??.log | grep -c " 1 NORMAL END"
+python3 scripts/gf_bins.py equiv gf_results/bins_v3 runs_cl2/ctrl runs_cl2/gf gf_results/cache_cl2_v3 $OLD
+python3 scripts/gf_bins.py equiv gf_results/bins_new runs_cl2/ctrl runs_cl2/gf gf_results/cache_cl2_new $NEW
+ls -la gf_results/cache_cl2_v3 gf_results/cache_cl2_new

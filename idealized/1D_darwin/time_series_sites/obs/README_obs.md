@@ -1,22 +1,32 @@
 # Observations for 1-D ECCO-Darwin columns (README_obs)
 
-Assembled 2026-10-07 (gap fill for HOT, PAP and GEOTRACES Fe on 2026-10-08) for comparison against 1-D ECCO-Darwin columns (1992-2025, 50 levels, daily).
+Assembled 2026-10-07 (gap fill for HOT, PAP and GEOTRACES Fe on 2026-10-08; SOTS, K2, CARIACO and DYFAMED added
+2026-10-09; synthesis products for MUNIDA and OWSM added later on 2026-10-09) for comparison against 1-D
+ECCO-Darwin columns (1992-2025, 50 levels, daily).
 Sites (model column): HOT/ALOHA (22.75N 158.0W), BATS (31.67N 64.17W), Hydrostation S (32.17N 64.5W),
-Papa / Line P P26 (50.1N 144.9W), PAP-SO (49.0N 16.5W).
+Papa / Line P P26 (50.1N 144.9W), PAP-SO (49.0N 16.5W), SOTS (46.94S 142.28E), K2 (47.0N 160.0E),
+CARIACO (10.50N 64.67W), DYFAMED (43.4167N 7.8667E), MUNIDA (45.83S 171.53E), OWSM (Ocean Weather Station M,
+66.0N 2.0E). MUNIDA and OWSM site sources are documented in `MUNIDA/SOURCES_MUNIDA.md` and `OWSM/SOURCES_OWSM.md`.
 
 ## Layout
 
 - `<SITE>/raw/<source>/` raw downloads, one dir per source (untrusted data; never executed)
-- `<SITE>/<SITE>_obs.csv` tidy long-format file per site (SITE = HOT, BATS, HydroS, Papa, PAP)
+- `<SITE>/<SITE>_obs.csv` tidy long-format file per site (SITE = HOT, BATS, HydroS, Papa, PAP, SOTS, K2, CARIACO, DYFAMED,
+  MUNIDA, OWSM)
 - `scripts/standardize_obs.py` driver; per-source readers `std_hot.py`, `std_bios.py` (BATS + HydroS),
   `std_papa.py`, `std_pap.py`, `std_synth.py` (GLODAP/SOCAT/BGC-Argo/satellite for all sites),
-  `std_tm.py` (dissolved trace metals, HOT + BATS; added 2026-10-08);
+  `std_tm.py` (dissolved trace metals, HOT + BATS; added 2026-10-08), `std_geotraces.py` (GEOTRACES IDP2025 Fe, all sites);
+  `std_sots.py`, `std_k2.py`, `std_cariaco.py`, `std_dyfamed.py`, `std_munida.py`, `std_owsm.py` (site readers for the
+  sites added 2026-10-09);
   `fetch_synth.sh`, `subset_glodap.py` (synthesis download/subset helpers); `summarize_core.py` (core summary)
 - `obs_summary.csv` (site x variable x source) and `obs_summary_core.csv` (site x variable)
 
 Regenerate: `python3 -I obs/scripts/standardize_obs.py --summary-csv obs/obs_summary.csv` then
 `python3 -I obs/scripts/summarize_core.py obs/obs_summary.csv obs/obs_summary_core.csv`
 (the driver re-adds the user site-packages dir, where pandas/numpy/netCDF4 live, since `-I` drops it).
+To redo only some sites, use `--site SOTS K2 ...` with `--summary-csv` pointed at a temporary file, then replace those
+sites' rows in `obs_summary.csv` (keeping the other rows as they are) and rerun `summarize_core.py`; this is how the
+four sites were added on 2026-10-09 without rewriting the other sites' CSVs (and MUNIDA + OWSM after them).
 
 ## Tidy file columns
 
@@ -89,6 +99,44 @@ the `units` column.
 | BATS | pH | 12702 | 2012-2024 | 1-3997 | bgcargo,glodap |
 | BATS | salt | 322757 | 1988-2025 | 0-4728 | bcodmo_bottle,bgcargo,glodap,ncei_btm_mooring,socat |
 | BATS | temp | 326482 | 1988-2025 | 0-4728 | bcodmo_bottle,bgcargo,glodap,ncei_btm_mooring,socat |
+| CARIACO | ALK | 3778 | 1995-2017 | 0-1343 | bcodmo_bottle,glodap |
+| CARIACO | Chl | 1828 | 1995-2017 | 0-114 | bcodmo_bottle |
+| CARIACO | Chl_HPLC | 1487 | 1995-2017 | 1-101 | bcodmo_hplc |
+| CARIACO | Chl_sat | 346 | 1997-2026 | 0-0 | satchl |
+| CARIACO | DIC | 3565 | 1995-2017 | 0-1343 | bcodmo_bottle,glodap |
+| CARIACO | DOC | 1103 | 1995-2017 | 1-1351 | bcodmo_bottle,glodap |
+| CARIACO | NO3 | 3814 | 1997-2017 | 0-1343 | bcodmo_bottle,glodap |
+| CARIACO | O2 | 3656 | 1995-2017 | 0-1210 | bcodmo_bottle,glodap |
+| CARIACO | PIC_flux | 1363 | 1995-2010 | 152-1210 | bcodmo_flux |
+| CARIACO | PO4 | 3828 | 1997-2017 | 0-1343 | bcodmo_bottle,glodap |
+| CARIACO | POC | 3946 | 1995-2017 | 0-1351 | bcodmo_bottle |
+| CARIACO | POC_flux | 1364 | 1995-2010 | 152-1210 | bcodmo_flux |
+| CARIACO | PON | 3880 | 1995-2017 | 0-1351 | bcodmo_bottle |
+| CARIACO | PP | 1652 | 1995-2017 | 0-107 | bcodmo_bottle |
+| CARIACO | SiO2 | 3804 | 1997-2017 | 0-1343 | bcodmo_bottle,glodap |
+| CARIACO | bSi_flux | 1339 | 1995-2010 | 152-1210 | bcodmo_flux |
+| CARIACO | fCO2 | 4484 | 1995-2017 | 0-1343 | bcodmo_bottle,socat |
+| CARIACO | pH | 3832 | 1995-2017 | 0-1351 | bcodmo_bottle |
+| CARIACO | salt | 5340 | 1995-2017 | 0-1351 | bcodmo_bottle,glodap,socat |
+| CARIACO | temp | 5236 | 1995-2017 | 0-1343 | bcodmo_bottle,glodap,socat |
+| DYFAMED | ALK | 1586 | 1998-2019 | 0-2468 | seanoe_bottle,seanoe_carb |
+| DYFAMED | Chl | 430445 | 2001-2026 | -4-2491 | bgcargo,seanoe_vessel_ctd |
+| DYFAMED | Chl_HPLC | 1374 | 1990-2001 | 0-400 | obsvlfr_sodyf |
+| DYFAMED | Chl_sat | 346 | 1997-2026 | 0-0 | satchl |
+| DYFAMED | DIC | 1629 | 1998-2019 | 0-2468 | seanoe_bottle,seanoe_carb |
+| DYFAMED | NO3 | 15757 | 1991-2026 | 0-2468 | bgcargo,obsvlfr_sodyf,seanoe_bottle |
+| DYFAMED | O2 | 269619 | 1994-2026 | -1-2468 | bgcargo,seanoe_bottle,seanoe_mooring |
+| DYFAMED | PO4 | 2830 | 1991-2019 | 0-2468 | obsvlfr_sodyf,seanoe_bottle |
+| DYFAMED | POC | 344 | 1997-2001 | 5-2000 | obsvlfr_sodyf |
+| DYFAMED | POC_flux | 1077 | 1988-2017 | 200-1000 | seanoe_traps |
+| DYFAMED | PON | 331 | 1997-2001 | 5-2000 | obsvlfr_sodyf |
+| DYFAMED | PP | 739 | 1993-2001 | 5-90 | obsvlfr_sodyf |
+| DYFAMED | SiO2 | 3054 | 1991-2019 | 0-2468 | obsvlfr_sodyf,seanoe_bottle |
+| DYFAMED | bbp | 243047 | 2012-2026 | -4-2007 | bgcargo |
+| DYFAMED | fCO2 | 50602 | 1995-2023 | 0-5 | seanoe_carioca,socat |
+| DYFAMED | pH | 350 | 1998-2016 | 0-2026 | seanoe_bottle |
+| DYFAMED | salt | 799786 | 1991-2026 | -1-2489 | bgcargo,seanoe_bottle,seanoe_mooring,seanoe_tso2,seanoe_vessel_ctd,socat |
+| DYFAMED | temp | 832768 | 1991-2026 | -1-2489 | bgcargo,seanoe_bottle,seanoe_buoy,seanoe_carioca,seanoe_mooring,seanoe_mooring_rcm,seanoe_tso2,seanoe_vessel_ctd,socat |
 | HOT | ALK | 6602 | 1988-2024 | 1-4728 | bcodmo_bottle,bcodmo_spots,glodap,hot_co2,scripps_co2 |
 | HOT | Chl | 30073 | 1988-2025 | 0-1601 | bcodmo_bottle,bgcargo,ncei_whots_pco2 |
 | HOT | Chl_HPLC | 3098 | 1988-2016 | 2-1014 | bcodmo_bottle |
@@ -127,6 +175,52 @@ the `units` column.
 | HydroS | pH | 18624 | 2012-2024 | 1-4719 | bgcargo,glodap |
 | HydroS | salt | 303752 | 1955-2025 | 0-4719 | bcodmo_bottle,bgcargo,glodap,socat |
 | HydroS | temp | 303836 | 1955-2025 | 0-4719 | bcodmo_bottle,bgcargo,glodap,socat |
+| K2 | ALK | 2199 | 1999-2021 | 0-5279 | glodap,jamstec_k2s1_bottle,ncei_ocads_k2 |
+| K2 | Chl | 418 | 1997-2021 | 0-298 | glodap,jamstec_k2s1_bottle |
+| K2 | Chl_HPLC | 157 | 2010-2012 | 0-150 | jamstec_k2s1_bottle |
+| K2 | Chl_sat | 326 | 1997-2026 | 0-0 | satchl |
+| K2 | DIC | 2358 | 1999-2021 | 0-5356 | glodap,jamstec_k2s1_bottle,ncei_ocads_k2 |
+| K2 | DOC | 433 | 2010-2021 | 0-5231 | glodap,jamstec_k2s1_bottle |
+| K2 | Fe | 85 | 2011-2017 | 10-5229 | geotraces_idp2025_GP02,geotraces_idp2025_GP18 |
+| K2 | NO3 | 9909 | 1985-2025 | 0-5356 | bgcargo,glodap,jamstec_k2s1_bottle,ncei_ocads_k2 |
+| K2 | O2 | 104283 | 1985-2026 | 0-5356 | bgcargo,glodap,jamstec_k2s1_bottle,ncei_ocads_k2 |
+| K2 | PIC_flux | 506 | 2010-2025 | 200-4811 | jamstec_k2s1_trap,oceansites_k2_trap |
+| K2 | PO4 | 2770 | 1985-2021 | 0-5356 | glodap,jamstec_k2s1_bottle,ncei_ocads_k2 |
+| K2 | POC_flux | 504 | 2010-2025 | 200-4811 | jamstec_k2s1_trap,oceansites_k2_trap |
+| K2 | PP | 47 | 2010-2010 | 0-60 | jamstec_k2s1_pp |
+| K2 | SiO2 | 2773 | 1985-2021 | 0-5356 | glodap,jamstec_k2s1_bottle,ncei_ocads_k2 |
+| K2 | bSi_flux | 502 | 2010-2025 | 200-4811 | jamstec_k2s1_trap,oceansites_k2_trap |
+| K2 | fCO2 | 5126 | 1995-2025 | 5-5 | socat |
+| K2 | pH | 2603 | 1999-2021 | 0-5356 | glodap,jamstec_k2s1_bottle |
+| K2 | salt | 147521 | 1985-2026 | 0-5356 | bgcargo,glodap,jamstec_k2s1_bottle,jamstec_k2s1_ctd,ncei_ocads_k2,socat |
+| K2 | temp | 150839 | 1985-2026 | 0-5356 | bgcargo,glodap,jamstec_k2s1_bottle,jamstec_k2s1_ctd,ncei_ocads_k2,socat |
+| MUNIDA | ALK | 298 | 2001-2019 | 7-996 | bcodmo_spots |
+| MUNIDA | Chl | 313 | 2017-2026 | 4-1399 | bgcargo |
+| MUNIDA | Chl_sat | 339 | 1997-2026 | 0-0 | satchl |
+| MUNIDA | DIC | 220 | 2001-2019 | 7-996 | bcodmo_spots |
+| MUNIDA | NO3 | 598 | 2001-2026 | 4-1399 | bcodmo_spots,bgcargo |
+| MUNIDA | O2 | 1112 | 2016-2026 | 2-1399 | bgcargo |
+| MUNIDA | PO4 | 285 | 2001-2019 | 7-996 | bcodmo_spots |
+| MUNIDA | SiO2 | 280 | 2001-2019 | 7-996 | bcodmo_spots |
+| MUNIDA | bbp | 313 | 2017-2026 | 4-1399 | bgcargo |
+| MUNIDA | fCO2 | 45903 | 1994-2025 | 5-5 | socat |
+| MUNIDA | pCO2 | 2687 | 2004-2006 | 2-2 | ncei_ocads_0100218,ncei_ocads_0112883 |
+| MUNIDA | pH | 313 | 2017-2026 | 4-1399 | bgcargo |
+| MUNIDA | salt | 49186 | 1994-2026 | 2-1399 | bcodmo_spots,bgcargo,ncei_ocads_0100218,ncei_ocads_0112883,socat |
+| MUNIDA | temp | 50189 | 1994-2026 | 2-1399 | bcodmo_spots,bgcargo,ncei_ocads_0100218,ncei_ocads_0112883,socat |
+| OWSM | ALK | 2947 | 1994-2025 | 0-2089 | glodap,ncei_ocads_owsm,nmdc_owsm_sdg |
+| OWSM | Chl | 61243 | 1995-2024 | 0-2002 | bgcargo,glodap,nmdc_imr_nutrients |
+| OWSM | Chl_sat | 226 | 1997-2026 | 0-0 | satchl |
+| OWSM | DIC | 4377 | 1994-2025 | 0-2961 | glodap,ncei_ocads_owsm,nmdc_owsm_sdg |
+| OWSM | NO3 | 3218 | 1994-2024 | 0-3418 | bgcargo,glodap,ncei_ocads_owsm,nmdc_imr_nutrients,nmdc_owsm_sdg |
+| OWSM | O2 | 66379 | 1992-2025 | -1-3418 | bgcargo,glodap,ncei_ocads_owsm,nmdc_imr_nutrients,oceansites_stationm |
+| OWSM | PO4 | 2777 | 1995-2024 | 0-3418 | glodap,ncei_ocads_owsm,nmdc_imr_nutrients,nmdc_owsm_sdg |
+| OWSM | SiO2 | 2995 | 1995-2024 | 0-3418 | glodap,ncei_ocads_owsm,nmdc_imr_nutrients,nmdc_owsm_sdg |
+| OWSM | bbp | 53932 | 2013-2022 | 0-2002 | bgcargo |
+| OWSM | fCO2 | 367318 | 1995-2025 | 1-582 | nmdc_noremso_mooring,socat |
+| OWSM | pH | 489 | 1998-2022 | 0-2005 | bgcargo,glodap |
+| OWSM | salt | 554837 | 1992-2025 | 0-3418 | bgcargo,glodap,ncei_ocads_owsm,nmdc_noremso_mooring,nmdc_owsm_sdg,oceansites_stationm,socat |
+| OWSM | temp | 579544 | 1992-2025 | 0-3418 | bgcargo,glodap,ncei_ocads_owsm,nmdc_noremso_mooring,nmdc_owsm_sdg,oceansites_stationm,socat |
 | PAP | ALK | 236 | 1981-2017 | 0-4905 | glodap |
 | PAP | Chl | 49039 | 1991-2025 | 0-2015 | bgcargo,glodap,oceansites_gdac_ifremer |
 | PAP | Chl_sat | 338 | 1997-2026 | 0-0 | satchl |
@@ -162,6 +256,23 @@ the `units` column.
 | Papa | pH | 65864 | 2005-2025 | 0-4237 | bgcargo,glodap,ooi_papa_flanking_flma,ooi_papa_flanking_flmb,pmel_co2_mooring |
 | Papa | salt | 343389 | 1956-2026 | 0-4300 | bgcargo,glodap,ios_bot_erddap,oceansites_pmel_daily,pmel_co2_mooring,socat |
 | Papa | temp | 365675 | 1956-2026 | 0-4300 | bgcargo,glodap,ios_bot_erddap,oceansites_pmel_daily,pmel_co2_mooring,socat |
+| SOTS | ALK | 182 | 1998-2023 | 4-3456 | glodap,imos_ras |
+| SOTS | Chl | 68285 | 2009-2026 | 0-2006 | bgcargo,imos_mooring |
+| SOTS | Chl_sat | 321 | 1997-2026 | 0-0 | satchl |
+| SOTS | DIC | 88 | 1998-2015 | 5-3934 | glodap |
+| SOTS | Fe | 54 | 2016-2020 | 15-1482 | geotraces_idp2025_GIpr10,geotraces_idp2025_GPpr11,geotraces_idp2025_GSc01 |
+| SOTS | NO3 | 6985 | 1998-2026 | 0-3934 | bgcargo,glodap,imos_mooring,imos_ras |
+| SOTS | O2 | 145728 | 1998-2026 | 0-3934 | bgcargo,glodap,imos_mooring |
+| SOTS | PIC_flux | 961 | 1997-2024 | 560-3980 | imos_traps |
+| SOTS | PO4 | 388 | 1998-2022 | 4-3934 | glodap,imos_ras |
+| SOTS | POC_flux | 916 | 1997-2024 | 560-3980 | imos_traps |
+| SOTS | SiO2 | 477 | 1998-2023 | 4-3934 | glodap,imos_ras |
+| SOTS | bSi_flux | 926 | 1997-2024 | 560-3980 | imos_traps |
+| SOTS | bbp | 22723 | 2010-2026 | 0-2005 | bgcargo |
+| SOTS | fCO2 | 148141 | 1993-2025 | 5-5 | socat |
+| SOTS | pH | 16196 | 2015-2025 | 0-1993 | bgcargo,imos_mooring |
+| SOTS | salt | 327650 | 1993-2026 | 0-4735 | bgcargo,glodap,imos_mooring,imos_ras,socat |
+| SOTS | temp | 443062 | 1993-2026 | 0-4745 | bgcargo,glodap,imos_mooring,imos_ras,socat |
 
 ## Missing data and sources needing login or manual fetch
 
@@ -806,6 +917,9 @@ Accessed 2026-10-07. Reader: `scripts/std_synth.py` (called by `standardize_obs.
 Download helpers: `scripts/fetch_synth.sh` (SOCAT, BGC-Argo; chunked + retried ERDDAP requests,
 because this network silently truncates long transfers), `scripts/subset_glodap.py` (GLODAP).
 Site centres: HOT 22.75N 158.0W; BATS 31.67N 64.17W; HydroS 32.17N 64.5W; Papa 50.1N 144.9W; PAP 49.0N 16.5W.
+Added 2026-10-09: SOTS 46.94S 142.28E; K2 47.0N 160.0E; CARIACO 10.50N 64.67W; DYFAMED 43.4167N 7.8667E
+(see "Update 2026-10-09" below).
+Added later on 2026-10-09: MUNIDA 45.83S 171.53E; OWSM 66.0N 2.0E (see "Update 2026-10-09 (b)" below).
 BATS and HydroS are ~60 km apart, so their synthesis subsets overlap (same samples can appear in both CSVs).
 All synthesis rows carry their own `lat`/`lon` (sample position), so the offset from the model column
 can be computed; filter on distance if a tighter match is wanted.
@@ -910,6 +1024,65 @@ can be computed; filter on distance if a tighter match is wanted.
   (1981-2017); Chl_sat 338.
 
 
+### Update 2026-10-09: four new sites (SOTS, K2, CARIACO, DYFAMED)
+
+- Same products, queries, boxes and QC as above; sites added to the tables in `fetch_synth.sh`, `subset_glodap.py`,
+  `std_synth.py` and `std_geotraces.py`. SOCAT and BGC-Argo via `fetch_synth.sh <root> socat|bgcargo SOTS K2 CARIACO
+  DYFAMED`; OC-CCI with the same +-0.0625 deg query form (`<SITE>/raw/satchl/query_url.txt`). Accessed 2026-10-09.
+- `subset_glodap.py` and `std_geotraces.py split` now take an optional `OBS_SITES="SOTS K2 ..."` environment variable to
+  subset only those sites (default: all sites), so the existing sites' raw subsets were not rewritten.
+- GLODAPv2.2023: SOTS rows are in the **Indian** Ocean file (548 rows; nothing in the Pacific file), K2 in the Pacific
+  file (1903 rows), CARIACO in the Atlantic file (72 rows). The Mediterranean is in the Atlantic file (plus one 1977
+  cruise in the Indian file), but **no GLODAP station lies within 1 deg of DYFAMED** (nearest ~440 km, 2011).
+- GEOTRACES IDP2025 Fe within 120 km: SOTS 159 raw rows (GIpr10 2020, GPpr11 2016, GSc01 2017), K2 446 (GP02, GP18
+  2011). **None at CARIACO (nearest 920 km) or DYFAMED (nearest 210 km, GApr09 2017).**
+- No BGC-Argo profiles within 100 km of CARIACO (enclosed basin); SOCAT at CARIACO is a single 2011 year.
+
+### Tidy-row counts from these products (after QC), 2026-10-09
+- SOTS: Argo O2 126k, Chl 63k, bbp 23k, pH 15k, NO3 6.1k (2005-2026, BGC 2010+); SOCAT fCO2 148k (1993-2025);
+  GLODAP 45-513 per var (1998-2016; DIC 88, ALK 87); IDP2025 Fe 54 (2016-2020); Chl_sat 321 months.
+- K2: Argo O2 101k, NO3 7.1k (2017-2026; no adjusted Chl, pH or bbp); SOCAT fCO2 5.1k (1995-2025); GLODAP 1.1-2.1k
+  per var for nutrients/O2/T/S/DIC/ALK/pH (1985-2021), Chl 99, DOC 66; IDP2025 Fe 85 (2011-2017); Chl_sat 326.
+- CARIACO: no Argo; SOCAT fCO2 928 (2011 only); GLODAP 5-71 per var (1997-2003); no IDP2025 Fe; Chl_sat 346.
+- DYFAMED: Argo Chl 274k, O2 261k, bbp 243k, NO3 13k (2012-2026), no adjusted pH; SOCAT fCO2 50k (1998-2023);
+  no GLODAP; no IDP2025 Fe; Chl_sat 346.
+
+
+### Update 2026-10-09 (b): two more sites (MUNIDA, OWSM)
+
+- Same products, queries, boxes and QC as above; MUNIDA (45.83S 171.53E) and OWSM (66.0N 2.0E) added to the site tables
+  in `fetch_synth.sh`, `subset_glodap.py`, `std_synth.py` and `std_geotraces.py`, and to `standardize_obs.py`
+  (readers `std_munida` / `std_owsm` + `std_synth` + `std_geotraces`). SOCAT and BGC-Argo via
+  `fetch_synth.sh <root> socat|bgcargo MUNIDA OWSM`; OC-CCI with the same +-0.0625 deg query form
+  (`<SITE>/raw/satchl/query_url.txt`); GLODAP and GEOTRACES subsets with `OBS_SITES="MUNIDA OWSM"`, so no other site's
+  raw subsets or tidy CSVs were rewritten (md5 of the other nine `<SITE>_obs.csv` checked unchanged). Accessed 2026-10-09.
+- GLODAPv2.2023: OWSM rows are in the **Arctic** Ocean file (GLODAPv2.2023_Arctic_Ocean.csv.zip, which holds the Nordic
+  Seas; nothing in the Atlantic file), 2419 rows from 9 cruises (1994-2021). 2098 of them are one compiled "cruise"
+  58P320011031 (weather ship Polarfront, Station M bottle series 2001-2021), very likely the same Skjelvan DIC/ALK/nutrient
+  bottles as the site source `ncei_ocads_owsm` (NCEI 0112884; not checked row by row): **deduplicate glodap vs ncei_ocads_owsm at OWSM**.
+  **No GLODAP station lies within 1 deg of MUNIDA** (nearest ~540 km, a 2009 cruise at 41.9S 175.5E).
+- GEOTRACES IDP2025 Fe within 120 km: **none at MUNIDA (nearest ~900 km, GIPY01 2006 / GPpr02 2010) or OWSM (nearest
+  ~950 km, GN04 2015)**; the per-site TSVs are header-only.
+- SOCAT at OWSM: M/V Polarfront (weather ship on station, 2006-2009, 347k rows), the Station M mooring (2011-2021, 12.9k)
+  and G.O. Sars (2006-2025, 6.5k); 348k of the 366k fCO2 rows are within 30 km of the station. **This is the only surface
+  pCO2/fCO2 at OWSM**: the site reader's NorEMSO HydroC fCO2 (`nmdc_noremso_mooring`) is at ~470-580 m.
+- SOCAT at MUNIDA: the 1 deg box covers the whole Otago shelf/Subtropical Front, so only 4352 of the 45.9k fCO2 rows are
+  within 15 km of the station (the `std_munida` cut). SOCAT 2004-2006 holds 4 Munida (61MU) and 12 Polaris II (61P2)
+  cruises whose dates match the NCEI underway files read by `std_munida` (`ncei_ocads_0100218` M040127-M060730,
+  `ncei_ocads_0112883` P060830, P061024), so those **2004-2006 SOCAT rows (10.5k in the box, 2300 within 15 km) very
+  likely duplicate the site's NCEI underway pCO2** (not checked row by row). Polaris II (to 2025) and Tangaroa (2013-2024) SOCAT
+  cruises continue, extending the underway record past the open NCEI files.
+- BGC-Argo at MUNIDA is sparse (O2 1112 levels 2016-2026; Chl/NO3/pH/bbp 313 each, 2017-2026). At OWSM, adjusted NO3 and pH
+  come from a single day (2022-09-11).
+
+### Tidy-row counts from these products (after QC), 2026-10-09 (b)
+- MUNIDA: Argo O2 1.1k, Chl/NO3/pH/bbp 313 each (2016-2026); SOCAT fCO2 45.9k (1994-2025); no GLODAP; no IDP2025 Fe;
+  Chl_sat 339 months.
+- OWSM: Argo T/S 70k, Chl 61k (2013-2022), O2 55k (2006-2025), bbp 54k, NO3 201, pH 447 (2022 only); SOCAT fCO2 366k
+  (1995-2025); GLODAP 2.4k T/S, DIC 2.1k, ALK 1.5k, NO3/SiO2/PO4/O2 1.1-1.3k (1994-2021; mostly the Station M bottles),
+  pH 42, Chl 12; no IDP2025 Fe; Chl_sat 226 months (winter gaps at 66N).
+
+
 ## GEOTRACES IDP2025 dissolved Fe (added 2026-10-08)
 - Extracted with the GEOTRACES webODV data extractor (https://geotraces.webodv.awi.de/, IDP2025 > seawater;
   variables DEPTH, CTDPRS_UP_T_VALUE, Fe_D_CONC; 1926 stations), ASCII spreadsheet (1.1 MB zip, 34 MB txt),
@@ -918,6 +1091,9 @@ can be computed; filter on distance if a tighter match is wanted.
 - Papa: 144 Fe (GP02 2017 to 4238 m; GPpr07 Line P process study 2012-2020, upper 600 m).
   BATS and Hydrostation S: 56 each (GA02 2010, GA03 2011). GApr13 (BAIT 2019) is skipped here because it is
   already ingested from BCO-DMO by std_tm. HOT and PAP: no IDP2025 Fe within 120 km (nearest 370 km, 338 km).
+- Added 2026-10-09: SOTS 54 Fe (GIpr10 2020, GPpr11 2016, GSc01 2017; upper 1500 m), K2 85 Fe (GP18 2011, GP02;
+  to 5229 m). CARIACO and DYFAMED: none within 120 km (nearest 920 km, 210 km).
+- Added later on 2026-10-09: MUNIDA and OWSM: none within 120 km (nearest ~900 km, GIPY01/GPpr02; ~950 km, GN04).
 - Citation: GEOTRACES Intermediate Data Product Group (2025). The GEOTRACES Intermediate Data Product 2025
   (IDP2025). NERC EDS British Oceanographic Data Centre NOC. doi:10.5285/42c92148-8d03-8be6-e063-7086abc09f0c
   (CC-BY 4.0, GEOTRACES Fair Data Use Statement).
