@@ -126,5 +126,10 @@ conservation check for T, S and every tracer each step (testing only).
   package was developed and tested on master 63cdc0b96 and on checkpoint68g. pkg/bbl
   itself has no upstream changes in between, but the master build has not been rerun.
 - The darwin3 adjoint with the BBL has not been tested.
+- Regional set-ups with pkg/obcs: BBL exchange is skipped on faces where `maskInW`/`maskInS`
+  is zero (beyond an open boundary), so halo cells past the boundary are never treated as
+  neighbors. Found in WestAO (single-facet exch2), where the fix closed `BBL_CHECK_BUDGET` from
+  0.4–18% to round-off (≤ 3e-16) over a 30-day run. Global set-ups are unchanged
+  (global_oce_latlon testreport identical).
 - The shelf changes used in the LLC90 runs (GM/Redi off on the shelf, brine to the
   bottom) are experiments, not part of this package.

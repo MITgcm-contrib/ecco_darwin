@@ -274,7 +274,10 @@ C     bbl in situ density is stored in k > kLowC indices.
          DO i=2-OLx,sNx+OLx
           kLowC1 = kLowC(i-1,j,bi,bj)
           kLowC2 = kLowC(i  ,j,bi,bj)
-          IF ((kLowC1.GT.0).AND.(kLowC2.GT.0)) THEN
+C     maskInW is 0 on faces beyond an open boundary (pkg/obcs), where
+C     the halo neighbor is not a real cell; else it is the wet mask
+          IF ((kLowC1.GT.0).AND.(kLowC2.GT.0)
+     &        .AND.(maskInW(i,j,bi,bj).GT.0.)) THEN
            kl = MAX(kLowC1,kLowC2) + 1
 C     parentheses make deltaDpt exactly antisymmetric (and exactly 0
 C     for equal BBL tops), so mirror-image faces get opposite signs
@@ -322,7 +325,8 @@ C--   Meridional faces (j-1|j), same as above.
          DO i=1-OLx,sNx+OLx
           kLowC1 = kLowC(i,j-1,bi,bj)
           kLowC2 = kLowC(i,j  ,bi,bj)
-          IF ((kLowC1.GT.0).AND.(kLowC2.GT.0)) THEN
+          IF ((kLowC1.GT.0).AND.(kLowC2.GT.0)
+     &        .AND.(maskInS(i,j,bi,bj).GT.0.)) THEN
            kl = MAX(kLowC1,kLowC2) + 1
            deltaDpt = ( R_low(i,j-1,bi,bj) + eta0(i,j-1,bi,bj) )
      &              - ( R_low(i,j  ,bi,bj) + eta0(i,j  ,bi,bj) )
