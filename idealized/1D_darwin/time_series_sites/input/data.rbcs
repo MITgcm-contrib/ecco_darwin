@@ -6,8 +6,8 @@
 # mid-January and the run end (31 Dec 2025) needs records 409-410 only.
 # tauRelaxT/S = 30 d over the whole column (relax_mask = 1); tune as needed.
 # Deep BGC supply: NO3, PO4, FeT, SiO2, DIC, ALK, O2 relaxed to v5r1 monthly
-# profiles with tau = 1 yr and mask 3 (all ptracers use mask 3): 0 above 150 m,
-# linear ramp to 1 at 250 m, so the euphotic zone evolves freely.
+# profiles with tau = 1 yr and mask 3 (all ptracers use mask 3): 0 above 200 m,
+# linear ramp to 1 at 300 m, so the euphotic zone evolves freely (150/250 m before 2026-10-15).
  &RBCS_PARM01
  useRBCtemp=.TRUE.,
  useRBCsalt=.TRUE.,

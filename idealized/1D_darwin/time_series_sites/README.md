@@ -66,8 +66,8 @@ or copy the parameters without building anything. For the v05 baseline instead, 
 - **T/S relaxation** (`pkg/rbcs`, 30-day timescale, full column) toward v5r1 monthly-mean profiles at the site, as a
   stand-in for 3-D advection.
 - **Deep BGC supply:** NO3, PO4, FeT, SiO2, DIC, ALK and O2 are relaxed (1-year timescale) toward v5r1 monthly
-  profiles below the euphotic zone only (mask 0 above 150 m, linear ramp, 1 below 250 m). The upper 150 m and all
-  plankton, DOM and POM tracers evolve freely.
+  profiles below the euphotic zone only (mask 0 above 200 m, linear ramp, 1 below 300 m; 150/250 m before
+  2026-10-15). The upper 200 m and all plankton, DOM and POM tracers evolve freely.
 - **rbcs timing:** with `rbcsForcingCycle=0`, record *k* is centered at
   `rbcsForcingOffset + (k-0.5)*rbcsForcingPeriod` (`eesupp/src/get_periodic_interval.F`), so
   `rbcsForcingOffset = -2629746` (one period) centers record 2 on mid-January 1992.
