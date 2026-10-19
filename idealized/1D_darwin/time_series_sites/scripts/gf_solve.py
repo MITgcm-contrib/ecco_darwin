@@ -53,9 +53,30 @@ VARMAP = {
     # obs POC is all particles: model = detrital POC + plankton C (c01-c07). DOC/PON not used:
     # Darwin DOC is the labile pool only (no ~40 uM refractory DOC), PON adds little beyond POC.
     'POC':  ('POCTOT', 1.),
+    # 2026-10-18: particulate N + P (G-POM + program bottle data). Non-quota Darwin: plankton N, P = C x R_NC, R_PC
+    # (darwin_traits.txt), so model PON = detrital PON (TRAC13) + sum R_NC*c, POP = TRAC14 + sum R_PC*c.
+    'PON':  ('PONTOT', 1.), 'POP': ('POPTOT', 1.),
     'pCO2': ('pCO2', 1e6),                                   # -> uatm
     'POC_flux': ('POCFLUX', 12.011 * 86400.),                # wC_sink*POC -> mg C m-2 d-1
 }
+
+
+def read_traits(path, names, n=7):
+    """Per-type trait vectors from darwin_traits.txt (handles 'k*value' repeats); missing file -> {}."""
+    out = {}
+    if not os.path.exists(path):
+        return out
+    for line in open(path):
+        k = line.split('=')[0].strip().upper()
+        if k in names:
+            vals = []
+            for tok in line.split('=')[1].replace(',', ' ').split():
+                if '*' in tok:
+                    c, x = tok.split('*'); vals += [float(x.replace('D', 'E'))] * int(c)
+                else:
+                    vals.append(float(tok.replace('D', 'E')))
+            out[k] = vals[:n]
+    return out
 
 
 class Model:
@@ -63,6 +84,7 @@ class Model:
     def __init__(self, run):
         self.d = {}
         self.wC = 1.1574074074074075E-004                    # darwin default 10 m/d
+        self.ratios = read_traits(os.path.join(run, 'darwin_traits.txt'), ('R_NC', 'R_PC'))
         for line in open(os.path.join(run, 'darwin_params.txt')):
             if line.strip().upper().startswith('WC_SINK'):
                 self.wC = float(line.split('=')[1].strip().rstrip(',').replace('D', 'E'))
@@ -91,6 +113,10 @@ class Model:
         for lst, (ds, t, freq) in self.d.items():
             if name == 'POCTOT' and 'TRAC12' in ds.variables:
                 a = sum(np.array(ds['TRAC%02d' % n][:]) for n in [12] + list(range(20, 27)))
+            elif name in ('PONTOT', 'POPTOT') and 'TRAC13' in ds.variables:
+                r = self.ratios['R_NC' if name == 'PONTOT' else 'R_PC']
+                a = np.array(ds['TRAC13' if name == 'PONTOT' else 'TRAC14'][:]) + \
+                    sum(r[j] * np.array(ds['TRAC%02d' % (20 + j)][:]) for j in range(7))
             elif name == 'POCFLUX' and 'TRAC12' in ds.variables:
                 a = np.array(ds['TRAC12'][:]) * self.wC         # mmol C m-2 s-1
             elif name == 'CHL' and 'TRAC27' in ds.variables:
@@ -114,6 +140,9 @@ def bin_obs(site, obs_root):
     o = load_obs(site, obs_root, variables=list(VARMAP))
     # POC flux: only shallow traps (100-500 m), where wC_sink x POC is a fair equivalent
     o = o[(o['variable'] != 'POC_flux') | o['depth_m'].between(100., 500.)]
+    # suspended POC/PON/POP: upper 200 m only (2026-10-18). Below 200 m the model's single fast-sinking detrital pool
+    # holds ~10x less suspended POM than observed (no refractory/slow-sinking pool; G-POM diagnosis, obs/gpom/NOTES.md)
+    o = o[~o['variable'].isin(['POC', 'PON', 'POP']) | (o['depth_m'] <= 200.)]
     o['tday'] = (o['t'] - pd.Timestamp(T0)).dt.total_seconds() / 86400.
     o['layer'] = np.digitize(o['depth_m'], LAYERS) - 1
     o['ym'] = o['t'].dt.year * 100 + o['t'].dt.month

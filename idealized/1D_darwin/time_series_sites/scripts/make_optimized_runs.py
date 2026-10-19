@@ -54,6 +54,7 @@ def main():
         else:
             d1 = os.path.join(work, 'base', s)
         m1 = open(os.path.join(d1, 'opt_manifest.txt')).read() if reg else ''
+        m3 = ''
         run([py('make_closure_runs.py'), '--inplace', d1])
         dst = os.path.join(runs, s)
         if os.path.exists(dst):
@@ -61,7 +62,18 @@ def main():
         if reg:
             run([py('gf_make_opt.py'), os.path.join(PARAMS, reg + '_step2.csv'), os.path.dirname(d1),
                  os.path.join(work, 'step2'), 'opt', os.path.basename(d1)], closure=True)
-            shutil.move(os.path.join(work, 'step2', 'opt_' + os.path.basename(d1)), dst)
+            s3 = os.path.join(PARAMS, reg + '_step3.csv')       # third GF iteration, where adopted (gyre, 2026-10-18)
+            m3 = ''
+            if os.path.exists(s3):
+                d2 = os.path.join(work, 'step2b', s)
+                shutil.move(os.path.join(work, 'step2', 'opt_' + os.path.basename(d1)), d2)
+                m2 = open(os.path.join(d2, 'opt_manifest.txt')).read()
+                run([py('gf_make_opt.py'), s3, os.path.dirname(d2), os.path.join(work, 'step3'), 'opt', s], closure=True)
+                shutil.move(os.path.join(work, 'step3', 'opt_' + s), dst)
+                m3 = open(os.path.join(dst, 'opt_manifest.txt')).read()
+                open(os.path.join(dst, 'opt_manifest.txt'), 'w').write(m2)
+            else:
+                shutil.move(os.path.join(work, 'step2', 'opt_' + os.path.basename(d1)), dst)
         else:
             shutil.move(d1, dst)
         clean = lambda t: t.replace(os.path.abspath(PARAMS), 'results/optimized').replace(PARAMS, 'results/optimized') \
@@ -75,7 +87,9 @@ def main():
             ('# step 2: %s set, first Green\'s-function fit\n%s' % (reg, m1) if reg else
              '# step 2: none (no regional set; v05 parameters)\n') +
             '# step 3: closure\n%s' % xt +
-            ('# step 4: %s set, second Green\'s-function iteration\n%s' % (reg, m2) if reg else '')))
+            ('# step 4: %s set, second Green\'s-function iteration\n%s' % (reg, m2) if reg else '') +
+            ('# step 5: %s set, third Green\'s-function iteration (200-300 m relaxation, G-POM cost)\n%s' % (reg, m3)
+             if reg and m3 else '')))
         print('ready:', dst, '(%s)' % (reg + ' set + closure' if reg else 'v05 parameters + closure'))
     shutil.rmtree(work)
 

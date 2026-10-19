@@ -1097,3 +1097,12 @@ can be computed; filter on distance if a tighter match is wanted.
 - Citation: GEOTRACES Intermediate Data Product Group (2025). The GEOTRACES Intermediate Data Product 2025
   (IDP2025). NERC EDS British Oceanographic Data Centre NOC. doi:10.5285/42c92148-8d03-8be6-e063-7086abc09f0c
   (CC-BY 4.0, GEOTRACES Fair Data Use Statement).
+
+## G-POM suspended POC/PON/POP (added 2026-10-18)
+
+Fumenia et al. (2026), Sci. Data, doi:10.1038/s41597-026-08413-7; data on SEANOE, doi:10.17882/113424 (CC-BY).
+Download `G-POM.csv` (revised version, ~34 MB) into `obs/gpom/G-POM_revised.csv`, then run
+`python3 obs/scripts/std_gpom.py`. It writes `obs/<SITE>/<SITE>_obs_gpom.csv` (samples within 50 km of each station;
+GF/F filters; valid C:N flag; days already in `<SITE>_obs.csv` dropped), which `scripts/obs_utils.load_obs` reads next to
+`<SITE>_obs.csv`. Adds the first suspended POC/PON at OWS Papa (EXPORTS NP 2018, Line P 2018-2020) and process-cruise
+samples at HOT and BATS. The cost scores POC, PON and POP above 200 m only (`scripts/gf_solve.py`, `bin_obs`).

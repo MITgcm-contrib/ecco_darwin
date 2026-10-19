@@ -30,7 +30,19 @@ def _to_model_units(var, units, v):
         ug = u.str.startswith('ug')
         out[ug] = out[ug] / 12.011 * np.where(u[ug].str.contains('kg'), RHO, 1.)
         out[u.str.contains('umol/kg')] *= RHO
-    elif var == 'POC_flux':
+    if var in ('POC', 'PON', 'POP'):                       # added 2026-10-18 (G-POM; PON/POP into the cost)
+        mw = {'POC': 12.011, 'PON': 14.007, 'POP': 30.974}[var]
+        mg = u.str.startswith('mg/m3')                        # G-POM: mg m-3
+        out[mg] = v.astype(float)[mg] / mw
+        if var == 'PON':
+            ug = u.str.startswith('ug')                       # BATS: ug/kg
+            out[ug] = v.astype(float)[ug] / mw * np.where(u[ug].str.contains('kg'), RHO, 1.)
+            out[u.str.startswith('umol/kg')] = v.astype(float)[u.str.startswith('umol/kg')] * RHO
+        elif var == 'POP':
+            nm = u.str.startswith('nmol/kg')                  # HOT: nmol/kg
+            out[nm] = v.astype(float)[nm] * 1e-3 * RHO
+            out[u.str.startswith('umol/kg')] = v.astype(float)[u.str.startswith('umol/kg')] * RHO
+    if var == 'POC_flux':
         out[u.str.contains('mmol')] *= 12.011
         y = u.str.contains('mol/m2/yr') & ~u.str.contains('mmol')
         out[y] *= 12.011e3 / 365.25
@@ -44,6 +56,9 @@ def load_obs(site, obs_root, variables=CORE, t0='1992-01-01', t1='2026-01-01',
     f = os.path.join(obs_root, name, '%s_obs.csv' % name)
     o = pd.read_csv(f, usecols=['time', 'depth_m', 'variable', 'value', 'units', 'source', 'qc'],
                     low_memory=False)
+    fg = os.path.join(obs_root, name, '%s_obs_gpom.csv' % name)   # G-POM POC/PON/POP supplement (obs/scripts/std_gpom.py)
+    if os.path.exists(fg):
+        o = pd.concat([o, pd.read_csv(fg)], ignore_index=True)
     o.loc[o['variable'] == 'theta', 'variable'] = 'theta'
     fc = o['variable'] == 'fCO2'
     o.loc[fc, 'value'] = o.loc[fc, 'value'].astype(float) * 1.0035   # fCO2 -> pCO2 (approx.)
@@ -51,7 +66,7 @@ def load_obs(site, obs_root, variables=CORE, t0='1992-01-01', t1='2026-01-01',
     o = o[o['variable'].isin(variables)].copy()
     for d in drop_units:                     # e.g. uncalibrated fluorescence Chl
         o = o[~o['units'].fillna('').str.contains(d, case=False)]
-    o['t'] = pd.to_datetime(o['time'], utc=True, errors='coerce').dt.tz_localize(None)
+    o['t'] = pd.to_datetime(o['time'], utc=True, errors='coerce', format='ISO8601').dt.tz_localize(None)
     o = o[(o['t'] >= t0) & (o['t'] < t1)].dropna(subset=['t', 'value'])
     o['depth_m'] = pd.to_numeric(o['depth_m'], errors='coerce').fillna(0.).clip(lower=0.)
     o['value_m'] = np.nan

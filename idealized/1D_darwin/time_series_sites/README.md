@@ -238,6 +238,24 @@ set (`results/misfit_by_site_20261015.csv`; per variable in `results/misfit_by_s
 | Regional sets + closure | 1.54 | grazers survive at all 11 sites |
 | **Optimized** (regional sets + closure + second iteration) | **1.44** | step 2: a small Green's-function step around the line above |
 
+**Update 2026-10-18 (four focus sites, current cost).** The cost now also includes suspended POC, PON and POP in the
+upper 200 m (program bottle data plus the G-POM compilation, Fumenia et al. 2026, Sci. Data,
+doi:10.1038/s41597-026-08413-7, via `obs/scripts/std_gpom.py`), and the nutrient relaxation starts at 200 m. A third
+Green's-function iteration on this cost improved the gyre set (step 3, `results/optimized/gyre_step3.csv`, applied by
+`make_optimized_runs.py`); the high-latitude third iteration made OWS Papa and PAP-SO slightly worse and was not adopted.
+Mean misfit, 1992–2025:
+
+| Site | v05 baseline | Optimized (before step 3) | Optimized (current) |
+|---|---|---|---|
+| HOT | 5.54 | 2.00 | **1.73** |
+| BATS | 2.13 | 1.33 | **1.30** |
+| OWS Papa | 3.66 | 2.59 | **2.59** |
+| PAP-SO | 3.30 | 0.97 | **0.97** |
+| Mean | 3.66 | 1.72 | **1.65** |
+
+Below 200 m the model holds ~10x less suspended POM than observed (one fast-sinking detrital pool), and observed particle
+C:P (150–245) exceeds the model's fixed 120, so neither is a parameter target.
+
 The optimized set-ups improve every site relative to the v05 baseline, e.g. HOT 4.08 to 1.90, K2 4.45 to 1.49
 and PAP 3.18 to 1.01. CARIACO (2.95) and DYFAMED (11.3) get the closure only; their misfit is structural (anoxic
 basin, Mediterranean physics) and parameters do not fix it.

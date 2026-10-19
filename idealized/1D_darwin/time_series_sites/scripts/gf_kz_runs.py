@@ -18,12 +18,14 @@ from gf_controls import KZ_CONTROL
 
 NAME, DELTA, (ZTOP, ZBOT) = KZ_CONTROL[0], KZ_CONTROL[1], KZ_CONTROL[2]
 SITES = ['HOT', 'BATS', 'HydroS', 'PAPA', 'PAP']
+BASE = os.environ.get('GF_BASE', 'runs/baseline')     # 2026-10-18: overridable like gf_kz_cache.py
+KZ = os.environ.get('GF_KZ', 'runs/gf_kz')
 
 if __name__ == '__main__':
     for s in sys.argv[1:] or SITES:
-        d = 'runs/gf_kz/%s/%s' % (NAME, s)
+        d = '%s/%s/%s' % (KZ, NAME, s)
         os.makedirs(os.path.dirname(d), exist_ok=True)
-        copy_run(os.path.realpath('runs/baseline/%s' % s), d)
+        copy_run(os.path.realpath('%s/%s' % (BASE, s)), d)
         p = os.path.join(d, 'diffkr_1x1x50')
         k = np.fromfile(p, '>f4').copy()
         os.remove(p)                                   # may be a symlink into the baseline inputs
@@ -34,6 +36,6 @@ if __name__ == '__main__':
             if f.endswith('.pid') or f == 'experiment.txt':
                 os.remove(os.path.join(d, f))
         open(os.path.join(d, 'experiment.txt'), 'w').write(
-            '%s: runs/baseline/%s with background diffusivity x%.2f at %g-%g m (%d levels)\n'
-            % (NAME, s, 1. + DELTA, ZTOP, ZBOT, m.sum()))
+            '%s: %s/%s with background diffusivity x%.2f at %g-%g m (%d levels)\n'
+            % (NAME, BASE, s, 1. + DELTA, ZTOP, ZBOT, m.sum()))
         print(d, 'levels', m.sum(), 'kz %.2e -> %.2e' % (k[m][0] / (1 + DELTA), k[m][0]))
