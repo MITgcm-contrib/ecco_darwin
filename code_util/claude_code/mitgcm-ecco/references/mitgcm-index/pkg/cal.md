@@ -4,7 +4,7 @@ Calendar tool (Gregorian/360-day/model calendar) used by exf, ecco, ctrl, diagno
 
 **runtime switch:** `useCAL`-style flag in `data.pkg` (check exact name in packages_boot.F)
 **reads:** `data.cal`
-**manual:** `doc/autodiff/autodiff.rst`, `doc/ocean_state_est/ocean_state_est.rst`, `doc/phys_pkgs/obcs.rst`
+**manual:** `doc/autodiff/autodiff.rst`, `doc/ocean_state_est/ocean_state_est.rst`, `doc/outp_pkgs/outp_pkgs.rst`, `doc/phys_pkgs/obcs.rst`
 **adjoint support files:** cal_ad_diff.list
 
 ## Namelist parameters

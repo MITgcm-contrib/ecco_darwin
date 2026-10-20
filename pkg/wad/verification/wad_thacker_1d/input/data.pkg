@@ -1,5 +1,0 @@
-# Packages
- &PACKAGES
- useWAD=.TRUE.,
- useDiagnostics=.FALSE.,
- &

@@ -39,7 +39,6 @@ Gradient check: compares adjoint gradient against finite differences (data.grdch
 - `GRDCHK_CHECK` ← `model/src/packages_check.F:445`
 - `GRDCHK_READPARMS` ← `model/src/packages_readparms.F:333`
 - `GRDCHK_MAIN` ← `model/src/the_model_main.F:735`
-- `GRDCHK_MAIN` ← `pkg/openad/the_model_main.F:309`
 
 ## Verification experiments compiling it (16)
 `1D_ocean_ice_column` `bottom_ctrl_5x5` `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.90x40x15` `global_ocean.cs32x15` `halfpipe_streamice` `hs94.1x64x5` `isomip` `lab_sea` `obcs_ctrl` `offline_exf_seaice` `tutorial_dic_adjoffline` `tutorial_global_oce_biogeo` `tutorial_global_oce_optim` `tutorial_tracer_adjsens`

@@ -18,8 +18,8 @@ EXTRA=()
 add() { [ -d "$2" ] && EXTRA+=(--extra "$1=$2${3:+:$3}") || echo "skip $1 ($2 missing)"; }
 add bbl        "$R/ECCO/BBL/MITgcm"
 add bbl_c68g   "$R/ECCO/BBL/MITgcm_c68g"
-add wad        "$R/ECCO/wetting_drying/MITgcm"
-add wadcheckin "$R/ECCO/MITgcm_wad_checkin"
+add wetdry     "$R/ECCO/wetting_drying/MITgcm"
+add wetdrycheckin "$R/ECCO/MITgcm_wetdry_checkin"
 add seaicebc   "$R/ECCO/sea_ice_BCs/MITgcm"
 add d3backport "$R/debug/darwin3" darwin,radtrans
 

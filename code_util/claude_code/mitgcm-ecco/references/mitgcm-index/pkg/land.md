@@ -64,7 +64,7 @@ Simple land model (bucket hydrology, soil temperature) for atmospheric configura
 - `LAND_DIAGNOSTICS_STATE` ← `model/src/do_statevars_diags.F:114`
 - `LAND_OUTPUT` ← `model/src/do_the_model_io.F:128`
 - `LAND_CHECK` ← `model/src/packages_check.F:386`
-- `LAND_INIT_FIXED` ← `model/src/packages_init_fixed.F:542`
+- `LAND_INIT_FIXED` ← `model/src/packages_init_fixed.F:538`
 - `LAND_INI_VARS` ← `model/src/packages_init_variables.F:463`
 - `LAND_READPARMS` ← `model/src/packages_readparms.F:311`
 - `LAND_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:200`

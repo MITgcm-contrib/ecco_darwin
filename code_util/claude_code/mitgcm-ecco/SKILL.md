@@ -1,12 +1,12 @@
 ---
 name: mitgcm-ecco
-description: Expert knowledge of the whole MITgcm code base (every package, namelist parameter, CPP option, the time-step call tree and all verification experiments, via a bundled source index) and of MITgcm, ECCO (v4r4–v4r6, LLC90/LLC270) and ECCO-Darwin / darwin3 as Dustin Carroll uses them — building with genmake2 and optfiles, running on NASA Pleiades (pfe, PBS) and the local Mac, checking code_*/run_* configurations for cross-file consistency, reading MDS/NetCDF output and LLC tiles, regional downscaling from ECCO-Darwin parents (grids, dv masks, diagnostics_vec extraction, OBCS/pickup generation, transport correction, production chains and the chain watchdog for kerguelen, kerguelen_4km/kerguelen_eco, fiji, pan_AO, nares, west_AO, GoM, mac_delta and others under /nobackup/<nas_user>/downscaling and ~/Documents/research/downscaling), writing and extending MITgcm and Darwin packages (pkg/bbl, pkg/wad, OBCS, offline, radtrans, adjoint with TAF/Tapenade), verification with testreport, and upstreaming to MITgcm or ecco_darwin. Use this skill for ANY task that touches MITgcm, ECCO, Darwin/darwin3, ECCO-Darwin, a SIZE.h / data.* namelist / packages.conf / optfile, mitgcmuv, a verification experiment, or model output in .data/.meta form — even when the user doesn't say "MITgcm", and in any project.
+description: Expert knowledge of the whole MITgcm code base (every package, namelist parameter, CPP option, the time-step call tree and all verification experiments, via a bundled source index) and of MITgcm, ECCO (v4r4–v4r6, LLC90/LLC270) and ECCO-Darwin / darwin3 as Dustin Carroll uses them — building with genmake2 and optfiles, running on NASA Pleiades (pfe, PBS) and the local Mac, checking code_*/run_* configurations for cross-file consistency, reading MDS/NetCDF output and LLC tiles, regional downscaling from ECCO-Darwin parents (grids, dv masks, diagnostics_vec extraction, OBCS/pickup generation, transport correction, production chains and the chain watchdog for kerguelen, kerguelen_4km/kerguelen_eco, fiji, pan_AO, nares, west_AO, GoM, mac_delta and others under /nobackup/<nas_user>/downscaling and ~/Documents/research/downscaling), writing and extending MITgcm and Darwin packages (pkg/bbl, pkg/wetdry, OBCS, offline, radtrans, adjoint with TAF/Tapenade), verification with testreport, and upstreaming to MITgcm or ecco_darwin. Use this skill for ANY task that touches MITgcm, ECCO, Darwin/darwin3, ECCO-Darwin, a SIZE.h / data.* namelist / packages.conf / optfile, mitgcmuv, a verification experiment, or model output in .data/.meta form — even when the user doesn't say "MITgcm", and in any project.
 ---
 
 # MITgcm + ECCO + Darwin
 
 You are working as a co-developer on Dustin's ocean-model code. He builds and extends
-MITgcm packages himself (pkg/bbl, pkg/wad, pkg/overflood, OBCS sea-ice sponges), runs
+MITgcm packages himself (pkg/bbl, pkg/wetdry, pkg/overflood, OBCS sea-ice sponges), runs
 ECCO v4r6 and ECCO-Darwin on NASA Pleiades, and publishes configurations to
 MITgcm-contrib/ecco_darwin. Treat the model source as the ground truth: MITgcm's own
 code is the documentation, so read the routine before explaining or changing it.
@@ -32,7 +32,7 @@ directly (still ask before `qsub`/`qdel`), and the Mac-only rules don't apply.
    never replaces an existing symlink, so a new override silently isn't compiled
    (check `ls -la build/<file>.F`).
 5. **Keep separate MITgcm clones separate.** `ECCO/BBL/MITgcm`, `ECCO/wetting_drying/MITgcm`,
-   `ECCO/sea_ice_BCs/MITgcm`, `ECCO/MITgcm_wad_checkin` etc. each hold uncommitted or
+   `ECCO/sea_ice_BCs/MITgcm`, `ECCO/MITgcm_wetdry_checkin` etc. each hold uncommitted or
    branch-specific work. Don't edit one to fix another's problem; don't push — Dustin pushes.
 6. **Verify claims against source.** When a diagnosis is relayed (from a colleague, a
    log, another session), confirm it in the code before acting. Before handing over a
@@ -66,7 +66,7 @@ map, then read the actual source before answering:
    checkpoint/optfile/grid it names), and the darwin3 manual's darwin/radtrans pages.
 5. When the user's branch differs from upstream, say which you're describing. Branch pages are
    named `<pkg>@<label>` / `<exp>@<label>` (labels → clones in the index `README.md`); they cover
-   pkg/wad, overflood, mangrove, sediment, the bbl and obcs/seaice changes, and darwin3 `backport_ckpt68y`.
+   pkg/wetdry, overflood, mangrove, sediment, the bbl and obcs/seaice changes, and darwin3 `backport_ckpt68y`.
 6. **Freshness:** the index `README.md` gives the indexed commit and date. If that's more than
    ~2 months old, or the user mentions new upstream changes or branch work, offer to run
    `scripts/refresh_index.sh` (~2 min, read-only apart from `git fetch` in `ECCO/BBL/MITgcm`).
@@ -92,7 +92,7 @@ Read only the reference(s) the task needs:
 | Reading/plotting output, LLC tiles, MDS format, budgets, figures/movies | `references/analysis.md` |
 | Writing a new package, adding a feature/hook to MITgcm or darwin3, diagnostics, pickups, adjoint-readiness | `references/package-development.md` |
 | testreport, verification experiments, restart/tiling tests, check-in/PRs, repos | `references/verification-upstream.md` |
-| Which config/run lives where (ECCO v4r6, offline Darwin, BBL, WAD, sea-ice BCs) | `references/configs.md` |
+| Which config/run lives where (ECCO v4r6, offline Darwin, BBL, wetdry, sea-ice BCs) | `references/configs.md` |
 | Regional downscaling: any region under `/nobackup/<nas_user>/downscaling` or `~/Documents/research/downscaling` (pipeline STEP1–4, OBCS/pickups, transport correction, eco tracer seeding, production chains, watchdog, region status, known failure modes) | `references/downscaling.md`, then that region's `DECISIONS.md` |
 | An error message, blow-up/NaN, hang, wrong-looking output, or "has anyone hit this before?" | `references/troubleshooting/`: grep the exact error text or parameter first (`grep -ri <text> references/troubleshooting/`); `README.md` lists topics |
 

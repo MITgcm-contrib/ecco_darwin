@@ -552,59 +552,59 @@ source tree (`git -C <clone> show origin/master:doc/... | sed -n <a>,<b>p`) for 
     - L48 Equations
     - L53 Key Subroutines and Parameters — `gdiag`, `diagnostics_addtolist.F`, `diagnostics_fill.F`, `diagnostics_scale_fill.F`, `diagnostics_fract_fill.F`, `diagnostics_frac_fill.F`, `diagnostics_is_on.F`, `diagnostics_count.F`, `DIAGNOSTICS.h`
     - L283 Usage Notes
-      - L286 Using available diagnostics — `useDiagnostics`, `fileFlags`, `writeBinaryPrec`, `numDiags`, `numLists`, `numperList`, `diagSt_size`, `gdiag`, `DIAGNOSTICS_SIZE.h`
-      - L434 Adjoint variables
-      - L566 Adding new diagnostics to the code — `diagMate`, `diagNum`, `diagCode`, `diagnostics_fill.F`, `diagnostics_addtolist.F`, `diagnostics_main_init.F`
-      - L638 MITgcm kernel available diagnostics list:
-      - L880 MITgcm packages: available diagnostics lists
-  - L920 Fortran Native I/O: pkg/mdsio and pkg/rw
-    - L923 pkg/mdsio
-      - L926 Introduction
-      - L933 Using pkg/mdsio — `precFloat64`, `precFloat32`, `globalFile`
-      - L1030 Important considerations — `SAFE_IO`, `ALLOW_WHIO`, `_BYTESWAPIO`
-    - L1141 pkg/rw basic binary I/O utilities
-      - L1148 Introduction — `RW_SAFE_MFLDS`, `RW_DISABLE_SMALL_OVERLAP`
-  - L1187 NetCDF I/O: pkg/mnc
-    - L1216 Using pkg/mnc
-      - L1219 pkg/mnc configuration: — `MNC_COMMON.h`
-      - L1256 pkg/mnc Inputs: — `useMNC`, `outputTypesInclusive`, `mnc_use_outdir`, `mnc_outdir_str`, `mnc_outdir_date`, `mnc_outdir_num`, `pickup_write_mnc`, `pickup_read_mnc`, `mnc_use_indir`, `mnc_indir_str`, `snapshot_mnc`, `monitor_mnc`, `timeave_mnc`, `autodiff_mnc`, `mnc_max_fsize`, `mnc_filefreq`, `readgrid_mnc`, `mnc_echo_gvtypes`
-      - L1375 pkg/mnc output: — `dumpFreq`
-    - L1465 pkg/mnc Troubleshooting
-      - L1468 Build troubleshooting:
-      - L1487 Runtime troubleshooting:
-    - L1526 pkg/mnc Internals
-      - L1572 pkg/mnc grid–tTypes and variable–types: — `DYNVARS.h`
-      - L1639 Using pkg/mnc: examples — `ini_model_io.F`, `write_state.F`, `mom_vecinv.F`
-  - L1721 Monitor: Simulation State Monitoring Toolkit
-    - L1724 Introduction
-    - L1763 Using pkg/monitor — `MONITOR_TEST_HFACZ`, `outputTypesInclusive`
-  - L1790 Grid Generation
-    - L1824 Using SPGrid
-      - L1855 SPGrid requirements
-      - L1875 Obtaining SPGrid
-      - L1881 Building SPGrid
-      - L1901 Running SPGrid — `SpF_test_cube_cap`
-    - L1933 Example Grids
-  - L1938 Pre– and Post–Processing Scripts and Utilities
-    - L1949 Utilities Supplied With the Model
-      - L1955 utils/scripts
-      - L1965 utils/matlab
-      - L1988 pkg/mnc utils
-    - L2016 Pre-Processing Software
-  - L2024 Potential Vorticity Matlab Toolbox
-    - L2029 Introduction
-    - L2045 Equations
-      - L2048 Potential vorticity
-      - L2096 Surface vertical potential vorticity fluxes
-    - L2198 Key routines — `splPV`
-    - L2265 Technical details
-      - L2268 File name — `netcdf_UVEL`, `netcdf_domain`, `netcdf_suff`
-      - L2305 Path to file
-      - L2325 Grids
-    - L2336 Notes on the flux form of the PV equation and vertical PV fluxes
-      - L2339 Flux form of the PV equation
-      - L2397 Determining the PV flux at the ocean’s surface
-  - L2561 pkg/flt – Simulation of float / parcel displacements
+      - L286 Using available diagnostics — `useDiagnostics`, `timePhase`, `frequency`, `calendarDumps`, `fileFlags`, `writeBinaryPrec`, `numDiags`, `numLists`, `numperList`, `diagSt_size`, `gdiag`, `DIAGNOSTICS_SIZE.h`
+      - L468 Adjoint variables
+      - L600 Adding new diagnostics to the code — `diagMate`, `diagNum`, `diagCode`, `diagnostics_fill.F`, `diagnostics_addtolist.F`, `diagnostics_main_init.F`
+      - L672 MITgcm kernel available diagnostics list:
+      - L914 MITgcm packages: available diagnostics lists
+  - L954 Fortran Native I/O: pkg/mdsio and pkg/rw
+    - L957 pkg/mdsio
+      - L960 Introduction
+      - L967 Using pkg/mdsio — `precFloat64`, `precFloat32`, `globalFile`
+      - L1064 Important considerations — `SAFE_IO`, `ALLOW_WHIO`, `_BYTESWAPIO`
+    - L1175 pkg/rw basic binary I/O utilities
+      - L1182 Introduction — `RW_SAFE_MFLDS`, `RW_DISABLE_SMALL_OVERLAP`
+  - L1221 NetCDF I/O: pkg/mnc
+    - L1250 Using pkg/mnc
+      - L1253 pkg/mnc configuration: — `MNC_COMMON.h`
+      - L1290 pkg/mnc Inputs: — `useMNC`, `outputTypesInclusive`, `mnc_use_outdir`, `mnc_outdir_str`, `mnc_outdir_date`, `mnc_outdir_num`, `pickup_write_mnc`, `pickup_read_mnc`, `mnc_use_indir`, `mnc_indir_str`, `snapshot_mnc`, `monitor_mnc`, `timeave_mnc`, `autodiff_mnc`, `mnc_max_fsize`, `mnc_filefreq`, `readgrid_mnc`, `mnc_echo_gvtypes`
+      - L1409 pkg/mnc output: — `dumpFreq`
+    - L1499 pkg/mnc Troubleshooting
+      - L1502 Build troubleshooting:
+      - L1521 Runtime troubleshooting:
+    - L1560 pkg/mnc Internals
+      - L1606 pkg/mnc grid–tTypes and variable–types: — `DYNVARS.h`
+      - L1673 Using pkg/mnc: examples — `ini_model_io.F`, `write_state.F`, `mom_vecinv.F`
+  - L1755 Monitor: Simulation State Monitoring Toolkit
+    - L1758 Introduction
+    - L1797 Using pkg/monitor — `MONITOR_TEST_HFACZ`, `outputTypesInclusive`
+  - L1824 Grid Generation
+    - L1858 Using SPGrid
+      - L1889 SPGrid requirements
+      - L1909 Obtaining SPGrid
+      - L1915 Building SPGrid
+      - L1935 Running SPGrid — `SpF_test_cube_cap`
+    - L1967 Example Grids
+  - L1972 Pre– and Post–Processing Scripts and Utilities
+    - L1983 Utilities Supplied With the Model
+      - L1989 utils/scripts
+      - L1999 utils/matlab
+      - L2022 pkg/mnc utils
+    - L2050 Pre-Processing Software
+  - L2058 Potential Vorticity Matlab Toolbox
+    - L2063 Introduction
+    - L2079 Equations
+      - L2082 Potential vorticity
+      - L2130 Surface vertical potential vorticity fluxes
+    - L2232 Key routines — `splPV`
+    - L2299 Technical details
+      - L2302 File name — `netcdf_UVEL`, `netcdf_domain`, `netcdf_suff`
+      - L2339 Path to file
+      - L2359 Grids
+    - L2370 Notes on the flux form of the PV equation and vertical PV fluxes
+      - L2373 Flux form of the PV equation
+      - L2431 Determining the PV flux at the ocean’s surface
+  - L2595 pkg/flt – Simulation of float / parcel displacements
 
 ## `doc/overview/adjoint.rst` — Adjoint
 - L1 Adjoint

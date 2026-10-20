@@ -76,6 +76,6 @@
 `atm2d_finish.F`, `atm2d_init_fixed.F`, `atm2d_init_vars.F`, `atm2d_read_pickup.F`, `atm2d_readparms.F`, `atm2d_write_pickup.F`, `atm2ocn_main.F`, `calc_1dto2d.F`, `calc_fileload.F`, `calc_zonal_means.F`, `fixed_flux_add.F`, `forward_step_atm2d.F`, `get_ocnvars.F`, `init_atm2d.F`, `init_sumvars.F`, `month_end_diags.F`, `norm_ocn_fluxes.F`, `pass_thsice_fluxes.F`, `put_ocnvars.F`, `read_atmos.F`, `relax_add.F`, `subtract_means.F`, `sum_ocn_fluxes.F`, `sum_thsice_out.F`, `sum_yr_end_diags.F`, `tave_end_diags.F`, `yr_end_diags.F`
 
 ## Called from outside the package
-- `FORWARD_STEP_ATM2D` ← `model/src/main_do_loop.F:217`
-- `ATM2D_INIT_FIXED` ← `model/src/packages_init_fixed.F:551`
+- `FORWARD_STEP_ATM2D` ← `model/src/main_do_loop.F:197`
+- `ATM2D_INIT_FIXED` ← `model/src/packages_init_fixed.F:547`
 - `ATM2D_INIT_VARS` ← `model/src/packages_init_variables.F:472`

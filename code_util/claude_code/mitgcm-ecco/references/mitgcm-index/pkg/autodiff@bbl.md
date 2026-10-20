@@ -210,5 +210,5 @@ c
 - `GLOBAL_ADSUM_R8` ← `pkg/tapenade/stubs_tap_adj.F:112`
 - `GLOBAL_ADSUM_TILE_RL` ← `pkg/tapenade/stubs_tap_adj.F:58,96`
 
-## Verification experiments compiling it (1)
-`global_oce_latlon@bbl`
+## Verification experiments compiling it (2)
+`global_oce_latlon@bbl` `lab_sea@bbl`

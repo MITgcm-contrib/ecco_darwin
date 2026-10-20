@@ -88,7 +88,7 @@ Ice-shelf cavities: pressure loading, three-equation melt, boundary-layer option
 - `SHELFICE_REMESHING` ← `model/src/forward_step.F:456`
 - `SHELFICE_INIT_DEPTHS` ← `model/src/ini_masks_etc.F:56`
 - `SHELFICE_CHECK` ← `model/src/packages_check.F:346`
-- `SHELFICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:469`
+- `SHELFICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:465`
 - `SHELFICE_INIT_VARIA` ← `model/src/packages_init_variables.F:386`
 - `SHELFICE_READPARMS` ← `model/src/packages_readparms.F:281`
 - `SHELFICE_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:178`

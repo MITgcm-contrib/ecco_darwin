@@ -1,0 +1,8 @@
+# pkg/wetdry parameters
+ &WETDRY_PARM01
+ wdMinDepth   = 0.05,
+ wdCritDepth  = 0.10,
+ wdDragDepth  = 0.,
+ wdConserveVol= .TRUE.,
+ wdMonFreq    = 168.2138050,
+ &

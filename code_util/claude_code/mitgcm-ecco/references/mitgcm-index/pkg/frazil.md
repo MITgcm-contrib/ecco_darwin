@@ -16,7 +16,7 @@ Frazil ice formation: removes supercooling and adjusts heat/salt (used with shel
 - `FRAZIL_TENDENCY_APPLY_T` ← `model/src/apply_forcing.F:697`
 - `FRAZIL_CALC_RHS` ← `model/src/do_oceanic_phys.F:372`
 - `FRAZIL_TENDENCY_APPLY_T` ← `model/src/external_forcing.F:555`
-- `FRAZIL_INIT_FIXED` ← `model/src/packages_init_fixed.F:505`
+- `FRAZIL_INIT_FIXED` ← `model/src/packages_init_fixed.F:501`
 - `FRAZIL_INIT_VARIA` ← `model/src/packages_init_variables.F:422`
 
 ## Verification experiments compiling it (1)

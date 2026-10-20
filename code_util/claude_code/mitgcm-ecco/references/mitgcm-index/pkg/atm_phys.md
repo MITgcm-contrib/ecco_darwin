@@ -55,7 +55,7 @@ Grey-radiation idealized atmospheric physics (Frierson/O'Gorman-type moist physi
 - `ATM_PHYS_TENDENCY_APPLY_U` ← `model/src/external_forcing.F:76`
 - `ATM_PHYS_TENDENCY_APPLY_V` ← `model/src/external_forcing.F:216`
 - `ATM_PHYS_CHECK` ← `model/src/packages_check.F:400`
-- `ATM_PHYS_INIT_FIXED` ← `model/src/packages_init_fixed.F:571`
+- `ATM_PHYS_INIT_FIXED` ← `model/src/packages_init_fixed.F:567`
 - `ATM_PHYS_INIT_VARIA` ← `model/src/packages_init_variables.F:481`
 - `ATM_PHYS_READPARMS` ← `model/src/packages_readparms.F:363`
 - `ATM_PHYS_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:207`

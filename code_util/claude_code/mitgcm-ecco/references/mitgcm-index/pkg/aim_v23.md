@@ -150,7 +150,7 @@ AIM intermediate-complexity atmospheric physics (SPEEDY v23: convection, clouds,
 - `AIM_TENDENCY_APPLY_U` ← `model/src/external_forcing.F:69`
 - `AIM_TENDENCY_APPLY_V` ← `model/src/external_forcing.F:209`
 - `AIM_FIELDS_LOAD` ← `model/src/load_fields_driver.F:256`
-- `AIM_INITIALISE` ← `model/src/packages_init_fixed.F:561`
+- `AIM_INITIALISE` ← `model/src/packages_init_fixed.F:557`
 
 ## Verification experiments compiling it (4)
 `aim.5l_Equatorial_Channel` `aim.5l_LatLon` `aim.5l_cs` `cpl_aim+ocn`

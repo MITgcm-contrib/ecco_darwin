@@ -312,7 +312,7 @@ Control-vector handling for adjoint/optimisation: generic 2-D/3-D/time-varying c
 - `CTRL_DEPTH_INI` ← `model/src/initialise_varia.F:191`
 - `CTRL_MAP_GENTIM2D` ← `model/src/load_fields_driver.F:191`
 - `CTRL_CHECK` ← `model/src/packages_check.F:420`
-- `CTRL_INIT_FIXED` ← `model/src/packages_init_fixed.F:657`
+- `CTRL_INIT_FIXED` ← `model/src/packages_init_fixed.F:653`
 - `CTRL_INIT_VARIABLES` ← `model/src/packages_init_variables.F:619`
 - `CTRL_READPARMS` ← `model/src/packages_readparms.F:323`
 - `OPTIM_READPARMS` ← `model/src/packages_readparms.F:321`
@@ -335,8 +335,6 @@ Control-vector handling for adjoint/optimisation: generic 2-D/3-D/time-varying c
 - `CTRL_GETOBCSN` ← `pkg/obcs/obcs_calc.F:423`
 - `CTRL_GETOBCSS` ← `pkg/obcs/obcs_calc.F:426`
 - `CTRL_GETOBCSW` ← `pkg/obcs/obcs_calc.F:429`
-- `CTRL_PACK` ← `pkg/openad/the_model_main.F:294,299`
-- `CTRL_UNPACK` ← `pkg/openad/the_model_main.F:172`
 
 ## Verification experiments compiling it (16)
 `1D_ocean_ice_column` `bottom_ctrl_5x5` `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.90x40x15` `global_ocean.cs32x15` `halfpipe_streamice` `hs94.1x64x5` `isomip` `lab_sea` `obcs_ctrl` `offline_exf_seaice` `tutorial_dic_adjoffline` `tutorial_global_oce_biogeo` `tutorial_global_oce_optim` `tutorial_tracer_adjsens`

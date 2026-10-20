@@ -25,7 +25,7 @@ Ice cavities with steep ice draft (alternative shelfice treatment).
 - `STIC_THERMODYNAMICS` ← `model/src/do_oceanic_phys.F:510`
 - `STIC_INIT_DEPTHS` ← `model/src/ini_masks_etc.F:62`
 - `STIC_CHECK` ← `model/src/packages_check.F:353`
-- `STIC_INIT_FIXED` ← `model/src/packages_init_fixed.F:478`
+- `STIC_INIT_FIXED` ← `model/src/packages_init_fixed.F:474`
 - `STIC_INIT_VARIA` ← `model/src/packages_init_variables.F:402`
 - `STIC_READPARMS` ← `model/src/packages_readparms.F:286`
 

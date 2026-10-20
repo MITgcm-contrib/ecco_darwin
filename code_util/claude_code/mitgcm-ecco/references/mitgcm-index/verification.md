@@ -74,16 +74,17 @@ Per-experiment details: `verification/<exp>.md`. Packages listed as written in p
 | experiment | grid | packages | tests | description |
 |---|---|---|---|---|
 | `global_oce_latlon@bbl` | 90x40x15 | gfd cd_code gmredi bbl ebm exf frazil profiles diagnostics | 14 | # Global Ocean Simulation at 4 degree Resolution, including Adjoint Set-Up |
-| `wad_balzano@wad` | 140x1x1 | gfd obcs wad diagnostics | 4 |  |
-| `wad_estuary_3d@wad` | 40x30x5 | gfd obcs kpp gmredi ptracers diagnostics exf cal seaice wad | 4 |  |
-| `wad_flat_xz@wad` | 100x1x10 | gfd obcs kpp wad | 2 |  |
-| `wad_iceground@wad` | 60x10x5 | gfd diagnostics exf cal seaice wad | 2 |  |
-| `wad_mangrove@wad` | 100x50x5 | gfd obcs kpp ptracers diagnostics wad sediment mangrove | 6 |  |
-| `wad_mudflat@wad` | 100x60x5 | gfd obcs kpp ptracers rbcs diagnostics exf cal seaice wad sediment | 6 |  |
-| `wad_overflood@wad` | 80x40x5 | gfd diagnostics exf cal seaice wad overflood | 3 |  |
-| `wad_thacker_1d@wad` | 250x1x1 | gfd wad diagnostics | 3 |  |
-| `wad_balzano@wadcheckin` | 140x1x1 | gfd obcs wad diagnostics | 4 | # wad_balzano: Balzano (1998) tidal-flat tests: slope, step, pool |
-| `wad_estuary_3d@wadcheckin` | 40x30x5 | gfd obcs kpp gmredi ptracers diagnostics wad | 4 | # wad_estuary_3d: 3-D tidal estuary with drying flats |
-| `wad_flat_xz@wadcheckin` | 100x1x10 | gfd obcs kpp wad | 2 | # wad_flat_xz: Stratified beach at rest, and under a tide |
-| `wad_mudflat@wadcheckin` | 100x60x5 | gfd obcs kpp ptracers rbcs diagnostics wad | 3 | # wad_mudflat: Macrotidal mudflat with tidal creeks and a river |
-| `wad_thacker_1d@wadcheckin` | 250x1x1 | gfd wad diagnostics | 3 | # wad_thacker_1d: Thacker (1981) oscillating basin |
+| `lab_sea@bbl` | 20x16x23 | oceanic cd_code exf seaice salt_plume ptracers longstep diagnostics mnc | 12 | Labrador Sea Region with Sea-Ice |
+| `wetdry_balzano@wetdry` | 140x1x1 | gfd obcs wetdry diagnostics | 4 |  |
+| `wetdry_estuary_3d@wetdry` | 40x30x5 | gfd obcs kpp gmredi ptracers diagnostics exf cal seaice wetdry | 4 |  |
+| `wetdry_flat_xz@wetdry` | 100x1x10 | gfd obcs kpp wetdry | 2 |  |
+| `wetdry_iceground@wetdry` | 60x10x5 | gfd diagnostics exf cal seaice wetdry | 2 |  |
+| `wetdry_mangrove@wetdry` | 100x50x5 | gfd obcs kpp ptracers diagnostics wetdry sediment mangrove | 6 |  |
+| `wetdry_mudflat@wetdry` | 100x60x5 | gfd obcs kpp ptracers rbcs diagnostics exf cal seaice wetdry sediment | 6 |  |
+| `wetdry_overflood@wetdry` | 80x40x5 | gfd diagnostics exf cal seaice wetdry overflood | 3 |  |
+| `wetdry_thacker_1d@wetdry` | 250x1x1 | gfd wetdry diagnostics | 3 |  |
+| `wetdry_balzano@wetdrycheckin` | 140x1x1 | gfd obcs wetdry diagnostics | 4 | # wetdry_balzano: Balzano (1998) tidal-flat tests: slope, step, pool |
+| `wetdry_estuary_3d@wetdrycheckin` | 40x30x5 | gfd obcs kpp gmredi ptracers diagnostics wetdry | 4 | # wetdry_estuary_3d: 3-D tidal estuary with drying flats |
+| `wetdry_flat_xz@wetdrycheckin` | 100x1x10 | gfd obcs kpp wetdry | 2 | # wetdry_flat_xz: Stratified beach at rest, and under a tide |
+| `wetdry_mudflat@wetdrycheckin` | 100x60x5 | gfd obcs kpp ptracers rbcs diagnostics wetdry | 3 | # wetdry_mudflat: Macrotidal mudflat with tidal creeks and a river |
+| `wetdry_thacker_1d@wetdrycheckin` | 250x1x1 | gfd wetdry diagnostics | 3 | # wetdry_thacker_1d: Thacker (1981) oscillating basin |

@@ -348,5 +348,5 @@ all the relevant information:
 - `MNC_CW_SET_CITER` ← `pkg/thsice/thsice_write_pickup.F:80,82`
 - `MNC_CW_SET_UDIM` ← `pkg/thsice/thsice_write_pickup.F:78,85`
 
-## Verification experiments compiling it (1)
-`global_oce_latlon@bbl`
+## Verification experiments compiling it (2)
+`global_oce_latlon@bbl` `lab_sea@bbl`

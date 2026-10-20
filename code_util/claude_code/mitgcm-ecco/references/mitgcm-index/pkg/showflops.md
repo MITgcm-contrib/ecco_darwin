@@ -19,4 +19,4 @@ FLOP counting/timing (PAPI).
 ## Called from outside the package
 - `SHOWFLOPS_INLOOP` ← `model/src/forward_step.F:1213`
 - `SHOWFLOPS_INSOLVE` ← `model/src/solve_for_pressure.F:463`
-- `SHOWFLOPS_INIT` ← `model/src/the_main_loop.F:391`
+- `SHOWFLOPS_INIT` ← `model/src/the_main_loop.F:374`

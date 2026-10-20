@@ -107,7 +107,6 @@ Ice-stream/shelf dynamics model (shallow-shelf / hybrid), optionally coupled to 
 - `streamice_buttr_width` — effective width for parameterisation of buttressing -- flowline mode only  _[ifdef STREAMICE_FLOWLINE_BUTTRESS]_
 - `useStreamiceFlowlineButtr`  _[ifdef STREAMICE_FLOWLINE_BUTTRESS]_
 - `STREAMICE_allow_cpl` — enable streamice-ocean coupling
-- `streamice_smooth_thick_adjoint` — facility to smooth adjoint thickness sensitivity after advect_thickness 0 -> no smoothing  _[ifdef ALLOW_OPENAD]_
 ### STREAMICE_PARMTRACER
 - `STREAMICETrac2DBCxFile`  _[ifdef ALLOW_STREAMICE_2DTRACER]_
 - `STREAMICETrac2DBCyFile`  _[ifdef ALLOW_STREAMICE_2DTRACER]_
@@ -116,7 +115,7 @@ Ice-stream/shelf dynamics model (shallow-shelf / hybrid), optionally coupled to 
 - `PETSC_PRECOND_TYPE` — JACOBI -- a jacobi precond (equiv to no petsc) BLOCKJACOBI -- block incomplete cholesky GAMG -- Algebraic multigrid MUMPS -- Direct ILU -- incomplete ILU (will not work in parallel)  _[ifdef ALLOW_PETSC]_
 - `PETSC_SOLVER_TYPE` — CG, BICG, GMRES  _[ifdef ALLOW_PETSC]_
 - `streamice_use_petsc`  _[ifdef ALLOW_PETSC]_
-- `streamice_maxnliter_petsc` — max NL iters with PETSC unavailable with OpenAD  _[ifdef ALLOW_PETSC]_
+- `streamice_maxnliter_petsc` — max NL iters with PETSC  _[ifdef ALLOW_PETSC]_
 - `streamice_petsc_pcfactorlevels` — fill level of incomplete cholesky preconditioner for use with PETSC and BLOCKJACOBI precond ONLY  _[ifdef ALLOW_PETSC]_
 ### STREAMICE_PARMOAD
 - `streamice_nonlin_tol_adjoint` — fixed-point error of adjoint iterative solve (absolute)  _[ifdef ALLOW_STREAMICE_FP_ADJ]_
@@ -244,15 +243,13 @@ Ice-stream/shelf dynamics model (shallow-shelf / hybrid), optionally coupled to 
 - `STREAMICE_DIAGNOSTICS_STATE` ← `model/src/do_statevars_diags.F:108`
 - `STREAMICE_TIMESTEP` ← `model/src/forward_step.F:662`
 - `STREAMICE_CHECK` ← `model/src/packages_check.F:366`
-- `STREAMICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:457`
+- `STREAMICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:456`
 - `STREAMICE_INIT_VARIA` ← `model/src/packages_init_variables.F:372`
 - `STREAMICE_READPARMS` ← `model/src/packages_readparms.F:276`
 - `STREAMICE_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:171`
 - `STREAMICE_FINALIZE_PETSC` ← `model/src/the_model_main.F:754`
 - `STREAMICE_COST_FINAL` ← `pkg/cost/cost_final.F:121`
 - `STREAMICE_COST_ACCUM` ← `pkg/cost/cost_tile.F:132`
-- `STREAMICE_FINALIZE_PETSC` ← `pkg/openad/the_model_main.F:327`
-- `STREAMICE_INITIALIZE_PETSC` ← `pkg/openad/the_model_main.F:131`
 - `ADSTREAMICE_CG_SOLVE` ← `pkg/tapenade/stubs_tap_adj.F:348,482`
 - `STREAMICE_CG_SOLVE` ← `pkg/tapenade/stubs_tap_adj.F:244,295,413`
 

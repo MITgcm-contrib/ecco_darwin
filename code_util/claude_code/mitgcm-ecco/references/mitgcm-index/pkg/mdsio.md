@@ -41,10 +41,10 @@ MDS (.data/.meta) binary I/O routines; always compiled.
 - `MDS_READ_SEC_YZ` ← `pkg/autodiff/active_file_control_slice.F:441,476,518,610`
 - `MDS_WRITE_SEC_XZ` ← `pkg/autodiff/active_file_control_slice.F:126,159,295,328`
 - `MDS_WRITE_SEC_YZ` ← `pkg/autodiff/active_file_control_slice.F:463,496,632,665`
-- `MDS_READ_TAPE` ← `pkg/autodiff/adread_adwrite.F:231,237`
-- `MDS_READ_WHALOS` ← `pkg/autodiff/adread_adwrite.F:207`
-- `MDS_WRITE_TAPE` ← `pkg/autodiff/adread_adwrite.F:446,452`
-- `MDS_WRITE_WHALOS` ← `pkg/autodiff/adread_adwrite.F:424`
+- `MDS_READ_TAPE` ← `pkg/autodiff/adread_adwrite.F:230,236`
+- `MDS_READ_WHALOS` ← `pkg/autodiff/adread_adwrite.F:206`
+- `MDS_WRITE_TAPE` ← `pkg/autodiff/adread_adwrite.F:444,450`
+- `MDS_WRITE_WHALOS` ← `pkg/autodiff/adread_adwrite.F:422`
 - `MDS_WR_METAFILES` ← `pkg/bbl/bbl_write_pickup.F:102`
 - `MDS_CHECK4FILE` ← `pkg/bling/bling_read_pickup.F:58`
 - `MDS_WR_METAFILES` ← `pkg/bling/bling_write_pickup.F:102`
@@ -74,8 +74,8 @@ MDS (.data/.meta) binary I/O routines; always compiled.
 - `MDS_WR_METAFILES` ← `pkg/diagnostics/diagnostics_out.F:444`
 - `MDS_CHECK4FILE` ← `pkg/dic/dic_read_co2_pickup.F:53`
 - `MDS_CHECK4FILE` ← `pkg/dic/dic_read_pickup.F:115`
-- `MDS_WRITEVEC_LOC` ← `pkg/dic/dic_write_pickup.F:68`
-- `MDS_WR_METAFILES` ← `pkg/dic/dic_write_pickup.F:121`
+- `MDS_WRITEVEC_LOC` ← `pkg/dic/dic_write_pickup.F:63`
+- `MDS_WR_METAFILES` ← `pkg/dic/dic_write_pickup.F:116`
 - `MDS_READVEC_LOC` ← `pkg/ecco/cost_gencost_boxmean.F:126`
 - `MDS_READVEC_LOC` ← `pkg/ecco/cost_gencost_moc.F:178`
 - `MDS_READVEC_LOC` ← `pkg/ecco/ecco_read_pickup.F:78`
@@ -125,7 +125,7 @@ MDS (.data/.meta) binary I/O routines; always compiled.
 - `MDS_WRITEVEC_LOC` ← `pkg/sbo/sbo_output.F:96`
 - `MDS_WR_METAFILES` ← `pkg/seaice/seaice_write_pickup.F:208`
 - `MDS_WR_METAFILES` ← `pkg/shelfice/shelfice_write_pickup.F:120`
-- `MDS_WR_METAFILES` ← `pkg/streamice/streamice_write_pickup.F:211`
+- `MDS_WR_METAFILES` ← `pkg/streamice/streamice_write_pickup.F:166`
 
 ## Verification experiments compiling it (58)
 `1D_ocean_ice_column` `MLAdjust` `adjustment.cs-32x32x1` `advect_cs` `advect_xz` `aim.5l_Equatorial_Channel` `aim.5l_LatLon` `aim.5l_cs` `atm_gray` `bottom_ctrl_5x5` `cfc_example` `cheapAML_box` `cpl_aim+ocn` `deep_anelastic` `dome` `exp2` `exp4` `fizhi-cs-32x32x40` `fizhi-cs-aqualev20` `fizhi-gridalt-hs` `front_relax` `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.90x40x15` `global_ocean.cs32x15` `halfpipe_streamice` `hs94.128x64x5` `hs94.1x64x5` `hs94.cs-32x32x5` `ideal_2D_oce` `internal_wave` `inverted_barometer` `isomip` `lab_sea` `matrix_example` `obcs_ctrl` `offline_exf_seaice` `seaice_itd` `seaice_obcs` `shelfice_2d_remesh` `short_surf_wave` `so_box_biogeo` `solid-body.cs-32x32x1` `tutorial_advection_in_gyre` `tutorial_baroclinic_gyre` `tutorial_cfc_offline` `tutorial_deep_convection` `tutorial_dic_adjoffline` `tutorial_global_oce_biogeo` `tutorial_global_oce_in_p` `tutorial_global_oce_latlon` `tutorial_global_oce_optim` `tutorial_held_suarez_cs` `tutorial_plume_on_slope` `tutorial_reentrant_channel` `tutorial_rotating_tank` `tutorial_tracer_adjsens` `vermix`

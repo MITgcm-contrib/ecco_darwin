@@ -24,4 +24,4 @@ binary and/or text data) within an executable for later extraction.
 `embed_files_init.F`
 
 ## Called from outside the package
-- `EMBED_FILES_INIT` ← `model/src/packages_init_fixed.F:637`
+- `EMBED_FILES_INIT` ← `model/src/packages_init_fixed.F:633`

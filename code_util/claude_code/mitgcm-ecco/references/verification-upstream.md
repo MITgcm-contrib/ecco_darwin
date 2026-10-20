@@ -18,8 +18,8 @@ cd <MITgcm>/verification
 - Each experiment can have secondary tests, `input.<suffix>/` → `results/output.<suffix>.txt`.
 - A full sweep takes a while (`global_oce_latlon` alone takes ~11 min). Run the experiments
   touched by the change first.
-- Regenerating reference output for the user's new experiments: `wetting_drying/scripts/make_wad_refs.sh`;
-  checking: `check_wad_refs.sh` / `check_wad_refs_x86.sh`.
+- Regenerating reference output for the user's new experiments: `wetting_drying/scripts/make_wetdry_refs.sh`;
+  checking: `check_wetdry_refs.sh` / `check_wetdry_refs_x86.sh`.
 
 ## A new verification experiment
 
@@ -55,10 +55,10 @@ feature changes `%MON` output. Otherwise testreport can't detect a regression.
 
 ## Upstreaming decisions so far
 
-- **pkg/wad**: check-in branch `wad` in `ECCO/MITgcm_wad_checkin` (based on `d861cd501`,
+- **pkg/wetdry**: check-in branch `wetdry` in `ECCO/MITgcm_wetdry_checkin` (based on `d861cd501`,
   sea-ice coupling removed for the first submission at a colleague's suggestion). There's
-  also a drop-in `ECCO/wad_for_ecco_darwin/pkg/wad` kept in sync by
-  `ECCO/wetting_drying/scripts/sync_wad_checkin.sh`. Change the check-in tree only on purpose, and re-sync after.
+  also a drop-in `ECCO/wetdry_for_ecco_darwin/pkg/wetdry` kept in sync by
+  `ECCO/wetting_drying/scripts/sync_wetdry_checkin.sh`. Change the check-in tree only on purpose, and re-sync after.
 - **pkg/bbl**: no MITgcm PR. It goes to MITgcm-contrib/ecco_darwin. Backport for
   checkpoint68g lives in `ECCO/BBL/MITgcm_c68g` (branch `bbl-c68g`).
 - The user pushes to their own fork and opens PRs. Claude prepares commits, the PR text and

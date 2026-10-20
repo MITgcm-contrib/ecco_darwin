@@ -23,13 +23,6 @@ Usage: "tools/genmake2" [OPTIONS]
 	  Here, "NAME" specifies a list of extra arguments to pass to the
 	  Tapenade command.
 
-    -oad | --oad
-	  Generate a Makefile for an OpenAD built
-    -oadsingularity NAME | --oadsingularity NAME | -oadsngl NAME | --oadsngl NAME
-      -oadsingularity=NAME | --oadsingularity=NAME | -oadsngl=NAME | --oadsngl=NAME
-	  Here, "NAME" specifies the singularity file
-	  that contains the OpenAD execulable.
-
     -nocat4ad | -dog4ad | -ncad | -dad
 	  do not concatenate (cat) source code sent to TAF
 	  resulting in compilation of multiple files
@@ -38,8 +31,7 @@ Usage: "tools/genmake2" [OPTIONS]
       -adoptfile=NAME | --adoptfile=NAME | -adof=NAME | --adof=NAME
 	  Use "NAME" as the adoptfile.  By default, use file
 	  "tools/adjoint_options/adjoint_default" or
-	  "tools/adjoint_options/adjoint_tap" (for Tapenade built) or
-	  "tools/adjoint_options/adjoint_oad" (for OpenAD built).
+	  "tools/adjoint_options/adjoint_tap" (for Tapenade built)
 
     -optfile NAME | --optfile NAME | -of NAME | --of NAME
       -optfile=NAME | --optfile=NAME | -of=NAME | --of=NAME
@@ -189,9 +181,6 @@ where possible OPTIONS are:
   (-tlm)                   perform a Tangent-Linear run (defaut: using TAF)
   (-adm|-ad)               perform an Adjoint run (default: using TAF)
   (-tap)                   use Tapenade for Adjoint or Tangent-Linear run
-  (-oad)                   perform an OpenAD adjoint run
-  (-oadsingularity|-oadsngl) STRING
-                           path to singularity container with OpenAD
   (-mth)                   run multi-threaded (using eedata.mth)
   (-mpi)                   use MPI to compile and run on 2 processors
   (-MPI)  NUMBER           use MPI to compile and run on max NUMBER procs

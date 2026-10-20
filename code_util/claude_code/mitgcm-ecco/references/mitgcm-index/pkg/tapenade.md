@@ -23,18 +23,18 @@ Tapenade automatic-differentiation support.
 
 ## Called from outside the package
 - `ADEXCH_3D_RL` ← `pkg/autodiff/addummy_in_dynamics.F:88,89`
-- `ADEXCH_3D_RL` ← `pkg/autodiff/addummy_in_stepping.F:156,157,158,177`
-- `ADEXCH_UV_3D_RL` ← `pkg/autodiff/addummy_in_stepping.F:159`
-- `ADEXCH_UV_XY_RS` ← `pkg/autodiff/addummy_in_stepping.F:135,169`
-- `ADEXCH_XY_RL` ← `pkg/autodiff/addummy_in_stepping.F:151,190,191,193`
-- `ADEXCH_XY_RS` ← `pkg/autodiff/addummy_in_stepping.F:136,137,170,171`
-- `ADEXCH_UV_3D_RL` ← `pkg/autodiff/copy_ad_uv_outp.F:116,118`
-- `ADEXCH_3D_RL` ← `pkg/autodiff/copy_advar_outp.F:101,103`
+- `ADEXCH_3D_RL` ← `pkg/autodiff/addummy_in_stepping.F:130,131,132,151`
+- `ADEXCH_UV_3D_RL` ← `pkg/autodiff/addummy_in_stepping.F:133`
+- `ADEXCH_UV_XY_RS` ← `pkg/autodiff/addummy_in_stepping.F:108,143`
+- `ADEXCH_XY_RL` ← `pkg/autodiff/addummy_in_stepping.F:124,164,165,167`
+- `ADEXCH_XY_RS` ← `pkg/autodiff/addummy_in_stepping.F:109,110,144,145`
+- `ADEXCH_UV_3D_RL` ← `pkg/autodiff/copy_ad_uv_outp.F:112,114`
+- `ADEXCH_3D_RL` ← `pkg/autodiff/copy_advar_outp.F:97,99`
 - `ADEXCH_3D_RL` ← `pkg/monitor/monitor_ad.F:116,118,119,120`
 - `ADEXCH_UV_3D_RL` ← `pkg/monitor/monitor_ad.F:117`
 - `ADEXCH_3D_RL` ← `pkg/ptracers/ptracers_ad_dump.F:80`
-- `ADEXCH_UV_3D_RL` ← `pkg/seaice/seaice_ad_dump.F:105`
-- `ADEXCH_XY_RL` ← `pkg/seaice/seaice_ad_dump.F:97,98,99,102`
+- `ADEXCH_UV_3D_RL` ← `pkg/seaice/seaice_ad_dump.F:99`
+- `ADEXCH_XY_RL` ← `pkg/seaice/seaice_ad_dump.F:91,92,93,96`
 
 ## Verification experiments compiling it (8)
 `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.cs32x15` `halfpipe_streamice` `isomip` `lab_sea` `tutorial_global_oce_biogeo` `tutorial_tracer_adjsens`

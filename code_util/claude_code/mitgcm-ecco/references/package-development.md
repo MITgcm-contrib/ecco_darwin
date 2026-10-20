@@ -1,7 +1,7 @@
 # Developing MITgcm and Darwin packages
 
 The best templates are the user's own packages, which already follow MITgcm conventions:
-`pkg/wad` in `ECCO/MITgcm_wad_checkin` (cleanest: check-in branch), `pkg/bbl` in
+`pkg/wetdry` in `ECCO/MITgcm_wetdry_checkin` (cleanest: check-in branch), `pkg/bbl` in
 `ECCO/BBL/MITgcm` (with adjoint support), and the OBCS sea-ice sponge in
 `ECCO/sea_ice_BCs/MITgcm`. Upstream also ships **`pkg/mypackage`**, the official
 skeleton for a new package (readparms, check, init, diagnostics, pickups, tendencies; it's
@@ -27,7 +27,7 @@ field is valid, not from Fortran.
 | feature routines | the physics, called from the core with guards | e.g. `forward_step.F`, `external_forcing_surf.F`, `do_oceanic_phys.F` |
 | `<name>_ad_diff.list`, `<name>_ad_check_lev*_dir.h` | adjoint: routines TAF differentiates; tape store directives | autodiff |
 
-**Registering the package in the core** (this is what `git grep -n useWAD` shows):
+**Registering the package in the core** (this is what `git grep -n useWETDRY` shows):
 1. `model/inc/PARAMS.h`: `LOGICAL use<NAME>` added to the package-flag declaration and common block.
 2. `model/src/packages_boot.F`: add to the `PACKAGES` namelist, default `.FALSE.`, and
    `CALL PACKAGES_PRINT_MSG( use<NAME>, '<NAME>', ' ' )` under `#ifdef ALLOW_<NAME>`.
@@ -60,7 +60,7 @@ field is valid, not from Fortran.
   `_EXCH_XY_RL(fld, myThid)` / `_EXCH_XYZ_RL` (or the `EXCH_UV_*` vector forms on
   cube-sphere/LLC where u/v rotate across faces).
 - Masks: `maskC/W/S`, `hFacC/W/S`, `kLowC`, `kSurfC`. Under z* (`select_rStar`) and with
-  pkg/wad, the effective thickness is `hFac*rStarFac`; don't assume static hFac.
+  pkg/wetdry, the effective thickness is `hFac*rStarFac`; don't assume static hFac.
 - Messages: `WRITE(msgBuf,'(A)') '...'` then
   `CALL PRINT_MESSAGE(msgBuf, standardMessageUnit, SQUEEZE_RIGHT, myThid)`; errors via
   `CALL PRINT_ERROR(msgBuf, myThid)` then `STOP 'ABNORMAL END: S/R <NAME>_CHECK'`.
@@ -72,15 +72,15 @@ field is valid, not from Fortran.
 ## Diagnostics
 
 ```
-        diagName  = 'WADdryC '        ! exactly 8 chars, padded
-        diagTitle = 'WAD dry-column flag (1=at film floor)'
+        diagName  = 'WDdryC  '        ! exactly 8 chars, padded
+        diagTitle = 'wetdry dry-column flag (1=at film floor)'
         diagUnits = '1               ' ! 16 chars
         diagCode  = 'SM      L1      ' ! 16-char code: col1 S=scalar/U/V/W, col2 M=cell centre,
                                        ! col9 vertical location, col10 '1'=single level / 'R'=Nr levels
                                        ! (full legend: header of pkg/diagnostics/diagnostics_main_init.F)
         CALL DIAGNOSTICS_ADDTOLIST( diagNum, diagName, diagCode, diagUnits, diagTitle, myThid )
 ```
-Fill during the step with `CALL DIAGNOSTICS_FILL(fld, 'WADdryC ', kLev, nLevs, bibjFlg, bi, bj, myThid)`,
+Fill during the step with `CALL DIAGNOSTICS_FILL(fld, 'WDdryC  ', kLev, nLevs, bibjFlg, bi, bj, myThid)`,
 guarded by `IF ( useDiagnostics )`. Check `available_diagnostics.log` after a short run.
 
 ## Darwin (darwin3) specifics
@@ -114,7 +114,7 @@ guarded by `IF ( useDiagnostics )`. Check `available_diagnostics.log` after a sh
 ## Adjoint-readiness
 
 - Don't use `IF` branches on state that switch discontinuously unless you accept a
-  non-differentiable point; provide smooth alternatives behind a flag (cf. `WAD_SMOOTH_MASK`).
+  non-differentiable point; provide smooth alternatives behind a flag (cf. `WETDRY_SMOOTH_MASK`).
 - List every routine in `<name>_ad_diff.list`: routines left out are treated as passive and
   the gradient is silently wrong (only some cases fail to compile); add store directives for state that's
   overwritten within a step (`<name>_ad_check_lev{1..4}_dir.h`, included from

@@ -1,13 +1,13 @@
 # MITgcm source index
 
-Indexed: MITgcm origin/master 14cea59b8 2026-10-05 (checkpoint69r +) + darwin3 pkg/darwin, pkg/radtrans: 28ac947a3 2024-09-24 Revert scavenging defaults to POP-based equivalents
-Counts: 106 package pages, 61 upstream + 14 branch verification experiments, 85 manual pages.
+Indexed: MITgcm origin/master 38a538975 2026-10-13 (checkpoint69r +) + darwin3 pkg/darwin, pkg/radtrans: 28ac947a3 2024-09-24 Revert scavenging defaults to POP-based equivalents
+Counts: 106 package pages, 61 upstream + 15 branch verification experiments, 85 manual pages.
 
 User branch clones indexed (only packages/experiments that are new or differ from upstream):
-- `@bbl` = `~/Documents/research/ECCO/BBL/MITgcm` (branch `bbl-improve`, cf59b7e91 2026-10-04 pkg/bbl: optional plume-like detrainment (bbl_selectDetrain, bbl_uDet); working tree incl. uncommitted edits; diffed against merge-base 63cdc0b96)
-- `@bbl_c68g` = `~/Documents/research/ECCO/BBL/MITgcm_c68g` (branch `bbl-c68g`, e0986b443 2026-10-04 pkg/bbl from bbl-improve (cf59b7e91) on checkpoint68g, for ECCO v4r5-r7 set-ups; working tree incl. uncommitted edits; diffed against merge-base ec9af2285)
-- `@wad` = `~/Documents/research/ECCO/wetting_drying/MITgcm` (branch `wad`, 95b64a247 2026-10-01 pkg/wad: wadIceMinHeff (leave faces with only a trace of new ice out of the sea-ice solver); working tree incl. uncommitted edits; diffed against merge-base d861cd501)
-- `@wadcheckin` = `~/Documents/research/ECCO/MITgcm_wad_checkin` (branch `wad`, e713bdd9e 2026-10-01 pkg/wad: check-in without sea ice; working tree incl. uncommitted edits; diffed against merge-base d861cd501)
+- `@bbl` = `~/Documents/research/ECCO/BBL/MITgcm` (branch `bbl-improve`, a8fa20eb9 2026-10-18 pkg/bbl: skip BBL exchange on faces beyond open boundaries (maskInW/maskInS); working tree incl. uncommitted edits; diffed against merge-base 63cdc0b96)
+- `@bbl_c68g` = `~/Documents/research/ECCO/BBL/MITgcm_c68g` (branch `bbl-c68g`, a435d4367 2026-10-18 pkg/bbl: skip BBL exchange on faces beyond open boundaries (maskInW/maskInS); working tree incl. uncommitted edits; diffed against merge-base ec9af2285)
+- `@wetdry` = `~/Documents/research/ECCO/wetting_drying/MITgcm` (branch `wetdry`, 6b684582c 2026-10-19 Rename pkg/wad to pkg/wetdry; working tree incl. uncommitted edits; diffed against merge-base d861cd501)
+- `@wetdrycheckin` = `~/Documents/research/ECCO/MITgcm_wetdry_checkin` (branch `wetdry`, 8a58928de 2026-10-19 Rename pkg/wad to pkg/wetdry; working tree incl. uncommitted edits; diffed against merge-base d861cd501)
 - `@seaicebc` = `~/Documents/research/ECCO/sea_ice_BCs/MITgcm` (branch `seaice-obcs-sponge`, 8994525a0 2026-10-03 pkg/obcs: sea-ice open-boundary sponge options (ALLOW_OBCS_SEAICE_SPONGE); working tree incl. uncommitted edits; diffed against merge-base 63cdc0b96)
 - `@d3backport` = `~/Documents/research/debug/darwin3` (branch `backport_ckpt68y`, 0078141 2025-03-06 Update RADIv2 nitrate sediment flux; working tree incl. uncommitted edits; diffed against merge-base upstream index root) — only darwin, radtrans
 

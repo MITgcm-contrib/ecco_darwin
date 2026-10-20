@@ -37,9 +37,9 @@ Ocean-side interface of the coupler for coupled atmosphere-ocean runs.
 - `OCN_APPLY_IMPORT` ← `model/src/do_oceanic_phys.F:347`
 - `OCN_EXPORT_DATA` ← `model/src/do_oceanic_phys.F:484`
 - `CPL_EXPORT_IMPORT_DATA` ← `model/src/forward_step.F:587`
-- `CPL_EXCH_CONFIGS` ← `model/src/initialise_fixed.F:290`
+- `CPL_EXCH_CONFIGS` ← `model/src/initialise_fixed.F:266`
 - `CPL_IMPORT_CPLPARMS` ← `model/src/initialise_fixed.F:125`
-- `CPL_INIT_FIXED` ← `model/src/packages_init_fixed.F:618`
+- `CPL_INIT_FIXED` ← `model/src/packages_init_fixed.F:614`
 - `CPL_INI_VARS` ← `model/src/packages_init_variables.F:544`
 - `CPL_READPARMS` ← `model/src/packages_readparms.F:409`
 - `CPL_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:231`

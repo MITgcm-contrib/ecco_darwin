@@ -111,7 +111,7 @@ Thermodynamic sea ice (Winton 2000 two-layer) usable alone or with seaice dynami
 - `THSICE_DIAGNOSTICS_STATE` ← `model/src/do_statevars_diags.F:102`
 - `THSICE_OUTPUT` ← `model/src/do_the_model_io.F:207`
 - `THSICE_CHECK` ← `model/src/packages_check.F:380`
-- `THSICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:532`
+- `THSICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:528`
 - `THSICE_INI_VARS` ← `model/src/packages_init_variables.F:454`
 - `THSICE_READPARMS` ← `model/src/packages_readparms.F:306`
 - `THSICE_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:192`

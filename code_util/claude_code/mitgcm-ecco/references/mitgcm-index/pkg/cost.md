@@ -55,12 +55,11 @@ Cost-function framework for adjoint/state estimation (accumulates and writes the
 - `COST_CHECK` ← `model/src/packages_check.F:424`
 - `COST_INIT_FIXED` ← `model/src/packages_init_fixed.F:360`
 - `COST_READPARMS` ← `model/src/packages_readparms.F:328`
-- `COST_DRIVER` ← `model/src/the_main_loop.F:769`
-- `COST_FINAL` ← `model/src/the_main_loop.F:774`
+- `COST_DRIVER` ← `model/src/the_main_loop.F:748`
+- `COST_FINAL` ← `model/src/the_main_loop.F:753`
 - `COST_DEPENDENT_INIT` ← `model/src/the_model_main.F:651`
 - `COST_FINAL_RESTORE` ← `model/src/the_model_main.F:690`
 - `COST_FINAL_STORE` ← `model/src/the_model_main.F:680`
-- `COST_DEPENDENT_INIT` ← `pkg/openad/the_model_main.F:181`
 
 ## Verification experiments compiling it (16)
 `1D_ocean_ice_column` `bottom_ctrl_5x5` `global_oce_biogeo_bling` `global_oce_latlon` `global_ocean.90x40x15` `global_ocean.cs32x15` `halfpipe_streamice` `hs94.1x64x5` `isomip` `lab_sea` `obcs_ctrl` `offline_exf_seaice` `tutorial_dic_adjoffline` `tutorial_global_oce_biogeo` `tutorial_global_oce_optim` `tutorial_tracer_adjsens`

@@ -57,7 +57,7 @@ TEMPLATE package: skeleton showing how to write a new package (readparms, check,
 - `MYPACKAGE_TENDENCY_APPLY_U` ← `model/src/external_forcing.F:140`
 - `MYPACKAGE_TENDENCY_APPLY_V` ← `model/src/external_forcing.F:279`
 - `MYPACKAGE_CHECK` ← `model/src/packages_check.F:508`
-- `MYPACKAGE_INIT_FIXED` ← `model/src/packages_init_fixed.F:646`
+- `MYPACKAGE_INIT_FIXED` ← `model/src/packages_init_fixed.F:642`
 - `MYPACKAGE_INIT_VARIA` ← `model/src/packages_init_variables.F:550`
 - `MYPACKAGE_READPARMS` ← `model/src/packages_readparms.F:423`
 - `MYPACKAGE_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:245`

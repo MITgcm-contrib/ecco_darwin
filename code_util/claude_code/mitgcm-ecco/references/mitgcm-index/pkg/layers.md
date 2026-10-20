@@ -16,23 +16,24 @@ Diagnostics of transport in isopycnal/temperature/salinity layers (residual over
 - `layers_kref`
 - `useBOLUS`
 - `layers_bolus`
+- `layers_useThermo` — true if using LAYERS_THERMODYNAMICS code
 - `layers_name`
 - `layers_bounds` — boundaries of tracer layers
 - `layers_krho`
 
 ## CPP options (defaults as shipped)
-- `LAYERS_UFLUX` (define, LAYERS_OPTIONS.h) — Compute isopycnal tranports in the U direction?
-- `LAYERS_VFLUX` (define, LAYERS_OPTIONS.h) — Compute isopycnal tranports in the V direction?
-- `LAYERS_THICKNESS` (define, LAYERS_OPTIONS.h) — Keep track of layer thicknesses?
-- `LAYERS_THERMODYNAMICS` (undef, LAYERS_OPTIONS.h) — Do water mass thermodynamics?
-- `LAYERS_FINEGRID_DIAPYCNAL` (undef, LAYERS_OPTIONS.h) — Use refined grid for diapycnal terms? (gives worse results)
-- `LAYERS_MNC` (undef, LAYERS_OPTIONS.h) — The MNC stuff is too complicated
-- `LAYERS_PRHO_REF` (define, LAYERS_OPTIONS.h) — Allow use of potential density as a layering field.
-- `LAYERS_MSE` (undef, LAYERS_OPTIONS.h) — Allow use of Moist Static Energy as a coordinate (relevant in the atmosphere)
+- `LAYERS_PRHO_REF` (define, LAYERS_OPTIONS.h) — -  Allow to use potential density as layer coordinate (layers defined as between isopycnal surfaces)
+- `LAYERS_MSE` (undef, LAYERS_OPTIONS.h) — -  Allow to use Moist Static Energy as layer coordinate (for atmospheric setup)
+- `LAYERS_UFLUX` (define, LAYERS_OPTIONS.h) — -- To map horizontal transport to layers (isothermal, isohaline, isopycnal): allow to map transport in U direction:
+- `LAYERS_VFLUX` (define, LAYERS_OPTIONS.h) — allow to map transport in V direction:
+- `LAYERS_THICKNESS` (define, LAYERS_OPTIONS.h) — and allow to keep track of layer thickness and probability/occurence
+- `LAYERS_THERMODYNAMICS` (undef, LAYERS_OPTIONS.h) — -- Enable water mass transformation budget:
+- `LAYERS_FINEGRID_DIAPYCNAL` (undef, LAYERS_OPTIONS.h) — using refined grid for diapycnal terms (gives worse results)
+- `LAYERS_MNC` (undef, LAYERS_OPTIONS.h) — -  The MNC stuff is too complicated
 
 ## Headers
 - `LAYERS.h` — --   Header for LAYERS package. By Ryan Abernathey. --   For computing volume fluxes in isopyncal layers
-- `LAYERS_OPTIONS.h` — CPP options file for LAYERS package Use this file for selecting options within package "LAYERS"
+- `LAYERS_OPTIONS.h` — BOP
 - `LAYERS_P2SHARE.h` — BOP
 - `LAYERS_SIZE.h` — * Compiled-in size options for the LAYERS package * - Just as you have to define Nr in SIZE.h, you must define the number of vertical layers for isopy
 
@@ -44,14 +45,14 @@ Diagnostics of transport in isopycnal/temperature/salinity layers (residual over
 - `LAYERS_CALC` ← `model/src/do_the_model_io.F:236`
 - `LAYERS_FILL` ← `model/src/impldiff.F:385`
 - `LAYERS_CHECK` ← `model/src/packages_check.F:470`
-- `LAYERS_INIT_FIXED` ← `model/src/packages_init_fixed.F:609`
+- `LAYERS_INIT_FIXED` ← `model/src/packages_init_fixed.F:605`
 - `LAYERS_INIT_VARIA` ← `model/src/packages_init_variables.F:503`
 - `LAYERS_READPARMS` ← `model/src/packages_readparms.F:384`
 - `LAYERS_WSURF_TR` ← `model/src/thermodynamics.F:161`
 - `LAYERS_FILL` ← `pkg/diagnostics/diagnostics_fill_state.F:413,438,727,752`
 - `LAYERS_FILL` ← `pkg/generic_advdiff/gad_advection.F:853,854,1087`
 - `LAYERS_FILL` ← `pkg/generic_advdiff/gad_calc_rhs.F:320,369,449,498`
-- `LAYERS_FILL` ← `pkg/generic_advdiff/gad_implicit_r.F:344,442`
+- `LAYERS_FILL` ← `pkg/generic_advdiff/gad_implicit_r.F:340,434`
 - `LAYERS_FILL` ← `pkg/generic_advdiff/gad_som_advect.F:471,472,666`
 
 ## Verification experiments compiling it (3)

@@ -37,16 +37,16 @@ Diffusion-operator smoothing for control/covariance (2-D/3-D correlation operato
 
 ## Called from outside the package
 - `SMOOTH_CHECK` ← `model/src/packages_check.F:360`
-- `SMOOTH_INIT_FIXED` ← `model/src/packages_init_fixed.F:487`
+- `SMOOTH_INIT_FIXED` ← `model/src/packages_init_fixed.F:483`
 - `SMOOTH_INIT_VARIA` ← `model/src/packages_init_variables.F:569`
 - `SMOOTH_READPARMS` ← `model/src/packages_readparms.F:338`
-- `SMOOTH2D` ← `pkg/ctrl/ctrl_get_gen.F:131,160`
+- `SMOOTH2D` ← `pkg/ctrl/ctrl_get_gen.F:114,137`
 - `SMOOTH2D` ← `pkg/ctrl/ctrl_map_genarr.F:139`
-- `SMOOTH3D` ← `pkg/ctrl/ctrl_map_genarr.F:338`
+- `SMOOTH3D` ← `pkg/ctrl/ctrl_map_genarr.F:335`
 - `SMOOTH_CORREL2D` ← `pkg/ctrl/ctrl_map_genarr.F:138`
-- `SMOOTH_CORREL3D` ← `pkg/ctrl/ctrl_map_genarr.F:337`
-- `SMOOTH2D` ← `pkg/ctrl/ctrl_map_ini_gentim2d.F:449`
-- `SMOOTH_CORREL2D` ← `pkg/ctrl/ctrl_map_ini_gentim2d.F:448`
+- `SMOOTH_CORREL3D` ← `pkg/ctrl/ctrl_map_genarr.F:334`
+- `SMOOTH2D` ← `pkg/ctrl/ctrl_map_ini_gentim2d.F:446`
+- `SMOOTH_CORREL2D` ← `pkg/ctrl/ctrl_map_ini_gentim2d.F:445`
 - `SMOOTH_BASIC2D` ← `pkg/ecco/cost_gencost_bpv4.F:315,333`
 - `SMOOTH_HETERO2D` ← `pkg/ecco/cost_gencost_bpv4.F:311,329`
 - `SMOOTH_HETERO2D` ← `pkg/ecco/cost_gencost_sshv4.F:580,947,950,1283`

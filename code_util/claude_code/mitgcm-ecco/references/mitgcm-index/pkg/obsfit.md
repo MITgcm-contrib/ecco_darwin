@@ -34,8 +34,8 @@ Model-data comparison for generic (unstructured) observations in the cost functi
 - `OBSFIT_INIT_FIXED` ← `model/src/packages_init_fixed.F:399`
 - `OBSFIT_INIT_VARIA` ← `model/src/packages_init_variables.F:583`
 - `OBSFIT_READPARMS` ← `model/src/packages_readparms.F:353`
-- `OBSFIT_COST` ← `model/src/the_main_loop.F:762`
-- `OBSFIT_INLOOP` ← `model/src/the_main_loop.F:694,759`
+- `OBSFIT_COST` ← `model/src/the_main_loop.F:741`
+- `OBSFIT_INLOOP` ← `model/src/the_main_loop.F:675,738`
 - `OBSFIT_NC_CLOSE` ← `model/src/the_model_main.F:777`
 - `OBSFIT_COST_FINAL` ← `pkg/cost/cost_final.F:92`
 

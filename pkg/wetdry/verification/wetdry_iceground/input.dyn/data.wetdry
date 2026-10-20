@@ -1,0 +1,8 @@
+# wetdry_iceground.dyn: ramped ice load (wdLoadDepth), see input/gendata.py
+ &WETDRY_PARM01
+ wdMinDepth=0.05,
+ wdCritDepth=0.10,
+ wdMonFreq=86400.,
+ wdIceTopMelt=.TRUE.,
+ wdLoadDepth=0.3,
+ &

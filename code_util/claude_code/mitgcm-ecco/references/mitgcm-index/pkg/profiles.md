@@ -43,8 +43,8 @@ Model-data comparison for in situ profiles (Argo, CTD, XBT...) for ECCO cost.
 - `PROFILES_INIT_FIXED` ← `model/src/packages_init_fixed.F:390`
 - `PROFILES_INIT_VARIA` ← `model/src/packages_init_variables.F:576`
 - `PROFILES_READPARMS` ← `model/src/packages_readparms.F:348`
-- `PROFILES_COST` ← `model/src/the_main_loop.F:751`
-- `PROFILES_INLOOP` ← `model/src/the_main_loop.F:682,748`
+- `PROFILES_COST` ← `model/src/the_main_loop.F:730`
+- `PROFILES_INLOOP` ← `model/src/the_main_loop.F:663,727`
 - `PROFILES_NC_CLOSE` ← `model/src/the_model_main.F:770`
 - `PROFILES_COST_FINAL` ← `pkg/cost/cost_final.F:89`
 

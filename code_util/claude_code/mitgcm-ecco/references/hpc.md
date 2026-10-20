@@ -13,7 +13,7 @@
   the data on a compute node (`qsub -I -q devel -l select=1:ncpus=40:model=sky_ele
   -l walltime=1:00:00`, or a small PBS script), never on the pfe login nodes: they are for
   editing, qsub/qstat and checks that take seconds. A ~20-min multi-core python run on
-  pfe25 (Oct 2026) drew a NAS usage-policy violation and a CPU penalty. Vectorise first
+  pfe25 (Oct 2026) drew a NAS usage-policy violation and a CPU penalty, and so did julia + two parallel CMEMS download scripts + `du` on 7 Oct. Downloads: one stream, `nice -n 19`; no `du`/`find` over /nobackup (use `lfs quota`); check `ps -u <nas_user>` first since all sessions share one per-user limit (rule also in ~/.claude/CLAUDE.md). Vectorise first
   (e.g. KD-tree nearest-cell, not per-cell loops). Copy back only small results. Never work around NAS security
   controls. More detail: `ECCO/BBL/docs/Pleiades_from_Claude_Code.docx`,
   `research/HPC/NAS/notes/`.

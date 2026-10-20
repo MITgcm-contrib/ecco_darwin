@@ -29,7 +29,7 @@ the live record, so read it before touching a region.**
 | `kerguelen_4km` | 292×252×90, 84 ranks (4×21 of 73×12) on 1 rom_ait node | coarsened from the 1 km inputs (`kerguelen_eco/fourkm/make_4km.py`) | kerguelen_eco test bed: darwin3 `3f0529872` (`darwin3_2021/`), radtrans/OASIM backport, pkg/profiles, build in `build_profiles/`; inputs `inputs_v2/` (eco = seeded) |
 | `fiji` | 2240-wide grid, production on 2688 ranks (`job_production_chain_r2688.sh`) | LLC270 | production under the watchdog; OBCS regenerated on the extended grid (`OBCS_1700_preext` kept) |
 | `pan_AO` | 1680×1680 polar disc, 60×60 tiles, 413 of 784 active (`grid/blanklist_sNx60.txt`), dt 300 | LLC270 | eta blow-up fixed (wet pockets masked → `grid_nopocket/`, per-arc OBCS correction, observed-2020 Bering target); Bering sits ~0.6 m above parent but stable; analysis in `pan_AO/analysis/` |
-| `nares`, `west_AO` | new (2026-10-06) | | scaffold, grid, bathymetry; west_AO has pkg/wad + sediment ported |
+| `nares`, `west_AO` | new (2026-10-06) | | scaffold, grid, bathymetry; west_AO has pkg/wad (old name of pkg/wetdry) + sediment ported |
 | `GoM`, `GoM_jra55do_nutrients`, `mac_delta` | darwin3 + ecco_darwin trees | | older set-ups (build notes in `~/Documents/research/downscaling/notes/{GOM,mac_delta}.txt`) |
 | Mac-only | `disko_bay`, `nares_strait`, `CCS_surf`, `pan_greenland` | | local grids/figures/m_files; Mike Wood's Greenland L0–L2 runs: `notes/mike_wood_nobackup_path.txt` |
 

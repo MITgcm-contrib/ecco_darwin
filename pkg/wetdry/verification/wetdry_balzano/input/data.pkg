@@ -1,0 +1,6 @@
+# Packages
+ &PACKAGES
+ useOBCS=.TRUE.,
+ useWETDRY=.TRUE.,
+ useDiagnostics=.FALSE.,
+ &

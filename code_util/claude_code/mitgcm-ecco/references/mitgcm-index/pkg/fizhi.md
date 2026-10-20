@@ -65,7 +65,7 @@ Fizhi atmospheric physics (NASA GEOS-like) for atmosphere configurations.
 - `FIZHI_TENDENCY_APPLY_U` ← `model/src/external_forcing.F:83`
 - `FIZHI_TENDENCY_APPLY_V` ← `model/src/external_forcing.F:223`
 - `STEP_FIZHI_CORR` ← `model/src/forward_step.F:1124`
-- `FIZHI_INIT_FIXED` ← `model/src/packages_init_fixed.F:581`
+- `FIZHI_INIT_FIXED` ← `model/src/packages_init_fixed.F:577`
 - `FIZHI_INIT_VARS` ← `model/src/packages_init_variables.F:491`
 - `FIZHI_READPARMS` ← `model/src/packages_readparms.F:368`
 - `FIZHI_WRITE_DATETIME` ← `model/src/packages_write_pickup.F:217`

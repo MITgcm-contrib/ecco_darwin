@@ -27,6 +27,6 @@ Regridding utilities for diagnostics output.
 
 ## Called from outside the package
 - `REGRID_CHECK` ← `model/src/packages_check.F:464`
-- `REGRID_INIT_FIXED` ← `model/src/packages_init_fixed.F:600`
+- `REGRID_INIT_FIXED` ← `model/src/packages_init_fixed.F:596`
 - `REGRID_INIT_VARIA` ← `model/src/packages_init_variables.F:497`
 - `REGRID_READPARMS` ← `model/src/packages_readparms.F:379`

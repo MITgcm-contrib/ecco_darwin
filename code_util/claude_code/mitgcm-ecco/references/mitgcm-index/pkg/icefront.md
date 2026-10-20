@@ -42,7 +42,7 @@ Vertical ice-front (tidewater glacier face) melt parameterisation at side walls.
 - `ICEFRONT_TENDENCY_APPLY_S` ← `model/src/external_forcing.F:775`
 - `ICEFRONT_TENDENCY_APPLY_T` ← `model/src/external_forcing.F:571`
 - `ICEFRONT_CHECK` ← `model/src/packages_check.F:373`
-- `ICEFRONT_INIT_FIXED` ← `model/src/packages_init_fixed.F:496`
+- `ICEFRONT_INIT_FIXED` ← `model/src/packages_init_fixed.F:492`
 - `ICEFRONT_INIT_VARIA` ← `model/src/packages_init_variables.F:413`
 - `ICEFRONT_READPARMS` ← `model/src/packages_readparms.F:291`
 

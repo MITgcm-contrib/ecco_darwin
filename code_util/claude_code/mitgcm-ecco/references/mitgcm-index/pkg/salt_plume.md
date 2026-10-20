@@ -34,8 +34,8 @@ Brine rejection from sea-ice growth distributed vertically (salt plume parameter
 - `salt_plume_ad_check_lev3_dir.h` — CADJ STORE saltplumeflux   = tapelev3, key = ilev_3
 - `salt_plume_ad_check_lev4_dir.h` — CADJ STORE saltplumeflux   = tapelev4, key = ilev_4
 
-## Routines (15)
-`salt_plume_apply.F`, `salt_plume_calc_depth.F`, `salt_plume_check.F`, `salt_plume_diagnostics_fill.F`, `salt_plume_diagnostics_init.F`, `salt_plume_do_exch.F`, `salt_plume_forcing_surf.F`, `salt_plume_frac.F`, `salt_plume_init_fixed.F`, `salt_plume_init_varia.F`, `salt_plume_mnc_init.F`, `salt_plume_readparms.F`, `salt_plume_tendency_apply_s.F`, `salt_plume_tendency_apply_t.F`, `salt_plume_volfrac.F`
+## Routines (16)
+`salt_plume_apply.F`, `salt_plume_bottom.F`, `salt_plume_calc_depth.F`, `salt_plume_check.F`, `salt_plume_diagnostics_fill.F`, `salt_plume_diagnostics_init.F`, `salt_plume_do_exch.F`, `salt_plume_forcing_surf.F`, `salt_plume_frac.F`, `salt_plume_init_fixed.F`, `salt_plume_init_varia.F`, `salt_plume_mnc_init.F`, `salt_plume_readparms.F`, `salt_plume_tendency_apply_s.F`, `salt_plume_tendency_apply_t.F`, `salt_plume_volfrac.F`
 
 ## Called from outside the package
 - `SALT_PLUME_TENDENCY_APPLY_S` ← `model/src/apply_forcing.F:952`
@@ -50,7 +50,7 @@ Brine rejection from sea-ice growth distributed vertically (salt plume parameter
 - `SALT_PLUME_TENDENCY_APPLY_T` ← `model/src/external_forcing.F:578`
 - `SALT_PLUME_FORCING_SURF` ← `model/src/external_forcing_surf.F:248`
 - `SALT_PLUME_CHECK` ← `model/src/packages_check.F:339`
-- `SALT_PLUME_INIT_FIXED` ← `model/src/packages_init_fixed.F:523`
+- `SALT_PLUME_INIT_FIXED` ← `model/src/packages_init_fixed.F:519`
 - `SALT_PLUME_INIT_VARIA` ← `model/src/packages_init_variables.F:445`
 - `SALT_PLUME_READPARMS` ← `model/src/packages_readparms.F:301`
 - `SALT_PLUME_FRAC` ← `pkg/kpp/kpp_calc.F:691`

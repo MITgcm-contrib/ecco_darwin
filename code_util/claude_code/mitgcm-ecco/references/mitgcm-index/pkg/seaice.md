@@ -373,12 +373,12 @@ Dynamic-thermodynamic sea ice (viscous-plastic/EVP/JFNK/Krylov dynamics, zero-la
 - `SEAICE_OUTPUT` ← `model/src/do_the_model_io.F:194`
 - `SEAICE_CHECK` ← `model/src/packages_check.F:333`
 - `SEAICE_COST_INIT_FIXED` ← `model/src/packages_init_fixed.F:369`
-- `SEAICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:514`
+- `SEAICE_INIT_FIXED` ← `model/src/packages_init_fixed.F:510`
 - `SEAICE_INIT_VARIA` ← `model/src/packages_init_variables.F:437`
 - `SEAICE_READPARMS` ← `model/src/packages_readparms.F:296`
 - `SEAICE_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:185`
 - `SEAICE_TURNOFF_IO` ← `model/src/turnoff_model_io.F:107`
-- `SEAICE_AD_DUMP` ← `pkg/autodiff/addummy_in_stepping.F:558`
+- `SEAICE_AD_DUMP` ← `pkg/autodiff/addummy_in_stepping.F:413`
 - `SEAICE_COST_FINAL` ← `pkg/cost/cost_final.F:113`
 - `SEAICE_COST_INIT_VARIA` ← `pkg/cost/cost_init_varia.F:81`
 - `ADSEAICE_MONITOR` ← `pkg/monitor/monitor_ad.F:249`

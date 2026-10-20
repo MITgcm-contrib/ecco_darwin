@@ -327,7 +327,7 @@ ECCO state-estimation package: model-data misfit cost terms, generic cost (genco
 - `ECCO_INIT_VARIA` ← `model/src/packages_init_variables.F:601`
 - `ECCO_READPARMS` ← `model/src/packages_readparms.F:343`
 - `ECCO_WRITE_PICKUP` ← `model/src/packages_write_pickup.F:238`
-- `COST_AVERAGESFIELDS` ← `model/src/the_main_loop.F:670,740`
+- `COST_AVERAGESFIELDS` ← `model/src/the_main_loop.F:651,719`
 - `COST_GENCOST_ALL` ← `pkg/cost/cost_driver.F:51`
 - `ECCO_COST_FINAL` ← `pkg/cost/cost_final.F:97`
 

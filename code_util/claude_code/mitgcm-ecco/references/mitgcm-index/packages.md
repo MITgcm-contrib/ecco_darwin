@@ -46,7 +46,7 @@ One row per `pkg/` directory. Details (namelists with descriptions, CPP options,
 | `kl10` | data.kl10 | 4 | 0 |  | 1: internal_wave | Klymak & Legg (2010) internal-wave-breaking vertical mixing scheme. |
 | `kpp` | data.kpp | 48 | 17 | y | 5: 1D_ocean_ice_column, lab_sea, seaice_obcs, tutorial_tracer_adjsens, … | K-Profile Parameterization (Large et al. 1994) vertical mixing with nonlocal transport. |
 | `land` | data.land | 37 | 2 |  | 2: aim.5l_cs, cpl_aim+ocn | Simple land model (bucket hydrology, soil temperature) for atmospheric configurations. |
-| `layers` | data.layers | 10 | 8 | y | 3: cfc_example, exp4, tutorial_reentrant_channel | Diagnostics of transport in isopycnal/temperature/salinity layers (residual overturning). |
+| `layers` | data.layers | 11 | 8 | y | 3: cfc_example, exp4, tutorial_reentrant_channel | Diagnostics of transport in isopycnal/temperature/salinity layers (residual overturning). |
 | `longstep` | data.longstep | 2 | 0 |  | 1: lab_sea | Longer time step for passive tracers than for dynamics (ptracers stepped every N steps with averaged velocities). |
 | `matrix` | data.matrix | 2 | 0 |  | 1: matrix_example | Transport-matrix method: extracts explicit/implicit tracer transport matrices. |
 | `mdsio` |  | 0 | 9 |  | 58: 1D_ocean_ice_column, MLAdjust, adjustment.cs-32x32x1, advect_cs, … | MDS (.data/.meta) binary I/O routines; always compiled. |
@@ -61,7 +61,6 @@ One row per `pkg/` directory. Details (namelists with descriptions, CPP options,
 | `obsfit` | data.obsfit | 6 | 2 | y | 1: global_oce_biogeo_bling | Model-data comparison for generic (unstructured) observations in the cost function. |
 | `ocn_compon_interf` | data.cpl | 15 | 0 |  | 1: cpl_aim+ocn | Ocean-side interface of the coupler for coupled atmosphere-ocean runs. |
 | `offline` | data.off | 22 | 1 | y | 2: tutorial_cfc_offline, tutorial_dic_adjoffline | Offline mode: reads precomputed velocities/diffusivities/forcing (e.g. ECCO archive) to drive passive tracers/BGC without dynamics |
-| `openad` |  | 0 | 5 | y | 0 | OpenAD automatic-differentiation support (legacy). |
 | `opps` | data.opps | 9 | 2 |  | 1: vermix | OPPS convection (Paluszkiewicz & Romea penetrative plume scheme). |
 | `pp81` | data.pp81 | 9 | 2 |  | 1: vermix | Pacanowski & Philander (1981) Richardson-number vertical mixing. |
 | `profiles` | data.profiles | 14 | 3 | y | 2: global_oce_biogeo_bling, global_oce_latlon | Model-data comparison for in situ profiles (Argo, CTD, XBT...) for ECCO cost. |
@@ -80,42 +79,43 @@ One row per `pkg/` directory. Details (namelists with descriptions, CPP options,
 | `smooth` | data.smooth | 18 | 0 | y | 0 | Diffusion-operator smoothing for control/covariance (2-D/3-D correlation operators). |
 | `sphere` |  | 0 | 0 | y | 0 | Spherical-harmonic utilities. |
 | `steep_icecavity` | data.stic | 2 | 1 | y | 1: isomip | Ice cavities with steep ice draft (alternative shelfice treatment). |
-| `streamice` | data.streamice data.strmctrlflux | 182 | 22 | y | 1: halfpipe_streamice | Ice-stream/shelf dynamics model (shallow-shelf / hybrid), optionally coupled to shelfice. |
+| `streamice` | data.streamice data.strmctrlflux | 181 | 22 | y | 1: halfpipe_streamice | Ice-stream/shelf dynamics model (shallow-shelf / hybrid), optionally coupled to shelfice. |
 | `tapenade` |  | 0 | 3 |  | 8: global_oce_biogeo_bling, global_oce_latlon, global_ocean.cs32x15, halfpipe_streamice, … | Tapenade automatic-differentiation support. |
 | `thsice` | data.ice | 72 | 4 | y | 4: aim.5l_cs, cpl_aim+ocn, global_ocean.cs32x15, offline_exf_seaice | Thermodynamic sea ice (Winton 2000 two-layer) usable alone or with seaice dynamics. |
 | `zonal_filt` | data.zonfilt | 6 | 0 |  | 2: aim.5l_LatLon, hs94.128x64x5 | Zonal (polar) Fourier filter for lat-lon grids. |
-| `autodiff@bbl` | data.autodiff | 19 | 16 | y | 1: global_oce_latlon@bbl | ad dump record number (used only if dumpAdByRec is true) |
+| `autodiff@bbl` | data.autodiff | 19 | 16 | y | 2: global_oce_latlon@bbl, lab_sea@bbl | ad dump record number (used only if dumpAdByRec is true) |
 | `autodiff@bbl_c68g` | data.autodiff | 19 | 12 | y | 0 | ad dump record number (used only if dumpAdByRec is true) |
-| `bbl@bbl` | data.bbl | 16 | 1 | y | 1: global_oce_latlon@bbl | bbl_wvel    :: default vertical entrainment velocity (m/s) bbl_hvvel   :: default horizontal velocity of BBL (m/s); upper bound of |
-| `bbl@bbl_c68g` | data.bbl | 16 | 1 | y | 0 | bbl_wvel    :: default vertical entrainment velocity (m/s) bbl_hvvel   :: default horizontal velocity of BBL (m/s); upper bound of |
+| `bbl@bbl` | data.bbl | 16 | 1 | y | 1: global_oce_latlon@bbl | bbl_wvel    :: vertical detrainment velocity of a dense BBL (m/s) bbl_hvel    :: default horizontal velocity of BBL (m/s); upper b |
+| `bbl@bbl_c68g` | data.bbl | 16 | 1 | y | 0 | bbl_wvel    :: vertical detrainment velocity of a dense BBL (m/s) bbl_hvel    :: default horizontal velocity of BBL (m/s); upper b |
 | `darwin@d3backport` | data.darwin data.traits | 926 | 48 |  | 0 | --  File darwin_carbon_chem.F: --   Contents --   o DARWIN_CALC_PCO2 --   o DARWIN_CALC_PCO2_APPROX --   o DARWIN_CARBON_COEFFS |
 | `exch2@bbl` | data.exch2 | 7 | 5 | y | 0 | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP 0 |
-| `gmredi@wad` | data.gmredi | 75 | 13 | y | 1: wad_estuary_3d@wad | Calculates the 3D diffusivity as per Bates et al. (2014) \ev |
-| `gmredi@wadcheckin` | data.gmredi | 75 | 13 | y | 1: wad_estuary_3d@wadcheckin | Calculates the 3D diffusivity as per Bates et al. (2014) \ev |
-| `kpp@wad` | data.kpp | 48 | 17 | y | 4: wad_estuary_3d@wad, wad_flat_xz@wad, wad_mangrove@wad, wad_mudflat@wad | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP 0 |
-| `kpp@wadcheckin` | data.kpp | 48 | 17 | y | 3: wad_estuary_3d@wadcheckin, wad_flat_xz@wadcheckin, wad_mudflat@wadcheckin | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP 0 |
-| `mangrove@wad` | data.mangrove | 14 | 0 |  | 1: wad_mangrove@wad | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
-| `mnc@bbl` |  | 21 | 2 |  | 1: global_oce_latlon@bbl | EH3 package-specific options go here |
-| `mom_vecinv@wad` |  | 0 | 1 | y | 8: wad_balzano@wad, wad_estuary_3d@wad, wad_flat_xz@wad, wad_iceground@wad, … | S/R MOM_VECINV Form the right hand-side of the momentum equation. Terms are evaluated one layer at a time working from the bottom  |
-| `mom_vecinv@wadcheckin` |  | 0 | 1 | y | 5: wad_balzano@wadcheckin, wad_estuary_3d@wadcheckin, wad_flat_xz@wadcheckin, wad_mudflat@wadcheckin, … | S/R MOM_VECINV Form the right hand-side of the momentum equation. Terms are evaluated one layer at a time working from the bottom  |
+| `gmredi@wetdry` | data.gmredi | 75 | 13 | y | 1: wetdry_estuary_3d@wetdry | Calculates the 3D diffusivity as per Bates et al. (2014) \ev |
+| `gmredi@wetdrycheckin` | data.gmredi | 75 | 13 | y | 1: wetdry_estuary_3d@wetdrycheckin | Calculates the 3D diffusivity as per Bates et al. (2014) \ev |
+| `kpp@wetdry` | data.kpp | 48 | 17 | y | 4: wetdry_estuary_3d@wetdry, wetdry_flat_xz@wetdry, wetdry_mangrove@wetdry, wetdry_mudflat@wetdry | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP 0 |
+| `kpp@wetdrycheckin` | data.kpp | 48 | 17 | y | 3: wetdry_estuary_3d@wetdrycheckin, wetdry_flat_xz@wetdrycheckin, wetdry_mudflat@wetdrycheckin | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP 0 |
+| `mangrove@wetdry` | data.mangrove | 14 | 0 |  | 1: wetdry_mangrove@wetdry | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
+| `mnc@bbl` |  | 21 | 2 |  | 2: global_oce_latlon@bbl, lab_sea@bbl | EH3 package-specific options go here |
+| `mom_vecinv@wetdry` |  | 0 | 1 | y | 8: wetdry_balzano@wetdry, wetdry_estuary_3d@wetdry, wetdry_flat_xz@wetdry, wetdry_iceground@wetdry, … | S/R MOM_VECINV Form the right hand-side of the momentum equation. Terms are evaluated one layer at a time working from the bottom  |
+| `mom_vecinv@wetdrycheckin` |  | 0 | 1 | y | 5: wetdry_balzano@wetdrycheckin, wetdry_estuary_3d@wetdrycheckin, wetdry_flat_xz@wetdrycheckin, wetdry_mudflat@wetdrycheckin, … | S/R MOM_VECINV Form the right hand-side of the momentum equation. Terms are evaluated one layer at a time working from the bottom  |
 | `obcs@seaicebc` | data.obcs | 165 | 19 | y | 0 | -- Fields and files for OBCS-support for passive tracers package PTRACERS |
-| `overflood@wad` | data.overflood | 16 | 0 |  | 1: wad_overflood@wad | pkg/overflood: a thin sheet of water on top of floating sea ice (river overflood at breakup), coupled to the ocean beneath and to  |
-| `ptracers@bbl` | data.ptracers | 34 | 1 | y | 0 | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
+| `overflood@wetdry` | data.overflood | 17 | 0 |  | 1: wetdry_overflood@wetdry | pkg/overflood: a thin sheet of water on top of floating sea ice (river overflood at breakup), coupled to the ocean beneath and to  |
+| `ptracers@bbl` | data.ptracers | 34 | 1 | y | 1: lab_sea@bbl | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
 | `ptracers@bbl_c68g` | data.ptracers | 34 | 1 | y | 0 | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
-| `ptracers@wad` | data.ptracers | 34 | 1 | y | 3: wad_estuary_3d@wad, wad_mangrove@wad, wad_mudflat@wad | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
+| `ptracers@wetdry` | data.ptracers | 34 | 1 | y | 3: wetdry_estuary_3d@wetdry, wetdry_mangrove@wetdry, wetdry_mudflat@wetdry | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
 | `radtrans@d3backport` | data.radtrans | 52 | 1 |  | 0 | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
 | `regrid@bbl` | data.regrid | 5 | 1 |  | 0 | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP 0 |
+| `salt_plume@bbl` | data.salt_plume | 14 | 3 | y | 1: lab_sea@bbl | --   SALT_PLUME parameters Find surface where the potential density (ref.lev=surface) is larger than surface density plus SaltPlum |
 | `seaice@seaicebc` | data.seaice | 282 | 53 | y | 0 | Basic parameter header for sea ice model. |
-| `seaice@wad` | data.seaice | 283 | 53 | y | 4: wad_estuary_3d@wad, wad_iceground@wad, wad_mudflat@wad, wad_overflood@wad | Basic parameter header for sea ice model. |
-| `sediment@wad` | data.sediment | 45 | 0 |  | 2: wad_mangrove@wad, wad_mudflat@wad | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
-| `wad@wad` | data.wad | 28 | 2 | y | 8: wad_balzano@wad, wad_estuary_3d@wad, wad_flat_xz@wad, wad_iceground@wad, … | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
-| `wad@wadcheckin` | data.wad | 20 | 2 | y | 5: wad_balzano@wadcheckin, wad_estuary_3d@wadcheckin, wad_flat_xz@wadcheckin, wad_mudflat@wadcheckin, … | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
+| `seaice@wetdry` | data.seaice | 284 | 53 | y | 4: wetdry_estuary_3d@wetdry, wetdry_iceground@wetdry, wetdry_mudflat@wetdry, wetdry_overflood@wetdry | Basic parameter header for sea ice model. |
+| `sediment@wetdry` | data.sediment | 45 | 0 |  | 2: wetdry_mangrove@wetdry, wetdry_mudflat@wetdry | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
+| `wetdry@wetdry` | data.wetdry | 32 | 2 |  | 8: wetdry_balzano@wetdry, wetdry_estuary_3d@wetdry, wetdry_flat_xz@wetdry, wetdry_iceground@wetdry, … | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
+| `wetdry@wetdrycheckin` | data.wetdry | 20 | 2 |  | 5: wetdry_balzano@wetdrycheckin, wetdry_estuary_3d@wetdrycheckin, wetdry_flat_xz@wetdrycheckin, wetdry_mudflat@wetdrycheckin, … | ---+----1----+----2----+----3----+----4----+----5----+----6----+----7-/--+---- BOP |
 
 ## Core (model/) changes in the user's branches
 
 - **bbl** `model/src`: changed: forward_step.F, packages_init_variables.F, the_main_loop.F
 - **bbl_c68g** `model/src`: changed: forward_step.F, packages_init_variables.F, the_main_loop.F
-- **wad** `model/src`: changed: apply_forcing.F, calc_3d_diffusivity.F, calc_r_star.F, calc_viscosity.F, external_forcing_surf.F, forward_step.F, initialise_varia.F, load_fields_driver.F, packages_boot.F, packages_check.F, packages_init_fixed.F, packages_init_variables.F, packages_readparms.F, packages_write_pickup.F, update_r_star.F, update_surf_dr.F
-- **wad** `model/inc`: changed: PARAMS.h
-- **wadcheckin** `model/src`: changed: calc_r_star.F, external_forcing_surf.F, forward_step.F, initialise_varia.F, packages_boot.F, packages_check.F, packages_init_fixed.F, packages_init_variables.F, packages_readparms.F, packages_write_pickup.F, update_r_star.F, update_surf_dr.F
-- **wadcheckin** `model/inc`: changed: PARAMS.h
+- **wetdry** `model/src`: changed: apply_forcing.F, calc_3d_diffusivity.F, calc_r_star.F, calc_viscosity.F, external_forcing_surf.F, forward_step.F, initialise_varia.F, load_fields_driver.F, packages_boot.F, packages_check.F, packages_init_fixed.F, packages_init_variables.F, packages_readparms.F, packages_write_pickup.F, update_r_star.F, update_surf_dr.F
+- **wetdry** `model/inc`: changed: PARAMS.h
+- **wetdrycheckin** `model/src`: changed: calc_r_star.F, external_forcing_surf.F, forward_step.F, initialise_varia.F, packages_boot.F, packages_check.F, packages_init_fixed.F, packages_init_variables.F, packages_readparms.F, packages_write_pickup.F, update_r_star.F, update_surf_dr.F
+- **wetdrycheckin** `model/inc`: changed: PARAMS.h

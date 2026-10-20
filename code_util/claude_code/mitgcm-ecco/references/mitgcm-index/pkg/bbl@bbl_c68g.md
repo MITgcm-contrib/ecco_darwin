@@ -1,6 +1,6 @@
 # pkg/bbl  (bbl_c68g: ~/Documents/research/ECCO/BBL/MITgcm_c68g)
 
-bbl_wvel    :: default vertical entrainment velocity (m/s) bbl_hvvel   :: default horizontal velocity of BBL (m/s); upper bound of the speed when bbl_useNofSpeed=T bbl_initEta :: default initial thickness of BBL (m)
+bbl_wvel    :: vertical detrainment velocity of a dense BBL (m/s) bbl_hvel    :: default horizontal velocity of BBL (m/s); upper bound of the speed when bbl_useNofSpeed=T bbl_initEta :: default initial thickness of BBL (m)
 
 **vs its upstream base (merge-base, see README):** added: BBL_PTR.h, README.md, bbl_ad_check_lev1_dir.h, bbl_ad_check_lev2_dir.h, bbl_ad_check_lev3_dir.h, bbl_ad_check_lev4_dir.h; changed: BBL.h, BBL_OPTIONS.h, bbl_ad_diff.list, bbl_calc_rhs.F, bbl_check.F, bbl_diagnostics_init.F, bbl_init_varia.F, bbl_read_pickup.F, bbl_readparms.F, bbl_tendency_apply.F, bbl_write_pickup.F
 
@@ -44,8 +44,8 @@ such that the volume integral of `bbl_tracer` and `resTracer` is consistent with
 
 ## Namelist parameters
 ### BBL_PARM01
-- `bbl_wvel` — default vertical entrainment velocity (m/s)
-- `bbl_hvel`
+- `bbl_wvel` — vertical detrainment velocity of a dense BBL (m/s)
+- `bbl_hvel` — default horizontal velocity of BBL (m/s); upper bound of the speed when bbl_useNofSpeed=T
 - `bbl_initEta` — default initial thickness of BBL (m)
 - `bbl_useNofSpeed` — compute the lateral BBL speed from the density contrast and slope, u = bbl_nofCoeff*gPrime*slope/f
 - `bbl_nofCoeff` — fraction of the Nof speed gPrime*slope/f that drains downslope (default 1; Campin & Goosse 1999 / MOM use 1/3, which gave too little export in tests)
@@ -65,7 +65,7 @@ such that the volume integral of `bbl_tracer` and `resTracer` is consistent with
 - `BBL_CHECK_BUDGET` (undef, BBL_OPTIONS.h) — Print global sums of BBL T/S tendency x volume x tracer time step (should be zero for a conservative lateral exchange)
 
 ## Headers
-- `BBL.h` — bbl_wvel    :: default vertical entrainment velocity (m/s) bbl_hvvel   :: default horizontal velocity of BBL (m/s); upper bound of the speed when bbl_
+- `BBL.h` — bbl_wvel    :: vertical detrainment velocity of a dense BBL (m/s) bbl_hvel    :: default horizontal velocity of BBL (m/s); upper bound of the speed wh
 - `BBL_OPTIONS.h` — CPP options file for BBL Use this file for selecting options within package "BBL"
 - `BBL_PTR.h` — Passive tracers (pkg/ptracers) carried by the bottom boundary layer. Requires PTRACERS_SIZE.h to be included before this file.
 - `bbl_ad_check_lev1_dir.h` — BBL state carried between time steps (pkg/bbl) ADJ STORE bbl_eta   = comlev1, key = ikey_dynamics, kind = isbyte ADJ STORE bbl_theta = comlev1, key = 

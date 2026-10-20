@@ -1,0 +1,13 @@
+# pkg/wetdry parameters (input.carry: opened faces take the upstream depth-mean u*)
+# A face opening onto a near-empty column gets transient speeds of ~40 m/s
+# in the film (harmless: the outflow limiter keeps the transport tiny), so
+# the runaway check (default 30 m/s) is raised here.
+ &WETDRY_PARM01
+ wdMinDepth   = 0.05,
+ wdCritDepth  = 0.10,
+ wdDragDepth  = 0.,
+ wdConserveVol= .TRUE.,
+ wdCarryVel   = .TRUE.,
+ wdMonFreq    = 168.2138050,
+ wdMaxSpeed   = 100.,
+ &

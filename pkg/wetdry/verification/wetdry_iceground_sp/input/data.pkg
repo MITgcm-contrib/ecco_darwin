@@ -1,0 +1,8 @@
+ &PACKAGES
+ useWETDRY=.TRUE.,
+ useSALT_PLUME=.TRUE.,
+ useSEAICE=.TRUE.,
+ useEXF=.TRUE.,
+ useCAL=.TRUE.,
+ useDiagnostics=.TRUE.,
+ &
