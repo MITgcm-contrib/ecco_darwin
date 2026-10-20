@@ -10,32 +10,9 @@ brine rejection (pkg/salt_plume).
 
 Author: Dustin Carroll (SJSU / JPL), 2026. Developed against MITgcm
 `master` at commit `d861cd501` ("Fix pkg/cheapaml flux option LANL",
-#1001). This version: development commit `59c256202`, with the package
-renamed from pkg/wad to pkg/wetdry (2026-10-20, see below).
+#1001). This version: development branch `wetdry` at `59c256202`.
 
-## Rename: pkg/wad is now pkg/wetdry (2026-10-20)
-
-The package and all its names changed. The model results did not: all 19
-runs of the 7 tests here gave bit-identical output before and after the
-rename (monitor statistics, solver residuals, every diagnostics and pickup
-file; gfortran on arm64, MITgcm `d861cd501`). There is
-no backward compatibility, so update existing set-ups as follows.
-
-| Old | New |
-|---|---|
-| `pkg/wad`, `wad` in `packages.conf` | `pkg/wetdry`, `wetdry` |
-| `useWAD`, `ALLOW_WAD` | `useWETDRY`, `ALLOW_WETDRY` |
-| `data.wad`, namelist `WAD_PARM01` | `data.wetdry`, namelist `WETDRY_PARM01` |
-| parameters `wad*` (e.g. `wadMinDepth`) | `wd*` (e.g. `wdMinDepth`) |
-| diagnostics `WADdepth`, `WADdryC`, `WADmaskW`, `WADmaskS`, `WADEVLIM` | `WDdepth`, `WDdryC`, `WDmaskW`, `WDmaskS`, `WDEVLIM` |
-| pickup files `pickup_wad*` | `pickup_wetdry*` |
-| CPP options `WAD_DEBUG`, `WAD_SMOOTH_MASK` | `WETDRY_DEBUG`, `WETDRY_SMOOTH_MASK` |
-| tests `wad_*` | `wetdry_*` |
-
-To restart a run made with pkg/wad, rename its `pickup_wad*` files to
-`pickup_wetdry*` (the content is the same).
-
-## What changed in the 2026-10-06 update
+## What changed in this update (2026-10-06)
 
 - **Bug fix, real fresh-water flux on drying columns.** With
   `nonlinFreeSurf > 0` and `useRealFreshWaterFlux`, `EXTERNAL_FORCING_SURF`
