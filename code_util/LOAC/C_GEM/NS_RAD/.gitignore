@@ -47,3 +47,27 @@ scratch/
 # forcing/*.csv outputs are tracked. Wildcarded (not listed one-by-one) since each new
 # source this project adds gets its own forcing/_<source>_cache/ directory.
 forcing/_*_cache/
+
+# Green's-function perturbation scratch (tools/build_green_perturbations.py) --
+# auto-generated perturbed forcing copies and one-override site variants, fully
+# reproducible by rerunning that script; not meant to be hand-edited or committed.
+forcing/_green_scratch/
+code/sites/_green_*.py
+
+# Same, for the FORTE-campaign-framework counterpart (tools/build_green_perturbations_
+# forte.py) -- 25 controls x 3 sites of auto-generated one-override site variants (plus
+# the 3 shared lateral-baseline variants), fully reproducible by rerunning that script.
+forcing/_fortegreen_scratch/
+code/sites/_fortegreen_*.py
+
+# Large, fully-regenerable synthetic-observation CSVs (tools/build_osse_observations*.py)
+# -- continuous-sensor channels (moorings/airborne/drifters) run tens of MB per river;
+# the small grab/satellite CSVs and the small observation_value_ranking*.csv RESULTS
+# stay tracked, since those are the actual analysis deliverables, not raw synthetic data.
+docs/osse*/*_moorings.csv
+docs/osse*/*_airborne.csv
+docs/osse*/*_drifters.csv
+
+# Per-session launch logs (tools/run_*.sh / ad-hoc background launches) -- transient
+# process output, not source and not a tracked result.
+tools/.*.log
