@@ -508,6 +508,22 @@ M1 = M - 1  # Max odd grid points
 M2 = M - 2  # Last even grid point
 M3 = M - 3  # Last odd grid point
 
+# Reach-local Green's-function controls (FORTE campaign sensitivity pipeline -- see
+# tools/build_green_perturbations_forte.py). Both default to inert/off, so every
+# existing site/run is unaffected unless its own site file sets one. Defined here
+# (not alongside LATERAL_INFLOW above) because both reference M, which doesn't exist
+# until this point in the file.
+KOX_MULT_REACH = getattr(_site, "KOX_MULT_REACH", None)
+# (i_start, i_end, multiplier) 1-indexed grid-cell range -> aerobic-degradation rate
+# (kox) is locally scaled within that range only; None = uniform 1.0 everywhere
+# (bit-identical to today). Consumed in init_module.py to build variables.kox_mult,
+# applied in biogeo_module.py's kernel.
+LATERAL_BOOST_REACH = getattr(_site, "LATERAL_BOOST_REACH", None)
+# (i_start, i_end, boost_frac) -- on top of LATERAL_INFLOW's existing uniform spread,
+# add a local +boost_frac fractional enhancement confined to that reach. None = no
+# boost (bit-identical to today's uniform-only spread). Consumed in init_module.py's
+# q_lat construction.
+
 # Numerical safety floor on the MOUTH boundary depth [m], applied in uphyd_module.new_bc
 # to H[1]/D[1]/DEPTH[1] only. Discovered necessary 2026-10: with the full-forcing
 # interannual variant's real 2005-2023 NOAA surge record (surge_prudhoe_interannual_

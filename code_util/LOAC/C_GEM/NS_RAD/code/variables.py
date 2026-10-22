@@ -90,6 +90,9 @@ sod = _z()                  # sediment oxygen demand -> benthic DIC efflux
 # Distributed lateral inflow per cell [m^3 s^-1], built in init from config.LATERAL_INFLOW
 # (zero unless the active site enables it). Injected as a mixing source in main.py.
 q_lat = _z()
+# Per-cell multiplier on the aerobic-degradation rate constant (kox), built in init
+# from config.KOX_MULT_REACH -- all-ones (no-op) unless the active site sets it.
+kox_mult = _z()
 #mol kg-1
 #mol kg-1 x 1000 = mmol kg-1
 #mmol kg-1 = mmol L-1

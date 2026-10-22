@@ -6,8 +6,9 @@ import math
 from file_module import exfread
 from config import (M, PI, EL, DELXI, G, Chezy_lb, Chezy_ub, DEPTH_lb, DEPTH_ub,
                     B_ub, B_lb, distance, BOUNDARIES, WIDTH_MODEL, L_FLARE, LATERAL_INFLOW,
+                    LATERAL_BOOST_REACH, KOX_MULT_REACH,
                     MULTICHANNEL, N_CHAN_LB, N_CHAN_UP)
-from variables import v, D, Dold, DEPTH, E, Y, U, TU, B, B_thread, n_chan, ZZ, Z, fl, dispersion, GPP, NPP, NPP_NO3, NPP_NH4, phy_death, aer_deg, denit, nit, O2_ex, Chezy, C, FCO2, Hplus, q_lat
+from variables import v, D, Dold, DEPTH, E, Y, U, TU, B, B_thread, n_chan, ZZ, Z, fl, dispersion, GPP, NPP, NPP_NO3, NPP_NH4, phy_death, aer_deg, denit, nit, O2_ex, Chezy, C, FCO2, Hplus, q_lat, kox_mult
 import numpy as np
 
 # Prismatic-end TOTAL conveyance width. With MULTICHANNEL off this is the site's
@@ -129,8 +130,26 @@ def init():
     # leave it off). Consumed by lateral_module each timestep.
     q_lat[:] = 0.0
     if LATERAL_INFLOW > 0.0:
+        base_per_cell = LATERAL_INFLOW / float(M)
         for i in range(1, M + 1):
-            q_lat[i] = LATERAL_INFLOW / float(M)
+            q_lat[i] = base_per_cell
+        # Reach-local Green's-function control (see config.py): on top of the uniform
+        # spread above, add a local +boost_frac fractional enhancement confined to one
+        # reach. None (every site but the generated FORTE Green's-function variants
+        # that set it) leaves the spread exactly as it was.
+        if LATERAL_BOOST_REACH is not None:
+            i0, i1, boost_frac = LATERAL_BOOST_REACH
+            for i in range(i0, i1 + 1):
+                q_lat[i] += base_per_cell * boost_frac
+
+    # Per-cell multiplier on the aerobic-degradation rate constant (kox), applied in
+    # biogeo_module.py. All-ones (no-op) unless the active site sets KOX_MULT_REACH
+    # (see config.py) -- a reach-local Green's-function control.
+    kox_mult[:] = 1.0
+    if KOX_MULT_REACH is not None:
+        i0, i1, mult = KOX_MULT_REACH
+        for i in range(i0, i1 + 1):
+            kox_mult[i] = mult
 
 
 def initialize_substance(name, filename, clb, cub):

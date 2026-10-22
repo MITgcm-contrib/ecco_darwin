@@ -39,7 +39,7 @@ from numba import njit
 
 from variables import v, DEPTH, M, vp, GPP, NPP_NO3, NPP_NH4, NPP, phy_death, Si_consumption, aer_deg, denit, nit,\
     O2_ex, NEM, FCO2, Hplus, ice_frac, ice_thickness,\
-    rdoc_ox, photo, ch4_ox, ch4_ex, n2o_prod, n2o_ex, sod
+    rdoc_ox, photo, ch4_ox, ch4_ex, n2o_prod, n2o_ex, sod, kox_mult
 from config import (
     KD1, KD2, Pbmax, alpha, kexcr, kgrowth, kmaint, kmort, redsi, redn,
     redp, KdSi, KN, KPO4, Euler, kox, KTOC, KO2_ox, KO2_nit, KinO2, KNO3, knit, KNH4, kdenit, DELTI, TS, Chla2CMIN, KE,
@@ -68,7 +68,7 @@ def _biogeo_loop(c_DIA, c_dSi, c_NO3, c_NH4, c_PO4, c_O2, c_TOC, c_S, c_SPM,
                  aer_deg, denit, nit, O2_ex, NEM, FCO2, Hplus,
                  rdoc_ox, photo, ch4_ox, ch4_ex, n2o_prod, n2o_ex, sod,
                  ice_frac, ice_thickness, k_ice_PAR, ice_on, arctic_on,
-                 M, t, pCO2, I0, previousdays):
+                 M, t, pCO2, I0, previousdays, kox_mult):
     """Jitted per-cell biogeochemistry: light-limited primary production, aerobic
     degradation, denitrification, nitrification, O2 and CO2 gas exchange, the mol/kg
     carbonate solve (pH, CO2*, FCO2), and the species state update -- all evaluated at
@@ -166,7 +166,7 @@ def _biogeo_loop(c_DIA, c_dSi, c_NO3, c_NH4, c_PO4, c_O2, c_TOC, c_S, c_SPM,
         NPP[i] = NPP_NO3[i] + NPP_NH4[i]
         phy_death[i] = kmort * c_DIA[i]
         Si_consumption[i] = max(0.0, redsi * NPP[i])
-        aer_deg[i] = kox * fhet * c_TOC[i] / (c_TOC[i] + KTOC) * c_O2[i] / (c_O2[i] + KO2_ox)
+        aer_deg[i] = kox * kox_mult[i] * fhet * c_TOC[i] / (c_TOC[i] + KTOC) * c_O2[i] / (c_O2[i] + KO2_ox)
         denit[i] = kdenit * fhet * c_TOC[i] / (c_TOC[i] + KTOC) * KinO2 / (c_O2[i] + KinO2) * c_NO3[i] / (c_NO3[i] + KNO3)
         nit[i] = knit * fnit * c_O2[i] / (c_O2[i] + KO2_nit) * c_NH4[i] / (c_NH4[i] + KNH4)
         # Air-water O2 exchange, shut off in proportion to ice cover.
@@ -336,7 +336,7 @@ def biogeo(t, Uw_sal, Uw_tid, T, pCO2, I0, previousdays):
                  aer_deg, denit, nit, O2_ex, NEM, FCO2, Hplus,
                  rdoc_ox, photo, ch4_ox, ch4_ex, n2o_prod, n2o_ex, sod,
                  ice_frac, ice_thickness, k_ice_PAR, ICE_MODEL, ARCTIC_BGC,
-                 M, t, pCO2, I0, previousdays)
+                 M, t, pCO2, I0, previousdays, kox_mult)
 
     # Write biogeochemical process rates [mmol m^-3 s-1]
     if (float(t) / float(TS * DELTI)) % 1 == 0:
