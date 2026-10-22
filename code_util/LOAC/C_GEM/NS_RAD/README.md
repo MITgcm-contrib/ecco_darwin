@@ -78,13 +78,14 @@ python tools/verify_idealized.py --full         # + full seasonal run (all exten
 | `forcing/` | 2022 forcing data (discharge, meteorology, tides, boundary chemistry) |
 | `tools/` | run script, figure/PDF/movie generators, the `build_all.sh` wrapper, the verification harness |
 | `docs/` | generated PDFs + movies, and the design/methods write-ups |
-| `runs/` | model output — `definitive/<river>/`, `regression_bnd/<river>/`, `idealized/`, plus archives of the states recent changes were measured against *(git-ignored)* |
+| `runs/` | model output — operational, multi-year, and FORTE-campaign/Green's-function runs; see [`docs/RUNS.md`](docs/RUNS.md) for the full catalog *(git-ignored)* |
 | `CLAUDE.md` | the developer guide: architecture, provenance, every non-obvious decision |
 
 ## Documentation
 
 - **[`docs/FEATURES.md`](docs/FEATURES.md)** — everything NS-RAD adds on top of the original C-GEM code (the full feature catalog).
 - **[`docs/model_description.md`](docs/model_description.md)** — the full technical model description: governing equations, every component/parameterization, and parameter tables.
+- **[`docs/RUNS.md`](docs/RUNS.md)** — catalog of every run type (operational, multi-year, FORTE campaign, Green's-function/OSSE sensitivity): what it's for and the exact commands to rebuild it.
 
 - **`CLAUDE.md`** — full developer/architecture guide (start here to modify the model).
 - **`docs/ns_rad_model_schematic.pdf`** — the land-to-ocean framework, data flow, and numerics (3 pages).
