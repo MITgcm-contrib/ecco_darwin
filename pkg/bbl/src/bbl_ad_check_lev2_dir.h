@@ -3,6 +3,7 @@ C     BBL state carried between time steps (pkg/bbl)
 CADJ STORE bbl_eta   = tapelev2, key = ilev_2
 CADJ STORE bbl_theta = tapelev2, key = ilev_2
 CADJ STORE bbl_salt  = tapelev2, key = ilev_2
+CADJ STORE bbl_rho_nr = tapelev2, key = ilev_2
 # ifdef ALLOW_PTRACERS
 CADJ STORE bbl_ptr   = tapelev2, key = ilev_2
 # endif

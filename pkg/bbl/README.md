@@ -103,6 +103,12 @@ saved in `pickup_bbl`. For adjoint runs also set the fade-out (`bbl_gpTaper = 1.
 `BBLvTrp`, `BBLwEnt`, ... `#define BBL_CHECK_BUDGET` in `BBL_OPTIONS.h` prints a
 conservation check for T, S and every tracer each step (testing only).
 
+For adjoint runs longer than a few days, also `#define BBL_WITH_STABLE_ADJOINT` in
+`BBL_OPTIONS.h`. It makes the BBL speeds and the entrainment speed passive in the
+adjoint, like `GMREDI_WITH_STABLE_ADJOINT`. The forward run does not change. Without it,
+the ECCO v4r6 LLC90 adjoint grew to 1e41 in 1 month on steep slopes (East Greenland
+shelf). With it, the adjoint stayed at the size of the BBL-off adjoint.
+
 ## Tests
 
 - MITgcm: bit-identical across tilings (1x1, 3x2, 6x4), MPI, OpenMP and restarts;

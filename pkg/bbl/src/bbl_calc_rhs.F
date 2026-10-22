@@ -364,6 +364,14 @@ C--   Meridional faces (j-1|j), same as above.
           ENDIF
          ENDDO
         ENDDO
+#if (defined ALLOW_AUTODIFF_TAMC) && (defined BBL_WITH_STABLE_ADJOINT)
+C     stable adjoint (cf. GMREDI_WITH_STABLE_ADJOINT): no sensitivity
+C     through the BBL speeds, which on steep slopes makes the adjoint
+C     grow without bound; the adjoint keeps the transport of BBL water
+C     by the speeds of the forward run
+        CALL ZERO_ADJ_LOC( 1, velX(1-OLx,1-OLy,bi,bj), myThid )
+        CALL ZERO_ADJ_LOC( 1, velY(1-OLx,1-OLy,bi,bj), myThid )
+#endif
 
 C--   Replenish thickness of interior donor cells, if needed.
         DO j=1,sNy
@@ -689,6 +697,17 @@ C     fade out near neutral density (E is largest as gPrime -> 0)
              IF ( bbl_gpTaper.GT.0. ) wEnt(i,j) = wEnt(i,j)
      &            * MIN( 1. _d 0, gPrime/bbl_gpTaper )
             ENDIF
+           ENDIF
+          ENDDO
+         ENDDO
+#if (defined ALLOW_AUTODIFF_TAMC) && (defined BBL_WITH_STABLE_ADJOINT)
+C     stable adjoint: no sensitivity through the entrainment speed
+         CALL ZERO_ADJ_LOC( 1, wEnt, myThid )
+#endif
+         DO j=1,sNy
+          DO i=1,sNx
+           kBot = kLowC(i,j,bi,bj)
+           IF ( kBot.GT.0 .AND. bbl_eta(i,j,bi,bj).GT.0. ) THEN
             kBotDt = dTtracerLev(kBot)
             dEta = MIN( wEnt(i,j)*kBotDt,
      &                  thk(i,j) - bbl_eta(i,j,bi,bj) )
