@@ -376,6 +376,7 @@ C === apply tendencies to tracers ======================================
       ENDDO
       CALL TIMER_STOP ('DARWIN_STEP [DARWIN_FORCING]',myThid)
 
+
 C === iron =============================================================
 C     re-apply free iron limit to FeT
       CALL TIMER_START('DARWIN_FE_CHEM [DARWIN_FORCING]',myThid)
@@ -417,6 +418,8 @@ C === diagnostics ======================================================
         CALL DIAGNOSTICS_FILL(PAR,diagname,0,Nr,2,bi,bj,myThid)
        ENDIF
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iPP),   'PP      ',
+     &       0,Nr,2,bi,bj,myThid)
+       CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iExudC),'ExudC   ',
      &       0,Nr,2,bi,bj,myThid)
        CALL DIAGNOSTICS_FILL(diags(1-OLx,1-OLy,1,iNfix), 'Nfix    ',
      &       0,Nr,2,bi,bj,myThid)

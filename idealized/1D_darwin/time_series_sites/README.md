@@ -52,6 +52,10 @@ Each run directory holds an `opt_manifest.txt` that lists every namelist change,
 `data.traits` and `data.darwin` for each site are also in `results/optimized/namelists/<SITE>/`, so you can see
 or copy the parameters without building anything. For the v05 baseline instead, use `scripts/make_runs.py` (section 3).
 
+**With exudation (optional):** build a second executable with `-mods="$MOD/code_exude $MOD/code"` (section 2) and add
+`--exude` before the arguments, e.g. `make_optimized_runs.py --exude <sites_dir> $MOD/input runs_exude build_exude/mitgcmuv`.
+The namelists are the same; `--exude` adds the `ExudC` diagnostic and a line to `opt_manifest.txt`.
+
 ## Set-up
 
 - 1×1 spherical-polar cell at the llc270 point, 50 levels (v5r1 `delR`), f-plane, 1200-s time step.
@@ -91,11 +95,33 @@ The nitrogen fixer persists only at the three subtropical gyre sites (9–12 mmo
 the expected biogeography. With darwin3's non-quota fixer, nitrogen fixation does not respond to ambient DIN; the
 faster v05 type 2 (2.4 d⁻¹) drives surface NO3 to 5–50 mmol m⁻³ at HOT, which is why the slow rate matters.
 
+### Excess-photosynthate exudation (optional build, adopted 2026-10-24)
+
+v05 primary production in the subtropical gyres is ~4× below the HOT and BATS ¹⁴C incubations, with its maximum near
+100 m instead of at the surface. Following Wu et al. 2021 (GBC), we decouple carbon fixation from biomass growth:
+photosynthesis is computed without the N, P and Si limits (iron still limits it), growth, nutrient uptake and Chl are
+unchanged, and the excess carbon goes directly from DIC to DOC (diagnostic `ExudC`; gross fixation = `PP` + `ExudC`).
+darwin3's `DARWIN_ALLOW_CSTORE` cannot be used here, because it caps growth with the vmax uptake traits (all zero in
+v05) and adds one carbon-store tracer per phytoplankton type. The code is in `code/darwin_plankton.F` under
+`DARWIN_EXUDE_EXCESS_C` + `DARWIN_EXUDE_FE_LIMITS`, which `code_exude/DARWIN_OPTIONS.h` turns on; with them off the
+build is bit-identical to the standard one (10-day test).
+
+At the four focus sites (1992–2025, 2000–2025 means), exudation raises 0–200 m carbon fixation at HOT from 0.28 to
+0.75 g C m⁻² d⁻¹ (~0.71 from the ¹⁴C casts), moves the production maximum to the surface and lowers the surface pCO2
+misfit at HOT (0.14 to 0.07) and BATS (0.37 to 0.27); HOT changes from weak outgassing to ~2.3 g C m⁻² yr⁻¹ uptake,
+close to the 2.9–3.9 g C m⁻² yr⁻¹ inferred from the WHOTS MAPCO2 mooring. Without the iron limit, exudation at the
+iron-limited high-latitude sites piles up DOC and overshoots the summer pCO2 drawdown (OWS Papa pCO2 misfit 0.51 to
+1.47); keeping the iron limit holds it at 0.81 (PAP-SO 0.96 vs 0.92). Tripling the DOC remineralization rate (mean
+misfit 1.670) or routing exudate into semi-labile (1.5 yr) and semi-refractory (20 yr) DOC pools (1.731) did worse
+than the iron-limited version (1.651 vs 1.646 without exudation, PP scored as growth). Note that ¹⁴C PP is measured
+on filters, so most exuded DOC is probably not in the observations; the cost still scores `PP` (growth).
+
 ## Directory contents
 
 | Path | Contents |
 |---|---|
 | `code/` | MITgcm/darwin3 overrides: v05/llc270 `code_darwin` plus the column-relevant v05/llc270 `code_v5r1` files, a 1×1×50 `SIZE.h` and `packages.conf` (adds `rbcs`, `mnc`) |
+| `code_exude/` | `DARWIN_OPTIONS.h` with iron-limited excess-photosynthate exudation on (`DARWIN_EXUDE_EXCESS_C`, `DARWIN_EXUDE_FE_LIMITS`); build with `-mods="code_exude code"` |
 | `code_rbcs_mask21/` | Optional `RBCS_SIZE.h` (`maskLEN = 21`) for per-tracer relaxation masks (`relaxMaskFile(2+iTr)`). Add it to `code/` and `make CLEAN`. Bit-identical to the standard build when all masks are equal (10-day test). |
 | `input/` | Namelist templates (`data` has `@SITE@`, `@F0@`, `@XG@`, `@YG@` placeholders) |
 | `scripts/` | Set-up, optimized set-ups, Green's-function optimization, scoring and experiment scripts (sections 3–6) |
@@ -142,6 +168,9 @@ MOD="../../ecco_darwin/idealized/1D_darwin/time_series_sites"
 make depend
 make -j 4
 ```
+
+For the exudation build (optional), use a second build directory and `-mods="$MOD/code_exude $MOD/code"` (the first
+directory wins, so its `DARWIN_OPTIONS.h` replaces the one in `code/`).
 
 > **macOS:** darwin3's `cog` step needs a `python` older than 3.12 (it imports `imp`) on `PATH`, e.g. a small
 > wrapper that runs `/usr/bin/python3`. With a conda gfortran, the environment's `bin/` must also be on `PATH` so
@@ -265,8 +294,8 @@ basin, Mediterranean physics) and parameters do not fix it.
   growth; the high-latitude set uses ~2.3× mixing, 2.8× faster POM remineralization, 1.6× phytoplankton mortality
   and 0.57× POM sinking. Every factor is in `results/optimized/{gyre,highlat}_step{1,2}.csv` (column `factor`
   multiplies the control value).
-- **Known structural biases:** surface primary production is still ~4–8× low in the subtropical gyres, which
-  points to missing new nitrogen supply rather than mixing or recycling. At HOT, chlorophyll at 100–200 m runs
+- **Known structural biases:** without exudation, surface primary production is ~4–8× low in the subtropical gyres;
+  the optional exudation build closes most of that gap (see "Excess-photosynthate exudation"). At HOT, chlorophyll at 100–200 m runs
   ~60% high (0.22 vs 0.13 mg m⁻³), and diatoms living in the deep chlorophyll maximum draw surface SiO2 down to
   0.4 vs 1.2 mmol m⁻³ observed. Hydrostation S has only five cruises per depth layer and no surviving diatoms,
   so its surface SiO2 stays too high.

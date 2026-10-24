@@ -2,7 +2,7 @@
 """
 Build ready-to-run 1-D columns with the current best (optimized) parameters, in one command (2026-10-15).
 
-  python3 make_optimized_runs.py <sites_dir> <input_template_dir> <runs_dir> <mitgcmuv> [SITE ...]
+  python3 make_optimized_runs.py [--exude] <sites_dir> <input_template_dir> <runs_dir> <mitgcmuv> [SITE ...]
 
 Writes <runs_dir>/<SITE>/ for each site (default: all sites in <sites_dir>); run with ./mitgcmuv > output.txt.
 The parameters are applied as the chain that produced them (each step is an existing script, so a set-up built here
@@ -17,6 +17,10 @@ is identical to the runs it was scored on):
 Regions: gyre = HOT, BATS, HydroS; high latitude = PAPA, PAP, SOTS, K2, MUNIDA, OWSM. CARIACO + DYFAMED have no
 regional set (structural misfit): they get steps 1 + 3 only (v05 parameters + closure).
 Each run dir gets opt_manifest.txt (steps 2 + 4: every namelist change) and experiment.txt (step 3).
+--exude (adopted 2026-10-24): the set-up for the iron-limited exudation build ("PP fix", after Wu et al. 2021 GBC).
+  Excess photosynthate (photosynthesis without the N, P, Si limits, iron still limiting) goes straight from DIC to DOC;
+  growth, biomass, nutrients and Chl are unchanged. <mitgcmuv> must then be built with -mods="code_exude code"
+  (DARWIN_EXUDE_EXCESS_C + DARWIN_EXUDE_FE_LIMITS). Adds the ExudC diagnostic; gross C fixation = PP + ExudC.
 """
 import os, sys, shutil, subprocess
 
@@ -35,11 +39,25 @@ def run(cmd, closure=False):
     subprocess.run([sys.executable] + cmd, check=True, env=env)
 
 
+def add_exudc(f):
+    """Append ExudC (exuded excess photosynthate, mmol C m-3 s-1) to the first (3-D) diagnostics list."""
+    import re
+    L = open(f).read().split('\n')
+    if any('ExudC' in x for x in L):
+        return
+    idx = [i for i, x in enumerate(L) if re.match(r"\s*fields\(\d+,1\)", x)]
+    n = int(re.search(r"fields\((\d+),1\)", L[idx[-1]]).group(1))
+    L.insert(idx[-1] + 1, "   fields(%d,1) = 'ExudC   '," % (n + 1))
+    open(f, 'w').write('\n'.join(L))
+
+
 def main():
-    if len(sys.argv) < 5:
+    argv = [a for a in sys.argv[1:] if a != '--exude']
+    exude = len(argv) < len(sys.argv) - 1
+    if len(argv) < 4:
         sys.exit(__doc__)
-    sites_dir, tmpl, runs, exe = sys.argv[1:5]
-    sites = sys.argv[5:] or sorted(d for d in os.listdir(sites_dir) if os.path.isdir(os.path.join(sites_dir, d)))
+    sites_dir, tmpl, runs, exe = argv[:4]
+    sites = argv[4:] or sorted(d for d in os.listdir(sites_dir) if os.path.isdir(os.path.join(sites_dir, d)))
     work = os.path.join(runs, '.build')
     if os.path.exists(work):
         shutil.rmtree(work)
@@ -89,7 +107,11 @@ def main():
             '# step 3: closure\n%s' % xt +
             ('# step 4: %s set, second Green\'s-function iteration\n%s' % (reg, m2) if reg else '') +
             ('# step 5: %s set, third Green\'s-function iteration (200-300 m relaxation, G-POM cost)\n%s' % (reg, m3)
-             if reg and m3 else '')))
+             if reg and m3 else '') +
+            ('# exudation: iron-limited excess-photosynthate exudation (build -mods="code_exude code"; diagnostic '
+             'ExudC)\n' if exude else '')))
+        if exude:
+            add_exudc(os.path.join(dst, 'data.diagnostics'))
         print('ready:', dst, '(%s)' % (reg + ' set + closure' if reg else 'v05 parameters + closure'))
     shutil.rmtree(work)
 

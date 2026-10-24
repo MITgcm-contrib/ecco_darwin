@@ -16,6 +16,7 @@ C Contains indices into diagnostics array
       integer iConsSi
       integer iConsFe 
       integer iConsDIN
+      integer iExudC
       integer iPPplank
       integer iConsNO3
       integer iConsNO2
@@ -51,7 +52,8 @@ C Contains indices into diagnostics array
       PARAMETER(iDisscDIC_PIC=17)
       PARAMETER(iConsALK=18)
       PARAMETER(iConsO2=19)
-      PARAMETER(iPPplank=20)
+      PARAMETER(iExudC=20)
+      PARAMETER(iPPplank=21)
 
 #ifdef DARWIN_DIAG_PERTYPE
       PARAMETER(iGRplank=iPPplank+nplank)

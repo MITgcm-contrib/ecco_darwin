@@ -116,6 +116,15 @@ C revert to old variable iron sediment source in terms of POP
 #undef  DARWIN_IRON_SED_SOURCE_POP
 
 
+C exude excess photosynthate (2026-10-23, "PP fix", after Wu et al. 2021 GBC, without the
+C carbon-store tracer): photosynthesis is computed without the nutrient limit; growth
+C (biomass, nutrient uptake, Chl) is unchanged; the difference goes from DIC to DOC
+C (diagnostic ExudC). Off here; code_exude/DARWIN_OPTIONS.h turns it on.
+#undef  DARWIN_EXUDE_EXCESS_C
+C   with DARWIN_EXUDE_EXCESS_C: iron still limits photosynthesis (only N, P, Si limits
+C   removed); adopted 2026-10-24 because it keeps high-latitude pCO2 in check
+#undef  DARWIN_EXUDE_FE_LIMITS
+
 C diagnostics
 
 C include code for per-type diagnostics

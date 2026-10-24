@@ -99,6 +99,9 @@ c !LOCAL VARIABLES: ====================================================
       _RL regQ
 
       _RL limitpCO2
+#ifdef DARWIN_EXUDE_EXCESS_C
+      _RL PCm_p, PC_p, excessC, exudC
+#endif
       _RL limitNH4
       _RL limitNO2
       _RL limitNO3
@@ -368,6 +371,9 @@ c ratio if not variable.
 #endif
 
       consumDIC  = 0.0
+#ifdef DARWIN_EXUDE_EXCESS_C
+      exudC = 0.0 _d 0
+#endif
       consumDIC_PIC = 0.0
       consumNH4  = 0.0
       consumNO2  = 0.0
@@ -587,6 +593,26 @@ C         "total" PAR:
           ENDIF
         ENDIF
 
+#ifdef DARWIN_EXUDE_EXCESS_C
+C       photosynthesis without the nutrient limit (same light, Chl:C, T)
+        PCm_p = PCmax(j)*photoTempFunc(j)*limitpCO2
+#ifdef DARWIN_EXUDE_FE_LIMITS
+        PCm_p = PCm_p*limitfe
+#endif
+        IF (PCm_p .GT. 0.0 .AND. PARtot .GT. PARmin) THEN
+          PC_p = PCm_p*(1-EXP(-alpha_I_growth*chl2c/PCm_p))
+        ELSE
+          PC_p = 0.0 _d 0
+        ENDIF
+        IF (inhibGeider(j) .GT. 0.0) THEN
+          tmp = alpha_I/alpha_mean(j)
+          Ek = PCm_p/(chl2c*alpha_mean(j))
+          IF (tmp .GE. Ek) THEN
+            PC_p = PC_p*(Ek/tmp)*inhibGeider(j)
+          ENDIF
+        ENDIF
+#endif
+
 #else /* not DARWIN_ALLOW_GEIDER */
 
         IF (PARtot .GT. PARmin) THEN
@@ -598,12 +624,27 @@ C         only 1 waveband without DARWIN_ALLOW_GEIDER
           PC = 0.0 _d 0
         ENDIF
         synthChl = 0.0
+#ifdef DARWIN_EXUDE_EXCESS_C
+        PC_p = 0.0 _d 0
+        IF (PARtot .GT. PARmin)
+     &   PC_p = PCmax(j)*limitI*photoTempFunc(j)*limitpCO2
+#ifdef DARWIN_EXUDE_FE_LIMITS
+        PC_p = PC_p*limitfe
+#endif
+#endif
 
 #endif /* DARWIN_ALLOW_GEIDER */
 
         growth = PC*ngrow*X(j)
 
         uptakeDIC = growth
+
+#ifdef DARWIN_EXUDE_EXCESS_C
+C       excess carbon fixation is exuded at once as DOC (no C store)
+        excessC = MAX(0 _d 0, (PC_p - PC)*ngrow*X(j))
+        exudC = exudC + excessC
+        diags(iExudC) = diags(iExudC) + excessC
+#endif
 
 C non-quota elements are taken up with fixed stoichiometry
 #ifndef DARWIN_ALLOW_NQUOTA
@@ -855,6 +896,10 @@ C=======================================================================
 C=======================================================================
 
       gTr(iDIC )=gTr(iDIC ) - consumDIC - consumDIC_PIC
+#ifdef DARWIN_EXUDE_EXCESS_C
+      gTr(iDIC )=gTr(iDIC ) - exudC
+      gTr(iDOC )=gTr(iDOC ) + exudC
+#endif
       
       diags(iConsDIC) = consumDIC
       diags(iConsDIC_PIC) = consumDIC_PIC
