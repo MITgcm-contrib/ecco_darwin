@@ -49,7 +49,7 @@ C     !LOCAL VARIABLES:
 
       DO j=jMin,jMax
        DO i=iMin,iMax
-         IF ( k .EQ. kLowC(i,j,bi,bj) )
+         IF ( k .EQ. bbl_kBot(i,j,bi,bj) )
      &     gT_arr(i,j) = gT_arr(i,j)
      &       + maskC(i,j,k,bi,bj) * bbl_TendTheta(i,j,bi,bj)
        ENDDO
@@ -102,7 +102,7 @@ C     !LOCAL VARIABLES:
 
       DO j=jMin,jMax
        DO i=iMin,iMax
-        IF ( k .EQ. kLowC(i,j,bi,bj) )
+        IF ( k .EQ. bbl_kBot(i,j,bi,bj) )
      &     gS_arr(i,j) = gS_arr(i,j)
      &       + maskC(i,j,k,bi,bj) * bbl_TendSalt(i,j,bi,bj)
        ENDDO
@@ -161,7 +161,7 @@ C     !LOCAL VARIABLES:
       IF ( bbl_doPtracers ) THEN
        DO j=jMin,jMax
         DO i=iMin,iMax
-         IF ( k .EQ. kLowC(i,j,bi,bj) )
+         IF ( k .EQ. bbl_kBot(i,j,bi,bj) )
      &     gPtr_arr(i,j) = gPtr_arr(i,j)
      &       + maskC(i,j,k,bi,bj) * bbl_TendPtr(i,j,bi,bj,iTracer)
         ENDDO

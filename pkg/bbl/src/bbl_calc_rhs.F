@@ -132,6 +132,7 @@ C     cellP     :: passive tracer of the cell after this step's tendency
       _RL     fLoc
       _RL     uEnt, gPrime, riB, dEta, cellT, cellS, kBotDt
       _RL     wEnt (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL     rampFld (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL     ramp, fMix, wDet, uOut
       LOGICAL isDonor, resetBBL
 #ifdef ALLOW_DIAGNOSTICS
@@ -191,7 +192,7 @@ C     and in-situ BBL density.
          DO i=1-OLx,sNx+OLx
           bbl_TendTheta(i,j,bi,bj) = 0. _d 0
           bbl_TendSalt (i,j,bi,bj) = 0. _d 0
-          kBot        = max(1,kLowC(i,j,bi,bj))
+          kBot        = max(1,bbl_kBot(i,j,bi,bj))
           tLoc(i,j)   = theta(i,j,kBot,bi,bj)
           sLoc(i,j)   = salt (i,j,kBot,bi,bj)
           thk(i,j)    = drF(kBot) * hFacC(i,j,kBot,bi,bj)
@@ -204,6 +205,26 @@ C     and in-situ BBL density.
          ENDDO
         ENDDO
 
+C     BBL fade-out ramp: 0 to 1 as gPrime goes from 0 to bbl_gpTaper
+        DO j=1-OLy,sNy+OLy
+         DO i=1-OLx,sNx+OLx
+          gPrime = gravity*recip_rhoConst
+     &           * ( rhoBBL(i,j) - rhoLoc(i,j) )
+          IF ( bbl_gpTaper.GT.0. ) THEN
+           rampFld(i,j) = MIN( 1. _d 0,
+     &                    MAX( 0. _d 0, gPrime/bbl_gpTaper ) )
+          ELSEIF ( gPrime.GT.0. ) THEN
+           rampFld(i,j) = 1. _d 0
+          ELSE
+           rampFld(i,j) = 0. _d 0
+          ENDIF
+         ENDDO
+        ENDDO
+#if (defined ALLOW_AUTODIFF_TAMC) && (defined BBL_WITH_STABLE_ADJOINT)
+C     stable adjoint: no sensitivity through the fade-out ramp
+        CALL ZERO_ADJ_LOC( 1, rampFld, myThid )
+#endif
+
 C--   Vertical exchange between BBL and residual volume of bottommost
 C     wet grid box. This operation does not change total tracer
 C     quantity in bottommost wet grid box. Pointwise, so it is done
@@ -211,7 +232,7 @@ C     identically in the halo of this tile and the interior of its
 C     neighbour.
         DO j=1-OLy,sNy+OLy
          DO i=1-OLx,sNx+OLx
-          kBot = kLowC(i,j,bi,bj)
+          kBot = bbl_kBot(i,j,bi,bj)
           IF ( kBot .GT. 0 ) THEN
            IF ( bbl_gpTaper.GT.0. .OR. bbl_tauMix.GT.0. ) THEN
 C     Continuous variant: detrain at bbl_wvel and dissolve a fraction
@@ -219,15 +240,7 @@ C     fMix of the BBL into its cell; fMix goes from 0 for
 C     gPrime >= bbl_gpTaper to min(1,dt/bbl_tauMix) for gPrime <= 0.
 C     BBL T/S are unchanged, so the cell content is conserved.
             kBotDt = dTtracerLev(kBot)
-            gPrime = gravity*recip_rhoConst
-     &             * ( rhoBBL(i,j) - rhoLoc(i,j) )
-            IF ( bbl_gpTaper.GT.0. ) THEN
-             ramp = MIN( 1. _d 0, MAX( 0. _d 0, gPrime/bbl_gpTaper ) )
-            ELSEIF ( gPrime.GT.0. ) THEN
-             ramp = 1. _d 0
-            ELSE
-             ramp = 0. _d 0
-            ENDIF
+            ramp = rampFld(i,j)
             fMix = 1. _d 0
             IF ( bbl_tauMix.GT.0. )
      &           fMix = MIN( 1. _d 0, kBotDt/bbl_tauMix )
@@ -272,8 +285,8 @@ C     higher pressure (highest possible density of given t,s);
 C     bbl in situ density is stored in k > kLowC indices.
         DO j=1-OLy,sNy+OLy
          DO i=2-OLx,sNx+OLx
-          kLowC1 = kLowC(i-1,j,bi,bj)
-          kLowC2 = kLowC(i  ,j,bi,bj)
+          kLowC1 = bbl_kBot(i-1,j,bi,bj)
+          kLowC2 = bbl_kBot(i  ,j,bi,bj)
 C     maskInW is 0 on faces beyond an open boundary (pkg/obcs), where
 C     the halo neighbor is not a real cell; else it is the wet mask
           IF ((kLowC1.GT.0).AND.(kLowC2.GT.0)
@@ -323,8 +336,8 @@ C     density contrast and slope from the BBL tops of the two cells
 C--   Meridional faces (j-1|j), same as above.
         DO j=2-OLy,sNy+OLy
          DO i=1-OLx,sNx+OLx
-          kLowC1 = kLowC(i,j-1,bi,bj)
-          kLowC2 = kLowC(i,j  ,bi,bj)
+          kLowC1 = bbl_kBot(i,j-1,bi,bj)
+          kLowC2 = bbl_kBot(i,j  ,bi,bj)
           IF ((kLowC1.GT.0).AND.(kLowC2.GT.0)
      &        .AND.(maskInS(i,j,bi,bj).GT.0.)) THEN
            kl = MAX(kLowC1,kLowC2) + 1
@@ -389,7 +402,7 @@ C     plume-like detrainment: a dense BBL detrains at
 C     bbl_wvel*max(0, 1 - uOut/bbl_uDet), uOut the fastest outflow
 C     speed of the cell, so a stagnant BBL detrains fully and a plume
 C     flowing out faster than bbl_uDet keeps its water
-          kBot = kLowC(i,j,bi,bj)
+          kBot = bbl_kBot(i,j,bi,bj)
           IF ( bbl_selectDetrain.EQ.1 .AND. kBot.GT.0 .AND.
      &         rhoLoc(i,j).LT.rhoBBL(i,j) ) THEN
            uOut = 0. _d 0
@@ -502,6 +515,13 @@ C--   Apply the limiter to the faces of interior cells.
           ENDIF
          ENDDO
         ENDDO
+#if (defined ALLOW_AUTODIFF_TAMC) && (defined BBL_WITH_STABLE_ADJOINT)
+C     stable adjoint: the face volumes (BBL thickness x speed, limiter)
+C     are passive too, so the adjoint only carries tracers along the
+C     BBL flow of the forward run
+        CALL ZERO_ADJ_LOC( 1, volX, myThid )
+        CALL ZERO_ADJ_LOC( 1, volY, myThid )
+#endif
 
 #ifdef ALLOW_DIAGNOSTICS
 C--   Signed face transports (m^3/s) and speeds (m/s), positive towards
@@ -516,9 +536,9 @@ C     increasing i or j.
            DO i=1-OLx,sNx+OLx
             diagFld(i,j) = 0. _d 0
             IF ( dirX(i,j,bi,bj).EQ.1 ) diagFld(i,j) = volX(i,j)
-     &           / dTtracerLev(kLowC(i-1,j,bi,bj))
+     &           / dTtracerLev(bbl_kBot(i-1,j,bi,bj))
             IF ( dirX(i,j,bi,bj).EQ.-1 ) diagFld(i,j) = -volX(i,j)
-     &           / dTtracerLev(kLowC(i,j,bi,bj))
+     &           / dTtracerLev(bbl_kBot(i,j,bi,bj))
            ENDDO
           ENDDO
           CALL DIAGNOSTICS_FILL( diagFld, 'BBLuTrp ',
@@ -527,9 +547,9 @@ C     increasing i or j.
            DO i=1-OLx,sNx+OLx
             diagFld(i,j) = 0. _d 0
             IF ( dirY(i,j,bi,bj).EQ.1 ) diagFld(i,j) = volY(i,j)
-     &           / dTtracerLev(kLowC(i,j-1,bi,bj))
+     &           / dTtracerLev(bbl_kBot(i,j-1,bi,bj))
             IF ( dirY(i,j,bi,bj).EQ.-1 ) diagFld(i,j) = -volY(i,j)
-     &           / dTtracerLev(kLowC(i,j,bi,bj))
+     &           / dTtracerLev(bbl_kBot(i,j,bi,bj))
            ENDDO
           ENDDO
           CALL DIAGNOSTICS_FILL( diagFld, 'BBLvTrp ',
@@ -638,7 +658,7 @@ C--   Adjust bbl thickness and tracer properties of interior cells.
             bbl_salt (i,j,bi,bj) = sLoc(i,j)
 #ifdef ALLOW_PTRACERS
             IF ( bbl_doPtracers ) THEN
-             kBot = max(1,kLowC(i,j,bi,bj))
+             kBot = max(1,bbl_kBot(i,j,bi,bj))
              DO iTr=1,PTRACERS_numInUse
               bbl_ptr(i,j,bi,bj,iTr) = pTracer(i,j,kBot,bi,bj,iTr)
              ENDDO
@@ -675,7 +695,7 @@ C     so it does not change the cell's tracer content.
         IF ( bbl_selectEntrain .EQ. 1 ) THEN
          DO j=1,sNy
           DO i=1,sNx
-           kBot = kLowC(i,j,bi,bj)
+           kBot = bbl_kBot(i,j,bi,bj)
            IF ( kBot.GT.0 .AND. bbl_eta(i,j,bi,bj).GT.0. ) THEN
             uEnt = 0. _d 0
             IF ( dirX(i  ,j,bi,bj).NE.0 )
@@ -706,7 +726,7 @@ C     stable adjoint: no sensitivity through the entrainment speed
 #endif
          DO j=1,sNy
           DO i=1,sNx
-           kBot = kLowC(i,j,bi,bj)
+           kBot = bbl_kBot(i,j,bi,bj)
            IF ( kBot.GT.0 .AND. bbl_eta(i,j,bi,bj).GT.0. ) THEN
             kBotDt = dTtracerLev(kBot)
             dEta = MIN( wEnt(i,j)*kBotDt,
@@ -779,7 +799,7 @@ C     volume-weighted sum of its tendencies over the domain should be 0.
         tileAbsS(bi,bj) = 0. _d 0
         DO j=1,sNy
          DO i=1,sNx
-          k = kLowC(i,j,bi,bj)
+          k = bbl_kBot(i,j,bi,bj)
           IF ( k .GT. 0 ) THEN
            vol = rA(i,j,bi,bj)*drF(k)*hFacC(i,j,k,bi,bj)
      &         * dTtracerLev(k)
@@ -816,7 +836,7 @@ C     volume-weighted sum of its tendencies over the domain should be 0.
           tileAbsT(bi,bj) = 0. _d 0
           DO j=1,sNy
            DO i=1,sNx
-            k = kLowC(i,j,bi,bj)
+            k = bbl_kBot(i,j,bi,bj)
             IF ( k .GT. 0 ) THEN
              vol = rA(i,j,bi,bj)*drF(k)*hFacC(i,j,k,bi,bj)
      &           * PTRACERS_dTLev(k)
@@ -909,8 +929,8 @@ C     dtD, dtR    :: tracer time step at donor / receiver bottom level
 C     The tendency of each cell is applied over the tracer time step of
 C     its own level, so both get exactly dVol*(bblTracer_d-resTracer_r)
 C     (conservative, and consistent with the bbl_eta update).
-      dtD = dTtracerLev(kLowC(id,jd,bi,bj))
-      dtR = dTtracerLev(kLowC(ir,jr,bi,bj))
+      dtD = dTtracerLev(bbl_kBot(id,jd,bi,bj))
+      dtR = dTtracerLev(bbl_kBot(ir,jr,bi,bj))
 
       IF ( inD ) THEN
        tendT = dVol * (bbl_theta(id,jd,bi,bj) - resTheta(ir,jr)) / dtD
@@ -975,12 +995,12 @@ C     !LOCAL VARIABLES:
 
         DO j=1-OLy,sNy+OLy
          DO i=1-OLx,sNx+OLx
-          kBot        = max(1,kLowC(i,j,bi,bj))
+          kBot        = max(1,bbl_kBot(i,j,bi,bj))
           tLoc(i,j)   = theta(i,j,kBot,bi,bj)
           sLoc(i,j)   = salt (i,j,kBot,bi,bj)
           thk(i,j)    = drF(kBot) * hFacC(i,j,kBot,bi,bj)
           resThk(i,j) = thk(i,j) - bbl_eta(i,j,bi,bj)
-          IF ( kLowC(i,j,bi,bj).GT.0 .AND. resThk(i,j).GT.0. ) THEN
+          IF ( bbl_kBot(i,j,bi,bj).GT.0 .AND. resThk(i,j).GT.0. ) THEN
            resTheta(i,j) = ( tLoc(i,j)*thk(i,j)
      &          - bbl_theta(i,j,bi,bj)*bbl_eta(i,j,bi,bj) )/resThk(i,j)
            resSalt (i,j) = ( sLoc(i,j)*thk(i,j)
@@ -1067,7 +1087,7 @@ C     the receiver residual volume (as in the original scheme).
      &          bbl_eta(id,j,bi,bj) * rA(id,j,bi,bj) * 0.5 _d 0,
      &          resThk(ir,j) * rA(ir,j,bi,bj) * 0.5 _d 0,
      &          dyG(i,j,bi,bj)*bbl_eta(id,j,bi,bj)*velX(i,j)
-     &          *dTtracerLev(kLowC(id,j,bi,bj)) ))
+     &          *dTtracerLev(bbl_kBot(id,j,bi,bj)) ))
            sumOut(id,j) = sumOut(id,j) + volX(i,j)
            sumIn (ir,j) = sumIn (ir,j) + volX(i,j)
           ENDIF
@@ -1087,7 +1107,7 @@ C     the receiver residual volume (as in the original scheme).
      &          bbl_eta(i,jd,bi,bj) * rA(i,jd,bi,bj) * 0.5 _d 0,
      &          resThk(i,jr) * rA(i,jr,bi,bj) * 0.5 _d 0,
      &          dxG(i,j,bi,bj)*bbl_eta(i,jd,bi,bj)*velY(i,j)
-     &          *dTtracerLev(kLowC(i,jd,bi,bj)) ))
+     &          *dTtracerLev(bbl_kBot(i,jd,bi,bj)) ))
            sumOut(i,jd) = sumOut(i,jd) + volY(i,j)
            sumIn (i,jr) = sumIn (i,jr) + volY(i,j)
           ENDIF
@@ -1162,8 +1182,8 @@ C     inD, inR    :: donor / receiver cell is in the tile interior
 
       inD = id.GE.1 .AND. id.LE.sNx .AND. jd.GE.1 .AND. jd.LE.sNy
       inR = ir.GE.1 .AND. ir.LE.sNx .AND. jr.GE.1 .AND. jr.LE.sNy
-      kD  = max(1,kLowC(id,jd,bi,bj))
-      kR  = max(1,kLowC(ir,jr,bi,bj))
+      kD  = max(1,bbl_kBot(id,jd,bi,bj))
+      kR  = max(1,bbl_kBot(ir,jr,bi,bj))
 
       DO iTr=1,PTRACERS_numInUse
 C     same expressions as resTheta in BBL_BOTTOM_STATE

@@ -36,8 +36,14 @@ C                    BBL as at iteration 0 (BBL T/S = bottom cell, zero
 C                    thickness, or bbl_*File if set)
 C     bbl_doPtracers :: the BBL also carries the passive tracers of
 C                    pkg/ptracers (default: .TRUE. when usePTRACERS)
+C     bbl_skipIceCavity :: no BBL in ice-shelf cavity columns (kSurfC > 1);
+C                    default .FALSE. In thin LLC90 cavity columns the
+C                    BBL couples to the ice-shelf melt and the adjoint
+C                    grows without bound (Getz Ice Shelf, Oct 2026)
       LOGICAL             bbl_useNofSpeed, bbl_coldStart, bbl_doPtracers
-      COMMON /BBL_PARM_L/ bbl_useNofSpeed, bbl_coldStart, bbl_doPtracers
+      LOGICAL             bbl_skipIceCavity
+      COMMON /BBL_PARM_L/ bbl_useNofSpeed, bbl_coldStart,
+     &                    bbl_doPtracers, bbl_skipIceCavity
       INTEGER             bbl_selectEntrain, bbl_selectDetrain
       COMMON /BBL_PARM_I/ bbl_selectEntrain, bbl_selectDetrain
       _RL                 bbl_wvel, bbl_hvel, bbl_initEta
@@ -59,6 +65,11 @@ C     BBL 2-dim. fields
       _RL bbl_eta   (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       _RL bbl_rho_nr(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       COMMON /BBL_STATE_2D/ bbl_theta, bbl_salt, bbl_eta, bbl_rho_nr
+
+C     bbl_kBot :: bottom level of the BBL of each column: kLowC, or 0
+C                 (no BBL) in ice-shelf cavities if bbl_skipIceCavity
+      INTEGER bbl_kBot  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      COMMON /BBL_KBOT/ bbl_kBot
 
 C     BBL lateral-exchange limiter factors (scratch, valid in halos
 C     after EXCH): fraction of the face volumes a cell may give / take

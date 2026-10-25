@@ -100,6 +100,18 @@ C     Restart from a pickup.
 C     End start-from-iter-zero if/else block.
       ENDIF
 
+C     No BBL in skipped columns (bbl_skipIceCavity): a BBL read from a
+C     file or pickup there is dropped
+      DO bj = myByLo(myThid), myByHi(myThid)
+       DO bi = myBxLo(myThid), myBxHi(myThid)
+        DO j=1-OLy,sNy+OLy
+         DO i=1-OLx,sNx+OLx
+          IF ( bbl_kBot(i,j,bi,bj).EQ.0 ) bbl_eta(i,j,bi,bj) = 0. _d 0
+         ENDDO
+        ENDDO
+       ENDDO
+      ENDDO
+
 #endif /* ALLOW_BBL */
 
       RETURN

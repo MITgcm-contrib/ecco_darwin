@@ -34,7 +34,7 @@ C     iUnit      :: Work variable for IO unit number
      &     bbl_useNofSpeed, bbl_nofCoeff, bbl_fMin,
      &     bbl_selectEntrain, bbl_selectDetrain, bbl_uDet,
      &     bbl_gpTaper, bbl_tauMix,
-     &     bbl_coldStart, bbl_doPtracers,
+     &     bbl_coldStart, bbl_doPtracers, bbl_skipIceCavity,
      &     bbl_thetaFile, bbl_saltFile, bbl_etaFile
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
@@ -65,6 +65,7 @@ C--   Default values for BBL
       bbl_tauMix    = 0. _d 0
       bbl_coldStart = .FALSE.
       bbl_doPtracers = usePTRACERS
+      bbl_skipIceCavity = .FALSE.
 
 C-    file names for initial conditions:
       bbl_thetaFile = ' '
