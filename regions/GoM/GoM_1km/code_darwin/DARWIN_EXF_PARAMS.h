@@ -816,12 +816,16 @@ C     R_DIP_IP_runoff   :: [mol P/mol P]  ratio of dissolved to total inorganic 
 C     R_DFe_DIP_runoff  :: [mol Fe/mol P] Fe:P ratio for inorganic P in runoff
 C     R_DOFe_DOP_runoff :: [mol Fe/mol P] Fe:P ratio for dissolved organic matter in runoff
 C     R_POFe_POP_runoff :: [mol Fe/mol P] Fe:P ratio for particulate organic matter in runoff
+C     darwinRunoffMixD  :: [m] depth over which runoff tracer loads are
+C                          spread.  0 (the default) puts the whole load
+C                          in level 1, the historical behaviour.
       COMMON/DARWIN_RUNOFF_PARAMS_R/
      &    R_ALK_DIC_runoff,
      &    R_NO3_DIN_runoff, R_NO2_DIN_runoff, R_NH4_DIN_runoff,
      &    R_DIP_IP_runoff, R_DFe_DIP_runoff,
      &    R_DOFe_DOP_runoff,
-     &    R_POFe_POP_runoff
+     &    R_POFe_POP_runoff,
+     &    darwinRunoffMixD
       _RL R_ALK_DIC_runoff
       _RL R_NO3_DIN_runoff
       _RL R_NO2_DIN_runoff
@@ -830,7 +834,7 @@ C     R_POFe_POP_runoff :: [mol Fe/mol P] Fe:P ratio for particulate organic mat
       _RL R_DFe_DIP_runoff
       _RL R_DOFe_DOP_runoff
       _RL R_POFe_POP_runoff
+      _RL darwinRunoffMixD
 CEOP
 
 #endif /* ALLOW_DARWIN */
-

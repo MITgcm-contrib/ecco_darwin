@@ -1,83 +1,153 @@
-# Diagnostic Package Choices
+#=====================================================================
+# data.diagnostics -- GoM_1km
 #
- &diagnostics_list
-     dumpAtLast = .TRUE.,
-#--
-  fields(1,1) = 'ETAN    ',
-  fileName(1) = 'diags/EtaN_day_snap/EtaN_day_snap',
-  frequency(1) =  -86400.,
-#--
-  fields(1,2) = 'ETAN    ',
-  fileName(2) = 'diags/EtaN_mon_mean/EtaN_mon_mean',
-  frequency(2) =  2592000.,
+# Conventions used below:
+#   frequency < 0   instantaneous snapshot every |frequency| seconds
+#   frequency > 0   time average over each frequency-second window
+#   levels(:,n)     restrict that stream to the listed model levels;
+#                   omit it entirely for the full column (all 90)
+#   fileName(n)     'diags/<name>/<name>' puts each stream in its own
+#                   subdirectory. MITgcm does NOT create directories --
+#                   see the mkdir line at the bottom of this file.
 #
-#  fields(1:5,3) = 'SIarea  ','SIheff  ','SIhsnow ','SIuice ','SIvice ',
-#  fileName(3) = 'diags/SI_daily_snap/SI_daily_snap',
-#  frequency(3) = -86400.,
+# Disk, at 2130 x 1840 x real*4 = 15.67 MB per 2-D slab per record:
+#   streams 1-8, 11-16 (pre-existing) ...... ~0.60 GB/day   218 GB/yr
+#   stream 9  (shelf T/S, 10 levels) ....... ~0.31 GB/day   114 GB/yr
+#   stream 10 (surface fluxes) ............. ~0.06 GB/day    23 GB/yr
+#   stream 17 (runoff) ..................... ~0.03 GB/day    11 GB/yr
+#   WVEL added to stream 7 ................. ~1.4 GB/month   17 GB/yr
+#                                             ~1.0 GB/day   383 GB/yr
 #
-  fields(1:2,4) = 'THETA   ','SALT    ',
-  fileName(4) = 'diags/TS_surf_daily_snap/TS_surf_daily_snap',
-  frequency(4) = -86400.,
-  levels(:,4) = 1,
+# Stream 9 is a DIAGNOSTIC, not production output: it exists to resolve
+# the shallow-column shortwave trapping. Comment it out before the
+# multi-decade run or it costs 3 TB.
+#=====================================================================
+ &DIAGNOSTICS_LIST
 #
-  fields(1:2,5) = 'UVEL    ','VVEL    ',
-  fileName(5) = 'diags/vel_surf_daily_snap/vel_surf_daily_snap',
-  frequency(5) = -86400.,
-  levels(:,5) = 1,
+#--- sea surface height ----------------------------------------------
+ fields(1,1) = 'ETAN    ',
+ fileName(1) = 'diags/EtaN_day_snap/EtaN_day_snap',
+ frequency(1) = -86400.,
 #
-  fields(1:2,6) = 'THETA   ','SALT    ',
-  fileName(6) = 'diags/TS_AW_daily_snap/TS_AW_daily_snap',
-  frequency(6) = -86400.,
-  levels(:,6) = 19,
+ fields(1,2) = 'ETAN    ',
+ fileName(2) = 'diags/EtaN_mon_mean/EtaN_mon_mean',
+ frequency(2) = 2592000.,
 #
-  fields(1:2,7) = 'THETA   ','SALT    ',
-  fileName(7) = 'diags/state_3D_mon_snap/state_3D_mon_snap',
-  frequency(7) = -2592000.,
+#--- surface state ---------------------------------------------------
+ fields(1:2,3) = 'THETA   ','SALT    ',
+ fileName(3) = 'diags/TS_surf_daily_snap/TS_surf_daily_snap',
+ frequency(3) = -86400.,
+ levels(:,3) = 1,
 #
-  fields(1:2,8) = 'UVEL    ','VVEL    ',
-  fileName(8) = 'diags/vel_3D_mon_snap/vel_3D_mon_snap',
-  frequency(8) = -2592000.,
+ fields(1:2,4) = 'UVEL    ','VVEL    ',
+ fileName(4) = 'diags/vel_surf_daily_snap/vel_surf_daily_snap',
+ frequency(4) = -86400.,
+ levels(:,4) = 1,
 #
-  fields(1:2,9) = 'THETA   ','SALT    ',
-  fileName(9) = 'diags/state_3D_mon_mean/state_3D_mon_mean',
-  frequency(9) = 2592000.,
+#--- Atlantic Water level --------------------------------------------
+ fields(1:2,5) = 'THETA   ','SALT    ',
+ fileName(5) = 'diags/TS_AW_daily_snap/TS_AW_daily_snap',
+ frequency(5) = -86400.,
+ levels(:,5) = 19,
 #
-  fields(1:2,10) = 'THETA   ','SALT    ',
-  fileName(10) = 'diags/vel_3D_mon_mean/vel_3D_mon_mean',
-  frequency(10) = 2592000.,
+#--- full-depth monthly ----------------------------------------------
+ fields(1:2,6) = 'THETA   ','SALT    ',
+ fileName(6) = 'diags/state_3D_mon_snap/state_3D_mon_snap',
+ frequency(6) = -2592000.,
 #
-  fields(1:7,11) = 'TRAC01  ','TRAC02  ','TRAC03  ','TRAC04  ','TRAC05  ','TRAC06  ','TRAC07  ',
-  fileName(11) = 'diags/BGC_daily_consts/BGC_daily_consts',
-  frequency(11) = -86400.,
-  levels(:,11) = 1,
+# WVEL added here: vertical velocity for the advective CFL, at no
+# daily cost. 3-D WVEL daily would be 1.4 GB/day.
+ fields(1:3,7) = 'UVEL    ','VVEL    ','WVEL    ',
+ fileName(7) = 'diags/vel_3D_mon_snap/vel_3D_mon_snap',
+ frequency(7) = -2592000.,
 #
-  fields(1:4,12) = 'TRAC08  ','TRAC09  ','TRAC10  ','TRAC11  ',
-  fileName(12) = 'diags/BGC_daily_DO/BGC_daily_DO',
-  frequency(12) = -86400.,
-  levels(:,12) = 1,
+ fields(1:2,8) = 'THETA   ','SALT    ',
+ fileName(8) = 'diags/state_3D_mon_mean/state_3D_mon_mean',
+ frequency(8) = 2592000.,
 #
-  fields(1:5,13) = 'TRAC12  ','TRAC13  ','TRAC14  ','TRAC15  ','TRAC16  ',
-  fileName(13) = 'diags/BGC_daily_PO/BGC_daily_PO',
-  frequency(13) = -86400.,
-  levels(:,13) = 1, 
+#--- shelf structure, top 10 levels ---------------------------------
+# Why: theta_max sits at k=3 in a 3.1 m column, warmer than anything
+# at the surface, because shortwave reaches the seabed and the river
+# halocline stops the column overturning. Levels 1-10 span every
+# column where that happens. 111,045 wet cells are shallower than 5 m.
+# TURN THIS OFF before the production run.
+ fields(1:2,9) = 'THETA   ','SALT    ',
+ fileName(9) = 'diags/TS_shelf_daily_snap/TS_shelf_daily_snap',
+ frequency(9) = -86400.,
+ levels(1:10,9) = 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,
 #
-  fields(1:3,14) = 'TRAC17  ','TRAC18  ','TRAC19  ',
-  fileName(14) = 'diags/BGC_daily_misc/BGC_daily_misc',
-  frequency(14) = -86400.,
-  levels(:,14) = 1,
+#--- surface fluxes --------------------------------------------------
+# oceFWflx is the selectBalanceEmPmR check: its domain mean should sit
+# at ~0 once the balancing is on. It was effectively +1.5 mm/day.
+# oceQsw is the shortwave actually entering the ocean, which is what
+# drives the trapping; TFLUX and SFLUX close the surface budgets.
+ fields(1:4,10) = 'oceFWflx','oceQsw  ','TFLUX   ','SFLUX   ',
+ fileName(10) = 'diags/surf_flux_daily/surf_flux_daily',
+ frequency(10) = 86400.,
 #
-  fields(1:7,15) = 'TRAC20  ','TRAC21  ','TRAC22  ','TRAC23  ','TRAC24  ','TRAC25  ','TRAC26  ',
-  fileName(15) = 'diags/BGC_daily_cx/BGC_daily_cx',
-  frequency(15) = -86400.,
-  levels(:,15) = 1,
+#--- biogeochemistry, surface ----------------------------------------
+ fields(1:7,11) = 'TRAC01  ','TRAC02  ','TRAC03  ','TRAC04  ','TRAC05  ','TRAC06  ','TRAC07  ',
+ fileName(11) = 'diags/BGC_daily_consts/BGC_daily_consts',
+ frequency(11) = -86400.,
+ levels(:,11) = 1,
 #
-  fields(1:5,16) = 'TRAC27  ','TRAC28  ','TRAC29  ','TRAC30  ','TRAC31  ',
-  fileName(16) = 'diags/BGC_daily_Chl/BGC_daily_Chl',
-  frequency(16) = -86400.,
-  levels(:,16) = 1,
+ fields(1:4,12) = 'TRAC08  ','TRAC09  ','TRAC10  ','TRAC11  ',
+ fileName(12) = 'diags/BGC_daily_DO/BGC_daily_DO',
+ frequency(12) = -86400.,
+ levels(:,12) = 1,
+#
+ fields(1:5,13) = 'TRAC12  ','TRAC13  ','TRAC14  ','TRAC15  ','TRAC16  ',
+ fileName(13) = 'diags/BGC_daily_PO/BGC_daily_PO',
+ frequency(13) = -86400.,
+ levels(:,13) = 1,
+#
+ fields(1:3,14) = 'TRAC17  ','TRAC18  ','TRAC19  ',
+ fileName(14) = 'diags/BGC_daily_misc/BGC_daily_misc',
+ frequency(14) = -86400.,
+ levels(:,14) = 1,
+#
+ fields(1:7,15) = 'TRAC20  ','TRAC21  ','TRAC22  ','TRAC23  ','TRAC24  ','TRAC25  ','TRAC26  ',
+ fileName(15) = 'diags/BGC_daily_cx/BGC_daily_cx',
+ frequency(15) = -86400.,
+ levels(:,15) = 1,
+#
+ fields(1:5,16) = 'TRAC27  ','TRAC28  ','TRAC29  ','TRAC30  ','TRAC31  ',
+ fileName(16) = 'diags/BGC_daily_Chl/BGC_daily_Chl',
+ frequency(16) = -86400.,
+ levels(:,16) = 1,
+#
+#--- river forcing as the model sees it ------------------------------
+# EXFroff confirms the runoff field and its spreading; EXFroft is the
+# river temperature. Both were previously commented out, which is why
+# a frozen exf_runoftemp_max of 32.4355 could not be chased without
+# reading the input binary directly.
+ fields(1:2,17) = 'EXFroff ','EXFroft ',
+ fileName(17) = 'diags/exf_runoff_daily/exf_runoff_daily',
+ frequency(17) = 86400.,
+#
+#--- OPTIONAL: vertical heat budget in the top 6 levels --------------
+# Turn this on only to quantify the shortwave trapping. It separates
+# the shortwave source from vertical diffusion and advection, so the
+# bottom-cell heating shows up as a residual in TOTTTEND that ADVr_TH
+# and DFrI_TH cannot account for. Costs ~0.38 GB/day.
+# fields(1:4,18) = 'TOTTTEND','ADVr_TH ','DFrI_TH ','GGL90Kr ',
+# fileName(18) = 'diags/heat_shelf_daily/heat_shelf_daily',
+# frequency(18) = 86400.,
+# levels(1:6,18) = 1.,2.,3.,4.,5.,6.,
 #
  &
-
+#
 # Parameter for Diagnostics of per level statistics:
  &DIAG_STATIS_PARMS
  &
+#
+#=====================================================================
+# Before running, create the new output directories -- MITgcm will not:
+#
+#   mkdir -p diags/TS_shelf_daily_snap \
+#            diags/surf_flux_daily \
+#            diags/exf_runoff_daily
+#
+# (add diags/heat_shelf_daily if you enable stream 18)
+#=====================================================================
+

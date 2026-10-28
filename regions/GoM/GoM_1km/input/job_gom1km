@@ -1,12 +1,15 @@
 #!/bin/csh
-#PBS -l select=30:ncpus=20:model=sky_ele
+#PBS -l select=30:ncpus=40:model=sky_ele
 #PBS -W group_list=g26113
 
 #PBS -l walltime=120:00:00
 #PBS -q long
 
+##PBS -l walltime=08:00:00
+##PBS -q normal
+
 ##PBS -l walltime=2:00:00
-##PBS -q debug
+##PBS -q devel
 
 ##PBS -j oe
 #PBS -m abe
@@ -17,12 +20,13 @@
 #PBS -l site=needed=/home3+/nobackupp27
 
 module purge
-module load comp-intel mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
+module load comp-intel mpi-hpe hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 module list
 
 umask 022
+ulimit -c 0
 cd $PBS_O_WORKDIR
 limit stacksize unlimited
 setenv MPI_LAUNCH_TIMEOUT 40
-mpiexec -np 600 ./mitgcmuv
+mpiexec -np 1200 ./mitgcmuv
 
