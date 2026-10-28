@@ -67,6 +67,7 @@ C !LOCAL VARIABLES: ====================================================
      &    R_DIP_IP_runoff,
      &    R_POFe_POP_runoff,
      &    R_ALK_DIC_runoff,
+     &    darwinRunoffMixD,
 C
      &    PARfile,
      &    PARperiod,
@@ -524,6 +525,8 @@ C Open and read the data.darwin file
       R_DIP_IP_runoff           = 0.333 _d 0
       R_POFe_POP_runoff          = 3. _d -4
       R_ALK_DIC_runoff           = 1.0218 _d 0
+C     0 = whole runoff load into level 1 (historical behaviour)
+      darwinRunoffMixD           = 0. _d 0
 
       PARfile = ' '
       PARperiod             = 0.0 _d 0
@@ -1291,4 +1294,3 @@ C     warn if darwin and radtrans ice forcing are different
 
       RETURN
       END
-

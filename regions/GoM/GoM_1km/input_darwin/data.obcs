@@ -13,16 +13,19 @@
  OBNtFile='THETA_north.bin',
  OBNuFile='UVEL_north.bin',
  OBNvFile='VVEL_north.bin',
+ OBNetaFile='ETAN_north.bin',
 #
  OBSsFile='SALT_south.bin',
  OBStFile='THETA_south.bin',
  OBSuFile='UVEL_south.bin',
  OBSvFile='VVEL_south.bin',
+ OBSetaFile='ETAN_south.bin',
 #
  OBEsFile='SALT_east.bin',
  OBEtFile='THETA_east.bin',
  OBEuFile='UVEL_east.bin',
  OBEvFile='VVEL_east.bin',
+ OBEetaFile='ETAN_east.bin',
 #
  OBNptrFile(1) = 'TRAC01_north.bin',
  OBEptrFile(1) = 'TRAC01_east.bin',

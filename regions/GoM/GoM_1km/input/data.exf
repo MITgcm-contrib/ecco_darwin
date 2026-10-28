@@ -20,11 +20,11 @@
 #
  &EXF_NML_02
  apressurefile     = 'ERA5/ERA5_pres',
- atempfile         = 'ERA5/ERA5_tmp2m_degC',
- aqhfile           = 'ERA5/ERA5_spfh2m',
+ atempfile         = 'ERA5_filled/ERA5_tmp2m_degC_filled',
+ aqhfile           = 'ERA5_filled/ERA5_spfh2m_filled',
  precipfile        = 'ERA5/ERA5_rain',
- uwindfile         = 'ERA5/ERA5_u10m',
- vwindfile         = 'ERA5/ERA5_v10m',
+ uwindfile         = 'ERA5_filled/ERA5_u10m_filled',
+ vwindfile         = 'ERA5_filled/ERA5_v10m_filled',
  swdownfile        = 'ERA5/ERA5_dsw',
  lwdownfile        = 'ERA5/ERA5_dlw',
 #
@@ -44,8 +44,8 @@
  precipstartdate2  = 003000,
  precipperiod      = 3600.0,
 #
- runofffile        = 'GloFas_GoM',
- runoftempfile     = 'GloFas_temp_GoM',
+ runofffile        = './GoM_exf3/GloFas_GoM_1km',
+ runoftempfile     = './GoM_exf3/GloFas_temp_GoM_1km',
  runoffstartdate1  = 19920101,
  runoffstartdate2  = 120000,
  runoffperiod      = 86400.0,
@@ -166,23 +166,18 @@
  lwdown_nlon        = 1280,
  lwdown_nlat        = 640,
 #
- runoff_lon0    = -98.5250000D0,
- runoff_lon_inc = 0.0500000D0,
- runoff_lat0    = 16.2250000D0,
- runoff_lat_inc = 352*0.0500000D0,
- runoff_nlon    = 422,
- runoff_nlat    = 353,
-&
+ runoff_interpMethod    = 0,
+ &
  &EXF_NML_OBCS
   obcsNstartdate1   = 19921231,
   obcsNstartdate2   = 002000,
-  obcsNperiod       = 2629800.0,
+  obcsNperiod       = 86400.0,
 #
   obcsSstartdate1   = 19921231,
   obcsSstartdate2   = 002000,
-  obcsSperiod       = 2629800.0,
+  obcsSperiod       = 86400.0,
 #
   obcsEstartdate1   = 19921231,
   obcsEstartdate2   = 002000,
-  obcsEperiod       = 2629800.0,
+  obcsEperiod       = 86400.0,
 /
