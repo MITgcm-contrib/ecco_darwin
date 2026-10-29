@@ -3,7 +3,10 @@
 # ====================
 # 1-D ECCO-Darwin v05 column at @SITE@, physics from ECCO-v5r1 (llc270)
 # Differences from v05/llc270/input_v5r1/data:
-#  - 1x1 spherical-polar cell at the llc270 point, f-plane (selectCoriMap=0)
+#  - 1x1 curvilinear cell (grid1d.face001.bin, written by make_runs.py): lon/lat and size of the
+#    llc270 cell but uniform metrics, f-plane (selectCoriMap=0). A 1x1 periodic spherical-polar
+#    cell has a shorter north than south face, so v gave a false divergence -v tan(lat)/R
+#    (ETAN drift up to -122 m over 1992-2025 at PAP, false w; changed results by <0.5%; fixed 2026-10-29)
 #  - no horizontal viscosity/diffusion (no neighbours)
 #  - virtual salt flux + linear free surface (useRealFreshWaterFlux=.FALSE.,
 #    nonlinFreeSurf=0) so local E-P does not drain/fill the column over 34 yr
@@ -72,11 +75,8 @@
  dumpInitAndLast=.FALSE.,
  /
  &PARM04
- usingSphericalPolarGrid=.TRUE.,
- delX=1*0.3333333,
- delY=1*0.3333333,
- xgOrigin=@XG@,
- ygOrigin=@YG@,
+ usingCurvilinearGrid=.TRUE.,
+ horizGridFile='grid1d',
  delR =
      10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.01,
      10.03, 10.11, 10.32, 10.80, 11.76, 13.42, 16.04, 19.82, 24.85,

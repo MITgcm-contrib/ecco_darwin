@@ -58,7 +58,12 @@ The namelists are the same; `--exude` adds the `ExudC` diagnostic and a line to 
 
 ## Set-up
 
-- 1×1 spherical-polar cell at the llc270 point, 50 levels (v5r1 `delR`), f-plane, 1200-s time step.
+- 1×1 cell with the longitude, latitude and size of the llc270 cell at the site, 50 levels (v5r1 `delR`), f-plane,
+  1200-s time step. The cell is curvilinear with uniform metrics (`usingCurvilinearGrid`, `horizGridFile='grid1d'`;
+  `make_runs.py` writes `grid1d.face001.bin`). A 1×1 periodic spherical-polar cell has a shorter north face than
+  south face, so the meridional velocity gave a false divergence (−v tan(lat)/R). This made the sea surface drift
+  (ETAN −122 m at PAP over 1992–2025) and added a false vertical velocity. It changed tracers, PP and pCO2 by less than
+  0.5% (fixed 2026-10-29). A Cartesian cell is not possible: the EXF zenith-angle code needs longitude and latitude.
 - darwin3 `darwin_ckpt68g`, with the same Darwin code, namelists and traits as v05/llc270 (31 tracers).
 - GGL90 mixing (v5r1 `data.ggl90`) plus the v5r1 `xx_diffkr` background diffusivity at the site.
 - v5r1 iter70 6-hourly atmospheric state (air temperature, humidity, precipitation, winds, downward short- and

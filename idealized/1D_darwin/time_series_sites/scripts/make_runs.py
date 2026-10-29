@@ -4,8 +4,8 @@ Build per-site 1-D run directories from extracted site inputs + namelist templat
 
   python3 make_runs.py <sites_dir> <input_template_dir> <runs_dir> <mitgcmuv> [site ...]
 
-For each site: copies namelists (filling @SITE@, @F0@, @XG@, @YG@ in `data`),
-writes data.diagnostics and relax_mask_1x1x50, and links the extracted inputs.
+For each site: copies namelists (filling @SITE@, @F0@ in `data`), writes data.diagnostics,
+relax_mask_1x1x50 and the 1x1 curvilinear grid file grid1d.face001.bin, and links the extracted inputs.
 """
 import os, sys, math, shutil
 import numpy as np
@@ -25,6 +25,20 @@ DRF = [10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.01, 10.03, 10.11, 10.
 BGC_Z0, BGC_Z1 = 200., 300.      # BGC relaxation mask: 0 above Z0, linear ramp, 1 below Z1 (was 150/250 m until 2026-10-15; team meeting: relax deeper)
 OMEGA = 2. * math.pi / 86164.
 DX = 0.3333333
+RSPHERE = 6370.e3                # MITgcm default rSphere
+
+
+def grid1d(path, xc, yc):
+    """1x1 curvilinear grid file (usingCurvilinearGrid, horizGridFile='grid1d'): the lon/lat and size of the
+    llc270 cell (as the old spherical-polar cell) but uniform metrics, so dxG(north) = dxG(south). The periodic
+    spherical-polar 1x1 cell had a shorter north face, so v gave a false divergence -v tan(lat)/R (ETAN drift,
+    false w). 18 records of (sNx+1)x(sNy+1) = 2x2 real*8: xC yC dxF dyF rA xG yG dxV dyU rAz dxC dyC rAw rAs
+    dxG dyG AngleCS AngleSN (pkg/mdsio MDS_FACEF_READ_RS)."""
+    dy = RSPHERE * math.radians(DX)
+    dx = dy * math.cos(math.radians(yc))
+    ra = dx * dy
+    recs = [xc, yc, dx, dy, ra, xc - DX / 2., yc - DX / 2., dx, dy, ra, dx, dy, ra, ra, dx, dy, 1., 0.]
+    np.concatenate([np.full(4, v) for v in recs]).astype('>f8').tofile(path)
 
 
 def site_info(path):
@@ -58,11 +72,10 @@ def main():
         for f in os.listdir(tmpl):
             s = open(os.path.join(tmpl, f)).read()
             s = (s.replace('@SITE@', '%s (%.3fN, %.3fE, %s m)' % (name, yc, xc, info['depth']))
-                  .replace('@F0@', '%.6e' % (2. * OMEGA * math.sin(math.radians(yc))))
-                  .replace('@XG@', '%.6f' % (xc - DX / 2.))
-                  .replace('@YG@', '%.6f' % (yc - DX / 2.)))
+                  .replace('@F0@', '%.6e' % (2. * OMEGA * math.sin(math.radians(yc)))))
             open(os.path.join(rd, f), 'w').write(s)
         open(os.path.join(rd, 'data.diagnostics'), 'w').write(diagnostics())
+        grid1d(os.path.join(rd, 'grid1d.face001.bin'), xc, yc)
         np.ones(50, '>f4').tofile(os.path.join(rd, 'relax_mask_1x1x50'))
         zc = np.cumsum(DRF) - np.array(DRF) / 2.
         np.clip((zc - BGC_Z0) / (BGC_Z1 - BGC_Z0), 0., 1.).astype('>f4').tofile(
