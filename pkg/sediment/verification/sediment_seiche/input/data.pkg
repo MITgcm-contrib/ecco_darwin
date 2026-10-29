@@ -1,0 +1,5 @@
+# sediment_seiche: pkg/sediment without pkg/wetdry
+ &PACKAGES
+ usePTRACERS=.TRUE.,
+ useSEDIMENT=.TRUE.,
+ &

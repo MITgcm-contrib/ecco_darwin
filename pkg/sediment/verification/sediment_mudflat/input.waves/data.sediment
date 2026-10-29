@@ -1,0 +1,60 @@
+# pkg/sediment: river sediment that settles, deposits and is resuspended
+# from a layered bed (ROMS-CSTMS-like: Sherwood et al. 2018, GMD 11;
+# Moriarty et al. 2017, Biogeosciences 14). Illustrative values within
+# typical ranges (not calibrated):
+#  class 1, mud (pTracer 3), cohesive: settling 0.5 mm/s, particle
+#   critical stress 0.05 Pa (the bulk critical stress of the bed below
+#   controls), 0.3 kg/m3 in the river (6 kg/s), dry bulk density 500 kg/m3
+#  class 2, fine sand, ~100-125 um (pTracer 4): settling 10 mm/s, critical
+#   stress 0.15 Pa, 0.05 kg/m3 in the river (1 kg/s), 1600 kg/m3
+#  erosion E = sedEroM*(1-porosity)*f*(tau/tau_ce - 1); with porosity 0.9
+#   sedEroM is 10x the old per-class rate, so a pure bed erodes as before
+#   (mud 5e-5, sand 5e-4 kg/m2/s per unit excess stress)
+# Deposition is continuous (no critical stress); clean bed at t=0.
+ &SEDIMENT_PARM01
+ sedNcl=2,
+ sedPtrIdx=3,4,
+ sedWs=0.5E-3,1.E-2,
+ sedTauCE=0.05,0.15,
+ sedEroM=5.E-4,5.E-3,
+ sedRiverC=0.3,0.05,
+ sedBulkRho=500.,1600.,
+ &
+# Layered bed: 8 layers, a new one below the active layer every 1 kg/m2
+# (2 mm of mud). Fresh deposit has a bulk critical stress of 0.05 Pa and
+# consolidates (1 day) toward tau_cb,eq = (z_m/1 kg m-2)**0.4 * 0.2 Pa
+# (0.2 Pa at 1 kg/m2, 0.5 Pa at 10 kg/m2; offset = 2.5*ln(5), slope 2.5),
+# swelling back over 10 days. Active layer za = max(0.5 mm, 7 mm/Pa *
+# excess stress) (Harris and Wiberg 1997). Mud is cohesive; the bed turns
+# cohesive between 3 and 20 % mud (Sherwood et al. Eq. 6).
+ &SEDIMENT_PARM02
+ sedNlay=8,
+ sedCohesive=.TRUE.,.FALSE.,
+ sedPorosity=0.9,
+ sedFcLo=0.03,
+ sedFcHi=0.2,
+ sedTcbNew=0.05,
+ sedTcbOffset=4.0236,
+ sedTcbSlope=2.5,
+ sedTcbMin=0.05,
+ sedTcbMax=2.,
+ sedTcons=86400.,
+ sedTswell=864000.,
+ sedZaCoef=0.007,
+ sedZaMin=0.5E-3,
+ sedLayMass=1.,
+ &
+# Waves: parametric fetch- and depth-limited wind sea (Young and Verhagen
+# 1996) for a steady 6 m/s onshore wind (blowing toward +x, landward) over
+# a 10 km fetch, breaking at Hs = 0.5 h; orbital velocity from linear
+# theory; wave friction factor with a 0.2 mm roughness length (mud;
+# Soulsby 1997); damped by sea-ice cover
+ &SEDIMENT_PARM03
+ sedWaveMode=2,
+ sedWindSpeed=6.,
+ sedWindDir=0.,
+ sedFetch=1.E4,
+ sedWaveGamma=0.5,
+ sedZ0=2.E-4,
+ sedWaveIce=.TRUE.,
+ &

@@ -1,0 +1,35 @@
+# sediment_seiche, input.layers: the same two classes on a layered bed
+# (ROMS-CSTMS-like): 6 layers of 1 kg/m^2 below the active layer, porosity
+# 0.9 (sedEroM 10x the main case, so a pure bed erodes as there), mud
+# cohesive, the bed cohesive between 3 and 20 % mud. Fresh deposit has a
+# bulk critical stress of 0.05 Pa and consolidates (1 h, for this short
+# test) toward tau_cb,eq = 0.09 Pa at 1 kg/m^2 and 0.17 Pa at 5 kg/m^2 (offset 6,
+# slope 2.5), swelling back over 10 h. Active layer
+# za = max(0.5 mm, 7 mm/Pa * excess stress).
+ &SEDIMENT_PARM01
+ sedNcl=2,
+ sedPtrIdx=1,2,
+ sedWs=0.5E-3,1.E-2,
+ sedTauCE=0.05,0.15,
+ sedEroM=5.E-4,5.E-3,
+ sedBulkRho=500.,1600.,
+ sedBedFile='bed_mud.bin','bed_sand.bin',
+ sedRefDepth=0.5,
+ &
+ &SEDIMENT_PARM02
+ sedNlay=6,
+ sedCohesive=.TRUE.,.FALSE.,
+ sedPorosity=0.9,
+ sedFcLo=0.03,
+ sedFcHi=0.2,
+ sedTcbNew=0.05,
+ sedTcbOffset=6.,
+ sedTcbSlope=2.5,
+ sedTcbMin=0.05,
+ sedTcbMax=2.,
+ sedTcons=3600.,
+ sedTswell=36000.,
+ sedZaCoef=0.007,
+ sedZaMin=0.5E-3,
+ sedLayMass=1.,
+ &

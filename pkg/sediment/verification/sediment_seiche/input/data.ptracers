@@ -1,0 +1,15 @@
+# sediment_seiche: two sediment classes carried by pkg/sediment (kg/m^3),
+# clear water at t=0
+ &PTRACERS_PARM01
+ PTRACERS_numInUse=2,
+ PTRACERS_Iter0=0,
+ PTRACERS_advScheme(1:2)=2*33,
+ PTRACERS_diffKh(1:2)=2*0.,
+ PTRACERS_diffKr(1:2)=2*1.E-4,
+ PTRACERS_ref(1:10,1)=10*0.,
+ PTRACERS_ref(1:10,2)=10*0.,
+ PTRACERS_names(1)='mud',
+ PTRACERS_names(2)='sand',
+ PTRACERS_units(1)='kg/m^3',
+ PTRACERS_units(2)='kg/m^3',
+ &

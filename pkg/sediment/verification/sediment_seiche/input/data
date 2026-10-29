@@ -1,0 +1,57 @@
+# sediment_seiche: closed 20 km x 5 m basin (x-z), a 0.5 m seiche over a
+# bed of mud and sand; linear free surface (input.rstar: r*)
+ &PARM01
+ tRef=10*10.,
+ sRef=10*35.,
+ viscAh=1.,
+ viscAr=1.E-3,
+ no_slip_sides=.FALSE.,
+ no_slip_bottom=.FALSE.,
+ bottomDragQuadratic=2.5E-3,
+ diffKhT=0.,
+ diffKrT=1.E-4,
+ diffKhS=0.,
+ diffKrS=1.E-4,
+ eosType='LINEAR',
+ tAlpha=2.E-4,
+ sBeta=0.,
+ gravity=9.81,
+ rhoConst=1000.,
+ rigidLid=.FALSE.,
+ implicitFreeSurface=.TRUE.,
+ exactConserv=.TRUE.,
+ implicitDiffusion=.TRUE.,
+ implicitViscosity=.TRUE.,
+ hFacMin=0.1,
+ tempStepping=.FALSE.,
+ saltStepping=.FALSE.,
+ readBinaryPrec=32,
+ writeBinaryPrec=64,
+ &
+
+ &PARM02
+ cg2dMaxIters=200,
+ cg2dTargetResidual=1.E-13,
+ &
+
+ &PARM03
+ nIter0=0,
+ nTimeSteps=360,
+ deltaT=20.,
+ pChkptFreq=0.,
+ chkptFreq=0.,
+ dumpFreq=0.,
+ monitorFreq=1800.,
+ &
+
+ &PARM04
+ usingCartesianGrid=.TRUE.,
+ delX=40*500.,
+ delY=500.,
+ delR=10*0.5,
+ &
+
+ &PARM05
+ bathyFile='bathy.bin',
+ pSurfInitFile='eta.bin',
+ &

@@ -1,0 +1,16 @@
+# sediment_seiche: two classes on a uniform bed of 5 kg/m^2 each
+#  class 1, mud (pTracer 1): settling 0.5 mm/s, critical stress 0.05 Pa
+#  class 2, fine sand (pTracer 2): settling 10 mm/s, critical stress 0.15 Pa
+# Erosion E = sedEroM*(tau/tau_ce - 1) (single bed store, no layers);
+# deposition is continuous. Bed stress from the mean velocity of the
+# lowest 0.5 m.
+ &SEDIMENT_PARM01
+ sedNcl=2,
+ sedPtrIdx=1,2,
+ sedWs=0.5E-3,1.E-2,
+ sedTauCE=0.05,0.15,
+ sedEroM=5.E-5,5.E-4,
+ sedBulkRho=500.,1600.,
+ sedBedFile='bed_mud.bin','bed_sand.bin',
+ sedRefDepth=0.5,
+ &

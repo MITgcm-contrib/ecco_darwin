@@ -1,0 +1,8 @@
+ &PACKAGES
+ useOBCS=.TRUE.,
+ useKPP=.TRUE.,
+ usePTRACERS=.TRUE.,
+ useRBCS=.TRUE.,
+ useWETDRY=.TRUE.,
+ useSEDIMENT=.TRUE.,
+ &
