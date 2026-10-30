@@ -1,0 +1,41 @@
+# LR17 80m_wetdry baseline v4.1: 2022-02-23 + 43 d; FES tide in boundary sea level only (IBI depth-mean current, band-pass over IBI 2022-01-25_2022-05-05); bed LR17_zb_v4.bin; initial S +1.3 (open-boundary S = IBI); explicit flux-limited vertical salt advection (scheme 33); 84 ranks
+# bed: LR17_zb_v4.bin (--zb; LR17_bathy.py thalweg options, v4 = --zmouth=-4 --ztip=-3)
+# v3 eta-only: FES boundary tide in sea level only (--fes-boundary=eta): IBI 1.80-2.06 and 3.6-4.2 cpd sea-level bands replaced by FES2022b M2 S2 N2 K2 2N2 MU2 NU2 L2 T2 M4 MS4, IBI depth-mean current kept
+# LR17 80 m wetting-drying prototype: 2022-02-23 + 43.0 d (model time 0 = 2022-02-23 00 UTC; rest level 5.5 m MSL)
+ &PARM01
+ tRef=14*10., sRef=14*34.,
+ no_slip_sides=.FALSE., no_slip_bottom=.FALSE.,
+ viscAr=1.E-4, viscAh=2., viscAhGrid=1.E-2,
+ viscC4Leith=1.5, viscC4Leithd=1.5, viscA4GridMax=0.5, useAreaViscLength=.TRUE.,
+ diffKhT=1., diffKhS=1., diffKrT=1.E-5, diffKrS=1.E-5,
+ bottomDragQuadratic=2.5E-3, selectImplicitDrag=2, implicitViscosity=.TRUE.,
+ implicitDiffusion=.TRUE.,
+ rhoConst=1025., gravity=9.81, eosType='JMD95Z',
+ rigidLid=.FALSE., implicitFreeSurface=.TRUE., exactConserv=.TRUE.,
+ nonlinFreeSurf=4, select_rStar=2,
+ hFacMin=0.01, hFacMinDr=0.01, hFacInf=0.001, hFacSup=2.0,
+ momStepping=.TRUE., vectorInvariantMomentum=.TRUE., upwindShear=.TRUE.,
+ tempStepping=.TRUE., saltStepping=.TRUE., tempAdvScheme=33, saltAdvScheme=33,
+ tempVertAdvScheme=3, saltVertAdvScheme=33,
+ momImplVertAdv=.TRUE., tempImplVertAdv=.TRUE., saltImplVertAdv=.FALSE.,
+ staggerTimeStep=.TRUE., useRealFreshWaterFlux=.FALSE.,
+ selectAddFluid=1, temp_addMass=9.0, salt_addMass=0.,
+ readBinaryPrec=32, writeBinaryPrec=32, useSingleCpuIO=.TRUE.,
+ &
+ &PARM02
+ cg2dMaxIters=500, cg2dTargetResidual=1.E-12,
+ &
+ &PARM03
+ nIter0=0, nTimeSteps=371520, deltaT=10.0, abEps=0.1,
+ dumpFreq=0., monitorSelect=2, monitorFreq=3600.,
+ pChkptFreq=3715200.0, chkptFreq=86400.,
+ &
+ &PARM04
+ usingSphericalPolarGrid=.TRUE., xgOrigin=-1.7001, ygOrigin=45.7499,
+ delX=936*0.0008, delY=875*0.0008,
+ delR=2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 5, 5, 10, 10, 10, 8.5,
+ &
+ &PARM05
+ bathyFile='bathy.bin', pSurfInitFile='eta.bin',
+ hydrogThetaFile='T.bin', hydrogSaltFile='S.bin',
+ &

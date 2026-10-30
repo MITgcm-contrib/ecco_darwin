@@ -1,0 +1,42 @@
+ &EXF_NML_01
+ useAtmWind=.TRUE., exf_iprec=32, useExfCheckRange=.FALSE.,
+ exf_albedo=0.1, ocean_emissivity=0.97,
+ &
+ &EXF_NML_02
+ uwindfile='exf/ERA5_uwind.bin', uwindstartdate1=20220223, uwindstartdate2=000000, uwindperiod=3600.0,
+ vwindfile='exf/ERA5_vwind.bin', vwindstartdate1=20220223, vwindstartdate2=000000, vwindperiod=3600.0,
+ atempfile='exf/ERA5_atemp.bin', atempstartdate1=20220223, atempstartdate2=000000, atempperiod=3600.0,
+ aqhfile='exf/ERA5_aqh.bin', aqhstartdate1=20220223, aqhstartdate2=000000, aqhperiod=3600.0,
+ swdownfile='exf/ERA5_swdown.bin', swdownstartdate1=20220223, swdownstartdate2=000000, swdownperiod=3600.0,
+ lwdownfile='exf/ERA5_lwdown.bin', lwdownstartdate1=20220223, lwdownstartdate2=000000, lwdownperiod=3600.0,
+ precipfile='exf/ERA5_precip.bin', precipstartdate1=20220223, precipstartdate2=000000, precipperiod=3600.0,
+ &
+ &EXF_NML_03
+ &
+ &EXF_NML_04
+ uwind_lon0=-2.25, uwind_lon_inc=0.25,
+ uwind_lat0=45.25, uwind_lat_inc=8*0.25,
+ uwind_nlon=9, uwind_nlat=8,
+ vwind_lon0=-2.25, vwind_lon_inc=0.25,
+ vwind_lat0=45.25, vwind_lat_inc=8*0.25,
+ vwind_nlon=9, vwind_nlat=8,
+ atemp_lon0=-2.25, atemp_lon_inc=0.25,
+ atemp_lat0=45.25, atemp_lat_inc=8*0.25,
+ atemp_nlon=9, atemp_nlat=8,
+ aqh_lon0=-2.25, aqh_lon_inc=0.25,
+ aqh_lat0=45.25, aqh_lat_inc=8*0.25,
+ aqh_nlon=9, aqh_nlat=8,
+ swdown_lon0=-2.25, swdown_lon_inc=0.25,
+ swdown_lat0=45.25, swdown_lat_inc=8*0.25,
+ swdown_nlon=9, swdown_nlat=8,
+ lwdown_lon0=-2.25, lwdown_lon_inc=0.25,
+ lwdown_lat0=45.25, lwdown_lat_inc=8*0.25,
+ lwdown_nlon=9, lwdown_nlat=8,
+ precip_lon0=-2.25, precip_lon_inc=0.25,
+ precip_lat0=45.25, precip_lat_inc=8*0.25,
+ precip_nlon=9, precip_nlat=8,
+ &
+ &EXF_NML_OBCS
+ obcsWstartdate1=20220223, obcsWstartdate2=000000, obcsWperiod=3600.0,
+ obcsSstartdate1=20220223, obcsSstartdate2=000000, obcsSperiod=3600.0,
+ &

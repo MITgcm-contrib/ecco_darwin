@@ -1,0 +1,11 @@
+ &OBCS_PARM01
+ OB_Iwest=870*1,5*0,
+ OB_Jsouth=570*1,366*0,
+ useOBCSprescribe=.TRUE.,
+ OBWuFile='obcs/OBWu.bin', OBWvFile='obcs/OBWv.bin', OBWtFile='obcs/OBWt.bin',
+ OBWsFile='obcs/OBWs.bin', OBWetaFile='obcs/OBWeta.bin',
+ OBSuFile='obcs/OBSu.bin', OBSvFile='obcs/OBSv.bin', OBStFile='obcs/OBSt.bin',
+ OBSsFile='obcs/OBSs.bin', OBSetaFile='obcs/OBSeta.bin',
+ &
+ &OBCS_PARM05
+ &

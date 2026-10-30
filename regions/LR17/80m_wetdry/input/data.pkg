@@ -1,0 +1,8 @@
+ &PACKAGES
+ useCAL=.TRUE.,
+ useEXF=.TRUE.,
+ useOBCS=.TRUE.,
+ useKPP=.TRUE.,
+ useWETDRY=.TRUE.,
+ useDiagnostics=.TRUE.,
+ &

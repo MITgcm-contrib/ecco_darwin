@@ -1,0 +1,7 @@
+ &WETDRY_PARM01
+ wdMinDepth=0.05,
+ wdCritDepth=0.10,
+ wdMonFreq=3600.,
+ wdManningN=0.02,
+ wdMaxFroude=1.0,
+ &

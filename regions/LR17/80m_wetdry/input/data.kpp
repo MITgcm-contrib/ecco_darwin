@@ -1,0 +1,3 @@
+# KPP with default parameters (no surface forcing)
+ &KPP_PARM01
+ &
