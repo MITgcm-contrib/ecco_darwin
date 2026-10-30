@@ -304,6 +304,18 @@ basin, Mediterranean physics) and parameters do not fix it.
   ~60% high (0.22 vs 0.13 mg m⁻³), and diatoms living in the deep chlorophyll maximum draw surface SiO2 down to
   0.4 vs 1.2 mmol m⁻³ observed. Hydrostation S has only five cruises per depth layer and no surviving diatoms,
   so its surface SiO2 stays too high.
+- **BATS nitrogen drift (inherited from the parent run):** at BATS, 0–207 m NO3 falls ~25% per decade over
+  1998–2023, against 4.5% per decade in the BATS bottle data. The v5r1 3-D parent run has the same drift at the BATS
+  cell (−21% per decade), and ECCO-Darwin v06 has a smaller drift (−14% per decade). The closed 0–207 m N budget
+  (`scripts/bats_n_budget.py`, with the 10-day `budget` diagnostics list) shows that the supply comes mostly in a few
+  deep-convection winters (2001, 2005, 2010). After 2010 the winter mixed layer is shallower in the v5r1 forcing, in
+  ERA5 and in the BATS CTD casts (−6.7% per decade). The vertical NO3 supply then falls from ~43 to ~11 mmol N m⁻² yr⁻¹,
+  in the 1-D column and in v5r1 3-D, and v5r1 lateral transport does not make up for it. The parent nitracline is too
+  sharp: NO3 is too low at 150–250 m (1.2 vs 1.7 mmol m⁻³ at 154 m) and too high at 350–650 m. Relaxing NO3 toward
+  BATS at 150–250 m corrects the nitracline but not the drift. It also leaves ~0.2 mmol m⁻³ of unused NO3 at the
+  surface, because phytoplankton with fixed N:P become P-limited, so it is not adopted. Treat the BATS NO3 trend as
+  a parent-run limitation. `gf_solve.py --pair_weight BATS:NO3=0.5` halves its weight in a fit; the gyre factors
+  change by ≤ 0.005.
 - **Earlier results:** `results/params_*.csv` and `results/forward_run_misfit_by_variable.csv` are the five-site
   sets of 2026-10-08 (old initial conditions and cost), kept for reference.
 - **Follow-up experiments:** `scripts/make_exp.py` (mixing, picophytoplankton growth, Fe half-saturation, an

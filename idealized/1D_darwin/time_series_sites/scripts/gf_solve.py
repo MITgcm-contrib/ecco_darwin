@@ -189,6 +189,11 @@ def main():
     ap.add_argument('--kz', action='store_true', help='add the KZ_BG control (needs --cache from gf_kz_cache.py)')
     ap.add_argument('--lat', action='store_true', help='add the LAT_SUP control after KZ_BG/KSAT_FE (cache_lat)')
     ap.add_argument('--fe', action='store_true', help='add the KSAT_FE control after KZ_BG (needs --kz + a cache from gf_extra_cache.py)')
+    ap.add_argument('--pair_weight', action='append', default=[], metavar='SITE:VAR=W',
+                    help='scale the weight of one (site, variable) pair in the fit, e.g. BATS:NO3=0.5 (repeatable). '
+                         'Suggested for BATS:NO3 since 2026-10-30: its 1998-2023 drift (-21 %%/decade in v5r1, '
+                         '-14 in v06, -4.5 in BATS obs) comes from the parent physics, not from the 1-D parameters. '
+                         'Reported J values are unweighted.')
     A = ap.parse_args()
     os.makedirs(A.out, exist_ok=True)
     sites = sorted(d for d in os.listdir(A.ctrl) if os.path.isfile(os.path.join(A.ctrl, d, 'data')))
@@ -235,6 +240,14 @@ def main():
     # equal weight per (site, variable): each pair contributes its mean normalized misfit
     ngrp = meta.groupby(['site', 'variable'])['value'].transform('size').values
     W = 1. / r / ngrp
+    for pw in A.pair_weight:                # optional per-pair weight (--pair_weight SITE:VAR=W)
+        key, w = pw.split('=')
+        ps, pv = key.split(':')
+        sel = (meta['site'].values == ps) & (meta['variable'].values == pv)
+        if not sel.any():
+            sys.exit('--pair_weight %s: no bins for %s:%s' % (pw, ps, pv))
+        W[sel] *= float(w)
+        print('pair weight %s:%s x %g (%d bins)' % (ps, pv, float(w), sel.sum()))
     GtW = G[train].T * W[train]
     Pinv = np.eye(len(names)) / A.prior ** 2
     H = Pinv + GtW @ G[train]
