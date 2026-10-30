@@ -565,8 +565,24 @@ index 9385d3efc..2879b0a4c 100644
  #endif /* SEAICE_ITD */
  C     we want to have some soft maximum for better differentiability:
  C     max(a,b;k) = ln(exp(k*a)+exp(k*b))/k
+diff --git a/pkg/seaice/seaice_calc_viscosities.F b/pkg/seaice/seaice_calc_viscosities.F
+index bbacdc122..2ab30926c 100644
+--- a/pkg/seaice/seaice_calc_viscosities.F
++++ b/pkg/seaice/seaice_calc_viscosities.F
+@@ -476,6 +476,11 @@ C     about the no-slip boundary conditions
+         ENDIF
+        ENDDO
+       ENDDO
++#ifdef ALLOW_WETDRY
++C     pkg/wetdry: free slip also at the ice faces wetdry closes (seaiceMaskU/V)
++      IF ( useWETDRY .AND. .NOT.SEAICE_no_slip )
++     &     CALL WETDRY_SEAICE_FREESLIP( etaZ, zetaZ, myThid )
++#endif /* ALLOW_WETDRY */
+ 
+ #endif /* SEAICE_CGRID */
+       RETURN
 diff --git a/pkg/seaice/seaice_dynsolver.F b/pkg/seaice/seaice_dynsolver.F
-index 1100ba92a..b1fc6604a 100644
+index 1100ba92a..92437afae 100644
 --- a/pkg/seaice/seaice_dynsolver.F
 +++ b/pkg/seaice/seaice_dynsolver.F
 @@ -33,6 +33,9 @@ C     === Global variables ===
@@ -634,7 +650,7 @@ index 1100ba92a..b1fc6604a 100644
             ENDDO
            ENDDO
           ENDIF
-@@ -372,6 +400,17 @@ C End of IF (SEAICEuseDYNAMICS and DIFFERENT_MULTIPLE ...
+@@ -372,6 +400,51 @@ C End of IF (SEAICEuseDYNAMICS and DIFFERENT_MULTIPLE ...
        ENDIF
  #endif /* SEAICE_CGRID */
  
@@ -649,9 +665,78 @@ index 1100ba92a..b1fc6604a 100644
 +      ENDIF
 +#endif /* SEAICE_CGRID */
 +
++#ifdef ALLOW_WETDRY
++C-    pkg/wetdry (wdIceMaxSlip): keep each ice velocity component within
++C     wdIceMaxSlip of the surface current at its point (floating ice
++C     cannot outrun the water; removes the runaway velocities the solver
++C     gives partly covered cells next to grounded, masked fast ice).
++C     Before the ocean stress, so the ocean feels the capped ice; closed
++C     faces (seaiceMaskU/V = 0, e.g. grounded ice) stay at rest.
++      IF ( useWETDRY .AND. SEAICEuseDYNAMICS
++     &     .AND. wdIceMaxSlip.GT.zeroRL ) THEN
++       kSrf = 1
++       IF ( usingPCoords ) kSrf = Nr
++       DO bj=myByLo(myThid),myByHi(myThid)
++        DO bi=myBxLo(myThid),myBxHi(myThid)
++         DO j=1-OLy,sNy+OLy
++          DO i=1-OLx,sNx+OLx
++           uIce(i,j,bi,bj) = uVel(i,j,kSrf,bi,bj)
++     &       + MAX( MIN( uIce(i,j,bi,bj) - uVel(i,j,kSrf,bi,bj),
++     &                   wdIceMaxSlip ), -wdIceMaxSlip )
++#ifdef SEAICE_CGRID
++           uIce(i,j,bi,bj) = uIce(i,j,bi,bj)*seaiceMaskU(i,j,bi,bj)
++#endif
++           vIce(i,j,bi,bj) = vVel(i,j,kSrf,bi,bj)
++     &       + MAX( MIN( vIce(i,j,bi,bj) - vVel(i,j,kSrf,bi,bj),
++     &                   wdIceMaxSlip ), -wdIceMaxSlip )
++#ifdef SEAICE_CGRID
++           vIce(i,j,bi,bj) = vIce(i,j,bi,bj)*seaiceMaskV(i,j,bi,bj)
++#endif
++          ENDDO
++         ENDDO
++        ENDDO
++       ENDDO
++      ENDIF
++#endif /* ALLOW_WETDRY */
++
  C Update ocean surface stress
        IF ( SEAICEupdateOceanStress ) THEN
  #ifdef ALLOW_AUTODIFF_TAMC
+diff --git a/pkg/seaice/seaice_growth.F b/pkg/seaice/seaice_growth.F
+index 6590b0dc2..3cb249c34 100644
+--- a/pkg/seaice/seaice_growth.F
++++ b/pkg/seaice/seaice_growth.F
+@@ -34,6 +34,9 @@ C     === Global variables ===
+ #include "SEAICE_GRID.h"
+ #include "SEAICE.h"
+ #include "SEAICE_TRACER.h"
++#ifdef ALLOW_WETDRY
++# include "WETDRY.h"
++#endif
+ #ifdef ALLOW_EXF
+ # include "EXF_PARAM.h"
+ # include "EXF_FIELDS.h"
+@@ -1755,6 +1758,20 @@ C =================================================================
+          ENDDO
+ #endif /* SEAICE_ITD */
+ 
++#ifdef ALLOW_WETDRY
++C-    pkg/wetdry (wdTopMeltSheet): ice + snow melted by the atmosphere
++C     this step [kg m^-2]
++        IF ( useWETDRY ) THEN
++         DO j=1,sNy
++          DO i=1,sNx
++           wdMeltAtm(i,j,bi,bj) =
++     &      - MIN( ZERO, d_HEFFbyATMonOCN(i,j) )*SEAICE_rhoIce
++     &      - MIN( ZERO, d_HSNWbyATMonSNW(i,j) )*SEAICE_rhoSnow
++          ENDDO
++         ENDDO
++        ENDIF
++#endif /* ALLOW_WETDRY */
++
+ C ===================================================================
+ C ==========PART 4: determine ice cover fraction increments=========-
+ C ===================================================================
 diff --git a/pkg/seaice/seaice_model.F b/pkg/seaice/seaice_model.F
 index eec8dc8d4..c4ab39e7e 100644
 --- a/pkg/seaice/seaice_model.F

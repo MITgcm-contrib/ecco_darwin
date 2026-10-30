@@ -10,9 +10,35 @@ brine rejection (pkg/salt_plume).
 
 Author: Dustin Carroll (SJSU / JPL), 2026. Developed against MITgcm
 `master` at commit `d861cd501` ("Fix pkg/cheapaml flux option LANL",
-#1001). This version: development branch `wetdry` at `59c256202`.
+#1001). This version: development branch `wetdry` at `0955ba4c4`.
 
-## What changed in this update (2026-10-06)
+## What changed in this update (2026-10-30)
+
+- **More sea-ice options for landfast and bottom-fast ice** (all off by
+  default; developed for the Colville River delta freshet):
+  `wdIceMaxSlip` (ice speed kept within a limit of the surface current),
+  `wdIceBondH`, `wdBondHead`, `wdBondTau`, `wdBondLag`, `wdBondFormEnd`
+  (ice frozen to the bed and its release), `wdTopMeltSheet`,
+  `wdTopMeltFloat`, `wdPondMax` (top melt kept on the ice as ponds; needs
+  pkg/overflood, which is not part of this folder). See the table below.
+- **Free slip at ice faces that wetdry closes** (new
+  `wetdry_seaice_freeslip.F`, with `SEAICE_no_slip=.FALSE.`): the shear
+  viscosity is zeroed there as at land. This changes results only with
+  sea-ice dynamics (`wetdry_iceground.dyn`).
+- Two more pkg/seaice files gain hooks (`seaice_calc_viscosities.F`,
+  `seaice_growth.F`): 25 files in `mitgcm_changes/`.
+- pkg/wetdry now builds without pkg/overflood (fix in `WETDRY_CHECK`).
+- Reference outputs refreshed for `wetdry_mudflat` (3 runs),
+  `wetdry_iceground` (2) and `wetdry_iceground_sp` (1): the old ones no
+  longer matched the old code either (gfortran x86). Apart from
+  `wetdry_iceground.dyn` (free slip), the new code gives the same output as
+  the previous version in all 19 runs; 12 runs match the old references to
+  16 digits.
+- Checked: `wetdry_hooks.patch` applies to `d861cd501`, and
+  `pkg/sediment/mitgcm_changes/sediment_hooks_with_wetdry.patch` applies on
+  top of it.
+
+## Earlier update (2026-10-06)
 
 - **Bug fix, real fresh-water flux on drying columns.** With
   `nonlinFreeSurf > 0` and `useRealFreshWaterFlux`, `EXTERNAL_FORCING_SURF`
@@ -40,12 +66,12 @@ Author: Dustin Carroll (SJSU / JPL), 2026. Developed against MITgcm
 ```
 wetdry/
   README.md            this file
-  src/                 the package itself (pkg/wetdry): 17 .F files, WETDRY.h,
+  src/                 the package itself (pkg/wetdry): 18 .F files, WETDRY.h,
                        WETDRY_OPTIONS.h
   mitgcm_changes/      MITgcm files changed to call the package
     wetdry_hooks.patch    the changes as one patch against d861cd501
-    model/ pkg/        the same 23 files, complete, at their MITgcm paths
-                       (16 core/gmredi/kpp/mom_vecinv + 7 pkg/seaice)
+    model/ pkg/        the same 25 files, complete, at their MITgcm paths
+                       (16 core/gmredi/kpp/mom_vecinv + 9 pkg/seaice)
   verification/        7 test experiments, 19 runs with their variants
                        (code/, input*/, results/)
   doc/
@@ -131,6 +157,15 @@ A working set (verification/wetdry_mudflat):
 | `wdIceSeal` | F | bottom-fast ice seals the column's faces until it melts |
 | `wdIceMinHeff` | 0 | faces with less ice than this (m) are left out of the ice solver |
 | `wdIceOBpack` | T | keep ice-free faces within 2 cells of an open boundary in the ice solver |
+| `wdIceMaxSlip` | 0 (off) | after the ice solve, each ice velocity component is kept within this (m/s) of the surface current |
+| `wdIceBondH` | 0 (off) | with `wdIceSeal`: ice sealed to the bed stays frozen to it until its thickness falls below this (m) |
+| `wdBondHead` | 0 (off) | with `wdIceBondH`: a bonded column lets go when the water on an open wet neighbor stands more than this (m) above its ice top |
+| `wdBondTau` | 0 (at once) | a released bond ramps off over this time (s) |
+| `wdBondLag` | 0 (off) | with `wdBondHead`: the head condition must hold this long in total (s) before release |
+| `wdBondFormEnd` | 1e30 s | no new bond forms after this model time |
+| `wdTopMeltSheet` | F | with `wdIceTopMelt`, `wdIceBondH` and pkg/overflood: the top melt of bonded ice stays on the ice |
+| `wdTopMeltFloat` | F | with `wdTopMeltSheet`: floating ice keeps its top melt too |
+| `wdPondMax` | 0 (no cap) | with `wdTopMeltSheet`: the kept melt fills the sheet only to this depth (m) |
 | `wdUpwindFace` | T | open-face thickness from the upwind surface |
 | `wdCarryVel` | F | a face that opens takes the upstream depth-mean u\* (needs `momImplVertAdv` if Nr > 1) |
 | `wdDragDepth` | 0 (off) | velocity relaxation in the last centimetres (Oey 2005) |

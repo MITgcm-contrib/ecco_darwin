@@ -58,6 +58,20 @@ C     diagTitle :: local string (80c): description of field in diagnostic
         CALL DIAGNOSTICS_ADDTOLIST( diagNum,
      I          diagName, diagCode, diagUnits, diagTitle, 0, myThid )
 
+        diagName  = 'WDbond  '
+        diagTitle = 'Ice frozen to the bed (1=bonded)'
+        diagUnits = '1               '
+        diagCode  = 'SM      L1      '
+        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I          diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
+        diagName  = 'WDmeltS '
+        diagTitle = 'Top melt of bonded ice kept on ice'
+        diagUnits = 'kg/m^2/s        '
+        diagCode  = 'SM      L1      '
+        CALL DIAGNOSTICS_ADDTOLIST( diagNum,
+     I          diagName, diagCode, diagUnits, diagTitle, 0, myThid )
+
 C-    U/V pair registered last: diagMate = diagNum + 2 relies on diagNum
 C     holding the number of the previously registered diagnostic
         diagName  = 'WDmaskW '

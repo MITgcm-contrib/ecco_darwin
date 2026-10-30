@@ -80,7 +80,12 @@ C     obC     :: open-boundary (ocean, outside the interior) cell
       INTEGER iUp, jUp, ks
 C     seal    :: bottom-fast (grounded, loaded) ice seals this column
 C                (wdIceSeal): its faces are closed
+C     lift    :: a bonded column the head of an open neighbour lifts
+C                (wdBondHead)
       LOGICAL seal(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      LOGICAL lift(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL bondRate, iceTop, stg, stgMax
+      INTEGER in, jn
       _RL nFlipsTile(nSx,nSy)
       _RL nFlips
 C     openW/S :: 1 where the face opened at this call (else 0)
@@ -135,7 +140,63 @@ C     read from a pickup), then relaxed within the time step
 C--   Bottom-fast ice (wdIceSeal): loaded ice with less than
 C     max(wdCritDepth, wdLoadDepth) of water under it is frozen to the
 C     bed; no water passes beneath it (the flood goes over it, e.g. as
-C     a pkg/overflood sheet) until it has melted
+C     a pkg/overflood sheet) until it has melted. With wdIceBondH the
+C     bond is kept (wdBond) until HEFF < wdIceBondH, whatever the film
+C     beneath does (it grows with the top meltwater, wdIceTopMelt), or
+C     (wdBondHead) until the water on an open wet neighbour stands
+C     more than wdBondHead above the ice top. A released bond falls
+C     to 0 over wdBondTau, and the column cannot seal again meanwhile
+        bondRate = oneRL
+        IF ( wdBondTau.GT.zeroRL )
+     &    bondRate = MIN( oneRL, deltaTClock/wdBondTau )
+        DO j=1-OLy,sNy+OLy
+         DO i=1-OLx,sNx+OLx
+          lift(i,j) = .FALSE.
+         ENDDO
+        ENDDO
+#ifdef ALLOW_SEAICE
+        IF ( wdIceSeal .AND. wdIceBondH.GT.zeroRL .AND.
+     &       wdBondHead.GT.zeroRL .AND. inStep .AND. useSEAICE ) THEN
+         DO j=2-OLy,sNy+OLy-1
+          DO i=2-OLx,sNx+OLx-1
+           IF ( wdBond(i,j,bi,bj).LT.oneRL ) wdLiftT(i,j,bi,bj) = zeroRL
+           IF ( wdBond(i,j,bi,bj).GE.oneRL .AND.
+     &          AREA(i,j,bi,bj).GT.zeroRL ) THEN
+            iceTop = Ro_surf(i,j,bi,bj) + etaH(i,j,bi,bj)
+     &        + HEFF(i,j,bi,bj)/MAX( AREA(i,j,bi,bj), 0.15 _d 0 )
+            stgMax = -1. _d 20
+            DO k=1,4
+             IF ( k.EQ.1 ) THEN
+              in = i-1
+              jn = j
+             ELSEIF ( k.EQ.2 ) THEN
+              in = i+1
+              jn = j
+             ELSEIF ( k.EQ.3 ) THEN
+              in = i
+              jn = j-1
+             ELSE
+              in = i
+              jn = j+1
+             ENDIF
+             stg = Ro_surf(in,jn,bi,bj) + etaH(in,jn,bi,bj)
+             IF ( kSurfC(in,jn,bi,bj).LE.Nr .AND.
+     &            wdBond(in,jn,bi,bj).LT.oneRL .AND.
+     &            stg - R_low(in,jn,bi,bj).GT.wdCritDepth )
+     &         stgMax = MAX( stgMax, stg )
+            ENDDO
+            lift(i,j) = stgMax - iceTop .GT. wdBondHead
+C-    wdBondLag: the bond lets go only after the head has held this long
+            IF ( wdBondLag.GT.zeroRL ) THEN
+             IF ( lift(i,j) ) wdLiftT(i,j,bi,bj) =
+     &         wdLiftT(i,j,bi,bj) + deltaTClock
+             lift(i,j) = wdLiftT(i,j,bi,bj).GE.wdBondLag
+            ENDIF
+           ENDIF
+          ENDDO
+         ENDDO
+        ENDIF
+#endif
         DO j=1-OLy,sNy+OLy
          DO i=1-OLx,sNx+OLx
           seal(i,j) = .FALSE.
@@ -145,6 +206,33 @@ C     a pkg/overflood sheet) until it has melted
      &       HEFF(i,j,bi,bj).GT.zeroRL .AND.
      &       etaH(i,j,bi,bj) + Ro_surf(i,j,bi,bj) - R_low(i,j,bi,bj)
      &         .LE.MAX( wdCritDepth, wdLoadDepth )
+          IF ( wdIceSeal .AND. wdIceBondH.GT.zeroRL .AND. useSEAICE
+     &         .AND. useRealFreshWaterFlux ) THEN
+           IF ( .NOT.inStep .AND. .NOT.wdBondRead )
+     &      wdBond(i,j,bi,bj) = zeroRL
+           IF ( wdBond(i,j,bi,bj).GT.zeroRL .AND.
+     &          wdBond(i,j,bi,bj).LT.oneRL ) THEN
+C-    released bond ramping off: no seal
+            seal(i,j) = .FALSE.
+            IF ( inStep ) wdBond(i,j,bi,bj) =
+     &        MAX( zeroRL, wdBond(i,j,bi,bj) - bondRate )
+           ELSE
+            IF ( wdBond(i,j,bi,bj).GT.zeroRL .AND.
+     &           AREA(i,j,bi,bj).GE.0.15 _d 0 .AND.
+     &           HEFF(i,j,bi,bj).GE.wdIceBondH ) seal(i,j) = .TRUE.
+            IF ( lift(i,j) ) seal(i,j) = .FALSE.
+C-    wdBondFormEnd: no new bottom-fast ice after this model time
+            IF ( wdBond(i,j,bi,bj).LE.zeroRL .AND.
+     &           myTime.GE.wdBondFormEnd ) seal(i,j) = .FALSE.
+            IF ( inStep .OR. .NOT.wdBondRead ) THEN
+             IF ( seal(i,j) ) THEN
+              wdBond(i,j,bi,bj) = oneRL
+             ELSEIF ( wdBond(i,j,bi,bj).GT.zeroRL ) THEN
+              wdBond(i,j,bi,bj) = oneRL - bondRate
+             ENDIF
+            ENDIF
+           ENDIF
+          ENDIF
 #endif
          ENDDO
         ENDDO
@@ -165,6 +253,10 @@ C--   West faces
            wdRelaxW(i,j,bi,bj) = newMask
            IF ( rlxRange.GT.zeroRL ) wdRelaxW(i,j,bi,bj) = newMask
      &        *MIN( oneRL, MAX( zeroRL, (hf-wdMinDepth)/rlxRange ) )
+C-    a released bond ramps the flow through its faces up (wdBondTau)
+           IF ( wdBondTau.GT.zeroRL ) wdRelaxW(i,j,bi,bj) =
+     &       wdRelaxW(i,j,bi,bj)*( oneRL - MIN( oneRL, MAX(
+     &       wdBond(i-1,j,bi,bj), wdBond(i,j,bi,bj) ) ) )
            wdAdvFacW(i,j,bi,bj) = newMask
            IF ( advRange.GT.zeroRL ) wdAdvFacW(i,j,bi,bj) = newMask
      &        *MIN( oneRL, MAX( zeroRL, (hf-wdCritDepth)/advRange ) )
@@ -196,6 +288,10 @@ C--   South faces
            wdRelaxS(i,j,bi,bj) = newMask
            IF ( rlxRange.GT.zeroRL ) wdRelaxS(i,j,bi,bj) = newMask
      &        *MIN( oneRL, MAX( zeroRL, (hf-wdMinDepth)/rlxRange ) )
+C-    a released bond ramps the flow through its faces up (wdBondTau)
+           IF ( wdBondTau.GT.zeroRL ) wdRelaxS(i,j,bi,bj) =
+     &       wdRelaxS(i,j,bi,bj)*( oneRL - MIN( oneRL, MAX(
+     &       wdBond(i,j-1,bi,bj), wdBond(i,j,bi,bj) ) ) )
            wdAdvFacS(i,j,bi,bj) = newMask
            IF ( advRange.GT.zeroRL ) wdAdvFacS(i,j,bi,bj) = newMask
      &        *MIN( oneRL, MAX( zeroRL, (hf-wdCritDepth)/advRange ) )
@@ -263,7 +359,8 @@ C     velocity, or the pickup on a restart)
 C-    face thickness from the upwind surface height (default: mean)
           DO j=2-OLy,sNy+OLy
            DO i=2-OLx,sNx+OLx
-            IF ( wdMaskW(i,j,bi,bj).NE.zeroRS ) THEN
+            IF ( wdMaskW(i,j,bi,bj).NE.zeroRS .AND.
+     &           rSurfW(i,j,bi,bj).GT.rLowW(i,j,bi,bj) ) THEN
              IF ( wdUpW(i,j,bi,bj).GT.zeroRL ) THEN
               rStarFacW(i,j,bi,bj) = 1. _d 0 + etaH(i-1,j,bi,bj)
      &          /( rSurfW(i,j,bi,bj) - rLowW(i,j,bi,bj) )
@@ -272,7 +369,8 @@ C-    face thickness from the upwind surface height (default: mean)
      &          /( rSurfW(i,j,bi,bj) - rLowW(i,j,bi,bj) )
              ENDIF
             ENDIF
-            IF ( wdMaskS(i,j,bi,bj).NE.zeroRS ) THEN
+            IF ( wdMaskS(i,j,bi,bj).NE.zeroRS .AND.
+     &           rSurfS(i,j,bi,bj).GT.rLowS(i,j,bi,bj) ) THEN
              IF ( wdUpS(i,j,bi,bj).GT.zeroRL ) THEN
               rStarFacS(i,j,bi,bj) = 1. _d 0 + etaH(i,j-1,bi,bj)
      &          /( rSurfS(i,j,bi,bj) - rLowS(i,j,bi,bj) )
@@ -284,12 +382,19 @@ C-    face thickness from the upwind surface height (default: mean)
            ENDDO
           ENDDO
          ENDIF
+C-    only where the face has thickness: halo copies of wdMaskW/S can be 1
+C     where rSurf = rLow (domain edges, exch2 blank-tile neighbours, fill 0),
+C     which gave Inf and then NaN in the first cg2d (WestAO, 2026-10-09)
          DO j=1-OLy,sNy+OLy
           DO i=1-OLx,sNx+OLx
-           IF ( wdMaskW(i,j,bi,bj).NE.zeroRS ) rStarFacW(i,j,bi,bj) =
+           IF ( wdMaskW(i,j,bi,bj).NE.zeroRS .AND.
+     &          rSurfW(i,j,bi,bj).GT.rLowW(i,j,bi,bj) )
+     &      rStarFacW(i,j,bi,bj) =
      &       MAX( rStarFacW(i,j,bi,bj), wdMinDepth
      &            /( rSurfW(i,j,bi,bj) - rLowW(i,j,bi,bj) ) )
-           IF ( wdMaskS(i,j,bi,bj).NE.zeroRS ) rStarFacS(i,j,bi,bj) =
+           IF ( wdMaskS(i,j,bi,bj).NE.zeroRS .AND.
+     &          rSurfS(i,j,bi,bj).GT.rLowS(i,j,bi,bj) )
+     &      rStarFacS(i,j,bi,bj) =
      &       MAX( rStarFacS(i,j,bi,bj), wdMinDepth
      &            /( rSurfS(i,j,bi,bj) - rLowS(i,j,bi,bj) ) )
           ENDDO
@@ -550,6 +655,8 @@ C     are set by both tiles and must agree for conservation)
      &                            myThid )
         CALL DIAGNOSTICS_FILL_RS( wdMaskS, 'WDmaskS ', 0, 1, 0,1,1,
      &                            myThid )
+        CALL DIAGNOSTICS_FILL( wdBond, 'WDbond  ', 0, 1, 0, 1, 1,
+     &                         myThid )
       ENDIF
 #endif /* ALLOW_DIAGNOSTICS */
 

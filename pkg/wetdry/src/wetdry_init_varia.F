@@ -47,6 +47,9 @@ C     !LOCAL VARIABLES:
           wdMaskW(i,j,bi,bj) = oneRS
           wdMaskS(i,j,bi,bj) = oneRS
           wdDryC (i,j,bi,bj) = zeroRS
+          wdMeltSh(i,j,bi,bj) = zeroRL
+          wdLiftT(i,j,bi,bj) = zeroRL
+          wdMeltAtm(i,j,bi,bj) = zeroRL
 C-    no Qsw seen yet: the first WETDRY_DRY_FORCING call takes Qsw as is
           wdQswIn (i,j,bi,bj) = zeroRS
           wdQswOut(i,j,bi,bj) = -1. _d 30

@@ -86,6 +86,34 @@ C     reset to its depth ramp (restart not bit-exact)
         _BARRIER
        ENDIF
       ENDIF
+C-    bed bond (wdIceBondH); without the file it restarts from the
+C     current seal condition (restart not bit-exact)
+      IF ( wdIceBondH.GT.zeroRL ) THEN
+       WRITE(fn,'(A,A)') 'pickup_wetdrybond.', suff
+       CALL MDS_CHECK4FILE( fn, '.data', 'WETDRY_READ_PICKUP',
+     &                      filNam, fileExist, .TRUE., myThid )
+       IF ( fileExist ) THEN
+        CALL READ_REC_3D_RL( fn, precFloat64, 1, wdBond, 1,
+     &                       myIter, myThid )
+        CALL EXCH_XY_RL( wdBond, myThid )
+        _BEGIN_MASTER(myThid)
+        wdBondRead = .TRUE.
+        _END_MASTER(myThid)
+        _BARRIER
+       ENDIF
+      ENDIF
+C-    time the head release condition has held (wdBondLag); without the
+C     file it restarts from 0
+      IF ( wdBondLag.GT.zeroRL ) THEN
+       WRITE(fn,'(A,A)') 'pickup_wetdrylift.', suff
+       CALL MDS_CHECK4FILE( fn, '.data', 'WETDRY_READ_PICKUP',
+     &                      filNam, fileExist, .TRUE., myThid )
+       IF ( fileExist ) THEN
+        CALL READ_REC_3D_RL( fn, precFloat64, 1, wdLiftT, 1,
+     &                       myIter, myThid )
+        CALL EXCH_XY_RL( wdLiftT, myThid )
+       ENDIF
+      ENDIF
 #endif /* ALLOW_WETDRY */
 
       RETURN

@@ -32,6 +32,8 @@ C     iUnit      :: Work variable for IO unit number
       NAMELIST /WETDRY_PARM01/
      &       wdMinDepth, wdCritDepth, wdDragDepth, wdAdvDepth,
      &       wdGMDepth, wdIceDepth, wdLoadDepth, wdLoadTau,
+     &       wdIceMaxSlip, wdIceBondH, wdBondHead, wdBondTau, wdBondLag,
+     &       wdPondMax, wdBondFormEnd,
      &       wdIceMinHeff,
      &       wdKPPDepth, wdKPPCapDepth,
      &       wdSmoothWidth, wdMonFreq, wdMaxSpeed,
@@ -39,6 +41,7 @@ C     iUnit      :: Work variable for IO unit number
      &       wdManningFile, wdManningT1, wdManningT2,
      &       wdConserveVol, wdCarryVel,
      &       wdIceGround, wdUpwindFace, wdDryForcing, wdIceTopMelt,
+     &       wdTopMeltSheet, wdTopMeltFloat,
      &       wdIceSeal, wdIceOBpack
 
       IF ( .NOT.useWETDRY ) THEN
@@ -67,11 +70,19 @@ C-    sea ice would slide down film-covered flats faster than the water
 C-    off by default (full ice load on grounded columns, as before)
       wdLoadDepth   = 0. _d 0
       wdLoadTau     = 3600. _d 0
+      wdIceMaxSlip  = 0. _d 0
+      wdIceBondH    = 0. _d 0
+      wdBondHead    = 0. _d 0
+      wdBondTau     = 0. _d 0
+      wdBondLag     = 0. _d 0
+      wdPondMax     = 0. _d 0
+      wdBondFormEnd = 1. _d 30
       wdIceSeal     = .FALSE.
       wdIceOBpack   = .TRUE.
       wdIceMinHeff  = 0. _d 0
 C-    set to .TRUE. by WETDRY_READ_PICKUP when it reads wdLoadFac
       wdLoadRead    = .FALSE.
+      wdBondRead    = .FALSE.
 C-    optional: the KPP non-local flux fraction is capped at 1 in any
 C     case (WETDRY_KPP_TAPER), which removes the T/S extrema it made in
 C     thin r* columns
@@ -94,6 +105,8 @@ C     reach ~10 m/s); a thin-water instability passes it within steps
       wdIceGround   = .TRUE.
       wdDryForcing  = .TRUE.
       wdIceTopMelt  = .FALSE.
+      wdTopMeltSheet = .FALSE.
+      wdTopMeltFloat = .FALSE.
 C-    the minimum (NLFS) or mean (r*) surface throttles the shoreline flux
       wdUpwindFace  = .TRUE.
 

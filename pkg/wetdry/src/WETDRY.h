@@ -50,10 +50,49 @@ C                       time scale [s] (<= 0: at once). The load reacts
 C                       to the water depth explicitly with a gain of
 C                       draft/(wdLoadDepth - wdCritDepth); without a lag
 C                       this is unstable at ordinary time steps
+C     wdIceMaxSlip  :: pkg/seaice: after the ice solve, each ice velocity
+C                       component is kept within wdIceMaxSlip of the
+C                       surface current at its point. Floating broken ice
+C                       cannot outrun the water carrying it; at the edge of
+C                       grounded (masked) fast ice the solver shot partly
+C                       covered cells out at 2-10 m/s in a 2 m/s flood
+C                       (Colville freshet), which blew up the free surface.
+C                       Off if <= 0 [m/s]
 C     wdIceSeal     :: bottom-fast ice: with the load, ice with less than
 C                       max(wdCritDepth, wdLoadDepth) of water under it
 C                       is frozen to the bed and closes the column's faces
 C                       (floods go over it, not under), until it melts
+C     wdIceBondH    :: with wdIceSeal: ice once sealed to the bed stays
+C                       frozen to it (bonded) until its thickness (HEFF,
+C                       m) falls below this, whatever the water beneath
+C                       does. Without it the seal follows the film under
+C                       the ice, which grows with the top meltwater
+C                       (wdIceTopMelt), so 1.7 m bottom-fast ice let the
+C                       flood under it and floated off (Colville freshet).
+C                       Off if <= 0 [m]
+C     wdBondHead    :: with wdIceBondH: a bonded column lets go when the
+C                       water on an open wet neighbour stands more than
+C                       this above its ice top (floe top, HEFF/AREA over
+C                       the column surface). Flooded bottom-fast ice is
+C                       always buoyant once water gets beneath it; only
+C                       the bond holds it, and a thin remnant cannot hold
+C                       back metres of water (Colville: 0.25 m of ice held
+C                       a 2.5 m step until HEFF < wdIceBondH, then the
+C                       dam broke at 5-7 m/s). Off if <= 0 [m]
+C     wdBondLag     :: with wdBondHead: a bonded column lets go only after
+C                       the head condition has held for this long in
+C                       total [s] (wdLiftT). Bottom-fast ice under the
+C                       overflood is held to the bed by suction and stays
+C                       submerged for ~1-2 weeks; water seeps beneath over
+C                       "days rather than hours" (Reimnitz 2002, Hearon et
+C                       al. 2009). The HEFF < wdIceBondH release stays
+C                       immediate. Off if <= 0 (default)
+C     wdBondTau     :: with wdIceBondH: a released bond (wdBond) falls
+C                       from 1 to 0 over this time [s]; the faces of the
+C                       column open at once but the thin-water velocity
+C                       factor (wdRelaxW/S) is scaled by 1 - wdBond, so
+C                       the flow through them ramps up instead of a dam
+C                       break. At once if <= 0 (default)
 C     wdIceMinHeff  :: sea-ice faces whose two cells hold less ice than
 C                       this (HEFF sum, m) are left out of the ice solver
 C                       (default 0: only ice-free faces)
@@ -78,6 +117,29 @@ C                       from wdCritDepth to 2*wdCritDepth)
 C     wdIceTopMelt  :: pkg/seaice: ice on a dry column (grounded ice) may
 C                       still melt (atmospheric melt, meltwater into the
 C                       film); growth there stays off (WETDRY_SEAICE_DRY)
+C     wdTopMeltSheet:: with wdIceTopMelt, wdIceBondH and pkg/overflood: the
+C                       top melt of ice frozen to the bed (wdBond = 1)
+C                       stays on the ice (joins the overflood sheet)
+C                       instead of draining into the water beneath it.
+C                       Bottom-fast ice is frozen to the bed, so its melt
+C                       ponds on top; draining it beneath floated the
+C                       near-shore ice before the Colville freshet (the
+C                       water beneath rose 0.23 -> 0.48 m, days 0-9).
+C                       Default .FALSE.
+C     wdTopMeltFloat:: with wdTopMeltSheet: floating ice keeps its top melt
+C                       too (melt ponds on all landfast ice, not only on
+C                       the bonded band, whose edge otherwise shows as a
+C                       line of meltwater). Default .FALSE.
+C     wdPondMax     :: with wdTopMeltSheet: the kept melt fills the sheet on
+C                       a bonded column only to this depth [m]; the rest
+C                       drains beneath as without wdTopMeltSheet (ponds
+C                       drain sideways to cracks). No cap if <= 0 (default)
+C     wdBondFormEnd :: with wdIceBondH: no new bond (bottom-fast ice) forms
+C                       after this model time [s]; bottom-fast ice forms
+C                       in winter, while under the freshet sheet a loaded
+C                       column pushed down to the bed sealed and bonded
+C                       over 3-8 m beds (Colville test, runaway). Default
+C                       1e30 (no limit)
 C     wdIceGround   :: pkg/seaice: ice does not move across a face where
 C                       its draft exceeds the flow depth (grounded ice)
 C     wdManningN    :: Manning roughness [s m^-1/3] for a depth-dependent
@@ -108,6 +170,8 @@ C                       Nr > 1 it needs momImplVertAdv=.TRUE.
       _RL wdAdvDepth
       _RL wdGMDepth
       _RL wdIceDepth, wdLoadDepth, wdLoadTau, wdIceMinHeff
+      _RL wdIceMaxSlip, wdIceBondH, wdBondHead, wdBondTau, wdBondLag
+      _RL wdPondMax, wdBondFormEnd
       _RL wdKPPDepth, wdKPPCapDepth
       _RL wdSmoothWidth
       _RL wdMonFreq
@@ -117,10 +181,12 @@ C                       Nr > 1 it needs momImplVertAdv=.TRUE.
       CHARACTER*(MAX_LEN_FNAM) wdManningFile
       LOGICAL wdConserveVol, wdCarryVel, wdIceGround, wdUpwindFace
       LOGICAL wdDryForcing, wdIceTopMelt, wdIceSeal, wdIceOBpack
+      LOGICAL wdTopMeltSheet, wdTopMeltFloat
       COMMON /WETDRY_PARAMS_R/
      &     wdMinDepth, wdCritDepth, wdDragDepth, wdAdvDepth,
      &     wdGMDepth, wdIceDepth, wdLoadDepth, wdLoadTau,
-     &     wdIceMinHeff,
+     &     wdIceMinHeff, wdIceMaxSlip, wdIceBondH,
+     &     wdBondHead, wdBondTau, wdBondLag, wdPondMax, wdBondFormEnd,
      &     wdKPPDepth, wdKPPCapDepth,
      &     wdSmoothWidth, wdMonFreq, wdMaxSpeed,
      &     wdManningN, wdDragMax, wdMaxFroude,
@@ -128,7 +194,8 @@ C                       Nr > 1 it needs momImplVertAdv=.TRUE.
       COMMON /WETDRY_PARAMS_C/ wdManningFile
       COMMON /WETDRY_PARAMS_L/
      &     wdConserveVol, wdCarryVel, wdIceGround, wdUpwindFace,
-     &     wdDryForcing, wdIceTopMelt, wdIceSeal, wdIceOBpack
+     &     wdDryForcing, wdIceTopMelt, wdIceSeal, wdIceOBpack,
+     &     wdTopMeltSheet, wdTopMeltFloat
 
 C--   wetdry fields
 C     wdMaskW/S  :: 1 = face open, 0 = face closed by wetdry
@@ -213,8 +280,28 @@ C                       change (S/R WETDRY_SEAICE_DRY)
       _RL wdSIsalt (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       COMMON /WETDRY_SEAICE_RL/
      &     wdSIheff, wdSIarea, wdSIsnow, wdSIempr, wdSIsalt
-      LOGICAL wdLoadRead
-      COMMON /WETDRY_LOAD_L/ wdLoadRead
+C     wdBond     :: 1 where the ice is frozen to the bed (wdIceBondH);
+C                    between 0 and 1 while a released bond ramps off
+C                    (wdBondTau)
+C     wdBondRead :: wdBond was read from a pickup
+      _RL wdBond(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      COMMON /WETDRY_BOND_RL/ wdBond
+C     wdMeltSh   :: top melt of bonded ice kept on the ice (wdTopMeltSheet)
+C                    [kg m^-2 s^-1], set in WETDRY_SEAICE_DRY and added to
+C                    the overflood sheet in the next OVERFLOOD_STEP (not in
+C                    the pickup: one step of melt is lost at a restart)
+      _RL wdMeltSh(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      COMMON /WETDRY_MELTSH_RL/ wdMeltSh
+C     wdMeltAtm  :: ice + snow melted by the atmosphere in the latest
+C                    SEAICE_GROWTH [kg m^-2] (wdTopMeltSheet keeps only it)
+      _RL wdMeltAtm(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      COMMON /WETDRY_MELTATM_RL/ wdMeltAtm
+C     wdLiftT    :: time the head release condition has held for a bonded
+C                    column (wdBondLag) [s]; 0 once the bond is gone
+      _RL wdLiftT(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      COMMON /WETDRY_LIFTT_RL/ wdLiftT
+      LOGICAL wdLoadRead, wdBondRead
+      COMMON /WETDRY_LOAD_L/ wdLoadRead, wdBondRead
       INTEGER wdNflips, wdNlimit
       COMMON /WETDRY_FIELDS_I/
      &     wdNflips, wdNlimit

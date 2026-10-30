@@ -27,6 +27,12 @@ C     before SEAICE_GROWTH (atmospheric fresh water only).
 C     With wdIceTopMelt, ice that thinned during the step keeps the whole
 C     change (grounded ice melting from the atmosphere, its meltwater in
 C     EmPmR); only growth is ramped off.
+C     With wdTopMeltSheet, the melt of ice frozen to the bed (wdBond = 1)
+C     stays on the ice: EmPmR keeps its value from before SEAICE_GROWTH
+C     and the melted ice + snow mass goes to wdMeltSh, which the next
+C     OVERFLOOD_STEP adds to the sheet (ice salinity SEAICE_salt0 must
+C     be 0, checked in OVERFLOOD_CHECK). With wdTopMeltFloat, floating
+C     ice keeps its top melt the same way (melt ponds on all ice).
 
 C !USES:
       IMPLICIT NONE
@@ -53,7 +59,7 @@ CEOP
 #if ( defined ALLOW_WETDRY && defined ALLOW_SEAICE )
 C !LOCAL VARIABLES:
       INTEGER i, j, bi, bj
-      _RL fD
+      _RL fD, dm
 
       IF ( .NOT.( useWETDRY .AND. wdDryForcing ) ) RETURN
 
@@ -74,6 +80,20 @@ C !LOCAL VARIABLES:
         ELSE
          DO j=1,sNy
           DO i=1,sNx
+           IF ( wdTopMeltSheet ) THEN
+            wdMeltSh(i,j,bi,bj) = zeroRL
+            IF ( ( wdBond(i,j,bi,bj).GE.oneRL .OR. wdTopMeltFloat )
+     &     .AND. HEFF(i,j,bi,bj).LT.wdSIheff(i,j,bi,bj) ) THEN
+             dm = ( wdSIheff(i,j,bi,bj) - HEFF(i,j,bi,bj) )
+     &          *SEAICE_rhoIce
+     &          + MAX( zeroRL, wdSIsnow(i,j,bi,bj) - HSNOW(i,j,bi,bj) )
+     &           *SEAICE_rhoSnow
+             dm = MIN( dm, wdMeltAtm(i,j,bi,bj) )
+             wdMeltSh(i,j,bi,bj) = dm/deltaTClock
+C-    only the atmospheric melt leaves the ocean side
+             EmPmR(i,j,bi,bj) = EmPmR(i,j,bi,bj) + wdMeltSh(i,j,bi,bj)
+            ENDIF
+           ENDIF
            fD = MIN( oneRL, MAX( zeroRL,
      &        ( etaH(i,j,bi,bj) + Ro_surf(i,j,bi,bj) - R_low(i,j,bi,bj)
      &          - wdCritDepth )/wdCritDepth ) )
@@ -101,6 +121,11 @@ C !LOCAL VARIABLES:
         ENDIF
        ENDDO
       ENDDO
+#ifdef ALLOW_DIAGNOSTICS
+      IF ( afterGrowth .AND. wdTopMeltSheet .AND. useDiagnostics )
+     &  CALL DIAGNOSTICS_FILL( wdMeltSh, 'WDmeltS ', 0, 1, 0, 1, 1,
+     &                         myThid )
+#endif
 #endif /* ALLOW_WETDRY and ALLOW_SEAICE */
 
       RETURN

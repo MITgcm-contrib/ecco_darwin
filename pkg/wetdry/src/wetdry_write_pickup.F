@@ -55,6 +55,18 @@ C-    relaxed sea-ice load factor (wdLoadDepth)
        CALL WRITE_REC_3D_RL( fn, precFloat64, 1, wdLoadFac, 1,
      &                       myIter, myThid )
       ENDIF
+C-    bed bond of bottom-fast ice (wdIceBondH)
+      IF ( wdIceBondH.GT.zeroRL ) THEN
+       WRITE(fn,'(A,A)') 'pickup_wetdrybond.', suff
+       CALL WRITE_REC_3D_RL( fn, precFloat64, 1, wdBond, 1,
+     &                       myIter, myThid )
+      ENDIF
+C-    time the head release condition has held (wdBondLag)
+      IF ( wdBondLag.GT.zeroRL ) THEN
+       WRITE(fn,'(A,A)') 'pickup_wetdrylift.', suff
+       CALL WRITE_REC_3D_RL( fn, precFloat64, 1, wdLiftT, 1,
+     &                       myIter, myThid )
+      ENDIF
 #endif /* ALLOW_WETDRY */
 
       RETURN

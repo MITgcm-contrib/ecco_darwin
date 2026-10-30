@@ -55,6 +55,8 @@ C     maxRcol  :: largest resting column thickness in the domain [m]
 #endif
       INTEGER i, j, bi, bj
       _RL maxRcol
+C     ovfOn    :: pkg/overflood is compiled and used
+      LOGICAL ovfOn
 
 C--   Largest resting column thickness (all threads, all procs)
       maxRcol = 0. _d 0
@@ -93,6 +95,20 @@ C--  Print out some key parameters :
      &  ' /* sea-ice load ramped on from wdCritDepth to this (m) */')
       CALL WRITE_0D_RL( wdLoadTau, INDEX_NONE, 'wdLoadTau =',
      &  ' /* relaxation time of the sea-ice load factor (s) */')
+      CALL WRITE_0D_RL( wdIceMaxSlip, INDEX_NONE, 'wdIceMaxSlip =',
+     &  ' /* max ice speed relative to the current (m/s, 0: off) */')
+      CALL WRITE_0D_RL( wdIceBondH, INDEX_NONE, 'wdIceBondH =',
+     &  ' /* bed-frozen ice sealed while HEFF above (m) */')
+      CALL WRITE_0D_RL( wdBondHead, INDEX_NONE, 'wdBondHead =',
+     &  ' /* bond lets go above this head over the ice (m, 0: off) */')
+      CALL WRITE_0D_RL( wdPondMax, INDEX_NONE, 'wdPondMax =',
+     &  ' /* kept melt fills the sheet to this depth (m, 0: no cap) */')
+      CALL WRITE_0D_RL( wdBondFormEnd, INDEX_NONE, 'wdBondFormEnd =',
+     &  ' /* no new bond after this model time (s) */')
+      CALL WRITE_0D_RL( wdBondLag, INDEX_NONE, 'wdBondLag =',
+     &  ' /* head release only after this long (s, 0: at once) */')
+      CALL WRITE_0D_RL( wdBondTau, INDEX_NONE, 'wdBondTau =',
+     &  ' /* released bond ramps off over this time (s) */')
       CALL WRITE_0D_RL( wdIceMinHeff, INDEX_NONE, 'wdIceMinHeff =',
      &  ' /* ice faces with less ice than this left out (m) */')
       CALL WRITE_0D_RL( wdKPPDepth, INDEX_NONE, 'wdKPPDepth =',
@@ -121,6 +137,10 @@ C--  Print out some key parameters :
      &  ' /* no surface forcing on dry columns */')
       CALL WRITE_0D_L( wdIceTopMelt, INDEX_NONE, 'wdIceTopMelt =',
      &  ' /* grounded ice (dry column) may still melt */')
+      CALL WRITE_0D_L( wdTopMeltSheet, INDEX_NONE, 'wdTopMeltSheet =',
+     &  ' /* top melt of bonded ice stays on the ice */')
+      CALL WRITE_0D_L( wdTopMeltFloat, INDEX_NONE, 'wdTopMeltFloat =',
+     &  ' /* floating ice keeps its top melt too */')
       CALL WRITE_0D_L( wdIceOBpack, INDEX_NONE, 'wdIceOBpack =',
      &  ' /* ice-free faces near open boundaries stay in solver */')
       CALL WRITE_0D_L( wdIceSeal, INDEX_NONE, 'wdIceSeal =',
@@ -198,6 +218,42 @@ C     telling wetdry: the film must be thicker than that clip
         CALL PRINT_ERROR( msgBuf, myThid )
         errCount = errCount + 1
       ENDIF
+      IF ( wdBondLag.GT.zeroRL .AND. wdBondHead.LE.zeroRL ) THEN
+        WRITE(msgBuf,'(A)')
+     &  'WETDRY_CHECK: wdBondLag needs wdBondHead > 0'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+      ovfOn = .FALSE.
+#ifdef ALLOW_OVERFLOOD
+      ovfOn = useOVERFLOOD
+#endif
+      IF ( wdTopMeltSheet .AND. ( .NOT.wdIceTopMelt .OR.
+     &     wdIceBondH.LE.zeroRL .OR. .NOT.ovfOn ) ) THEN
+        WRITE(msgBuf,'(A)') 'WETDRY_CHECK: wdTopMeltSheet needs '
+     &  //'wdIceTopMelt=T, wdIceBondH > 0 and pkg/overflood'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+      IF ( wdTopMeltFloat .AND. .NOT.wdTopMeltSheet ) THEN
+        WRITE(msgBuf,'(A)') 'WETDRY_CHECK: wdTopMeltFloat needs '
+     &  //'wdTopMeltSheet=T'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+      IF ( wdIceBondH.GT.zeroRL .AND. .NOT.wdIceSeal ) THEN
+        WRITE(msgBuf,'(A)')
+     &  'WETDRY_CHECK: wdIceBondH > 0 needs wdIceSeal=T'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
+      IF ( ( wdBondHead.GT.zeroRL .OR. wdBondTau.GT.zeroRL ) .AND.
+     &     wdIceBondH.LE.zeroRL ) THEN
+        WRITE(msgBuf,'(A)')
+     &  'WETDRY_CHECK: wdBondHead, wdBondTau need wdIceBondH > 0'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
       IF ( wdMinDepth.LE.zeroRL ) THEN
         WRITE(msgBuf,'(A)') 'WETDRY_CHECK: wdMinDepth must be > 0'
         CALL PRINT_ERROR( msgBuf, myThid )
@@ -219,6 +275,14 @@ C     advection of momentum blows up
         errCount = errCount + 1
       ENDIF
 #ifdef ALLOW_SEAICE
+      IF ( wdTopMeltSheet .AND. useSEAICE .AND.
+     &     SEAICE_salt0.NE.zeroRL ) THEN
+C-    the melt kept on the ice is fresh: the ice salt would be lost
+        WRITE(msgBuf,'(A)')
+     &  'WETDRY_CHECK: wdTopMeltSheet needs SEAICE_salt0 = 0'
+        CALL PRINT_ERROR( msgBuf, myThid )
+        errCount = errCount + 1
+      ENDIF
       IF ( useSEAICE .AND. SEAICE_maskRHS ) THEN
 C-    SEAICE_maskRHS recomputes seaiceMaskU/V each step, undoing wetdry
         WRITE(msgBuf,'(A)')

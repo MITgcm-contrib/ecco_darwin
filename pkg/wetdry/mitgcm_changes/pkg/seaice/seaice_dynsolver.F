@@ -411,6 +411,40 @@ C     otherwise set the ice-ocean drag coefficient, are not called
       ENDIF
 #endif /* SEAICE_CGRID */
 
+#ifdef ALLOW_WETDRY
+C-    pkg/wetdry (wdIceMaxSlip): keep each ice velocity component within
+C     wdIceMaxSlip of the surface current at its point (floating ice
+C     cannot outrun the water; removes the runaway velocities the solver
+C     gives partly covered cells next to grounded, masked fast ice).
+C     Before the ocean stress, so the ocean feels the capped ice; closed
+C     faces (seaiceMaskU/V = 0, e.g. grounded ice) stay at rest.
+      IF ( useWETDRY .AND. SEAICEuseDYNAMICS
+     &     .AND. wdIceMaxSlip.GT.zeroRL ) THEN
+       kSrf = 1
+       IF ( usingPCoords ) kSrf = Nr
+       DO bj=myByLo(myThid),myByHi(myThid)
+        DO bi=myBxLo(myThid),myBxHi(myThid)
+         DO j=1-OLy,sNy+OLy
+          DO i=1-OLx,sNx+OLx
+           uIce(i,j,bi,bj) = uVel(i,j,kSrf,bi,bj)
+     &       + MAX( MIN( uIce(i,j,bi,bj) - uVel(i,j,kSrf,bi,bj),
+     &                   wdIceMaxSlip ), -wdIceMaxSlip )
+#ifdef SEAICE_CGRID
+           uIce(i,j,bi,bj) = uIce(i,j,bi,bj)*seaiceMaskU(i,j,bi,bj)
+#endif
+           vIce(i,j,bi,bj) = vVel(i,j,kSrf,bi,bj)
+     &       + MAX( MIN( vIce(i,j,bi,bj) - vVel(i,j,kSrf,bi,bj),
+     &                   wdIceMaxSlip ), -wdIceMaxSlip )
+#ifdef SEAICE_CGRID
+           vIce(i,j,bi,bj) = vIce(i,j,bi,bj)*seaiceMaskV(i,j,bi,bj)
+#endif
+          ENDDO
+         ENDDO
+        ENDDO
+       ENDDO
+      ENDIF
+#endif /* ALLOW_WETDRY */
+
 C Update ocean surface stress
       IF ( SEAICEupdateOceanStress ) THEN
 #ifdef ALLOW_AUTODIFF_TAMC
