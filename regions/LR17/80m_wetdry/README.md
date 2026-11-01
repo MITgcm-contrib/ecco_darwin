@@ -1,7 +1,7 @@
-# LR17 80 m with wetting and drying (baseline v4.1)
+# LR17 80 m with wetting and drying (baseline v4.2)
 
 LR17 is an ~80 m MITgcm configuration of the Pertuis Charentais (Bay of Biscay, France). This folder holds
-the v4.1 baseline: physics with wetting and drying (pkg/wetdry) on Adeola's LR17 80 m grid
+the v4.2 baseline: physics with wetting and drying (pkg/wetdry) on Adeola's LR17 80 m grid
 (`../80m`), with real March 2022 forcing. pkg/sediment is compiled in and is off by default.
 
 The reference run is 43 days from 23 February 2022 00 UTC, which covers the observation window
@@ -15,7 +15,7 @@ of the 2022 calibration package (SOMLIT Antioche, CocoriCO2, AWAC, SHOM tide gau
 | `code/lr17_flather.F` | Flather radiation correction of the prescribed normal velocity on the west and south boundaries. |
 | `code/lr17_rivers.F`, `LR17_RIVERS.h` | Daily river discharge (`data.rivers`) as volume sources (`addMass`) at the tip of each river channel. |
 | `code/obcs_calc.F`, `code/load_fields_driver.F` | Stock MITgcm `d861cd501` files with one added call each (to `LR17_FLATHER` and `LR17_RIVERS`). |
-| `input/` | Namelists of the v4.1 reference run. |
+| `input/` | Namelists of the v4.2 reference run. |
 | `scripts/` | Python scripts that make every binary input from public data (see "Make the inputs"). |
 
 ## 1. Get the code
@@ -53,7 +53,7 @@ Run `make CLEAN` before you build again after a change to a header file (`*.h`).
 
 ## 3. Run
 
-1. Get the run template from Box: <https://nasa-ext.box.com/s/211e45aj2ve5j7raqbvf8yty8vkex602>. It holds `80m_wetdry_run_template.tar` (binary inputs, 0.53 GB;
+1. Get the run template from Box: <https://nasa-ext.box.com/s/211e45aj2ve5j7raqbvf8yty8vkex602>. It holds `80m_wetdry_run_template_v42.tar` (binary inputs, 0.53 GB;
    `tar -xf` gives `run_template/`).
 2. Copy the namelists and link the executable:
 
@@ -84,18 +84,20 @@ OpenStreetMap coast, dike and river files, the Hub'Eau discharge used for the re
 | Bed (v4 river channels) | `LR17_bathy.py --zmouth=-4 --ztip=-3 --out=LR17_zb_v4.bin` | Adeola's `bathy_LR17_936x875`, OpenStreetMap coast, dikes and rivers | none |
 | Run folder | `LR17_gendata_somlit.py` (calls `gendata.py`) | all of the above | |
 
-The command for the v4.1 reference run:
+The command for the v4.2 reference run:
 
 ```
-LR17_S_OFFSET_IC=1.3 python3 scripts/LR17_gendata_somlit.py 2022-02-23 43 run_v41 2022-02-20 2022-04-10 \
-  --fes-boundary=eta --band-download=2022-01-25_2022-05-05 --zb=data/LR17/work/LR17_zb_v4.bin
-cp input/data* run_v41/
+LR17_S_OFFSET_IC=1.3 python3 scripts/LR17_gendata_somlit.py 2022-02-23 43 run_v42 2022-02-20 2022-04-10 \
+  --fes-boundary=eta --band-download=2022-01-25_2022-05-05 --zb=data/LR17/work/LR17_zb_v4.bin --plume-beta=0.25
+cp input/data* run_v42/
 ```
 
 `--band-download` needs IBI sea level and currents for 25 January to 5 May 2022, so that the band-pass
-filter does not leak into the run window. Then copy the namelists from `input/`: they add the hourly
+filter does not leak into the run window. `--plume-beta=0.25` scales IBI's fresh river-plume anomaly on the
+south boundary to 1/4 (`scripts/LR17_plume_bc.py`, see section 5). Then copy the namelists from `input/`: they add the hourly
 level-1 U, V output (`uv1`) that `gendata.py` does not write. We checked that these scripts make 30 of
-the 31 input files of the reference run byte for byte; the other one is `data.diagnostics`.
+the 31 input files of the v4.1 run byte for byte; the other one is `data.diagnostics`. v4.2 changes only
+`obcs/OBSs.bin` (the same md5 as the v4.2 reference run) and the header comment of `data`.
 
 ## Sediment (optional)
 
@@ -105,9 +107,9 @@ it writes `data.sediment` and `data.ptracers`, the initial bed from the EMODnet 
 rain and evaporation. A first 2-day test ran on an earlier physics version; sediment is not yet
 calibrated.
 
-## 5. What is in v4.1
+## 5. What is in v4.2
 
-| | Adeola's `../80m` | v4.1 (this folder) |
+| | Adeola's `../80m` | v4.2 (this folder) |
 |---|---|---|
 | Period | 48 h from 16 Jan 1993 | 43 days from 23 Feb 2022 |
 | Vertical grid | 9 levels, 60 m | 14 levels (8 x 2.5, 2 x 5, 3 x 10, 8.5 m), rest level 5.5 m above MSL |
@@ -118,27 +120,34 @@ calibrated.
 | Boundary currents | IBI | IBI depth-mean current and daily shear, with a Flather radiation condition |
 | Atmosphere | ERA-Interim, 6-hourly | ERA5 hourly |
 | Rivers | none | Charente (with the Boutonne), Sevre Niortaise, Lay, Seudre (Hub'Eau, daily) |
+| Boundary salinity | IBI | IBI; on the south boundary, where IBI is fresher than its offshore mean (westernmost 100 cells), the difference is scaled by 0.25 |
 | Salt vertical advection | | explicit, flux-limited third order (scheme 33): no negative salinity at the river sources |
 
 The full description, with the tests that led to each choice, is in
 `docs/LR17/LR17_boundary_initial_conditions.md` of the development project.
 
+Why the plume scaling: in the v4.1 run, 8 to 13 March 2022, the freshwater content of the model domain rose by about 1.8 km3,
+mostly through the near-coast part of the south boundary (about 6,000 m3/s of prescribed IBI freshwater inflow,
+vs. 82 m3/s from the rivers). There IBI surface salinity falls to 21-25, 3-12 below IBI offshore, while the
+CMEMS multi-observation SSS shows a near-coast anomaly of only about 0.2-3. A scaling of 0.5 was also tested.
+
 ## 6. Evaluation of the reference run (23 February to 7 April 2022)
 
-| Observation | v4.1 |
+| Observation | v4.2 (v4.1 in brackets) |
 |---|---|
-| SHOM tide gauges La Pallice / Ile d'Aix | sea-level RMSE 0.14 / 0.15 m for a ~6 m tidal range (IBI: 0.21 / 0.22 m) |
-| Tidal constituents (41 days) | M2 0.07 m low (~4%), phase within 1.5 degrees; M4 within 0.04 m and 2.5 degrees; MS4 about half of observed |
-| AWAC 2 current speed (hourly, level 1) | bias +0.03 m/s, rms 0.16 m/s, r = 0.84 (observed mean 0.35 m/s) |
-| CocoriCO2 MA21 / ROCHL (daily) | temperature bias -0.06 / +0.10 C; salinity bias -0.89 / -1.07 |
-| IFREMER L4 SST | bias +0.15 C (domain mean) |
-| SOMLIT Antioche casts (4) | mean salinity error 0.44 (IBI: 1.31); temperature within -0.33 to +0.08 C |
-| Negative salinity | no surface cell below S = 0 in the 6-hourly output (v4 with implicit vertical advection: 178 cells) |
+| SHOM tide gauges La Pallice / Ile d'Aix | sea-level RMSE 0.14 / 0.15 m for a ~6 m tidal range (IBI: 0.21 / 0.22 m); the same as v4.1 |
+| Tidal constituents (41 days) | M2 0.07 m low (~4%), phase within 1.5 degrees; M4 within 0.04 m and 2.5 degrees; MS4 about half of observed; within 0.001 m of v4.1 |
+| AWAC 2 current speed (hourly, level 1) | v4.1 run: bias +0.03 m/s, rms 0.16 m/s, r = 0.84 (observed mean 0.35 m/s); v4.2 6-hourly mean speed within 0.004 m/s of v4.1 (rms difference 0.05 m/s) |
+| CocoriCO2 MA21 / ROCHL (daily) | temperature bias -0.13 / +0.03 C (-0.06 / +0.10); salinity bias +0.38 / -0.14 (-0.89 / -1.07) |
+| IFREMER L4 SST | bias +0.11 C, domain mean (+0.15) |
+| SOMLIT Antioche casts (4) | mean salinity error 0.21 (0.44; IBI: 1.31); temperature within -0.28 to +0.05 C |
+| Negative salinity | v4.1 run: no surface cell below S = 0 in the 6-hourly output (v4 with implicit vertical advection: 178 cells); v4.2 hourly domain minimum -0.005 (round-off) |
 
 ## 7. Known limitations
 
 1. M2 at the SHOM gauges is about 4% low; most of this comes from the IBI and FES forcing.
 2. Spring low waters are about 0.1 m too high, and MS4 has about half of the observed amplitude.
    Lower and zoned bottom friction, higher flats and a thinner wet/dry critical depth did not change this.
-3. Salinity is 0.4 to 1.1 too fresh at the observation sites, mostly from IBI.
+3. The plume scaling is a fixed factor tuned to the 2022 observations, not a physical correction of IBI.
+   Salinity errors are now -0.2 to +0.4; early April at SOMLIT Antioche is about 0.4 too salty.
 4. The river sources are single cells at the tip of each channel.

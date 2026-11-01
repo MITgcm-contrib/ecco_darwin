@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Inputs for the LR17 80 m wetting-drying prototype (Pertuis Charentais).
 
-Usage:  python3 gendata.py START DAYS [OUTDIR] [--zb=FILE] [--sed] [--transport] [--stamp-times]
+Usage:  python3 gendata.py START DAYS [OUTDIR] [--zb=FILE] [--plume-beta=B] [--sed] [--transport] [--stamp-times]
                           [--tide=fes2022|fes2014] [--fes-boundary[=eta] [--band-download=START_END]]
   LR17_ROOT (environment, optional): the wetting_drying checkout that holds
          data/ and MITgcm/ (default: the checkout of this script), so a git
@@ -73,6 +73,9 @@ e.g. 2022-01-25_2022-05-05 for runs that reach into April. Everything else
 IBI M2 is ~4 % below FES2022b at the boundary and IBI MS4 a third of the
 observed; v3 (run_fesd2b_16) cut the gauge M2 error by a third and the low-water
 bias from +0.22 to +0.14 m against v2 (docs/LR17/LR17_tidal_analysis.pptx).
+--plume-beta=B (LR17 v4.2 baseline, B = 0.25, 2026-10-31): on the south open boundary, scale IBI's
+fresh river-plume anomaly (relative to IBI's offshore salinity on the same boundary) by B
+(scripts/LR17_plume_bc.py); IBI's plume is too fresh against SOMLIT and satellite SSS.
 --fes-boundary=eta swaps the bands in the boundary sea level only and keeps
 IBI's depth-mean current (test of the v3 current bias at the AWAC, 2026-10-24).
 Not with --tide or --stamp-times.
@@ -275,7 +278,7 @@ def atlas_tide(tide, kind, times, plat, plon):
 
 
 def main(start, days, out, sed=False, transport=False, stamp_times=False, tide=None,
-         fes_boundary=False, band_tag=None, zb_file=None):
+         fes_boundary=False, band_tag=None, zb_file=None, plume_beta=None):
     t0 = np.datetime64(start + 'T00:00')
     t1 = t0 + np.timedelta64(int(round(days * 24)) + 1, 'h')
     os.makedirs(os.path.join(out, 'obcs'), exist_ok=True)
@@ -411,6 +414,11 @@ def main(start, days, out, sed=False, transport=False, stamp_times=False, tide=N
                 np.where(m, prof[key], 0.0))
         w32(os.path.join(out, 'obcs', f'OB{side[0]}eta.bin'), np.where(open_[None], eta_b, 0.0))
     nrec = len(hts)
+    if plume_beta is not None:                       # v4.2: scale down IBI's fresh plume on the south boundary
+        sys.path.insert(0, HERE)
+        import LR17_plume_bc
+        fn = os.path.join(out, 'obcs', 'OBSs.bin')
+        LR17_plume_bc.main(fn, fn, plume_beta)
 
     # --- ERA5 on its grid (EXF interpolation), hourly from START
     ei = xr.open_dataset(os.path.join(D, 'era5', f'era5_{TAG}_instant.nc'))
@@ -481,6 +489,11 @@ def main(start, days, out, sed=False, transport=False, stamp_times=False, tide=N
         body = open(fn).read()
         open(fn, 'w').write(f'# bed: {os.path.basename(zb_file)} (--zb; LR17_bathy.py thalweg options, '
                             'v4 = --zmouth=-4 --ztip=-3)\n' + body)
+    if plume_beta is not None:
+        fn = os.path.join(out, 'data')
+        body = open(fn).read()
+        open(fn, 'w').write(f'# v4.2: south-boundary plume salinity anomaly x {float(plume_beta):g} (--plume-beta; '
+                            'LR17_plume_bc.py)\n' + body)
     if sed:
         write_sed(out, t0, t1, zb, model, lon, lat)
         dpath = os.path.join(out, 'data')
@@ -587,7 +600,8 @@ def write_namelists(out, start, days, nrec, obw, obs, elon, elat):
  obcsSstartdate1={d0}, obcsSstartdate2=000000, obcsSperiod=3600.0,
  &
 """)
-    open(os.path.join(out, 'data.kpp'), 'w').write(open(os.path.join(TOP, 'input', 'data.kpp')).read())
+    open(os.path.join(out, 'data.kpp'), 'w').write(open(os.path.join(
+        ROOT, 'MITgcm', 'verification', 'wetdry_mudflat', 'input', 'data.kpp')).read())
     open(os.path.join(out, 'data.wetdry'), 'w').write(
         ' &WETDRY_PARM01\n wdMinDepth=0.05,\n wdCritDepth=0.10,\n wdMonFreq=3600.,\n'
         ' wdManningN=0.02,\n wdMaxFroude=1.0,\n &\n')
@@ -755,8 +769,9 @@ if __name__ == '__main__':
         sys.exit('--fes-boundary does not combine with --tide or --stamp-times')
     args = [a for a in sys.argv[1:] if a not in ('--sed', '--transport', '--stamp-times',
                                                  '--fes-boundary', '--fes-boundary=eta')
-            and not a.startswith(('--tide=', '--band-download=', '--zb='))]
+            and not a.startswith(('--tide=', '--band-download=', '--zb=', '--plume-beta='))]
     zb_file = next((os.path.abspath(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--zb=')), None)
     start, days = args[0], float(args[1])
     out = args[2] if len(args) > 2 else os.path.join(HERE, f'run_{start}' + ('_sed' if sed else ''))
-    main(start, days, out, sed, transport, stamp_times, tide, fes_boundary, band_tag, zb_file)
+    plume_beta = next((float(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--plume-beta=')), None)
+    main(start, days, out, sed, transport, stamp_times, tide, fes_boundary, band_tag, zb_file, plume_beta)

@@ -1,4 +1,5 @@
-# LR17 80m_wetdry baseline v4.1: 2022-02-23 + 43 d; FES tide in boundary sea level only (IBI depth-mean current, band-pass over IBI 2022-01-25_2022-05-05); bed LR17_zb_v4.bin; initial S +1.3 (open-boundary S = IBI); explicit flux-limited vertical salt advection (scheme 33); 84 ranks
+# LR17 80m_wetdry baseline v4.2: 2022-02-23 + 43 d; FES tide in boundary sea level only (IBI depth-mean current, band-pass over IBI 2022-01-25_2022-05-05); bed LR17_zb_v4.bin; initial S +1.3 (open-boundary S = IBI, south-boundary plume anomaly x 0.25); explicit flux-limited vertical salt advection (scheme 33); 84 ranks
+# v4.2: south-boundary plume salinity anomaly x 0.25 (--plume-beta; LR17_plume_bc.py)
 # bed: LR17_zb_v4.bin (--zb; LR17_bathy.py thalweg options, v4 = --zmouth=-4 --ztip=-3)
 # v3 eta-only: FES boundary tide in sea level only (--fes-boundary=eta): IBI 1.80-2.06 and 3.6-4.2 cpd sea-level bands replaced by FES2022b M2 S2 N2 K2 2N2 MU2 NU2 L2 T2 M4 MS4, IBI depth-mean current kept
 # LR17 80 m wetting-drying prototype: 2022-02-23 + 43.0 d (model time 0 = 2022-02-23 00 UTC; rest level 5.5 m MSL)

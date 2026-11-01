@@ -8,7 +8,7 @@ Note: gendata takes IBI mean sea level as the time mean of zos over the whole do
 download shifts MSL slightly relative to v2.
 
 Usage: [LR17_S_OFFSET=1.3] python3 LR17_gendata_somlit.py RUN_START DAYS OUTDIR [DL_START DL_END]
-                                 [--fes-boundary[=eta] [--band-download=START_END]] [--zb=FILE] [--sed]
+                                 [--fes-boundary[=eta] [--band-download=START_END]] [--zb=FILE] [--plume-beta=B] [--sed]
   --fes-boundary, --band-download, --zb and --sed are passed to gendata.main (v3 baseline: --fes-boundary;
   v4 baseline: --fes-boundary=eta --zb=data/LR17/work/LR17_zb_v4.bin).
   e.g. python3 LR17_gendata_somlit.py 2022-02-23 43 ../LR17_model/input/run_2022-02-23_somlit 2022-02-20 2022-04-10
@@ -33,6 +33,7 @@ FES = next(('eta' if a == '--fes-boundary=eta' else 'all' for a in sys.argv
 SED = '--sed' in sys.argv
 BAND = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--band-download=')), None)
 ZB = next((os.path.abspath(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--zb=')), None)
+PLUME = next((float(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--plume-beta=')), None)
 argv = [a for a in sys.argv if not a.startswith('--')]
 start, days, out = argv[1], float(argv[2]), os.path.abspath(argv[3])
 s, e = (argv[4], argv[5]) if len(argv) > 5 else ('2022-02-20', '2022-04-10')
@@ -69,7 +70,7 @@ elif S_OFF:
     gendata.ibi = ibi_offset
     print(f'IBI salinity offset {S_OFF:+.2f}')
 print(f'gendata with TAG={gendata.TAG}, rivers {os.path.basename(gendata.RIVER_FILE)}')
-gendata.main(start, days, out, SED, False, False, None, FES, BAND, ZB)
+gendata.main(start, days, out, SED, False, False, None, FES, BAND, ZB, PLUME)
 S_OFF_IC = float(os.environ.get('LR17_S_OFFSET_IC', '0'))
 if S_OFF_IC:
     import numpy as np
