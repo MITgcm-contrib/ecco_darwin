@@ -1,0 +1,37 @@
+# pkg/sediment (wad branch, snapshot in ../pkg_sediment) acting on darwin TSS
+# (pTracer 36 with the CDOM tracer at 20). TSS is in g/m^3, not kg/m^3: the scheme is linear in
+# concentration, so the mass-flux parameters below are in g (sedEroM in
+# g/m^2/s, bed mass in g/m^2); the stresses stay in Pa.
+# darwin's own TSS sinking is off (wTSS_sink = 0 in data.darwin).
+ &SEDIMENT_PARM01
+ sedNcl = 1,
+ sedPtrIdx(1) = 36,
+# fine silt / flocs, ~8.6 m/d
+ sedWs(1) = 1.E-4,
+ sedTauCE(1) = 0.1,
+# erodible bed (python/make_sed_bed.py): usSEABED mud % x Palos Verdes erodible
+# mass 130 g/m2 at 65 % fines (Ferre et al. 2010, CSR, p18/Fig. 11d)
+ sedBedFile = 'sediment/sed_bed_128x72',
+# M = 0.01 kg/m2/s x (1 - porosity 0.9) (Moriarty et al. 2017, BG 14:1919, Table 3)
+ sedEroM(1) = 1.0,
+# dry bulk density ~1100 kg/m3, Palos Verdes shelf mud (Ferre et al. 2010, p20)
+ sedBulkRho = 1.1E6,
+ sedTauCD(1) = 0.,
+ sedDryDepth = 0.,
+# bed stress from the mean velocity of the lowest 2 m (one 2-m cell on the shelf)
+ sedRefDepth = 2.,
+ sedMonFreq = 900.,
+ /
+ &SEDIMENT_PARM02
+ /
+# Copernicus Marine WAVERYS (cmems_mod_glo_wav_my_0.2deg_PT3H-i), nearest ocean value; was WW3 + CDIP MOP (v4d)
+# (python/make_waves.py --source waverys), hourly from 2025-01-01 (waves_2025h1_waverys)
+# the run start; orbital velocity from the local depth (linear theory)
+ &SEDIMENT_PARM03
+ sedWaveMode = 3,
+ sedWaveHsFile = 'waves/sed_Hs_128x72',
+ sedWavePerFile = 'waves/sed_Tp_128x72',
+ sedWaveDirFile = 'waves/sed_Dir_128x72',
+ sedWaveNrec = 4345,
+ sedWaveDt = 3600.0,
+ /

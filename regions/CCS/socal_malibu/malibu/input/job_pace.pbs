@@ -1,0 +1,19 @@
+#PBS -S /bin/csh
+#PBS -N v4w_smg155
+#PBS -l select=1:ncpus=40:model=sky_ele
+#PBS -l walltime=14:00:00
+#PBS -q long
+#PBS -W group_list=s1353
+#PBS -j oe
+#PBS -m bea
+# malibu_v01 PACE-year nest (V5r1 BCs), 32 ranks (SIZE.h_32: 8 x 4 of 16 x 18)
+module purge
+module load comp-intel mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+limit stacksize unlimited
+setenv FORT_BUFFERED 1
+setenv MPI_BUFS_PER_PROC 128
+cd $PBS_O_WORKDIR
+mpiexec -np 32 /u/scicon/tools/bin/mbind.x ./mitgcmuv
+# MITgcm can stop with an error and mpiexec still returns 0: fail the job then (afterok chains).
+grep -q "ended Normally" STDOUT.0000
+if ($status != 0) exit 1

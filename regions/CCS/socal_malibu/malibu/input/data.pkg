@@ -1,0 +1,14 @@
+# Packages (malibu_v01)
+ &PACKAGES
+ useCAL         = .TRUE.,
+ useDiagnostics = .TRUE.,
+ useEXF         = .TRUE.,
+ useGCHEM       = .TRUE.,
+ useGGL90       = .TRUE.,
+# ~460 m grid: no GM/Redi (compiled in for the v05 code, off at run time)
+ useGMRedi      = .FALSE.,
+ useOBCS        = .TRUE.,
+ usePTRACERS    = .TRUE.,
+ useRADTRANS    = .TRUE.,
+ useSEDIMENT    = .TRUE.,
+ /

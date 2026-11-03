@@ -1,0 +1,12 @@
+# malibu_v01 [KD1] kelp canopy drag on momentum (code_kelpdrag/kelp_drag.F, build_kelpdrag)
+# F = -1/2 kd_Cd a kd_proj |u| u per unit mass, a = kd_sfa x Bmag [m-1]
+# MACMODS form and values (Frieder et al. 2022, Front. Mar. Sci. 9:752951, Eq. 5):
+#   C_D = 0.0148 (their value, citing Utter & Denny 1996), P = 1/2 I
+# kd_sfa = 1/58 m2/gDW: same blade area per dry weight as kelp_sfa (data.kelpoptics, G-MACMODS)
+# v4w runs (2026-10-26): WAVERYS waves, Jan 1-Jun 29 cold start; v4w drag off, v4w_kd10 C_D 0.148
+ &KELP_DRAG_PARM
+ kd_on = .FALSE.,
+ kd_Cd = 0.0148,
+ kd_proj = 0.5,
+ kd_sfa = 0.017241,
+ /

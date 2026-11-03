@@ -1,0 +1,37 @@
+# Kelp blade optics for radtrans (python/make_kelp_optics.py; malibu_v01 [K1,K2])
+# bands: 400, 425, 450, 475, 500, 525, 550, 575, 600, 625, 650, 675, 700 nm
+# MEASURED M. pyrifera blades: A shape Colombo-Pallotta 2006 (PhD thesis, CICESE), PAR mean
+# 0.80; R mean of 1,770 SBC LTER blade spectra (knb-lter-sbc.157.1); T = 1 - A - R (>= 0)
+# sfa = 1/58 m2/gDW (G-MACMODS dry_sa), proj = 0.5 (ASSUMED)
+ &DARWIN_KELP_OPTICS
+ kelp_optics_mode = 1,
+ kelp_proj = 0.5,
+ kelp_sfa = 0.017241,
+ kelp_absBlade = 0.9654, 0.9679, 0.9687, 0.9564, 0.9291, 0.8613, 0.7360, 0.5824, 0.5481, 0.6483, 0.6820, 0.9351, 0.5626,
+ kelp_refBlade = 0.0333, 0.0321, 0.0313, 0.0313, 0.0326, 0.0353, 0.0410, 0.0470, 0.0472, 0.0417, 0.0399, 0.0309, 0.0529,
+ kelp_trnBlade = 0.0013, 0.0000, 0.0000, 0.0123, 0.0383, 0.1034, 0.2230, 0.3706, 0.4047, 0.3100, 0.2781, 0.0339, 0.3845,
+ /
+# TSS (mineral particles, g/m3) [K4]: a*(l) = a443 exp(-S (l - 443)), a443 = 0.05 m2/g
+# (within 0.03-0.1 m2/g at 443 nm for most natural mineral assemblages, Babin & Stramski
+# 2004, L&O 49:756, p.765), S = 0.012 nm-1 (typical S_NAP, Babin et al. 2003, L&O 48:843,
+# Eq. 14); b*(l) = 0.5 (l/555)^-0.083 m2/g (case-2 b_pm(555) 0.51 m2/g, Table 4;
+# spectral exponent from bp(412):bp(555) = 1.025, all stations, Table 5, same paper);
+# bb ratio 0.025 (low end of 0.025-0.044 for minerals, Mie base model, Wozniak & Stramski
+# 2004, Appl. Opt. 43:3489, p.3494)
+ &DARWIN_TSS_OPTICS
+ tss_optics_mode = 1,
+ tss_aStar = 0.0838, 0.0621, 0.0460, 0.0341, 0.0252, 0.0187, 0.0138, 0.0103, 0.0076, 0.0056, 0.0042, 0.0031, 0.0023,
+ tss_bStar = 0.5138, 0.5112, 0.5088, 0.5065, 0.5043, 0.5023, 0.5004, 0.4985, 0.4968, 0.4951, 0.4935, 0.4919, 0.4905,
+ tss_bbRatio = 0.025,
+ /
+# particle backscatter slope [K6]: bbp(l) = bbp_darwin (l / bbp_lambda0)^-bbp_eta
+# bbp_eta = median PACE OCI bbp_s, Santa Monica Bay Jan 2025 (IQR 0.76-1.13)
+ &DARWIN_BBP_OPTICS
+ bbp_eta = 1.0,
+ bbp_lambda0 = 550.0,
+ /
+# river CDOM [K7] = cdom_riv_frac x DOP runoff: a_CDOM(440) = 2.0 m-1 (PLACEHOLDER)
+# -> CDOM 0.0174 mmol P/m3 / creek DOP 0.8394 mmol P/m3
+ &DARWIN_CDOM_RIVER
+ cdom_riv_frac = 0.02071,
+ /

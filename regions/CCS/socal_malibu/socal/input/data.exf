@@ -1,0 +1,154 @@
+# v2 (2026-10-10): sea-filled ERA5 box (era5_seafill_box.py), grid lines in EXF_NML_04 below
+# socal 2-km nest (2026-10-08): kerguelen/regional_run/input/data.exf w/ 2025 dates; ERA5 hourly (hzhang1 forcing/era5)
+# *********************
+# External Forcing Data
+# *********************
+#
+ &EXF_NML_01
+#TO COMBINE WITH ALLOW_ZENITH_ANGLE:
+ exf_albedo        = 0.1,
+ useExfZenIncoming = .TRUE., 
+ select_ZenAlbedo  = 1,
+#
+ ocean_emissivity  = 0.97,
+ ice_emissivity    = 0.95,
+ snow_emissivity   = 0.95,
+ exf_iprec         = 32,
+ exf_yftype        = 'RL',
+ useExfYearlyFields= .TRUE.,
+ useExfCheckRange  = .FALSE.,
+ useRelativeWind   = .TRUE.,
+ &
+#
+ &EXF_NML_02
+ apressurefile     = 'era5_seafill/ERA5_pres',
+ atempfile         = 'era5_seafill/ERA5_tmp2m_degC',
+ aqhfile           = 'era5_seafill/ERA5_spfh2m',
+ precipfile        = 'era5_seafill/ERA5_rain',
+ uwindfile         = 'era5_seafill/ERA5_u10m',
+ vwindfile         = 'era5_seafill/ERA5_v10m',
+ swdownfile        = 'era5_seafill/ERA5_dsw',
+ lwdownfile        = 'era5_seafill/ERA5_dlw',
+#
+ apressurestartdate1 = 20250101,
+ apressurestartdate2 = 000000,
+ apressureperiod   = 3600.0,
+#
+ atempstartdate1   = 20250101,
+ atempstartdate2   = 000000,
+ atempperiod       = 3600.0,
+#
+ aqhstartdate1     = 20250101,
+ aqhstartdate2     = 000000,
+ aqhperiod         = 3600.0,
+#
+ precipstartdate1  = 20250101,
+ precipstartdate2  = 003000,
+ precipperiod      = 3600.0,
+#
+# Decided: no river-runoff forcing for Kerguelen (small subantarctic
+# island group, no major rivers) -- GoM's own Mississippi-basin product
+# dropped entirely rather than reused.
+# runofffile        = 'jra55_do_runoff_GoM_1km',
+# runoffstartdate1  = 20250101,
+# runoffstartdate2  = 120000,
+# runoffperiod      = 86400.0,
+#
+ uwindstartdate1   = 20250101,
+ uwindstartdate2   = 000000,
+ uwindperiod       = 3600.0,
+#
+ vwindstartdate1   = 20250101,
+ vwindstartdate2   = 000000,
+ vwindperiod       = 3600.0,
+#
+ swdownstartdate1  = 20250101,
+ swdownstartdate2  = 003000,
+ swdownperiod      = 3600.0,
+#
+ lwdownstartdate1  = 20250101,
+ lwdownstartdate2  = 003000,
+ lwdownperiod      = 3600.0,
+#
+ &
+#
+ &EXF_NML_03
+ exf_offset_atemp   = 273.15,
+ exf_inscal_swdown  = -1.0,
+ exf_inscal_lwdown  = -1.0,
+ exf_inscal_precip  = 1.0,
+# exf_inscal_runoff  = 1.0,  (no runoff forcing for Kerguelen)
+ &
+#
+ &EXF_NML_04
+# sea-filled ERA5 box (era5_seafill_box.py: 11 x 17 cells, -121.5..-117.0E, Gaussian lat 32.0..34.9N)
+ uwind_lon0 = -121.5000000D0,
+ uwind_lon_inc = 0.2812500D0,
+ uwind_lat0 = 32.1779581D0,
+ uwind_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ uwind_nlon = 17,
+ uwind_nlat = 11,
+ vwind_lon0 = -121.5000000D0,
+ vwind_lon_inc = 0.2812500D0,
+ vwind_lat0 = 32.1779581D0,
+ vwind_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ vwind_nlon = 17,
+ vwind_nlat = 11,
+ atemp_lon0 = -121.5000000D0,
+ atemp_lon_inc = 0.2812500D0,
+ atemp_lat0 = 32.1779581D0,
+ atemp_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ atemp_nlon = 17,
+ atemp_nlat = 11,
+ aqh_lon0 = -121.5000000D0,
+ aqh_lon_inc = 0.2812500D0,
+ aqh_lat0 = 32.1779581D0,
+ aqh_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ aqh_nlon = 17,
+ aqh_nlat = 11,
+ swdown_lon0 = -121.5000000D0,
+ swdown_lon_inc = 0.2812500D0,
+ swdown_lat0 = 32.1779581D0,
+ swdown_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ swdown_nlon = 17,
+ swdown_nlat = 11,
+ lwdown_lon0 = -121.5000000D0,
+ lwdown_lon_inc = 0.2812500D0,
+ lwdown_lat0 = 32.1779581D0,
+ lwdown_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ lwdown_nlon = 17,
+ lwdown_nlat = 11,
+ precip_lon0 = -121.5000000D0,
+ precip_lon_inc = 0.2812500D0,
+ precip_lat0 = 32.1779581D0,
+ precip_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ precip_nlon = 17,
+ precip_nlat = 11,
+ apressure_lon0 = -121.5000000D0,
+ apressure_lon_inc = 0.2812500D0,
+ apressure_lat0 = 32.1779581D0,
+ apressure_lat_inc = 0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,0.2810302D0,
+ apressure_nlon = 17,
+ apressure_nlat = 11,
+ &
+ &EXF_NML_OBCS
+# Hourly-mean OBCS records from gen_obcs_fast.py: record 1 = mean of 2025-01-01 00:00-01:00.
+# Startdate 2025-01-01 00:00 (not 00:30) so record 1 is in hand at myTime=0 (non-yearly files
+# have no record 0); this lags the boundary by 30 min. Period = file cadence (Kerguelen
+# 2026-09-14 lesson: a monthly period here freezes the boundary).
+  obcsNstartdate1   = 20250101,
+  obcsNstartdate2   = 000000,
+  obcsNperiod       = 3600.0,
+#
+  obcsSstartdate1   = 20250101,
+  obcsSstartdate2   = 000000,
+  obcsSperiod       = 3600.0,
+#
+  obcsEstartdate1   = 20250101,
+  obcsEstartdate2   = 000000,
+  obcsEperiod       = 3600.0,
+#
+  obcsWstartdate1   = 20250101,
+  obcsWstartdate2   = 000000,
+  obcsWperiod       = 3600.0,
+/

@@ -1,0 +1,125 @@
+# ====================
+# | Model parameters |
+# ====================
+#
+# Continuous equation parameters
+# socal 2-km nest (2026-10-08), adapted from kerguelen/regional_run/input/data.
+# tRef/sRef: horizontal means of the 2025-01-01 initial conditions (gen_pickups.py, iter 867888).
+ &PARM01
+ tRef = 15.18, 15.18, 15.18, 15.18, 15.18, 15.18,
+         15.17, 15.17, 15.17, 15.17, 15.12, 15.08,
+         15.04, 14.99, 14.95, 14.68, 14.42, 14.15,
+         13.88, 13.61, 13.33, 13.00, 12.62, 12.24,
+         11.90, 11.50, 11.21, 10.89, 10.62, 10.38,
+         10.16, 9.96, 9.79, 9.64, 9.51, 9.36,
+         9.18, 8.97, 8.71, 8.40, 8.06, 7.69,
+         7.29, 6.87, 6.42, 5.96, 5.50, 5.03,
+         4.57, 4.11, 3.67, 3.22, 2.77, 2.37,
+         2.05, 1.81, 1.60, 1.42, 1.27, 1.16,
+ sRef = 33.54, 33.54, 33.54, 33.54, 33.54, 33.54,
+         33.54, 33.54, 33.54, 33.54, 33.54, 33.53,
+         33.53, 33.53, 33.52, 33.51, 33.50, 33.48,
+         33.47, 33.46, 33.46, 33.46, 33.46, 33.47,
+         33.48, 33.51, 33.54, 33.58, 33.63, 33.68,
+         33.74, 33.79, 33.85, 33.90, 33.95, 34.00,
+         34.04, 34.07, 34.10, 34.13, 34.16, 34.19,
+         34.22, 34.25, 34.28, 34.31, 34.35, 34.39,
+         34.43, 34.46, 34.50, 34.54, 34.57, 34.60,
+         34.63, 34.64, 34.65, 34.67, 34.68, 34.69,
+ viscAr= 5.6614e-04,
+ no_slip_sides = .TRUE.,
+ no_slip_bottom = .TRUE.,
+ rhonil=1027.5,
+ rhoConstFresh=999.8,
+ eosType='JMD95Z',
+ hFacMin=0.3,
+# hFacMinDr = 1 m as in the Malibu nest and socal_ncgrid.nc (make_socal_ncgrid_full.py)
+ hFacMinDr=1.,
+ hFacInf=0.1,
+ hFacSup=5.,
+ nonlinFreeSurf=4,
+ implicitDiffusion=.TRUE.,
+ implicitViscosity=.TRUE.,
+ viscC4Leith=1.5,
+ viscC4Leithd=1.5,
+ viscA4GridMax=0.5,
+ useAreaViscLength=.TRUE.,
+ selectVortScheme = 2,
+ bottomDragQuadratic = 0.0021,
+ selectImplicitDrag  = 2,
+ tempAdvScheme=7,
+ saltAdvScheme=7,
+ StaggerTimeStep=.TRUE.,
+ vectorInvariantMomentum=.TRUE.,
+ implicitFreeSurface=.TRUE.,
+ implicSurfPress=0.6,
+ implicDiv2DFlow=0.6,
+ exactConserv=.TRUE.,
+ debuglevel=-1,
+ useRealFreshWaterFlux=.TRUE.,
+ useSingleCPUio=.TRUE.,
+ globalFiles=.TRUE.,
+ readBinaryPrec=64,
+ writeBinaryPrec=32,
+ /
+
+# Elliptic solver parameters
+ &PARM02
+ cg2dMaxIters = 100,
+ cg2dTargetResidual = 1.E-5,
+ &
+
+# Time stepping parameters
+# Own clock (nIter0=0), cold start from the 2025-01-01 initial conditions (parent iter 867888);
+# endtime 4342 h = 2025-06-30 22:00: one hour before the last hourly OBCS record (v1 stopped when it needed record 4345).
+ &PARM03
+ nIter0=0,
+ endtime=15631200.,
+ deltaT=120.,
+ cAdjFreq=0.,
+ pChkptFreq=2592000.,
+ chkptFreq=864000.,
+ monitorFreq=86400.,
+ forcing_In_AB = .FALSE.,
+ momDissip_In_AB   = .FALSE.,
+ dumpInitAndLast=.FALSE.,
+ writePickupAtEnd=.TRUE.,
+ pickupStrictlyMatch=.FALSE.,
+ /
+
+# Gridding parameters
+ &PARM04
+ pCellMix_select = 20,
+ pCellMix_delR = 3.,
+ pCellMix_viscAr = 60*5.e-3,
+# 60 levels: 20 x 2 m to 40 m (= Malibu nest top levels), then x1.149 to 3961 m
+ delR = 2.000, 2.000, 2.000, 2.000, 2.000, 2.000, 2.000, 2.000,
+         2.000, 2.000, 2.000, 2.000, 2.000, 2.000, 2.000, 2.000,
+         2.000, 2.000, 2.000, 2.000, 2.297, 2.638, 3.030, 3.480,
+         3.997, 4.591, 5.273, 6.056, 6.955, 7.988, 9.175, 10.538,
+         12.103, 13.901, 15.965, 18.337, 21.060, 24.188, 27.781, 31.907,
+         36.647, 42.090, 48.342, 55.522, 63.769, 73.240, 84.119, 96.613,
+         110.963, 127.445, 146.374, 168.116, 193.086, 221.766, 254.705, 292.537,
+         335.988, 385.893, 443.210, 509.041,
+# socal grid: 1/48 deg uniform lon/lat, SW corner -121.0E, 32.5N (make_socal_grid.py)
+ usingSphericalPolarGrid=.TRUE.,
+ xgOrigin = -121.0,
+ ygOrigin =   32.5,
+ delX     = 168*0.020833333333333,
+ delY     = 101*0.020833333333333,
+ /
+
+# Input datasets
+# readBinaryPrec=64: bathymetry written as real*8 (BATHY_168x101_socal is real*4); initial
+# conditions from gen_pickups.py (real*8).
+ &PARM05
+ bathyFile      ='socal_bathy_r8.bin',
+# v2 (2026-10-10): upper 60 m corrected toward MUR SST 2025-01-01 (malibu_v01/python/socal_ic_murfix.py)
+ hydrogThetaFile = 'pickup_THETA_ctdfix.0000867888.data',
+ checkIniTemp=.FALSE.,
+ hydrogSaltFile  = 'pickup_SALT.0000867888.data',
+ checkIniSalt=.FALSE.,
+ uVelInitFile    = 'pickup_U.0000867888.data',
+ vVelInitFile    = 'pickup_V.0000867888.data',
+ pSurfInitFile   = 'pickup_ETAN.0000867888.data',
+ /

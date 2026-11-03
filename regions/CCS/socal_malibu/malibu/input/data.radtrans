@@ -1,0 +1,51 @@
+# radtrans: 13 wavebands, 400-700 nm (as in ECCO-Darwin v06)
+# OASIM monthly below-surface Ed/Es (Oliver Jahn, C61extrap/below, 1 deg global).
+# darwin3 24885b71 EXF reads RT files only as 12 monthly means (period -12, no
+# year suffix), so oasim/ holds run-window files from python/oasim_window.py
+# (Nov-Dec from 2024, Jan-Mar from 2025). Daily-mean light: no diel cycle.
+ &RADTRANS_FORCING_PARAMS
+ RT_EdFile( 1)='oasim/edsEd01',
+ RT_EdFile( 2)='oasim/edsEd02',
+ RT_EdFile( 3)='oasim/edsEd03',
+ RT_EdFile( 4)='oasim/edsEd04',
+ RT_EdFile( 5)='oasim/edsEd05',
+ RT_EdFile( 6)='oasim/edsEd06',
+ RT_EdFile( 7)='oasim/edsEd07',
+ RT_EdFile( 8)='oasim/edsEd08',
+ RT_EdFile( 9)='oasim/edsEd09',
+ RT_EdFile(10)='oasim/edsEd10',
+ RT_EdFile(11)='oasim/edsEd11',
+ RT_EdFile(12)='oasim/edsEd12',
+ RT_EdFile(13)='oasim/edsEd13',
+ RT_EsFile( 1)='oasim/edsEs01',
+ RT_EsFile( 2)='oasim/edsEs02',
+ RT_EsFile( 3)='oasim/edsEs03',
+ RT_EsFile( 4)='oasim/edsEs04',
+ RT_EsFile( 5)='oasim/edsEs05',
+ RT_EsFile( 6)='oasim/edsEs06',
+ RT_EsFile( 7)='oasim/edsEs07',
+ RT_EsFile( 8)='oasim/edsEs08',
+ RT_EsFile( 9)='oasim/edsEs09',
+ RT_EsFile(10)='oasim/edsEs10',
+ RT_EsFile(11)='oasim/edsEs11',
+ RT_EsFile(12)='oasim/edsEs12',
+ RT_EsFile(13)='oasim/edsEs13',
+ RT_E_period = -12.,
+ RT_iceconst = 0.,
+ /
+ &RADTRANS_INTERP_PARAMS
+ RT_E_lon0 = -179.5,
+ RT_E_lon_inc = 1.,
+ RT_E_lat0 = -89.5,
+ RT_E_lat_inc = 179*1.,
+ RT_E_nlon = 360,
+ RT_E_nlat = 180,
+ RT_E_interpMethod = 1,
+ /
+ &RADTRANS_PARAMS
+ RT_useMeanCosSolz = .TRUE.,
+# solve to ~200 m (level 37); the domain's kelp beds are < 25 m deep
+ RT_kmax = 37,
+ RT_wbEdges = 400,412.5,437.5,462.5,487.5,512.5,537.5,562.5,587.5,612.5,637.5,662.5,687.5,700,
+ RT_wbRefWLs = 400,425,450,475,500,525,550,575,600,625,650,675,700,
+ /

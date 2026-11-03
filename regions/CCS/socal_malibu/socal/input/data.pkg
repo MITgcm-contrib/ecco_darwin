@@ -1,0 +1,10 @@
+# Packages (socal: no seaice)
+ &PACKAGES
+ useCAL         = .TRUE.,
+ useEXF         = .TRUE.,
+ useOBCS        = .TRUE.,
+ useDiagnostics = .TRUE.,
+ useGCHEM       = .TRUE.,
+ usePTRACERS    = .TRUE.,
+ useGGL90       = .TRUE.,
+ /

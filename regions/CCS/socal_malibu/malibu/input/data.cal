@@ -1,0 +1,8 @@
+#
+# Calendar Parameters (malibu_v01, Jan-Jun 2025 case: ICs/OBCS from the socal 2-km tidal nest v3)
+ &CAL_NML
+ TheCalendar='gregorian',
+ startDate_1=20250101,
+ startDate_2=000000,
+ calendarDumps = .TRUE.,
+ &
