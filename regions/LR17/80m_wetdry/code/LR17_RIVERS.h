@@ -8,6 +8,9 @@ C                      (linear in time between records, held at the ends)
 C     rivHalf       :: half-width of the block of cells that shares each
 C                      river's discharge (0: the source cell only; 1: 3x3)
 C     rivCells(r)   :: number of wet cells in river r's block (computed)
+C     rivTemp(n)    :: optional temperature of the river water at record n
+C                      [deg C], one series for all rivers; replaces
+C                      temp_addMass (unset: temp_addMass stays constant)
 C     The discharge enters level kSurfC of the block's wet cells as
 C     addMass (selectAddFluid=1), shared equally, at temp_addMass,
 C     salt_addMass (PARM01).
@@ -15,5 +18,6 @@ C     salt_addMass (PARM01).
       PARAMETER ( rivMax = 10, rivRecMax = 400 )
       INTEGER rivN, rivNrec, rivI(rivMax), rivJ(rivMax), rivHalf
       _RL rivT0, rivDt, rivQ(rivMax,rivRecMax), rivCells(rivMax)
+      _RL rivTemp(rivRecMax)
       COMMON /LR17_RIV_I/ rivN, rivNrec, rivI, rivJ, rivHalf
-      COMMON /LR17_RIV_R/ rivT0, rivDt, rivQ, rivCells
+      COMMON /LR17_RIV_R/ rivT0, rivDt, rivQ, rivCells, rivTemp

@@ -9,6 +9,7 @@ download shifts MSL slightly relative to v2.
 
 Usage: [LR17_S_OFFSET=1.3] python3 LR17_gendata_somlit.py RUN_START DAYS OUTDIR [DL_START DL_END]
                                  [--fes-boundary[=eta] [--band-download=START_END]] [--zb=FILE] [--plume-beta=B] [--sed]
+                                 [--real-fw] [--river-temp=CSV]
   --fes-boundary, --band-download, --zb and --sed are passed to gendata.main (v3 baseline: --fes-boundary;
   v4 baseline: --fes-boundary=eta --zb=data/LR17/work/LR17_zb_v4.bin).
   e.g. python3 LR17_gendata_somlit.py 2022-02-23 43 ../LR17_model/input/run_2022-02-23_somlit 2022-02-20 2022-04-10
@@ -34,6 +35,8 @@ SED = '--sed' in sys.argv
 BAND = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--band-download=')), None)
 ZB = next((os.path.abspath(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--zb=')), None)
 PLUME = next((float(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--plume-beta=')), None)
+gendata.REAL_FW = '--real-fw' in sys.argv
+gendata.RIVER_TEMP_FILE = next((os.path.abspath(a.split('=', 1)[1]) for a in sys.argv if a.startswith('--river-temp=')), None)
 argv = [a for a in sys.argv if not a.startswith('--')]
 start, days, out = argv[1], float(argv[2]), os.path.abspath(argv[3])
 s, e = (argv[4], argv[5]) if len(argv) > 5 else ('2022-02-20', '2022-04-10')

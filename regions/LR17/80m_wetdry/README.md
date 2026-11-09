@@ -99,6 +99,14 @@ level-1 U, V output (`uv1`) that `gendata.py` does not write. We checked that th
 the 31 input files of the v4.1 run byte for byte; the other one is `data.diagnostics`. v4.2 changes only
 `obcs/OBSs.bin` (the same md5 as the v4.2 reference run) and the header comment of `data`.
 
+Year-long runs (the 2025 run, 1 December 2024 to 1 January 2026): `LR17_era5.py` downloads a span of more than two
+months one month at a time; `LR17_rivers_year.py START END` fills the Boutonne at Saint-Jean-d'Angely from Saint-Severin
+and writes the river temperature from the Hub'Eau samples of the Charente at Taillebourg; `--river-temp=CSV` passes that
+series to the model (`rivTemp` in `data.rivers`, read by `code/lr17_rivers.F`; without it rivers enter at 9 C), and
+`--real-fw` turns on `useRealFreshWaterFlux` without the sediment set-up. With `--real-fw`, use pkg/wetdry with the
+dry-film evaporation fix in `wetdry_dry_forcing.F` (November 2026): without it, evaporation adds salt to the 5 cm
+film of dry cells.
+
 ## Sediment (optional)
 
 pkg/sediment is compiled in. To make a sediment run, add `--sed` to the `LR17_gendata_somlit.py` command:
@@ -138,10 +146,22 @@ CMEMS multi-observation SSS shows a near-coast anomaly of only about 0.2-3. A sc
 | SHOM tide gauges La Pallice / Ile d'Aix | sea-level RMSE 0.14 / 0.15 m for a ~6 m tidal range (IBI: 0.21 / 0.22 m); the same as v4.1 |
 | Tidal constituents (41 days) | M2 0.07 m low (~4%), phase within 1.5 degrees; M4 within 0.04 m and 2.5 degrees; MS4 about half of observed; within 0.001 m of v4.1 |
 | AWAC 2 current speed (hourly, level 1) | v4.1 run: bias +0.03 m/s, rms 0.16 m/s, r = 0.84 (observed mean 0.35 m/s); v4.2 6-hourly mean speed within 0.004 m/s of v4.1 (rms difference 0.05 m/s) |
-| CocoriCO2 MA21 / ROCHL (daily) | temperature bias -0.13 / +0.03 C (-0.06 / +0.10); salinity bias +0.38 / -0.14 (-0.89 / -1.07) |
+| CocoriCO2 MA21 / ROCHL (daily) | temperature bias -0.13 / +0.03 C (-0.06 / +0.10); salinity bias +0.29 / -0.17 with all river records read (+0.38 / -0.14 in the first v4.2 run, see below; v4.1: -0.89 / -1.07) |
 | IFREMER L4 SST | bias +0.11 C, domain mean (+0.15) |
 | SOMLIT Antioche casts (4) | mean salinity error 0.21 (0.44; IBI: 1.31); temperature within -0.28 to +0.05 C |
 | Negative salinity | v4.1 run: no surface cell below S = 0 in the 6-hourly output (v4 with implicit vertical advection: 178 cells); v4.2 hourly domain minimum -0.005 (round-off) |
+
+River input fix (8 November 2026): `data.rivers` used to hold each river's daily discharge on one line of more than
+200 characters. MITgcm reads only the first 200 characters of each line of a namelist file, so the records after the
+cut kept their default of zero: in the first v4.2 run the Charente and Sevre stopped after about day 25 (20 March 2022)
+and the Lay and Seudre after about day 30. `gendata.py` now writes at most 10 values per line, and `input/data.rivers`
+is rewritten that way. A rerun with all river records changes the MA21 / ROCHL salinity biases by -0.09 / -0.03,
+SST and AWAC current speed by less than 0.01, and salinity at SOMLIT Antioche by at most 0.03 at the cast dates; the
+largest change is in the Marennes-Oleron basin, about 0.7 fresher by 7 April. The other rows of this table come from
+the first v4.2 run.
+
+Check any new namelist file for lines longer than 200 characters before a run:
+`awk 'length($0) > 199' data*`.
 
 ## 7. Known limitations
 

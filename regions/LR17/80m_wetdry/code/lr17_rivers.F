@@ -12,7 +12,9 @@ C     source cell (rivHalf = 0, the default: the source cell alone).
 C     Spreading lowers the divergence of the single source cell, where
 C     salinity undershot below zero (2026-10-24). Called from
 C     LOAD_FIELDS_DRIVER right after addMass is reset, so other
-C     contributions still add on top.
+C     contributions still add on top. If data.rivers gives rivTemp, the
+C     temperature of the added water (temp_addMass, one value for all
+C     rivers) follows it in time, on the same records as rivQ.
 C     !USES:
       IMPLICIT NONE
 #include "SIZE.h"
@@ -33,7 +35,7 @@ CEOP
       DATA done /.FALSE./, counted /.FALSE./
       CHARACTER*(MAX_LEN_MBUF) msgBuf
       NAMELIST /RIVERS_PARM/ rivN, rivNrec, rivT0, rivDt, rivI, rivJ,
-     &                       rivQ, rivHalf
+     &                       rivQ, rivHalf, rivTemp
 
       IF ( .NOT.done ) THEN
         _BARRIER
@@ -43,6 +45,9 @@ CEOP
         rivT0   = 0. _d 0
         rivDt   = 86400. _d 0
         rivHalf = 0
+        DO n=1,rivRecMax
+          rivTemp(n) = UNSET_RL
+        ENDDO
         CALL OPEN_COPY_DATA_FILE( 'data.rivers', 'LR17_RIVERS',
      O                            iUnit, myThid )
         READ(UNIT=iUnit,NML=RIVERS_PARM)
@@ -115,6 +120,14 @@ C--   record weights (linear between records, held at the ends)
       IF ( rivNrec.EQ.1 ) THEN
         n = 1
         w = 0. _d 0
+      ENDIF
+
+      IF ( rivTemp(1).NE.UNSET_RL ) THEN
+        _BEGIN_MASTER(myThid)
+        temp_addMass = rivTemp(n)
+        IF ( rivNrec.GT.1 ) temp_addMass = (1.-w)*rivTemp(n)
+     &                                     + w*rivTemp(n+1)
+        _END_MASTER(myThid)
       ENDIF
 
       DO bj=myByLo(myThid),myByHi(myThid)

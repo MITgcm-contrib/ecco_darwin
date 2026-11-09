@@ -85,6 +85,10 @@ limited to 0.5 .. 2, so that each cell passes IBI's volume transport
 rather than IBI's velocity times the model's (different) depth (IBI
 deptho, ibi_static.nc). Without it the model's mean sea level drifted by
 +-0.8 m with the spring-neap cycle (2026-10-02).
+REAL_FW (wrapper --real-fw): rain and evaporation move volume
+(useRealFreshWaterFlux=.TRUE.); otherwise E - P acts as a virtual salt flux.
+RIVER_TEMP_FILE (wrapper --river-temp=CSV of date,temp): river temperature follows
+this series (rivTemp in data.rivers), linear in time between its dates, held at the ends.
 --sed: rain and evaporation on (useRealFreshWaterFlux, ERA5); mud and fine
 sand (pTracers 1, 2) with pkg/sediment, layered bed
 and IBI waves (sedWaveMode=3): hourly Hs (VHM0), mean period (VTM02) and
@@ -135,6 +139,8 @@ RIVER_MUD = 0.03                # kg/m3 mud in river water without RIVER_MUD_EAC
 RIVER_MUD_EACH = {'Charente': 0.010, 'Sevre': 0.010, 'Lay': 0.015, 'Seudre': 0.008}
 GAUGES = {'La Rochelle-La Pallice': (46.1585, -1.2206), "Ile d'Aix": (46.0074, -1.1743)}
 RIVER_T = 9.0                    # river temperature, deg C (Feb-Mar)
+RIVER_TEMP_FILE = None
+REAL_FW = False
 # model river: (OSM name of the carved river or None, gauged rivers it carries)
 RIVERS = {'Charente': (None, ('Charente', 'Boutonne')),
           'Sevre': ('La Sèvre Niortaise', ('Sevre',)),
@@ -239,6 +245,13 @@ def river_tips(model, lon, lat):
                                            np.ones((3, 3), bool))
         tips[name] = np.unravel_index(np.argmax(np.where(area & model, dist, -1)), model.shape)
     return tips
+
+
+def wrap_values(values, per_line=10):
+    """namelist values on short lines: MITgcm's OPEN_COPY_DATA_FILE silently cuts every line at
+    MAX_LEN_PREC = 200 characters, and the values after the cut then keep their defaults"""
+    v = [f'{x:.2f},' for x in values]
+    return '\n'.join('  ' + ' '.join(v[k:k + per_line]) for k in range(0, len(v), per_line))
 
 
 def w32(path, a):
@@ -446,12 +459,19 @@ def main(start, days, out, sed=False, transport=False, stamp_times=False, tide=N
     d0 = dt.date.fromisoformat(start) - dt.timedelta(days=1)
     k0 = days_r.index(d0)
     nday = int(np.ceil(days)) + 3
-    Q = {n: sum(np.array(riv[g]['q'][k0:k0 + nday]) for g in gauged) for n, (_, gauged) in RIVERS.items()}
+    # a tidal gauge can report a small negative daily mean (Marans, 2025): rivers only add water
+    Q = {n: np.maximum(sum(np.array(riv[g]['q'][k0:k0 + nday]) for g in gauged), 0.0) for n, (_, gauged) in RIVERS.items()}
     rows = [f' rivN={len(RIVERS)}, rivNrec={nday}, rivT0={-12 * 3600.:.1f}, rivDt=86400.,',
             ' rivI=' + ', '.join(str(tips[n][1] + 1) for n in RIVERS) + ',',
             ' rivJ=' + ', '.join(str(tips[n][0] + 1) for n in RIVERS) + ',']
     for r, n in enumerate(RIVERS, 1):
-        rows.append(f' rivQ({r},1:{nday})=' + ', '.join(f'{v:.2f}' for v in Q[n]) + ',')
+        rows.append(f' rivQ({r},1:{nday})=\n' + wrap_values(Q[n]))
+    if RIVER_TEMP_FILE:
+        tf = np.genfromtxt(RIVER_TEMP_FILE, delimiter=',', skip_header=1, dtype=None, encoding=None)
+        ord_t = [dt.date.fromisoformat(r[0]).toordinal() for r in tf]
+        tr = np.interp([(d0 + dt.timedelta(days=k)).toordinal() + 0.5 for k in range(nday)], ord_t, [r[1] for r in tf])
+        rows.append(f' rivTemp(1:{nday})=\n' + wrap_values(tr))
+        print(f'river temperature {os.path.basename(RIVER_TEMP_FILE)}: {tr.min():.1f}..{tr.max():.1f} C')
     open(os.path.join(out, 'data.rivers'), 'w').write(
         '# LR17 rivers (' + ', '.join(RIVERS) + '), Hub\'Eau daily discharge, m3/s; '
         'record 1 = noon of the day before START\n &RIVERS_PARM\n' + '\n'.join(rows) + '\n &\n')
@@ -494,6 +514,11 @@ def main(start, days, out, sed=False, transport=False, stamp_times=False, tide=N
         body = open(fn).read()
         open(fn, 'w').write(f'# v4.2: south-boundary plume salinity anomaly x {float(plume_beta):g} (--plume-beta; '
                             'LR17_plume_bc.py)\n' + body)
+    if REAL_FW and not sed:
+        dpath = os.path.join(out, 'data')
+        txt = open(dpath).read()
+        assert 'useRealFreshWaterFlux=.FALSE.' in txt
+        open(dpath, 'w').write(txt.replace('useRealFreshWaterFlux=.FALSE.', 'useRealFreshWaterFlux=.TRUE.'))
     if sed:
         write_sed(out, t0, t1, zb, model, lon, lat)
         dpath = os.path.join(out, 'data')

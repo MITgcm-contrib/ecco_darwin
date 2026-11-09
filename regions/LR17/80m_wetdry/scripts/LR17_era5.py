@@ -9,7 +9,9 @@ dewpoint, mean sea-level pressure, downward short- and long-wave radiation
 (accumulated, J/m2 per hour) and total precipitation (m per hour).
 Writes OUTDIR/era5_START_END_instant.nc (wind, temperature, dewpoint,
 pressure) and ..._accum.nc (radiation, precipitation); the CDS delivers the
-two as one zip. Needs ~/.cdsapirc.
+two as one zip. Needs ~/.cdsapirc. A span over several months is requested month by month
+(one CDS request crosses years, months and days, so it would fetch far more than the span) and
+joined, which keeps the request under the CDS size limit.
 """
 import datetime as dt
 import os
@@ -23,6 +25,26 @@ VARS = ['10m_u_component_of_wind', '10m_v_component_of_wind', '2m_temperature',
         '2m_dewpoint_temperature', 'mean_sea_level_pressure',
         'surface_solar_radiation_downwards', 'surface_thermal_radiation_downwards',
         'total_precipitation']
+
+
+def by_month(start, end, out):
+    import xarray as xr
+    s, e = dt.date.fromisoformat(start), dt.date.fromisoformat(end)
+    parts, a = [], s
+    while a <= e:
+        b = min((a.replace(day=1) + dt.timedelta(days=32)).replace(day=1) - dt.timedelta(days=1), e)
+        parts.append((a.isoformat(), b.isoformat()))
+        if not os.path.exists(os.path.join(out, f'era5_{parts[-1][0]}_{parts[-1][1]}_accum.nc')):
+            main(*parts[-1], out)                    # finished months are kept, so a rerun resumes
+        a = b + dt.timedelta(days=1)
+    for kind in ('instant', 'accum'):
+        fs = [os.path.join(out, f'era5_{p}_{q}_{kind}.nc') for p, q in parts]
+        ds = xr.concat([xr.open_dataset(f) for f in fs], 'valid_time')
+        ds.to_netcdf(os.path.join(out, f'era5_{start}_{end}_{kind}.nc'))
+        print('joined', kind, dict(ds.sizes))
+    for p, q in parts:
+        for kind in ('instant', 'accum'):
+            os.remove(os.path.join(out, f'era5_{p}_{q}_{kind}.nc'))
 
 
 def main(start, end, out):
@@ -50,5 +72,6 @@ def main(start, end, out):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1], sys.argv[2],
-         sys.argv[3] if len(sys.argv) > 3 else os.path.join(TOP, 'data', 'LR17', 'era5'))
+    d = sys.argv[3] if len(sys.argv) > 3 else os.path.join(TOP, 'data', 'LR17', 'era5')
+    a, b = dt.date.fromisoformat(sys.argv[1]), dt.date.fromisoformat(sys.argv[2])
+    ((by_month if (b - a).days > 62 else main))(sys.argv[1], sys.argv[2], d)
