@@ -64,3 +64,14 @@ c assign   WvPeriod
 CEOB
 
 
+
+=================================
+kelp mortality fix (2026-11-08, [ML1] in code/darwin_macroalgae.F)
+=================================
+With mp_spp_vertical = .TRUE., cells whose frond length exceeds the cell
+thickness passed their mortality up the plant (excess_mort), and the
+uppermost cell removed at most its own biomass, min(B, ...); the rest was
+discarded. With a near-empty top cell and little growth, columns stopped
+losing biomass (found in the Malibu nest, regions/CCS/socal_malibu).
+Mortality is now applied in each cell. This changes kelp results; this
+CCS set-up has not been rebuilt or rerun with the fix.

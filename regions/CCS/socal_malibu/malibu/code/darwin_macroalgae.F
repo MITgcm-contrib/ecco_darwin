@@ -452,13 +452,13 @@ C malibu_v01 [A9]: outgoing quota: local growth (diluted Q) + pass-through
                                                                           ! applied to biomass here [gDW/m3]
           excess_growth = (((ptr(iMagB)  * muMAG * deltaT) +              ! Add transfer of growth from lower levels [gDW/m3]
      &     excess_growth)) 
-          mort = c0                                                       ! Local mortality is set to zero but added to mortality to transfer 
-                                                                          ! bellow
-          excess_mort = min(ptr(iMagB) ,
-     &     (ptr(iMagB)  * mortMAG * deltaT) + 
-     &     excess_mort)                                                   ! Local mortality is computed here and added to mortality from lower 
+C malibu_v01 [ML1]: mortality applied in each cell (2026-11-06). Was: lower cells passed it up in excess_mort
+C malibu_v01 [ML1]: and the uppermost cell took min(B, ...), which discarded loss above its own biomass and
+C malibu_v01 [ML1]: froze columns with a near-empty top cell (Oct-Dec 2025: 19 of 31 columns, 140 of 150 t).
+          mort = ptr(iMagB) * mortMAG * deltaT                            ! Local mortality [gDW/m3]
+          excess_mort = c0
                                                                           ! levels and to transfer to upper levels                         
-          dBmagdt = 0.0                                                   ! Biomass is not changing [gDW/m3]
+          dBmagdt = -mort                                                 ! Growth moves up, mortality is local [gDW/m3]
           dQgrowthdt = ptr(iMagQ)  * (1.0/(1.0 + muMAG * deltaT) - 1.0)   ! [mg-N/gDW]   
           dQmagdt = (UptakeN * deltaT + dQgrowthdt - dE)                  ! [mg-N/gDW]   
         ELSEIF(total_length.GE.mp_spp_maxlength) THEN
@@ -468,31 +468,18 @@ C       and applied to first grid cell with length lower than grid cell thicknes
 C malibu_v01 [A11]: incoming growth stays here (was discarded)
           excess_growth = c0                                              ! No vertical transfer of growth [gDW/m3]
           prev_qmag = c0                                                  ! No vertical transfer of quota [mg-N/gDW]  
-          mort = c0                                                       ! Local mortality is set to zero but added to mortality to transfer 
-                                                                          ! bellow
-          excess_mort = min(ptr(iMagB) ,
-     &     (ptr(iMagB)  * mortMAG * deltaT) + 
-     &     excess_mort)                                                   ! Local mortality is computed here and added to mortality from lower
-                                                                          ! levels and to transfer to upper levels                         
-          IF(biomass_up.EQ.0.0)THEN
-C         Check if local cell is the uppermost one with biomass so mortality can be applied                  
-           mort = excess_mort                                             ! Local mortality account for local mortality plus the transfer of 
-                                                                          ! mortality
-           excess_mort = 0.0                                              ! Reset transfer of mortality
-           dBmagdt = -mort + eg_in                                        ! Biomass only changes with mortality      
-          ELSE
-           dBmagdt = eg_in                                                ! No change of biomass if there is biomass in grid cell above that has
-                                                                          ! to be empty first
-          ENDIF 
+C malibu_v01 [ML1]: local mortality, see above
+          mort = ptr(iMagB) * mortMAG * deltaT                            ! Local mortality [gDW/m3]
+          excess_mort = c0
+          dBmagdt = -mort + eg_in                                         ! No growth, incoming growth stays here
           dQgrowthdt = 0.0                                                ! No change of quota associated with growth [mg-N/gDW]
           dQmagdt = (UptakeN * deltaT + dQgrowthdt - dE) + dQmix
         ELSE
 C       Local length does not exceed grid cell thickness or max length not reached or we are at the surface.
 C       Accounts for all the transfer of growth and mortality from lower grid cells.                         
           growth = ptr(iMagB)  * muMAG * deltaT                           ! Local growth [gDW/m3]         
-          mort = min(ptr(iMagB) ,(ptr(iMagB)  * mortMAG * deltaT) +       ! Mortality accounts for local mortality and mortality from lower grid 
-                                                                          ! cells
-     &     excess_mort)
+C malibu_v01 [ML1]: local mortality, see above
+          mort = ptr(iMagB) * mortMAG * deltaT                            ! Local mortality [gDW/m3]
 C malibu_v01 [A9]: incoming biomass mixes its quota in (was: Q overwritten)
           dBmagdt = growth - mort + eg_in                         ! [gDW/m3]
           dQgrowthdt = qmix * (1.0/(1.0 + muMAG * deltaT) - 1.0)  ! [mg-N/gDW]

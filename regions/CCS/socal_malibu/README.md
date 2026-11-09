@@ -31,7 +31,7 @@ https://doi.org/10.1038/s43247-023-00833-2), as set up for the CCS in `../v05_ke
 | `socal/scripts/` | Build, set-up and run scripts, and the Python scripts that made the SoCal grid, temperature correction and tides. |
 | `malibu/code/` | Code changes for the Malibu build, used with `../v05_kelp/code` and `../v05/code`. Every change is tagged `C malibu_v01:`. |
 | `malibu/pkg_sediment/` | The pkg/sediment version the Malibu reference run used (see note in section 4). |
-| `malibu/input/` | Namelists and PBS script of the Malibu reference run (`run_2025h1_v4w_smg155`). |
+| `malibu/input/` | Namelists and PBS script of the Malibu reference run (`run_2025h1_v4w_smg155`; the 2026-11-08 kelp-mortality fix changes only `malibu/code/darwin_macroalgae.F`). |
 | `malibu/scripts/` | The Python scripts that made the Malibu grid, initial and boundary conditions, rivers, waves, kelp initial condition and namelists. |
 
 The scripts are the versions that made the reference inputs. They keep the paths of the development project,
@@ -114,6 +114,11 @@ Notes:
    in `malibu/code/`.
 4. `malibu/code/` has the seasonal kelp mortality (`mp_spp_death_mon`), the kelp drag on currents (off in the
    reference run), the kelp optics in pkg/radtrans, the ramped boundary tides and extra CDOM diagnostics.
+5. Kelp mortality fix (2026-11-08, tag `[ML1]` in `darwin_macroalgae.F`). In the vertical-transfer branches, lower cells
+   used to pass their mortality up the plant, and the uppermost cell removed at most its own biomass. The rest was
+   discarded. With a near-empty top cell and little growth, columns stopped losing biomass: in a Jul–Dec 2025 run, 19 of
+   31 kelp columns changed by less than 0.1% from 13 October to 18 December. Mortality is now applied in each cell, and
+   its POC, PON and POP are released there. The same fix is in `../v05_kelp/code/darwin_macroalgae.F`.
 
 ## 5. Run `malibu/`
 
@@ -175,6 +180,7 @@ How the inputs were made:
 |---|---|---|
 | Maximum growth (`mp_spp_Gmax_cap`) | 0.155 d⁻¹ | Lowered from 0.173 d⁻¹ so that the Q1 → Q2 2025 growth is near KelpWatch |
 | Background mortality (`mp_spp_death_mon`) | 0.017–0.042 d⁻¹ by month, linear between mid-month values | SBC LTER monthly median loss (knb-lter-sbc.112.15) minus the model wave loss of 0.0035 d⁻¹ |
+| Kelp mortality | applied in each cell (`[ML1]`) | Section 4, note 5 |
 | Kelp drag on currents | off | `data.kelpdrag` |
 | Initial kelp | 106 t dry weight on 1 January 2025 | KelpWatch 2025 Q1 |
 
@@ -183,8 +189,8 @@ How the inputs were made:
 | Observation | Model |
 |---|---|
 | NOAA tide gauges Santa Monica and Los Angeles (SoCal, 15-day calibrated tide test) | hourly sea level r = 0.996, M2 amplitude x1.03–1.04 of observed, phase +1° |
-| KelpWatch Malibu canopy: 106 t (Q1), 299 t (Q2), growth x2.82 | 107 t (15 Feb), 322 t (16 May), growth x3.00 |
-| SBC LTER kelp loss Apr–Jun: 0.032, 0.023, 0.024 d⁻¹ | 0.031, 0.024, 0.023 d⁻¹ |
+| KelpWatch Malibu canopy: 106 t (Q1), 299 t (Q2), growth x2.82 | 69 t (15 Feb), 236 t (16 May), growth x3.43 (before the mortality fix: 107 t, 322 t, x3.00) |
+| SBC LTER kelp loss Jan–Jun: 0.046, 0.033, 0.041, 0.032, 0.023, 0.024 d⁻¹ | 0.040, 0.033, 0.035, 0.032, 0.026, 0.024 d⁻¹ (biomass-weighted growth minus the rate of change of ln biomass) |
 | Malibu CTD casts (n = 8), median model − CTD | 2 m −0.06 °C, 10 m +0.10 °C, 20 m +0.45 °C, 30 m +0.99 °C (measured on run v4, before the BGC-boundary, wave and kelp changes; not checked again) |
 | PACE surface Chl, shelf, 8–23 March | mean log10(model/PACE) = −0.34 |
 
@@ -194,7 +200,8 @@ How the inputs were made:
    Lower GGL90 mixing and tides off did not remove it.
 2. The March inner-shelf bloom is too small (shelf Chl about half of PACE).
 3. Model TSS is mineral sediment only and is far below OLCI TSM near the coast.
-4. Kelp loss in January–March is lower than SBC LTER (0.027–0.034 vs 0.033–0.046 d⁻¹).
+4. The maximum kelp growth (0.155 d⁻¹) was tuned before the mortality fix. With the fix, kelp starts lower (69 vs 106 t in
+   mid-February) and grows x3.43 to mid-May vs x2.82 in KelpWatch, so it needs a retune.
 5. The kelp initial condition depends on the canopy fraction of the SBC LTER sites, which are shallower
    (4.5–10.7 m) than much of the Malibu kelp. This fraction is uncertain at Malibu.
 6. SoCal sea level has no remote signal: there is no sea-level boundary condition, and the volume balance holds
