@@ -1,0 +1,52 @@
+# v05 1deg Darwin3 simulation based on ECCOV4r6 set-up
+#code base: c68g
+#code_v4r6 + input_v4r6
+
+# "Release6/" folder is also available at ECCO Drive
+# To Download, one needs to have an Earthdata account
+# (Or create it at https://urs.earthdata.nasa.gov/users/new)
+# For using wget, one needs an Earthdata username and WebDAV password (different from Earthdata password)
+# Find it at https://ecco.jpl.nasa.gov/drive
+# and https://ecco-group.org/docs/wget_download_multiple_files_and_directories.pdf for more detail
+wget -r --no-parent --user=USERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/ECCO2/LLC90/Release6
+
+# ========
+# 1. Get code
+git clone --branch backport_ckpt68g https://github.com/darwinproject/darwin3
+git clone --depth 1 https://github.com/MITgcm-contrib/ecco_darwin.git
+cd darwin3
+
+# ================
+# 2. Build executable
+# Prerequisite: 1. Get code
+mkdir build run
+cd build
+rm *
+module load comp-intel/2020.4.304 mpi-hpe/mpt hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
+MOD="../../ecco_darwin/v05/1deg"
+../tools/genmake2 -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
+	-mo "${MOD}/code_darwin_v4r6 ${MOD}/code_v4r6" -mpi
+make depend
+make -j 16
+
+==============
+# 3. Instructions for running simulation (1992-2025 period)
+
+cd ../run
+rm -rf *
+mkdir -p diags
+ln -sf ../build/mitgcmuv .
+
+INPUTDIR='/nobackup/hzhang1/pub/Release6'
+ln -s ${INPUTDIR}/input_bin/* .
+ln -s ${INPUTDIR}/forcing .
+cp ${MOD}/input_v4r6/* .
+
+rm data data.pkg data.diagnostics
+cp ${MOD}/input_darwin_v4r6/* .
+ln -sf /nobackup/dcarrol2/forcing/apCO2/NOAA_MBL/* .
+ln -sf /nobackup/dcarrol2/pub/1deg/v05/V4r5/* .
+mkdir diags/3hourly diags/daily diags/monthly diags/budget
+
+
+qsub job_ECCOv4r6
