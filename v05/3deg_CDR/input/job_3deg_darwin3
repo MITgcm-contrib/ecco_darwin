@@ -1,5 +1,5 @@
 #!/bin/csh
-#PBS -l select=1:ncpus=16:model=has
+#PBS -l select=1:ncpus=16:model=bro_ele
 
 #PBS -q normal
 #PBS -l walltime=8:00:00

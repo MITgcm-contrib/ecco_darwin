@@ -1,6 +1,5 @@
 #!/bin/csh
-#PBS -l select=32:ncpus=24:model=has
-##PBS -l select=39:ncpus=20:model=ivy
+#PBS -l select=28:ncpus=28:model=bro_ele
 
 #PBS -q debug
 #PBS -l walltime=2:00:00

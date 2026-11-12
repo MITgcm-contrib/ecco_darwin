@@ -1,5 +1,5 @@
 #!/bin/csh
-#PBS -l select=80:ncpus=28:model=bro
+#PBS -l select=80:ncpus=28:model=bro_ele
 #PBS -l walltime=148:00:00
 ##PBS -l walltime=48:00:00
 #PBS -q vlong

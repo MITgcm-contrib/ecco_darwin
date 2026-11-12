@@ -1,5 +1,5 @@
 #!/bin/csh
-#PBS -l select=24:ncpus=20:model=ivy
+#PBS -l select=17:ncpus=28:model=bro_ele
 #PBS -l site=needed=/home1+/nobackupp19
 
 ##When runing the full configuration

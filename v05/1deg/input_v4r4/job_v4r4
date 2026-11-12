@@ -1,5 +1,5 @@
 #!/bin/csh
-#PBS -l select=5:ncpus=20:model=ivy
+#PBS -l select=4:ncpus=28:model=bro_ele
 #below 2 lines for test:
 #PBS -l walltime=2:00:00
 #PBS -q devel
