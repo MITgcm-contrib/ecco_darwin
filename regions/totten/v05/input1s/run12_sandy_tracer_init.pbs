@@ -5,7 +5,7 @@
 #PBS -j oe
 ##PBS -m abe
 
-module load comp-intel/2015.0.090 mpi-sgi/mpt.2.12r23 netcdf/4.0
+module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 umask 027
 cd $PBS_O_WORKDIR
 limit stacksize unlimited

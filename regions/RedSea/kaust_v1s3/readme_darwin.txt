@@ -6,8 +6,8 @@ WORKDIR=/scratch/wangy0m/ECCO_Darwin/
 ==============
 # 1. Get code
   cd $WORKDIR
-  git clone git@github.com:MITgcm-contrib/ecco_darwin.git
-  git clone git@github.com:darwinproject/darwin3
+  git clone https://github.com/MITgcm-contrib/ecco_darwin.git
+  git clone https://github.com/darwinproject/darwin3
   cd $WORKDIR/darwin3
   git checkout 24885b71
   mkdir build run

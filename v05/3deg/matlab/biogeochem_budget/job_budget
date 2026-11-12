@@ -17,7 +17,7 @@
 
 module purge
 module load matlab
-module load gcc/4.9.4
+module load gcc/10.3
 module list
 
 cd /nobackup/dcarrol2/v05_DIC_budget/m_files/budget

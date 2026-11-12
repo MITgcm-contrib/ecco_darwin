@@ -16,8 +16,8 @@
 
 ==============
 # 1. Get code
-  git clone git@github.com:MITgcm-contrib/ecco_darwin.git
-  git clone git@github.com:darwinproject/darwin3
+  git clone https://github.com/MITgcm-contrib/ecco_darwin.git
+  git clone https://github.com/darwinproject/darwin3
   cd darwin3
   mkdir build run
 

@@ -11,7 +11,7 @@
 
 setenv FORT_BUFFERED 1
 
-module load comp-intel/2016.2.181 mpi-sgi/mpt.2.14r19 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+module load comp-intel/2020.4.304 mpi-hpe/mpt.2.25 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
 
 cd $PBS_O_WORKDIR
 limit stacksize unlimited

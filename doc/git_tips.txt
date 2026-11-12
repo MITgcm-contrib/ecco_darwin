@@ -8,7 +8,7 @@
  sudo apt-get install gitk
 
 # To get the ECCO-Darwin repository:
- git clone git@github.com:MITgcm-contrib/ecco_darwin.git
+ git clone https://github.com/MITgcm-contrib/ecco_darwin.git
 
 # All commands below must be executed somewhere within the repo, e.g.,
  cd ecco_darwin
