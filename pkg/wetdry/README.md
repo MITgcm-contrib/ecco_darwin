@@ -10,9 +10,24 @@ brine rejection (pkg/salt_plume).
 
 Author: Dustin Carroll (SJSU / JPL), 2026. Developed against MITgcm
 `master` at commit `d861cd501` ("Fix pkg/cheapaml flux option LANL",
-#1001). This version: development branch `wetdry` at `0955ba4c4`.
+#1001). This version: development branch `wetdry` at `2f7cf4e7b`.
 
-## What changed in this update (2026-10-30)
+## What changed in this update (2026-11-12)
+
+- **Budget pickup always 64 bit** (`wetdry_read_pickup.F`,
+  `wetdry_write_pickup.F`): `pickup_wetdry` used to be written at
+  `writeBinaryPrec` and read at `readBinaryPrec`, so `readBinaryPrec=64`
+  with `writeBinaryPrec=32` gave a garbage volume budget after a restart.
+  Pickups written before this change with `writeBinaryPrec=32` cannot be read.
+- **Evaporation tracer term ramped on dry columns with `staggerTimeStep`**
+  (`wetdry_dry_forcing.F`).
+- **`WETDRY_SEAICE_FREESLIP` arguments renamed** to `wdEtaZ`, `wdZetaZ`, which
+  clashed with the `SEAICE.h` common block in trees that include it (darwin3
+  ckpt69k).
+- Checked: LR17 `80m_wetdry`, 1 day on 84 ranks (Pleiades job 25385137):
+  monitor output identical to the 2026-10-30 check-in.
+
+## Earlier update (2026-10-30)
 
 - **More sea-ice options for landfast and bottom-fast ice** (all off by
   default; developed for the Colville River delta freshet):

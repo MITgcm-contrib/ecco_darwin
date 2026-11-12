@@ -8,19 +8,19 @@ CBOP
 C !ROUTINE: WETDRY_SEAICE_FREESLIP
 
 C !INTERFACE:
-      SUBROUTINE WETDRY_SEAICE_FREESLIP( etaZ, zetaZ, myThid )
+      SUBROUTINE WETDRY_SEAICE_FREESLIP( wdEtaZ, wdZetaZ, myThid )
 
 C !DESCRIPTION:
 C     Free slip at the ice faces pkg/wetdry closes (dry faces, wdIceSeal,
 C     wdIceGround, ice thinner than wdIceMinHeff), as at land.
 C     With SEAICE_no_slip=.FALSE. S/R SEAICE_CALC_VISCOSITIES zeroes the
 C     shear viscosity at Z points with the static mask HEFFM only. At a
-C     face pkg/wetdry closes all four HEFFM are 1, so etaZ stays the average
+C     face pkg/wetdry closes all four HEFFM are 1, so wdEtaZ stays the average
 C     of the four cells, including the stiff grounded fast ice: the partly
 C     covered cell next to it feels a no-slip wall with the fast ice's
 C     viscosity, which its own weak ice and area-scaled drag cannot
 C     balance (Colville freshet: 2-10 m/s ice next to the fast-ice edge).
-C     Here etaZ and zetaZ are also zeroed at Z points next to a closed
+C     Here wdEtaZ and wdZetaZ are also zeroed at Z points next to a closed
 C     face (seaiceMaskU/V, set in S/R WETDRY_UPDATE_MASKS).
 C     Called from S/R SEAICE_CALC_VISCOSITIES (free-slip branch).
 
@@ -35,9 +35,9 @@ C !USES:
 #endif
 
 C !INPUT/OUTPUT PARAMETERS:
-C     etaZ, zetaZ :: shear and bulk viscosity at Z points (masked here)
-      _RL etaZ (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
-      _RL zetaZ(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+C     wdEtaZ, wdZetaZ :: shear and bulk viscosity at Z points (masked here)
+      _RL wdEtaZ (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL wdZetaZ(1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
       INTEGER myThid
 CEOP
 
@@ -54,8 +54,8 @@ C !LOCAL VARIABLES:
          DO i=1-OLx+1,sNx+OLx-1
           maskZ = seaiceMaskU(i,j,bi,bj)*seaiceMaskU(i,j-1,bi,bj)
      &          * seaiceMaskV(i,j,bi,bj)*seaiceMaskV(i-1,j,bi,bj)
-          etaZ (i,j,bi,bj) = etaZ (i,j,bi,bj)*maskZ
-          zetaZ(i,j,bi,bj) = zetaZ(i,j,bi,bj)*maskZ
+          wdEtaZ (i,j,bi,bj) = wdEtaZ (i,j,bi,bj)*maskZ
+          wdZetaZ(i,j,bi,bj) = wdZetaZ(i,j,bi,bj)*maskZ
          ENDDO
         ENDDO
        ENDDO
