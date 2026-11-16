@@ -1,0 +1,51 @@
+[     1 s] V6a lat  42.50: pixarea   22.818 km2, formula   22.790 km2, formula/pixarea 0.99875
+[     1 s] V6a lat  50.02: pixarea   19.926 km2, formula   19.859 km2, formula/pixarea 0.99661
+[     1 s] V6a lat  55.02: pixarea   17.799 km2, formula   17.719 km2, formula/pixarea 0.99548
+[     1 s] V6a lat  60.02: pixarea   15.530 km2, formula   15.444 km2, formula/pixarea 0.99442
+[     1 s] V6a lat  65.03: pixarea   13.137 km2, formula   13.051 km2, formula/pixarea 0.99347
+[     1 s] V6a lat  70.03: pixarea   10.638 km2, formula   10.559 km2, formula/pixarea 0.99264
+[     1 s] V6a lat  75.03: pixarea    8.052 km2, formula    7.987 km2, formula/pixarea 0.99198
+[     1 s] V6a lat  80.03: pixarea    5.400 km2, formula    5.354 km2, formula/pixarea 0.99148
+[     1 s] V6a lat  85.03: pixarea    2.704 km2, formula    2.681 km2, formula/pixarea 0.99118
+[   119 s] V6b 2015 40-90N: map x pixarea 245,054 m3/s; coast rule, duplicates removed 256,549 (+4.7 %); with duplicates 335,965
+[   120 s]    box lon   -80..-70   lat  50..55 : coast rule        625  map      2,524  diff    -1,900 m3/s
+[   120 s]    box lon   150..160   lat  70..75 : coast rule        330  map      2,207  diff    -1,876 m3/s
+[   120 s]    box lon  -140..-130  lat  55..60 : coast rule      5,157  map      3,800  diff    +1,357 m3/s
+[   120 s]    box lon   120..130   lat  70..75 : coast rule     15,598  map     16,691  diff    -1,093 m3/s
+[   120 s]    box lon  -130..-120  lat  50..55 : coast rule      2,963  map      1,941  diff    +1,021 m3/s
+[   120 s]    box lon    20..30    lat  65..70 : coast rule      2,729  map      3,649  diff      -919 m3/s
+[   120 s]    box lon     0..10    lat  60..65 : coast rule      1,317  map        515  diff      +803 m3/s
+[   120 s]    box lon  -140..-130  lat  50..55 : coast rule        970  map        283  diff      +687 m3/s
+[   120 s]    box lon   -60..-50   lat  45..50 : coast rule      1,786  map      1,211  diff      +575 m3/s
+[   120 s]    box lon  -160..-150  lat  55..60 : coast rule      2,859  map      2,302  diff      +557 m3/s
+[   120 s]    box lon   -10..0     lat  55..60 : coast rule      1,684  map      1,182  diff      +502 m3/s
+[   120 s]    box lon   -30..-20   lat  70..75 : coast rule        952  map        542  diff      +410 m3/s
+[   120 s]    box lon    10..20    lat  65..70 : coast rule      1,141  map        743  diff      +398 m3/s
+[   120 s]    box lon   -70..-60   lat  45..50 : coast rule      5,819  map      5,426  diff      +393 m3/s
+[   120 s]    box lon   140..150   lat  40..45 : coast rule      2,377  map      1,989  diff      +387 m3/s
+[   120 s]    box lon  -130..-120  lat  45..50 : coast rule      6,291  map      5,910  diff      +381 m3/s
+[   120 s]    box lon   160..170   lat  60..65 : coast rule      1,627  map      1,989  diff      -362 m3/s
+[   120 s]    box lon   -50..-40   lat  60..65 : coast rule      1,047  map        704  diff      +344 m3/s
+[   120 s]    box lon  -100..-90   lat  55..60 : coast rule      1,594  map      1,917  diff      -323 m3/s
+[   120 s]    box lon   -30..-20   lat  65..70 : coast rule        860  map        551  diff      +309 m3/s
+[   120 s]    cells < 10 m3/s: coast rule 53,481 (103,820 cells) vs map 27,891 (33,323 cells)
+[   120 s]    cells >= 10 m3/s: coast rule 203,067 (1,529) vs map 217,163 (1,682)
+[   134 s] V6c WestAO 2015: raw path (dups removed + hand list) 54,393 m3/s vs production 49,200 (+10.6 %)
+[   134 s]    1-deg box lon  -139 lat  59: production     463.8  raw path - production    -399.1 m3/s
+[   134 s]    1-deg box lon  -130 lat  53: production     113.5  raw path - production    +330.0 m3/s
+[   134 s]    1-deg box lon  -139 lat  58: production     372.2  raw path - production    -284.5 m3/s
+[   134 s]    1-deg box lon  -129 lat  52: production     765.8  raw path - production    +240.5 m3/s
+[   134 s]    1-deg box lon  -134 lat  57: production     441.8  raw path - production    +233.7 m3/s
+[   134 s]    1-deg box lon  -136 lat  58: production     340.0  raw path - production    +220.3 m3/s
+[   134 s]    1-deg box lon  -132 lat  55: production     334.6  raw path - production    +215.3 m3/s
+[   134 s]    1-deg box lon  -135 lat  57: production     152.2  raw path - production    +213.6 m3/s
+[   134 s]    1-deg box lon  -131 lat  54: production   2,403.0  raw path - production    +199.4 m3/s
+[   134 s]    1-deg box lon  -134 lat  56: production      98.0  raw path - production    +161.3 m3/s
+[   134 s]    1-deg box lon  -148 lat  60: production     123.1  raw path - production    +160.2 m3/s
+[   134 s]    1-deg box lon  -152 lat  60: production     562.9  raw path - production    -159.2 m3/s
+[   134 s]    1-deg box lon  -133 lat  56: production   1,638.8  raw path - production    +155.4 m3/s
+[   134 s]    1-deg box lon  -135 lat  58: production     503.4  raw path - production    +153.2 m3/s
+[   134 s]    1-deg box lon  -133 lat  55: production     131.2  raw path - production    +144.3 m3/s
+[   134 s]    sum of positive box differences 6,614, negative -1,421 m3/s
+[   159 s] V6d WestAO 2015 runoff map, kept sources: x formula area 36,147.9 m3/s, x pixarea 36,372.2 m3/s (ratio 0.99383)
+[   159 s] done
