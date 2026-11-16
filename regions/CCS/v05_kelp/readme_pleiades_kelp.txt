@@ -75,3 +75,12 @@ discarded. With a near-empty top cell and little growth, columns stopped
 losing biomass (found in the Malibu nest, regions/CCS/socal_malibu).
 Mortality is now applied in each cell. This changes kelp results; this
 CCS set-up has not been rebuilt or rerun with the fix.
+
+=================================
+kelp vertical growth transfer (2026-11-16, [KB1] in code/darwin_macroalgae.F)
+=================================
+A full cell (frond length > cell thickness) passed all its growth up the
+plant, so it only lost biomass and lower fronds, holdfast included, died
+back under a surface canopy. Now it keeps min(0, growth - mortality) and
+passes max(0, growth - mortality) up. Tested in regions/CCS/socal_malibu
+(section 4, note 6); not compiled or run in v05_kelp.

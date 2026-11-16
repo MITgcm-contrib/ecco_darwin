@@ -24,7 +24,13 @@ to the nearest wet cell within 2 cells, else are dropped and counted). As in
 make_ic_obcs.py, the stock sits in the bottom wet cell (kLowC) as Bmag
 [gDW/m3] = mass / (cell area x drF x hFacC); Qmag = 20 mgN/gDW, Cmag = 0.3 B.
 
-Usage: python3 make_kelp_ic.py <work dir with init/> <hFacC.data> [YYYYQn] [--write]
+--spread (2026-11-14, [IC2]): the plant spans the water column instead of sitting in the bottom cell. The canopy share
+  F_CANOPY[q] of the column stock goes to the surface cell (k = 1, where KelpWatch sees it); the rest is spread over the
+  cells below down to kLowC at one concentration (mass in proportion to drF x hFacC). One-cell columns keep all of it at
+  k = 1. Why: with all kelp in the bottom cell, kelp in deep (7-13 m) columns never reached the surface (frond length of
+  the topmost kelp cell = B Q dz / mp_spp_length_*, growth moves up only from a full cell; readme 2026-11-14).
+
+Usage: python3 make_kelp_ic.py <work dir with init/> <hFacC.data> [YYYYQn] [--write] [--spread]
 (without --write it only reports the comparison with the current IC)
 """
 import json
@@ -43,7 +49,8 @@ KELP_Q0, KELP_CARBON = 20.0, 0.3        # as make_ic_obcs.py
 
 def main():
     write = '--write' in sys.argv
-    args = [a for a in sys.argv[1:] if a != '--write']
+    spread = '--spread' in sys.argv
+    args = [a for a in sys.argv[1:] if a not in ('--write', '--spread')]
     wdir, hfile = args[:2]
     yq = args[2] if len(args) > 2 else '2024Q4'
     year, q = int(yq[:4]), int(yq[-1])
@@ -79,7 +86,18 @@ def main():
     B = np.zeros((nr, ny, nx))
     jj, ii = np.where(dry > 0)
     kk = kbot[jj, ii]
-    B[kk, jj, ii] = dry[jj, ii] / (area[jj, ii] * drf[kk] * hf[kk, jj, ii])
+    if not spread:
+        B[kk, jj, ii] = dry[jj, ii] / (area[jj, ii] * drf[kk] * hf[kk, jj, ii])
+    else:
+        fc = F_CANOPY[q]
+        for j1, i1, kb in zip(jj, ii, kk):
+            th = drf[:kb + 1] * hf[:kb + 1, j1, i1]                       # wet thickness of cells 0..kLowC (m)
+            m2 = dry[j1, i1] / area[j1, i1]                             # whole-plant g dry m-2
+            if kb == 0:
+                B[0, j1, i1] = m2 / th[0]
+            else:
+                B[0, j1, i1] = fc * m2 / th[0]
+                B[1:kb + 1, j1, i1] = (1 - fc) * m2 / th[1:].sum()
     # current (placeholder) IC for comparison
     tag = f'{nx}x{ny}x{nr}'
     B_old = np.fromfile(os.path.join(wdir, 'init', f'Bmag_{tag}'), '>f4').reshape(nr, ny, nx)
@@ -91,7 +109,7 @@ def main():
                 cells_new=int((dry > 0).sum()), cells_old=int((B_old.sum(0) > 0).sum()),
                 total_dry_t_new=float(tot_new), total_dry_t_old=float(tot_old),
                 cell_dry_kg_m2_new_median=float(np.median(dry[dry > 0] / 1e3 / area[dry > 0])),
-                cell_dry_kg_m2_new_max=float((dry / 1e3 / area).max()))
+                cell_dry_kg_m2_new_max=float((dry / 1e3 / area).max()), spread=spread)
     print(json.dumps(info, indent=1))
     if write:
         Q = np.where(B > 0, KELP_Q0, 0.0)

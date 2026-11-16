@@ -91,6 +91,7 @@ C     Variables related to ocean flow and wave motion affecting nutrient uptake
       _RL mortout                 ! Mortality for Darwin tendency
       _RL growthout               ! Growth for Darwin tendency
       _RL prev_qmag               ! Save Q for transfer
+      _RL gpass                   ! [KB1] growth passed up by a full cell [gDW/m3]
 C malibu_v01 [K3]: blade fraction of this cell, for radtrans
       _RL bladefrac
       _RL total_length            ! total vertical frond length
@@ -446,19 +447,23 @@ C       than grid cell thickness or grid cell at the surface, where N and C is r
           growth = ptr(iMagB)  * muMAG * deltaT                           ! Growth is computed for feedback with C, N and ALK but not 
 C malibu_v01 [A9]: outgoing quota: local growth (diluted Q) + pass-through
           prev_qmag = c0
-          IF (growth+eg_in.GT.c0) prev_qmag =
-     &      (growth*ptr(iMagQ)/(c1+muMAG*deltaT) + eg_in*qin)
-     &      / (growth+eg_in)
+C malibu_v01 [KB1]: the quota is weighted by the growth that leaves (net of local loss), not all local growth
+          gpass = max(c0, ptr(iMagB)*(muMAG - mortMAG)*deltaT)
+          IF (gpass+eg_in.GT.c0) prev_qmag =
+     &      (gpass*ptr(iMagQ)/(c1+muMAG*deltaT) + eg_in*qin)
+     &      / (gpass+eg_in)
                                                                           ! applied to biomass here [gDW/m3]
-          excess_growth = (((ptr(iMagB)  * muMAG * deltaT) +              ! Add transfer of growth from lower levels [gDW/m3]
-     &     excess_growth)) 
 C malibu_v01 [ML1]: mortality applied in each cell (2026-11-06). Was: lower cells passed it up in excess_mort
 C malibu_v01 [ML1]: and the uppermost cell took min(B, ...), which discarded loss above its own biomass and
 C malibu_v01 [ML1]: froze columns with a near-empty top cell (Oct-Dec 2025: 19 of 31 columns, 140 of 150 t).
           mort = ptr(iMagB) * mortMAG * deltaT                            ! Local mortality [gDW/m3]
           excess_mort = c0
-                                                                          ! levels and to transfer to upper levels                         
-          dBmagdt = -mort                                                 ! Growth moves up, mortality is local [gDW/m3]
+C malibu_v01 [KB1] (2026-11-12): a full cell first replaces its own loss from its own growth and passes only the
+C malibu_v01 [KB1]: rest up (was: all growth up, so full lower cells, holdfast included, only lost biomass and the
+C malibu_v01 [KB1]: canopy floated over an empty column). Kelp in the column and the POC release are unchanged:
+C malibu_v01 [KB1]: kept + passed up = growth - mort, as before.
+          excess_growth = max(c0, growth - mort) + excess_growth          ! Net local growth + growth from below [gDW/m3]
+          dBmagdt = min(c0, growth - mort)                                ! Keeps its biomass while growth >= loss [gDW/m3]
           dQgrowthdt = ptr(iMagQ)  * (1.0/(1.0 + muMAG * deltaT) - 1.0)   ! [mg-N/gDW]   
           dQmagdt = (UptakeN * deltaT + dQgrowthdt - dE)                  ! [mg-N/gDW]   
         ELSEIF(total_length.GE.mp_spp_maxlength) THEN

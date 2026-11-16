@@ -409,15 +409,17 @@ C       than grid cell thickness or grid cell at the surface, where N and C is r
           prev_qmag = ptr(iMagQ)                                          ! Save quota value for transfer to upper level [mg-N/gDW]  
           growth = ptr(iMagB)  * muMAG * deltaT                           ! Growth is computed for feedback with C, N and ALK but not 
                                                                           ! applied to biomass here [gDW/m3]
-          excess_growth = (((ptr(iMagB)  * muMAG * deltaT) +              ! Add transfer of growth from lower levels [gDW/m3]
-     &     excess_growth)) 
 C     2026-11-06 [ML1] (malibu_v01): mortality applied in each cell. Was: lower cells passed it up in
 C     excess_mort and the uppermost cell took min(B, ...), which discarded loss above its own biomass
 C     and froze columns with a near-empty top cell (regions/CCS/socal_malibu/README.md).
           mort = ptr(iMagB) * mortMAG * deltaT                            ! Local mortality [gDW/m3]
           excess_mort = c0
-                                                                          ! levels and to transfer to upper levels                         
-          dBmagdt = -mort                                                 ! Growth moves up, mortality is local [gDW/m3]
+C     2026-11-12 [KB1] (malibu_v01): a full cell first replaces its own loss from its own growth and
+C     passes only the rest up (was: all growth up, so full lower cells, holdfast included, only lost
+C     biomass). Kelp in the column and the POC release are unchanged: kept + passed up = growth - mort.
+C     Not compiled or run in v05_kelp (tested in regions/CCS/socal_malibu).
+          excess_growth = max(c0, growth - mort) + excess_growth          ! Net local growth + growth from below [gDW/m3]
+          dBmagdt = min(c0, growth - mort)                                ! Keeps its biomass while growth >= loss [gDW/m3]
           dQgrowthdt = ptr(iMagQ)  * (1.0/(1.0 + muMAG * deltaT) - 1.0)   ! [mg-N/gDW]   
           dQmagdt = (UptakeN * deltaT + dQgrowthdt - dE)                  ! [mg-N/gDW]   
         ELSEIF(total_length.GE.mp_spp_maxlength) THEN
