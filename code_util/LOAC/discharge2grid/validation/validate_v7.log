@@ -1,0 +1,85 @@
+  GloFas_2015: band rows 2178..2707, 698,306 candidate cells, 4,656 carry water
+sources: 4,656 (365 records); kept 3,776 carrying 36,147.9 m3/s mean; too far (> 95 km) 20 carrying 54.6; outside the domain 860 carrying 5,207.0
+conservation: delivered / kept = 1.000000000000  (79,791 receiving cells, 2,362 distinct destination cells)
+footprint area: median 2,101 km2, min 209 (unclipped 4 pi sigma^2 = 4,072 km2); 20 below 10 %
+snapped > 25 km: 1,866.5 m3/s from 156 sources; largest (check each lands in the right basin):
+   src_176.225_64.625             176.225   64.625      368.1 m3/s snap   61.3 km ->   177.507   64.587
+   src_-125.625_51.075           -125.625   51.075      277.0 m3/s snap   68.8 km ->   233.489   50.809
+   src_-130.925_55.825           -130.925   55.825      162.8 m3/s snap   41.8 km ->   228.406   55.846
+dropped as too far (within 285 km of water): 54.6 m3/s; largest:
+   src_171.025_69.025             171.025   69.025       11.4 m3/s  114.6 km from water
+   src_-124.675_50.075           -124.675   50.075       10.1 m3/s  112.8 km from water
+   src_-124.025_50.025           -124.025   50.025        7.7 m3/s  157.9 km from water
+dropped as outside the domain (within 285 km of water): 5,207.0 m3/s; largest:
+   src_-123.175_49.125           -123.175   49.125    3,551.6 m3/s  260.2 km from water
+   src_169.575_60.425             169.575   60.425      205.9 m3/s   76.1 km from water
+   src_170.675_68.875             170.675   68.875      194.7 m3/s  134.7 km from water
+temperature: 0.00 .. 23.37 C on receiving cells; heat out/in = 1.000000000000; cell-records with water of unknown temperature: 0 of 28,823,541
+[    71 s] V7a RESULT: temperature 365 vs 365 records, values differing 0 of 213,452,000 -> BITWISE IDENTICAL
+[    71 s] V7b: climatology from 33 files (wattmp1991.bin .. wattmp_clim366.bin)
+  wattmp1991.bin: 365 records
+  wattmp1992.bin: 366 records
+  wattmp1993.bin: 365 records
+  wattmp1994.bin: 365 records
+  wattmp1995.bin: 365 records
+  wattmp1996.bin: 366 records
+  wattmp1997.bin: 365 records
+  wattmp1998.bin: 365 records
+  wattmp1999.bin: 365 records
+  wattmp2000.bin: 366 records
+  wattmp2001.bin: 365 records
+  wattmp2002.bin: 365 records
+  wattmp2003.bin: 365 records
+  wattmp2004.bin: 366 records
+  wattmp2005.bin: 365 records
+  wattmp2006.bin: 365 records
+  wattmp2007.bin: 365 records
+  wattmp2008.bin: 366 records
+  wattmp2009.bin: 365 records
+  wattmp2010.bin: 365 records
+  wattmp2011.bin: 365 records
+  wattmp2012.bin: 366 records
+  wattmp2013.bin: 365 records
+  wattmp2014.bin: 365 records
+  wattmp2015.bin: 365 records
+  wattmp2016.bin: 366 records
+  wattmp2017.bin: 365 records
+  wattmp2018.bin: 365 records
+  wattmp2019.bin: 365 records
+  wattmp2020.bin: 366 records
+  wattmp2021.bin: 365 records
+  wattmp_clim365.bin: 365 records
+  wattmp_clim366.bin: 366 records
+  climatology from 12,054 records: 130,039 usable cells of 316,800; cell means 0.00 .. 24.26 C
+[  2080 s] V7b RESULT: 1,452,868 source-days with runoff; package climatology == production map on 78.96 %; |diff| median 0.0000, p99 2.0697, max 11.9263 C; lookup distance median 8.7 km, max 362.4 km
+[  2080 s]    1075 sources differ by > 0.01 C on some day (production averages the values of neighbouring runoff cells over each cell's 3x3); largest:
+[  2080 s]     -163.525  54.975 day 223: package 0.698 production 12.625 (Q 1.5 m3/s)
+[  2080 s]     -147.625  61.025 day 184: package 1.114 production 11.236 (Q 10.4 m3/s)
+[  2080 s]     -147.675  60.975 day 184: package 21.359 production 11.236 (Q 7.4 m3/s)
+[  2080 s]     -163.575  55.025 day 223: package 18.588 production 9.643 (Q 1.4 m3/s)
+[  2080 s]     -163.475  55.025 day 223: package 18.588 production 9.643 (Q 0.1 m3/s)
+[  2080 s]     -151.825  59.725 day 189: package 3.430 production 11.947 (Q 0.2 m3/s)
+[  2159 s] V7c: raw path 13,913 sources; sampled at the nearest usable cell (median 11.1 km, max 362.4 km); 0 sources with missing temperature; 0 filled from a neighbour within 150 km, 0 left unknown
+sources: 13,913 (365 records); kept 11,331 carrying 54,392.8 m3/s mean; too far (> 95 km) 65 carrying 93.5; outside the domain 2,517 carrying 6,329.6
+conservation: delivered / kept = 1.000000000000  (81,968 receiving cells, 4,696 distinct destination cells)
+footprint area: median 2,138 km2, min 209 (unclipped 4 pi sigma^2 = 4,072 km2); 27 below 10 %
+snapped > 25 km: 8,821.8 m3/s from 578 sources; largest (check each lands in the right basin):
+   Anadyr                         176.225   64.875    1,973.6 m3/s snap   66.3 km ->   177.584   64.731
+   Skeena                        -129.875   54.225    1,619.9 m3/s snap   29.1 km ->   229.716   54.119
+   Nass                          -129.725   54.975      858.2 m3/s snap   53.2 km ->   229.562   54.730
+dropped as too far (within 285 km of water): 93.5 m3/s; largest:
+   src_171.025_69.025             171.025   69.025       11.5 m3/s  114.6 km from water
+   src_-124.675_50.075           -124.675   50.075       10.1 m3/s  112.8 km from water
+   src_-124.025_50.025           -124.025   50.025        7.7 m3/s  157.9 km from water
+dropped as outside the domain (within 285 km of water): 6,329.6 m3/s; largest:
+   src_-123.175_49.125           -123.175   49.125    3,563.0 m3/s  260.2 km from water
+   src_169.575_60.425             169.575   60.425      207.1 m3/s   76.1 km from water
+   src_169.725_60.425             169.725   60.425      206.1 m3/s   67.9 km from water
+temperature: 0.00 .. 23.41 C on receiving cells; heat out/in = 1.000000000000; cell-records with water of unknown temperature: 0 of 29,711,825
+[  2256 s] V7c RESULT: flux-weighted river temperature, annual mean: production 7.258 C, raw path 7.240 C; daily mean |diff| 0.483 C, max 1.149 C, corr 0.9989
+[  2256 s]    heat flux (sum Q T) raw/production: 1.1027; water raw/production 1.1055
+[  2256 s]    Jan-Mar: production  0.704 C, raw path  1.233 C
+[  2256 s]    Apr-Jun: production  8.065 C, raw path  8.115 C
+[  2256 s]    Jul-Sep: production 10.539 C, raw path 10.870 C
+[  2256 s]    Oct-Dec: production  1.792 C, raw path  2.215 C
+[  2256 s] done

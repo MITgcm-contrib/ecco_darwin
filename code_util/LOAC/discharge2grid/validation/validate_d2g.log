@@ -1,0 +1,174 @@
+grid $DATA/LOAC/westAO/WestAO_grid.nc: lon=lon lat=lat area=area mask=mask -> shape (680, 860) dims ('j', 'i')
+[      1 s] grid WestAO_grid.nc shape (680, 860) dims ('j', 'i'): 353,349 wet cells, mean cell 4.04 km, lon 170.96..237.11, lat 49.95..74.37
+[     18 s] V1: production script, WestAO 2015, water only, no extras
+[     86 s] V1: package, legacy runoff map
+  GloFas_2015: band rows 2178..2707, 698,306 candidate cells, 4,656 carry water
+sources: 4,656 (365 records); kept 3,776 carrying 36,147.9 m3/s mean; too far (> 95 km) 20 carrying 54.6; outside the domain 860 carrying 5,207.0
+conservation: delivered / kept = 1.000000000000  (79,791 receiving cells, 2,362 distinct destination cells)
+footprint area: median 2,101 km2, min 209 (unclipped 4 pi sigma^2 = 4,072 km2); 20 below 10 %
+snapped > 25 km: 1,866.5 m3/s from 156 sources; largest (check each lands in the right basin):
+   src_176.225_64.625             176.225   64.625      368.1 m3/s snap   61.3 km ->   177.507   64.587
+   src_-125.625_51.075           -125.625   51.075      277.0 m3/s snap   68.8 km ->   233.489   50.809
+   src_-130.925_55.825           -130.925   55.825      162.8 m3/s snap   41.8 km ->   228.406   55.846
+   src_-125.275_50.025           -125.275   50.025       85.2 m3/s snap   79.3 km ->   233.874   50.486
+   src_-125.325_50.025           -125.325   50.025       73.1 m3/s snap   76.6 km ->   233.874   50.486
+   src_-125.575_51.075           -125.575   51.075       60.6 m3/s snap   71.9 km ->   233.489   50.809
+   src_-134.075_58.425           -134.075   58.425       52.9 m3/s snap   27.0 km ->   225.865   58.184
+   src_-128.125_53.325           -128.125   53.325       44.3 m3/s snap   60.6 km ->   231.718   52.788
+dropped as too far (within 285 km of water): 54.6 m3/s; largest:
+   src_171.025_69.025             171.025   69.025       11.4 m3/s  114.6 km from water
+   src_-124.675_50.075           -124.675   50.075       10.1 m3/s  112.8 km from water
+   src_-124.025_50.025           -124.025   50.025        7.7 m3/s  157.9 km from water
+   src_-123.725_50.075           -123.725   50.075        6.4 m3/s  176.6 km from water
+   src_-123.825_50.175           -123.825   50.175        5.2 m3/s  167.0 km from water
+   src_-123.775_50.075           -123.775   50.075        3.5 m3/s  173.2 km from water
+   src_-124.825_50.175           -124.825   50.175        2.8 m3/s   98.6 km from water
+   src_-124.625_49.925           -124.625   49.925        2.0 m3/s  123.7 km from water
+dropped as outside the domain (within 285 km of water): 5,207.0 m3/s; largest:
+   src_-123.175_49.125           -123.175   49.125    3,551.6 m3/s  260.2 km from water
+   src_169.575_60.425             169.575   60.425      205.9 m3/s   76.1 km from water
+   src_170.675_68.875             170.675   68.875      194.7 m3/s  134.7 km from water
+   src_169.175_60.575             169.175   60.575      148.5 m3/s   98.2 km from water
+   src_166.625_69.475             166.625   69.475       83.6 m3/s  180.1 km from water
+   src_-124.575_49.875           -124.575   49.875       72.9 m3/s  129.7 km from water
+   src_-125.675_49.125           -125.675   49.125       41.7 m3/s  147.5 km from water
+   src_169.975_68.775             169.975   68.775       41.6 m3/s  151.3 km from water
+[    103 s] V1 RESULT: 365 vs 365 records; values differing: 0 of 213,452,000 -> BITWISE IDENTICAL
+[    103 s] V2: scan raw 2015, 40-90N
+  scanned glofas_original_2015.nc: 365 days, rows 0..1001 (lat 39.93..89.97)
+[    165 s]    raw lat 89.975 .. 39.925 (rows 0..1001), lon -179.975 .. 179.975, 365 days
+[    169 s]    map rows for the raw rows: 0..1001 (raw 0..1001); map cols = raw cols: True
+[    234 s] V2 RESULT: map cells 35,005 (243,739 m3/s); raw coastal 106,080 (335,965 m3/s)
+[    234 s]    both 26,229: map 211,225 vs raw 212,376 m3/s; ratio map/raw at shared cells: median 0.992828, p1 0.9913, p99 0.9988
+[    234 s]    only in map 8,776 (32,514 m3/s); only raw-coastal 79,851 (123,589 m3/s)
+[    234 s]    only-map: {'lon': '30.275', 'lat': '59.925', 'q_map': '1953.5', 'q_raw': '1964.5', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '150.675', 'lat': '71.425', 'q_map': '1885.5', 'q_raw': '1899.9', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '4.725', 'lat': '43.425', 'q_map': '1660.0', 'q_raw': '1663.1', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '12.375', 'lat': '44.975', 'q_map': '1484.8', 'q_raw': '1488.1', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '-78.925', 'lat': '51.225', 'q_map': '1239.3', 'q_raw': '1243.8', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '120.425', 'lat': '72.925', 'q_map': '1103.3', 'q_raw': '1112.0', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '-138.575', 'lat': '59.175', 'q_map': '822.7', 'q_raw': '827.2', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '165.125', 'lat': '62.475', 'q_map': '629.3', 'q_raw': '633.2', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '22.025', 'lat': '65.575', 'q_map': '570.5', 'q_raw': '574.3', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '-150.475', 'lat': '70.425', 'q_map': '448.5', 'q_raw': '451.8', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '10.425', 'lat': '59.625', 'q_map': '429.4', 'q_raw': '431.8', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-map: {'lon': '-78.825', 'lat': '51.375', 'q_map': '391.7', 'q_raw': '393.2', 'raw_is_sea': 0, 'sea_nbrs': 0}
+[    234 s]    only-raw: {'lon': '-136.075', 'lat': '68.925', 'q_map': '0.0', 'q_raw': '10081.7', 'raw_is_sea': 0, 'sea_nbrs': 2}
+[    234 s]    only-raw: {'lon': '54.375', 'lat': '68.275', 'q_map': '0.0', 'q_raw': '4952.9', 'raw_is_sea': 0, 'sea_nbrs': 1}
+[    234 s]    only-raw: {'lon': '161.675', 'lat': '69.475', 'q_map': '0.0', 'q_raw': '3776.5', 'raw_is_sea': 0, 'sea_nbrs': 2}
+[    234 s]    only-raw: {'lon': '40.025', 'lat': '64.675', 'q_map': '0.0', 'q_raw': '2612.1', 'raw_is_sea': 0, 'sea_nbrs': 2}
+[    234 s]    only-raw: {'lon': '30.225', 'lat': '59.925', 'q_map': '0.0', 'q_raw': '1964.3', 'raw_is_sea': 0, 'sea_nbrs': 1}
+[    234 s]    only-raw: {'lon': '4.775', 'lat': '43.375', 'q_map': '0.0', 'q_raw': '1662.6', 'raw_is_sea': 0, 'sea_nbrs': 2}
+[    234 s]    only-raw: {'lon': '4.825', 'lat': '43.375', 'q_map': '0.0', 'q_raw': '1662.5', 'raw_is_sea': 0, 'sea_nbrs': 3}
+[    234 s]    only-raw: {'lon': '4.825', 'lat': '43.325', 'q_map': '0.0', 'q_raw': '1662.4', 'raw_is_sea': 0, 'sea_nbrs': 6}
+[    234 s]    only-raw: {'lon': '12.425', 'lat': '44.975', 'q_map': '0.0', 'q_raw': '1488.0', 'raw_is_sea': 0, 'sea_nbrs': 1}
+[    234 s]    only-raw: {'lon': '12.475', 'lat': '44.975', 'q_map': '0.0', 'q_raw': '1487.9', 'raw_is_sea': 0, 'sea_nbrs': 2}
+[    234 s]    only-raw: {'lon': '12.525', 'lat': '44.975', 'q_map': '0.0', 'q_raw': '1487.8', 'raw_is_sea': 0, 'sea_nbrs': 5}
+[    234 s]    only-raw: {'lon': '119.625', 'lat': '73.125', 'q_map': '0.0', 'q_raw': '1159.1', 'raw_is_sea': 0, 'sea_nbrs': 3}
+[    234 s]    along-coast duplicates flagged: 731 cells, 79,417 m3/s; 3 of them are also in the runoff map (= double counted there)
+[    234 s]    raw coastal cells >=    1 m3/s:  15,175 carrying  94.6 %
+[    234 s]    raw coastal cells >=   10 m3/s:   2,260 carrying  84.1 %
+[    234 s]    raw coastal cells >=  100 m3/s:     324 carrying  67.9 %
+[    234 s]    raw coastal cells >= 1000 m3/s:      37 carrying  44.5 %
+[    235 s] V3: dead-end candidates vs the hand list
+[    236 s]    Ob              FOUND  nearest candidate     0.0 km (15,191 m3/s)
+[    236 s]    Anadyr          FOUND  nearest candidate     0.0 km (1,974 m3/s)
+[    236 s]    Kuskokwim       FOUND  nearest candidate     0.0 km (1,532 m3/s)
+[    236 s]    Yana            FOUND  nearest candidate    13.6 km (1,328 m3/s)
+[    236 s]    Thelon          FOUND  nearest candidate     6.1 km (1,269 m3/s)
+[    236 s]    Mezen           FOUND  nearest candidate     0.0 km (752 m3/s)
+[    236 s]    George          FOUND  nearest candidate     0.0 km (698 m3/s)
+[    236 s]    Kobuk           FOUND  nearest candidate     0.0 km (536 m3/s)
+[    236 s]    Koukdjuak       FOUND  nearest candidate     0.0 km (526 m3/s)
+[    236 s]    Arnaud          FOUND  nearest candidate     2.8 km (470 m3/s)
+[    236 s]    Kem             FOUND  nearest candidate     0.0 km (398 m3/s)
+[    236 s]    Noatak          FOUND  nearest candidate     0.0 km (368 m3/s)
+[    236 s]    Povungnituk     FOUND  nearest candidate     0.0 km (318 m3/s)
+[    236 s]    Anderson        FOUND  nearest candidate     0.0 km (254 m3/s)
+[    236 s]    Kanchalan       FOUND  nearest candidate     0.0 km (242 m3/s)
+[    236 s]    Skeena          FOUND  nearest candidate     0.0 km (1,620 m3/s)
+[    236 s]    Stikine         FOUND  nearest candidate     0.0 km (1,577 m3/s)
+[    236 s]    Copper          FOUND  nearest candidate     0.0 km (1,386 m3/s)
+[    236 s]    Nass            FOUND  nearest candidate     0.0 km (858 m3/s)
+[    236 s]    Nushagak        FOUND  nearest candidate     0.0 km (805 m3/s)
+[    236 s]    Taku            FOUND  nearest candidate     0.0 km (439 m3/s)
+[    236 s]    Kitlope         FOUND  nearest candidate     0.0 km (308 m3/s)
+[    236 s]    Wannock         FOUND  nearest candidate     0.0 km (279 m3/s)
+[    236 s]    Matanuska-Knik  FOUND  nearest candidate     0.0 km (245 m3/s)
+[    236 s]    Chilkat         FOUND  nearest candidate     0.0 km (221 m3/s)
+[    236 s]    Bella-Coola     FOUND  nearest candidate     0.0 km (208 m3/s)
+[    236 s]    Dean            FOUND  nearest candidate     0.0 km (200 m3/s)
+[    236 s] V3 RESULT: 136 candidates >= 100 m3/s within 250 km of the sea; 27 of 27 hand-triaged rivers among them
+[    236 s] V4: raw path on WestAO 2015
+sources: 14,087 (365 records); kept 11,487 carrying 70,369.0 m3/s mean; too far (> 95 km) 65 carrying 93.5; outside the domain 2,535 carrying 7,687.5
+conservation: delivered / kept = 1.000000000000  (81,971 receiving cells, 4,723 distinct destination cells)
+footprint area: median 2,137 km2, min 209 (unclipped 4 pi sigma^2 = 4,072 km2); 27 below 10 %
+snapped > 25 km: 8,936.6 m3/s from 585 sources; largest (check each lands in the right basin):
+   Anadyr                         176.225   64.875    1,973.6 m3/s snap   66.3 km ->   177.584   64.731
+   Skeena                        -129.875   54.225    1,619.9 m3/s snap   29.1 km ->   229.716   54.119
+   Nass                          -129.725   54.975      858.2 m3/s snap   53.2 km ->   229.562   54.730
+   Taku                          -133.925   58.525      439.3 m3/s snap   39.9 km ->   225.865   58.184
+   src_176.225_64.625             176.225   64.625      370.5 m3/s snap   61.3 km ->   177.507   64.587
+dropped as too far (within 285 km of water): 93.5 m3/s; largest:
+   src_171.025_69.025             171.025   69.025       11.5 m3/s  114.6 km from water
+   src_-124.675_50.075           -124.675   50.075       10.1 m3/s  112.8 km from water
+   src_-124.025_50.025           -124.025   50.025        7.7 m3/s  157.9 km from water
+   src_-123.775_50.075           -123.775   50.075        3.5 m3/s  173.2 km from water
+   src_-124.675_50.375           -124.675   50.375        3.4 m3/s  103.5 km from water
+dropped as outside the domain (within 285 km of water): 7,687.5 m3/s; largest:
+   src_-123.175_49.125           -123.175   49.125    3,563.0 m3/s  260.2 km from water
+   src_169.575_60.425             169.575   60.425      207.1 m3/s   76.1 km from water
+   src_169.625_60.425             169.625   60.425      206.9 m3/s   73.4 km from water
+   src_169.725_60.425             169.725   60.425      206.1 m3/s   67.9 km from water
+   src_170.675_68.875             170.675   68.875      196.2 m3/s  134.7 km from water
+[    250 s]    coastal+hand: 14,087 sources, 81,971 receiving cells, mean 70,369.0 m3/s
+sources: 13,913 (365 records); kept 11,331 carrying 54,392.8 m3/s mean; too far (> 95 km) 65 carrying 93.5; outside the domain 2,517 carrying 6,329.6
+conservation: delivered / kept = 1.000000000000  (81,968 receiving cells, 4,696 distinct destination cells)
+footprint area: median 2,138 km2, min 209 (unclipped 4 pi sigma^2 = 4,072 km2); 27 below 10 %
+snapped > 25 km: 8,821.8 m3/s from 578 sources; largest (check each lands in the right basin):
+   Anadyr                         176.225   64.875    1,973.6 m3/s snap   66.3 km ->   177.584   64.731
+   Skeena                        -129.875   54.225    1,619.9 m3/s snap   29.1 km ->   229.716   54.119
+   Nass                          -129.725   54.975      858.2 m3/s snap   53.2 km ->   229.562   54.730
+   Taku                          -133.925   58.525      439.3 m3/s snap   39.9 km ->   225.865   58.184
+   src_176.225_64.625             176.225   64.625      370.5 m3/s snap   61.3 km ->   177.507   64.587
+dropped as too far (within 285 km of water): 93.5 m3/s; largest:
+   src_171.025_69.025             171.025   69.025       11.5 m3/s  114.6 km from water
+   src_-124.675_50.075           -124.675   50.075       10.1 m3/s  112.8 km from water
+   src_-124.025_50.025           -124.025   50.025        7.7 m3/s  157.9 km from water
+   src_-123.775_50.075           -123.775   50.075        3.5 m3/s  173.2 km from water
+   src_-124.675_50.375           -124.675   50.375        3.4 m3/s  103.5 km from water
+dropped as outside the domain (within 285 km of water): 6,329.6 m3/s; largest:
+   src_-123.175_49.125           -123.175   49.125    3,563.0 m3/s  260.2 km from water
+   src_169.575_60.425             169.575   60.425      207.1 m3/s   76.1 km from water
+   src_169.725_60.425             169.725   60.425      206.1 m3/s   67.9 km from water
+   src_170.675_68.875             170.675   68.875      196.2 m3/s  134.7 km from water
+   src_169.175_60.575             169.175   60.575      149.4 m3/s   98.2 km from water
+[    262 s]    coastal-dups+hand: 13,913 sources, 81,968 receiving cells, mean 54,392.8 m3/s
+[    264 s] V4 RESULT coastal+hand: 70,369.0 m3/s vs production forcing 49,200.3 (+43.03 %) vs V1 runoff map only 36,147.9; daily corr with production 0.99699
+[    264 s] V4 RESULT coastal-dups+hand: 54,392.8 m3/s vs production forcing 49,200.3 (+10.55 %) vs V1 runoff map only 36,147.9; daily corr with production 0.99877
+[    272 s]    sparse file 137.2 MB (81,971 points) vs dense MITgcm file 853.8 MB (584,800 cells)
+[    274 s]    1-deg box lon  -137 lat  68: raw path - production =    +4789.4 m3/s
+[    274 s]    1-deg box lon  -137 lat  69: raw path - production =    +4199.1 m3/s
+[    274 s]    1-deg box lon  -136 lat  69: raw path - production =     +896.9 m3/s
+[    274 s]    1-deg box lon  -130 lat  53: raw path - production =     +395.3 m3/s
+[    274 s]    1-deg box lon  -178 lat  68: raw path - production =     +381.9 m3/s
+[    274 s]    1-deg box lon  -151 lat  70: raw path - production =     +324.4 m3/s
+[    274 s]    1-deg box lon  -139 lat  59: raw path - production =     -317.1 m3/s
+[    274 s]    1-deg box lon  -136 lat  58: raw path - production =     +262.9 m3/s
+[    274 s]    1-deg box lon  -134 lat  57: raw path - production =     +251.2 m3/s
+[    274 s]    1-deg box lon  -129 lat  52: raw path - production =     +240.5 m3/s
+[    274 s]    1-deg box lon  -131 lat  54: raw path - production =     +233.0 m3/s
+[    274 s]    1-deg box lon  -139 lat  58: raw path - production =     -221.4 m3/s
+[    274 s]    1-deg box lon  -132 lat  55: raw path - production =     +218.7 m3/s
+[    274 s]    1-deg box lon  -135 lat  57: raw path - production =     +217.7 m3/s
+[    274 s]    1-deg box lon  -179 lat  68: raw path - production =     +206.3 m3/s
+[    274 s] V5: dropout cells, good year vs dropout year
+[    284 s]    Olfusa           1990: raw Q    254.5 m3/s, cell is sea False, sea neighbours 3; raw 3x3 Q [[  6.,247.,247.], [  6.,254.,  1.], [  0.,  0.,  0.]]; map 3x3 [[  6.,  0.,  0.], [  0.,253.,  1.], [  0.,  0.,  0.]]
+[    294 s]    Olfusa           1991: raw Q    291.7 m3/s, cell is sea False, sea neighbours 3; raw 3x3 Q [[  6.,284.,284.], [  7.,292.,  1.], [  0.,  0.,  0.]]; map 3x3 [[6.,0.,0.], [0.,0.,1.], [0.,0.,0.]]
+[    301 s]    Pur              1998: raw Q   1056.5 m3/s, cell is sea False, sea neighbours 2; raw 3x3 Q [[1.000e+00,0.000e+00,0.000e+00], [1.000e+00,1.056e+03,0.000e+00], [1.056e+03,1.056e+03,0.000e+00]]; map 3x3 [[1.000e+00,0.000e+00,0.000e+00], [0.000e+00,1.049e+03,0.000e+00], [0.000e+00,0.000e+00,0.000e+00]]
+[    308 s]    Pur              1999: raw Q   1101.4 m3/s, cell is sea False, sea neighbours 2; raw 3x3 Q [[1.000e+00,0.000e+00,0.000e+00], [1.000e+00,1.101e+03,0.000e+00], [1.101e+03,1.101e+03,0.000e+00]]; map 3x3 [[1.,0.,0.], [0.,0.,0.], [0.,0.,0.]]
+[    323 s]    Chukotka -173.1  1991: raw Q     19.3 m3/s, cell is sea False, sea neighbours 0; raw 3x3 Q [[ 0., 0.,23.], [19.,19., 0.], [ 0., 0., 0.]]; map 3x3 [[ 0., 0.,22.], [ 0.,19., 0.], [ 0., 0., 0.]]
+[    338 s]    Chukotka -173.1  1992: raw Q     12.3 m3/s, cell is sea False, sea neighbours 0; raw 3x3 Q [[ 0., 0.,13.], [12.,12., 0.], [ 0., 0., 0.]]; map 3x3 [[ 0., 0.,13.], [ 0., 0., 0.], [ 0., 0., 0.]]
+[    348 s]    GoA -141.3       2007: raw Q     42.5 m3/s, cell is sea False, sea neighbours 2; raw 3x3 Q [[ 0., 1., 1.], [ 0.,42.,42.], [ 1., 1., 1.]]; map 3x3 [[ 0., 0., 0.], [ 0.,42., 0.], [ 0., 0., 0.]]
+[    358 s]    GoA -141.3       2008: raw Q     51.3 m3/s, cell is sea False, sea neighbours 2; raw 3x3 Q [[ 0., 1., 2.], [ 0.,51.,51.], [ 1., 1., 2.]]; map 3x3 [[0.,0.,0.], [0.,0.,0.], [0.,0.,0.]]
+[    358 s] done

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "discharge2grid"
+version = "0.2.0"
+description = "River discharge datasets onto ocean-model grids (MITgcm / ECCO), volume conserving"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.21", "scipy>=1.7", "netCDF4>=1.5"]
+
+[project.optional-dependencies]
+mds = ["MITgcmutils"]
+test = ["pytest"]
+
+[project.scripts]
+discharge2grid = "discharge2grid.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["discharge2grid*"]
