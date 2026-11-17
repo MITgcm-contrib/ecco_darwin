@@ -1,0 +1,26 @@
+# pkg/salt_plume -- Arctic brine rejection.
+#
+# Copied 2026-10-02 from
+#   ecco_darwin/regions/mac_delta/llc270/biogeochem_setup/AO_ecosystem/
+#     setup_files_v0/input/data.salt_plume
+# (byte-identical to the llc4320 AO_ecosystem variant -- both carry only
+# SPsalFRAC, no file references and nothing grid-dependent, which is why
+# this one of the four missing namelists was safe to carry across and
+# data.ctrl was not).
+#
+# SPsalFRAC is the fraction of the salt by-product of seaice GROWTH (not
+# melt) redistributed vertically by salt_plume_frac.F; pkg default is 1.0
+# (100% effect), range [0,1].
+#
+# Checked against this build rather than assumed: SALT_PLUME.h declares
+# SPsalFRAC as SPsalFRAC(2) only under SALT_PLUME_SPLIT_BASIN, and
+# darwin3_ckpt69k/pkg/salt_plume/SALT_PLUME_OPTIONS.h has that #undef
+# (as are SALT_PLUME_IN_LEADS and SALT_PLUME_VOLUME). So SPsalFRAC is a
+# SCALAR here and the assignment below sets it completely. Under the array
+# variant the same line would have set element 1 and silently left element
+# 2 at 1.0 -- half the domain at a different brine fraction, with no
+# warning. If SALT_PLUME_SPLIT_BASIN is ever defined, this file must
+# become two values.
+ &SALT_PLUME_PARM01
+ SPsalFRAC= 0.5D0,
+ &

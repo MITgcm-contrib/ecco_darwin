@@ -1,0 +1,222 @@
+ &PTRACERS_PARM01
+ PTRACERS_numInUse= 33,
+# 2026-10-02: was 1, inherited from the parent config. ptracers_check.F:157
+# makes `nIter0 < PTRACERS_Iter0 < nEndIter` a FATAL error, and the regional run starts
+# from ICs at nIter0=0, so 0 < 1 < nEndIter tripped it. Must track nIter0.
+# 0 is also correct for every later restart: on a pickup run nIter0 is large,
+# PTRACERS_Iter0=0 is simply < nIter0, which is the normal read-from-pickup
+# path and not an error. So this value never needs touching again.
+ PTRACERS_Iter0= 0,
+#
+ PTRACERS_advScheme(:)= 33*33,
+ PTRACERS_diffKh(:)= 33*0.E3,
+ PTRACERS_diffKr(:)= 33*1.E-5,
+# PTRACERS_useGMRedi is DELIBERATELY ABSENT, not set to .FALSE.
+#
+# It used to read `33*.TRUE.`, inherited from the parent. pan_AO runs (and
+# Nares at 1 km runs) with GMRedi OFF (see data.pkg), and ptracers_check.F:191
+# makes `PTRACERS_useGMRedi(i) .AND. .NOT.useGMRedi` fatal -- that was 33 of the
+# 34 errors that killed dt test 25222573.
+#
+# Omitting the line is better than writing .FALSE.: ptracers_readparms.F:126
+# defaults it per tracer to `useGMRedi` itself, so with no line here it tracks
+# data.pkg automatically and can never disagree with it. A hardcoded .FALSE.
+# would silently become wrong the day someone switches GMRedi back on.
+# Same reasoning applies to PTRACERS_useDWNSLP (=useDOWN_SLOPE) and
+# PTRACERS_useKPP (=useKPP), which are likewise left unset.
+#
+# 2026-10-22 Dustin (pan_AO window, "lets fix this in west AO and Nares"): EvPrRn = 0 for ALL 33 tracers. Unset means
+# freshwater (E, P and RUNOFF) carries the LOCAL surface value, so a tracer that also gets a darwin river flux is
+# double counted (pan_AO test 25301296: O2 955 vs river 457 at the Mackenzie delta). Backup: *.bak_pre_EvPrRn_20261022.
+ PTRACERS_EvPrRn( 1)= 0.,
+ PTRACERS_EvPrRn( 2)= 0.,
+ PTRACERS_EvPrRn( 3)= 0.,
+ PTRACERS_EvPrRn( 4)= 0.,
+ PTRACERS_EvPrRn( 5)= 0.,
+ PTRACERS_EvPrRn( 6)= 0.,
+ PTRACERS_EvPrRn( 7)= 0.,
+ PTRACERS_EvPrRn( 8)= 0.,
+ PTRACERS_EvPrRn( 9)= 0.,
+ PTRACERS_EvPrRn(10)= 0.,
+ PTRACERS_EvPrRn(11)= 0.,
+ PTRACERS_EvPrRn(12)= 0.,
+ PTRACERS_EvPrRn(13)= 0.,
+ PTRACERS_EvPrRn(14)= 0.,
+ PTRACERS_EvPrRn(15)= 0.,
+ PTRACERS_EvPrRn(16)= 0.,
+ PTRACERS_EvPrRn(17)= 0.,
+ PTRACERS_EvPrRn(18)= 0.,
+ PTRACERS_EvPrRn(19)= 0.,
+ PTRACERS_EvPrRn(20)= 0.,
+ PTRACERS_EvPrRn(21)= 0.,
+ PTRACERS_EvPrRn(22)= 0.,
+ PTRACERS_EvPrRn(23)= 0.,
+ PTRACERS_EvPrRn(24)= 0.,
+ PTRACERS_EvPrRn(25)= 0.,
+ PTRACERS_EvPrRn(26)= 0.,
+ PTRACERS_EvPrRn(27)= 0.,
+ PTRACERS_EvPrRn(28)= 0.,
+ PTRACERS_EvPrRn(29)= 0.,
+ PTRACERS_EvPrRn(30)= 0.,
+ PTRACERS_EvPrRn(31)= 0.,
+ PTRACERS_EvPrRn(32)= 0.,
+ PTRACERS_EvPrRn(33)= 0.,
+#
+ PTRACERS_names( 1)= 'DIC',
+ PTRACERS_names( 2)= 'NO3',
+ PTRACERS_names( 3)= 'NO2',
+ PTRACERS_names( 4)= 'NH4',
+ PTRACERS_names( 5)= 'PO4',
+ PTRACERS_names( 6)= 'FeT',
+ PTRACERS_names( 7)= 'SiO2',
+ PTRACERS_names( 8)= 'DOC',
+ PTRACERS_names( 9)= 'rDOC',
+ PTRACERS_names(10)= 'DON',
+ PTRACERS_names(11)= 'DOP',
+ PTRACERS_names(12)= 'DOFe',
+ PTRACERS_names(13)= 'POC',
+ PTRACERS_names(14)= 'PON',
+ PTRACERS_names(15)= 'POP',
+ PTRACERS_names(16)= 'POFe',
+ PTRACERS_names(17)= 'POSi',
+ PTRACERS_names(18)= 'PIC',
+ PTRACERS_names(19)= 'ALK',
+ PTRACERS_names(20)= 'O2',
+ PTRACERS_names(21)= 'CDOM',
+ PTRACERS_names(22)= 'c01',
+ PTRACERS_names(23)= 'c02',
+ PTRACERS_names(24)= 'c03',
+ PTRACERS_names(25)= 'c04',
+ PTRACERS_names(26)= 'c05',
+ PTRACERS_names(27)= 'c06',
+ PTRACERS_names(28)= 'c07',
+ PTRACERS_names(29)= 'Chl01',
+ PTRACERS_names(30)= 'Chl02',
+ PTRACERS_names(31)= 'Chl03',
+ PTRACERS_names(32)= 'Chl04',
+ PTRACERS_names(33)= 'Chl05',
+#
+ PTRACERS_units( 1)= 'uM C'
+ PTRACERS_units( 2)= 'uM N'
+ PTRACERS_units( 3)= 'uM N'
+ PTRACERS_units( 4)= 'uM N'
+ PTRACERS_units( 5)= 'uM P'
+ PTRACERS_units( 6)= 'uM Fe'
+ PTRACERS_units( 7)= 'uM Si'
+ PTRACERS_units( 8)= 'uM C'
+ PTRACERS_units( 9)= 'uM C'
+ PTRACERS_units(10)= 'uM N'
+ PTRACERS_units(11)= 'uM P'
+ PTRACERS_units(12)= 'uM Fe'
+ PTRACERS_units(13)= 'uM C'
+ PTRACERS_units(14)= 'uM N'
+ PTRACERS_units(15)= 'uM P'
+ PTRACERS_units(16)= 'uM Fe'
+ PTRACERS_units(17)= 'uM Si'
+ PTRACERS_units(18)= 'uM C'
+ PTRACERS_units(19)= 'meq/m^3'
+ PTRACERS_units(20)= 'uM O'
+ PTRACERS_units(21)= 'uM C'
+ PTRACERS_units(22)= 'uM C'
+ PTRACERS_units(23)= 'uM C'
+ PTRACERS_units(24)= 'uM C'
+ PTRACERS_units(25)= 'uM C'
+ PTRACERS_units(26)= 'uM C'
+ PTRACERS_units(27)= 'uM C'
+ PTRACERS_units(28)= 'uM C'
+ PTRACERS_units(29)= 'mg/m^3'
+ PTRACERS_units(30)= 'mg/m^3'
+ PTRACERS_units(31)= 'mg/m^3'
+ PTRACERS_units(32)= 'mg/m^3'
+ PTRACERS_units(33)= 'mg/m^3'
+#
+# ---- Nares 2026-10-07: copied from pan_AO input_darwin/data.ptracers. ----
+# Same parent (LLC270 V5r1, 31 tracers) and same 33-tracer AO_ecosystem layout,
+# so the name-matching below carries over unchanged; only the parent pickup
+# iteration differs: 0000604872 = 2015-01-01 (the shared parent extraction's
+# nIter0, parent_V5r1_westAO_nares). The pickup_*.0000604872.data files are
+# the parent fields interpolated onto the Nares grid (not made yet), with rDOC
+# and CDOM derived from DOC as in pan_AO (gen_derived_tracer_pickup.py).
+#
+# ---- PTRACERS_initialFile: NAME-MATCHED to the parent LLC270 v5r1 ----
+# Generated by build_ptracer_map.py -- DO NOT hand-edit, and DO NOT
+# 'simplify' to initialFile(n)='pickup_pTr<n>'.  pan_AO inserts rDOC at
+# index 9 and CDOM at index 21, so 23 of these 31 entries are
+# deliberately index-shifted: pickup_pTrNN is named for the PARENT's
+# slot NN, not pan_AO's.  Re-run build_ptracer_map.py to regenerate.
+#
+# DIC <- parent pTr01 (DIC)
+ PTRACERS_initialFile( 1)= 'pickup_pTr01.0000604872.data',
+# NO3 <- parent pTr02 (NO3)
+ PTRACERS_initialFile( 2)= 'pickup_pTr02.0000604872.data',
+# NO2 <- parent pTr03 (NO2)
+ PTRACERS_initialFile( 3)= 'pickup_pTr03.0000604872.data',
+# NH4 <- parent pTr04 (NH4)
+ PTRACERS_initialFile( 4)= 'pickup_pTr04.0000604872.data',
+# PO4 <- parent pTr05 (PO4)
+ PTRACERS_initialFile( 5)= 'pickup_pTr05.0000604872.data',
+# FeT <- parent pTr06 (FeT)
+ PTRACERS_initialFile( 6)= 'pickup_pTr06.0000604872.data',
+# SiO2 <- parent pTr07 (SiO2)
+ PTRACERS_initialFile( 7)= 'pickup_pTr07.0000604872.data',
+# DOC <- parent pTr08 (DOC)
+ PTRACERS_initialFile( 8)= 'pickup_pTr08.0000604872.data',
+# rDOC <- DERIVED, no parent source: a fraction of the
+#   already-downscaled parent DOC, per the 2026-09-30 decision.
+#   Built by gen_derived_tracer_pickup.py; the same fraction is
+#   used for the OBCS boundary value so IC and BC stay
+#   consistent. Re-run that script to change the fraction.
+ PTRACERS_initialFile( 9)= 'pickup_rDOC.0000604872.data',
+# DON <- parent pTr09 (DON), index-shifted -1
+ PTRACERS_initialFile(10)= 'pickup_pTr09.0000604872.data',
+# DOP <- parent pTr10 (DOP), index-shifted -1
+ PTRACERS_initialFile(11)= 'pickup_pTr10.0000604872.data',
+# DOFe <- parent pTr11 (DOFe), index-shifted -1
+ PTRACERS_initialFile(12)= 'pickup_pTr11.0000604872.data',
+# POC <- parent pTr12 (POC), index-shifted -1
+ PTRACERS_initialFile(13)= 'pickup_pTr12.0000604872.data',
+# PON <- parent pTr13 (PON), index-shifted -1
+ PTRACERS_initialFile(14)= 'pickup_pTr13.0000604872.data',
+# POP <- parent pTr14 (POP), index-shifted -1
+ PTRACERS_initialFile(15)= 'pickup_pTr14.0000604872.data',
+# POFe <- parent pTr15 (POFe), index-shifted -1
+ PTRACERS_initialFile(16)= 'pickup_pTr15.0000604872.data',
+# POSi <- parent pTr16 (POSi), index-shifted -1
+ PTRACERS_initialFile(17)= 'pickup_pTr16.0000604872.data',
+# PIC <- parent pTr17 (PIC), index-shifted -1
+ PTRACERS_initialFile(18)= 'pickup_pTr17.0000604872.data',
+# ALK <- parent pTr18 (ALK), index-shifted -1
+ PTRACERS_initialFile(19)= 'pickup_pTr18.0000604872.data',
+# O2 <- parent pTr19 (O2), index-shifted -1
+ PTRACERS_initialFile(20)= 'pickup_pTr19.0000604872.data',
+# CDOM <- DERIVED, no parent source: a fraction of the
+#   already-downscaled parent DOC, per the 2026-09-30 decision.
+#   Built by gen_derived_tracer_pickup.py; the same fraction is
+#   used for the OBCS boundary value so IC and BC stay
+#   consistent. Re-run that script to change the fraction.
+ PTRACERS_initialFile(21)= 'pickup_CDOM.0000604872.data',
+# c01 <- parent pTr20 (c01), index-shifted -2
+ PTRACERS_initialFile(22)= 'pickup_pTr20.0000604872.data',
+# c02 <- parent pTr21 (c02), index-shifted -2
+ PTRACERS_initialFile(23)= 'pickup_pTr21.0000604872.data',
+# c03 <- parent pTr22 (c03), index-shifted -2
+ PTRACERS_initialFile(24)= 'pickup_pTr22.0000604872.data',
+# c04 <- parent pTr23 (c04), index-shifted -2
+ PTRACERS_initialFile(25)= 'pickup_pTr23.0000604872.data',
+# c05 <- parent pTr24 (c05), index-shifted -2
+ PTRACERS_initialFile(26)= 'pickup_pTr24.0000604872.data',
+# c06 <- parent pTr25 (c06), index-shifted -2
+ PTRACERS_initialFile(27)= 'pickup_pTr25.0000604872.data',
+# c07 <- parent pTr26 (c07), index-shifted -2
+ PTRACERS_initialFile(28)= 'pickup_pTr26.0000604872.data',
+# Chl01 <- parent pTr27 (Chl01), index-shifted -2
+ PTRACERS_initialFile(29)= 'pickup_pTr27.0000604872.data',
+# Chl02 <- parent pTr28 (Chl02), index-shifted -2
+ PTRACERS_initialFile(30)= 'pickup_pTr28.0000604872.data',
+# Chl03 <- parent pTr29 (Chl03), index-shifted -2
+ PTRACERS_initialFile(31)= 'pickup_pTr29.0000604872.data',
+# Chl04 <- parent pTr30 (Chl04), index-shifted -2
+ PTRACERS_initialFile(32)= 'pickup_pTr30.0000604872.data',
+# Chl05 <- parent pTr31 (Chl05), index-shifted -2
+ PTRACERS_initialFile(33)= 'pickup_pTr31.0000604872.data',
+ &

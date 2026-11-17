@@ -1,0 +1,68 @@
+# ARCH TEST (physics only): ptracers/gchem(darwin)/radtrans/oasim switched OFF at run time;
+# iceplume OFF too (2026-10-07): test 25242078 blew up in 7 steps at the Humboldt plume cell
+# (i,j)=(551,111) where the January discharge is ~1e-13 m3/s (cone plume r_sg ~ 2.5e-7 m). Plumes do
+# not matter for arches; runoffQsg will be thresholded before plumes go back on.
+# the build keeps them, so no recompile. Everything else as input/data.pkg.
+# Nares 1-km regional run (2026-10-07). Adapted from pan_AO input/data.pkg.
+# Comments below that are not marked 'Nares' are inherited from pan_AO
+# (dates, job ids and file names in them refer to pan_AO).
+#
+# Packages
+# Combined physics (GoM_1km) + BGC/seaice (AO_ecosystem setup_files_v0)
+# use-flags -- this is already the union (verified: every GoM_1km-enabled
+# package name here too), copied verbatim from
+# biogeochem_setup/AO_ecosystem/setup_files_v0/input/data.pkg.
+#
+# 2026-10-02: THREE SWITCHES TURNED OFF. The verbatim copy above enabled four
+# packages whose namelists AO_ecosystem ships and pan_AO never copied; 29 of
+# 413 ranks aborted in GM_READPARMS with "File data.gmredi does not exist!"
+# (dt test 25221002). A copied data.pkg is a list of promises about files that
+# must also be copied. The four were audited individually, not reinstated as a
+# block -- see DECISIONS.md 2026-10-02. All four remain COMPILED IN
+# (code_darwin/packages.conf), so these are runtime switches only; no rebuild.
+#
+#   GMRedi  -> off. AO_ecosystem's data.gmredi sets GM_background_K and
+#     GM_isopycK to 100 m^2/s, a mesoscale parameterization sized for a COARSE
+#     model. pan_AO is ~4-5 km, eddy-permitting against an Arctic Rossby
+#     radius of ~5-10 km, so GM at that strength would damp the very eddies
+#     the grid exists to resolve. Dropping it also matches kerguelen, which
+#     has run GMRedi off through 48% of a 3-year integration on a PARM01
+#     mixing block identical to this one (Leith biharmonic viscC4Leith=1.5,
+#     no explicit diffK, 7th-order temp/salt advection). User decision.
+#   CTRL    -> off. This is a FORWARD run, not an adjoint/assimilation one,
+#     and AO_ecosystem's data.ctrl carries 12 file references to mac_delta's
+#     46x68 control vector ("xx*00.46x68_Mac_Delta"). Copying it verbatim
+#     would aim pan_AO at another region's grid -- the identical trap as
+#     iron_dust_46x68_Mac.
+#   SMOOTH  -> off. Only meaningful alongside CTRL.
+#
+# SALT_PLUME stays ON and data.salt_plume is now copied in: Arctic brine
+# rejection is named in this project's scope, the namelist is 3 lines with no
+# file or grid references, and SPsalFRAC is a SCALAR in this build
+# (SALT_PLUME_SPLIT_BASIN is #undef in ckpt69k's SALT_PLUME_OPTIONS.h), so
+# AO_ecosystem's scalar assignment sets it fully rather than leaving a second
+# basin element at its 1.0 default.
+ &PACKAGES
+ useEXF   = .TRUE.,
+ useCAL   = .TRUE.,
+ useGMRedi= .FALSE.,
+ useSeaice= .TRUE.,
+ useGGL90 = .TRUE.,
+ useCTRL  = .FALSE.,
+ useSMOOTH= .FALSE.,
+ useSALT_PlUME=.TRUE.,
+ useDiagnostics=.TRUE.,
+ useOBCS  = .TRUE.,
+ usePTRACERS   = .TRUE.,
+ useGCHEM      = .TRUE.,
+ useRADTRANS   = .TRUE.,
+# OASIM switch added 2026-09-30. RADTRANS was already on but there was no
+# irradiance source behind it and no data.radtrans on disk, so the run would
+# have aborted in RADTRANS_READPARMS' OPEN_COPY_DATA_FILE before reaching the
+# first timestep. Matches v06/1deg input_darwin_v4r5_v2_AO/data.pkg.
+# (pkg/sun has no use-flag -- it is compile-time only.)
+ useOASIM      = .TRUE.,
+# Nares: Petermann cavity (static) and Humboldt/Ellesmere plumes.
+ useShelfIce   = .TRUE.,
+ useICEPLUME   = .FALSE.,
+ /

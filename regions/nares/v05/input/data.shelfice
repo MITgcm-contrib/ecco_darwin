@@ -1,0 +1,21 @@
+# Nares 2026-10-07: Petermann floating tongue as a STATIC pkg/shelfice cavity
+# (no remeshing: shelfice_check rejects remeshing with select_rStar > 0).
+# Free-surface set-up matches upstream verification isomip (select_rStar=2,
+# nonlinFreeSurf=4, with SHELFICEloadAnomalyFile); drag and velocity-
+# dependent exchange as verification shelfice_2d_remesh.
+#
+# TODO before the first run: make Nares_shelficeLoadAnomaly.bin (pressure
+# load of the ice minus a reference-density column, from the IC T/S with
+# JMD95Z; real*8, 1120x360). Without it the cavity starts with a spurious
+# pressure gradient.
+ &SHELFICE_PARM01
+ SHELFICEtopoFile        = 'Nares_shelficeTopo.bin',
+ SHELFICEloadAnomalyFile = 'Nares_shelficeLoadAnomaly.bin',
+ SHELFICEboundaryLayer   = .TRUE.,
+ SHELFICEconserve        = .TRUE.,
+ SHELFICEuseGammaFrict   = .TRUE.,
+ SHELFICEDragQuadratic   = 0.0015,
+ shiCdrag                = 0.0015,
+ SHELFICEselectDragQuadr = 2,
+ SHELFICEwriteState      = .TRUE.,
+ &

@@ -1,0 +1,88 @@
+# SEAICE parameters
+ &SEAICE_PARM01
+# OW: Additional entries are required to make  
+#     the setup with c68g as close as possible  
+#     to Hong's original V5Alph using c64x.  
+#     Many of the changes result from new default values  
+#     and/or newly introduced parameters.  
+
+# OW: default is 0.001 for checkpoint68g. 
+      SEAICE_drag=0.002,
+
+# OW: SEAICEuseStrImpCpl does not exist in c64x, but 
+#     V5Alpha effectively used SEAICEuseStrImpCpl=.FALSE., which is the defult value in c68g. 
+#     SEAICEuseStrImpCpl=.FALSE.,
+
+# OW: default for SEAICEetaZmethod is 3 in c68g. Set it to 0 to be consistent with V5Alpha
+      SEAICEetaZmethod=0,
+
+# OW: default for SEAICEscaleSurfStress is TRUE in c68g. Set it to FALSE to be consistent with V5Alpha
+      SEAICEscaleSurfStress=.FALSE.,
+
+# OW: default for SEAICEaddSnowMass is TRUE in c68g. Set it to FALSE to be consistent with V5Alpha
+      SEAICEaddSnowMass=.FALSE.,
+
+# OW: SEAICE_waterDrag has different units between c68g and c64x
+#     SEAICE_waterDrag*rhoConst in c68g is the same as SEAICE_waterDrag in c64x (5.5)
+#     So, SEAICE_waterDrag in c68g=5.5/1029 = 0.005345
+      SEAICE_waterDrag = 0.005345,  
+
+# OW: SEAICE_useMultDimSnow affects the thermodyn. The default is TRUE for c68g  but FALSE for V5Alpha.
+#     Note that we are using different seaice_growth code.
+      SEAICE_useMultDimSnow=.FALSE.
+
+      SEAICEuseTILT=.FALSE.,
+      SEAICEpresH0=2.,
+      SEAICEpresPow0=1,
+      SEAICEpresPow1=3,
+      SEAICE_multDim=1,
+      SEAICErestoreUnderIce=.TRUE.,
+      SEAICE_area_max=0.95,      
+#for backward compatibility (before 2011 june 19, those were the defaults)
+#     SEAICE_area_floor=0.15,
+#     SEAICE_area_reg=0.15,
+      SEAICE_salt0=4.,
+# for long time step:
+#      SEAICE_deltaTevp   = 720.,
+# for regular time step:
+#      SEAICE_deltaTevp   = 60.,
+# for lsr:
+      LSR_ERROR          = 2.e-4,
+      SEAICEuseDYNAMICS  = .TRUE.,
+# BAD OPTION -- DO NOT USE -- SEAICE_maskRHS     = .TRUE.,
+      MIN_ATEMP          = -40.,
+      MIN_TICE           = -40.,
+      SEAICEadvScheme    = 30,
+      SEAICEuseFluxForm = .TRUE.,
+      SEAICEadvSnow      = .TRUE.,
+#      SEAICEadvSalt      = .TRUE.,
+      SEAICEdiffKhHeff   = 400.,
+      SEAICEdiffKhArea   = 400.,
+      SEAICEdiffKhSnow   = 400.,
+#      SEAICEdiffKhSalt   = 400.,
+      SEAICEuseFlooding  = .TRUE.,
+      SEAICE_mcPheePiston= 3.858024691358025E-05,
+      SEAICE_frazilFrac  = 1.,
+      SEAICE_mcPheeTaper = 0.,
+      SEAICE_areaLossFormula=2,
+      SEAICEheatConsFix  = .TRUE.,
+      SEAICE_tempFrz0    = -1.96,
+      SEAICE_dTempFrz_dS = 0.,
+      SEAICEuseMetricTerms = .TRUE.,
+      SEAICE_no_slip     = .FALSE.,
+      SEAICE_clipVelocities = .TRUE.,
+#take 33% out of (1-albedo)
+      SEAICE_dryIceAlb   = 0.84,
+      SEAICE_wetIceAlb   = 0.78,
+      SEAICE_drySnowAlb  = 0.90,
+      SEAICE_wetSnowAlb  = 0.8 ,
+#default albedos
+      SEAICE_dryIceAlb_south   = 0.75
+      SEAICE_wetIceAlb_south   = 0.66
+      SEAICE_drySnowAlb_south  = 0.84
+      SEAICE_wetSnowAlb_south  = 0.7 
+ /
+#
+ &SEAICE_PARM02
+ /
+

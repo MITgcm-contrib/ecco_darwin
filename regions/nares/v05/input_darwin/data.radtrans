@@ -1,0 +1,46 @@
+#######################
+# nares radtrans configuration (copied from pan_AO; same Nr=90 delR, so RT_kmax=38 -> 457.0 m holds; verified 2026-10-07).
+#
+# Adapted from ecco_darwin v06/1deg input_darwin_v4r5_v2_AO/data.radtrans
+# (same file as the working local deployment at
+# /nobackupp19/dcarrol2/v06_1deg_latest_AO/darwin3/run/data.radtrans).
+# Everything is verbatim from that reference EXCEPT RT_kmax -- see below.
+#
+# Irradiance comes from pkg/oasim (RADTRANS_FORCING_PARAMS left empty, so no
+# RT_Ed*/RT_Es* EXF files are read); sea-ice area comes from pkg/seaice.
+#
+# The 13 wavebands match RADTRANS_SIZE.h nlam=13 (14 edges -> 13 bands).
+#######################
+ &RADTRANS_FORCING_PARAMS
+# use oasim pkg for irradiances
+#
+# use seaice pkg for area
+ /
+ &RADTRANS_INTERP_PARAMS
+ /
+########################
+ &RADTRANS_PARAMS
+ RT_useOASIMrmud=.TRUE.,
+ RT_useMeanCosSolz=.FALSE.,
+#
+# RT_kmax is a LEVEL COUNT, not a depth, so it does NOT transfer between
+# grids. The 1deg reference uses a value of 22, but its delR starts at 10 m and
+# level 22 sits at 441.7 m. pan_AO's delR starts at 1.00 m over Nr=90, where
+# level 22 is only 105.2 m -- copying 22 verbatim would have solved radiative
+# transfer over the top 105 m and left the rest of the euphotic zone dark.
+# 38 reproduces the reference's DEPTH (457.0 m vs 441.7 m), which is the thing
+# the reference was actually choosing.
+#
+# pan_AO depth-vs-level, for whoever revisits this:
+#   k=22 -> 105.2 m    k=29 -> 219.2 m    k=33 -> 312.1 m    k=38 -> 457.0 m
+# A cheaper defensible alternative is k=29 (~220 m), below the 1% light depth
+# almost everywhere in the Arctic; that would cut radtrans cost by ~24%
+# relative to 38. Chosen 38 to stay faithful to the reference's depth.
+ RT_kmax=38,
+ RT_wbEdges=400,412.5,437.5,462.5,487.5,512.5,537.5,562.5,587.5,612.5,637.5,662.5,687.5,700,
+ RT_wbRefWLs=400,425,450,475,500,525,550,575,600,625,650,675,700,
+ RT_oasimWgt=0.5,12*1.,
+# under-ice light + ice-shelf mask: downscaling/shared_code/radtrans_underice/README.md
+# all other RT_ice*/RT_snow*/RT_pond* at their literature defaults (README table)
+ RT_iceTransmit=.TRUE.,
+ /

@@ -1,0 +1,41 @@
+# ARCH TEST (physics only) diagnostics. Do not list BGC/radtrans fields: their packages are off
+# and an unknown diagnostic stops the model.
+ &DIAGNOSTICS_LIST
+# arch formation/collapse: 3-hourly ice state
+  frequency(1) = 10800.,
+   fields(1:4,1) = 'SIuice  ','SIvice  ','SIarea  ','SIheff  ',
+   filename(1) = 'diags/3hourly/SIdyn',
+# ice deformation and stress
+  frequency(2) = 86400.,
+   fields(1:6,2) = 'SIshear ','SIdelta ','SItensil','SIsig1  ','SIsig2  ','SIhsnow ',
+   filename(2) = 'diags/daily/SIdeform',
+# surface ocean
+  frequency(3) = 86400.,
+   fields(1:3,3) = 'ETAN    ','MXLDEPTH','oceQnet ',
+   filename(3) = 'diags/daily/surf',
+# surface T and S (top level only)
+  frequency(6) = 86400.,
+   fields(1:2,6) = 'THETA   ','SALT    ',
+   levels(1,6) = 1.,
+   filename(6) = 'diags/daily/surfTS',
+# Petermann cavity and Humboldt plumes
+  frequency(4) = 86400.,
+   fields(1:4,4) = 'SHIfwFlx','SHIhtFlx','SHIuStar','SHIgammT',
+   filename(4) = 'diags/daily/SHI',
+# monthly 3-D state
+  frequency(5) = 2592000.,
+   fields(1:4,5) = 'THETA   ','SALT    ','UVEL    ','VVEL    ',
+   filename(5) = 'diags/monthly/state',
+# 6-hourly means (same list as run_arch_F / PW1 / HO2)
+  frequency(7) = 21600.,
+   fields(1:12,7) = 'EXFuwind','EXFvwind','SItaux  ','SItauy  ','oceTAUX ','oceTAUY ',
+                    'SIpress ','SIzeta  ','SIuice  ','SIvice  ','SIheff  ','SIarea  ',
+   filename(7) = 'diags/6hourly/SIforce',
+# tides: hourly means (harmonic analysis of M2/K1 vs FES2022; tidal ice motion)
+# 2026-11-12 Y69m (as Y69h): sea-ice melt/growth terms to find the spring Kennedy melt source
+  frequency(11) = 86400.,
+   fields(1:7,11) = 'SIdHbOCN','SIdHbATC','SIdHbATO','SIaQbOCN','SIdAbOCN','SIdAbATC','SIdAbATO',
+   filename(11) = 'diags/daily/SImelt',
+ &
+ &DIAG_STATIS_PARMS
+ /

@@ -1,0 +1,170 @@
+# Nares 1-km regional run (2026-10-07). Adapted from pan_AO input/data.seaice.
+# Comments below that are not marked 'Nares' are inherited from pan_AO
+# (dates, job ids and file names in them refer to pan_AO).
+#
+# SEAICE parameters -- copied verbatim from
+# mac_delta/llc4320/AO_ecosystem/input/data.seaice, per DECISIONS.md's
+# explicit instruction to use THIS project's sea-ice reference (dynamically
+# load-bearing for pan_AO), not kerguelen's vestigial plain-parent copy.
+ &SEAICE_PARM01
+      HO=2.0,
+# run_arch6m_D (stage_arch_6m_v2.sh, 2026-10-09)
+      SEAICEuseTILT=.FALSE.,
+      SEAICEpresH0=2.,
+# 2026-10-31 Y16p0 (Dustin: do the recommended): thin ice weaker, strength ~ h^2 below presH0 (was linear)
+      SEAICEpresPow0=2,
+# 2026-11-01 Y55c (Dustin: do the recommended): thick ice linear above presH0 (as Y16p1)
+      SEAICEpresPow1=1,
+      SEAICE_multDim=1,
+      SEAICErestoreUnderIce=.TRUE.,
+# Baseline 2026-10-19 (Dustin "go"): area_max 0.95 -> 0.98 (AM98 adopted)
+      SEAICE_area_max=0.98,
+# 2026-10-26 arch test Ps82 (Dustin: do both): P* 27500 (default) -> 82500 (3x), restart Mar 1 from run_arch_ICTs to Aug 31
+# 2026-11-01 Y55c: P* 82500 -> 55000 (2x default)
+# 2026-11-03 Y69c (Dustin: yes): P* 55000 -> 68750 (2.5x default)
+      SEAICE_strength=6.875E4,
+#for backward compatibility (before 2011 june 19, those were the defaults)
+#     SEAICE_area_floor=0.15,
+#     SEAICE_area_reg=0.15,
+      SEAICE_salt0=4.,
+# for long time step:
+#      SEAICE_deltaTevp   = 720.,
+# for regular time step:
+#      SEAICE_deltaTevp   = 60.,
+# for lsr:
+      LSR_ERROR          = 2.e-4,
+      SEAICEuseDYNAMICS  = .TRUE.,
+# BAD OPTION -- DO NOT USE -- SEAICE_maskRHS     = .TRUE.,
+      MIN_ATEMP          = -40.,
+      MIN_TICE           = -40.,
+# 2026-10-29 Y16 (Dustin yes): advScheme 7 -> 77 (hot-cell fix, Ps55c)
+      SEAICEadvScheme    = 77,
+      SEAICEuseFluxForm = .TRUE.,
+      SEAICEadvSnow      = .TRUE.,
+#      SEAICEadvSalt      = .TRUE.,
+      SEAICEdiffKhHeff   = 0.,
+      SEAICEdiffKhArea   = 0.,
+      SEAICEdiffKhSnow   = 0.,
+#      SEAICEdiffKhSalt   = 400.,
+      SEAICEuseFlooding  = .TRUE.,
+      SEAICE_mcPheePiston= 3.858024691358025E-05,
+      SEAICE_frazilFrac  = 1.,
+      SEAICE_mcPheeTaper = 0.,
+      SEAICE_areaLossFormula=2,
+      SEAICEheatConsFix  = .TRUE.,
+      SEAICE_tempFrz0    = -1.96,
+      SEAICE_dTempFrz_dS = 0.,
+      SEAICEuseMetricTerms = .TRUE.,
+      SEAICE_no_slip     = .FALSE.,
+      SEAICE_clipVelocities = .TRUE.,
+#take 33% out of (1-albedo)
+      SEAICE_dryIceAlb   = 0.84,
+      SEAICE_wetIceAlb   = 0.78,
+      SEAICE_drySnowAlb  = 0.90,
+      SEAICE_wetSnowAlb  = 0.8 ,
+#default albedos
+      SEAICE_dryIceAlb_south   = 0.75
+      SEAICE_wetIceAlb_south   = 0.66
+      SEAICE_drySnowAlb_south  = 0.84
+      SEAICE_wetSnowAlb_south  = 0.7
+#
+# ---------------------------------------------------------------------------
+# 2026-10-03: SEA-ICE INITIAL CONDITION. Added after run 25225418 showed the
+# model was starting 1 January in the Arctic with ZERO ice and freezing
+# 1.55e12 m^3 of it into existence on day 1 -- which, under
+# useRealFreshWaterFlux=.TRUE., removed 16.4 Sv of liquid water and WAS the
+# whole unexplained volume leak (measured oceFWflx sink: 15.44 Sv).
+#
+# Nothing here was broken; nothing was ever read. The IC
+# (forcings/pickups/pickup_seaice.0000736344.data) is correct and is staged
+# into every run dir, but SEAICE never opens it:
+#
+#   seaice_init_varia.F:250  calls SEAICE_READ_PICKUP only if NOT
+#                            ( startTime==baseTime AND nIter0==0 AND
+#                              pickupSuff==' ' ). All three hold here, so it
+#                            is skipped and the cold-start ELSE branch runs.
+#   that ELSE branch         sets HEFF = SEAICE_initialHEFF*HEFFM, and
+#                            seaice_readparms.F:380 defaults
+#                            SEAICE_initialHEFF to ZERO. It then reads the
+#                            five files below only if they are non-blank, and
+#                            seaice_readparms.F:512-517 defaults every one of
+#                            them to ' '. So: no ice.
+#
+# Do NOT "fix" this with pickupSuff or nIter0 instead:
+#   pickupSuff='0000736344' would flip the gate above, but it ALSO redirects
+#     the MAIN pickup read to pickup.0000736344.data, which does not exist --
+#     this configuration builds its ocean state from per-field
+#     hydrogThetaFile/hydrogSaltFile/uVelInitFile/vVelInitFile/pSurfInitFile
+#     in PARM05, not from a true MITgcm pickup. Fatal, for an unrelated reason.
+#   nIter0=736344 would break the OBCS record alignment that
+#     diag_model_vs_obcs_day1.py verified at offset 0 (0.046-0.185% per cell).
+#
+# These five binaries are single-field, big-endian float64, 1680x1680,
+# 22,579,200 bytes each, split out of the 6-record pickup by gen_seaice_ic.py.
+# READ_FLD_XY_RL honours readBinaryPrec, which PARM05 sets to 64 -- a 32-bit
+# file here would NOT error, it would silently produce garbage, which is why
+# the generator asserts sizes and reads every file back before exiting.
+#
+# siTICE is deliberately absent: the cold-start path offers no namelist slot
+# for ice surface temperature (seaice_readparms.F:187 lists only Area/Heff/
+# uIce/vIce/Hsnow/Hsalt). TICE still cold-starts -- a small, fast-relaxing
+# error against 1.4e13 m^3 of missing ice. siHSALT is not in the source file,
+# so HsaltFile stays unset (SEAICEadvSalt is off anyway, line 30).
+# ---------------------------------------------------------------------------
+      AreaFile   = 'pickup_seaice_siAREA.0000604872.bin',
+# Baseline 2026-10-20 (Dustin "adopt ICT"): mouth i 840-920 floe thickness capped at 2.0 m (CryoSat-2; analysis/make_ic_thin_mouth.py)
+      HeffFile   = 'pickup_seaice_siHEFF_ICT.0000604872.bin',
+      HsnowFile  = 'pickup_seaice_siHSNOW.0000604872.bin',
+      uIceFile   = 'pickup_seaice_siUICE.0000604872.bin',
+      vIceFile   = 'pickup_seaice_siVICE.0000604872.bin',
+#
+# ---------------------------------------------------------------------------
+# Nares 2026-10-07: ice-arch physics (DECISIONS.md "sea-ice physics plan").
+# All four are compiled in (code/SEAICE_OPTIONS.h; build 25239538).
+#
+# Solver: JFNK (Losch et al. 2014) -- a converged solver matters for arches
+# and LKFs at 1 km (Hutter & Losch 2020; Mehlmann et al. 2021). Settings from
+# upstream verification offline_exf_seaice/input.dyn_jfnk; check iteration
+# counts and cost in the short test.
+# 2026-10-08 short tests (DECISIONS): JFNK with these values hit the Newton cap on every
+# step (93% of wall time); LSR and JFNK both stall at the same residual floor, with or
+# without side/basal drag and tensile strength. LSR reaches that floor in ~5 passes at
+# ~1 ms per pass, so the arch runs use LSR with 20 passes; JFNK values kept for later.
+      SEAICEuseJFNK       = .FALSE.,
+      SEAICEetaZmethod    = 3,
+      SEAICEpreconLinIter = 10,
+#      SEAICEnonLinIterMax = 20,   (LSR default)
+#      SEAICElinearIterMax = 500,   (LSR default)
+      SEAICEnonLinTol     = 1.E-09,
+      SEAICE_JFNK_lsIter  = 0,
+      JFNKres_tFac        = 0.5,
+      SEAICE_JFNKalpha    = 1.5,
+#
+# Yield curve: truncated ellipse (TEM) + tensile strength, the main arch
+# stability knob (Koenig Beatty & Holland 2010). 0.05 = upstream verification
+# value; sensitivity 0 / 0.10, guided by the ice-bridge strengths of
+# Plante et al. (2020). SEAICE_eccen stays at the default 2.
+      SEAICEuseTEM        = .TRUE.,
+# 2026-10-29 Y16 cold start Jan 1-Aug 31 (Dustin yes), from arch test Pe16: yield-ellipse ratio 2 (default) -> 1.6, on top of Ps82 (P* 82500). eccfr follows (normal flow rule).
+      SEAICE_eccen        = 1.6,
+      SEAICE_tensilFac    = 0.,
+#
+# Basal (grounding) drag, Lemieux et al. (2015): ON only if K2 > 0
+# (seaice_bottomdrag_coeffs.F). K2 = 15 N m-3, the value the pkg/seaice docs
+# say Lemieux suggests; K1, U0, cBasalStar at defaults (8, 5e-5 m/s, cStar).
+      SEAICEbasalDragK2   = 0.,
+#
+# Lateral (coastal) drag, Liu et al. (2022). Coast factor from the land mask
+# (no uCoastLineFile). The stress is SEAICEsideDrag x ice mass x (number of
+# land neighbours) in each coastal cell, i.e. per CELL, not per metre of
+# coastline, so the coastal force per km of coast scales with dx. Start value
+# (user 2026-10-07, "most logical"): Liu's 36-km 2e-4 x (36 km / 1 km) =
+# 7.2e-3, which keeps their calibrated force per coastline length. Weaker
+# sensitivities 2e-3 and 2e-4 (Liu's per-cell value); judge against arch
+# formation/collapse timing (Moore et al. 2021).
+      SEAICEsideDrag      = 0.,
+# ---------------------------------------------------------------------------
+ /
+#
+ &SEAICE_PARM02
+ /

@@ -1,0 +1,26 @@
+# Nares 2026-10-07: Humboldt subglacial-discharge plumes (pkg/iceplume,
+# nares_fixes). Baseline = 4 plume cells (top-5 Mankoff v8 outlets lumped,
+# cone plumes, mask +-3) + 109 melt-only front cells (+-1); the 'sheet' and
+# 'nodischarge' sensitivity runs swap the mask/length files.
+# Files from python/nares_strait/gen_humboldt_plumes.py
+# (model_setup/nares_strait/iceplume/). runoffQsg_YYYY (yearly 2-D files of
+# daily discharge, ~590 MB/yr real*4) are expanded from Humboldt_Qsg_daily.npz
+# on pfe at staging. Humboldt is NOT also in EXF runoff (double counting).
+ &ICEPLUME_PARM01
+ runoffQsgfile   = 'runoffQsg',
+ plumeMaskFile   = 'Humboldt_plumes_baseline_mask.bin',
+ plumeLengthFile = 'Humboldt_plumes_baseline_length.bin',
+ usePlumeDiagnostics = .TRUE.,
+ &
+ &ICEPLUME_PARM02
+ &
+ &ICEPLUME_PARM03
+# Plume ptracers: set ptracerMaskFile + useInputPtracers once the discharge
+# tracer concentrations are decided (the fixed package conserves every
+# ptracer to <= 1.5e-14 of inventory).
+ &
+ &ICEPLUME_EXF_PARM04
+ runoffQsgperiod     = 86400.,
+ runoffQsgstartdate1 = 20150101,
+ runoffQsgstartdate2 = 120000,
+ &

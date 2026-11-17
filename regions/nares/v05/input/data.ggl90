@@ -1,0 +1,18 @@
+# Nares 2026-10-07: pan_AO data.ggl90 with the parent IC iteration 0000604872.
+#
+# =====================================================================
+# | Parameters for Gaspar et al. (1990)'s TKE vertical mixing scheme  |
+# =====================================================================
+# TODO CLEARED 2026-10-02: the ICs the old note was waiting on now exist.
+# pickup_ggl90.0000736344.data was generated in STEP3 and passed
+# scan_pickups.py (job 25218294). Same field, same iteration, same parent as
+# kerguelen's data.ggl90.
+ &GGL90_PARM01
+ GGL90TKEFile = 'pickup_ggl90.0000604872.data',
+# 2026-11-12 Y69m (Dustin: yes): GGL90 settings of the ECCO-Darwin parent (pan_AO/parent_run/input/data.ggl90)
+ GGL90alpha=30.,
+ GGL90TKEmin  = 1.e-7,
+ GGL90TKEbottom = 1.e-6,
+ mxlMaxFlag =2,
+ mxlSurfFlag=.TRUE.,
+ /

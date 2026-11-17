@@ -1,0 +1,33 @@
+#!/bin/bash
+# job_run_ncgrid -- 1-time-step Nares grid-geometry dump (STEP1.IV), 252 ranks
+# (sNx=sNy=40 on one 1120 x 360 exch2 facet, all tiles, no blankList).
+# exch2 reads the whole facet from tile001.mitgrid (file named by FACE number,
+# ini_curvilinear_grid.F); Nares.mitgrid must be 16 x 361 x 1121 x 8 bytes.
+# Stitch afterwards x-fastest (exch2 tile ids run x-fastest within the facet).
+#PBS -l select=2:ncpus=126:mpiprocs=126:model=rom_ait
+#PBS -q normal
+#PBS -l walltime=0:30:00
+#PBS -N naresncgrid_run
+#PBS -W group_list=g26113
+#PBS -j oe
+#PBS -o /nobackup/dcarrol2/downscaling/nares/gen_ncgrid/job_run_out.txt
+set -e
+module purge
+module load comp-intel/2023.2.1 mpi-hpe/mpt.2.30 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
+GN=/nobackup/dcarrol2/downscaling/nares/gen_ncgrid
+GRID=/nobackup/dcarrol2/downscaling/nares/grid
+mkdir -p "$GN/run"; cd "$GN/run"
+rm -rf mnc_*
+ln -sf ../build/mitgcmuv .
+cp -f "$GN/input/"* .
+ln -sfn "$GRID/Nares.mitgrid" tile001.mitgrid
+ln -sfn "$GRID/Nares_bathymetry.bin" .
+GOT=$(stat -Lc %s tile001.mitgrid); EXPECT=$((16 * 361 * 1121 * 8))
+echo "facet mitgrid bytes: got $GOT expect $EXPECT"; [ "$GOT" = "$EXPECT" ] || { echo FAILED; exit 1; }
+GOT=$(stat -Lc %s Nares_bathymetry.bin); EXPECT=$((1120 * 360 * 8))
+echo "bathymetry bytes: got $GOT expect $EXPECT"; [ "$GOT" = "$EXPECT" ] || { echo FAILED; exit 1; }
+ulimit -s unlimited 2>/dev/null
+mpiexec -np 252 ./mitgcmuv
+echo "MPIEXEC_EXIT_CODE $?"
+grep -q "Execution ended Normally" STDOUT.0000 && echo "GEN_NCGRID_RUN_DONE"
+ls -d mnc_* | wc -l

@@ -1,0 +1,186 @@
+# ====================
+# | Model parameters |
+# ====================
+#
+# Continuous equation parameters
+ &PARM01
+ tRef               = 3*23.,3*22.,21.,2*20.,19.,2*18.,17.,2*16.,15.,14.,13.,
+                      12.,11.,2*9.,8.,7.,2*6.,2*5.,3*4.,3*3.,4*2.,12*1.,
+ sRef               = 50*34.5,
+ no_slip_sides  = .TRUE.,
+ no_slip_bottom = .TRUE.,
+#
+ viscAr=0.5E-4,
+#
+ viscAh=1.E0,
+ viscAhGrid=1.E-2,
+# viscAh=2.0e4,
+#
+ diffKhT=1.E1,
+ diffKrT=1.E-5,
+ diffKhS=1.E1,
+ diffKrS=1.E-5,
+#
+### diffKrBL79surf=0.1E-4,
+### diffKrBL79deep=1.0E-4,
+ bottomDragQuadratic = 0.001,
+#when using ggl90
+ ivdc_kappa=10.,
+ implicitDiffusion=.TRUE.,
+ implicitViscosity=.TRUE.,
+ viscC4Leith=1.5,
+ viscC4Leithd=1.5,
+ viscA4GridMax=0.5,
+ useAreaViscLength=.TRUE.,
+ useRealFreshWaterFlux=.TRUE.,
+# balanceThetaClimRelax=.TRUE.,
+ balanceSaltClimRelax=.TRUE.,
+# balanceEmPmR=.TRUE.,
+# balanceQnet=.TRUE.,
+ allowFreezing=.FALSE.,
+### hFacInf=0.2,
+### hFacSup=2.0,
+# hFacMin=.2,
+# hFacMinDr=5.,
+ hFacMinDr=50.,
+ hFacMin=0.3,
+ hFacInf=0.1,
+ hFacSup=5.,
+ select_rStar=2,
+ nonlinFreeSurf=4,
+ gravity=9.81,
+ rhonil=1029.,
+ rhoConst=1029.,
+ rhoConstFresh=1000.,
+ convertFW2Salt=-1.,
+ eosType='JMD95Z',
+ implicitFreeSurface=.TRUE.,
+ exactConserv=.TRUE.,
+ useSingleCpuIO=.TRUE.,
+ tempAdvScheme=30,
+ saltAdvScheme=30,
+ tempVertAdvScheme=3,
+ saltVertAdvScheme=3,
+ tempImplVertAdv=.TRUE.,
+ saltImplVertAdv=.TRUE.,
+ staggerTimeStep=.TRUE.,
+ vectorInvariantMomentum=.TRUE.,
+#when using the cd scheme:
+# useCDscheme=.TRUE.,
+ useJamartWetPoints=.TRUE.,
+ readBinaryPrec=32,
+ writeBinaryPrec=32,
+ debugLevel=-1,
+ /
+
+# Elliptic solver parameters
+ &PARM02
+ cg2dMaxIters=300,
+# cg2dTargetResWunit=1.E-12,
+ /
+
+# Time stepping parameters
+ &PARM03
+#2026-10-01 RESTART FROM SCRATCH, SEGMENT 1 OF A NEW CHAIN. Was nIter0=751680
+#(segment 2 of the previous chain, job 25210810, killed by signal 15 at 02:24
+#on 09-30 and never logged).
+#
+#WHY THE WHOLE CHAIN IS VOID, not resumable. That chain's dv output was
+#extracted through the masks in run/dv/ at the time, which were built on the
+#stitched grid's SQUARE perimeter. pan_AO is a polar stereographic DISC: the
+#model array's square edge is not the open boundary (174 of 6720 cells wet,
+#east edge 0 wet). The masks were regenerated along the rim on 09-30 by
+#gen_dvmasks_disc.py (job 25215198) and are a DIFFERENT GEOMETRY with
+#DIFFERENT POINT COUNTS -- west 0->736, east 265->141, south 324->685,
+#north 358->256. There are no common bytes between old and new output, so
+#nothing can be reused and nothing can be stitched across the change. The 249
+#old files are archived in run/dv_SQUARE_BOUNDARY_defective/ as history only;
+#do not diff against them (same trap as dv_hourly_partial_killed_25187803).
+#
+#The west boundary is also BACK in data.diagnostics_vec (20 entries, not 15)
+#and DIAGNOSTICS_VEC_SIZE.h nVEC_mask is 20 to match, which REQUIRED A
+#REBUILD. A restart at the old nIter0 with the new 20-mask config would be the
+#worst of both worlds: diagnostics_vec_init_fixed.F:76-77 resets
+#vec_time_levels to (1, nIter0+1) on every startup, and the STATUS='OLD'
+#interleaving hazard bites precisely when a segment restarts at the SAME
+#nIter0 -- it would write new-geometry records into the old-geometry files.
+#Starting from 736344 sidesteps that entirely: run/dv/ is empty of output.
+#
+#Back to the original pickup, iter 736344 (all 5 filesets present as symlinks
+#into v05_latest/darwin3/run, confirmed 2026-10-01).
+#
+#CHAINING, unchanged and still required: each restart writes its own
+#independent file set *_<nIter0+1>.bin with records restarting at 1, named by
+#CREATE_FILENAME_VEC from vec_time_levels(.,2). Segments must be stitched, not
+#concatenated blindly, and a segment that overruns its successor's pickup
+#leaves redone overlap records at its tail to discard. See stage_dv_segments.py.
+ nIter0=604872,
+#pan_AO FULL 1-YEAR PARENT dv EXTRACTION (Milestone 2 gate closed
+#2026-09-22 -- round-2 debug run confirmed record-index/write path
+#correct, see DECISIONS.md): restart from the same 2020-01-01 pickup
+#Fiji uses (nIter0=736344), run 1 simulated year to 2021-01-01, same
+#duration/endtime as fiji's completed fijidv run (job 25148838).
+#endtime is ABSOLUTE model myTime (seconds since 1992-01-01, data.cal
+#base), NOT a duration: nIter0*deltaT (736344*1200=883,612,800) +
+#26352*1200 (31,622,400) = 915,235,200 = iteration 762696.
+ endtime=1072958400.,
+ forcing_In_AB=.FALSE.,
+ momDissip_In_AB=.FALSE.,
+#when using the cd scheme:
+# epsAB_CD = 0.25,
+# tauCD=172800.0,
+ deltaTmom   =1200.,
+ deltaTtracer=1200.,
+ deltaTfreesurf=1200.,
+ deltaTClock =1200.,
+#when using ab2:
+# abEps = 0.1,
+#when using ab3:
+ doAB_onGtGs=.FALSE.,
+ alph_AB=0.5,
+ beta_AB=0.281105,
+#
+#2026-09-28: pChkptFreq cut 31536000.0 (365d) -> 2592000.0 (30d = 2160
+#iterations at deltaT=1200). The hourly-cadence dv extraction is projected
+#at ~139h wall (job 25187803 reached only 34.6% in its 48h cap), which
+#exceeds the `long` queue's own 120h hard max -- so this run CANNOT finish
+#in one submission and must be chained across restarts. At the old 365d
+#setting the only pickup boundary fell at the very end of the window, so a
+#walltime kill lost all progress (exactly what happened to 25187803).
+#At 30d there are ~12 named restart points, capping loss at ~11h wall.
+#chkptFreq (rolling ckptA/ckptB) left at 365d on purpose: the permanent
+#pickups are now frequent enough to be the restart points, and they carry
+#an unambiguous iteration number, which the ckptA/ckptB pair does not.
+ pChkptFreq  =2592000.0,
+ chkptFreq   =31536000.0,
+# taveFreq    =31536000.0,
+# dumpFreq    =31536000.0,
+ monitorFreq = 43200.0,
+# monitorFreq = 6307200.0,
+ dumpInitAndLast = .FALSE.,
+ pickupStrictlyMatch=.FALSE.,
+ /
+
+# Gridding parameters
+ &PARM04
+ usingCurvilinearGrid=.TRUE.,
+ delR = 
+     10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.00, 10.01,
+     10.03, 10.11, 10.32, 10.80, 11.76, 13.42, 16.04, 19.82, 24.85,
+     31.10, 38.42, 46.50, 55.00, 63.50, 71.58, 78.90, 85.15, 90.18,
+     93.96, 96.58, 98.25, 99.25,100.01,101.33,104.56,111.33,122.83,
+     139.09,158.94,180.83,203.55,226.50,249.50,272.50,295.50,318.50,
+     341.50,364.50,387.50,410.50,433.50,456.50,
+ /
+
+# Input datasets
+ &PARM05
+ diffKrFile='xx_diffkr.effective.V5alpha.iter50',
+#bathyFile      ='bathy_eccollc_90x50.bin',
+ bathyFile      ='bathy270_filled_noCaspian_r4',
+ hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',
+ hydrogSaltFile ='S_OWPv1_M_eccollc_90x50.bin',
+# viscA4Dfile    ='viscA4Dfld_eccollc_90x50.bin',
+# viscA4Zfile    ='viscA4Zfld_eccollc_90x50.bin',
+#
+ /

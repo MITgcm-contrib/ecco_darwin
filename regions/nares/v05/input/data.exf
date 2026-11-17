@@ -1,0 +1,326 @@
+# Nares 1-km regional run (2026-10-07). Adapted from pan_AO input/data.exf.
+# Comments below that are not marked 'Nares' are inherited from pan_AO
+# (dates, job ids and file names in them refer to pan_AO).
+#
+# Nares: same ERA5 hourly yearly files as pan_AO (ERA5 -> hzhang1/forcing/era5,
+# 1991-2026) and the same hourly OBCS convention (record 1 at 00:00); all
+# active start dates move to 2015-01-01 (parent extraction nIter0 = 604872 =
+# 2015-01-01 00:00). No EXF runoff yet: Humboldt discharge goes through
+# iceplume (never also via EXF runoff).
+#
+# *********************
+# External Forcing Data
+# *********************
+# ERA5 atmospheric forcing (EXF_NML_01/02[atmos fields only]/03/04) reused
+# as-is from GoM_1km, per DECISIONS.md's locked decision ("Atmospheric
+# forcing: ERA5, region-independent, reused as-is -- same as kerguelen").
+# River runoff (locked "yes" decision, Arctic rivers Ob/Yenisei/Lena/
+# Mackenzie etc.) and the EXF_NML_OBCS boundary-forcing block are
+# deliberately NOT wired up here -- see TODOs below.
+#
+ &EXF_NML_01
+ exf_albedo        = 0.1,
+ useExfZenIncoming = .TRUE.,
+ select_ZenAlbedo  = 1,
+#
+ ocean_emissivity  = 0.97,
+ ice_emissivity    = 0.95,
+ snow_emissivity   = 0.95,
+ exf_iprec         = 32,
+ exf_yftype        = 'RL',
+ useExfYearlyFields= .TRUE.,
+ useExfCheckRange  = .FALSE.,
+ useRelativeWind   = .TRUE.,
+ &
+#
+ &EXF_NML_02
+ apressurefile     = 'ERA5/ERA5_pres',
+ atempfile         = 'ERA5/ERA5_tmp2m_degC',
+ aqhfile           = 'ERA5/ERA5_spfh2m',
+ precipfile        = 'ERA5/ERA5_rain',
+ uwindfile         = 'ERA5/ERA5_u10m',
+ vwindfile         = 'ERA5/ERA5_v10m',
+ swdownfile        = 'ERA5/ERA5_dsw',
+ lwdownfile        = 'ERA5/ERA5_dlw',
+#
+# ALL startdate1 below: 19920101 -> 20200101 (2026-10-02).
+#
+# 19920101 is the parent LLC270 v5r1 calendar BASE, which is what the
+# scaffold defaulted every EXF field to. It is NOT this run's start date:
+# the ICs are pinned to parent iteration 736344 = 1992-01-01 + 883,612,800 s
+# = exactly 2020-01-01, and data.cal startDate_1 is now 20200101 to match.
+#
+# useExfYearlyFields=.TRUE. does NOT make 19920101 harmless here -- kerguelen
+# runs the SAME parent pickups at the SAME iteration with 20200101 on every
+# one of these fields. The EXF_NML_OBCS block below was already set to
+# 20200101 when real OBCS files landed on 10-01; it was the disagreement
+# between that block and this one that exposed the rest.
+#
+# This is the quiet kind of error: every ERA5 yearly file exists and is the
+# right size, so a 28-year-offset run starts clean, never warns, and simply
+# forces the Arctic with weather from the wrong end of the archive.
+#
+ apressurestartdate1 = 20150101,
+ apressurestartdate2 = 000000,
+ apressureperiod   = 3600.0,
+#
+ atempstartdate1   = 20150101,
+ atempstartdate2   = 000000,
+ atempperiod       = 3600.0,
+#
+ aqhstartdate1     = 20150101,
+ aqhstartdate2     = 000000,
+ aqhperiod         = 3600.0,
+#
+ precipstartdate1  = 20150101,
+ precipstartdate2  = 003000,
+ precipperiod      = 3600.0,
+#
+# TODO (river runoff, locked "yes" decision, NOT wired up here -- adapting
+# this jra55_do_runoff mechanism to the real Arctic rivers (Ob, Yenisei,
+# Lena, Mackenzie, etc.) is explicitly deferred pending user input, per
+# task scope. Left commented, not fabricated. Its startdate1 is carried to
+# 20200101 with the rest ON PURPOSE: if this block is ever uncommented, a
+# stale 19920101 sitting here would silently reintroduce the exact 28-year
+# offset being fixed above.
+# runofffile        = 'jra55_do_runoff_panAO',
+# runoffstartdate1  = 20200101,
+# runoffstartdate2  = 120000,
+# runoffperiod      = 86400.0,
+#
+ uwindstartdate1   = 20150101,
+ uwindstartdate2   = 000000,
+ uwindperiod       = 3600.0,
+#
+ vwindstartdate1   = 20150101,
+ vwindstartdate2   = 000000,
+ vwindperiod       = 3600.0,
+#
+ swdownstartdate1  = 20150101,
+ swdownstartdate2  = 003000,
+ swdownperiod      = 3600.0,
+#
+ lwdownstartdate1  = 20150101,
+ lwdownstartdate2  = 003000,
+ lwdownperiod      = 3600.0,
+#
+ &
+#
+ &EXF_NML_03
+ exf_offset_atemp   = 273.15,
+ exf_inscal_swdown  = -1.0,
+ exf_inscal_lwdown  = -1.0,
+ exf_inscal_precip  = 1.0,
+# exf_inscal_runoff  = 1.0,   (runoff deferred for pan_AO 2026-09-28)
+ &
+#
+# EXF_NML_04: ERA5 lon/lat grid definitions -- global, region-independent
+# 1280x640 grid, reused verbatim from GoM_1km/input/data.exf per the locked
+# "ERA5 reused as-is" decision.
+ &EXF_NML_04
+#
+ apressure_lon0    =   0.0000000D0,
+ apressure_lon_inc =   0.2812500D0,
+ apressure_lat0    = -89.7848850D0,
+ apressure_lat_inc = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ apressure_nlon    = 1280,
+ apressure_nlat    = 640,
+#
+ atemp_lon0        =   0.0000000D0,
+ atemp_lon_inc     =   0.2812500D0,
+ atemp_lat0        = -89.7848850D0,
+ atemp_lat_inc     = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ atemp_nlon        = 1280,
+ atemp_nlat        = 640,
+#
+ aqh_lon0        =   0.0000000D0,
+ aqh_lon_inc     =   0.2812500D0,
+ aqh_lat0        = -89.7848850D0,
+ aqh_lat_inc     = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ aqh_nlon        = 1280,
+ aqh_nlat        = 640,
+#
+ precip_lon0        =   0.0000000D0,
+ precip_lon_inc     =   0.2812500D0,
+ precip_lat0        = -89.7848850D0,
+ precip_lat_inc     = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ precip_nlon        = 1280,
+ precip_nlat        = 640,
+#
+ uwind_lon0        =   0.0000000D0,
+ uwind_lon_inc     =   0.2812500D0,
+ uwind_lat0        = -89.7848850D0,
+ uwind_lat_inc     = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ uwind_nlon        = 1280,
+ uwind_nlat        = 640,
+#
+ vwind_lon0        =   0.0000000D0,
+ vwind_lon_inc     =   0.2812500D0,
+ vwind_lat0        = -89.7848850D0,
+ vwind_lat_inc     = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ vwind_nlon        = 1280,
+ vwind_nlat        = 640,
+#
+ swdown_lon0        =   0.0000000D0,
+ swdown_lon_inc     =   0.2812500D0,
+ swdown_lat0        = -89.7848850D0,
+ swdown_lat_inc     = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ swdown_nlon        = 1280,
+ swdown_nlat        = 640,
+#
+ lwdown_lon0        =   0.0000000D0,
+ lwdown_lon_inc     =   0.2812500D0,
+ lwdown_lat0        = -89.7848850D0,
+ lwdown_lat_inc     = 0.2786766D0,0.2803199D0,0.2806917D0,0.2808328D0,0.2809011D0,0.2809392D0,0.2809626D0,0.2809781D0,
+                     0.2809888D0,0.2809965D0,0.2810023D0,0.2810067D0,0.2810102D0,0.2810129D0,0.2810151D0,
+                     33*0.2810258D0,543*0.2810302D0,33*0.2810258D0,
+                     0.2810151D0,0.2810129D0,0.2810102D0,0.2810067D0,0.2810023D0,0.2809965D0,0.2809888D0,0.2809781D0,
+                     0.2809626D0,0.2809392D0,0.2809011D0,0.2808328D0,0.2806917D0,0.2803199D0,0.2786766D0,
+ lwdown_nlon        = 1280,
+ lwdown_nlat        = 640,
+#
+# 2026-09-28: runoff DEFERRED for pan_AO (run without it for now, add
+# later). Arctic/subarctic river discharge (Ob, Yenisei, Lena,
+# Mackenzie) is a major freshwater term for a pan-Arctic domain, so
+# this is an accepted simplification to revisit, not a settled 'no'.
+# Prior TODO note (river runoff, see EXF_NML_02 above): runoff_interpMethod left
+# commented out to match -- not wired up yet.
+# runoff_interpMethod = 0,
+ &
+#
+# EXF_NML_OBCS -- added 2026-10-01, once real OBCS files existed and the
+# cadence had been checked against them, per Milestone 5's checklist item.
+#
+# WHY THIS BLOCK MATTERS AT ALL: useOBCSprescribe=.TRUE. + useEXF=.TRUE.
+# means pkg/obcs's OBCS_PRESCRIBE_READ calls OBCS_EXF_LOAD (obcs_prescribe_
+# read.F:41), so the {VAR}_{bnd}.bin record index comes from THESE
+# start/period values via EXF_GetFFieldRec -- computed from elapsed time
+# divided by the period, NOT from the file's real record count. A wrong
+# period therefore reads a real, finite, plausible record forever and
+# nothing complains. That is what kerguelen hit (2026-09-14: a monthly
+# 2629800.0 left over from a GoM_1km template meant only ~36 of 26304
+# hourly records were ever touched in a 3-year run).
+#
+# PERIOD -- derived from pan_AO's OWN dv output, not copied from a sibling:
+#   parent_run/run/data.diagnostics_vec has nml_startTime = 883612800.,
+#   nml_endTime = 915235200. and nml_vec_avg_periods = 3600., and the files
+#   on disk hold exactly 8784 records. (915235200-883612800)/8784 = 3600 s.
+#   Checked three ways -- namelist, record count, and file size.
+ &EXF_NML_OBCS
+#
+# STARTDATE -- the calendar time of RECORD 1, derived, not inherited:
+#   The parent's calendar base is 1992-01-01 00:00:00 (parent data.cal) with
+#   deltaT=1200, so nml_startTime 883612800 s = 736344*1200 is exactly
+#   2020-01-01 00:00:00 (10227 days, 7 leap days -- verified).
+#   nml_vec_avg_periods=3600 means each record is an hourly AVERAGE, so
+#   record 1 spans [2020-01-01 00:00, 01:00) and is CENTRED at 00:30:00.
+#
+# 2026-10-02: startdate2 CHANGED 003000 -> 000000 on all four boundaries.
+#
+#   003000 was the physically honest value -- record 1 really is centred at
+#   00:30 -- and it is what the time-averaged ERA5 fields above use. It is
+#   also FATAL here, and attempt 6 (25223189) died on it in 110 s:
+#     *** ERROR *** EXF_GetFFieldRec for field "obcsN ": myTime= 0.0000E+00
+#     *** ERROR *** earlier than 1rst reccord (field-startdate= 1.8000E+03)
+#
+#   exf_getffieldrec.F:116 computes fldsectot = myTime - fldStartTime and
+#   line 121 makes fldsectot < 0 a hard STOP. With startdate2=003000 the
+#   model starts 1800 s BEFORE the nominal time of its own first boundary
+#   record, so t=0 has nothing to interpolate from.
+#
+#   WHY THE ERA5 FIELDS GET AWAY WITH 003000 AND OBCS CANNOT. data.exf:21
+#   sets useExfYearlyFields=.TRUE., which sends ERA5 down the OTHER branch of
+#   exf_getffieldrec.F (line 151+). That branch has no negative check: at
+#   t=0 it steps year0 back to 2019 and reads record 8760 of the 2019 file,
+#   i.e. the record centred 2019-12-31 23:30 -- exactly the predecessor the
+#   centred convention needs. OBCS has no such escape. useOBCSYearlyFields is
+#   hardwired .FALSE. (obcs_readparms.F:378) and is explicitly REJECTED if
+#   set in data.obcs (obcs_readparms.F:404-407), and there is no 2019 OBCS
+#   file to reach into -- the dv extraction starts at 2020-01-01 00:00.
+#   So for OBCS the centred convention is not merely wrong, it is
+#   UNREPRESENTABLE. Do not "fix" this back to 003000.
+#
+#   WHAT 000000 COSTS: it declares record 1 valid AT 00:00 rather than at
+#   00:30, so boundary forcing carries a constant half-period (30 min) phase
+#   LEAD for the whole run. Every record is still used exactly once, in
+#   order, with no wrap and no skip -- at t=0, count0 = INT(0.5/3600)+1 = 1
+#   with fac = 1.0, i.e. pure record 1. 30 minutes of phase on hourly
+#   boundary data is the smallest available error here.
+#
+#   REJECTED ALTERNATIVE: backing startdate up one period to 20191231
+#   233000. That clears the STOP (fldStartTime = -1800) but at t=0 gives
+#   count0=1, count1=2, fac=0.5 -- it blends records 1 and 2, substituting
+#   record 2 for the missing 23:30 predecessor, which is extrapolation
+#   forward through the boundary of the data. Worse than a phase shift.
+#   Backing up a whole day (kerguelen's convention, see below) is worse
+#   still: fldsectot = 85200 at t=0 gives count0 = 24, so the run would open
+#   with hour 24 of the file.
+#
+#   PRODUCTION LIMIT IMPLIED BY THIS. The files hold 8784 hourly records
+#   (1680 pts x 90 lev x 8784 x 4 B = 5,312,563,200 B, confirmed on disk for
+#   all four boundaries; ETAN 1680 x 8784 x 4 = 59,028,480 B). The model
+#   always reads count1 = count0+1 for interpolation, so endTime must keep
+#   count1 <= 8784, i.e. endTime <= 8783*3600 = 31,618,800 s (365.96 days).
+#   Overrunning that reads past EOF. Carry this into the endTime decision.
+#
+# DELIBERATELY NOT COPIED FROM KERGUELEN. kerguelen's data.exf carries
+# obcs?startdate1=20191231 / startdate2=002000 for a dv window with the
+# IDENTICAL base (nml_startTime=883612800, avg period 3600) -- i.e. 1 day
+# 0:10 earlier than its own record 1, and the only field in its own file not
+# on 20200101. It looks like the same GoM_1km template residue as the period
+# bug fixed on 2026-09-14, where the period was corrected and the startdate
+# never re-derived. FLAGGED for kerguelen, not propagated here.
+#
+  obcsNstartdate1   = 20150101,
+  obcsNstartdate2   = 000000,
+  obcsNperiod       = 3600.0,
+#
+  obcsSstartdate1   = 20150101,
+  obcsSstartdate2   = 000000,
+  obcsSperiod       = 3600.0,
+#
+  obcsEstartdate1   = 20150101,
+  obcsEstartdate2   = 000000,
+  obcsEperiod       = 3600.0,
+#
+# West is pan_AO's largest open boundary, not an absent one.
+  obcsWstartdate1   = 20150101,
+  obcsWstartdate2   = 000000,
+  obcsWperiod       = 3600.0,
+/
+#
+# OPEN ITEM, not introduced here but blocking a real run: regional_run/
+# input/data.cal still has startDate_1=19920101 (its own comment calls it
+# "provisional") with nIter0=0 in data. The OBCS data covers 2020 only, so
+# the model as configured would begin in 1992 and never reach it. kerguelen
+# sets startDate_1=20200101 and carries nIter0 within that. The startdates
+# above are ABSOLUTE calendar dates and are correct either way -- fixing the
+# calendar base is a separate, deliberate change. See DECISIONS.md.

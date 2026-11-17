@@ -1,0 +1,19 @@
+#!/bin/csh
+# Shared V5r1 LLC270 parent diagnostics_vec extraction for WestAO + Nares, 2015-01-01 (iter 604872)
+# -> 2025-12-31 12:00 (endtime 1072958400). 48-h segments chained by chain_next.sh from the newest
+# 30-day pickup. Layout/modules as pan_AO parent_run (767 ranks, 28 bro_ele).
+#PBS -S /bin/csh
+#PBS -l select=28:ncpus=28:model=bro_ele
+#PBS -q long
+#PBS -l walltime=48:00:00
+#PBS -N parentWAN
+
+#PBS -j oe
+#PBS -m abe
+module purge
+module load comp-intel/2023.2.1 mpi-hpe/mpt.2.30 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt
+umask 022
+cd /nobackupp19/dcarrol2/downscaling/parent_V5r1_westAO_nares/run
+limit stacksize unlimited
+timeout 171000 mpiexec -np 767 ./mitgcmuv   # stop 30 min before walltime so chain_next.sh runs
+bash /nobackupp19/dcarrol2/downscaling/parent_V5r1_westAO_nares/chain_next.sh

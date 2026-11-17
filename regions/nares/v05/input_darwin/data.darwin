@@ -1,0 +1,362 @@
+# Nares 2026-10-07: pan_AO data.darwin. Only change: pCO2startdate1 2020 -> 2015.
+# TODO at staging: the apCO2 file must start 2015-01-01 (pan_AO's starts 2020).
+# CDOMcoeff = 0.20 kept (the under-ice light column tests used this value).
+#
+########################
+# Copied/adapted from biogeochem_setup/AO_ecosystem/setup_files_v0/input/
+# data.darwin. DARWIN_PARAMS/DARWIN_CDOM_PARAMS/DARWIN_RADTRANS_PARAMS/
+# DARWIN_RANDOM_PARAMS/DARWIN_TRAIT_PARAMS blocks below are trait-level
+# (not domain-specific) and reused verbatim. DARWIN_FORCING_PARAMS'
+# river-runoff and iron-dust file references ARE domain-specific
+# (mac_delta's own Mackenzie-delta grid, 'tXXX_runoff_mac270'/'
+# iron_dust_46x68_Mac' -- wrong tracer-forcing files and wrong grid shape
+# for pan_AO's own 1680x1680 domain) -- deliberately commented out here,
+# NOT reused, per task scope (river runoff is a locked "yes" decision but
+# adapting it to the real Arctic rivers, Ob/Yenisei/Lena/Mackenzie etc., is
+# explicitly deferred pending user input). pCO2File (global atmospheric
+# pCO2, lon0=0/loninc=360/nlon=2 i.e. periodic-global, lat -89.46 to 89.46,
+# NOT mac_delta-domain-specific) is generic and kept.
+########################
+ &DARWIN_FORCING_PARAMS
+# IRON DUST RESOLVED 2026-10-02 (user decision). The old TODO was right that
+# mac_delta's 'iron_dust_46x68_Mac' is its own 46x68 regional grid and wrong
+# for pan_AO's 1680x1680 domain. The global product it asked for is the one
+# kerguelen and the v05 parent already use -- the same parent these ICs and
+# OBCS were extracted from -- so it needs no new data and introduces no new
+# provenance.
+#
+# Size-verified rather than assumed: the file is 393,216 bytes = 128*64*12*4,
+# i.e. 12 monthly records of a 128x64 float32 field, which is exactly what
+# ironperiod=-12 (monthly climatology) and iron_nlon/nlat=128/64 below
+# describe. ironperiod and darwin_inscal_iron are restored at the values this
+# file already carried; only the filename changes, plus iron_interpMethod
+# 0 -> 1 in DARWIN_INTERP_PARAMS (0 means "already on the model grid", which
+# a 128x64 global field is not -- leaving it 0 would misread the array).
+ ironfile = '3deg_Mahowald_2009_soluble_iron_dust.bin',
+ ironperiod = -12,
+ darwin_inscal_iron= 1000.,
+#
+ pCO2File = 'apCO2',
+# 19920101 -> 20200101 (2026-10-02). See the data.cal note: iteration 736344
+# is 2020-01-01, and kerguelen runs this same field at 20200101 off the same
+# parent. Was part of a 28-year offset shared with data.exf's EXF startdates.
+ pCO2startdate1 = 20150101,
+ pCO2startdate2 = 030000,
+ pCO2period     = 86400.0,
+#
+# TODO (river runoff, locked "yes" decision, NOT wired up here -- deferred
+# pending the real Arctic-river forcing files/mapping):
+# DOCrunofffile = 'tDOCl/tDOCl_runoff_mac270',
+# DOCrunoffstartdate1 = 19920101,
+# DOCrunoffstartdate2 = 120000,
+# DOCrunoffperiod     = 86400.0,
+#
+# rDOCrunofffile = 'tDOCr/tDOCr_runoff_mac270',
+# rDOCrunoffstartdate1 = 19920101,
+# rDOCrunoffstartdate2 = 120000,
+# rDOCrunoffperiod     = 86400.0,
+#
+# CDOMrunofffile = 'tDOCc/tDOCc_runoff_mac270',
+# CDOMrunoffstartdate1 = 19920101,
+# CDOMrunoffstartdate2 = 120000,
+# CDOMrunoffperiod     = 86400.0,
+#
+# DICrunofffile = 'tDIC/tDIC_runoff_mac270',
+# DICrunoffstartdate1 = 19920101,
+# DICrunoffstartdate2 = 120000,
+# DICrunoffperiod     = 86400.0,
+#
+# ALKrunofffile = 'tAlk/tAlk_runoff_mac270',
+# ALKrunoffstartdate1 = 19920101,
+# ALKrunoffstartdate2 = 120000,
+# ALKrunoffperiod     = 86400.0
+#
+# DONrunofffile = 'tDON/tDON_runoff_mac270',
+# DONrunoffstartdate1 = 19920101,
+# DONrunoffstartdate2 = 120000,
+# DONrunoffperiod     = 86400.0,
+#
+# NO3runofffile = 'tNO3/tNO3_runoff_mac270',
+# NO3runoffstartdate1 = 19920101,
+# NO3runoffstartdate2 = 120000,
+# NO3runoffperiod     = 86400.0,
+#
+# NH4runofffile = 'tNH4/tNH4_runoff_mac270',
+# NH4runoffstartdate1 = 19920101,
+# NH4runoffstartdate2 = 120000,
+# NH4runoffperiod     = 86400.0,
+#
+# DOPrunofffile = 'tDOP/tDOP_runoff_mac270',
+# DOPrunoffstartdate1 = 19920101,
+# DOPrunoffstartdate2 = 120000,
+# DOPrunoffperiod     = 86400.0,
+#
+# PO4runofffile = 'tPO4/tPO4_runoff_mac270',
+# PO4runoffstartdate1 = 19920101,
+# PO4runoffstartdate2 = 120000,
+# PO4runoffperiod     = 86400.0,
+#
+# DSirunofffile = 'tDSi/tDSi_runoff_mac270',
+# DSirunoffstartdate1 = 19920101,
+# DSirunoffstartdate2 = 120000,
+# DSirunoffperiod     = 86400.0,
+#
+# ---------------------------------------------------------------------------
+# RUNOFF CONSTANTS MADE EXPLICIT 2026-10-02. Commenting out the *runofffile
+# lines above does NOT turn river runoff off.
+#
+# When a *runofffile is blank, exf_init_fld fills the whole field with the
+# matching *runoffconst. Twelve of the fifteen default to 0 in
+# darwin_exf_readparms.F -- but rDOCrunoffconst, CDOMrunoffconst and
+# ALKrunoffconst default to UNSET_RL, which is not a sentinel the code ever
+# tests for; it is the literal number 1.234567e5. So the deferred-runoff
+# configuration above was injecting 123456.7 of refractory DOC, CDOM and
+# alkalinity into every surface cell on every timestep.
+#
+# Measured on job 25223608 (dt=300, 63 steps) in darwin_cons_*: mean C went
+# 2.23e3 -> 1.74e6, alkalinity 2.36e3 -> 1.66e6, P 1.00 -> 1.55e4, N 1.41e1
+# -> 2.32e5, Fe 7.2e-4 -> 1.43e1. Si and O were the only elements conserved,
+# and they are the only two with no runoff pathway -- that contrast is what
+# identified runoff as the source. The P/N/Fe growth is CDOM being counted at
+# darwin's C:N:P:Fe = 120:16:1:0.001, which the increment ratios reproduce to
+# 4 digits.
+#
+# darwin_check.F prints DOCrunoffconst..DICrunoffconst but NOT
+# ALKrunoffconst, so one of the three bad values appears nowhere in STDOUT.
+# Do not rely on the log to tell you this is off.
+#
+# All fifteen are therefore set explicitly rather than left to defaults, so
+# "runoff is deferred" is stated in this file instead of being a property of
+# darwin3's initialisation. When the real Arctic-river forcing lands, replace
+# these with the *runofffile block above; do not simply delete them.
+ DOCrunoffconst  = 0.,
+ rDOCrunoffconst = 0.,
+ CDOMrunoffconst = 0.,
+ DONrunoffconst  = 0.,
+ DOPrunoffconst  = 0.,
+ NO3runoffconst  = 0.,
+ NO2runoffconst  = 0.,
+ NH4runoffconst  = 0.,
+ PO4runoffconst  = 0.,
+ DSirunoffconst  = 0.,
+ POCrunoffconst  = 0.,
+ POPrunoffconst  = 0.,
+ PONrunoffconst  = 0.,
+ DICrunoffconst  = 0.,
+ ALKrunoffconst  = 0.,
+# ---------------------------------------------------------------------------
+#
+ darwin_useEXFwind = .TRUE.,
+ darwin_useQsw = .TRUE.,
+ darwin_useSEAICE = .TRUE.,
+ /
+ &DARWIN_INTERP_PARAMS
+# 0 -> 1 (2026-10-02): ironfile is now the GLOBAL 128x64 3deg Mahowald field,
+# which must be interpolated onto pan_AO's 1680x1680 stereographic disc.
+# iron_interpMethod=0 means "the file is already on the model grid" -- with a
+# 128x64 source that would misread the array rather than fail, so this must
+# move together with the filename, never separately. Grid description below
+# is kerguelen's verbatim, and matches the file's 128*64*12*4 byte size.
+ iron_interpMethod = 1,
+ iron_lon0    = 1.40625D0,
+ iron_lon_inc = 2.8125D0,
+ iron_lat0    = -88.59375D0,
+ iron_lat_inc = 64*2.8125,
+ iron_nlon    = 128,
+ iron_nlat    = 64,
+# TODO (river runoff, see DARWIN_FORCING_PARAMS above -- commented out to
+# match):
+# DOCrunoff_interpMethod = 0,
+# rDOCrunoff_interpMethod = 0,
+# CDOMrunoff_interpMethod = 0,
+# DICrunoff_interpMethod = 0,
+# ALKrunoff_interpMethod = 0,
+# DONrunoff_interpMethod = 0,
+# NO3runoff_interpMethod = 0,
+# NH4runoff_interpMethod = 0,
+# DOPrunoff_interpMethod = 0,
+# PO4runoff_interpMethod = 0,
+# DSirunoff_interpMethod = 0,
+#
+ pCO2_lon0    = 0.0D0,
+ pCO2_lon_inc = 360.0D0,
+ pCO2_lat0    = -89.4628220D0,
+ pCO2_lat_inc = 0.6958694,0.6999817,0.7009048,0.7012634,0.7014313,
+                245*0.7017418,
+                0.7014313,0.7012634,0.7009048,0.6999817,0.6958694
+ pCO2_nlon    = 2,
+ pCO2_nlat    = 256,
+ /
+########################
+ &DARWIN_PARAMS
+# do not read darwin pickup
+ darwin_pickupSuff= ' ',
+ darwin_chlInitBalanced= .TRUE.,
+ darwin_chlIter0= 1,
+ diaz_ini_fac= 0.1,
+ darwin_seed= 56,
+ selectPHsolver=1,
+ PARmin= 1E-3,
+ alpfe= 0.92831,
+ freefemax = .1E-3,
+ depthfesed= 7000.,
+ scav_rat=2.314814814814815E-6,
+ kdoc=  3.858024691358024E-7,   ! 1/30days
+ krdoc= 3.168808781402895E-9,   ! 1/10years
+ kdop=  2.314814814814815E-7,   ! 1/50day
+ kdon=  2.314814814814815E-7,   ! 1/50day
+ kdofe= 2.314814814814815E-7,   ! 1/50day
+ kPOC=  2.314814814814815E-7,   ! 1/50day
+ kPOP=  4.629629629629630E-7,   ! 1/25day
+ kPON=  4.629629629629630E-7,   ! 1/25day
+ kPOFe= 4.629629629629630E-7,   ! 1/25day
+ kPOSi= 7.716049382716049E-8,   ! 1/150day
+ phygrazmin= 120E-10,
+ hollexp = 1.E0,
+ SURFDICMIN  =   100.0,
+ SURFALKMIN  =   100.0,
+ /
+########################
+ &DARWIN_CDOM_PARAMS
+ fracCDOM = 0.02,
+ CDOMcoeff=0.20,
+ cdomdegrd  = 3.168808781402895E-9, ! 1/10years
+ CDOMbleach = 1.929012345679012E-6, ! 1/6days
+ PARCDOM = 60.,
+ /
+ ########################
+ &DARWIN_RADTRANS_PARAMS
+# GAP CLOSED 2026-10-02. The old names ('optics/optics_water.txt' etc.) were
+# scaffold inventions pointing at files that exist nowhere, with
+# useRADTRANS=.TRUE. -- so this blocked the run outright, not just science.
+#
+# The previous note correctly refused a blind rename to the AO_ecosystem
+# files without checking band structure. That check was then DONE, and it
+# passes on all three independent counts:
+#   - AO_ecosystem's own code_darwin/RADTRANS_SIZE.h is nlam=13, IDENTICAL to
+#     pan_AO's code_darwin/RADTRANS_SIZE.h and build/RADTRANS_SIZE.h.
+#   - optics_water and optics_detritus each carry exactly 13 data rows, at
+#     400,425,...,700 nm -- 13 bands of 25 nm, matching nlam.
+#   - darwin_scatSwitchSizeLog, darwin_scatSlopeSmall and darwin_scatSlopeLarge
+#     below each have 13 values, one per waveband.
+#     CORRECTED 17:50 2026-10-02: this line previously claimed SlopeSmall and
+#     SlopeLarge "have 26 = 13 x 2, as expected". They have 13, and 13 is
+#     right -- `darwin_check.F:2910` writes them with length `nlam` and
+#     `darwin_generate_allometric.F:471` indexes `darwin_scatSlopeSmall(l)`
+#     over wavebands only. The values were always correct; the justification
+#     written next to them was not. Left in place rather than silently
+#     deleted, because anyone who counted 13 against the old note would have
+#     "fixed" a correct array by padding it to 26.
+# "bandave25" in the filenames is the 25 nm averaging WIDTH, not a band count
+# -- that name is what made these look like 25-band tables and look unusable.
+#
+# AO_ecosystem is a working deployment of exactly this file set at nlam=13.
+# Pointed at the REAL filenames rather than symlinking them under the old
+# generic names: the generic names are what hid which table was in use, and
+# an optics table is a science input whose provenance should be legible here.
+ darwin_waterabsorbFile='optics/optics_water_Aug2014_bandave25.txt',
+ darwin_phytoabsorbFile='optics/optics_phyto_10_bandave25_newsize5_diffsyn_zoo_bact3_AHbacteria_ecol.txt',
+ darwin_particleabsorbFile='optics/optics_detritus_8_sameas4_bandave25.txt',
+ darwin_Sdom=0.019,
+ darwin_part_size_P = 1e-15,
+ darwin_RPOC = 2.0,
+
+ darwin_allomSpectra= T,
+ darwin_absorpSlope= -0.075,
+ darwin_bbbSlope=    -1.458,
+ darwin_scatSwitchSizeLog= 2.860959e-01, 2.923177e-01, 2.983251e-01, 3.140574e-01, 3.261153e-01,
+                           3.440134e-01, 3.577670e-01, 3.618763e-01, 3.695100e-01, 3.718916e-01,
+                           3.706202e-01, 3.640583e-01, 3.682107e-01,
+ darwin_scatSlopeSmall= 4.185404e+00, 4.208007e+00, 4.261307e+00, 4.302451e+00, 4.341968e+00,
+                        4.373109e+00, 4.392320e+00, 4.416705e+00, 4.434653e+00, 4.454953e+00,
+                        4.479809e+00, 4.507577e+00, 4.544071e+00,
+ darwin_scatSlopeLarge= 1.723153e+00, 1.718186e+00, 1.699666e+00, 1.687533e+00, 1.710736e+00,
+                        1.732242e+00, 1.763117e+00, 1.811451e+00, 1.834619e+00, 1.863836e+00,
+                        1.897289e+00, 1.861866e+00, 1.907367e+00,
+ /
+########################
+ &DARWIN_RANDOM_PARAMS
+ /
+########################
+ &DARWIN_TRAIT_PARAMS
+ grp_names= 'PicoEuk', 'Hapto', 'HL Diat', 'LL Diat', 'Dino', 'Zoo'
+#
+#                        s  C  D1 D2 l  Z
+ grp_nplank(:)=          1, 1, 1, 1, 1, 2,
+ grp_photo(:)=           1, 1, 1, 1, 1, 0,
+ grp_pred(:)=            0, 0, 0, 0, 1, 1,
+ grp_prey(:)=            1, 1, 1, 1, 1, 1,
+ grp_hasSi(:)=           0, 0, 1, 1, 0, 0,
+ grp_hasPIC(:)=          0, 0, 0, 0, 0, 0,
+ grp_DIAZO(:)=           0, 0, 0, 0, 0, 0,
+ grp_useNH4(:)=          1, 1, 1, 1, 1, 0,
+ grp_useNO2(:)=          1, 1, 1, 1, 1, 0,
+ grp_useNO3(:)=          1, 1, 1, 1, 1, 0,
+ grp_combNO(:)=          1, 1, 1, 1, 1, 0,
+ grp_bacttype(:)=        0, 0, 0, 0, 0, 0,
+ grp_aerobic(:)=         0, 0, 0, 0, 0, 0,
+ grp_denit(:)=           0, 0, 0, 0, 0, 0,
+ grp_tempMort(:)=        0, 0, 0, 0, 0, 0,
+ grp_tempMort2(:)=       0, 0, 0, 0, 0, 0,
+ grp_aptype(:)=          1, 6, 5, 5, 9, 11,
+#
+ a_Xmin(:)= 5*1.25e-2, 1e-3,
+
+
+ a_phytoTempAe= 5*0.0095,
+ a_hetTempAe=5*0.0631,
+ a_grazTempAe=5*0.1100,
+
+# NOTE (haptophyte / c2, LOCKED decision, DECISIONS.md 2026-09-15): kept
+# ACTIVE for pan_AO -- verified NOT zeroed in this copy: a_mQyield(2)=4E-5,
+# a_chl2cmax(2)=.2, a_PCmax(2)=1.5149 (all nonzero), and PALAT(2,7)=1 (c2 is
+# valid prey to large zooplankton) -- despite setup_content.txt's own
+# "SET TO 0 IN THIS SETUP AS NOT REPRESENTATIVE OF SBS" doc comment, the
+# actual numeric trait values in THIS setup_files_v0 copy do not zero it.
+# No edit needed here to satisfy the locked decision; flagged in
+# DECISIONS.md as a doc/reality mismatch worth a second look by whoever
+# owns BGC tuning next.
+ a_mQyield(:)= 6E-5, 2*4E-5, 6E-5, 4E-5, 0.0,
+ a_chl2cmax(:)=  2*.2, .3, .3, .2, 0.,
+ a_acclimtimescl(:)= 6*5.7870370370370370E-6,
+ logvolbase= -1.4130,
+ logvolinc= .513,
+ logvol0ind(:)= 5, 7, 9, 9, 9, 11,
+ a_biosink(:)= 5*6.951416635391563E-7, 0.,
+ b_biosink(:)= 5*.2833333333333333, 0.,
+ a_PCmax(1)= 0.7016,
+ a_PCmax(2)= 1.5149,
+ a_PCmax(3)= 1.7672,
+ a_PCmax(4)= 1.4138,
+ a_PCmax(5)= 0.8810,
+ a_PCmax(6)= 0,
+
+
+
+ a_PCmax_denom(:)= 6*86400.,
+ b_PCmax(:)= 0.28, -0.10, -0.10, -0.10,-0.10, 0.,
+#
+ a_Qpmin = 5*0.005, 0.008,
+ a_Qpmax = 5*0.02,  0.01,
+#
+ darwin_effective_ksat= T,
+ darwin_select_kn_allom= 2,
+#
+#grp_ExportFracPreyPred(1:6,6)= 6*.8,
+ a_R_ChlC(6)= 0.,
+ a_grazemax(6)= 3.4722000000000000E-05,  ! prowe values
+ b_grazemax(6)= -0.16,
+#
+ a_mort(:)= 5*8e-07, 2e-7,
+ a_mort2(:)= 6*6.e-8,
+ a_phytoTempExp2= 6*.0003,
+ a_R_PC(:)= 6*0.008333333333333333,
+ a_R_FeC(:)= 6*0.008333333333333333E-3,
+ a_R_NC(:)= 6*0.13333333333333333,
+ a_R_SiC(:)= 2*0., 2*0.26666666666666666, 2*0.,
+ a_R_PICPOC(:)= 6*0.,
+ a_kgrazesat(:)= 6*3.5,
+ b_kgrazesat(:)= 6*0,
+#
+ grp_ass_eff(:,:)=36*0.32,
+ /

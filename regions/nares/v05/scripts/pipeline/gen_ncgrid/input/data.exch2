@@ -1,0 +1,5 @@
+ &W2_EXCH2_PARM01
+# one facet, 1040 x 360; no blankList for the grid dump (all 252 tiles run)
+  dimsFacets = 1120, 360,
+  W2_printMsg = 0,
+ &

@@ -1,0 +1,175 @@
+# Nares 1-km regional run (2026-10-07). Adapted from pan_AO input/data.
+# Comments below that are not marked 'Nares' are inherited from pan_AO
+# (dates, job ids and file names in them refer to pan_AO).
+#
+# ====================
+# | Model parameters |
+# ====================
+# regional_run/input/data -- pan_AO production-run scaffold. PARM01/PARM02/
+# PARM04 carried over from gen_ncgrid/input/data (already pan_AO-specific:
+# curvilinear grid, correct delR, correct tRef/sRef placeholder, matching
+# SIZE.h tiling) with GoM_1km's production I/O settings (readBinaryPrec/
+# writeBinaryPrec) added. PARM03 (real time-stepping) and PARM05 (real ICs)
+# are explicitly left as placeholders/TODO -- this is a SCAFFOLDING pass
+# only, not a tuned production `data` file. Do NOT build/run from this yet.
+#
+# Continuous equation parameters
+# Nares: tRef/sRef = horizontal mean of the Nares starting T/S (pickup 0000604872),
+# written by prep/stage_run_arch.sh from forcings/pickups/tref_sref_namelist.txt.
+ &PARM01
+# PLACEHOLDER REPLACED 2026-10-02. Was `tRef = 90*-1.0, sRef = 90*34.0` --
+# uniform, and flagged in the old note here as something that must not be
+# carried into a real run. Derived by gen_tref_sref.py as the wet-cell
+# horizontal mean of pickup_THETA/SALT.0000736344 at each level; raw means
+# and wet counts preserved in tref_sref_derived.npz.
+#
+# The wet mask comes from the BATHYMETRY + delR, not from "value != 0": this
+# is the Arctic, where 0.0 degC is physical water, so a zero-based mask would
+# have dropped real cells and biased the profile warm. Checked both ways --
+# wet-but-zero-in-file = 0, i.e. the bathy mask is a strict subset of the
+# pickup's own wet set, so no land cell entered any mean.
+#
+# Levels 83-89 are NOT means. Their wet-cell counts collapse to 463/198/46/3
+# /0/0/0 (sum(delR)=7357 m vs a 5545 m deepest point), and the raw means there
+# swung back up to +1.07 degC -- warm water under the coldest layer of the
+# column, an inverted reference state built from 3 cells. Those levels carry
+# level 82's value instead. They bound essentially no water, so this is
+# cosmetic, but it keeps a sampling artifact out of a profile that will later
+# be read as a statement about Arctic stratification.
+#
+# Shape check: surface -0.08 degC / 31.78 PSU, Atlantic-water warm core
+# +2.54 degC at k=33 (~460 m), cold deep water -0.89 degC / 34.93 PSU.
+tRef = -1.8016, -1.8016, -1.8016, -1.8016, -1.8016, -1.8016, -1.8013, -1.8012, -1.8004, -1.7995, -1.7912, -1.7801, -1.7568, -1.7095, -1.6486, -1.5694, -1.4829, -1.3958, -1.3125, -1.2267, -1.1271, -1.0205, -0.9271, -0.8432, -0.7546, -0.6494, -0.5222, -0.3875, -0.2646, -0.1534, -0.0622, 0.0127, 0.0520, 0.0797, 0.1045, 0.1282, 0.1531, 0.1679, 0.1884, 0.2330, 0.3039, 0.3873, 0.4412, 0.4829, 0.6749, 0.7354, 0.6972, 0.6307, 0.5489, 0.4577, 0.3647, 0.2820, 0.1944, 0.0998, 0.0242, -0.0370, -0.0923, -0.1471, -0.2008, -0.2530, -0.3045, -0.3560, -0.3940, -0.4352, -0.4738, -0.5111, -0.5568, -0.5892, -0.6264, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924, -0.5924,
+ sRef = 32.8362, 32.8362, 32.8362, 32.8362, 32.8362, 32.8362, 32.8364, 32.8380, 32.8386, 32.8392, 32.8440, 32.8506, 32.8646, 32.8938, 32.9364, 32.9973, 33.0677, 33.1377, 33.2059, 33.2840, 33.3836, 33.5040, 33.6324, 33.7573, 33.8731, 33.9825, 34.0893, 34.1780, 34.2505, 34.3112, 34.3499, 34.3803, 34.3964, 34.4010, 34.4141, 34.4299, 34.4487, 34.4622, 34.4759, 34.4912, 34.5067, 34.5324, 34.5581, 34.5890, 34.6329, 34.6630, 34.6789, 34.6935, 34.7109, 34.7263, 34.7408, 34.7531, 34.7612, 34.7668, 34.7726, 34.7762, 34.7794, 34.7813, 34.7843, 34.7849, 34.7881, 34.7967, 34.8052, 34.8090, 34.8309, 34.8601, 34.9211, 34.9222, 34.9235, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197, 34.9197,
+ viscAr= 5.6614e-04,
+ no_slip_sides=.FALSE.,
+ no_slip_bottom=.TRUE.,
+ rhonil=1027.5,
+ rhoConstFresh=999.8,
+ eosType='JMD95Z',
+ hFacMin=0.3,
+ hFacInf=0.1,
+ hFacSup=5.,
+ select_rStar=2,
+ nonlinFreeSurf=4,
+ implicitDiffusion=.TRUE.,
+ implicitViscosity=.TRUE.,
+ viscC4Leith=1.5,
+ viscC4Leithd=1.5,
+ viscA4GridMax=0.5,
+ useAreaViscLength=.TRUE.,
+ selectVortScheme = 2,
+ bottomDragQuadratic = 0.0021,
+ selectImplicitDrag  = 2,
+ tempAdvScheme=7,
+ saltAdvScheme=7,
+ StaggerTimeStep=.TRUE.,
+ vectorInvariantMomentum=.TRUE.,
+ implicitFreeSurface=.TRUE.,
+ implicSurfPress=0.6,
+ implicDiv2DFlow=0.6,
+ exactConserv=.TRUE.,
+ debugLevel=0,
+ useRealFreshWaterFlux=.TRUE.,
+# Nares: iceplume adds plume + melt water via addMass; ICEPLUME_CHECK stops
+# unless selectAddFluid = 1.
+ selectAddFluid=1,
+ globalFiles=.TRUE.,
+# gen_bathy_panAO.py writes bathyFile as real*8 -- readBinaryPrec must match
+# (GOTCHA carried from Fiji/Kerguelen, see gen_ncgrid/input/data).
+ readBinaryPrec=64,
+ writeBinaryPrec=32,
+ &
+
+# Elliptic solver parameters
+ &PARM02
+ cg2dMaxIters=300,
+ cg2dTargetResidual=1.E-10,
+ &
+
+# Time stepping parameters
+# TODO -- ALL of PARM03 below is a structural placeholder, not a real
+# decision. deltaT/endTime/chkptFreq/pChkptFreq depend on the actual
+# production run design (not one of the two mechanical tasks this scaffold
+# pass covers) -- must be revisited before any real run, together with
+# Milestone 5's explicit data.exf EXF_NML_OBCS-vs-file-cadence check.
+ &PARM03
+ nIter0=0,
+# TODO: endTime not yet decided.
+# endTime=,
+# Nares: 1 km (pan_AO 4 km at 300 s). 120 s is a first guess for 1-km
+# tides (~1 m/s in Kennedy/Robeson), plumes and thin partial cells under
+# Petermann; confirm CFL in the short test (monitor advcfl) before production.
+ deltaT=60.,
+# Nares: 720 steps = 1 day short test. Set the production length later.
+ nTimeSteps=349920,
+ cAdjFreq=0.,
+ pChkptFreq=2592000.,
+ chkptFreq=2592000.,
+ monitorFreq=86400.,
+ forcing_In_AB = .FALSE.,
+ momDissip_In_AB   = .FALSE.,
+ dumpInitAndLast=.FALSE.,
+ writePickupAtEnd=.FALSE.,
+ pickupStrictlyMatch=.FALSE.,
+ &
+
+# Gridding parameters
+ &PARM04
+ horizGridFile = 'Nares_grid18',
+ usingCartesianGrid=.FALSE.,
+ usingSphericalPolarGrid=.FALSE.,
+ usingCurvilinearGrid=.TRUE.,
+ pCellMix_select = 20,
+ pCellMix_delR = 3.,
+ pCellMix_viscAr = 90*5.e-3,
+# Standard 90-level GoM_1km-derived profile, same as Kerguelen/Fiji/
+# gen_ncgrid -- user-confirmed choice (2026-09-16), see DECISIONS.md.
+ delR =   1.00,    1.14,    1.30,    1.49,   1.70,
+          1.93,    2.20,    2.50,    2.84,   3.21,
+          3.63,    4.10,    4.61,    5.18,   5.79,
+          6.47,    7.20,    7.98,    8.83,   9.73,
+         10.69,   11.70,   12.76,   13.87,  15.03,
+         16.22,   17.45,   18.70,   19.97,  21.27,
+         22.56,   23.87,   25.17,   26.46,  27.74,
+         29.00,   30.24,   31.45,   32.65,  33.82,
+         34.97,   36.09,   37.20,   38.29,  39.37,
+         40.45,   41.53,   42.62,   43.73,  44.87,
+         46.05,   47.28,   48.56,   49.93,  51.38,
+         52.93,   54.61,   56.42,   58.38,  60.53,
+         62.87,   65.43,   68.24,   71.33,  74.73,
+         78.47,   82.61,   87.17,   92.21,  97.79,
+        103.96,  110.79,  118.35,  126.73, 136.01,
+        146.30,  157.71,  170.35,  184.37, 199.89,
+        217.09,  236.13,  257.21,  280.50, 306.24,
+        345.64,  405.93,  465.38,  548.9,  610,
+ &
+
+# Input datasets
+ &PARM05
+# 2026-09-30: was 'pan_AO_bathymetry.bin', which is the DEFECTIVE STITCHED
+# grid's bathymetry (the one with 633,963 zero-area cells). The model now runs
+# on the north polar stereographic disc, whose model-facing bathymetry is the
+# disc+basin-masked file below -- the same file gen_ncgrid/input/data was
+# already pointed at (:131) and the one the verified ncgrid describes.
+# Both files are 1680*1680*8 = 22,579,200 bytes, so the stale name loaded
+# WITHOUT error and would have integrated the wrong bathymetry silently.
+ bathyFile      = 'Nares_bathymetry.bin',
+# TODO CLEARED 2026-10-02. The STEP3 extraction + IC generation the old note
+# was waiting on is complete: these 5 files live in forcings/pickups/ (82
+# files, 80 GB, all at parent iteration 736344 = 2020-01-01) and passed
+# scan_pickups.py (job 25218294: NaN-free, zero-set == land-set).
+#
+# checkIniTemp/checkIniSalt are .FALSE. for the same reason kerguelen sets
+# them so: these ICs are interpolated from the parent onto a finer child
+# grid, so near-boundary and near-topography cells legitimately fall outside
+# the parent's own min/max range. The check would abort the run on a
+# correctly-downscaled field.
+ hydrogThetaFile = 'pickup_THETA.0000604872.data',
+ checkIniTemp    = .FALSE.,
+ hydrogSaltFile  = 'pickup_SALT.0000604872.data',
+ checkIniSalt    = .FALSE.,
+ uVelInitFile    = 'pickup_U.0000604872.data',
+ vVelInitFile    = 'pickup_V.0000604872.data',
+ pSurfInitFile   = 'pickup_ETAN.0000604872.data',
+ &

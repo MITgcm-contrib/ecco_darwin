@@ -1,0 +1,128 @@
+# ====================
+# | Model parameters |
+# ====================
+# Nares gen_ncgrid: 1-time-step dump of the model grid geometry (STEP1.IV).
+# GRID: rotated lat-lon, 1120 x 360 at 1 km (grid/gen_nares_mitgrid.py), read
+# as ONE exch2 facet from tile001.mitgrid (= Nares.mitgrid, 16 x 361 x 1121
+# real*8), the pan_AO regional-run pattern. All 252 tiles are run (no
+# blankList) so every tile writes its MNC grid; stitch x-fastest.
+# tRef/sRef: pan_AO's Arctic profile, a PLACEHOLDER (not used by the dump).
+ &PARM01
+ tRef =     -0.0827,   -0.0814,   -0.0799,   -0.0783,   -0.0742,
+            -0.0692,   -0.0613,   -0.0485,   -0.0287,   -0.0067,
+             0.0450,    0.1054,    0.1872,    0.3193,    0.4684,
+             0.6430,    0.7973,    0.9213,    1.0253,    1.1282,
+             1.2370,    1.3568,    1.4786,    1.5974,    1.7268,
+             1.8679,    2.0135,    2.1616,    2.3010,    2.4183,
+             2.4861,    2.5298,    2.5407,    2.5289,    2.4976,
+             2.4453,    2.3793,    2.3001,    2.2042,    2.1048,
+             2.0018,    1.8944,    1.7945,    1.6910,    1.6007,
+             1.5113,    1.4287,    1.3514,    1.2769,    1.2084,
+             1.1393,    1.0748,    1.0096,    0.9456,    0.8788,
+             0.8129,    0.7483,    0.6843,    0.6217,    0.5603,
+             0.5016,    0.4425,    0.3905,    0.3391,    0.2883,
+             0.2405,    0.1917,    0.1446,    0.1030,    0.0573,
+             0.0095,   -0.0427,   -0.1075,   -0.1819,   -0.2622,
+            -0.3556,   -0.4708,   -0.5554,   -0.6120,   -0.7023,
+            -0.6163,   -0.8710,   -0.8858,   -0.8858,   -0.8858,
+            -0.8858,   -0.8858,   -0.8858,   -0.8858,   -0.8858,
+ sRef =     31.7802,   31.7831,   31.7871,   31.7916,   31.8035,
+            31.8169,   31.8347,   31.8584,   31.8982,   31.9376,
+            32.0049,   32.0808,   32.1676,   32.2955,   32.4542,
+            32.6606,   32.8632,   33.0483,   33.2132,   33.3594,
+            33.4928,   33.6188,   33.7391,   33.8580,   33.9843,
+            34.1143,   34.2417,   34.3608,   34.4684,   34.5638,
+            34.6312,   34.6899,   34.7342,   34.7692,   34.7966,
+            34.8166,   34.8312,   34.8422,   34.8491,   34.8549,
+            34.8583,   34.8617,   34.8637,   34.8657,   34.8678,
+            34.8696,   34.8713,   34.8730,   34.8747,   34.8765,
+            34.8784,   34.8801,   34.8819,   34.8834,   34.8850,
+            34.8865,   34.8882,   34.8900,   34.8919,   34.8940,
+            34.8961,   34.8983,   34.9004,   34.9026,   34.9047,
+            34.9067,   34.9087,   34.9107,   34.9126,   34.9146,
+            34.9170,   34.9199,   34.9209,   34.9217,   34.9228,
+            34.9236,   34.9260,   34.9284,   34.9311,   34.9361,
+            34.9259,   34.9324,   34.9332,   34.9332,   34.9332,
+            34.9332,   34.9332,   34.9332,   34.9332,   34.9332,
+ viscAr= 5.6614e-04,
+ no_slip_sides=.FALSE.,
+ no_slip_bottom=.TRUE.,
+ rhonil=1027.5,
+ rhoConstFresh=999.8,
+ eosType='JMD95Z',
+ hFacMin=0.3,
+ hFacInf=0.1,
+ hFacSup=5.,
+ select_rStar=2,
+ nonlinFreeSurf=4,
+ implicitDiffusion=.TRUE.,
+ implicitViscosity=.TRUE.,
+ viscC4Leith=1.5,
+ viscC4Leithd=1.5,
+ viscA4GridMax=0.5,
+ useAreaViscLength=.TRUE.,
+ selectVortScheme = 2,
+ bottomDragQuadratic = 0.0021,
+ selectImplicitDrag  = 2,
+ tempAdvScheme=7,
+ saltAdvScheme=7,
+ StaggerTimeStep=.TRUE.,
+ vectorInvariantMomentum=.TRUE.,
+ implicitFreeSurface=.TRUE.,
+ implicSurfPress=0.6,
+ implicDiv2DFlow=0.6,
+ exactConserv=.TRUE.,
+ useRealFreshWaterFlux=.TRUE.,
+ globalFiles=.TRUE.,
+ debugLevel=0,
+# gen_bathy_nares.py writes real*8 big-endian; must match.
+ readBinaryPrec=64,
+ &
+
+ &PARM02
+ cg2dMaxIters=300,
+ cg2dTargetResidual=1.E-10,
+ &
+
+ &PARM03
+ niter0=0,
+ nTimeSteps = 1,
+ deltaT=60.,
+ pChkptFreq=0.,
+ chkptFreq=0.,
+ monitorFreq=0.,
+ dumpInitAndLast=.FALSE.,
+ writePickupAtEnd=.FALSE.,
+ &
+
+ &PARM04
+ usingSphericalPolarGrid=.FALSE.,
+ usingCurvilinearGrid=.TRUE.,
+ pCellMix_select = 20,
+ pCellMix_delR = 3.,
+ pCellMix_viscAr = 90*5.e-3,
+# Standard 90-level GoM_1km-derived profile (pan_AO/fiji/kerguelen); sum 7357 m.
+ delR =
+     1.00,    1.14,    1.30,    1.49,    1.70,
+     1.93,    2.20,    2.50,    2.84,    3.21,
+     3.63,    4.10,    4.61,    5.18,    5.79,
+     6.47,    7.20,    7.98,    8.83,    9.73,
+    10.69,   11.70,   12.76,   13.87,   15.03,
+    16.22,   17.45,   18.70,   19.97,   21.27,
+    22.56,   23.87,   25.17,   26.46,   27.74,
+    29.00,   30.24,   31.45,   32.65,   33.82,
+    34.97,   36.09,   37.20,   38.29,   39.37,
+    40.45,   41.53,   42.62,   43.73,   44.87,
+    46.05,   47.28,   48.56,   49.93,   51.38,
+    52.93,   54.61,   56.42,   58.38,   60.53,
+    62.87,   65.43,   68.24,   71.33,   74.73,
+    78.47,   82.61,   87.17,   92.21,   97.79,
+   103.96,  110.79,  118.35,  126.73,  136.01,
+   146.30,  157.71,  170.35,  184.37,  199.89,
+   217.09,  236.13,  257.21,  280.50,  306.24,
+   345.64,  405.93,  465.38,  548.90,  610.00,
+ &
+
+ &PARM05
+ bathyFile = 'Nares_bathymetry.bin',
+ &

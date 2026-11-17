@@ -1,0 +1,28 @@
+# Nares 1-km regional run (2026-10-07). Adapted from pan_AO input/data.cal.
+# Comments below that are not marked 'Nares' are inherited from pan_AO
+# (dates, job ids and file names in them refer to pan_AO).
+#
+#
+# *******************
+# Calendar Parameters
+# *******************
+# startDate_1 LOCKED 2026-10-02 to the actual regional-run start date.
+# Was 19920101 -- the parent LLC270 v5r1 calendar BASE, correct as a
+# placeholder but wrong as a start date once the ICs were pinned to parent
+# iteration 736344. That iteration is 1992-01-01 + 736344*1200 s =
+# 883,612,800 s = 10227.0 days exactly = 2020-01-01 00:00:00 (28 yr, 7 leap
+# days -- verified by calendar arithmetic, not assumed).
+#
+# This value must agree with the obcs{N,S,E,W}startdate1 = 20200101 already
+# wired in data.exf (2026-10-01) and with kerguelen, which runs 20200101 off
+# the SAME parent pickups at the same iteration. Leaving 19920101 here would
+# have offset the model clock 28 years from its own boundary forcing: EXF
+# would have read OBCS/ERA5 records from the wrong end of the archive, and
+# because every file involved exists and is the right size, it would have
+# run without error.
+ &CAL_NML
+ TheCalendar='gregorian',
+ startDate_1=20150101,
+ startDate_2=000000,
+ calendarDumps = .TRUE.,
+ &

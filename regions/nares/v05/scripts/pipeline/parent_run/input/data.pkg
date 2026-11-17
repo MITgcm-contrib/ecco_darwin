@@ -1,0 +1,16 @@
+# Packages -- matches run2's actual active set (useDiagnostics/usePTRACERS/
+# useGCHEM are TRUE in the live run2/data.pkg but commented out in the
+# input_v5r1 template this file was copied from), plus useDiagnostics_vec
+# for STEP2 boundary extraction.
+ &PACKAGES
+ useEXF   = .TRUE.,
+ useCAL   = .TRUE.,
+ useGMRedi= .TRUE.,
+ useSeaice= .TRUE.,
+ useGGL90 = .TRUE.,
+ useSALT_PlUME=.TRUE.,
+ useDiagnostics=.TRUE.,
+ usePTRACERS   = .TRUE.,
+ useGCHEM      = .TRUE.,
+ useDiagnostics_vec = .TRUE.,
+ /
