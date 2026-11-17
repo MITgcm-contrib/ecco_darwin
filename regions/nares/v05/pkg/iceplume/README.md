@@ -1,8 +1,9 @@
 # pkg/iceplume (as compiled for Nares)
 
 Subglacial-discharge plume parameterization (Cowton et al. 2015) for MITgcm,
-packaged by Mike Wood: https://github.com/mhwood/iceplume, commit e4d4ac9
-(https://github.com/mhwood/iceplume/commit/e4d4ac9), with 13 fixes made for
+packaged by Mike Wood: https://github.com/mhwood/iceplume, commit
+e4d4ac9260ff49f9b3328e7093d26eb649abc79d ("Update README.md",
+https://github.com/mhwood/iceplume/commit/e4d4ac9), with 13 fixes made for
 Nares (local branch `nares_fixes`, HEAD c2e6dbd, 2026-10-06: volume, salt and
 every ptracer close to <= 1.5e-14 of inventory for open and shelf plumes; 1 vs
 4 ranks agree to round-off; restart bit-for-bit; heat closure not
@@ -23,6 +24,7 @@ Runtime: `data.iceplume` (plume mask, plume length, `runoffQsg` yearly files;
 see `../../PIPELINE.md`). `useICEPLUME = .FALSE.` in every Nares run so far.
 
 License: `LICENSE` (BSD 3-Clause, Mike Wood, 2024) covers the iceplume files.
-`opkda1.F`, `opkda2.F` and `opkdmain.F` are ODEPACK (Alan Hindmarsh, LLNL,
-https://computing.llnl.gov/projects/odepack); they carry an author line but no
-license header. Not verified: the ODEPACK redistribution terms.
+`opkda1.F`, `opkda2.F` and `opkdmain.F` are ODEPACK (Alan Hindmarsh, LLNL).
+They carry an author line but no license header; the LLNL ODEPACK page
+(https://computing.llnl.gov/projects/odepack, read 2026-11-16) states that the
+solvers "are in the public domain and are freely available".

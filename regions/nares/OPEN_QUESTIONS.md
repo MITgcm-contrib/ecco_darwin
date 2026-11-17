@@ -6,7 +6,8 @@ Decisions for Dustin. Nothing below is decided in the staged files.
 
 - Stop rule adopted 2026-11-16: at most 2 more full Jan-Aug 2015 runs, one
   change per run, then freeze the run with the lowest total error.
-- Run 1 of 2 is `run_arch_D10` (PBS 25399446, started 2026-11-16): ice-ocean
+- Run 1 of 2 is `run_arch_D10` (PBS 25399446, submitted 2026-11-16; still
+  QUEUED at 18:00 on 2026-11-16, "no available resources"): ice-ocean
   drag on the top-10-m mean ocean velocity (`code_drag10`, 6 files). The staged
   `code/` INCLUDES these 6 files because `job_build_drag10.sh` is the newest
   physics build. If D10 fails the stop rule, remove them from `code/` (the
@@ -25,37 +26,51 @@ Decisions for Dustin. Nothing below is decided in the staged files.
 - The SEAICE_SWFrac backport (2 pkg/seaice files) is shipped as `code/`
   overrides. With these, public darwin3 at tag `darwin_ckpt69k` builds the
   configuration. Not verified by a build yet.
-- Still open: the ODEPACK files (`opkd*.F`) carry no license header.
-- Still open: `useICEPLUME = .FALSE.` in every run so far. Decide whether the
-  shipped configuration should say "iceplume on" or "iceplume off".
+- ODEPACK (`opkd*.F`): no license header, but the LLNL ODEPACK page states
+  the solvers are in the public domain (read 2026-11-16). Resolved.
+- `useICEPLUME = .FALSE.` in every run so far. DECIDED 2026-11-16 (Dustin):
+  keep it off in `input/data.pkg`, as run; `readme_pleiades.txt` section 5
+  says how to switch it on.
 
 ## 3. BGC production tiling and period
 
 - The BGC chain Jan 1 to Sep 1 2015 ran in 3 segments on 192 ranks
   (`run_bgc15_s1..s3`, 2.337 s per step, 1.07 model days per wall hour).
-- A scaling test for the 2016-2025 production is in progress (20x20 tiles,
-  678 ranks; 40x20 tiles, 365 ranks). `build_bgc_s20x20`, `build_bgc_s40x20`,
+- Scaling test for the 2016-2025 production (1-day BGC runs, Jan 1 cold start):
+  - 40x40 tiles, 192 ranks (run_bgc_test2d, 2026-10-30): 2.337 s per step.
+  - 20x20 tiles, 678 ranks (run_bgc_sc_20x20, PBS 25399447, 2026-11-16,
+    ended normally, 1440 steps): 1385.7 s wall = 0.962 s per step, so 2.43x
+    faster for 3.53x the ranks (69 % parallel efficiency). BLOCKING_EXCHANGES
+    134 s, THERMODYNAMICS 429 s, GCHEM_FORCING_SEP 353 s of the 1386 s.
+    One model day = 23 min; 10 years (2016-2025) = about 1400 wall hours =
+    12 long-queue segments of 120 h. (My arithmetic from STDOUT.0000; the
+    BGC session owns the scaling analysis.)
+  - 40x20 tiles, 365 ranks (run_bgc_sc_40x20, PBS 25399711): queued. `build_bgc_s20x20`, `build_bgc_s40x20`,
   `code_size20x20`, `code_size40x20`, `prep/scaling/`, `make_build_scaling.py`,
   `stage_scaling_1d.sh` and `job_run_scaling.sh` are NOT staged, per the
   instruction to ignore them. If a new tiling is adopted, `code/SIZE.h` and
   `input/data.exch2` change together (and the build pre-flight checks that).
 - The production period (2016-2025 proposed) follows the measured rate.
 
-## 4. The staged BGC build has never been built as staged
+## 4. The staged BGC build -- test build DECIDED 2026-11-16 (Dustin: stage and qsub)
 
-- `build_bgc` (2026-10-29) was `-mo "code_capload code_bgc code"`. It has NO
-  SW-heating fix (`code_swfix`) and NO drag10 (`code_drag10`). Both came
-  later. For BGC runs (`useGCHEM = .TRUE.`) the swfix is a no-op by
-  construction (it only guards the CDOMdecay path with `IF (useGCHEM)`), so
-  the staged `code_darwin + code` build should give the same BGC physics as
-  `build_bgc` plus drag10. This is not verified by a build or run.
-- `input_darwin/` comes from `run_bgc15_s1`, whose physics namelists are the
-  older `run_arch_Y16` set (P* 8.25e4, presPow 1/3, no parent GGL90 set, no
-  SImelt diagnostics). The staged `input/` is the newer Y69m_sw set.
-  `input_darwin/data.diagnostics` = Y16 list + BGC streams; it lacks the
-  `SImelt` list that Y69m_sw added. Decide: regenerate `input_darwin/
-  data.diagnostics` from `input/data.diagnostics` + the BGC streams, or keep
-  it as run.
+- `build_bgc` (2026-10-29) was `-mo "code_capload code_bgc code"`, before
+  `code_swfix` and `code_drag10`. The staged `code_darwin + code` = build_bgc +
+  swfix + drag10. For BGC runs the swfix guard is a no-op by construction.
+- Test build: `regional_run/v05test/` (text copy of the staged `v05/`) +
+  `regional_run/job_build_v05test.sh` -> `build_v05test/`. RESULT (PBS
+  25399785, 2026-11-16 18:48): BUILD OK, 0 error lines, mitgcmuv 291 MB,
+  all 8 expected objects, packages darwin gchem ptracers radtrans oasim
+  iceplume shelfice obcs exch2 seaice ggl90 configured. Every override came
+  from the staged tree (12 physics files incl. the SWFrac backport, 5 Darwin
+  files checked; darwin_plankton md5 6cc6dcc5). Compiled sources differ from
+  build_bgc ONLY in the 2 swfix + 4 drag10 files (+ the 2 drag10 files new to
+  it), and from build_drag10 ONLY in the 18 code_darwin files. Not run.
+  (The job's own assert on packages.conf failed because genmake2 does not
+  link that file; the asserts were rerun by hand and the script fixed.)
+- `input_darwin/data.diagnostics` regenerated from `input/data.diagnostics` +
+  the run_bgc15_s1 BGC streams (DECIDED 2026-11-16; see PROVENANCE.md 4).
+  `input_darwin` otherwise = run_bgc15_s1, whose physics was the older Y16 set.
 
 ## 5. Version label -- DECIDED 2026-11-16 (Dustin: v05)
 
@@ -80,22 +95,14 @@ Decisions for Dustin. Nothing below is decided in the staged files.
 - The nutrient-fix factor file `nutfix_factor_v3.npz` and `glodap_north50.npz`
   come from the pan_AO project (not in this tree).
 
-## 7. Things to clean before copying to GitHub
+## 7. Clean-ups -- DECIDED 2026-11-16 (Dustin)
 
-- `scripts/` and `scripts/pipeline/` are shipped AS RUN with absolute
-  Pleiades paths and PBS resource lines. They are records, not portable tools.
-- `code/` contains the 30 Darwin files of the OLD (2026-10-07) `code_darwin`
-  set, because the physics builds compile them (packages.conf lists darwin,
-  gchem, radtrans, oasim). 17 of them are stale (17-argument
-  `darwin_plankton.F`, old RADIv2 sediment) and are REPLACED by `code_darwin/`
-  in a BGC build. They are inactive in physics runs (`useGCHEM = .FALSE.`).
-  Option: drop them from `code/` and make `code_darwin/` the only Darwin set.
-  That changes which Darwin sources the physics binary compiles, so it needs
-  one physics build to check (nothing runtime should change).
+- `scripts/` and `scripts/pipeline/` stay AS RUN, with absolute Pleiades paths
+  and PBS resource lines. They are records, not portable tools.
+- `code/` keeps the 30 Darwin files of the old (2026-10-07) `code_darwin` set,
+  so that `code/` reproduces `build_drag10` file for file. 17 of them are stale
+  and are replaced by `code_darwin/` in a BGC build; they never execute in a
+  physics run (`useGCHEM = .FALSE.`). Listed in PROVENANCE.md section 2.
 - `code/seaice_growth.F` and `code/apply_forcing.F` are the `code_swfix`
-  versions (6-m ice-load cap + `IF (useGCHEM)` guard around the CDOMdecay
-  shortwave path). The BGC chain's winners for these two names
-  (`code_capload/seaice_growth.F`, `code_bgc/apply_forcing.F`) are the same
-  code WITHOUT the guard. With `useGCHEM = .TRUE.` the guard is a no-op, so
-  they are NOT staged in `code_darwin/` (staging them would undo the fix for
-  physics-only runs of a BGC binary). See PROVENANCE.md.
+  versions. The BGC chain's winners for these two names are the same code
+  without the `IF (useGCHEM)` guard, so they are not staged in `code_darwin/`.

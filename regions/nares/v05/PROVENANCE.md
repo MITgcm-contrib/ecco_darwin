@@ -120,8 +120,11 @@ Staging rule: a BGC-chain winner is staged in `code_darwin/` only if its
 content differs from the file of the same name in `code/`. Two exceptions
 (`apply_forcing.F`, `seaice_growth.F`) are explained in the table. Result:
 18 files. The intended BGC build is therefore `-mo "code_darwin code"`, which
-= `build_bgc` + `code_swfix` + `code_drag10`. **That combination has never
-been built or run** (see OPEN_QUESTIONS.md item 4).
+= `build_bgc` + `code_swfix` + `code_drag10`. Built once as a test on
+2026-11-16 (`regional_run/build_v05test`, PBS 25399785): clean build, and the
+compiled sources differ from `build_bgc` only in the swfix and drag10 files
+and from `build_drag10` only in the 18 `code_darwin` files. **Not run** (see
+OPEN_QUESTIONS.md item 4).
 
 | file | source dir (wins in the BGC chain) | lost | staged? |
 |---|---|---|---|
@@ -228,16 +231,20 @@ of the only full BGC chain (Jan 1 to Apr 1; s2, s3 continue to Sep 1 with
 only `nIter0`/`nTimeSteps` changed). Copied: `data.darwin`, `data.gchem`,
 `data.oasim`, `data.ptracers`, `data.radtrans`, `data.traits` (all
 byte-identical to `nares/regional_run/input_darwin/`), plus the two files that
-override `input/`: `data.pkg` (BGC packages on) and `data.diagnostics` (BGC
-streams added).
+override `input/`: `data.pkg` (BGC packages on) and `data.diagnostics`.
+`data.diagnostics` is DERIVED (2026-11-16, Dustin's decision): the staged
+`input/data.diagnostics` (Y69m_sw lists 1-7, 11) plus the BGC streams of
+`run_bgc15_s1` (its lists 8-10 kept, its monthly tracer lists 11-43 renumbered
+12-44). It has not been run in this form. The as-run `run_bgc15_s1` file had
+the older `run_arch_Y16` physics lists (no `SImelt`).
 
 Physics files of `run_bgc15_s1` that are NOT staged, because they are the
 older `run_arch_Y16` physics (superseded by Y69m_sw): `data.seaice`
 (`SEAICE_strength 8.25e4`, `presPow0/1 = 1/3`), `data.ggl90` (no parent set),
 `data` (`nTimeSteps 129600`). `data.obcs`, `data.exf`, `data.exch2`,
 `data.iceplume`, `data.shelfice`, `data.salt_plume`, `data.cal`, `eedata` are
-identical to the staged `input/`. DRAFT: `input_darwin/data.diagnostics` lacks
-the `SImelt` list that Y69m_sw added (OPEN_QUESTIONS.md item 4).
+identical to the staged `input/`. (`input_darwin/data.diagnostics` carries the `SImelt`
+list; see above.)
 
 ## 5. `scripts/`
 

@@ -71,9 +71,11 @@
 #      master has SEAICE_SWFrac but no Darwin extensions. seaice_growth.F
 #      (code/) needs both.
 # The core files iceplume patches are in code/ as well (PROVENANCE.md).
-# Not verified: that a build from public darwin_ckpt69k with these overrides
-# is bit-identical to build_drag10 (it compiles the same sources by
-# construction, but has not been done).
+# Verified 2026-11-16 against the Pleiades tree: a build from these two
+# directories (build_v05test) compiles the same sources as build_drag10 plus
+# the 18 code_darwin files. Not verified: the same build from a fresh public
+# darwin_ckpt69k clone (the SWFrac backport files were only checked as
+# overrides on the Pleiades tree, where pkg/seaice already carries them).
 
 ==============
 # 2. Build executable
@@ -99,9 +101,10 @@
 # files with the v5 ecosystem set. Reversing the order gives a BGC binary with
 # the stale (invalid) 17-argument darwin_plankton.F and no error.
 #
-# NOTE 2 (DRAFT): the BGC combination code_darwin + code has NOT been built
-# yet. build_bgc (2026-10-29) predates code_swfix and code_drag10
-# (OPEN_QUESTIONS.md item 4).
+# NOTE 2 (DRAFT): the BGC combination code_darwin + code was test-built on
+# 2026-11-16 (build_v05test: clean; sources = build_bgc + swfix + drag10
+# exactly) but has NOT been run. build_bgc (2026-10-29), which ran the BGC
+# chain, predates code_swfix and code_drag10 (OPEN_QUESTIONS.md item 4).
 
 # AMD (rom_ait) portability and the >2 GB static arrays (mitgcmuv has a
 # 1.93 GB bss): required on Pleiades, harmless otherwise:
@@ -223,6 +226,14 @@
 #                             layer, which flowed about 30 % slower with the parent
 #                             GGL90 set and left the strait mouth ice locked.
 #                             run_arch_D10 (full year) is the test.
+
+# iceplume is compiled in but OFF (useICEPLUME = .FALSE. in data.pkg) in every
+# run so far, including the BGC chain. To switch it on: set useICEPLUME =
+# .TRUE. in data.pkg; keep selectAddFluid = 1 in data (ICEPLUME_CHECK needs
+# it); link the Humboldt plume mask and length files and the yearly
+# runoffQsg_YYYY files (data.iceplume names them; PIPELINE.md STEP 3). The
+# plume ptracer concentrations (ICEPLUME_PARM02/03) are unset. Untested in a
+# full run (a 1-day test ran on 2026-10-07 with iceplume on).
 
 # Cold start. input/data ships nIter0 = 0 with hydrogThetaFile /
 # hydrogSaltFile / uVelInitFile / vVelInitFile / pSurfInitFile pointing at the
