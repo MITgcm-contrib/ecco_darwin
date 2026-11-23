@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Wetting-drying bathymetry for the LR17 80 m grid (Pertuis Charentais).
 
-Usage:  python3 LR17_bathy.py [ZMAX] [--zmouth=Z] [--ztip=Z] [--out=NAME] [--nofig]
+Usage:  python3 LR17_bathy.py [ZMAX] [--zmouth=Z] [--ztip=Z] [--out=NAME] [--fillpits=ZRIM] [--nofig]
   --zmouth, --ztip: thalweg profile ends (m MSL, default -2.5 and -0.5; v4: -4 and -3);
   --out: output file name in data/LR17/work (default LR17_zb.bin); --nofig: no figure.
+  --fillpits: raise closed basins to their lowest rim where that rim is above ZRIM (m MSL).
   LR17_ROOT (env): root that holds data/ (default: the parent of scripts/).
 Grid: 936 x 875, 0.0008 deg (62 x 89 m), lon -1.7001 + ..., lat 45.7499 + ...
 (Adeola's LR17 80 m Darwin P1). Source: data/LR17/bathymetry/bathy_LR17_936x875,
@@ -26,6 +27,9 @@ River thalwegs (2026-09-30): the DEM gives the carved rivers their banks or
 water surface (1-2.6 m above MSL, with sills), so each carved river cell is
 capped by a profile from Z_TIP (-0.5 m MSL) at the upstream end to Z_MOUTH
 (-2.5 m) where it meets deeper water: the Lay and Sevre now reach the sea.
+Closed basins (--fillpits, 2026-11-23): pits that the tide seldom flushes trap
+rain + a wdCritDepth layer and fell to -3.4 C in winter (2025 run). Only
+basins with a high rim are filled; low-water channels keep their shape.
 Writes data/LR17/work/LR17_zb.bin (float32 big-endian, m MSL, land = NaN
 ... written as +99) and figures/LR17/LR17_bathymetry.{pdf,png}.
 
@@ -36,6 +40,7 @@ b, Floodable cells (bed -4 to +5 m MSL, blue) and low polders kept dry
 """
 import json
 from collections import deque
+import heapq
 import os
 import sys
 
@@ -61,6 +66,7 @@ LAND = 99.0
 Z_MOUTH, Z_TIP = float(OPT.get('zmouth', -2.5)), float(OPT.get('ztip', -0.5))
 Z_SEA = -2.5                    # m MSL: a river mouth is a river cell next to sea deeper than this
 OUT = OPT.get('out', 'LR17_zb.bin')
+FILLPITS = float(OPT['fillpits']) if 'fillpits' in OPT else None
 
 
 def rasterize(elements):
@@ -92,6 +98,31 @@ def fill_polys(elements):
         edge = rasterize(parts)
         out |= ndimage.binary_fill_holes(edge)
     return out
+
+
+def spill_level(zb, wet):
+    """lowest level (m MSL) at which each cell connects to the open sea
+    (largest area below -3 m MSL) through cell faces (priority flood)"""
+    lab, _ = ndimage.label(wet & (zb < -3))
+    n = np.bincount(lab.ravel())
+    n[0] = 0
+    f = np.full(zb.shape, np.inf)
+    q = []
+    for j, i in zip(*np.where(lab == n.argmax())):
+        f[j, i] = zb[j, i]
+        q.append((zb[j, i], j, i))
+    heapq.heapify(q)
+    while q:
+        z, j, i = heapq.heappop(q)
+        if z > f[j, i]:
+            continue
+        for jj, ii in ((j + 1, i), (j - 1, i), (j, i + 1), (j, i - 1)):
+            if 0 <= jj < NY and 0 <= ii < NX and wet[jj, ii]:
+                znew = max(z, zb[jj, ii])
+                if znew < f[jj, ii]:
+                    f[jj, ii] = znew
+                    heapq.heappush(q, (znew, jj, ii))
+    return f
 
 
 def main(write=True, fig=True):
@@ -140,6 +171,12 @@ def main(write=True, fig=True):
         carved += low.sum()
     print(f'river thalwegs: {carved} carved river cells lowered to the '
           f'{Z_MOUTH:+.1f} .. {Z_TIP:+.1f} m MSL profile')
+    if FILLPITS is not None:
+        f = spill_level(zb, wet)
+        pit = wet & np.isfinite(f) & (f > zb + 1.e-4) & (f > FILLPITS)
+        print(f'closed basins: {pit.sum()} cells with a rim above {FILLPITS:+.1f} m MSL raised to the rim '
+              f'(largest {(f - zb)[pit].max() if pit.any() else 0:.2f} m)')
+        zb = np.where(pit, f, zb)
     os.makedirs(os.path.join(D, 'work'), exist_ok=True)
     if write:
         zb.astype('>f4').tofile(os.path.join(D, 'work', OUT))

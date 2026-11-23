@@ -1,0 +1,41 @@
+# LR17 80m_wetdry baseline v4.2, 2025 run: 2024-12-01 + 396 d (1 Dec 2024 - 31 Dec 2025; December 2024 is spin-up)
+# v4.2 physics, real freshwater flux, river temperature (data.rivers), initial S +1.3; bed LR17_zb_v4.bin
+# FES2022b tide in boundary sea level only; south-boundary plume salinity anomaly x 0.25; model time 0 = 2024-12-01 00 UTC
+# The run was done in 5 segments of 691200 steps (80 days): set nIter0, nTimeSteps and pChkptFreq per segment
+ &PARM01
+ tRef=14*10., sRef=14*34.,
+ no_slip_sides=.FALSE., no_slip_bottom=.FALSE.,
+ viscAr=1.E-4, viscAh=2., viscAhGrid=1.E-2,
+ viscC4Leith=1.5, viscC4Leithd=1.5, viscA4GridMax=0.5, useAreaViscLength=.TRUE.,
+ diffKhT=1., diffKhS=1., diffKrT=1.E-5, diffKrS=1.E-5,
+ bottomDragQuadratic=2.5E-3, selectImplicitDrag=2, implicitViscosity=.TRUE.,
+ implicitDiffusion=.TRUE.,
+ rhoConst=1025., gravity=9.81, eosType='JMD95Z',
+ rigidLid=.FALSE., implicitFreeSurface=.TRUE., exactConserv=.TRUE.,
+ nonlinFreeSurf=4, select_rStar=2,
+ hFacMin=0.01, hFacMinDr=0.01, hFacInf=0.001, hFacSup=2.0,
+ momStepping=.TRUE., vectorInvariantMomentum=.TRUE., upwindShear=.TRUE.,
+ tempStepping=.TRUE., saltStepping=.TRUE., tempAdvScheme=33, saltAdvScheme=33,
+ tempVertAdvScheme=3, saltVertAdvScheme=33,
+ momImplVertAdv=.TRUE., tempImplVertAdv=.TRUE., saltImplVertAdv=.FALSE.,
+ staggerTimeStep=.TRUE., useRealFreshWaterFlux=.TRUE.,
+ selectAddFluid=1, temp_addMass=9.0, salt_addMass=0.,
+ readBinaryPrec=32, writeBinaryPrec=32, useSingleCpuIO=.TRUE.,
+ &
+ &PARM02
+ cg2dMaxIters=500, cg2dTargetResidual=1.E-12,
+ &
+ &PARM03
+ nIter0=0, nTimeSteps=3421440, deltaT=10.0, abEps=0.1,
+ dumpFreq=0., monitorSelect=2, monitorFreq=3600.,
+ pChkptFreq=34214400.0, chkptFreq=86400.,
+ &
+ &PARM04
+ usingSphericalPolarGrid=.TRUE., xgOrigin=-1.7001, ygOrigin=45.7499,
+ delX=936*0.0008, delY=875*0.0008,
+ delR=2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 5, 5, 10, 10, 10, 8.5,
+ &
+ &PARM05
+ bathyFile='bathy.bin', pSurfInitFile='eta.bin',
+ hydrogThetaFile='T.bin', hydrogSaltFile='S.bin',
+ &

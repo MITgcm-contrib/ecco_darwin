@@ -6,6 +6,7 @@ the v4.2 baseline: physics with wetting and drying (pkg/wetdry) on Adeola's LR17
 
 The reference run is 43 days from 23 February 2022 00 UTC, which covers the observation window
 of the 2022 calibration package (SOMLIT Antioche, CocoriCO2, AWAC, SHOM tide gauges, IFREMER SST).
+The 2025 run is a full year with the same physics (section 8).
 
 ## Contents
 
@@ -16,6 +17,7 @@ of the 2022 calibration package (SOMLIT Antioche, CocoriCO2, AWAC, SHOM tide gau
 | `code/lr17_rivers.F`, `LR17_RIVERS.h` | Daily river discharge (`data.rivers`) as volume sources (`addMass`) at the tip of each river channel. |
 | `code/obcs_calc.F`, `code/load_fields_driver.F` | Stock MITgcm `d861cd501` files with one added call each (to `LR17_FLATHER` and `LR17_RIVERS`). |
 | `input/` | Namelists of the v4.2 reference run. |
+| `input_y2025/` | Namelists of the 2025 run that differ from `input/`: `data`, `data.cal`, `data.exf`, `data.rivers`. |
 | `scripts/` | Python scripts that make every binary input from public data (see "Make the inputs"). |
 
 ## 1. Get the code
@@ -82,6 +84,7 @@ OpenStreetMap coast, dike and river files, the Hub'Eau discharge used for the re
 | Rivers | `LR17_rivers.py START END` | Hub'Eau daily discharge | none |
 | FES tide atlases | `fes_crop.py FILE ...` | FES2022b elevations, FES2014 currents | AVISO |
 | Bed (v4 river channels) | `LR17_bathy.py --zmouth=-4 --ztip=-3 --out=LR17_zb_v4.bin` | Adeola's `bathy_LR17_936x875`, OpenStreetMap coast, dikes and rivers | none |
+| Bed with filled pits (optional, not run yet) | the same with `--fillpits=1 --out=LR17_zb_v4_pitfill.bin` | the same | none |
 | Run folder | `LR17_gendata_somlit.py` (calls `gendata.py`) | all of the above | |
 
 The command for the v4.2 reference run:
@@ -103,9 +106,9 @@ Year-long runs (the 2025 run, 1 December 2024 to 1 January 2026): `LR17_era5.py`
 months one month at a time; `LR17_rivers_year.py START END` fills the Boutonne at Saint-Jean-d'Angely from Saint-Severin
 and writes the river temperature from the Hub'Eau samples of the Charente at Taillebourg; `--river-temp=CSV` passes that
 series to the model (`rivTemp` in `data.rivers`, read by `code/lr17_rivers.F`; without it rivers enter at 9 C), and
-`--real-fw` turns on `useRealFreshWaterFlux` without the sediment set-up. With `--real-fw`, use pkg/wetdry with the
-dry-film evaporation fix in `wetdry_dry_forcing.F` (November 2026): without it, evaporation adds salt to the 5 cm
-film of dry cells.
+`--real-fw` turns on `useRealFreshWaterFlux` without the sediment set-up. With `--real-fw`, use ecco_darwin's pkg/wetdry
+from 23 November 2026 or later (dry-film evaporation fix in `wetdry_dry_forcing.F`): without the fix, evaporation adds
+salt to the 5 cm film of dry cells. The 2025 run used the same fix as a local override.
 
 ## Sediment (optional)
 
@@ -171,3 +174,42 @@ Check any new namelist file for lines longer than 200 characters before a run:
 3. The plume scaling is a fixed factor tuned to the 2022 observations, not a physical correction of IBI.
    Salinity errors are now -0.2 to +0.4; early April at SOMLIT Antioche is about 0.4 too salty.
 4. The river sources are single cells at the tip of each channel.
+5. Closed pits in the v4 bed hold rain water (rim + 0.10 m, the critical depth) and fell to -3.4 C in January 2025, because the
+   run has no sea ice and no freezing limit. These are a few shallow cells. `LR17_bathy.py --fillpits=1` raises the 21
+   pit cells with a rim above +1 m MSL to the rim; this bed is not run yet.
+6. Surface currents reach 2.5 m/s or more in 36% of hours in the Sevre channel (46.30 N, 1.14 W) and in 15% of hours at the
+   Fier d'Ars entrance (46.23 N, 1.47 W). We have no current data there to compare with.
+
+## 8. The 2025 run (1 December 2024 to 31 December 2025)
+
+396 days with v4.2 physics; December 2024 is spin-up. Differences from the reference run: real freshwater flux (rain and
+evaporation), river temperature from the Charente at Taillebourg (all four rivers), the full Hub'Eau discharge, and ERA5 and
+IBI for 2024-2025. Commands:
+
+```
+python3 scripts/LR17_ibi.py 2024-11-25 2026-01-05
+python3 scripts/LR17_ibi.py 2024-11-01 2026-02-01 --only=ssh,cur     # for the band-pass filter
+python3 scripts/LR17_era5.py 2024-11-25 2026-01-05
+python3 scripts/LR17_rivers.py 2024-11-25 2026-01-05
+python3 scripts/LR17_rivers_year.py 2024-11-25 2026-01-05
+LR17_S_OFFSET_IC=1.3 python3 scripts/LR17_gendata_somlit.py 2024-12-01 396 run_y2025 2024-11-25 2026-01-05 \
+  --fes-boundary=eta --band-download=2024-11-01_2026-02-01 --zb=data/LR17/work/LR17_zb_v4.bin --plume-beta=0.25 \
+  --real-fw --river-temp=data/LR17/hubeau/LR17_river_temp_2024-11-25_2026-01-05.csv
+cp input/data* input_y2025/data* run_y2025/
+```
+
+The run needs about 0.29 s per 10-s step on 84 Skylake ranks, about 11.5 days for 3,421,440 steps. It ran in 5 segments
+of 691,200 steps (the last 656,640); restart each segment from the permanent pickup (`pChkptFreq` = segment length). Output: 174 GB (hourly sea
+level and surface currents, 6-hourly surface fields, daily 3-D T and S, 10-min sea level at the gauges).
+
+| Observation (calendar year 2025) | LR17 2025 run |
+|---|---|
+| Tide gauge La Pallice (all year) | sea-level RMSE 0.12 m (IBI: 0.21 m), subtidal r = 0.985 |
+| Tide gauge Ile d'Aix (60% of the year) | RMSE 0.13 m (IBI: 0.21 m) |
+| Tides | M2 2.5-2.7% low, phase within 1.5 degrees; M4 6-7% low, 4-6 degrees late; MS4 25-28% low, 20-23 degrees early |
+| High / low water | high water within 0.03 m on average; lowest 10% of low waters 0.16-0.18 m too high |
+| IFREMER L4 SST (1 January to 4 November) | bias +0.20 C (largest month +0.8 C in August), r = 0.995 |
+| SOMLIT Antioche, 17 casts | mean salinity error 0.43 (IBI: 1.41); 1.0-1.3 too salty on three January-February casts; mean temperature error 0.34 C |
+
+Tide gauge rows: each series has its own mean removed, so the mean sea level is not tested. The salty bias in winter is likely
+the weak plume on the south boundary (section 5) during high river flow; this is not tested.

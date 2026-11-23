@@ -10,7 +10,21 @@ brine rejection (pkg/salt_plume).
 
 Author: Dustin Carroll (SJSU / JPL), 2026. Developed against MITgcm
 `master` at commit `d861cd501` ("Fix pkg/cheapaml flux option LANL",
-#1001). This version: development branch `wetdry` at `0955ba4c4`.
+#1001). This version: development branch `wetdry` at `0955ba4c4`, plus the
+2026-11-05 fix of `d1501816d` in `wetdry_dry_forcing.F` (see below).
+
+## Update 2026-11-23: evaporation on dry columns
+
+- `wetdry_dry_forcing.F`: with `useRealFreshWaterFlux` and `staggerTimeStep`, `PmEpR` holds the
+  full evaporation while `WETDRY_LIMIT_OUTFLOW` removes it from dry columns later in the step, so
+  the tracer term `PmEpR*(EvPrRn - tracer)` concentrated salt in a film that lost no water. That
+  term now uses the same factor `fD` where `PmEpR < 0`. Runs without real fresh-water flux, or
+  without dry cells, do not change. With synchronous time stepping the code is unchanged.
+- The reference outputs `wetdry_mudflat.rain` and `wetdry_iceground.dyn` change with this fix
+  (development branch: maximum S in mudflat.rain falls from 55.84 to 38.36). The files in
+  `verification/` are NOT refreshed here: they need a run on x86.
+- The development branch also writes `pickup_wetdry` at 64 bit (`166da29c8`). That change is NOT
+  in this folder, because it makes old 32-bit `pickup_wetdry` files unreadable.
 
 ## What changed in this update (2026-10-30)
 
