@@ -10,9 +10,9 @@ All paths below are relative to the Nares configuration directory on Pleiades
 (`<config>` = `/nobackup/dcarrol2/downscaling/nares/`), which is separate from
 this repository. Dates refer to the decision log.
 
-**DRAFT: pending the frozen physics (run_arch_D10).** The inputs themselves do
-not depend on the sea-ice tuning, but the final OBCS and IC sets for a
-2016-2025 production run do not exist yet.
+Physics frozen 2026-11-20 at `run_arch_D10`. The inputs below are the 2015
+(Jan-Aug) sets the tuning runs used. The OBCS and IC sets for the 2016-2025
+production run are made by the same steps and are not described here yet.
 
 ---
 
@@ -27,7 +27,7 @@ Produces `<config>/grid/`.
 | `grid/wall_fill_bridges_nares.py` | `Nares_bathymetry_walled.bin` (the bathymetry the runs use) |
 | `gen_ncgrid/` (code, input, 2 PBS jobs) | `Nares_ncgrid.nc` (1-step dump on all 252 tiles, no blankList) |
 | not sourced (DECISIONS 2026-10-15) | `Nares_grid18.face001.bin` = the 16 mitgrid fields + AngleCS/AngleSN from `Nares_ncgrid.nc` |
-| `grid/gen_exch2_blanklist.py` | `input/data.exch2` (28 x 9 = 252 tiles of 40 x 40, 60 blank, x-fastest ids) |
+| `grid/gen_exch2_blanklist.py` (args `20 20`) | `input/data.exch2` (56 x 18 = 1008 tiles of 20 x 20, 330 blank, x-fastest ids; with no tile-size args it writes the 40 x 40 tiling of the 2015 tuning runs: 252 tiles, 60 blank) |
 | `grid/gen_ob_index.py` | the `OB_I{east,west}` / `OB_J{north,south}` arrays in `input/data.obcs` |
 | `utils/gen_dvmasks.py` (toolkit; no Nares wrapper found) | `parent/inputs/{east,west,north,south}_BC_mask.bin` |
 | `grid/gen_humboldt_plumes.py` | iceplume mask + length files (baseline, sheet, no-discharge variants) and `Humboldt_Qsg_daily.npz` |
@@ -56,9 +56,10 @@ the unwalled bathymetry are used unchanged. A 20 m minimum depth was tested
 (`deepen_min_depth_nares.py`) and not adopted.
 
 Tiling: a tile is active if it holds any wet cell (bathymetry < 0 or shelfice
-cavity). 60 of 252 tiles are blank, so 192 MPI ranks. `SIZE.h` (nPx = 192),
-`data.exch2` (blankList) and the bathymetry must change together; the build
-scripts assert this.
+cavity). Production tiling (20 x 20): 330 of 1008 tiles are blank, so 678
+MPI ranks. The 2015 tuning runs used 40 x 40 tiles: 60 of 252 blank, 192
+ranks. `SIZE.h` (nPx = 678), `data.exch2` (blankList) and the bathymetry must
+change together; the build scripts assert this.
 
 Grid angles: the run reads `Nares_grid18.face001.bin` (`horizGridFile =
 'Nares_grid18'`). Without it the model computes the angles itself and gets the
@@ -184,10 +185,13 @@ The BGC run reads the physics pickups and OBCS from STEP 3 above unchanged.
 
 ## STEP 4 — regional run
 
-See `readme_pleiades.txt`. Physics built from `code`, run with
-`scripts/job_run_arch_long.sh` (27.4 h for Jan 1 to Sep 1 2015 on 192 ranks).
-BGC built from `code_darwin` + `code` (DRAFT, not yet built in that form) and
-run as 3 segments with `scripts/stage_bgc_prod.sh` (about 227 h in all).
+See `readme_pleiades.txt`. Production (20 x 20, 678 ranks): build with
+`scripts/job_build_v05.sh` (`code_darwin` + `code`; test-built, not yet run)
+and run with `scripts/job_run_scaling.sh` (NP = 678). The 2015 tuning runs
+(40 x 40, 192 ranks): physics built from the `build_drag10` chain and run with
+`scripts/job_run_arch_long.sh` (28.2 h for Jan 1 to Sep 1 2015, run_arch_D10);
+BGC built as `build_bgc` and run as 3 segments with `scripts/stage_bgc_prod.sh`
+(about 227 h in all).
 
 ---
 

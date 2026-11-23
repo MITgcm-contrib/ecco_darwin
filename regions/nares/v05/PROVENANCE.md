@@ -1,12 +1,17 @@
-# Provenance of every staged file (2026-11-16)
+# Provenance of every staged file (2026-11-16, updated 2026-11-22)
 
 Source root on Pleiades: `/nobackup/dcarrol2/downscaling/nares/` (called `nares/`
 below). Builds and runs are PBS jobs under `nares/regional_run/`. "Wins" means
 genmake2 `-mo` resolution: directories are searched left to right and the
 FIRST match is compiled.
 
-**DRAFT: pending the frozen physics (run_arch_D10).** `code/` reproduces the
-newest physics build. If D10 fails the stop rule, the 6 `code_drag10` files go.
+Physics frozen 2026-11-20 at `run_arch_D10` (built as `build_drag10`).
+`code/` reproduces `build_drag10` file for file, with ONE exception: `SIZE.h`
+is the 20x20 production file (sNx = sNy = 20, nPx = 678; from
+`nares/regional_run/code_size20x20/`, as built in `build_bgc_s20x20` for the
+scaling test). `input/data.exch2` is its partner (from
+`nares/prep/scaling/data.exch2_20x20`: 1008 tiles, 330 blank). Every 2015
+tuning run used the 40x40 pair (192 ranks).
 
 ## 1. `code/` = the physics build `build_drag10`, collapsed
 
@@ -32,7 +37,7 @@ What each source directory is:
 | `code_darwin` | the 2026-10-07 Darwin set (pan_AO code_darwin of that date + 5 radtrans under-ice light overrides + iceplume blocks in `apply_forcing.F`). 17 of its 34 files are stale for BGC (17-argument `darwin_plankton.F`). Compiled into every physics binary but inactive (`useGCHEM = .FALSE.`) | `build`, `build_capload`, `build_swfix`, `build_drag10` |
 | `code_capload` | 2026-10-24: `SEAICE_CAP_ICELOAD` + `heffTooHeavy = 6 m` (ice load capped at 6 m of water) | `build_capload` and every later build |
 | `code_swfix` | 2026-11-08: `IF (useGCHEM)` guard around the CDOMdecay shortwave path in `apply_forcing.F` and `seaice_growth.F` (physics-only runs had no ocean SW heating) | `build_swfix`, `build_drag10` |
-| `code_drag10` | 2026-11-15 (`prep/make_drag10.py`): ice-ocean drag on the 0-10 m mean ocean velocity (`SEAICE_OCNVEL.h`, `seaice_ocnvel_avg.F`, 4 patched seaice routines) | `build_drag10` only (run_arch_D10t passed a 10-day test; run_arch_D10 running) |
+| `code_drag10` | 2026-11-15 (`prep/make_drag10.py`): ice-ocean drag on the 0-10 m mean ocean velocity (`SEAICE_OCNVEL.h`, `seaice_ocnvel_avg.F`, 4 patched seaice routines) | `build_drag10` only (run_arch_D10t passed a 10-day test; run_arch_D10 = the frozen physics) |
 
 File table (61 files; the last two rows are the SEAICE_SWFrac backport, taken from the darwin3 `nares` branch commit ce5f626cf, not from an override directory). "lost" = the same-named files further right in the `-mo` list.
 
@@ -58,7 +63,7 @@ File table (61 files; the last two rows are the SEAICE_SWFrac backport, taken fr
 | `RADTRANS_SIZE.h` | `code_darwin` | - |
 | `SEAICE_OCNVEL.h` | `code_drag10` | - |
 | `SEAICE_OPTIONS.h` | `code_capload` | code |
-| `SIZE.h` | `code` | - |
+| `SIZE.h` | `code_size20x20` (staged; `build_drag10` compiled the 40x40 `code/SIZE.h`) | - |
 | `apply_forcing.F` | `code_swfix` | code_darwin |
 | `darwin_add_surfforc.F` | `code_darwin` | - |
 | `darwin_check.F` | `code_darwin` | - |
@@ -196,7 +201,13 @@ sky_ele / 192 ranks) is the last scored full Jan 1 to Sep 1 2015 physics run and
 the base of `run_arch_D10`. Copied: `data`, `data.cal`, `data.diagnostics`,
 `data.exch2`, `data.exf`, `data.ggl90`, `data.iceplume`, `data.obcs`,
 `data.pkg`, `data.salt_plume`, `data.seaice`, `data.shelfice`, `eedata`.
-Not copied: `data.diagnostics.bak_with_hourly` (the 3 hourly lists dropped on
+`data.exch2` was then replaced by the 20x20 production file (section 1).
+
+Compared with the frozen run `run_arch_D10` on 2026-11-22: every staged
+physics namelist is byte-identical to D10's, except `data.exch2` (20x20, see
+above) and `data.diagnostics`. D10 adds one evaluation-only list 12 (daily
+`uv10`: `UVEL`, `VVEL`, levels 1-7). It is not staged; it does not change the
+solution. Not copied: `data.diagnostics.bak_with_hourly` (the 3 hourly lists dropped on
 2026-11-13 to save inodes) and `data.obcs_tides.snippet` (a fragment already
 inside `data.obcs`).
 
@@ -217,7 +228,8 @@ is NOT this baseline"). The staged files differ from it as follows
 | `data.seaice` | `presPow0/1 = 1/3`, `area_max 0.95`, `advScheme 30`, `diffKh 400`, `nonLinIterMax 20`, `tensilFac 0.05`, `basalDragK2 15`, `sideDrag 7.2e-3`, default P* | `HO 2.0`, `presPow0/1 = 2/1`, `area_max 0.98`, `SEAICE_strength 6.875e4`, `SEAICE_eccen 1.6`, `advScheme 77`, `diffKh 0`, tensile/basal/side drag 0, `HeffFile = pickup_seaice_siHEFF_ICT` (thinned mouth) |
 | `data.ggl90` | TKE file only | + parent GGL90 set: `alpha 30`, `TKEmin 1e-7`, `TKEbottom 1e-6`, `mxlMaxFlag 2`, `mxlSurfFlag` |
 | `data.diagnostics` | BGC daily surface lists | sea-ice 3-hourly `SIdyn`, daily `SIdeform`, `surf`, `surfTS`, `SHI`, `SImelt`, 6-hourly `SIforce`, monthly `state` |
-| `data.cal`, `data.exch2`, `data.exf`, `data.iceplume`, `data.salt_plume`, `data.shelfice`, `eedata` | identical | identical |
+| `data.exch2` | 40x40 blankList (60 of 252) | staged: 20x20 blankList (330 of 1008), the production tiling (run_arch_Y69m_sw and D10 ran the 40x40 file) |
+| `data.cal`, `data.exf`, `data.iceplume`, `data.salt_plume`, `data.shelfice`, `eedata` | identical | identical |
 | `ob_index_namelist.txt` | present (helper) | not copied |
 
 `regional_run/input_baseline/` (2026-10-15 to 10-21 frozen baseline, `run_arch_HO2`
@@ -241,9 +253,9 @@ the older `run_arch_Y16` physics lists (no `SImelt`).
 Physics files of `run_bgc15_s1` that are NOT staged, because they are the
 older `run_arch_Y16` physics (superseded by Y69m_sw): `data.seaice`
 (`SEAICE_strength 8.25e4`, `presPow0/1 = 1/3`), `data.ggl90` (no parent set),
-`data` (`nTimeSteps 129600`). `data.obcs`, `data.exf`, `data.exch2`,
+`data` (`nTimeSteps 129600`). `data.obcs`, `data.exf`,
 `data.iceplume`, `data.shelfice`, `data.salt_plume`, `data.cal`, `eedata` are
-identical to the staged `input/`. (`input_darwin/data.diagnostics` carries the `SImelt`
+identical to the staged `input/`. Its `data.exch2` is the 40x40 file. (`input_darwin/data.diagnostics` carries the `SImelt`
 list; see above.)
 
 ## 5. `scripts/`
@@ -256,6 +268,8 @@ list; see above.)
 | `job_build_drag10.sh` | `regional_run/` | + `code_drag10` (2026-11-15); = the staged `code/` |
 | `job_build_bgc.sh` | `regional_run/` | BGC build (2026-10-29) |
 | `job_run_arch.sh`, `job_run_arch_long.sh` | `prep/` | run scripts (192 ranks; the long one checks OBCS record counts) |
+| `job_build_v05.sh` | written 2026-11-22 from `regional_run/job_build_v05test.sh` | production build of this tree (`-mo "code_darwin code"`), checks 678 ranks; paths from `P`, `B`, `BUILD`, `DARWIN3` |
+| `job_run_scaling.sh` | `prep/` | `job_run_arch_long.sh` with the rank count from `NP`; ran the 20x20 scaling test (678 ranks, 18 sky_ele nodes) |
 | `stage_arch_tc4.sh` | `prep/` | stages a cold-start run on the baseline namelists (walled bathymetry, tides, grid18) |
 | `stage_arch_restart_long.sh` | `prep/` | continues a run from a pickup with the Jan to Sep OBCS set |
 | `stage_y69m_sw.sh`, `stage_drag10_test.sh`, `stage_drag10_full.sh` | `prep/` | how Y69m_sw, D10t and D10 were staged |

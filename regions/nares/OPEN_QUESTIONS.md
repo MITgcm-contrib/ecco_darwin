@@ -1,22 +1,23 @@
-# Open questions before this tree goes to GitHub (2026-11-16)
+# Open questions before this tree goes to GitHub (2026-11-16, updated 2026-11-22)
 
-Decisions for Dustin. Nothing below is decided in the staged files.
+Decisions for Dustin, and what was decided.
 
-## 1. The physics is not frozen (DRAFT everywhere)
+## 1. Frozen physics -- DECIDED 2026-11-20 (Dustin: "Freeze D10")
 
-- Stop rule adopted 2026-11-16: at most 2 more full Jan-Aug 2015 runs, one
+- Stop rule (adopted 2026-11-16): at most 2 more full Jan-Aug 2015 runs, one
   change per run, then freeze the run with the lowest total error.
-- Run 1 of 2 is `run_arch_D10` (PBS 25399446, submitted 2026-11-16; still
-  QUEUED at 18:00 on 2026-11-16, "no available resources"): ice-ocean
-  drag on the top-10-m mean ocean velocity (`code_drag10`, 6 files). The staged
-  `code/` INCLUDES these 6 files because `job_build_drag10.sh` is the newest
-  physics build. If D10 fails the stop rule, remove them from `code/` (the
-  previous binary, `build_swfix`, = `code/` minus the 6 `code_drag10` files).
-- `input/` = `run_arch_Y69m_sw` namelists (the last scored full run). D10 uses
-  the same namelists plus one daily diagnostics list (`uv10`, levels 1-7).
-- Values that depend on this: everything in `data.seaice`, `data.ggl90`, the
-  sea-ice source overrides, the `code_drag10` files, and the readme numbers
-  for ice-arch timing.
+- Run 1 = `run_arch_D10` (PBS 25399446): ice-ocean drag on the top-10-m mean
+  ocean velocity (`code_drag10`, 6 files). Normal end, 28:11 wall. Score:
+  closure Feb 8 (obs Jan 30, +9 d), polynya 90/94/121 % of MODIS (Feb/Mar/Apr),
+  summer date errors 26 d in sum. It does not meet the stop rule.
+- Run 2 = `run_arch_K10` (PBS 25409065): D10 + GGL90 diffusivity x0.1 in
+  Kennedy Channel. Normal end, 29.1 h wall. Its summer error was worse (31 d
+  vs 26 d); it gained only the April polynya point (117 vs 121 %). Not kept.
+- So `code/` = the `build_drag10` chain (it already holds the 6 `code_drag10`
+  files), and the physics namelists in `input/` are the D10 namelists
+  byte for byte. One exception: `input/data.diagnostics` leaves out D10's
+  evaluation-only list 12 (daily `uv10`, UVEL/VVEL levels 1-7). It has no
+  effect on the solution.
 
 ## 2. pkg/iceplume -- DECIDED 2026-11-16 (Dustin: add it to the tree)
 
@@ -32,25 +33,25 @@ Decisions for Dustin. Nothing below is decided in the staged files.
   keep it off in `input/data.pkg`, as run; `readme_pleiades.txt` section 5
   says how to switch it on.
 
-## 3. BGC production tiling and period
+## 3. BGC production tiling -- DECIDED 2026-11-20 (Dustin: 20x20)
 
-- The BGC chain Jan 1 to Sep 1 2015 ran in 3 segments on 192 ranks
-  (`run_bgc15_s1..s3`, 2.337 s per step, 1.07 model days per wall hour).
-- Scaling test for the 2016-2025 production (1-day BGC runs, Jan 1 cold start):
-  - 40x40 tiles, 192 ranks (run_bgc_test2d, 2026-10-30): 2.337 s per step.
-  - 20x20 tiles, 678 ranks (run_bgc_sc_20x20, PBS 25399447, 2026-11-16,
-    ended normally, 1440 steps): 1385.7 s wall = 0.962 s per step, so 2.43x
-    faster for 3.53x the ranks (69 % parallel efficiency). BLOCKING_EXCHANGES
-    134 s, THERMODYNAMICS 429 s, GCHEM_FORCING_SEP 353 s of the 1386 s.
-    One model day = 23 min; 10 years (2016-2025) = about 1400 wall hours =
-    12 long-queue segments of 120 h. (My arithmetic from STDOUT.0000; the
-    BGC session owns the scaling analysis.)
-  - 40x20 tiles, 365 ranks (run_bgc_sc_40x20, PBS 25399711): queued. `build_bgc_s20x20`, `build_bgc_s40x20`,
-  `code_size20x20`, `code_size40x20`, `prep/scaling/`, `make_build_scaling.py`,
-  `stage_scaling_1d.sh` and `job_run_scaling.sh` are NOT staged, per the
-  instruction to ignore them. If a new tiling is adopted, `code/SIZE.h` and
-  `input/data.exch2` change together (and the build pre-flight checks that).
-- The production period (2016-2025 proposed) follows the measured rate.
+1-day BGC runs, Jan 1 2015 cold start, 1440 steps each:
+
+| tiling | ranks | s per step | speed-up | run |
+|---|---|---|---|---|
+| 40x40 | 192 | 2.337 | 1.0x | run_bgc_test2d (2026-10-30) |
+| 40x20 | 365 | 1.425 | 1.64x | run_bgc_sc_40x20 (PBS 25399711) |
+| 20x20 | 678 | 0.962 | 2.43x | run_bgc_sc_20x20 (PBS 25399447) |
+
+- Estimate for 2016-2025 (3653 model days) on 20x20: about 1405 wall hours
+  = 12 long-queue segments of 120 h on 18 sky_ele nodes, about 25,300
+  node-hours (my arithmetic from the timers; queue waits not included).
+- Done in the freeze commit (2026-11-22): `code/SIZE.h` (sNx = sNy = 20,
+  nPx = 678) and `input/data.exch2` (56 x 18 = 1008 tiles, 330 blank) are
+  the `code_size20x20/` and `prep/scaling/data.exch2_20x20` files. New
+  `scripts/job_build_v05.sh` checks 678 ranks. `scripts/job_run_scaling.sh`
+  runs with NP=678. The older build and run scripts in `scripts/` are the
+  as-run record of the 40x40 tuning runs and stop unless they see 192 ranks.
 
 ## 4. The staged BGC build -- test build DECIDED 2026-11-16 (Dustin: stage and qsub)
 
@@ -68,6 +69,15 @@ Decisions for Dustin. Nothing below is decided in the staged files.
   it), and from build_drag10 ONLY in the 18 code_darwin files. Not run.
   (The job's own assert on packages.conf failed because genmake2 does not
   link that file; the asserts were rerun by hand and the script fixed.)
+- Freeze test build (2026-11-22): this tree with the 20x20 `SIZE.h` and
+  `data.exch2`, built by `scripts/job_build_v05.sh` -> `build_v05freeze`
+  (PBS 25423792, 1 cas_ait node; the Electra nodes took no jobs that day).
+  RESULT: `V05_BUILD_OK`, exit 0, 0 compiler errors, mitgcmuv 137 MB (the
+  20x20 `build_bgc_s20x20` binary is also 137 MB). Pre-flight: 33/33 tracers,
+  678 ranks = 1008 - 330 blank. Sources that differ from `build_drag10`: the
+  17 changed `code_darwin` files + `SIZE.h` (+ `BUILD_INFO.h`). From
+  `build_bgc_s20x20`: the 2 swfix + 4 drag10 files (+ `BUILD_INFO.h`, and
+  `SIZE.h` in its comment lines only). Not run.
 - `input_darwin/data.diagnostics` regenerated from `input/data.diagnostics` +
   the run_bgc15_s1 BGC streams (DECIDED 2026-11-16; see PROVENANCE.md 4).
   `input_darwin` otherwise = run_bgc15_s1, whose physics was the older Y16 set.

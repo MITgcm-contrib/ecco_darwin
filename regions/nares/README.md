@@ -5,10 +5,10 @@ Nares Strait (Lincoln Sea to the North Water), downscaled from ECCO-Darwin
 LLC270 v05 (V5r1) with the `regions/downscaling` toolkit. Target: the Nares
 ice arches, their formation and collapse, and their effect on the ecosystem.
 
-**STATUS (2026-11-16): DRAFT. The physics is not frozen.** A stop rule allows
-at most two more full 2015 runs. Run 1 of 2 (`run_arch_D10`, ice-ocean drag on
-the top-10-m current) is running. Every value marked "DRAFT" below can still
-change. See `OPEN_QUESTIONS.md`.
+**STATUS (2026-11-22): physics frozen.** Dustin froze `run_arch_D10` on
+2026-11-20 (ice-ocean drag on the top-10-m current; run 1 of the 2 runs the
+stop rule allowed). The `code/` and `input/` here reproduce D10. The tiling is
+the 20x20 BGC production tiling (678 ranks). See `OPEN_QUESTIONS.md`.
 
 | | |
 |---|---|
@@ -17,9 +17,9 @@ change. See `OPEN_QUESTIONS.md`.
 | Extent | 80.80 W to 40.52 W, 74.37 N to 84.94 N (corner values) |
 | Resolution | 999.6 to 1000.0 m in both directions |
 | Vertical | 90 levels, 1 m at the surface |
-| Period | 2015-01-01 to 2015-09-01 (243 days, test year). Production 2016-2025 planned, DRAFT: pending the scaling test |
+| Period | 2015-01-01 to 2015-09-01 (243 days, test year). Production 2016-2025 planned |
 | Timestep | 60 s (349,920 steps for the 243-day run) |
-| Decomposition | sNx=sNy=40, 28 x 9 = 252 tiles, 60 blank, 192 active MPI ranks (nPx=192, nPy=1) |
+| Decomposition | sNx=sNy=20, 56 x 18 = 1008 tiles, 330 blank, 678 active MPI ranks (nPx=678, nPy=1). All 2015 tuning runs used 40x40 tiles (192 ranks) |
 | Parent | ECCO-Darwin LLC270 v05 (V5r1), 31-tracer Darwin, pickup iteration 604872 = 2015-01-01 |
 | Open boundaries | all four edges, hourly, prescribed from the parent, with barotropic tides (8 constituents) and an OBCS sponge |
 | Atmospheric forcing | ERA5 hourly (no EXF runoff) |

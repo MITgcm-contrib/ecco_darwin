@@ -46,18 +46,18 @@ C NOTE TO EDITORS: do NOT write "<name>=<number>" for any SIZE.h symbol in
 C these comments (job_build.sh greps for 'nPx *= *[0-9]+'). Write shapes as
 C "40x40" instead.
 C
-C exch2 single facet 1120x360 (data.exch2 dimsFacets), 28x9 = 252 tiles of
-C 40x40. 60 tiles hold no wet cell (bathymetry + shelficeTopo, 2026-10-07)
-C and go in data.exch2 blankList, so nPx*nPy below = 192 ACTIVE tiles.
+C Production tiling (adopted 2026-11-20; scaling test 2026-11-16): exch2 single facet 1120x360, 56x18 = 1008 tiles of
+C 20x20. 330 tiles hold no wet cell (input/data.exch2, gen_exch2_blanklist.py)
+C and go in the blankList, so nPx*nPy below = 678 ACTIVE tiles. W2_maxNbTiles (2 x ranks) >= 1008.
 C Nx/Ny here are NOT the domain size.
       PARAMETER (
-     &           sNx =  40,
-     &           sNy =  40,
+     &           sNx =  20,
+     &           sNy =  20,
      &           OLx =   4,
      &           OLy =   4,
      &           nSx =   1,
      &           nSy =   1,
-     &           nPx = 192,
+     &           nPx = 678,
      &           nPy =   1,
      &           Nx  = sNx*nSx*nPx,
      &           Ny  = sNy*nSy*nPy,

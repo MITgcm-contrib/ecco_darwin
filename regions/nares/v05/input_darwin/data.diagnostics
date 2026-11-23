@@ -1,6 +1,6 @@
 # Nares BGC diagnostics = input/data.diagnostics (run_arch_Y69m_sw physics lists 1-7 and 11)
 # + the BGC streams of run_bgc15_s1 (lists 8-10 and the monthly tracers, renumbered 12-44 so
-# that list 11 = SImelt stays as in input/). DRAFT 2026-11-16: derived, not as run. The as-run
+# that list 11 = SImelt stays as in input/). Derived 2026-11-16, not as run. The as-run
 # run_bgc15_s1 file had the older run_arch_Y16 physics lists (no SImelt). BGC names checked in
 # code_bgc (2026-10-30).
  &DIAGNOSTICS_LIST

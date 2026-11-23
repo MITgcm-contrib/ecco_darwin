@@ -2,9 +2,9 @@
 # simulation on Pleiades. Downscaled from ECCO-Darwin LLC270 v05 (V5r1) with
 # the ecco_darwin/regions/downscaling toolkit plus Nares-specific scripts.
 #
-# DRAFT 2026-11-16: the physics is NOT frozen (stop rule: at most 2 more full
-# 2015 runs; run_arch_D10 = run 1 of 2 is in progress). Every line marked
-# DRAFT can change. See ../OPEN_QUESTIONS.md.
+# Physics frozen 2026-11-20 at run_arch_D10 (Dustin). code/ and input/
+# reproduce D10, with the 20x20 production tiling (678 ranks). Every 2015
+# tuning run used 40x40 tiles (192 ranks). See ../OPEN_QUESTIONS.md.
 
 ==============
 # 0. Domain summary
@@ -21,9 +21,9 @@
               BedMachine v6 (1200 cells, draft 9-586 m)
   Period      2015-01-01 00:00 to 2015-09-01 00:00 (243 d), deltaT = 60 s,
               nTimeSteps = 349920, cold start (nIter0 = 0).
-              DRAFT: production 2016-2025 pending the scaling test.
-  Decomp      sNx = sNy = 40, 28 x 9 = 252 tiles, 60 blank (data.exch2),
-              192 active -> SIZE.h nPx = 192, nPy = 1 -> 192 MPI ranks
+  Decomp      sNx = sNy = 20, 56 x 18 = 1008 tiles, 330 blank (data.exch2),
+              678 active -> SIZE.h nPx = 678, nPy = 1 -> 678 MPI ranks
+              (the 2015 tuning runs: 40x40, 252 tiles, 60 blank, 192 ranks)
   Parent      ECCO-Darwin LLC270 v05 (V5r1), 31-tracer Darwin; IC = parent
               pickup iteration 604872 (2015-01-01); boundaries from the shared
               west_AO + Nares pkg/diagnostics_vec extraction (hourly, 2015-2025)
@@ -43,9 +43,9 @@
               eccen 1.6, advScheme 77, HO 2.0, area_max 0.98, no tensile /
               side / basal drag, ice load capped at 6 m of water (code_capload),
               thinned-mouth IC (siHEFF_ICT), ice-ocean drag on the 0-10 m
-              mean ocean current (code_drag10).  <- ALL DRAFT (run_arch_D10)
+              mean ocean current (code_drag10). = frozen run_arch_D10
   Mixing      GGL90 with the parent set (alpha 30, TKEmin 1e-7, TKEbottom
-              1e-6, mxlMaxFlag 2, mxlSurfFlag T).  <- DRAFT
+              1e-6, mxlMaxFlag 2, mxlSurfFlag T).
   BGC         33 ptracers (31 parent + rDOC + CDOM), pan_AO/west_AO v5
               ecosystem (RADIv2 emulator + limiter), radtrans + OASIM
               (oasim_dTsolz 60), under-ice light (RT_iceTransmit).
@@ -83,7 +83,7 @@
   module purge
   module load comp-intel/2023.2.1 mpi-hpe/mpt.2.30 hdf4/4.2.12 hdf5/1.8.18_mpt netcdf/4.4.1.1_mpt python3/3.9.12
 
-# Physics-only binary (= build_drag10; DRAFT):
+# Physics-only binary (= build_drag10 sources, with the 20x20 SIZE.h):
   ../tools/genmake2 -rootdir .. -mpi \
     -of ../tools/build_options/linux_amd64_ifort+mpi_ice_nas \
     -mo "../../ecco_darwin/regions/nares/v05/code"
@@ -101,10 +101,11 @@
 # files with the v5 ecosystem set. Reversing the order gives a BGC binary with
 # the stale (invalid) 17-argument darwin_plankton.F and no error.
 #
-# NOTE 2 (DRAFT): the BGC combination code_darwin + code was test-built on
+# NOTE 2: the BGC combination code_darwin + code was test-built on
 # 2026-11-16 (build_v05test: clean; sources = build_bgc + swfix + drag10
-# exactly) but has NOT been run. build_bgc (2026-10-29), which ran the BGC
-# chain, predates code_swfix and code_drag10 (OPEN_QUESTIONS.md item 4).
+# exactly) and again with the 20x20 SIZE.h (OPEN_QUESTIONS.md item 4). It has
+# NOT been run. build_bgc (2026-10-29), which ran the 2015 BGC tests,
+# predates code_swfix and code_drag10.
 
 # AMD (rom_ait) portability and the >2 GB static arrays (mitgcmuv has a
 # 1.93 GB bss): required on Pleiades, harmless otherwise:
@@ -117,12 +118,14 @@
   make -j 16
 
 # Or use the packaged job scripts, which do all of the above plus pre-flight
-# checks (33/33 tracers, 192 ranks = 252 - 60 blank tiles, SIZE.h vs
+# checks (33/33 tracers, 678 ranks = 1008 - 330 blank tiles, SIZE.h vs
 # data.exch2 vs blankList, every OBCS namelist switch set .TRUE. has its CPP
 # flag) and post-build asserts (iceplume, shelfice, JFNK, side drag, radtrans
 # objects; which override directory each file came from):
-#   qsub -W group_list=<group> scripts/job_build_drag10.sh    (physics)
-#   qsub -W group_list=<group> scripts/job_build_bgc.sh       (BGC, as run 2026-10-29)
+#   qsub -W group_list=<group> -v P=<tree>/regions/nares/v05,B=<dir>,BUILD=build_v05 \
+#        scripts/job_build_v05.sh                             (production, 20x20)
+# The as-run build scripts of the 2015 tuning runs (job_build_drag10.sh,
+# job_build_bgc.sh ...) stop unless SIZE.h gives 192 ranks (40x40 tiles).
 # Both wipe their build directory first: genmake2 does not replace existing
 # source links, and a build directory that has seen another package set ends
 # up as a mixture of both.
@@ -171,20 +174,26 @@
 
 ==============
 # 4. Run
-# Physics: 5 sky_ele nodes, 39 ranks per node, 192 ranks, long queue:
-  qsub -q long -l select=5:ncpus=40:mpiprocs=39:model=sky_ele -l walltime=40:00:00 \
-       -W group_list=<group> -v RUN=<run dir> scripts/job_run_arch_long.sh
-# Measured: 0.334 s per step (run_arch_Pe16), about 7.5 model days per wall
-# hour; Jan 1 to Sep 1 2015 took 27.4 h (run_arch_Y69m_sw). The script checks
-# that every OBCS file holds enough hourly records for nIter0 + nTimeSteps.
+# Production (20x20 tiles, 678 ranks): 18 sky_ele nodes, 38 ranks per node
+# (684 slots), as the 20x20 scaling test ran (run_bgc_sc_20x20, 2026-11-16):
+  qsub -q long -l select=18:ncpus=40:mpiprocs=38:model=sky_ele -l walltime=120:00:00 \
+       -W group_list=<group> -v RUN=<run dir>,NP=678 scripts/job_run_scaling.sh
+# The script checks that every OBCS file holds enough hourly records for
+# nIter0 + nTimeSteps.
+#
+# The 2015 physics tuning runs (40x40, 192 ranks) used 5 sky_ele nodes, 39 ranks
+# per node, and scripts/job_run_arch_long.sh. Measured: 0.334 s per step
+# (run_arch_Pe16), about 7.5 model days per wall hour; Jan 1 to Sep 1 2015 took
+# 27.4 h (run_arch_Y69m_sw) and 28.2 h (run_arch_D10).
 
-# BGC: same nodes; measured 2.337 s per step = 7.0x the physics, 1.07 model
+# BGC on 40x40 (192 ranks): measured 2.337 s per step = 7.0x the physics, 1.07 model
 # days per wall hour (run_bgc_test2d). Jan 1 to Sep 1 2015 does not fit one
 # 120 h long-queue window, so scripts/stage_bgc_prod.sh stages 3 segments at
 # calendar-month pickups (Jan 1 -> Apr 1, 129600 steps; Apr 1 -> Jul 1,
 # 131040; Jul 1 -> Sep 1, 89280) submitted with afterok. Measured: 84 h,
-# about 85 h, 58 h. DRAFT: the 2016-2025 production needs more ranks
-# (scaling test with 20x20 and 40x20 tiles in progress; OPEN_QUESTIONS.md 3).
+# about 85 h, 58 h. BGC on 20x20 (678 ranks): measured 0.962 s per step
+# (2.43x faster). The 2016-2025 production estimate is about 1405 wall hours,
+# 12 long-queue segments of 120 h (OPEN_QUESTIONS.md item 3).
 
 ==============
 # 5. Notes on this configuration
@@ -211,7 +220,7 @@
 # grid axes (the grid is rotated 43-83 degrees); the first OBCS set
 # (2026-10-07) lacked this rotation. See PIPELINE.md.
 
-# Sea-ice tuning (DRAFT). The 2015 ice-arch timing was tuned against MODIS,
+# Sea-ice tuning (frozen at run_arch_D10, 2026-11-20). The 2015 ice-arch timing was tuned against MODIS,
 # OSI SAF drift and CS2SMOS thickness over about 70 short and 20 full runs
 # (DECISIONS.md, not in this repository). Changes with a code side:
 #   code_capload  2026-10-24  ice load on the sea surface capped at 6 m of water
