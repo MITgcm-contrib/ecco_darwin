@@ -55,8 +55,8 @@ Run `make CLEAN` before you build again after a change to a header file (`*.h`).
 
 ## 3. Run
 
-1. Get the run template from Box: <https://nasa-ext.box.com/s/211e45aj2ve5j7raqbvf8yty8vkex602>. It holds `80m_wetdry_run_template_v42.tar` (binary inputs, 0.53 GB;
-   `tar -xf` gives `run_template/`).
+1. Get the run template from Box: <https://nasa-ext.box.com/s/211e45aj2ve5j7raqbvf8yty8vkex602>. Download the folder
+   `run_template` (v4.2 binary inputs and namelists, 32 files, 0.53 GB) and keep its subfolders `obcs/` and `exf/`.
 2. Copy the namelists and link the executable:
 
 ```
